@@ -1,5 +1,5 @@
 <?php 
-namespace BETTERLINKS;
+namespace BetterLinks;
 
 class Admin {
     public function __construct()

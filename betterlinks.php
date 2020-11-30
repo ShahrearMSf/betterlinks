@@ -21,6 +21,7 @@ final class BetterLinks
 	private function __construct()
 	{
 		$this->define_constants();
+		register_activation_hook(__FILE__, [$this, 'activate']);
 		add_action('plugins_loaded', [$this, 'init_plugin']);
 	}
 
@@ -47,7 +48,7 @@ final class BetterLinks
 		define('BL_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
 		define('BL_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
 		define('WPSP_ASSETS_DIR_PATH', BL_ROOT_DIR_PATH . 'assets/');
-		define('BL_ASSETS_URI', BL_ASSETS_URI . 'assets/');
+		define('BL_ASSETS_URI', BL_PLUGIN_ROOT_URI . 'assets/');
 	}
 
 	/**
@@ -58,9 +59,9 @@ final class BetterLinks
 	public function init_plugin()
 	{
         $this->load_textdomain();
-		new BETTERLINKS\API();
+		new BetterLinks\API();
 		if(is_admin()){
-			new BETTERLINKS\Admin();
+			new BetterLinks\Admin();
 		}
 	}
 
@@ -71,6 +72,10 @@ final class BetterLinks
 			false,
 			dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
 		);
+	}
+
+	public function activate(){
+		new BetterLinks\Installer();
 	}
 }
 

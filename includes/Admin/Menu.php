@@ -1,6 +1,6 @@
 <?php
 
-namespace BETTERLINKS\Admin;
+namespace BetterLinks\Admin;
 
 class Menu
 {

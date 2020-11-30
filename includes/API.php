@@ -1,5 +1,5 @@
 <?php
-namespace BETTERLINKS;
+namespace BetterLinks;
 class API {
     
 }
