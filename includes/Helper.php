@@ -3,6 +3,16 @@ namespace BetterLinks;
 
 class Helper {
 
+    public static function DB(){
+        static $BLDATA;
+        if (! $BLDATA) {
+            global $wpdb;
+            $connection = new Query\Connection($wpdb, ['prefix' => $wpdb->prefix]);
+            $BLDATA = new Query\QueryBuilder\QueryBuilderHandler($connection);
+        }
+        return $BLDATA;
+    }
+
     /**
      * Check Supported Post type for admin page and plugin main settings page
      * 
