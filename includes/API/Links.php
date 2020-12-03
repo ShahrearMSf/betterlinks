@@ -26,7 +26,12 @@ class Links
                 'methods'               => \WP_REST_Server::READABLE,
                 'callback'              => array($this, 'get_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => array(),
+                'args'                  => array(
+                    'limit' => array(
+                        'default'   => 5,
+                        'sanitize_callback' => 'absint'
+                    )
+                ),
             ),
         ));
 
@@ -58,6 +63,23 @@ class Links
         ));
     }
 
+    public function parse_response($items){
+        $results = [];
+        foreach($items as $item){
+            if(!isset($results[$item->term_slug])){
+                $results[$item->term_slug] = array(
+                    'term_name' => $item->term_name,
+                    'term_type' => $item->term_type,
+                );
+                $results[$item->term_slug]['lists'][] = $item;
+                
+            } else {
+                $results[$item->term_slug]['lists'][] = $item;
+            }
+        }
+        return $results;
+    }
+
     /**
      * Get wpsp
      *
@@ -66,9 +88,15 @@ class Links
      */
     public function get_value($request)
     {
+        $query = \BetterLinks\Helper::DB();
+        $query = $query->table('better_links')->join('better_terms', 'better_links.term_id', '=', 'better_terms.id')->where('term_type', '=', 'category')->get();
+        
+
+
+
         return new \WP_REST_Response(array(
             'success' => true,
-            'value' => []
+            'value' => $this->parse_response($query)
         ), 200);
     }
 

@@ -19,7 +19,7 @@ class Assets
     public function plugin_scripts($hook)
     {
         if (\BetterLinks\Helper::plugin_page_hook_suffix($hook)) {
-            wp_enqueue_style('betterlinks-admin-style', BL_ASSETS_URI . 'css/admin.css', array(), filemtime(WPSP_ASSETS_DIR_PATH . 'css/wpscp-admin.css'), 'all');
+            wp_enqueue_style('betterlinks-admin-style', BL_ASSETS_URI . 'css/admin.css', array(), filemtime(WPSP_ASSETS_DIR_PATH . 'css/admin.css'), 'all');
             // js
             wp_enqueue_script('betterlinks-admin-scripts', BL_ASSETS_URI . 'js/admin.js', array('jquery'), filemtime(WPSP_ASSETS_DIR_PATH . 'js/admin.js'), false);
             wp_localize_script('betterlinks-admin-scripts', 'betterLinksGlobal', array(

@@ -52820,8 +52820,10 @@ module.exports = function(originalModule) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
  // fake data generator
@@ -52876,8 +52878,17 @@ const getListStyle = isDraggingOver => ({
 });
 
 function DndCanvas() {
-  const [state, setState] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([getItems(10), getItems(5, 10)]);
-  console.log(state);
+  const [state, setState] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([getItems(10), getItems(5, 10)]); // Similar to componentDidMount and componentDidUpdate:
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    _utils_helper__WEBPACK_IMPORTED_MODULE_1__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_1__["namespace"] + 'links', {
+      params: {
+        limit: 20
+      }
+    }).then(function (response) {
+      console.log(response);
+    });
+  }, []);
 
   function onDragEnd(result) {
     const {
@@ -52910,15 +52921,15 @@ function DndCanvas() {
     style: {
       display: 'flex'
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["DragDropContext"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_2__["DragDropContext"], {
     onDragEnd: onDragEnd
-  }, state.map((el, ind) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Droppable"], {
+  }, state.map((el, ind) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_2__["Droppable"], {
     key: ind,
     droppableId: `${ind}`
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), el.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_1__["Draggable"], {
+  }, provided.droppableProps), el.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_2__["Draggable"], {
     key: item.id,
     draggableId: item.id,
     index: index
@@ -52976,22 +52987,14 @@ function DndCanvas() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _DndCanvas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DndCanvas */ "./src/containers/DndCanvas.js");
+/* harmony import */ var _DndCanvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DndCanvas */ "./src/containers/DndCanvas.js");
 
 
-
-
-const load = () => {
-  _utils_helper__WEBPACK_IMPORTED_MODULE_1__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_1__["namespace"] + 'links', []).then(function (response) {
-    console.log(response);
-  });
-};
 
 const Settings = () => {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "wrap"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DndCanvas__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DndCanvas__WEBPACK_IMPORTED_MODULE_1__["default"], null));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Settings);

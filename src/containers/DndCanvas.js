@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { API, namespace } from './../utils/helper'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 // fake data generator
@@ -56,7 +57,14 @@ const getListStyle = (isDraggingOver) => ({
 function DndCanvas() {
     const [state, setState] = useState([getItems(10), getItems(5, 10)])
 
-    console.log(state)
+    // Similar to componentDidMount and componentDidUpdate:
+    useEffect(() => {
+        API.get(namespace + 'links', {
+            params: { limit: 20 },
+        }).then(function (response) {
+            console.log(response)
+        })
+    }, [])
 
     function onDragEnd(result) {
         const { source, destination } = result
