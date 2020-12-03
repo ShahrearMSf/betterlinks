@@ -39,6 +39,7 @@ class Installer {
             redirect_type varchar(255) default '307',
             target_url varchar(255) default NULL,
             short_url varchar(255) default NULL,
+            term_id bigint(20) NOT NULL,
             link_modified datetime NOT NULL default '0000-00-00 00:00:00',
             link_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
             PRIMARY KEY  (ID),
