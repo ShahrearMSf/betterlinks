@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 // fake data generator
@@ -50,11 +49,14 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
     padding: grid,
+    margin: '10px',
     width: 250,
 })
 
 function DndCanvas() {
     const [state, setState] = useState([getItems(10), getItems(5, 10)])
+
+    console.log(state)
 
     function onDragEnd(result) {
         const { source, destination } = result
@@ -83,22 +85,6 @@ function DndCanvas() {
 
     return (
         <div>
-            <button
-                type='button'
-                onClick={() => {
-                    setState([...state, []])
-                }}
-            >
-                Add new group
-            </button>
-            <button
-                type='button'
-                onClick={() => {
-                    setState([...state, getItems(1)])
-                }}
-            >
-                Add new item
-            </button>
             <div style={{ display: 'flex' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {state.map((el, ind) => (
@@ -166,10 +152,40 @@ function DndCanvas() {
                                         </Draggable>
                                     ))}
                                     {provided.placeholder}
+                                    <button
+                                        type='button'
+                                        onClick={() => {
+                                            const newState = [...state]
+                                            newState[ind].splice(index, 1)
+                                            setState(
+                                                newState.filter(
+                                                    (group) => group.length
+                                                )
+                                            )
+                                        }}
+                                        onClick={() => {
+                                            let newState = [...state]
+                                            newState[ind].push({
+                                                content: 'item 14',
+                                                id: 'item-14-1606980908648',
+                                            })
+                                            setState([...newState])
+                                        }}
+                                    >
+                                        Add new Post
+                                    </button>
                                 </div>
                             )}
                         </Droppable>
                     ))}
+                    <button
+                        type='button'
+                        onClick={() => {
+                            setState([...state, []])
+                        }}
+                    >
+                        Add New Category
+                    </button>
                 </DragDropContext>
             </div>
         </div>
