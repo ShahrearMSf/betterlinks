@@ -5,7 +5,14 @@ if (!window._babelPolyfill) {
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import store from './redux/store'
 import Settings from './containers/Settings'
 document.addEventListener('DOMContentLoaded', function () {
-    ReactDOM.render(<Settings />, document.getElementById('betterlinksbody'))
+    ReactDOM.render(
+        <Provider store={store}>
+            <Settings />
+        </Provider>,
+        document.getElementById('betterlinksbody')
+    )
 })

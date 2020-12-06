@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { API, namespace } from './../utils/helper'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetch_settings_data } from './../redux/actions/settings.actions'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 // fake data generator
@@ -54,16 +56,12 @@ const getListStyle = (isDraggingOver) => ({
     width: 250,
 })
 
-function DndCanvas() {
+function DndCanvas(props) {
     const [state, setState] = useState([getItems(10), getItems(5, 10)])
-
+    const { settings } = props.settings
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
-        API.get(namespace + 'links', {
-            params: { limit: '<<//4ts' },
-        }).then(function (response) {
-            console.log(response)
-        })
+        props.fetch_settings_data()
     }, [])
 
     function onDragEnd(result) {
@@ -199,4 +197,15 @@ function DndCanvas() {
         </div>
     )
 }
-export default DndCanvas
+
+const mapStateToProps = (state) => ({
+    settings: state.settings,
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DndCanvas)

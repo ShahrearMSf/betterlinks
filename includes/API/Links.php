@@ -84,11 +84,9 @@ class Links extends Controller
     {
         $query = \BetterLinks\Helper::DB();
         $query = $query->table('better_links')->join('better_terms', 'better_links.term_id', '=', 'better_terms.id')->where('term_type', '=', 'category')->get();
-        
-
         return new \WP_REST_Response(array(
             'success' => true,
-            'value' => $this->parse_response($query)
+            'data' => $this->parse_response($query)
         ), 200);
     }
 
