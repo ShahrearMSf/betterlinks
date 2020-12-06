@@ -60,7 +60,7 @@ function DndCanvas() {
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
         API.get(namespace + 'links', {
-            params: { limit: 20 },
+            params: { limit: '<<//4ts' },
         }).then(function (response) {
             console.log(response)
         })

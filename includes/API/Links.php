@@ -1,10 +1,11 @@
 <?php
-
 namespace BetterLinks\API;
 
+use BetterLinks\Traits\ArgumentSchema;
 
-class Links
+class Links extends Controller
 {
+    use ArgumentSchema;
     /**
      * Initialize hooks and option name
      */
@@ -18,47 +19,40 @@ class Links
      */
     public function register_routes()
     {
-        $namespace = BL_PLUGIN_SLUG . '/v1';
         $endpoint = '/links/';
-        
-        register_rest_route($namespace, $endpoint, array(
+        register_rest_route($this->namespace, $endpoint, array(
             array(
                 'methods'               => \WP_REST_Server::READABLE,
                 'callback'              => array($this, 'get_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => array(
-                    'limit' => array(
-                        'default'   => 5,
-                        'sanitize_callback' => 'absint'
-                    )
-                ),
+                'args'                  => $this->get_links_schema(),
             ),
         ));
 
-        register_rest_route($namespace, $endpoint, array(
+        register_rest_route($this->namespace, $endpoint, array(
             array(
                 'methods'               => \WP_REST_Server::CREATABLE,
                 'callback'              => array($this, 'update_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => array(),
+                'args'                  => $this->get_links_schema(),
             ),
         ));
 
-        register_rest_route($namespace, $endpoint, array(
+        register_rest_route($this->namespace, $endpoint, array(
             array(
                 'methods'               => \WP_REST_Server::EDITABLE,
                 'callback'              => array($this, 'update_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => array(),
+                'args'                  => $this->get_links_schema(),
             ),
         ));
 
-        register_rest_route($namespace, $endpoint, array(
+        register_rest_route($this->namespace, $endpoint, array(
             array(
                 'methods'               => \WP_REST_Server::DELETABLE,
                 'callback'              => array($this, 'delete_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => array(),
+                'args'                  => $this->get_links_schema(),
             ),
         ));
     }
@@ -91,8 +85,6 @@ class Links
         $query = \BetterLinks\Helper::DB();
         $query = $query->table('better_links')->join('better_terms', 'better_links.term_id', '=', 'better_terms.id')->where('term_type', '=', 'category')->get();
         
-
-
 
         return new \WP_REST_Response(array(
             'success' => true,
