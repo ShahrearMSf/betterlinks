@@ -52907,14 +52907,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
- // fake data generator
 
-const getItems = (count, offset = 0) => Array.from({
-  length: count
-}, (v, k) => k).map(k => ({
-  id: `item-${k + offset}-${new Date().getTime()}`,
-  content: `item ${k + offset}`
-}));
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -52959,11 +52952,9 @@ const getListStyle = isDraggingOver => ({
 });
 
 function DndCanvas(props) {
-  const [state, setState] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([getItems(10), getItems(5, 10)]);
   const {
     settings
-  } = props.settings; // Similar to componentDidMount and componentDidUpdate:
-
+  } = props.settings;
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     props.fetch_settings_data();
   }, []);
@@ -52995,21 +52986,21 @@ function DndCanvas(props) {
     }
   }
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, console.log(settings), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     style: {
       display: 'flex'
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["DragDropContext"], {
     onDragEnd: onDragEnd
-  }, state.map((el, ind) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Droppable"], {
+  }, settings && Object.entries(settings).map(([ind, el]) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Droppable"], {
     key: ind,
     droppableId: `${ind}`
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), el.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
-    key: item.id,
-    draggableId: item.id,
+  }, provided.droppableProps), el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
+    key: item.ID,
+    draggableId: item.ID,
     index: index
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef
@@ -53020,32 +53011,20 @@ function DndCanvas(props) {
       display: 'flex',
       justifyContent: 'space-around'
     }
-  }, item.content, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, item.link_title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: () => {
-      const newState = [...state];
-      newState[ind].splice(index, 1);
-      setState(newState.filter(group => group.length));
+      props.delete_link(ind, index);
     }
   }, "delete"))))), provided.placeholder, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: () => {
-      const newState = [...state];
-      newState[ind].splice(index, 1);
-      setState(newState.filter(group => group.length));
-    },
-    onClick: () => {
-      let newState = [...state];
-      newState[ind].push({
-        content: 'item 14',
-        id: 'item-14-1606980908648'
-      });
-      setState([...newState]);
+      props.add_new_link(ind);
     }
   }, "Add new Post")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: () => {
-      setState([...state, []]);
+      props.add_new_cat();
     }
   }, "Add New Category"))));
 }
@@ -53056,7 +53035,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_settings_data: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["fetch_settings_data"], dispatch)
+    fetch_settings_data: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["fetch_settings_data"], dispatch),
+    add_new_cat: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["add_new_cat"], dispatch),
+    add_new_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["add_new_link"], dispatch),
+    delete_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["delete_link"], dispatch)
   };
 };
 
@@ -53127,16 +53109,25 @@ document.addEventListener('DOMContentLoaded', function () {
 /*!***********************************************!*\
   !*** ./src/redux/actions/settings.actions.js ***!
   \***********************************************/
-/*! exports provided: FETCH_INITIAL_DATA, fetch_settings_data */
+/*! exports provided: FETCH_INITIAL_DATA, ADD_NEW_CAT, ADD_NEW_LINK, DELETE_LINK, fetch_settings_data, add_new_cat, add_new_link, delete_link */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_INITIAL_DATA", function() { return FETCH_INITIAL_DATA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_CAT", function() { return ADD_NEW_CAT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_LINK", function() { return ADD_NEW_LINK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_LINK", function() { return DELETE_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetch_settings_data", function() { return fetch_settings_data; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_cat", function() { return add_new_cat; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_link", function() { return add_new_link; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_link", function() { return delete_link; });
 /* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
 
 const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
+const ADD_NEW_CAT = 'ADD_NEW_CAT';
+const ADD_NEW_LINK = 'ADD_NEW_LINK';
+const DELETE_LINK = 'DELETE_LINK';
 const fetch_settings_data = () => async dispatch => {
   try {
     const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
@@ -53154,6 +53145,47 @@ const fetch_settings_data = () => async dispatch => {
       payload: console.log(e)
     });
   }
+};
+const add_new_cat = () => {
+  return dispatch => {
+    dispatch({
+      type: ADD_NEW_CAT,
+      payload: {
+        rahim: {
+          term_name: 'rahim',
+          term_type: 'category',
+          lists: []
+        }
+      }
+    });
+  };
+};
+const add_new_link = catName => {
+  console.log(catName);
+  return dispatch => {
+    dispatch({
+      type: ADD_NEW_LINK,
+      payload: {
+        cat: catName,
+        data: {
+          ID: 25,
+          link_title: 'lorem Ipsum dolor'
+        }
+      }
+    });
+  };
+};
+const delete_link = (catName, linkIndex) => {
+  console.log(catName, linkIndex);
+  return dispatch => {
+    dispatch({
+      type: DELETE_LINK,
+      payload: {
+        cat: catName,
+        data: linkIndex
+      }
+    });
+  };
 };
 
 /***/ }),
@@ -53186,19 +53218,45 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/settings.actions */ "./src/redux/actions/settings.actions.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../actions/settings.actions */ "./src/redux/actions/settings.actions.js");
 
-const initialState = {
-  settings: [],
-  loading: true
-};
 
-function settings(state = initialState, action) {
+
+function settings(state = {}, action) {
+  const payload = action.payload;
+
   switch (action.type) {
-    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_INITIAL_DATA"]:
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["FETCH_INITIAL_DATA"]:
       return { ...state,
-        settings: action.payload,
-        loading: false
+        settings: { ...payload.data
+        }
+      };
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["ADD_NEW_CAT"]:
+      return { ...state,
+        settings: { ...state.settings,
+          ...payload
+        }
+      };
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["ADD_NEW_LINK"]:
+      return { ...state,
+        settings: { ...state.settings,
+          [payload.cat]: { ...state.settings[payload.cat],
+            lists: [...state.settings[payload.cat].lists, payload.data]
+          }
+        }
+      };
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["DELETE_LINK"]:
+      return { ...state,
+        settings: { ...state.settings,
+          [payload.cat]: { ...state.settings[payload.cat],
+            lists: state.settings[payload.cat].lists.filter((item, index) => index != payload.data)
+          }
+        }
       };
 
     default:

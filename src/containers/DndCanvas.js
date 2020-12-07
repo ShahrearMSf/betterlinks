@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetch_settings_data } from './../redux/actions/settings.actions'
+import {
+    fetch_settings_data,
+    add_new_cat,
+    add_new_link,
+    delete_link,
+} from './../redux/actions/settings.actions'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-
-// fake data generator
-const getItems = (count, offset = 0) =>
-    Array.from({ length: count }, (v, k) => k).map((k) => ({
-        id: `item-${k + offset}-${new Date().getTime()}`,
-        content: `item ${k + offset}`,
-    }))
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -57,9 +55,8 @@ const getListStyle = (isDraggingOver) => ({
 })
 
 function DndCanvas(props) {
-    const [state, setState] = useState([getItems(10), getItems(5, 10)])
     const { settings } = props.settings
-    // Similar to componentDidMount and componentDidUpdate:
+
     useEffect(() => {
         props.fetch_settings_data()
     }, [])
@@ -91,103 +88,79 @@ function DndCanvas(props) {
 
     return (
         <div>
+            {console.log(settings)}
             <div style={{ display: 'flex' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
-                    {state.map((el, ind) => (
-                        <Droppable key={ind} droppableId={`${ind}`}>
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    style={getListStyle(
-                                        snapshot.isDraggingOver
-                                    )}
-                                    {...provided.droppableProps}
-                                >
-                                    {el.map((item, index) => (
-                                        <Draggable
-                                            key={item.id}
-                                            draggableId={item.id}
-                                            index={index}
-                                        >
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={getItemStyle(
-                                                        snapshot.isDragging,
-                                                        provided.draggableProps
-                                                            .style
-                                                    )}
-                                                >
+                    {settings &&
+                        Object.entries(settings).map(([ind, el]) => (
+                            <Droppable key={ind} droppableId={`${ind}`}>
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        style={getListStyle(
+                                            snapshot.isDraggingOver
+                                        )}
+                                        {...provided.droppableProps}
+                                    >
+                                        {el.lists.map((item, index) => (
+                                            <Draggable
+                                                key={item.ID}
+                                                draggableId={item.ID}
+                                                index={index}
+                                            >
+                                                {(provided, snapshot) => (
                                                     <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            justifyContent:
-                                                                'space-around',
-                                                        }}
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        style={getItemStyle(
+                                                            snapshot.isDragging,
+                                                            provided
+                                                                .draggableProps
+                                                                .style
+                                                        )}
                                                     >
-                                                        {item.content}
-                                                        <button
-                                                            type='button'
-                                                            onClick={() => {
-                                                                const newState = [
-                                                                    ...state,
-                                                                ]
-                                                                newState[
-                                                                    ind
-                                                                ].splice(
-                                                                    index,
-                                                                    1
-                                                                )
-                                                                setState(
-                                                                    newState.filter(
-                                                                        (
-                                                                            group
-                                                                        ) =>
-                                                                            group.length
-                                                                    )
-                                                                )
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent:
+                                                                    'space-around',
                                                             }}
                                                         >
-                                                            delete
-                                                        </button>
+                                                            {item.link_title}
+                                                            <button
+                                                                type='button'
+                                                                onClick={() => {
+                                                                    props.delete_link(
+                                                                        ind,
+                                                                        index
+                                                                    )
+                                                                }}
+                                                            >
+                                                                delete
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                    <button
-                                        type='button'
-                                        onClick={() => {
-                                            const newState = [...state]
-                                            newState[ind].splice(index, 1)
-                                            setState(
-                                                newState.filter(
-                                                    (group) => group.length
-                                                )
-                                            )
-                                        }}
-                                        onClick={() => {
-                                            let newState = [...state]
-                                            newState[ind].push({
-                                                content: 'item 14',
-                                                id: 'item-14-1606980908648',
-                                            })
-                                            setState([...newState])
-                                        }}
-                                    >
-                                        Add new Post
-                                    </button>
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                        <button
+                                            type='button'
+                                            onClick={() => {
+                                                props.add_new_link(ind)
+                                            }}
+                                        >
+                                            Add new Post
+                                        </button>
+                                    </div>
+                                )}
+                            </Droppable>
+                        ))}
                     <button
                         type='button'
                         onClick={() => {
-                            setState([...state, []])
+                            props.add_new_cat()
                         }}
                     >
                         Add New Category
@@ -205,6 +178,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+        add_new_cat: bindActionCreators(add_new_cat, dispatch),
+        add_new_link: bindActionCreators(add_new_link, dispatch),
+        delete_link: bindActionCreators(delete_link, dispatch),
     }
 }
 
