@@ -82,8 +82,6 @@ function settings(state = {}, action) {
                 },
             }
         case DELETE_LINK:
-            console.log(payload.data.term_id)
-            console.log(payload.data.ID)
             return {
                 ...state,
                 settings: {

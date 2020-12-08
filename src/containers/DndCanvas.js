@@ -9,6 +9,7 @@ import {
     delete_link,
 } from './../redux/actions/settings.actions'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import CreateCategory from './../components/CreateCategory'
 
 /**
  * Moves an item from one list to another list.
@@ -112,14 +113,7 @@ function DndCanvas(props) {
                                 )}
                             </Droppable>
                         ))}
-                    <button
-                        type='button'
-                        onClick={() => {
-                            props.add_new_cat()
-                        }}
-                    >
-                        Add New Category
-                    </button>
+                    <CreateCategory />
                 </DragDropContext>
             </div>
         </div>
