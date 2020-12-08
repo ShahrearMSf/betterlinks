@@ -88,7 +88,7 @@ function DndCanvas(props) {
                                                                 onClick={() => {
                                                                     props.delete_link(
                                                                         ind,
-                                                                        index
+                                                                        item.ID
                                                                     )
                                                                 }}
                                                             >

@@ -58,14 +58,20 @@ export const add_new_link = (catName) => {
         })
     }
 }
-export const delete_link = (catName, linkIndex) => {
-    return (dispatch) => {
+
+export const delete_link = (catID, linID) => async (dispatch) => {
+    try {
+        const res = await API.delete(namespace + 'links', {
+            params: { ID: linID, term_id: catID },
+        })
         dispatch({
             type: DELETE_LINK,
-            payload: {
-                cat: catName,
-                data: linkIndex,
-            },
+            payload: res.data,
+        })
+    } catch (e) {
+        dispatch({
+            type: DELETE_LINK,
+            payload: console.log(e),
         })
     }
 }

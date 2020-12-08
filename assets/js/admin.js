@@ -52967,7 +52967,7 @@ function DndCanvas(props) {
   }, item.link_title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: () => {
-      props.delete_link(ind, index);
+      props.delete_link(ind, item.ID);
     }
   }, "delete"))))), provided.placeholder, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
@@ -53139,16 +53139,24 @@ const add_new_link = catName => {
     });
   };
 };
-const delete_link = (catName, linkIndex) => {
-  return dispatch => {
-    dispatch({
-      type: DELETE_LINK,
-      payload: {
-        cat: catName,
-        data: linkIndex
+const delete_link = (catID, linID) => async dispatch => {
+  try {
+    const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].delete(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
+      params: {
+        ID: linID,
+        term_id: catID
       }
     });
-  };
+    dispatch({
+      type: DELETE_LINK,
+      payload: res.data
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_LINK,
+      payload: console.log(e)
+    });
+  }
 };
 
 /***/ }),
@@ -53182,27 +53190,9 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/settings.actions */ "./src/redux/actions/settings.actions.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
 
 
-const reorder = (list, startIndex, endIndex) => {
-  console.log('list', list);
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  console.log('result', result);
-  return result;
-};
-
-const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
-  destClone.splice(droppableDestination.index, 0, removed);
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-  return result;
-};
 
 function settings(state = {}, action) {
   const payload = action.payload;
@@ -53229,7 +53219,7 @@ function settings(state = {}, action) {
       const dInd = +destination.droppableId;
 
       if (sInd === dInd) {
-        const items = reorder(state.settings[sInd].lists, source.index, destination.index);
+        const items = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_1__["reorder"])(state.settings[sInd].lists, source.index, destination.index);
         const newState = state.settings;
         newState[sInd].lists = items;
         return { ...state,
@@ -53237,7 +53227,7 @@ function settings(state = {}, action) {
           }
         };
       } else {
-        const result = move(state.settings[sInd].lists, state.settings[dInd].lists, source, destination);
+        const result = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_1__["move"])(state.settings[sInd].lists, state.settings[dInd].lists, source, destination);
         const newState = state.settings;
         newState[sInd].lists = result[sInd];
         newState[dInd].lists = result[dInd];
@@ -53264,10 +53254,12 @@ function settings(state = {}, action) {
       };
 
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["DELETE_LINK"]:
+      console.log(payload.data.term_id);
+      console.log(payload.data.ID);
       return { ...state,
         settings: { ...state.settings,
-          [payload.cat]: { ...state.settings[payload.cat],
-            lists: state.settings[payload.cat].lists.filter((item, index) => index != payload.data)
+          [payload.data.term_id]: { ...state.settings[payload.data.term_id],
+            lists: state.settings[payload.data.term_id].lists.filter((item, index) => item.ID != payload.data.ID)
           }
         }
       };
@@ -53316,7 +53308,7 @@ if (true) {
 /*!*****************************!*\
   !*** ./src/utils/helper.js ***!
   \*****************************/
-/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API */
+/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API, reorder, move */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -53327,6 +53319,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugin_root_url", function() { return plugin_root_url; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugin_root_path", function() { return plugin_root_path; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API", function() { return API; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reorder", function() { return reorder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "move", function() { return move; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -53344,6 +53338,22 @@ const API = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
     'X-WP-Nonce': nonce
   }
 });
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+  destClone.splice(droppableDestination.index, 0, removed);
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+  return result;
+};
 
 /***/ })
 

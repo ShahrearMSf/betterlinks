@@ -5,27 +5,7 @@ import {
     ADD_NEW_LINK,
     DELETE_LINK,
 } from '../actions/settings.actions'
-const reorder = (list, startIndex, endIndex) => {
-    console.log('list', list)
-    const result = Array.from(list)
-    const [removed] = result.splice(startIndex, 1)
-    result.splice(endIndex, 0, removed)
-    console.log('result', result)
-    return result
-}
-const move = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source)
-    const destClone = Array.from(destination)
-    const [removed] = sourceClone.splice(droppableSource.index, 1)
-
-    destClone.splice(droppableDestination.index, 0, removed)
-
-    const result = {}
-    result[droppableSource.droppableId] = sourceClone
-    result[droppableDestination.droppableId] = destClone
-
-    return result
-}
+import { move, reorder } from './../../utils/helper'
 function settings(state = {}, action) {
     const payload = action.payload
     switch (action.type) {
@@ -102,14 +82,18 @@ function settings(state = {}, action) {
                 },
             }
         case DELETE_LINK:
+            console.log(payload.data.term_id)
+            console.log(payload.data.ID)
             return {
                 ...state,
                 settings: {
                     ...state.settings,
-                    [payload.cat]: {
-                        ...state.settings[payload.cat],
-                        lists: state.settings[payload.cat].lists.filter(
-                            (item, index) => index != payload.data
+                    [payload.data.term_id]: {
+                        ...state.settings[payload.data.term_id],
+                        lists: state.settings[
+                            payload.data.term_id
+                        ].lists.filter(
+                            (item, index) => item.ID != payload.data.ID
                         ),
                     },
                 },

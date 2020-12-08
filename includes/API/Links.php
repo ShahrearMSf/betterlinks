@@ -83,8 +83,6 @@ class Links extends Controller
     public function get_value($request)
     {
         $query = \BetterLinks\Helper::DB();
-        // $query = $query->table('better_links')->join('better_terms', 'better_links.term_id', '=', 'better_terms.ID')->where('term_type', '=', 'category')->get();
-
         $query = $query->table('better_terms')->join('better_links', 'better_terms.ID', '=', 'better_links.term_id')->where('term_type', '=', 'category')->get();
         return new \WP_REST_Response(array(
             'success' => true,
@@ -116,11 +114,17 @@ class Links extends Controller
      */
     public function delete_value($request)
     {
-        $deleted = delete_option($this->settings_name);
+       
+        $results = \BetterLinks\Helper::DB()->table('better_links')->where('id', '=', $request['ID'])->delete();
+        
+        error_log(print_r($results, true));
 
         return new \WP_REST_Response(array(
-            'success'   => $deleted,
-            'value'     => ''
+            'success'   => true,
+            'data'     => [
+                'term_id' => $request['term_id'],
+                'ID' => $request['ID'],
+            ]
         ), 200);
     }
 
