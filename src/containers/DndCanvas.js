@@ -3,36 +3,17 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
     fetch_settings_data,
+    onDragEnd,
     add_new_cat,
     add_new_link,
     delete_link,
 } from './../redux/actions/settings.actions'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list)
-    const [removed] = result.splice(startIndex, 1)
-    result.splice(endIndex, 0, removed)
-
-    return result
-}
-
 /**
  * Moves an item from one list to another list.
  */
-const move = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source)
-    const destClone = Array.from(destination)
-    const [removed] = sourceClone.splice(droppableSource.index, 1)
 
-    destClone.splice(droppableDestination.index, 0, removed)
-
-    const result = {}
-    result[droppableSource.droppableId] = sourceClone
-    result[droppableDestination.droppableId] = destClone
-
-    return result
-}
 const grid = 8
 
 const getItemStyle = (isDragging, draggableStyle) => ({
@@ -61,39 +42,13 @@ function DndCanvas(props) {
         props.fetch_settings_data()
     }, [])
 
-    function onDragEnd(result) {
-        const { source, destination } = result
-
-        // dropped outside the list
-        if (!destination) {
-            return
-        }
-        const sInd = +source.droppableId
-        const dInd = +destination.droppableId
-
-        if (sInd === dInd) {
-            const items = reorder(state[sInd], source.index, destination.index)
-            const newState = [...state]
-            newState[sInd] = items
-            setState(newState)
-        } else {
-            const result = move(state[sInd], state[dInd], source, destination)
-            const newState = [...state]
-            newState[sInd] = result[sInd]
-            newState[dInd] = result[dInd]
-
-            setState(newState.filter((group) => group.length))
-        }
-    }
-
     return (
         <div>
-            {console.log(settings)}
             <div style={{ display: 'flex' }}>
-                <DragDropContext onDragEnd={onDragEnd}>
+                <DragDropContext onDragEnd={props.onDragEnd}>
                     {settings &&
                         Object.entries(settings).map(([ind, el]) => (
-                            <Droppable key={ind} droppableId={`${ind}`}>
+                            <Droppable key={ind} droppableId={ind}>
                                 {(provided, snapshot) => (
                                     <div
                                         ref={provided.innerRef}
@@ -178,6 +133,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+        onDragEnd: bindActionCreators(onDragEnd, dispatch),
         add_new_cat: bindActionCreators(add_new_cat, dispatch),
         add_new_link: bindActionCreators(add_new_link, dispatch),
         delete_link: bindActionCreators(delete_link, dispatch),

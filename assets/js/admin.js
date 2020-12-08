@@ -52908,28 +52908,9 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
-
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
-};
 /**
  * Moves an item from one list to another list.
  */
-
-
-const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
-  destClone.splice(droppableDestination.index, 0, removed);
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-  return result;
-};
 
 const grid = 8;
 
@@ -52958,43 +52939,15 @@ function DndCanvas(props) {
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     props.fetch_settings_data();
   }, []);
-
-  function onDragEnd(result) {
-    const {
-      source,
-      destination
-    } = result; // dropped outside the list
-
-    if (!destination) {
-      return;
-    }
-
-    const sInd = +source.droppableId;
-    const dInd = +destination.droppableId;
-
-    if (sInd === dInd) {
-      const items = reorder(state[sInd], source.index, destination.index);
-      const newState = [...state];
-      newState[sInd] = items;
-      setState(newState);
-    } else {
-      const result = move(state[sInd], state[dInd], source, destination);
-      const newState = [...state];
-      newState[sInd] = result[sInd];
-      newState[dInd] = result[dInd];
-      setState(newState.filter(group => group.length));
-    }
-  }
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, console.log(settings), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     style: {
       display: 'flex'
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["DragDropContext"], {
-    onDragEnd: onDragEnd
+    onDragEnd: props.onDragEnd
   }, settings && Object.entries(settings).map(([ind, el]) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Droppable"], {
     key: ind,
-    droppableId: `${ind}`
+    droppableId: ind
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
@@ -53036,6 +52989,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     fetch_settings_data: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["fetch_settings_data"], dispatch),
+    onDragEnd: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["onDragEnd"], dispatch),
     add_new_cat: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["add_new_cat"], dispatch),
     add_new_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["add_new_link"], dispatch),
     delete_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["delete_link"], dispatch)
@@ -53109,25 +53063,36 @@ document.addEventListener('DOMContentLoaded', function () {
 /*!***********************************************!*\
   !*** ./src/redux/actions/settings.actions.js ***!
   \***********************************************/
-/*! exports provided: FETCH_INITIAL_DATA, ADD_NEW_CAT, ADD_NEW_LINK, DELETE_LINK, fetch_settings_data, add_new_cat, add_new_link, delete_link */
+/*! exports provided: DRAG_AND_DROP, FETCH_INITIAL_DATA, ADD_NEW_CAT, ADD_NEW_LINK, DELETE_LINK, onDragEnd, fetch_settings_data, add_new_cat, add_new_link, delete_link */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DRAG_AND_DROP", function() { return DRAG_AND_DROP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_INITIAL_DATA", function() { return FETCH_INITIAL_DATA; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_CAT", function() { return ADD_NEW_CAT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_LINK", function() { return ADD_NEW_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_LINK", function() { return DELETE_LINK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onDragEnd", function() { return onDragEnd; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetch_settings_data", function() { return fetch_settings_data; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_cat", function() { return add_new_cat; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_link", function() { return add_new_link; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_link", function() { return delete_link; });
 /* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
 
+const DRAG_AND_DROP = 'DRAG_AND_DROP';
 const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 const ADD_NEW_CAT = 'ADD_NEW_CAT';
 const ADD_NEW_LINK = 'ADD_NEW_LINK';
 const DELETE_LINK = 'DELETE_LINK';
+const onDragEnd = result => {
+  return dispatch => {
+    dispatch({
+      type: DRAG_AND_DROP,
+      payload: result
+    });
+  };
+};
 const fetch_settings_data = () => async dispatch => {
   try {
     const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
@@ -53161,7 +53126,6 @@ const add_new_cat = () => {
   };
 };
 const add_new_link = catName => {
-  console.log(catName);
   return dispatch => {
     dispatch({
       type: ADD_NEW_LINK,
@@ -53176,7 +53140,6 @@ const add_new_link = catName => {
   };
 };
 const delete_link = (catName, linkIndex) => {
-  console.log(catName, linkIndex);
   return dispatch => {
     dispatch({
       type: DELETE_LINK,
@@ -53218,30 +53181,80 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../actions/settings.actions */ "./src/redux/actions/settings.actions.js");
+/* harmony import */ var _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/settings.actions */ "./src/redux/actions/settings.actions.js");
 
 
+const reorder = (list, startIndex, endIndex) => {
+  console.log('list', list);
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  console.log('result', result);
+  return result;
+};
+
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+  destClone.splice(droppableDestination.index, 0, removed);
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+  return result;
+};
 
 function settings(state = {}, action) {
   const payload = action.payload;
 
   switch (action.type) {
-    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["FETCH_INITIAL_DATA"]:
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_INITIAL_DATA"]:
       return { ...state,
         settings: { ...payload.data
         }
       };
 
-    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["ADD_NEW_CAT"]:
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["DRAG_AND_DROP"]:
+      const {
+        source,
+        destination
+      } = payload; // dropped outside the list
+
+      if (!destination) {
+        return { ...state
+        };
+      }
+
+      const sInd = +source.droppableId;
+      const dInd = +destination.droppableId;
+
+      if (sInd === dInd) {
+        const items = reorder(state.settings[sInd].lists, source.index, destination.index);
+        const newState = state.settings;
+        newState[sInd].lists = items;
+        return { ...state,
+          settings: { ...newState
+          }
+        };
+      } else {
+        const result = move(state.settings[sInd].lists, state.settings[dInd].lists, source, destination);
+        const newState = state.settings;
+        newState[sInd].lists = result[sInd];
+        newState[dInd].lists = result[dInd];
+        return { ...state,
+          settings: { ...newState
+          }
+        };
+      }
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["ADD_NEW_CAT"]:
       return { ...state,
         settings: { ...state.settings,
           ...payload
         }
       };
 
-    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["ADD_NEW_LINK"]:
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["ADD_NEW_LINK"]:
       return { ...state,
         settings: { ...state.settings,
           [payload.cat]: { ...state.settings[payload.cat],
@@ -53250,7 +53263,7 @@ function settings(state = {}, action) {
         }
       };
 
-    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_1__["DELETE_LINK"]:
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["DELETE_LINK"]:
       return { ...state,
         settings: { ...state.settings,
           [payload.cat]: { ...state.settings[payload.cat],

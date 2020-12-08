@@ -60,15 +60,15 @@ class Links extends Controller
     public function parse_response($items){
         $results = [];
         foreach($items as $item){
-            if(!isset($results[$item->term_slug])){
-                $results[$item->term_slug] = array(
+            if(!isset($results[$item->term_id])){
+                $results[$item->term_id] = array(
                     'term_name' => $item->term_name,
                     'term_type' => $item->term_type,
                 );
-                $results[$item->term_slug]['lists'][] = $item;
+                $results[$item->term_id]['lists'][] = $item;
                 
             } else {
-                $results[$item->term_slug]['lists'][] = $item;
+                $results[$item->term_id]['lists'][] = $item;
             }
         }
         return $results;
@@ -83,7 +83,9 @@ class Links extends Controller
     public function get_value($request)
     {
         $query = \BetterLinks\Helper::DB();
-        $query = $query->table('better_links')->join('better_terms', 'better_links.term_id', '=', 'better_terms.id')->where('term_type', '=', 'category')->get();
+        // $query = $query->table('better_links')->join('better_terms', 'better_links.term_id', '=', 'better_terms.ID')->where('term_type', '=', 'category')->get();
+
+        $query = $query->table('better_terms')->join('better_links', 'better_terms.ID', '=', 'better_links.term_id')->where('term_type', '=', 'category')->get();
         return new \WP_REST_Response(array(
             'success' => true,
             'data' => $this->parse_response($query)
