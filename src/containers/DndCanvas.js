@@ -58,48 +58,54 @@ function DndCanvas(props) {
                                         )}
                                         {...provided.droppableProps}
                                     >
-                                        {el.lists.map((item, index) => (
-                                            <Draggable
-                                                key={item.ID}
-                                                draggableId={item.ID}
-                                                index={index}
-                                            >
-                                                {(provided, snapshot) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided
-                                                                .draggableProps
-                                                                .style
-                                                        )}
-                                                    >
+                                        {el.lists &&
+                                            el.lists.map((item, index) => (
+                                                <Draggable
+                                                    key={item.ID}
+                                                    draggableId={item.ID}
+                                                    index={index}
+                                                >
+                                                    {(provided, snapshot) => (
                                                         <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                justifyContent:
-                                                                    'space-around',
-                                                            }}
+                                                            ref={
+                                                                provided.innerRef
+                                                            }
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            style={getItemStyle(
+                                                                snapshot.isDragging,
+                                                                provided
+                                                                    .draggableProps
+                                                                    .style
+                                                            )}
                                                         >
-                                                            {item.link_title}
-                                                            <button
-                                                                type='button'
-                                                                onClick={() => {
-                                                                    props.delete_link(
-                                                                        ind,
-                                                                        item.ID
-                                                                    )
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    justifyContent:
+                                                                        'space-around',
                                                                 }}
                                                             >
-                                                                delete
-                                                            </button>
+                                                                {
+                                                                    item.link_title
+                                                                }
+                                                                <button
+                                                                    type='button'
+                                                                    onClick={() => {
+                                                                        props.delete_link(
+                                                                            ind,
+                                                                            item.ID
+                                                                        )
+                                                                    }}
+                                                                >
+                                                                    delete
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        ))}
+                                                    )}
+                                                </Draggable>
+                                            ))}
                                         {provided.placeholder}
                                         <button
                                             type='button'
@@ -113,7 +119,7 @@ function DndCanvas(props) {
                                 )}
                             </Droppable>
                         ))}
-                    <CreateCategory />
+                    <CreateCategory createCatHandler={props.add_new_cat} />
                 </DragDropContext>
             </div>
         </div>

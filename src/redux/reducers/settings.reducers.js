@@ -60,11 +60,15 @@ function settings(state = {}, action) {
                 }
             }
         case ADD_NEW_CAT:
+            console.log(payload.data)
             return {
                 ...state,
                 settings: {
                     ...state.settings,
-                    ...payload,
+                    [payload.data.ID]: {
+                        ...state.settings[payload.data.ID],
+                        ...payload.data,
+                    },
                 },
             }
         case ADD_NEW_LINK:

@@ -3,8 +3,8 @@ namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
 
-class Links extends Controller
-{
+
+class Terms extends Controller {
     use ArgumentSchema;
     /**
      * Initialize hooks and option name
@@ -19,13 +19,13 @@ class Links extends Controller
      */
     public function register_routes()
     {
-        $endpoint = '/links/';
+        $endpoint = '/terms/';
         register_rest_route($this->namespace, $endpoint, array(
             array(
                 'methods'               => \WP_REST_Server::READABLE,
                 'callback'              => array($this, 'get_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => $this->get_links_schema(),
+                'args'                  => $this->get_terms_schema(),
             ),
         ));
 
@@ -34,7 +34,7 @@ class Links extends Controller
                 'methods'               => \WP_REST_Server::CREATABLE,
                 'callback'              => array($this, 'update_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => $this->get_links_schema(),
+                'args'                  => $this->get_terms_schema(),
             ),
         ));
 
@@ -43,7 +43,7 @@ class Links extends Controller
                 'methods'               => \WP_REST_Server::EDITABLE,
                 'callback'              => array($this, 'update_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => $this->get_links_schema(),
+                'args'                  => $this->get_terms_schema(),
             ),
         ));
 
@@ -52,30 +52,11 @@ class Links extends Controller
                 'methods'               => \WP_REST_Server::DELETABLE,
                 'callback'              => array($this, 'delete_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
-                'args'                  => $this->get_links_schema(),
+                'args'                  => $this->get_terms_schema(),
             ),
         ));
     }
 
-    public function parse_response($items){
-        $results = [];
-        foreach($items as $item){
-            if(!isset($results[$item->cat_id])){
-                $results[$item->cat_id] = array(
-                    'term_name' => $item->term_name,
-                    'term_type' => $item->term_type,
-                );
-                if($item->ID !== null){
-                    $results[$item->cat_id]['lists'][] = $item;
-                } else {
-                    $results[$item->cat_id]['lists'] =  [];
-                }
-            } else {
-                $results[$item->cat_id]['lists'][] = $item;
-            }
-        }
-        return $results;
-    }
 
     /**
      * Get wpsp
@@ -85,32 +66,9 @@ class Links extends Controller
      */
     public function get_value($request)
     {
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $query = \BetterLinks\Helper::DB();
-        $results = $query->query("SELECT 
-            {$prefix}better_terms.ID as cat_id, 
-            {$prefix}better_terms.term_name, 
-            {$prefix}better_terms.term_type, 
-            {$prefix}better_links.ID, 
-            {$prefix}better_links.term_id, 
-            {$prefix}better_links.link_title,
-            {$prefix}better_links.link_slug,
-            {$prefix}better_links.link_status,
-            {$prefix}better_links.nofollow,
-            {$prefix}better_links.sponsored,
-            {$prefix}better_links.track_me,
-            {$prefix}better_links.param_forwarding,
-            {$prefix}better_links.param_struct,
-            {$prefix}better_links.redirect_type,
-            {$prefix}better_links.target_url,
-            {$prefix}better_links.short_url
-        FROM wp_better_terms
-        LEFT JOIN wp_better_links
-        ON wp_better_terms.ID = wp_better_links.term_id")->get();
         return new \WP_REST_Response(array(
-            'success' => is_bool($results),
-            'data' => $this->parse_response($results)
+            'success' => true,
+            'data' => []
         ), 200);
     }
 
@@ -122,11 +80,13 @@ class Links extends Controller
      */
     public function update_value($request)
     {
-        $updated = update_option($this->settings_name, $request->get_param('wpspSetting'));
-
+        $request = $request->get_params();    
+        $id = \BetterLinks\Helper::DB()->table('better_terms')->insert($request['params']);
+        $request['params']['ID'] = $id;
+        $request['params']['lists'] = [];
         return new \WP_REST_Response(array(
-            'success'   => $updated,
-            'value'     => $request->get_param('wpspSetting')
+            'success'   => is_bool($id),
+            'data'     => $request['params']
         ), 200);
     }
 

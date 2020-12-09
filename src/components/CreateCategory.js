@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useFormikContext, Formik, Field, Form } from 'formik'
 import { generateSlug } from './../utils/helper'
 
-const CreateCategory = () => {
+const CreateCategory = ({ createCatHandler }) => {
     const [isOpenForm, setIsOpenForm] = useState(false)
     const [nameToSlug, setNameToSlug] = useState(false)
     const [slugToSlug, setSlugToSlug] = useState(false)
@@ -20,7 +20,6 @@ const CreateCategory = () => {
         }, [values])
         return null
     }
-
     return (
         <div>
             <button onClick={() => setIsOpenForm(!isOpenForm)}>+</button>
@@ -33,8 +32,8 @@ const CreateCategory = () => {
                         term_type: 'category',
                     }}
                     onSubmit={async (values) => {
-                        await new Promise((r) => setTimeout(r, 500))
-                        alert(JSON.stringify(values, null, 2))
+                        setIsOpenForm(false)
+                        return createCatHandler(values)
                     }}
                 >
                     <Form>

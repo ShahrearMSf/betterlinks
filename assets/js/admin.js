@@ -59971,7 +59971,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const CreateCategory = () => {
+const CreateCategory = ({
+  createCatHandler
+}) => {
   const [isOpenForm, setIsOpenForm] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [nameToSlug, setNameToSlug] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [slugToSlug, setSlugToSlug] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
@@ -60003,8 +60005,8 @@ const CreateCategory = () => {
       term_type: 'category'
     },
     onSubmit: async values => {
-      await new Promise(r => setTimeout(r, 500));
-      alert(JSON.stringify(values, null, 2));
+      setIsOpenForm(false);
+      return createCatHandler(values);
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "term_name"
@@ -60098,7 +60100,7 @@ function DndCanvas(props) {
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
+  }, provided.droppableProps), el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
     key: item.ID,
     draggableId: item.ID,
     index: index
@@ -60121,7 +60123,9 @@ function DndCanvas(props) {
     onClick: () => {
       props.add_new_link(ind);
     }
-  }, "Add new Post")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], null))));
+  }, "Add new Post")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    createCatHandler: props.add_new_cat
+  }))));
 }
 
 const mapStateToProps = state => ({
@@ -60247,25 +60251,29 @@ const fetch_settings_data = () => async dispatch => {
       payload: res.data
     });
   } catch (e) {
+    console.log(e);
     dispatch({
       type: FETCH_INITIAL_DATA,
-      payload: console.log(e)
+      payload: {}
     });
   }
 };
-const add_new_cat = () => {
-  return dispatch => {
+const add_new_cat = data => async dispatch => {
+  try {
+    const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].post(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'terms', {
+      params: data
+    });
     dispatch({
       type: ADD_NEW_CAT,
-      payload: {
-        rahim: {
-          term_name: 'rahim',
-          term_type: 'category',
-          lists: []
-        }
-      }
+      payload: res.data
     });
-  };
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: ADD_NEW_CAT,
+      payload: {}
+    });
+  }
 };
 const add_new_link = catName => {
   return dispatch => {
@@ -60294,9 +60302,10 @@ const delete_link = (catID, linID) => async dispatch => {
       payload: res.data
     });
   } catch (e) {
+    console.log(e);
     dispatch({
       type: DELETE_LINK,
-      payload: console.log(e)
+      payload: {}
     });
   }
 };
@@ -60380,9 +60389,12 @@ function settings(state = {}, action) {
       }
 
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["ADD_NEW_CAT"]:
+      console.log(payload.data);
       return { ...state,
         settings: { ...state.settings,
-          ...payload
+          [payload.data.ID]: { ...state.settings[payload.data.ID],
+            ...payload.data
+          }
         }
       };
 

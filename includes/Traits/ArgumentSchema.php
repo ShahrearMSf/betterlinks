@@ -2,8 +2,25 @@
 namespace BetterLinks\Traits;
 
 trait ArgumentSchema {
-    public function get_links_schema(){
+    public function terms_schema(){
         return array(
+            'term_name' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'term_slug' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'term_type' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            )
+        );
+    }
+    public function get_links_schema(){
+
+        return array_merge(array(
             'ID' => array(
                 'type' => 'integer',
                 'sanitize_callback' => 'absint'
@@ -68,18 +85,6 @@ trait ArgumentSchema {
                 'type'   => 'integer',
                 'sanitize_callback' => 'absint'
             ),
-            'term_name' => array(
-                'type'   => 'string',
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
-            'term_slug' => array(
-                'type'   => 'string',
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
-            'term_type' => array(
-                'type'   => 'string',
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
             'link_modified' => array(
                 'type'   => 'string',
                 'format' => 'date-time'
@@ -89,6 +94,10 @@ trait ArgumentSchema {
                 'default'   => 5,
                 'sanitize_callback' => 'absint'
             )
-        );
+        ), $this->terms_schema());
+    }
+
+    public function get_terms_schema(){
+        return $this->terms_schema();
     }
 }

@@ -23,27 +23,32 @@ export const fetch_settings_data = () => async (dispatch) => {
             payload: res.data,
         })
     } catch (e) {
+        console.log(e)
         dispatch({
             type: FETCH_INITIAL_DATA,
-            payload: console.log(e),
+            payload: {},
         })
     }
 }
 
-export const add_new_cat = () => {
-    return (dispatch) => {
+export const add_new_cat = (data) => async (dispatch) => {
+    try {
+        const res = await API.post(namespace + 'terms', {
+            params: data,
+        })
         dispatch({
             type: ADD_NEW_CAT,
-            payload: {
-                rahim: {
-                    term_name: 'rahim',
-                    term_type: 'category',
-                    lists: [],
-                },
-            },
+            payload: res.data,
+        })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: ADD_NEW_CAT,
+            payload: {},
         })
     }
 }
+
 export const add_new_link = (catName) => {
     return (dispatch) => {
         dispatch({
@@ -69,9 +74,10 @@ export const delete_link = (catID, linID) => async (dispatch) => {
             payload: res.data,
         })
     } catch (e) {
+        console.log(e)
         dispatch({
             type: DELETE_LINK,
-            payload: console.log(e),
+            payload: {},
         })
     }
 }
