@@ -32,7 +32,7 @@ class Terms extends Controller {
         register_rest_route($this->namespace, $endpoint, array(
             array(
                 'methods'               => \WP_REST_Server::CREATABLE,
-                'callback'              => array($this, 'update_value'),
+                'callback'              => array($this, 'create_value'),
                 'permission_callback'   => array($this, 'permissions_check'),
                 'args'                  => $this->get_terms_schema(),
             ),
@@ -69,6 +69,24 @@ class Terms extends Controller {
         return new \WP_REST_Response(array(
             'success' => true,
             'data' => []
+        ), 200);
+    }
+
+    /**
+     * Create OR Update wpsp
+     *
+     * @param WP_REST_Request $request Full data about the request.
+     * @return WP_Error|WP_REST_Request
+     */
+    public function create_value($request)
+    {
+        $request = $request->get_params();    
+        $id = \BetterLinks\Helper::DB()->table('better_terms')->insert($request['params']);
+        $request['params']['ID'] = $id;
+        $request['params']['lists'] = [];
+        return new \WP_REST_Response(array(
+            'success'   => is_bool($id),
+            'data'     => $request['params']
         ), 200);
     }
 

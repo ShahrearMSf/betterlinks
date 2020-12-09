@@ -60,7 +60,6 @@ function settings(state = {}, action) {
                 }
             }
         case ADD_NEW_CAT:
-            console.log(payload.data)
             return {
                 ...state,
                 settings: {
@@ -76,10 +75,10 @@ function settings(state = {}, action) {
                 ...state,
                 settings: {
                     ...state.settings,
-                    [payload.cat]: {
-                        ...state.settings[payload.cat],
+                    [payload.data.term_id]: {
+                        ...state.settings[payload.data.term_id],
                         lists: [
-                            ...state.settings[payload.cat].lists,
+                            ...state.settings[payload.data.term_id].lists,
                             payload.data,
                         ],
                     },

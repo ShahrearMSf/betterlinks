@@ -49,17 +49,21 @@ export const add_new_cat = (data) => async (dispatch) => {
     }
 }
 
-export const add_new_link = (catName) => {
-    return (dispatch) => {
+export const add_new_link = (formData) => async (dispatch) => {
+    console.log(formData)
+    try {
+        const res = await API.post(namespace + 'links', {
+            params: formData,
+        })
         dispatch({
             type: ADD_NEW_LINK,
-            payload: {
-                cat: catName,
-                data: {
-                    ID: 25,
-                    link_title: 'lorem Ipsum dolor',
-                },
-            },
+            payload: res.data,
+        })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: ADD_NEW_LINK,
+            payload: {},
         })
     }
 }
