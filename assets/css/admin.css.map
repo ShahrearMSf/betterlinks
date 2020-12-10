@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../scss/admin.scss",
+        "../scss/_modal.scss"
+    ],
+    "names": [],
+    "file": "admin.css"
+}
