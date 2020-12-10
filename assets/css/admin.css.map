@@ -1,11 +1,14 @@
 {
     "version": 3,
-    "mappings": "AAAA,AAAA,iBAAiB,CAAA;EACf,WAAW,EAAE,IAAI;CAElB;;AAHD,ACAA,iBDAiB,CCAjB,OAAO,CAAA;EACL,OAAO,EAAE,IAAI;CAEd;;ADCD,AACE,IADE,AACD,sBAAsB,CAAA;EACrB,UAAU,EAAE,IAAI;CAIjB",
+    "mappings": "AACE,OAAO,CAAC,oFAAI;AADd,AAAA,iBAAiB,CAAA;EAEf,WAAW,EAAE,oBAAoB;EACjC,WAAW,EAAE,IAAI;EACjB,aAAa,EAAE,IAAI;CAKpB;;AATD,AEAA,iBFAiB,CEAjB,EAAE,CAAA;EACA,SAAS,EAAE,IAAI;EACf,WAAW,EAAE,GAAG;CACjB;;AFHD,AGAA,iBHAiB,CGAjB,OAAO,CAAA;EACL,OAAO,EAAE,IAAI;EACb,OAAO,EAAE,IAAI;EACb,aAAa,EAAE,IAAI;EACnB,YAAY,EAAE,GAAG;EACjB,YAAY,EAAE,KAAK;EACnB,YAAY,EFJC,OAAO;EEKpB,gBAAgB,EFHV,IAAI;EEIV,aAAa,EAAE,GAAG;CAInB;;AHZD,AGSE,iBHTe,CGAjB,OAAO,CASL,MAAM,CAAA;EACJ,WAAW,EAAE,IAAI;CAClB;;AHXH,AIAA,iBJAiB,CIAjB,qBAAqB,CAAA;EACnB,YAAY,EAAE,CAAC;EACf,UAAU,EAAE,IAAI;EAChB,OAAO,EAAE,CAAC;EACV,MAAM,EAAE,CAAC;CAOV;;AJXD,AIKE,iBJLe,CIAjB,qBAAqB,CAKnB,aAAa,CAAA;EACX,OAAO,EAAE,WAAW;EACpB,cAAc,EAAE,MAAM;EACtB,KAAK,EAAE,IAAI;EACX,aAAa,EAAE,IAAI;CACpB;;AJAH,AACE,IADE,AACD,sBAAsB,CAAA;EACrB,UAAU,EAAE,IAAI;CAIjB",
     "sources": [
         "../scss/admin.scss",
-        "../scss/_topbar.scss",
-        "../scss/_plugin-mode.scss",
-        "../scss/_modal.scss"
+        "../scss/common/_veriable.scss",
+        "../scss/common/_reboot.scss",
+        "../scss/components/_topbar.scss",
+        "../scss/components/_category.scss",
+        "../scss/control/_plugin-mode.scss",
+        "../scss/components/_modal.scss"
     ],
     "names": [],
     "file": "admin.css"

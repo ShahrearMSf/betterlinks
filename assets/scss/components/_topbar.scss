@@ -1,4 +1,13 @@
 .topbar{
   display: flex;
-  
+  padding: 20px;
+  margin-bottom: 30px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $light-darken;
+  background-color: $white;
+  border-radius: 5px;
+  button{
+    margin-left: auto;
+  }
 }

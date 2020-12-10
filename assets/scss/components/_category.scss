@@ -1,0 +1,12 @@
+.dnd-category-wrapper{
+  column-count: 4;
+  column-gap: 20px;
+  orphans: 1;
+  widows: 1;
+  .dnd-category{
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}

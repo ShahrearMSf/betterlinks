@@ -69836,10 +69836,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 });
 
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
-  padding: grid,
-  margin: '10px',
-  width: 250
+  background: isDraggingOver ? 'lightblue' : 'lightgrey'
 });
 
 function DndCanvas(props) {
@@ -69850,16 +69847,14 @@ function DndCanvas(props) {
     props.fetch_settings_data();
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "dnd-category-wrapper",
-    style: {
-      display: 'flex'
-    }
+    className: "dnd-category-wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["DragDropContext"], {
     onDragEnd: props.onDragEnd
   }, settings && Object.entries(settings).map(([ind, el]) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Droppable"], {
     key: ind,
     droppableId: ind
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+    className: "dnd-category",
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
   }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

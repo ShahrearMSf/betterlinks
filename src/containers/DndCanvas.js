@@ -32,9 +32,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 })
 const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    padding: grid,
-    margin: '10px',
-    width: 250,
 })
 
 function DndCanvas(props) {
@@ -45,13 +42,14 @@ function DndCanvas(props) {
     }, [])
 
     return (
-        <div className='dnd-category-wrapper' style={{ display: 'flex' }}>
+        <div className='dnd-category-wrapper'>
             <DragDropContext onDragEnd={props.onDragEnd}>
                 {settings &&
                     Object.entries(settings).map(([ind, el]) => (
                         <Droppable key={ind} droppableId={ind}>
                             {(provided, snapshot) => (
                                 <div
+                                    className="dnd-category"
                                     ref={provided.innerRef}
                                     style={getListStyle(
                                         snapshot.isDraggingOver
