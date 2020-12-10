@@ -5,12 +5,20 @@ export const ADD_NEW_CAT = 'ADD_NEW_CAT'
 export const ADD_NEW_LINK = 'ADD_NEW_LINK'
 export const DELETE_LINK = 'DELETE_LINK'
 
-export const onDragEnd = (result) => {
-    return (dispatch) => {
-        dispatch({
-            type: DRAG_AND_DROP,
-            payload: result,
+export const onDragEnd = (result) => async (dispatch) => {
+    dispatch({
+        type: DRAG_AND_DROP,
+        payload: result,
+    })
+    try {
+        await API.put(namespace + 'links', {
+            params: {
+                ID: result.draggableId,
+                term_id: result.destination.droppableId,
+            },
         })
+    } catch (e) {
+        console.log(e)
     }
 }
 export const fetch_settings_data = () => async (dispatch) => {
@@ -50,7 +58,6 @@ export const add_new_cat = (data) => async (dispatch) => {
 }
 
 export const add_new_link = (formData) => async (dispatch) => {
-    console.log(formData)
     try {
         const res = await API.post(namespace + 'links', {
             params: formData,

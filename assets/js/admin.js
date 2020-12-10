@@ -69990,13 +69990,22 @@ const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 const ADD_NEW_CAT = 'ADD_NEW_CAT';
 const ADD_NEW_LINK = 'ADD_NEW_LINK';
 const DELETE_LINK = 'DELETE_LINK';
-const onDragEnd = result => {
-  return dispatch => {
-    dispatch({
-      type: DRAG_AND_DROP,
-      payload: result
+const onDragEnd = result => async dispatch => {
+  dispatch({
+    type: DRAG_AND_DROP,
+    payload: result
+  });
+
+  try {
+    await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].put(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
+      params: {
+        ID: result.draggableId,
+        term_id: result.destination.droppableId
+      }
     });
-  };
+  } catch (e) {
+    console.log(e);
+  }
 };
 const fetch_settings_data = () => async dispatch => {
   try {
@@ -70035,8 +70044,6 @@ const add_new_cat = data => async dispatch => {
   }
 };
 const add_new_link = formData => async dispatch => {
-  console.log(formData);
-
   try {
     const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].post(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
       params: formData

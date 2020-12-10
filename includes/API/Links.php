@@ -139,9 +139,11 @@ class Links extends Controller
      */
     public function update_value($request)
     {
+        $request = $request->get_params();    
+        $id = \BetterLinks\Helper::DB()->table('better_links')->where('id', $request['params']['ID'])->update($request['params']);
         return new \WP_REST_Response(array(
-            'success'   => true,
-            'value'     => $request->get_param('wpspSetting')
+            'success'   => is_bool($id),
+            'value'     => []
         ), 200);
     }
 
