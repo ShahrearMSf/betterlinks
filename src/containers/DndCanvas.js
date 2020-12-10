@@ -51,7 +51,7 @@ function DndCanvas(props) {
                         <Droppable key={ind} droppableId={ind}>
                             {(provided, snapshot) => (
                                 <div
-                                    className="dnd-category"
+                                    className='dnd-category'
                                     ref={provided.innerRef}
                                     style={getListStyle(
                                         snapshot.isDraggingOver
@@ -120,7 +120,8 @@ function DndCanvas(props) {
                                     </div>
                                     <div className='category-footer'>
                                         <CreateLink
-                                            catId={ind}
+                                            term_id={ind}
+                                            {...el}
                                             createLinkHandler={
                                                 props.add_new_link
                                             }

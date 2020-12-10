@@ -69658,6 +69658,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
 /* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
 /* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils/data */ "./src/utils/data.js");
+
 
 
 
@@ -69665,8 +69667,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const CreateLink = ({
-  catId,
-  item,
+  term_id,
+  term_name,
   createLinkHandler
 }) => {
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
@@ -69690,11 +69692,13 @@ const CreateLink = ({
     onClick: closeModal
   }, "close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Formik"], {
     initialValues: {
+      link_title: '',
+      link_slug: '',
       redirect_type: '',
       target_url: '',
+      short_url: Object(_utils_helper__WEBPACK_IMPORTED_MODULE_4__["generateRandomSlug"])(),
       link_note: '',
-      link_note: '',
-      term_id: catId,
+      term_id: '',
       nofollow: '',
       sponsored: '',
       param_forwarding: '',
@@ -69719,30 +69723,22 @@ const CreateLink = ({
     name: "link_slug",
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_name"
+    htmlFor: "redirect_type"
   }, "Redirect Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
     id: "redirect_type",
     name: "redirect_type",
-    options: [{
-      value: 'chocolate',
-      label: 'Chocolate'
-    }, {
-      value: 'strawberry',
-      label: 'Strawberry'
-    }, {
-      value: 'vanilla',
-      label: 'Vanilla'
-    }],
+    defaultValue: _utils_data__WEBPACK_IMPORTED_MODULE_5__["redirectType"][0],
+    options: _utils_data__WEBPACK_IMPORTED_MODULE_5__["redirectType"],
     isMulti: false
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_slug"
+    htmlFor: "target_url"
   }, "Target URL"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     id: "target_url",
     name: "target_url",
     placeholder: "http://wpdeveloper.com",
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_slug"
+    htmlFor: "short_url"
   }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     id: "short_url",
     name: "short_url",
@@ -69757,9 +69753,9 @@ const CreateLink = ({
   }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
     id: "term_id",
     name: "term_id",
-    options: [{
-      value: catId,
-      label: 'Chocolate'
+    defaultValue: [{
+      value: term_id,
+      label: term_name
     }],
     isMulti: false
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69821,7 +69817,6 @@ const EditLink = ({
     setModalIsOpen(false);
   }
 
-  console.log(item);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: openModal
   }, "Edit Link"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
@@ -70014,10 +70009,11 @@ function DndCanvas(props) {
     }
   }, "delete"))))), provided.placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-footer"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
-    catId: ind,
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_7__["default"], _extends({
+    term_id: ind
+  }, el, {
     createLinkHandler: props.add_new_link
-  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  })))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], {
     createCatHandler: props.add_new_cat
   })));
 }
@@ -70438,11 +70434,34 @@ if (true) {
 
 /***/ }),
 
+/***/ "./src/utils/data.js":
+/*!***************************!*\
+  !*** ./src/utils/data.js ***!
+  \***************************/
+/*! exports provided: redirectType */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "redirectType", function() { return redirectType; });
+const redirectType = [{
+  value: '307',
+  label: '307 (Temporary)'
+}, {
+  value: '302',
+  label: '302 (Temporary)'
+}, {
+  value: '301',
+  label: '301 (Permanent)'
+}];
+
+/***/ }),
+
 /***/ "./src/utils/helper.js":
 /*!*****************************!*\
   !*** ./src/utils/helper.js ***!
   \*****************************/
-/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API, reorder, move, generateSlug, modalCustomStyles */
+/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API, reorder, move, generateSlug, generateRandomSlug, modalCustomStyles */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70456,6 +70475,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reorder", function() { return reorder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "move", function() { return move; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateSlug", function() { return generateSlug; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateRandomSlug", function() { return generateRandomSlug; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalCustomStyles", function() { return modalCustomStyles; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
@@ -70492,6 +70512,9 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const generateSlug = value => {
   return value.toLowerCase().replace(/-+/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+};
+const generateRandomSlug = (length = 3) => {
+  return Math.random().toString(20).substr(2, length) + new Date().getMilliseconds();
 };
 const modalCustomStyles = {
   content: {

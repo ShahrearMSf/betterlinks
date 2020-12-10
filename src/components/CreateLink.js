@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import Modal from 'react-modal'
 import Select2 from 'react-select'
 import { Formik, Field, Form } from 'formik'
-import { modalCustomStyles } from './../utils/helper'
+import { modalCustomStyles, generateRandomSlug } from './../utils/helper'
+import { redirectType } from './../utils/data'
 
-const CreateLink = ({ catId, item, createLinkHandler }) => {
+const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
 
     function openModal() {
@@ -14,7 +15,6 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
     function closeModal() {
         setModalIsOpen(false)
     }
-
     return (
         <div>
             <button onClick={openModal}>Create Link</button>
@@ -27,11 +27,13 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
                 <button onClick={closeModal}>close</button>
                 <Formik
                     initialValues={{
+                        link_title: '',
+                        link_slug: '',
                         redirect_type: '',
                         target_url: '',
+                        short_url: generateRandomSlug(),
                         link_note: '',
-                        link_note: '',
-                        term_id: catId,
+                        term_id: '',
                         nofollow: '',
                         sponsored: '',
                         param_forwarding: '',
@@ -61,26 +63,19 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='term_name'>Redirect Type</label>
+                                <label htmlFor='redirect_type'>
+                                    Redirect Type
+                                </label>
                                 <Select2
                                     id='redirect_type'
                                     name='redirect_type'
-                                    options={[
-                                        {
-                                            value: 'chocolate',
-                                            label: 'Chocolate',
-                                        },
-                                        {
-                                            value: 'strawberry',
-                                            label: 'Strawberry',
-                                        },
-                                        { value: 'vanilla', label: 'Vanilla' },
-                                    ]}
+                                    defaultValue={redirectType[0]}
+                                    options={redirectType}
                                     isMulti={false}
                                 />
                             </div>
                             <div>
-                                <label htmlFor='term_slug'>Target URL</label>
+                                <label htmlFor='target_url'>Target URL</label>
                                 <Field
                                     id='target_url'
                                     name='target_url'
@@ -89,7 +84,7 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='term_slug'>Better Links</label>
+                                <label htmlFor='short_url'>Better Links</label>
                                 <Field
                                     id='short_url'
                                     name='short_url'
@@ -105,10 +100,10 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
                                 <Select2
                                     id='term_id'
                                     name='term_id'
-                                    options={[
+                                    defaultValue={[
                                         {
-                                            value: catId,
-                                            label: 'Chocolate',
+                                            value: term_id,
+                                            label: term_name,
                                         },
                                     ]}
                                     isMulti={false}
