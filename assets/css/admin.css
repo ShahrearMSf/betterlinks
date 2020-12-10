@@ -36,16 +36,14 @@
   widows: 1;
 }
 
-.betterlinks-body .dnd-category-wrapper .dnd-category {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+.betterlinks-body .dnd-category-wrapper .dnd-category,
+.betterlinks-body .dnd-category-wrapper .dnd-create-category {
+  display: inline-block;
   width: 100%;
   margin-bottom: 20px;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+  break-inside: avoid-column;
 }
 
 body.betterlinks-dark-mode {
