@@ -69849,7 +69849,8 @@ function DndCanvas(props) {
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     props.fetch_settings_data();
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dnd-category-wrapper",
     style: {
       display: 'flex'
     }
@@ -69861,7 +69862,11 @@ function DndCanvas(props) {
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
+  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "category-head"
+  }, "Head"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "category-body"
+  }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
     key: item.ID,
     draggableId: item.ID,
     index: index
@@ -69879,12 +69884,14 @@ function DndCanvas(props) {
     onClick: () => {
       props.delete_link(ind, item.ID);
     }
-  }, "delete"))))), provided.placeholder, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, "delete"))))), provided.placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "category-footer"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_6__["default"], {
     catId: ind,
     createLinkHandler: props.add_new_link
-  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], {
     createCatHandler: props.add_new_cat
-  }))));
+  })));
 }
 
 const mapStateToProps = state => ({
@@ -69917,16 +69924,62 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _DndCanvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DndCanvas */ "./src/containers/DndCanvas.js");
+/* harmony import */ var _TopBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TopBar */ "./src/containers/TopBar.js");
+
 
 
 
 const Settings = () => {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "wrap"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DndCanvas__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TopBar__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DndCanvas__WEBPACK_IMPORTED_MODULE_1__["default"], null));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Settings);
+
+/***/ }),
+
+/***/ "./src/containers/TopBar.js":
+/*!**********************************!*\
+  !*** ./src/containers/TopBar.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const TopBar = props => {
+  const mode = localStorage.getItem('betterLinksIsDarkMode');
+  const [isDarkMode, setIsDarkMode] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(mode);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    if (mode) {
+      document.body.classList.add('betterlinks-dark-mode');
+    } else {
+      document.body.classList.remove('betterlinks-dark-mode');
+    }
+  }, []);
+
+  const darkModeHandler = mode => {
+    if (mode) {
+      document.body.classList.add('betterlinks-dark-mode');
+    } else {
+      document.body.classList.remove('betterlinks-dark-mode');
+    }
+
+    localStorage.setItem('betterLinksIsDarkMode', mode);
+    setIsDarkMode(mode);
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "topbar"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "BetterLinks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: () => darkModeHandler(!isDarkMode)
+  }, isDarkMode ? 'Dard Mode' : 'Light Mode'));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (TopBar);
 
 /***/ }),
 

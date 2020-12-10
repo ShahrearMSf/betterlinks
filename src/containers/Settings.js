@@ -1,10 +1,12 @@
 import React from 'react'
 import DndCanvas from './DndCanvas'
+import Topbar from './TopBar'
 const Settings = () => {
     return (
-        <div className='wrap'>
+        <React.Fragment>
+            <Topbar />
             <DndCanvas />
-        </div>
+        </React.Fragment>
     )
 }
 export default Settings
