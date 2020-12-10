@@ -69657,6 +69657,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
 /* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+
 
 
 
@@ -69664,19 +69666,10 @@ __webpack_require__.r(__webpack_exports__);
 
 const CreateLink = ({
   catId,
+  item,
   createLinkHandler
 }) => {
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)'
-    }
-  };
 
   function openModal() {
     setModalIsOpen(true);
@@ -69691,7 +69684,7 @@ const CreateLink = ({
   }, "Create Link"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
     isOpen: modalIsOpen,
     onRequestClose: closeModal,
-    style: customStyles,
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_4__["modalCustomStyles"],
     ariaHideApp: false
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: closeModal
@@ -69792,6 +69785,141 @@ const CreateLink = ({
 
 /***/ }),
 
+/***/ "./src/components/EditLink.js":
+/*!************************************!*\
+  !*** ./src/components/EditLink.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+
+
+
+
+
+
+const EditLink = ({
+  item,
+  editLinkHandler
+}) => {
+  const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  function openModal() {
+    setModalIsOpen(true);
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
+
+  console.log(item);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: openModal
+  }, "Edit Link"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    isOpen: modalIsOpen,
+    onRequestClose: closeModal,
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_4__["modalCustomStyles"],
+    ariaHideApp: false
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: closeModal
+  }, "close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Formik"], {
+    initialValues: { ...item
+    },
+    onSubmit: async values => {
+      setModalIsOpen(false);
+      console.log('submit', values);
+      return editLinkHandler(values);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "entry-content-left"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "link_title"
+  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    id: "link_title",
+    name: "link_title",
+    required: true
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "link_slug"
+  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    id: "link_slug",
+    name: "link_slug",
+    required: true
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "term_name"
+  }, "Redirect Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    id: "redirect_type",
+    name: "redirect_type",
+    options: [{
+      value: 'chocolate',
+      label: 'Chocolate'
+    }, {
+      value: 'strawberry',
+      label: 'Strawberry'
+    }, {
+      value: 'vanilla',
+      label: 'Vanilla'
+    }],
+    isMulti: false
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "term_slug"
+  }, "Target URL"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    id: "target_url",
+    name: "target_url",
+    placeholder: "http://wpdeveloper.com",
+    required: true
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "term_slug"
+  }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    id: "short_url",
+    name: "short_url",
+    required: true
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "link_note"
+  }, "Notes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    id: "link_note",
+    name: "link_note"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "term_id"
+  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    id: "term_id",
+    name: "term_id",
+    options: [{
+      value: 1,
+      label: 'Chocolate'
+    }],
+    isMulti: false
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "entry-content-right"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "No Follow"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    name: "nofollow",
+    type: "checkbox"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Sponsored"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    name: "sponsored",
+    type: "checkbox"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Parameter Forwarding"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    name: "param_forwarding",
+    type: "checkbox"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Tracking"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    name: "track_me",
+    type: "checkbox"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "submit"
+  }, "Publish")))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (EditLink);
+
+/***/ }),
+
 /***/ "./src/containers/DndCanvas.js":
 /*!*************************************!*\
   !*** ./src/containers/DndCanvas.js ***!
@@ -69808,8 +69936,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../redux/actions/settings.actions */ "./src/redux/actions/settings.actions.js");
 /* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
 /* harmony import */ var _components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../components/CreateCategory */ "./src/components/CreateCategory.js");
-/* harmony import */ var _components_CreateLink__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../components/CreateLink */ "./src/components/CreateLink.js");
+/* harmony import */ var _components_EditLink__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../components/EditLink */ "./src/components/EditLink.js");
+/* harmony import */ var _components_CreateLink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../components/CreateLink */ "./src/components/CreateLink.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -69874,14 +70004,17 @@ function DndCanvas(props) {
       display: 'flex',
       justifyContent: 'space-around'
     }
-  }, item.link_title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, item.link_title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_EditLink__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    item: item,
+    editLinkHandler: props.edit_link
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: () => {
       props.delete_link(ind, item.ID);
     }
   }, "delete"))))), provided.placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-footer"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
     catId: ind,
     createLinkHandler: props.add_new_link
   }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -69899,6 +70032,7 @@ const mapDispatchToProps = dispatch => {
     onDragEnd: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["onDragEnd"], dispatch),
     add_new_cat: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["add_new_cat"], dispatch),
     add_new_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["add_new_link"], dispatch),
+    edit_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["edit_link"], dispatch),
     delete_link: Object(redux__WEBPACK_IMPORTED_MODULE_2__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_3__["delete_link"], dispatch)
   };
 };
@@ -70017,7 +70151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /*!***********************************************!*\
   !*** ./src/redux/actions/settings.actions.js ***!
   \***********************************************/
-/*! exports provided: DRAG_AND_DROP, FETCH_INITIAL_DATA, ADD_NEW_CAT, ADD_NEW_LINK, DELETE_LINK, onDragEnd, fetch_settings_data, add_new_cat, add_new_link, delete_link */
+/*! exports provided: DRAG_AND_DROP, FETCH_INITIAL_DATA, ADD_NEW_CAT, ADD_NEW_LINK, DELETE_LINK, EDIT_LINK, onDragEnd, fetch_settings_data, add_new_cat, add_new_link, edit_link, delete_link */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70027,10 +70161,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_CAT", function() { return ADD_NEW_CAT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_LINK", function() { return ADD_NEW_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_LINK", function() { return DELETE_LINK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDIT_LINK", function() { return EDIT_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onDragEnd", function() { return onDragEnd; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetch_settings_data", function() { return fetch_settings_data; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_cat", function() { return add_new_cat; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_link", function() { return add_new_link; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edit_link", function() { return edit_link; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_link", function() { return delete_link; });
 /* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
 
@@ -70039,6 +70175,7 @@ const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 const ADD_NEW_CAT = 'ADD_NEW_CAT';
 const ADD_NEW_LINK = 'ADD_NEW_LINK';
 const DELETE_LINK = 'DELETE_LINK';
+const EDIT_LINK = 'EDIT_LINK';
 const onDragEnd = result => async dispatch => {
   dispatch({
     type: DRAG_AND_DROP,
@@ -70105,6 +70242,23 @@ const add_new_link = formData => async dispatch => {
     console.log(e);
     dispatch({
       type: ADD_NEW_LINK,
+      payload: {}
+    });
+  }
+};
+const edit_link = item => async dispatch => {
+  try {
+    const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].put(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
+      params: item
+    });
+    dispatch({
+      type: EDIT_LINK,
+      payload: item
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: EDIT_LINK,
       payload: {}
     });
   }
@@ -70226,6 +70380,15 @@ function settings(state = {}, action) {
         }
       };
 
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["EDIT_LINK"]:
+      return { ...state,
+        settings: { ...state.settings,
+          [payload.term_id]: { ...state.settings[payload.term_id],
+            lists: [...state.settings[payload.term_id].lists.filter((item, index) => item.ID != payload.ID), payload]
+          }
+        }
+      };
+
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["DELETE_LINK"]:
       return { ...state,
         settings: { ...state.settings,
@@ -70279,7 +70442,7 @@ if (true) {
 /*!*****************************!*\
   !*** ./src/utils/helper.js ***!
   \*****************************/
-/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API, reorder, move, generateSlug */
+/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API, reorder, move, generateSlug, modalCustomStyles */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70293,6 +70456,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reorder", function() { return reorder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "move", function() { return move; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateSlug", function() { return generateSlug; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalCustomStyles", function() { return modalCustomStyles; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -70328,6 +70492,16 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const generateSlug = value => {
   return value.toLowerCase().replace(/-+/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+};
+const modalCustomStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
+  }
 };
 
 /***/ })

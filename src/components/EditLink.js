@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal'
 import Select2 from 'react-select'
 import { Formik, Field, Form } from 'formik'
 import { modalCustomStyles } from './../utils/helper'
 
-const CreateLink = ({ catId, item, createLinkHandler }) => {
+const EditLink = ({ item, editLinkHandler }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
 
     function openModal() {
@@ -15,9 +15,11 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
         setModalIsOpen(false)
     }
 
+    console.log(item)
+
     return (
         <div>
-            <button onClick={openModal}>Create Link</button>
+            <button onClick={openModal}>Edit Link</button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -26,20 +28,11 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
             >
                 <button onClick={closeModal}>close</button>
                 <Formik
-                    initialValues={{
-                        redirect_type: '',
-                        target_url: '',
-                        link_note: '',
-                        link_note: '',
-                        term_id: catId,
-                        nofollow: '',
-                        sponsored: '',
-                        param_forwarding: '',
-                        track_me: '',
-                    }}
+                    initialValues={{ ...item }}
                     onSubmit={async (values) => {
                         setModalIsOpen(false)
-                        return createLinkHandler(values)
+                        console.log('submit', values)
+                        return editLinkHandler(values)
                     }}
                 >
                     <Form>
@@ -107,7 +100,7 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
                                     name='term_id'
                                     options={[
                                         {
-                                            value: catId,
+                                            value: 1,
                                             label: 'Chocolate',
                                         },
                                     ]}
@@ -143,4 +136,4 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
         </div>
     )
 }
-export default CreateLink
+export default EditLink

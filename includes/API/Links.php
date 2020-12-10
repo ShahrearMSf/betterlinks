@@ -139,8 +139,9 @@ class Links extends Controller
      */
     public function update_value($request)
     {
-        $request = $request->get_params();    
-        $id = \BetterLinks\Helper::DB()->table('better_links')->where('id', $request['params']['ID'])->update($request['params']);
+        $request = $request->get_params(); 
+        $remove = ['cat_id', 'term_name', 'term_slug', 'term_type'];
+        $id = \BetterLinks\Helper::DB()->table('better_links')->where('id', $request['params']['ID'])->update(array_diff_key($request['params'], array_flip($remove)));
         return new \WP_REST_Response(array(
             'success'   => is_bool($id),
             'value'     => []

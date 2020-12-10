@@ -47,3 +47,14 @@ export const generateSlug = (value) => {
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '')
 }
+
+export const modalCustomStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+}

@@ -4,6 +4,7 @@ export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
 export const ADD_NEW_CAT = 'ADD_NEW_CAT'
 export const ADD_NEW_LINK = 'ADD_NEW_LINK'
 export const DELETE_LINK = 'DELETE_LINK'
+export const EDIT_LINK = 'EDIT_LINK'
 
 export const onDragEnd = (result) => async (dispatch) => {
     dispatch({
@@ -70,6 +71,23 @@ export const add_new_link = (formData) => async (dispatch) => {
         console.log(e)
         dispatch({
             type: ADD_NEW_LINK,
+            payload: {},
+        })
+    }
+}
+export const edit_link = (item) => async (dispatch) => {
+    try {
+        const res = await API.put(namespace + 'links', {
+            params: item,
+        })
+        dispatch({
+            type: EDIT_LINK,
+            payload: item,
+        })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: EDIT_LINK,
             payload: {},
         })
     }
