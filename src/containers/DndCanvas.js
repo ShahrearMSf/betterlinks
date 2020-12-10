@@ -45,20 +45,21 @@ function DndCanvas(props) {
     }, [])
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
-                <DragDropContext onDragEnd={props.onDragEnd}>
-                    {settings &&
-                        Object.entries(settings).map(([ind, el]) => (
-                            <Droppable key={ind} droppableId={ind}>
-                                {(provided, snapshot) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        style={getListStyle(
-                                            snapshot.isDraggingOver
-                                        )}
-                                        {...provided.droppableProps}
-                                    >
+        <div className='dnd-category-wrapper' style={{ display: 'flex' }}>
+            <DragDropContext onDragEnd={props.onDragEnd}>
+                {settings &&
+                    Object.entries(settings).map(([ind, el]) => (
+                        <Droppable key={ind} droppableId={ind}>
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={getListStyle(
+                                        snapshot.isDraggingOver
+                                    )}
+                                    {...provided.droppableProps}
+                                >
+                                    <div className='category-head'>Head</div>
+                                    <div className='category-body'>
                                         {el.lists &&
                                             el.lists.map((item, index) => (
                                                 <Draggable
@@ -108,6 +109,8 @@ function DndCanvas(props) {
                                                 </Draggable>
                                             ))}
                                         {provided.placeholder}
+                                    </div>
+                                    <div className='category-footer'>
                                         <CreateLink
                                             catId={ind}
                                             createLinkHandler={
@@ -115,12 +118,12 @@ function DndCanvas(props) {
                                             }
                                         />
                                     </div>
-                                )}
-                            </Droppable>
-                        ))}
-                    <CreateCategory createCatHandler={props.add_new_cat} />
-                </DragDropContext>
-            </div>
+                                </div>
+                            )}
+                        </Droppable>
+                    ))}
+                <CreateCategory createCatHandler={props.add_new_cat} />
+            </DragDropContext>
         </div>
     )
 }
