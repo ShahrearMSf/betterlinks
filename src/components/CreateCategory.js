@@ -21,7 +21,7 @@ const CreateCategory = ({ createCatHandler }) => {
         return null
     }
     return (
-        <div>
+        <div className="dnd-create-category">
             <button onClick={() => setIsOpenForm(!isOpenForm)}>+</button>
             <p>Add New Category</p>
             {isOpenForm && (

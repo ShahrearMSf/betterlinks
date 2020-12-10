@@ -3,10 +3,14 @@
   column-gap: 20px;
   orphans: 1;
   widows: 1;
-  .dnd-category{
-    display: inline-flex;
-    flex-direction: column;
+  .dnd-category,
+  .dnd-create-category{
+    display: inline-block;
     width: 100%;
     margin-bottom: 20px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    break-inside: avoid-column;
   }
 }
