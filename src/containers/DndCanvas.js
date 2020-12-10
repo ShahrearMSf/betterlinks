@@ -58,7 +58,9 @@ function DndCanvas(props) {
                                     )}
                                     {...provided.droppableProps}
                                 >
-                                    <div className='category-head'>Head</div>
+                                    <div className='category-head'>
+                                        <h4>{el.term_name}</h4>
+                                    </div>
                                     <div className='category-body'>
                                         {el.lists &&
                                             el.lists.map((item, index) => (

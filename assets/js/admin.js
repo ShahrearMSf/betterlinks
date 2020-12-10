@@ -69864,7 +69864,7 @@ function DndCanvas(props) {
     style: getListStyle(snapshot.isDraggingOver)
   }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-head"
-  }, "Head"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, el.term_name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-body"
   }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
     key: item.ID,
@@ -69964,11 +69964,12 @@ const TopBar = props => {
   const darkModeHandler = mode => {
     if (mode) {
       document.body.classList.add('betterlinks-dark-mode');
+      localStorage.setItem('betterLinksIsDarkMode', mode);
     } else {
       document.body.classList.remove('betterlinks-dark-mode');
+      localStorage.removeItem('betterLinksIsDarkMode');
     }
 
-    localStorage.setItem('betterLinksIsDarkMode', mode);
     setIsDarkMode(mode);
   };
 
@@ -69976,7 +69977,7 @@ const TopBar = props => {
     className: "topbar"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "BetterLinks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: () => darkModeHandler(!isDarkMode)
-  }, isDarkMode ? 'Dard Mode' : 'Light Mode'));
+  }, !isDarkMode ? 'Dard Mode' : 'Light Mode'));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (TopBar);
