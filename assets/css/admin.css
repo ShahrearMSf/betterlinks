@@ -1,1 +1,14 @@
-/* No CSS *//*# sourceMappingURL=admin.css.map */
+.betterlinks-body {
+  padding-top: 20px;
+}
+
+.betterlinks-body .topbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+body.betterlinks-dark-mode {
+  background: #333;
+}
+/*# sourceMappingURL=admin.css.map */

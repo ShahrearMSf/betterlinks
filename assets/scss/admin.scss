@@ -1,5 +1,14 @@
 .betterlinks-body{
+  padding-top: 20px;
+  @import './components/topbar';
+}
+body{
+  &.betterlinks-dark-mode{
+    background: #333;
+    .betterlinks-body{
+      @import './control/plugin-mode';
+    }
+  }
 }
 
-
-@import 'modal';
+@import './components/modal';

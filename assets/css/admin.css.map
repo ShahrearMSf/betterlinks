@@ -1,8 +1,10 @@
 {
     "version": 3,
-    "mappings": "",
+    "mappings": "AAAA,AAAA,iBAAiB,CAAA;EACf,WAAW,EAAE,IAAI;CAElB;;AAHD,ACAA,iBDAiB,CCAjB,OAAO,CAAA;EACL,OAAO,EAAE,IAAI;CAEd;;ADCD,AACE,IADE,AACD,sBAAsB,CAAA;EACrB,UAAU,EAAE,IAAI;CAIjB",
     "sources": [
         "../scss/admin.scss",
+        "../scss/_topbar.scss",
+        "../scss/_plugin-mode.scss",
         "../scss/_modal.scss"
     ],
     "names": [],
