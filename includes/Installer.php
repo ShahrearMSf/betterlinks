@@ -40,12 +40,14 @@ class Installer {
             target_url varchar(255) default NULL,
             short_url varchar(255) default NULL,
             term_id bigint(20) NOT NULL,
+            link_order tinyint(11) default 0,
             link_modified datetime NOT NULL default '0000-00-00 00:00:00',
             link_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
             PRIMARY KEY  (ID),
             KEY link_slug (link_slug(191)),
             KEY type_status_date (link_status,link_date,ID),
-            KEY link_author (link_author)
+            KEY link_author (link_author),
+            KEY link_order (link_order)
         ) $this->charset_collate;";
         dbDelta( $sql );
     }
@@ -57,9 +59,11 @@ class Installer {
             term_name text NOT NULL,
             term_slug varchar(200) NOT NULL default '',
             term_type varchar(15) NOT NULL,
+            term_order tinyint(11) default 0,
             PRIMARY KEY  (ID),
             KEY term_slug (term_slug(191)),
-            key term_type (term_type)
+            key term_type (term_type),
+            key term_order (term_order)
         ) $this->charset_collate;";
         dbDelta( $sql );
     }
@@ -77,11 +81,13 @@ class Installer {
             uri varchar(255) NULL,
             click_count tinyint(4) NOT NULL default 0, 
             visitor_id varchar(25) NULL,
+            click_order tinyint(11) default 0,
             created_at datetime NOT NULL default '0000-00-00 00:00:00',
             created_at_gmt datetime NOT NULL default '0000-00-00 00:00:00',
             PRIMARY KEY  (ID),
             KEY ip (ip),
-            key link_id (link_id)
+            key link_id (link_id),
+            key click_order (click_order)
         ) $this->charset_collate;";
         dbDelta( $sql );
     }
