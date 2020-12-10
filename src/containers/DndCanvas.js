@@ -6,10 +6,12 @@ import {
     onDragEnd,
     add_new_cat,
     add_new_link,
+    edit_link,
     delete_link,
 } from './../redux/actions/settings.actions'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import CreateCategory from './../components/CreateCategory'
+import EditLink from './../components/EditLink'
 import CreateLink from './../components/CreateLink'
 
 /**
@@ -94,6 +96,12 @@ function DndCanvas(props) {
                                                                 {
                                                                     item.link_title
                                                                 }
+                                                                <EditLink
+                                                                    item={item}
+                                                                    editLinkHandler={
+                                                                        props.edit_link
+                                                                    }
+                                                                />
                                                                 <button
                                                                     type='button'
                                                                     onClick={() => {
@@ -140,6 +148,7 @@ const mapDispatchToProps = (dispatch) => {
         onDragEnd: bindActionCreators(onDragEnd, dispatch),
         add_new_cat: bindActionCreators(add_new_cat, dispatch),
         add_new_link: bindActionCreators(add_new_link, dispatch),
+        edit_link: bindActionCreators(edit_link, dispatch),
         delete_link: bindActionCreators(delete_link, dispatch),
     }
 }
