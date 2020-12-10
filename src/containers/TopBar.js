@@ -14,17 +14,19 @@ const TopBar = (props) => {
     const darkModeHandler = (mode) => {
         if (mode) {
             document.body.classList.add('betterlinks-dark-mode')
+            localStorage.setItem('betterLinksIsDarkMode', mode)
         } else {
             document.body.classList.remove('betterlinks-dark-mode')
+            localStorage.removeItem('betterLinksIsDarkMode')
         }
-        localStorage.setItem('betterLinksIsDarkMode', mode)
+
         setIsDarkMode(mode)
     }
     return (
         <div className='topbar'>
             <h1>BetterLinks</h1>
             <button onClick={() => darkModeHandler(!isDarkMode)}>
-                {isDarkMode ? 'Dard Mode' : 'Light Mode'}
+                {!isDarkMode ? 'Dard Mode' : 'Light Mode'}
             </button>
         </div>
     )
