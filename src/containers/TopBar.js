@@ -25,17 +25,20 @@ const TopBar = (props) => {
     return (
         <div className='topbar'>
             <h1>BetterLinks</h1>
-            {/* <button onClick={() => darkModeHandler(!isDarkMode)}>
-                {!isDarkMode ? 'Dard Mode' : 'Light Mode'}
-            </button> */}
-            <label className="theme-mood-button" for="theme-mood">
-                <input type="checkbox" name="theme-mood" id="theme-mood"/>
-                <span className="theme-mood">
-                    <span className="icon">
-                        <i className="btl btl-sun"></i>
+            <label className='theme-mood-button' for='theme-mood'>
+                <input
+                    type='checkbox'
+                    name='theme-mood'
+                    id='theme-mood'
+                    onClick={() => darkModeHandler(!isDarkMode)}
+                    checked={isDarkMode}
+                />
+                <span className='theme-mood'>
+                    <span className='icon'>
+                        <i className='btl btl-sun'></i>
                     </span>
-                    <span className="icon">
-                        <i className="btl btl-moon"></i>
+                    <span className='icon'>
+                        <i className='btl btl-moon'></i>
                     </span>
                 </span>
             </label>
