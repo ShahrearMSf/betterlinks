@@ -15,8 +15,6 @@ const EditLink = ({ item, editLinkHandler }) => {
         setModalIsOpen(false)
     }
 
-    console.log(item)
-
     return (
         <div>
             <button onClick={openModal}>Edit Link</button>
