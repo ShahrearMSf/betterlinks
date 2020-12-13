@@ -22,8 +22,8 @@ const CreateCategory = ({ createCatHandler }) => {
     }
     return (
         <div className="dnd-create-category">
-            <button onClick={() => setIsOpenForm(!isOpenForm)}><i className="btl btl-add"></i></button>
-            <p>Add New Category</p>
+            <button className="dnd-create-category-button" onClick={() => setIsOpenForm(!isOpenForm)}><i className="btl btl-add"></i></button>
+            <p className="dnd-create-category-text">Add New Category</p>
             {isOpenForm && (
                 <Formik
                     initialValues={{
@@ -36,31 +36,29 @@ const CreateCategory = ({ createCatHandler }) => {
                         return createCatHandler(values)
                     }}
                 >
-                    <Form>
-                        <p>
-                            <label htmlFor='term_name'>Category Name</label>
-                            <br />
+                    <Form className="w-100">
+                        <span className="btl-form-group">
                             <Field
                                 id='term_name'
                                 name='term_name'
-                                placeholder='all doc'
+                                placeholder='* Name'
+                                className='btl-form-control'
                                 onBlur={() => setNameToSlug(true)}
                                 required
                             />
-                        </p>
-                        <p>
-                            <label htmlFor='term_slug'>Category Slug</label>
-                            <br />
+                        </span>
+                        <span className="btl-form-group">
                             <Field
                                 id='term_slug'
                                 name='term_slug'
-                                placeholder='all-doc'
+                                placeholder='* Slug'
+                                className='btl-form-control'
                                 onBlur={() => setSlugToSlug(true)}
                                 required
                             />
-                        </p>
+                        </span>
                         <AutoSlugGenerate />
-                        <button type='submit'>Publish</button>
+                        <button className="btl-create-category-submit" type='submit'>Submit</button>
                     </Form>
                 </Formik>
             )}

@@ -1,0 +1,44 @@
+.btl-form-group{
+  &:not(:last-child){
+    margin-bottom: 15px;
+    display: flex;
+  }
+}
+.btl-form-control{
+  height: 44px;
+  border-radius: 5px;
+  background: $light;
+  padding: 0 10px;
+  width: 100%;
+  border: none;
+  border: 1px solid $light;
+  &:focus{
+    border: 1px solid $light-darken;
+    outline: none;
+  }
+}
+.btl-create-category-submit{
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: linear-gradient(to left, $success, $success-lighten);
+  color: $white;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  transition: box-shadow 0.2s ease;
+  &:focus{
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  &:hover{
+    box-shadow: 0 5px 10px rgba(#03623c, 0.15);
+  }
+}

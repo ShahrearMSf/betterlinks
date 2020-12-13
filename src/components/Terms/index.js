@@ -16,6 +16,7 @@ const Terms = (props) => {
     return (
         <React.Fragment>
             <Select2
+                className='btl-modal-form-control btl-modal-select'
                 onMenuOpen={() => fetchData()}
                 options={
                     props.terms.terms &&
