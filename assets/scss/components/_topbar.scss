@@ -10,4 +10,66 @@
   button{
     margin-left: auto;
   }
+  .theme-mood-button{
+    margin-left: auto;
+    height: 40px;
+    border: 1px solid $light-darken;
+    border-radius: 50px;
+    input#theme-mood{
+      display: none;
+    }
+    .theme-mood{
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin: 0 5px;
+      position: relative;
+      border-radius: 50px;
+      .icon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 30px;
+        width: 40px;
+        z-index: 1;
+      }
+      &:before{
+        position: absolute;
+        content: "";
+        height: 30px;
+        width: 40px;
+        background-image: linear-gradient(to left, $success, $success-lighten);
+        border-radius: 50px;
+        left: 0;
+      }
+    }
+    input#theme-mood:not(:checked){
+      & + .theme-mood{
+        .icon{
+          &:first-child{
+            color: $white;
+          }
+          &:last-child{
+            color: $secondary;
+          }
+        }
+      }
+    }
+    input#theme-mood:checked{
+      & + .theme-mood{
+        .icon{
+          &:first-child{
+            color: $secondary;
+          }
+          &:last-child{
+            color: $white;
+          }
+        }
+        &:before{
+          left: unset;
+          right: 0;
+        }
+      }
+    }
+  }
 }
