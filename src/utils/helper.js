@@ -56,11 +56,15 @@ export const generateRandomSlug = (length = 3) => {
 }
 
 export const modalCustomStyles = {
+    overlay: {
+        background: 'rgba(35, 40, 45, 0.62)',
+    },
     content: {
         top: '50%',
         left: '50%',
         right: 'auto',
         bottom: 'auto',
+        width: '50%',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
     },
