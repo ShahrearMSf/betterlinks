@@ -24,7 +24,7 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                 style={modalCustomStyles}
                 ariaHideApp={false}
             >
-                <button onClick={closeModal}>close</button>
+                <span className="btl-close-modal" onClick={closeModal}><i className="btl btl-cancel"></i></span>
                 <Formik
                     initialValues={{
                         link_title: '',
@@ -44,94 +44,102 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                         return createLinkHandler(values)
                     }}
                 >
-                    <Form>
-                        <div className='entry-content-left'>
-                            <div>
-                                <label htmlFor='link_title'>Title</label>
-                                <Field
-                                    id='link_title'
-                                    name='link_title'
-                                    required
-                                />
+                    <Form className="w-100">
+                        <div className='btl-entry-content'>
+                            <div className='btl-entry-content-left'>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label btl-required' htmlFor='link_title'>Title</label>
+                                    <Field
+                                        className="btl-modal-form-control"
+                                        id='link_title'
+                                        name='link_title'
+                                        required
+                                    />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label btl-required' htmlFor='link_slug'>Slug</label>
+                                    <Field
+                                        className="btl-modal-form-control"
+                                        id='link_slug'
+                                        name='link_slug'
+                                        required
+                                    />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label btl-required' htmlFor='redirect_type'>
+                                        Redirect Type
+                                    </label>
+                                    <Select2
+                                        className="btl-modal-form-control btl-modal-select"
+                                        id='redirect_type'
+                                        name='redirect_type'
+                                        defaultValue={redirectType[0]}
+                                        options={redirectType}
+                                        isMulti={false}
+                                    />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label btl-required' htmlFor='target_url'>Target URL</label>
+                                    <Field
+                                        className="btl-modal-form-control"
+                                        id='target_url'
+                                        name='target_url'
+                                        placeholder='http://wpdeveloper.com'
+                                        required
+                                    />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label' htmlFor='short_url'>Better Links</label>
+                                    <Field
+                                        className="btl-modal-form-control"
+                                        id='short_url'
+                                        name='short_url'
+                                        required
+                                    />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label' htmlFor='link_note'>Notes</label>
+                                    <Field className="btl-modal-form-control" id='link_note' name='link_note' />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label' htmlFor='term_id'>Category</label>
+                                    <Select2
+                                        className="btl-modal-form-control btl-modal-select"
+                                        id='term_id'
+                                        name='term_id'
+                                        defaultValue={[
+                                            {
+                                                value: term_id,
+                                                label: term_name,
+                                            },
+                                        ]}
+                                        isMulti={false}
+                                    />
+                                </div>
+                                <div className="btl-modal-form-group">
+                                    <label className='btl-modal-form-label' htmlFor='term_id'></label>
+                                    <button type='submit'>Publish</button>
+                                </div>
                             </div>
-                            <div>
-                                <label htmlFor='link_slug'>Slug</label>
-                                <Field
-                                    id='link_slug'
-                                    name='link_slug'
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor='redirect_type'>
-                                    Redirect Type
+                            <div className='btl-entry-content-right'>
+                                <label className="btl-checkbox-field">
+                                    <Field className="btl-check" name='nofollow' type='checkbox' />
+                                    <span className="text">No Follow</span>
                                 </label>
-                                <Select2
-                                    id='redirect_type'
-                                    name='redirect_type'
-                                    defaultValue={redirectType[0]}
-                                    options={redirectType}
-                                    isMulti={false}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor='target_url'>Target URL</label>
-                                <Field
-                                    id='target_url'
-                                    name='target_url'
-                                    placeholder='http://wpdeveloper.com'
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor='short_url'>Better Links</label>
-                                <Field
-                                    id='short_url'
-                                    name='short_url'
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor='link_note'>Notes</label>
-                                <Field id='link_note' name='link_note' />
-                            </div>
-                            <div>
-                                <label htmlFor='term_id'>Category</label>
-                                <Select2
-                                    id='term_id'
-                                    name='term_id'
-                                    defaultValue={[
-                                        {
-                                            value: term_id,
-                                            label: term_name,
-                                        },
-                                    ]}
-                                    isMulti={false}
-                                />
+                                <label className="btl-checkbox-field">
+                                    <Field className="btl-check" name='sponsored' type='checkbox' />
+                                    <span className="text">Sponsored</span>
+                                </label>
+                                <label className="btl-checkbox-field">
+                                    <Field className="btl-check" name='param_forwarding' type='checkbox' />
+                                    <span className="text">Parameter Forwarding</span>
+                                </label>
+                                <label className="btl-checkbox-field">
+                                    <Field className="btl-check" name='track_me' type='checkbox' />
+                                    <span className="text">Tracking</span>
+                                </label>
                             </div>
                         </div>
-                        <div className='entry-content-right'>
-                            <div>
-                                <label>No Follow</label>
-                                <Field name='nofollow' type='checkbox' />
-                            </div>
-                            <div>
-                                <label>Sponsored</label>
-                                <Field name='sponsored' type='checkbox' />
-                            </div>
-                            <div>
-                                <label>Parameter Forwarding</label>
-                                <Field
-                                    name='param_forwarding'
-                                    type='checkbox'
-                                />
-                            </div>
-                            <div>
-                                <label>Tracking</label>
-                                <Field name='track_me' type='checkbox' />
-                            </div>
-                        </div>
-                        <button type='submit'>Publish</button>
                     </Form>
                 </Formik>
             </Modal>

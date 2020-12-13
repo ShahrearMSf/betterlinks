@@ -18,6 +18,7 @@
       &:before{
         content: "";
         width: 5px;
+        min-width: 5px;
         height: 35px;
         border-radius: 2px;
         background: linear-gradient(to top, $success, $success-lighten);
