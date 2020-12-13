@@ -22,7 +22,7 @@ const CreateCategory = ({ createCatHandler }) => {
     }
     return (
         <div className="dnd-create-category">
-            <button onClick={() => setIsOpenForm(!isOpenForm)}>+</button>
+            <button onClick={() => setIsOpenForm(!isOpenForm)}><i className="btl btl-add"></i></button>
             <p>Add New Category</p>
             {isOpenForm && (
                 <Formik

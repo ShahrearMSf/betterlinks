@@ -17,7 +17,7 @@ const CreateLink = ({ catId, item, createLinkHandler }) => {
 
     return (
         <div>
-            <button onClick={openModal}>Create Link</button>
+            <button onClick={openModal}><i className="btl btl-add"></i></button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
