@@ -1,5 +1,6 @@
 import {
     FETCH_INITIAL_DATA,
+    FETCH_TERMS_DATA,
     DRAG_AND_DROP,
     ADD_NEW_CAT,
     ADD_NEW_LINK,
@@ -14,6 +15,13 @@ function settings(state = {}, action) {
             return {
                 ...state,
                 settings: {
+                    ...payload.data,
+                },
+            }
+        case FETCH_TERMS_DATA:
+            return {
+                ...state,
+                terms: {
                     ...payload.data,
                 },
             }

@@ -69663,6 +69663,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
 /* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
 /* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils/data */ "./src/utils/data.js");
+/* harmony import */ var _Terms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Terms */ "./src/components/Terms/index.js");
+
 
 
 
@@ -69756,14 +69758,16 @@ const CreateLink = ({
     name: "link_note"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: "term_id"
-  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "term_id",
-    name: "term_id",
-    defaultValue: [{
-      value: term_id,
-      label: term_name
-    }],
+  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    name: "cat_ids",
+    type: "category",
     isMulti: false
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "term_id"
+  }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    name: "tag_ids",
+    type: "tags",
+    isMulti: true
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "entry-content-right"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "No Follow"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
@@ -69922,6 +69926,61 @@ const EditLink = ({
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (EditLink);
+
+/***/ }),
+
+/***/ "./src/components/Terms/index.js":
+/*!***************************************!*\
+  !*** ./src/components/Terms/index.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+
+
+
+
+
+
+const Terms = props => {
+  const [isFetchData, setIsFetchData] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  const fetchData = () => {
+    if (!isFetchData) {
+      props.fetch_terms_data();
+      setIsFetchData(true);
+    }
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    onMenuOpen: () => fetchData(),
+    options: props.terms.terms && Object.entries(props.terms.terms).filter(([key, value]) => value.term_type === props.type).map(([key, value]) => ({
+      value: value.ID,
+      label: value.term_name
+    })),
+    isMulti: props.isMulti
+  }));
+};
+
+const mapStateToProps = state => ({
+  terms: state.terms
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_4__["fetch_terms_data"], dispatch)
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Terms));
 
 /***/ }),
 
@@ -70247,9 +70306,7 @@ const onDragEnd = result => async dispatch => {
 const fetch_settings_data = () => async dispatch => {
   try {
     const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
-      params: {
-        limit: 5
-      }
+      params: {}
     });
     dispatch({
       type: FETCH_INITIAL_DATA,
@@ -70337,6 +70394,42 @@ const delete_link = (catID, linID) => async dispatch => {
 
 /***/ }),
 
+/***/ "./src/redux/actions/terms.actions.js":
+/*!********************************************!*\
+  !*** ./src/redux/actions/terms.actions.js ***!
+  \********************************************/
+/*! exports provided: FETCH_TERMS_DATA, fetch_terms_data */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_TERMS_DATA", function() { return FETCH_TERMS_DATA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetch_terms_data", function() { return fetch_terms_data; });
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+
+const FETCH_TERMS_DATA = 'FETCH_TERMS_DATA';
+const fetch_terms_data = type => async dispatch => {
+  try {
+    const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'terms', {
+      params: {
+        term_type: type
+      }
+    });
+    dispatch({
+      type: FETCH_TERMS_DATA,
+      payload: res.data
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: FETCH_TERMS_DATA,
+      payload: {}
+    });
+  }
+};
+
+/***/ }),
+
 /***/ "./src/redux/reducers/index.js":
 /*!*************************************!*\
   !*** ./src/redux/reducers/index.js ***!
@@ -70348,10 +70441,13 @@ const delete_link = (catID, linID) => async dispatch => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _settings_reducers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings.reducers */ "./src/redux/reducers/settings.reducers.js");
+/* harmony import */ var _terms_reducers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./terms.reducers */ "./src/redux/reducers/terms.reducers.js");
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-  settings: _settings_reducers__WEBPACK_IMPORTED_MODULE_1__["default"]
+  settings: _settings_reducers__WEBPACK_IMPORTED_MODULE_1__["default"],
+  terms: _terms_reducers__WEBPACK_IMPORTED_MODULE_2__["default"]
 }));
 
 /***/ }),
@@ -70377,6 +70473,12 @@ function settings(state = {}, action) {
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_INITIAL_DATA"]:
       return { ...state,
         settings: { ...payload.data
+        }
+      };
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_TERMS_DATA"]:
+      return { ...state,
+        terms: { ...payload.data
         }
       };
 
@@ -70455,6 +70557,37 @@ function settings(state = {}, action) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (settings);
+
+/***/ }),
+
+/***/ "./src/redux/reducers/terms.reducers.js":
+/*!**********************************************!*\
+  !*** ./src/redux/reducers/terms.reducers.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_terms_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+
+
+function terms(state = {}, action) {
+  const payload = action.payload;
+
+  switch (action.type) {
+    case _actions_terms_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_TERMS_DATA"]:
+      return { ...state,
+        terms: { ...payload.data
+        }
+      };
+
+    default:
+      return state;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (terms);
 
 /***/ }),
 

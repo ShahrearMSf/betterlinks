@@ -66,9 +66,12 @@ class Terms extends Controller {
      */
     public function get_value($request)
     {
+        $query = \BetterLinks\Helper::DB();
+        $results = $query->table('better_terms')->get();
+
         return new \WP_REST_Response(array(
             'success' => true,
-            'data' => []
+            'data' => $results
         ), 200);
     }
 

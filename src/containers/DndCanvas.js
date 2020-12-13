@@ -71,7 +71,7 @@ function DndCanvas(props) {
                                                 >
                                                     {(provided, snapshot) => (
                                                         <div
-                                                            className="btl-dnd-link"
+                                                            className='btl-dnd-link'
                                                             ref={
                                                                 provided.innerRef
                                                             }
@@ -84,41 +84,43 @@ function DndCanvas(props) {
                                                                     .style
                                                             )}
                                                         >
-                                                            <div
-                                                                className="btl-dnd-link-body"
-                                                            >
+                                                            <div className='btl-dnd-link-body'>
                                                                 <h3>
-                                                                    <span className="icon">
-                                                                        <i className="btl btl-move"></i>
+                                                                    <span className='icon'>
+                                                                        <i className='btl btl-move'></i>
                                                                     </span>
-                                                                    {item.link_title}
-                                                                </h3>    
-                                                                <div className="btl-dnd-link-button-group">
-                                                                    <button
-                                                                        className="dnd-link-button"
-                                                                    >
-                                                                        <span className="icon"><i className="btl btl-target"></i></span>
+                                                                    {
+                                                                        item.link_title
+                                                                    }
+                                                                </h3>
+                                                                <div className='btl-dnd-link-button-group'>
+                                                                    <button className='dnd-link-button'>
+                                                                        <span className='icon'>
+                                                                            <i className='btl btl-target'></i>
+                                                                        </span>
                                                                     </button>
-                                                                    <button
-                                                                        className="dnd-link-button"
-                                                                    >
-                                                                        <span className="icon"><i className="btl btl-reload"></i></span>
+                                                                    <button className='dnd-link-button'>
+                                                                        <span className='icon'>
+                                                                            <i className='btl btl-reload'></i>
+                                                                        </span>
                                                                     </button>
-                                                                    <button
-                                                                        className="dnd-link-button"
-                                                                    >
-                                                                        <span className="icon"><i className="btl btl-link"></i></span>
+                                                                    <button className='dnd-link-button'>
+                                                                        <span className='icon'>
+                                                                            <i className='btl btl-link'></i>
+                                                                        </span>
                                                                     </button>
                                                                     <EditLink
-                                                                        item={item}
-                                                                        className="dnd-link-button"
+                                                                        item={
+                                                                            item
+                                                                        }
+                                                                        className='dnd-link-button'
                                                                         editLinkHandler={
                                                                             props.edit_link
                                                                         }
                                                                     />
                                                                     <button
                                                                         type='button'
-                                                                        className="dnd-link-button"
+                                                                        className='dnd-link-button'
                                                                         onClick={() => {
                                                                             props.delete_link(
                                                                                 ind,
@@ -126,7 +128,9 @@ function DndCanvas(props) {
                                                                             )
                                                                         }}
                                                                     >
-                                                                        <span className="icon"><i className="btl btl-delete"></i></span>
+                                                                        <span className='icon'>
+                                                                            <i className='btl btl-delete'></i>
+                                                                        </span>
                                                                     </button>
                                                                 </div>
                                                             </div>

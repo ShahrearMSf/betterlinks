@@ -81,10 +81,6 @@ trait ArgumentSchema {
                 'type'   => 'string',
                 'sanitize_callback' => 'esc_url_raw'
             ),
-            'term_id' => array(
-                'type'   => 'integer',
-                'sanitize_callback' => 'absint'
-            ),
             'link_modified' => array(
                 'type'   => 'string',
                 'format' => 'date-time'

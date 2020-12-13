@@ -4,6 +4,7 @@ import Select2 from 'react-select'
 import { Formik, Field, Form } from 'formik'
 import { modalCustomStyles, generateRandomSlug } from './../utils/helper'
 import { redirectType } from './../utils/data'
+import Terms from './Terms'
 
 const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -17,7 +18,9 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
     }
     return (
         <div>
-            <button onClick={openModal}><i className="btl btl-add"></i></button>
+            <button onClick={openModal}>
+                <i className='btl btl-add'></i>
+            </button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -97,16 +100,18 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                             </div>
                             <div>
                                 <label htmlFor='term_id'>Category</label>
-                                <Select2
-                                    id='term_id'
-                                    name='term_id'
-                                    defaultValue={[
-                                        {
-                                            value: term_id,
-                                            label: term_name,
-                                        },
-                                    ]}
+                                <Terms
+                                    name='cat_ids'
+                                    type='category'
                                     isMulti={false}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor='term_id'>Tags</label>
+                                <Terms
+                                    name='tag_ids'
+                                    type='tags'
+                                    isMulti={true}
                                 />
                             </div>
                         </div>

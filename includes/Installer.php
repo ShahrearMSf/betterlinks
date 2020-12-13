@@ -15,6 +15,7 @@ class Installer {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         $this->createBetterLinksTable();
         $this->createBetterTermsTable();
+        $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
         // set version number
         update_option( 'betterlinks_version', BL_VERSION );
@@ -39,7 +40,6 @@ class Installer {
             redirect_type varchar(255) default '307',
             target_url varchar(255) default NULL,
             short_url varchar(255) default NULL,
-            term_id bigint(20) NOT NULL,
             link_order tinyint(11) default 0,
             link_modified datetime NOT NULL default '0000-00-00 00:00:00',
             link_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
@@ -64,6 +64,19 @@ class Installer {
             KEY term_slug (term_slug(191)),
             key term_type (term_type),
             key term_order (term_order)
+        ) $this->charset_collate;";
+        dbDelta( $sql );
+    }
+
+    public function createBetterTermsRelationshipsTable (){
+        $table_name = $this->wpdb->prefix . 'better_terms_relationships';
+        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+            ID bigint(20) unsigned NOT NULL auto_increment,
+            term_id bigint(20) default 0,
+            link_id bigint(20) default 0,
+            PRIMARY KEY  (ID),
+            KEY term_id (term_id),
+            key link_id (link_id)
         ) $this->charset_collate;";
         dbDelta( $sql );
     }

@@ -25,7 +25,7 @@ export const onDragEnd = (result) => async (dispatch) => {
 export const fetch_settings_data = () => async (dispatch) => {
     try {
         const res = await API.get(namespace + 'links', {
-            params: { limit: 5 },
+            params: {},
         })
         dispatch({
             type: FETCH_INITIAL_DATA,
