@@ -97,6 +97,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 20px;
   margin-bottom: 30px;
   border-width: 1px;
@@ -106,8 +109,11 @@
   border-radius: 5px;
 }
 
-.betterlinks-body .topbar button {
-  margin-left: auto;
+.betterlinks-body .topbar .tool-title {
+  font-size: 28px;
+  margin: 0;
+  line-height: 1.3;
+  margin-right: 10px;
 }
 
 .betterlinks-body .topbar .theme-mood-button {
@@ -192,12 +198,57 @@
 
 .betterlinks-body .dnd-category-wrapper .dnd-category,
 .betterlinks-body .dnd-category-wrapper .dnd-create-category {
-  display: inline-block;
   width: 100%;
   margin-bottom: 20px;
   -webkit-column-break-inside: avoid;
   break-inside: avoid;
   break-inside: avoid-column;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head {
+  background: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-body {
+  padding: 8px 8px 0;
+  max-height: 630px;
+  overflow-y: auto;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title {
+  margin-right: 5px;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group {
+  margin-left: auto;
 }
 
 body.betterlinks-dark-mode {

@@ -5,12 +5,26 @@
   widows: 1;
   .dnd-category,
   .dnd-create-category{
-    display: inline-block;
     width: 100%;
     margin-bottom: 20px;
     -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
     break-inside: avoid;
     break-inside: avoid-column;
+  }
+  .dnd-category{
+    display: flex;
+    flex-direction: column;
+    .category-head{
+      background: $white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .category-body{
+      padding: 8px 8px 0;
+      max-height: 630px;
+      overflow-y: auto;
+    }
   }
 }

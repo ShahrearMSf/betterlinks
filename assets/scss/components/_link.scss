@@ -1,0 +1,12 @@
+.btl-dnd-link{
+  .btl-dnd-link-body{
+    display: flex;
+    align-items: center;
+    .dnd-link-title{
+      margin-right: 5px;
+    }
+    .btl-dnd-link-button-group{
+      margin-left: auto;
+    }
+  }
+}

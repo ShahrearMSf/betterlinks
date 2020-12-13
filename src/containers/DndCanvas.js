@@ -87,7 +87,7 @@ function DndCanvas(props) {
                                                             <div
                                                                 className="btl-dnd-link-body"
                                                             >
-                                                                <h3>
+                                                                <h3 className="btl-dnd-link-button-group">
                                                                     <span className="icon">
                                                                         <i className="btl btl-move"></i>
                                                                     </span>

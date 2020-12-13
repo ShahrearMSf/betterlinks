@@ -24,7 +24,7 @@ const TopBar = (props) => {
     }
     return (
         <div className='topbar'>
-            <h1>BetterLinks</h1>
+            <h1 className="tool-title">BetterLinks</h1>
             <label className='theme-mood-button' for='theme-mood'>
                 <input
                     type='checkbox'
