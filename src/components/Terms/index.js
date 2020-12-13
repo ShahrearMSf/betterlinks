@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+import { useField } from 'formik'
 import Select2 from 'react-select'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetch_terms_data } from './../../redux/actions/terms.actions'
 
 const Terms = (props) => {
+    const [field] = useField(props.name)
     const [isFetchData, setIsFetchData] = useState(false)
     const fetchData = () => {
         if (!isFetchData) {
@@ -13,11 +15,24 @@ const Terms = (props) => {
         }
     }
 
+    const onChange = (option) => {
+        if (option == null) {
+            return props.setFieldValue(field.name, '')
+        }
+        return props.setFieldValue(
+            field.name,
+            props.isMulti ? option.map((item) => item.value) : option.value
+        )
+    }
+
     return (
         <React.Fragment>
             <Select2
                 className='btl-modal-form-control btl-modal-select'
+                id={field.id}
+                name={field.name}
                 onMenuOpen={() => fetchData()}
+                onChange={onChange}
                 options={
                     props.terms.terms &&
                     Object.entries(props.terms.terms)

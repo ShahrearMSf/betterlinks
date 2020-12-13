@@ -69718,17 +69718,17 @@ const CreateLink = ({
       target_url: '',
       short_url: Object(_utils_helper__WEBPACK_IMPORTED_MODULE_4__["generateRandomSlug"])(),
       link_note: '',
-      term_id: '',
       nofollow: '',
       sponsored: '',
       param_forwarding: '',
       track_me: ''
     },
     onSubmit: async values => {
+      console.log(values);
       setModalIsOpen(false);
       return createLinkHandler(values);
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], {
+  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], {
     className: "w-100"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-entry-content"
@@ -69800,25 +69800,26 @@ const CreateLink = ({
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
-    htmlFor: "term_id"
+    htmlFor: "cat_id"
   }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    name: "cat_ids",
+    name: "cat_id",
+    setFieldValue: props.setFieldValue,
     type: "category",
     isMulti: false
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
-    htmlFor: "term_id"
+    htmlFor: "tags_id"
   }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    name: "tag_ids",
+    name: "tags_id",
+    setFieldValue: props.setFieldValue,
     type: "tags",
     isMulti: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    className: "btl-modal-form-label",
-    htmlFor: "term_id"
+    className: "btl-modal-form-label"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit"
   }, "Publish"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69855,13 +69856,7 @@ const CreateLink = ({
     type: "checkbox"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, "Tracking")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "redirect_type",
-    name: "redirect_type",
-    defaultValue: _utils_data__WEBPACK_IMPORTED_MODULE_5__["redirectType"][0],
-    options: _utils_data__WEBPACK_IMPORTED_MODULE_5__["redirectType"],
-    isMulti: false
-  })))))));
+  }, "Tracking"))))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CreateLink);
@@ -70018,10 +70013,12 @@ const EditLink = ({
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+
 
 
 
@@ -70029,6 +70026,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Terms = props => {
+  const [field] = Object(formik__WEBPACK_IMPORTED_MODULE_1__["useField"])(props.name);
   const [isFetchData, setIsFetchData] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
 
   const fetchData = () => {
@@ -70038,9 +70036,20 @@ const Terms = props => {
     }
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  const onChange = option => {
+    if (option == null) {
+      return props.setFieldValue(field.name, '');
+    }
+
+    return props.setFieldValue(field.name, props.isMulti ? option.map(item => item.value) : option.value);
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btl-modal-form-control btl-modal-select",
+    id: field.id,
+    name: field.name,
     onMenuOpen: () => fetchData(),
+    onChange: onChange,
     options: props.terms.terms && Object.entries(props.terms.terms).filter(([key, value]) => value.term_type === props.type).map(([key, value]) => ({
       value: value.ID,
       label: value.term_name
@@ -70055,11 +70064,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_4__["fetch_terms_data"], dispatch)
+    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_4__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_5__["fetch_terms_data"], dispatch)
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Terms));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps, mapDispatchToProps)(Terms));
 
 /***/ }),
 

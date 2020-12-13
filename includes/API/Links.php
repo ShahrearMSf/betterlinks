@@ -93,7 +93,6 @@ class Links extends Controller
             {$prefix}better_terms.term_name, 
             {$prefix}better_terms.term_type, 
             {$prefix}better_links.ID, 
-            {$prefix}better_links.term_id, 
             {$prefix}better_links.link_title,
             {$prefix}better_links.link_slug,
             {$prefix}better_links.link_status,
@@ -105,9 +104,10 @@ class Links extends Controller
             {$prefix}better_links.redirect_type,
             {$prefix}better_links.target_url,
             {$prefix}better_links.short_url
-        FROM wp_better_terms
-        LEFT JOIN wp_better_links
-        ON wp_better_terms.ID = wp_better_links.term_id")->get();
+        FROM {$prefix}better_terms
+        LEFT JOIN  {$prefix}better_terms_relationships ON {$prefix}better_terms.ID = {$prefix}better_terms_relationships.term_id
+        LEFT JOIN  {$prefix}better_links ON {$prefix}better_links.ID = {$prefix}better_terms_relationships.link_id
+        ")->get();
         return new \WP_REST_Response(array(
             'success' => is_bool($results),
             'data' => $this->parse_response($results)
@@ -122,8 +122,20 @@ class Links extends Controller
      */
     public function create_value($request)
     {
+
         $request = $request->get_params();    
-        $id = \BetterLinks\Helper::DB()->table('better_links')->insert($request['params']);
+        error_log(print_r($request, true));
+        exit;
+        \BetterLinks\Helper::DB()->transaction(function ($qb) use($request) {
+            $id = \BetterLinks\Helper::DB()->table('better_links')->insert($request['params']);
+        
+            $qb->table('my_table')->insert([
+                'name' => 'Test2',
+                'url'  => 'example.com'
+            ]);
+        });
+        
+
         $request['params']['ID'] = $id;
         return new \WP_REST_Response(array(
             'success'   => is_bool($id),
