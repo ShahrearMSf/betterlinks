@@ -27,7 +27,7 @@
           width: 200px;
           min-width: 200px;
           font-size: 20px;
-          font-weight: 400;
+          font-weight: 500;
           text-align: right;
           padding-right: 40px;
           &.btl-required{
@@ -40,13 +40,15 @@
         }
         input.btl-modal-form-control{
           flex: 1;
-          height: 44px;
+          height: 55px;
           border-radius: 5px;
           background: $light;
-          padding: 0 10px;
+          padding: 0 15px;
           width: 100%;
           border: none;
           border: 1px solid $light;
+          font-size: 16px;
+          font-weight: 500;
           &:focus{
             border: 1px solid $light-darken;
             outline: none;

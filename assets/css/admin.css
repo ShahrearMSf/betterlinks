@@ -598,7 +598,7 @@ body.betterlinks-dark-mode {
   width: 200px;
   min-width: 200px;
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 500;
   text-align: right;
   padding-right: 40px;
 }
@@ -613,13 +613,15 @@ body.betterlinks-dark-mode {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  height: 44px;
+  height: 55px;
   border-radius: 5px;
   background: #f7f8fa;
-  padding: 0 10px;
+  padding: 0 15px;
   width: 100%;
   border: none;
   border: 1px solid #f7f8fa;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group input.btl-modal-form-control:focus {
