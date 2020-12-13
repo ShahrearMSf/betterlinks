@@ -16,8 +16,10 @@ const EditLink = ({ item, editLinkHandler }) => {
     }
 
     return (
-        <div>
-            <button onClick={openModal}>Edit Link</button>
+        <>
+            <button onClick={openModal}>
+                <span className="icon"><i className="btl btl-edit"></i></span>
+            </button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -131,7 +133,7 @@ const EditLink = ({ item, editLinkHandler }) => {
                     </Form>
                 </Formik>
             </Modal>
-        </div>
+        </>
     )
 }
 export default EditLink
