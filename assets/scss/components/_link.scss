@@ -1,12 +1,56 @@
 .btl-dnd-link{
+  padding: 5px;
+  margin-right: 4px;
+  border-radius: 3px;
   .btl-dnd-link-body{
     display: flex;
     align-items: center;
+
     .dnd-link-title{
       margin-right: 5px;
+      display: flex;
+      align-items: center;
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: $secondary-darken;
+      &:before{
+        content: "";
+        width: 5px;
+        height: 35px;
+        border-radius: 2px;
+        background: linear-gradient(to top, $success, $success-lighten);
+        margin-right: 10px;
+      }
     }
     .btl-dnd-link-button-group{
       margin-left: auto;
+      margin-right: 5px;
+      display: flex;
+      .dnd-link-button{
+        padding: 5px;
+        border: none;
+        background: none;
+        color: $secondary-lighten;
+        font-size: 12px;
+        cursor: pointer;
+        transition: color 0.2s ease 0s;
+        &:focus{
+          border: none;
+          outline: none;
+          box-shadow: none;
+        }
+        &:hover{
+          color: $dark;
+        }
+        &.delete-button:hover{
+          color: $danger;
+        }
+      }
     }
+  }
+  &:not(:last-child){
+    margin-bottom: 8px;
   }
 }

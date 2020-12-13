@@ -18,22 +18,19 @@ import CreateLink from './../components/CreateLink'
  * Moves an item from one list to another list.
  */
 
-const grid = 8
 
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
-    padding: grid * 2,
-    margin: `0 0 ${grid}px 0`,
 
     // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'grey',
+    background: isDragging ? 'lightgreen' : 'white',
 
     // styles we need to apply on draggables
     ...draggableStyle,
 })
 const getListStyle = (isDraggingOver) => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
+    background: isDraggingOver ? 'lightblue' : '#e6e8ec',
 })
 
 function DndCanvas(props) {
@@ -59,7 +56,8 @@ function DndCanvas(props) {
                                     {...provided.droppableProps}
                                 >
                                     <div className='category-head'>
-                                        <h4>{el.term_name}</h4>
+                                        <h4 className="title">{el.term_name}</h4>
+                                        <span className="icon"><i className="btl btl-toggle-double"></i></span>
                                     </div>
                                     <div className='category-body'>
                                         {el.lists &&
@@ -87,12 +85,9 @@ function DndCanvas(props) {
                                                             <div
                                                                 className="btl-dnd-link-body"
                                                             >
-                                                                <h3 className="btl-dnd-link-button-group">
-                                                                    <span className="icon">
-                                                                        <i className="btl btl-move"></i>
-                                                                    </span>
+                                                                <h3 className="dnd-link-title">
                                                                     {item.link_title}
-                                                                </h3>    
+                                                                </h3> 
                                                                 <div className="btl-dnd-link-button-group">
                                                                     <button
                                                                         className="dnd-link-button"
@@ -111,14 +106,13 @@ function DndCanvas(props) {
                                                                     </button>
                                                                     <EditLink
                                                                         item={item}
-                                                                        className="dnd-link-button"
                                                                         editLinkHandler={
                                                                             props.edit_link
                                                                         }
                                                                     />
                                                                     <button
                                                                         type='button'
-                                                                        className="dnd-link-button"
+                                                                        className="dnd-link-button delete-button"
                                                                         onClick={() => {
                                                                             props.delete_link(
                                                                                 ind,

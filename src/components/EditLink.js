@@ -17,7 +17,7 @@ const EditLink = ({ item, editLinkHandler }) => {
 
     return (
         <>
-            <button onClick={openModal}>
+            <button onClick={openModal} className="dnd-link-button">
                 <span className="icon"><i className="btl btl-edit"></i></span>
             </button>
             <Modal

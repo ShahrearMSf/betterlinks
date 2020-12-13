@@ -16,8 +16,8 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
         setModalIsOpen(false)
     }
     return (
-        <div>
-            <button onClick={openModal}><i className="btl btl-add"></i></button>
+        <>
+            <button onClick={openModal} className="btl-create-link-button"><i className="btl btl-add"></i></button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -135,7 +135,7 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                     </Form>
                 </Formik>
             </Modal>
-        </div>
+        </>
     )
 }
 export default CreateLink

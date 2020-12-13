@@ -17,6 +17,9 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -213,10 +216,13 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid transparent;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-head {
-  background: #fff;
+  background: transparent;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -226,12 +232,114 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  height: 55px;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .title {
+  font-size: 17px;
+  font-weight: 500;
+  color: #252525;
+  margin: 0;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .icon {
+  margin-left: 20px;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: #b0b2ba;
+  display: none;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head:hover {
+  background: #fff;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head:hover .icon {
+  display: block;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-body {
-  padding: 8px 8px 0;
+  margin: 8px 4px 0 8px;
   max-height: 630px;
   overflow-y: auto;
+  text-rendering: optimizeSpeed;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-body::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: rgba(176, 178, 186, 0.4);
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-body::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #b0b2ba;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 30px;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-footer .btl-create-link-button {
+  height: 50px;
+  width: 50px;
+  min-width: 50px;
+  background: #fff;
+  border: none;
+  border-radius: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 16px;
+  color: #707070;
+  cursor: pointer;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-footer .btl-create-link-button:focus {
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-footer .btl-create-link-button:hover {
+  background: -webkit-gradient(linear, right top, left top, from(#1bcba0), to(#33db8d));
+  background: linear-gradient(to left, #1bcba0, #33db8d);
+  color: #fff;
+  -webkit-box-shadow: 0 22px 42px rgba(3, 98, 60, 0.18);
+          box-shadow: 0 22px 42px rgba(3, 98, 60, 0.18);
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-create-category {
+  background: #fff;
+}
+
+.betterlinks-body .btl-dnd-link {
+  padding: 5px;
+  margin-right: 4px;
+  border-radius: 3px;
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body {
@@ -245,10 +353,65 @@
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title {
   margin-right: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6e7178;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title:before {
+  content: "";
+  width: 5px;
+  height: 35px;
+  border-radius: 2px;
+  background: -webkit-gradient(linear, left bottom, left top, from(#1bcba0), to(#33db8d));
+  background: linear-gradient(to top, #1bcba0, #33db8d);
+  margin-right: 10px;
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group {
   margin-left: auto;
+  margin-right: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button {
+  padding: 5px;
+  border: none;
+  background: none;
+  color: #b0b2ba;
+  font-size: 12px;
+  cursor: pointer;
+  -webkit-transition: color 0.2s ease 0s;
+  transition: color 0.2s ease 0s;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button:focus {
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button:hover {
+  color: #252525;
+}
+
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button.delete-button:hover {
+  color: #F97272;
+}
+
+.betterlinks-body .btl-dnd-link:not(:last-child) {
+  margin-bottom: 8px;
 }
 
 body.betterlinks-dark-mode {
