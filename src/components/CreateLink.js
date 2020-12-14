@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import Select2 from 'react-select'
+import Select from './Select'
 import { Formik, Field, Form } from 'formik'
 import { modalCustomStyles, generateRandomSlug } from './../utils/helper'
 import { redirectType } from './../utils/data'
-import Terms from './Terms'
+import Category from './Terms/Category'
+import Tags from './Terms/Tags'
 
 const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -42,6 +43,7 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                         sponsored: '',
                         param_forwarding: '',
                         track_me: '',
+                        cat_id: term_id,
                     }}
                     onSubmit={async (values) => {
                         console.log(values)
@@ -88,12 +90,12 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                         >
                                             Redirect Type
                                         </label>
-                                        <Select2
+                                        <Select
                                             className='btl-modal-form-control btl-modal-select'
                                             id='redirect_type'
                                             name='redirect_type'
-                                            defaultValue={redirectType[0]}
-                                            options={redirectType}
+                                            value={redirectType}
+                                            setFieldValue={props.setFieldValue}
                                             isMulti={false}
                                         />
                                     </div>
@@ -146,11 +148,11 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                         >
                                             Category
                                         </label>
-                                        <Terms
+                                        <Category
                                             name='cat_id'
+                                            cat_id={term_id}
+                                            cat_name={term_name}
                                             setFieldValue={props.setFieldValue}
-                                            type='category'
-                                            isMulti={false}
                                         />
                                     </div>
                                     <div className='btl-modal-form-group'>
@@ -160,11 +162,9 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                         >
                                             Tags
                                         </label>
-                                        <Terms
+                                        <Tags
                                             name='tags_id'
                                             setFieldValue={props.setFieldValue}
-                                            type='tags'
-                                            isMulti={true}
                                         />
                                     </div>
                                     <div className='btl-modal-form-group'>

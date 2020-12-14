@@ -1,6 +1,5 @@
 import {
     FETCH_INITIAL_DATA,
-    FETCH_TERMS_DATA,
     DRAG_AND_DROP,
     ADD_NEW_CAT,
     ADD_NEW_LINK,
@@ -15,13 +14,6 @@ function settings(state = {}, action) {
             return {
                 ...state,
                 settings: {
-                    ...payload.data,
-                },
-            }
-        case FETCH_TERMS_DATA:
-            return {
-                ...state,
-                terms: {
                     ...payload.data,
                 },
             }
@@ -84,10 +76,10 @@ function settings(state = {}, action) {
                 ...state,
                 settings: {
                     ...state.settings,
-                    [payload.data.term_id]: {
-                        ...state.settings[payload.data.term_id],
+                    [payload.data.cat_id]: {
+                        ...state.settings[payload.data.cat_id],
                         lists: [
-                            ...state.settings[payload.data.term_id].lists,
+                            ...state.settings[payload.data.cat_id].lists,
                             payload.data,
                         ],
                     },

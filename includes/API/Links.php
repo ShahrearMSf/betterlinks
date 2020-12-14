@@ -107,6 +107,7 @@ class Links extends Controller
         FROM {$prefix}better_terms
         LEFT JOIN  {$prefix}better_terms_relationships ON {$prefix}better_terms.ID = {$prefix}better_terms_relationships.term_id
         LEFT JOIN  {$prefix}better_links ON {$prefix}better_links.ID = {$prefix}better_terms_relationships.link_id
+        WHERE {$prefix}better_terms.term_type = 'category'
         ")->get();
         return new \WP_REST_Response(array(
             'success' => is_bool($results),
@@ -122,23 +123,31 @@ class Links extends Controller
      */
     public function create_value($request)
     {
-
         $request = $request->get_params();    
-        error_log(print_r($request, true));
-        exit;
         \BetterLinks\Helper::DB()->transaction(function ($qb) use($request) {
-            $id = \BetterLinks\Helper::DB()->table('better_links')->insert($request['params']);
-        
-            $qb->table('my_table')->insert([
-                'name' => 'Test2',
-                'url'  => 'example.com'
-            ]);
+            $term_data = [];
+            $remove = ['cat_id', 'tags_id'];
+            $params = array_diff_key($request['params'], array_flip($remove));
+            $id = $qb->table('better_links')->insert($params);
+            // store tags relation data
+            if(isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])){
+                $term_data[] = [
+                    'term_id' => $request['params']['cat_id'],
+                    'link_id'  => $id
+                ];
+            }
+            if(isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])){
+                foreach($request['params']['tags_id'] as $key => $value){
+                    $term_data[] = [
+                        'term_id' =>  $value,
+                        'link_id'  => $id
+                    ];
+                }
+            }
+            $qb->table('better_terms_relationships')->insert($term_data);
         });
-        
-
-        $request['params']['ID'] = $id;
         return new \WP_REST_Response(array(
-            'success'   => is_bool($id),
+            'success'   => true,
             'data'     => $request['params']
         ), 200);
     }

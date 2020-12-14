@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetch_terms_data } from './../../redux/actions/terms.actions'
 
-const Terms = (props) => {
+const Category = (props) => {
     const [field] = useField(props.name)
     const [isFetchData, setIsFetchData] = useState(false)
     const fetchData = () => {
@@ -19,10 +19,7 @@ const Terms = (props) => {
         if (option == null) {
             return props.setFieldValue(field.name, '')
         }
-        return props.setFieldValue(
-            field.name,
-            props.isMulti ? option.map((item) => item.value) : option.value
-        )
+        return props.setFieldValue(field.name, option.value)
     }
 
     return (
@@ -31,20 +28,20 @@ const Terms = (props) => {
                 className='btl-modal-form-control btl-modal-select'
                 id={field.id}
                 name={field.name}
+                defaultValue={{ label: props.cat_name, value: props.cat_id }}
                 onMenuOpen={() => fetchData()}
                 onChange={onChange}
                 options={
                     props.terms.terms &&
                     Object.entries(props.terms.terms)
                         .filter(
-                            ([key, value]) => value.term_type === props.type
+                            ([key, value]) => value.term_type === 'category'
                         )
                         .map(([key, value]) => ({
                             value: value.ID,
                             label: value.term_name,
                         }))
                 }
-                isMulti={props.isMulti}
             />
         </React.Fragment>
     )
@@ -58,4 +55,4 @@ const mapDispatchToProps = (dispatch) => {
         fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Terms)
+export default connect(mapStateToProps, mapDispatchToProps)(Category)
