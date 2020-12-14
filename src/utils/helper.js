@@ -64,7 +64,7 @@ export const modalCustomStyles = {
         left: '50%',
         right: 'auto',
         bottom: 'auto',
-        width: '50%',
+        width: '60%',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
     },

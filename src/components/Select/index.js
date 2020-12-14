@@ -18,7 +18,8 @@ const Select = (props) => {
     return (
         <React.Fragment>
             <Select2
-                className='btl-modal-form-control btl-modal-select'
+                className='btl-modal-select--full'
+                classNamePrefix='btl-react-select'
                 id={field.id}
                 name={field.name}
                 defaultValue={

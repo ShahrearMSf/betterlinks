@@ -69763,7 +69763,6 @@ const CreateLink = ({
     className: "btl-modal-form-label btl-required",
     htmlFor: "redirect_type"
   }, "Redirect Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "btl-modal-form-control btl-modal-select",
     id: "redirect_type",
     name: "redirect_type",
     value: _utils_data__WEBPACK_IMPORTED_MODULE_5__["redirectType"],
@@ -69785,12 +69784,20 @@ const CreateLink = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "short_url"
-  }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    className: "btl-modal-form-control",
+  }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-link-field-copyable"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "btl-static-link"
+  }, "http://eaeltest.local/"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    className: "btl-dynamic-link",
     id: "short_url",
     name: "short_url",
     required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btl-link-copy-button"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "btl btl-copy"
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
@@ -69822,7 +69829,11 @@ const CreateLink = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    type: "submit"
+    type: "submit",
+    className: "btl-modal-submit-button",
+    style: {
+      marginTop: '20px'
+    }
   }, "Publish"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-entry-content-right"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -70032,7 +70043,8 @@ const Select = props => {
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "btl-modal-form-control btl-modal-select",
+    className: "btl-modal-select--full",
+    classNamePrefix: "btl-react-select",
     id: field.id,
     name: field.name,
     defaultValue: props.value && props.value.filter(item => item.value == '307'),
@@ -70089,13 +70101,14 @@ const Category = props => {
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "btl-modal-form-control btl-modal-select",
+    className: "btl-modal-select",
     id: field.id,
     name: field.name,
     defaultValue: {
       label: props.cat_name,
       value: props.cat_id
     },
+    classNamePrefix: "btl-react-select",
     onMenuOpen: () => fetchData(),
     onChange: onChange,
     options: props.terms.terms && Object.entries(props.terms.terms).filter(([key, value]) => value.term_type === 'category').map(([key, value]) => ({
@@ -70913,7 +70926,7 @@ const modalCustomStyles = {
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    width: '50%',
+    width: '60%',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)'
   }

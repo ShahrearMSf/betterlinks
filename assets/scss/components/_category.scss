@@ -21,30 +21,24 @@
     flex-direction: column;
     border: 1px solid transparent;
     .category-head{
-      background: transparent;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 55px;
+      background: #fff;
       .title{
         font-size: 17px;
         font-weight: 500;
         color: $dark;
         margin: 0;
+        line-height: 1;
       }
       .icon{
         margin-left: 20px;
         cursor: pointer;
         display: flex;
         color: $secondary-lighten;
-        visibility: hidden;
 
-      }
-      &:hover{
-        background: #fff;
-        .icon{
-          visibility: hidden;
-        }
       }
     }
     .category-body{
@@ -113,7 +107,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 16px;
+      font-size: 21px;
       background: linear-gradient(to left, $success, $success-lighten);
       color: $white;
       cursor: pointer;

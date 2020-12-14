@@ -25,10 +25,11 @@ const Category = (props) => {
     return (
         <React.Fragment>
             <Select2
-                className='btl-modal-form-control btl-modal-select'
+                className='btl-modal-select'
                 id={field.id}
                 name={field.name}
                 defaultValue={{ label: props.cat_name, value: props.cat_id }}
+                classNamePrefix='btl-react-select'
                 onMenuOpen={() => fetchData()}
                 onChange={onChange}
                 options={
