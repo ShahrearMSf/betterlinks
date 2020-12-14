@@ -17,12 +17,13 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.btl-more:before {
+  content: "\e90f";
 }
 
 .btl-checkbox:before {
@@ -162,6 +163,120 @@
           box-shadow: 0 5px 10px rgba(3, 98, 60, 0.15);
 }
 
+.betterlinks-body .dropdown {
+  position: relative;
+}
+
+.betterlinks-body .dropdown .dropdown-menu {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 10px);
+  background: #fff;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 10px 22px rgba(37, 37, 37, 0.18);
+          box-shadow: 0 10px 22px rgba(37, 37, 37, 0.18);
+  width: 110px;
+}
+
+.betterlinks-body .dropdown .dropdown-menu ul {
+  margin: 0;
+  list-style: none;
+}
+
+.betterlinks-body .dropdown .dropdown-menu ul li {
+  margin: 0;
+}
+
+.betterlinks-body .dropdown .dropdown-menu ul li:not(:last-child) {
+  border-bottom: 1px solid #ebebeb;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .link {
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  padding: 9px 20px;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  font-size: 15px;
+  color: #707070;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .link:hover {
+  color: #252525;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .link.delete:hover {
+  color: #F97272;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 10px;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-text {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #707070;
+  font-weight: 500;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set .action {
+  padding: 3px 5px;
+  border: 0;
+  outline: 0;
+  -webkit-box-shadow: 0;
+          box-shadow: 0;
+  color: #fff;
+  width: 45%;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set .action.yes {
+  background: #33db8d;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set .action.no {
+  background: #F97272;
+}
+
 .betterlinks-body .topbar {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -275,7 +390,6 @@
   break-inside: avoid;
   break-inside: avoid-column;
   border-radius: 5px;
-  overflow: hidden;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category {
@@ -301,6 +415,7 @@
           align-items: center;
   height: 55px;
   background: #fff;
+  border-radius: 5px 5px 0 0;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-head .title {
@@ -311,13 +426,18 @@
   line-height: 1;
 }
 
-.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .icon {
-  margin-left: 20px;
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .dropdown {
+  margin-left: 5px;
+  position: relative;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .dropdown .icon {
   cursor: pointer;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   color: #b0b2ba;
+  font-size: 14px;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-body {
@@ -521,7 +641,7 @@
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button:hover {
-  color: #252525;
+  color: #1bcba0;
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button.delete-button:hover {

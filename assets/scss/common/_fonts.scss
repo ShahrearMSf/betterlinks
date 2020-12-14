@@ -19,13 +19,15 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: flex;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.btl-more:before {
+  content: "\e90f";
+}
 .btl-checkbox:before {
   content: "\e90c";
 }

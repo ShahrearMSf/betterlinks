@@ -25,11 +25,12 @@ const Tags = (props) => {
     return (
         <React.Fragment>
             <Select2
-                className='btl-modal-form-control btl-modal-select'
+                className='btl-modal-select'
                 id={field.id}
                 name={field.name}
                 onMenuOpen={() => fetchData()}
                 onChange={onChange}
+                classNamePrefix='btl-react-select'
                 options={
                     props.terms.terms &&
                     Object.entries(props.terms.terms)
