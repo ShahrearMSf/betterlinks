@@ -89,8 +89,9 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                             Redirect Type
                                         </label>
                                         <Select2
-                                            className='btl-modal-form-control btl-modal-select'
+                                            className='btl-modal-select--full'
                                             id='redirect_type'
+                                            classNamePrefix="btl-react-select"
                                             name='redirect_type'
                                             defaultValue={redirectType[0]}
                                             options={redirectType}
@@ -119,12 +120,16 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                         >
                                             Better Links
                                         </label>
-                                        <Field
-                                            className='btl-modal-form-control'
-                                            id='short_url'
-                                            name='short_url'
-                                            required
-                                        />
+                                        <div className="btl-link-field-copyable">
+                                            <span className="btl-static-link">http://eaeltest.local/</span>
+                                            <Field
+                                                className='btl-dynamic-link'
+                                                id='short_url'
+                                                name='short_url'
+                                                required
+                                            />
+                                            <button className="btl-link-copy-button"><i className="btl btl-copy"></i></button>
+                                        </div>
                                     </div>
                                     <div className='btl-modal-form-group'>
                                         <label
@@ -169,7 +174,7 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                     </div>
                                     <div className='btl-modal-form-group'>
                                         <label className='btl-modal-form-label'></label>
-                                        <button type='submit'>Publish</button>
+                                        <button type='submit' className="btl-modal-submit-button" style={{marginTop: '20px'}}>Publish</button>
                                     </div>
                                 </div>
                                 <div className='btl-entry-content-right'>
