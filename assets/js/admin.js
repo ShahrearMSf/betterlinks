@@ -69792,6 +69792,158 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
+/***/ "./src/components/CatHeader/index.js":
+/*!*******************************************!*\
+  !*** ./src/components/CatHeader/index.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+
+
+
+
+
+const CatHeader = props => {
+  const {
+    cat_id,
+    cat_name
+  } = props;
+  const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [isCatAction, setCatAction] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [isDeleteConfirm, setDeleteConfrim] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  const catActionHandler = () => {
+    setDeleteConfrim(false);
+    setCatAction(!isCatAction);
+  };
+
+  const deleteHandler = () => {
+    setCatAction(!isCatAction);
+    setDeleteConfrim(!isDeleteConfirm);
+  };
+
+  const noDelete = () => {
+    setCatAction(false);
+    setDeleteConfrim(false);
+  };
+
+  const confirmDelete = () => {
+    setDeleteConfrim(false);
+    setDeleteConfrim(false);
+    console.log('Category Delete');
+  };
+
+  function openModal() {
+    setModalIsOpen(true);
+  }
+
+  function closeModal() {
+    setCatAction(false);
+    setModalIsOpen(false);
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "category-head"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+    className: "title"
+  }, cat_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dropdown"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "icon",
+    onClick: () => catActionHandler()
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "btl btl-more"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dropdown-menu"
+  }, isCatAction && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: openModal,
+    className: "link"
+  }, "Edit")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "link delete",
+    onClick: () => deleteHandler()
+  }, "Delete"))), isDeleteConfirm && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-confirm-message"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    className: "action-text"
+  }, "Are Your Sure?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "action-set"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "action yes",
+    onClick: confirmDelete
+  }, "Yes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "action no",
+    onClick: noDelete
+  }, "No")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    isOpen: modalIsOpen,
+    onRequestClose: closeModal,
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_3__["modalCustomStyles"],
+    ariaHideApp: false
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "btl-close-modal",
+    onClick: closeModal
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "btl btl-cancel"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Formik"], {
+    initialValues: {
+      cat_id: ''
+    },
+    onSubmit: async values => {
+      console.log(values);
+      setModalIsOpen(false);
+      return;
+    }
+  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], {
+    className: "w-100"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-entry-content"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-entry-content-left",
+    style: {
+      marginBottom: '20px'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-modal-form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: "btl-modal-form-label btl-required",
+    htmlFor: "link_title"
+  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
+    className: "btl-modal-form-control",
+    id: "link_title",
+    name: "link_title",
+    required: true
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-modal-form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: "btl-modal-form-label btl-required",
+    htmlFor: "link_slug"
+  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
+    className: "btl-modal-form-control",
+    id: "link_slug",
+    name: "link_slug",
+    required: true
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-modal-form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: "btl-modal-form-label"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "submit",
+    className: "btl-modal-submit-button"
+  }, "Update"))))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (CatHeader);
+
+/***/ }),
+
 /***/ "./src/components/CreateCategory.js":
 /*!******************************************!*\
   !*** ./src/components/CreateCategory.js ***!
@@ -70451,7 +70603,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_CreateCategory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../components/CreateCategory */ "./src/components/CreateCategory.js");
 /* harmony import */ var _components_EditLink__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../components/EditLink */ "./src/components/EditLink.js");
 /* harmony import */ var _components_CreateLink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../components/CreateLink */ "./src/components/CreateLink.js");
+/* harmony import */ var _components_CatHeader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/CatHeader */ "./src/components/CatHeader/index.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -70496,23 +70650,10 @@ function DndCanvas(props) {
     className: "dnd-category",
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "category-head"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
-    className: "title"
-  }, el.term_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "dropdown"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "icon"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "btl btl-more"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "dropdown-menu"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "link"
-  }, "Edit")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "link delete"
-  }, "Delete")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    cat_id: ind,
+    cat_name: el.term_name
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-body"
   }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
     key: item.ID,

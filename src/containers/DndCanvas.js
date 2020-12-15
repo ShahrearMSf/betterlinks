@@ -13,6 +13,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import CreateCategory from './../components/CreateCategory'
 import EditLink from './../components/EditLink'
 import CreateLink from './../components/CreateLink'
+import CatHeader from '../components/CatHeader'
 
 /**
  * Moves an item from one list to another list.
@@ -54,33 +55,11 @@ function DndCanvas(props) {
                                     )}
                                     {...provided.droppableProps}
                                 >
-                                    <div className='category-head'>
-                                        <h4 className='title'>
-                                            {el.term_name}
-                                        </h4>
-                                        <div className="dropdown">
-                                            <span className='icon'>
-                                                <i className='btl btl-more'></i>
-                                            </span>
-                                            <div className="dropdown-menu">
-                                                <ul>
-                                                    <li>
-                                                        <button className="link">Edit</button>
-                                                    </li>
-                                                    <li>
-                                                        <button className="link delete">Delete</button>
-                                                    </li>
-                                                </ul>
-                                                {/* <div className="btl-confirm-message">
-                                                    <p className="action-text">Are Your Sure?</p>
-                                                    <div className="action-set">
-                                                        <button className="action yes">Yes</button>
-                                                        <button className="action no">No</button>
-                                                    </div>
-                                                </div> */}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <CatHeader
+                                        cat_id={ind}
+                                        cat_name={el.term_name}
+                                    />
+
                                     <div className='category-body'>
                                         {el.lists &&
                                             el.lists.map((item, index) => (
