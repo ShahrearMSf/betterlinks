@@ -31,6 +31,7 @@ const Tags = (props) => {
                 name={field.name}
                 onMenuOpen={() => fetchData()}
                 onChange={onChange}
+                classNamePrefix='btl-react-select'
                 options={
                     props.terms.terms &&
                     Object.entries(props.terms.terms)

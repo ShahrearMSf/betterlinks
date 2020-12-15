@@ -17,12 +17,13 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.btl-more:before {
+  content: "\e90f";
 }
 
 .btl-checkbox:before {
@@ -162,6 +163,120 @@
           box-shadow: 0 5px 10px rgba(3, 98, 60, 0.15);
 }
 
+.betterlinks-body .dropdown {
+  position: relative;
+}
+
+.betterlinks-body .dropdown .dropdown-menu {
+  position: absolute;
+  top: calc( 100% + 10px);
+  right: -5px;
+  background: #fff;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 10px 22px rgba(37, 37, 37, 0.18);
+          box-shadow: 0 10px 22px rgba(37, 37, 37, 0.18);
+  width: 110px;
+}
+
+.betterlinks-body .dropdown .dropdown-menu ul {
+  margin: 0;
+  list-style: none;
+}
+
+.betterlinks-body .dropdown .dropdown-menu ul li {
+  margin: 0;
+}
+
+.betterlinks-body .dropdown .dropdown-menu ul li:not(:last-child) {
+  border-bottom: 1px solid #ebebeb;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .link {
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  padding: 9px 20px;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  font-size: 15px;
+  color: #707070;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .link:hover {
+  color: #252525;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .link.delete:hover {
+  color: #F97272;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 10px;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-text {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #707070;
+  font-weight: 500;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set .action {
+  padding: 3px 5px;
+  border: 0;
+  outline: 0;
+  -webkit-box-shadow: 0;
+          box-shadow: 0;
+  color: #fff;
+  width: 45%;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set .action.yes {
+  background: #33db8d;
+}
+
+.betterlinks-body .dropdown .dropdown-menu .btl-confirm-message .action-set .action.no {
+  background: #F97272;
+}
+
 .betterlinks-body .topbar {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -221,22 +336,13 @@
           align-items: center;
   height: 30px;
   width: 40px;
-  z-index: 1;
-}
-
-.betterlinks-body .topbar .theme-mood-button .theme-mood:before {
-  position: absolute;
-  content: "";
-  height: 30px;
-  width: 40px;
-  background-image: -webkit-gradient(linear, right top, left top, from(#1bcba0), to(#33db8d));
-  background-image: linear-gradient(to left, #1bcba0, #33db8d);
   border-radius: 50px;
-  left: 0;
 }
 
 .betterlinks-body .topbar .theme-mood-button input#theme-mood:not(:checked) + .theme-mood .icon:first-child {
   color: #fff;
+  background-image: -webkit-gradient(linear, right top, left top, from(#1bcba0), to(#33db8d));
+  background-image: linear-gradient(to left, #1bcba0, #33db8d);
 }
 
 .betterlinks-body .topbar .theme-mood-button input#theme-mood:not(:checked) + .theme-mood .icon:last-child {
@@ -249,11 +355,8 @@
 
 .betterlinks-body .topbar .theme-mood-button input#theme-mood:checked + .theme-mood .icon:last-child {
   color: #fff;
-}
-
-.betterlinks-body .topbar .theme-mood-button input#theme-mood:checked + .theme-mood:before {
-  left: unset;
-  right: 0;
+  background-image: -webkit-gradient(linear, right top, left top, from(#1bcba0), to(#33db8d));
+  background-image: linear-gradient(to left, #1bcba0, #33db8d);
 }
 
 .betterlinks-body .dnd-category-wrapper {
@@ -263,6 +366,27 @@
           column-gap: 20px;
   orphans: 1;
   widows: 1;
+}
+
+@media screen and (max-width: 1599px) {
+  .betterlinks-body .dnd-category-wrapper {
+    -webkit-column-count: 3;
+            column-count: 3;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .betterlinks-body .dnd-category-wrapper {
+    -webkit-column-count: 2;
+            column-count: 2;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .betterlinks-body .dnd-category-wrapper {
+    -webkit-column-count: 1;
+            column-count: 1;
+  }
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category,
@@ -275,7 +399,6 @@
   break-inside: avoid;
   break-inside: avoid-column;
   border-radius: 5px;
-  overflow: hidden;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category {
@@ -301,6 +424,9 @@
           align-items: center;
   height: 55px;
   background: #fff;
+  border-radius: 5px 5px 0 0;
+  padding: 0 10px;
+  text-align: center;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-head .title {
@@ -311,13 +437,18 @@
   line-height: 1;
 }
 
-.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .icon {
-  margin-left: 20px;
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .dropdown {
+  margin-left: 5px;
+  position: relative;
+}
+
+.betterlinks-body .dnd-category-wrapper .dnd-category .category-head .dropdown .icon {
   cursor: pointer;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   color: #b0b2ba;
+  font-size: 14px;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-body {
@@ -521,7 +652,7 @@
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button:hover {
-  color: #252525;
+  color: #1bcba0;
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button.delete-button:hover {
@@ -536,9 +667,33 @@ body.betterlinks-dark-mode {
   background: #333;
 }
 
+.ReactModal__Overlay {
+  z-index: 100000;
+  overflow: auto;
+}
+
 .ReactModal__Content {
   overflow: visible !important;
   padding: 60px !important;
+  width: 60%;
+}
+
+@media screen and (max-width: 1599px) {
+  .ReactModal__Content {
+    width: 75%;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .ReactModal__Content {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .ReactModal__Content {
+    padding: 20px !important;
+  }
 }
 
 .ReactModal__Content .btl-close-modal {
@@ -567,13 +722,45 @@ body.betterlinks-dark-mode {
   display: flex;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+@media screen and (max-width: 1023px) {
+  .ReactModal__Content .btl-entry-content {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group {
+.ReactModal__Content .btl-entry-content .btl-entry-content-left {
+  width: calc(100% - 260px);
+}
+
+@media screen and (max-width: 1023px) {
+  .ReactModal__Content .btl-entry-content .btl-entry-content-left {
+    width: 100%;
+  }
+}
+
+.ReactModal__Content .btl-entry-content .btl-entry-content-right {
+  width: 260px;
+  min-width: 260px;
+  padding-left: 40px;
+  padding-top: 15px;
+}
+
+@media screen and (max-width: 1023px) {
+  .ReactModal__Content .btl-entry-content .btl-entry-content-right {
+    padding-left: 210px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .ReactModal__Content .btl-entry-content .btl-entry-content-right {
+    padding-left: 0;
+  }
+}
+
+.ReactModal__Content .btl-modal-form-group {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -582,86 +769,108 @@ body.betterlinks-dark-mode {
           align-items: center;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group .btl-modal-form-label {
-  width: 200px;
-  min-width: 200px;
+@media screen and (max-width: 650px) {
+  .ReactModal__Content .btl-modal-form-group {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
+.ReactModal__Content .btl-modal-form-group .btl-modal-form-label {
+  width: 170px;
+  min-width: 170px;
   font-size: 20px;
   font-weight: 500;
   text-align: right;
   padding-right: 40px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group .btl-modal-form-label.btl-required:after {
+@media screen and (max-width: 650px) {
+  .ReactModal__Content .btl-modal-form-group .btl-modal-form-label {
+    margin-bottom: 15px;
+    text-align: center;
+    padding-right: 0;
+  }
+}
+
+.ReactModal__Content .btl-modal-form-group .btl-modal-form-label.btl-required:after {
   content: '*';
   margin-left: 2px;
   color: #F97272;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group input.btl-modal-form-control {
+.ReactModal__Content .btl-modal-form-group:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.ReactModal__Content input.btl-modal-form-control {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  width: 100%;
   height: 55px;
+  min-height: 55px;
   border-radius: 5px;
   background: #fafafa;
   padding: 0 15px;
-  width: 100%;
   border: 1px solid #ebebeb;
   font-size: 16px;
   font-weight: 500;
   outline: none;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group input.btl-modal-form-control:focus {
+.ReactModal__Content input.btl-modal-form-control:focus {
   background: #fff;
   -webkit-box-shadow: 0 10px 15px rgba(26, 22, 61, 0.06);
           box-shadow: 0 10px 15px rgba(26, 22, 61, 0.06);
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-form-group:not(:last-child) {
-  margin-bottom: 20px;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select, .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select--full {
+.ReactModal__Content .btl-modal-select, .ReactModal__Content .btl-modal-select--full {
   width: 300px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select .btl-react-select__control, .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select--full .btl-react-select__control {
+.ReactModal__Content .btl-modal-select .btl-react-select__control, .ReactModal__Content .btl-modal-select--full .btl-react-select__control {
   background-color: #fafafa;
   height: 55px;
   border: 1px solid #ebebeb;
   border-radius: 5px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select .btl-react-select__control .btl-react-select__value-container, .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select--full .btl-react-select__control .btl-react-select__value-container {
+.ReactModal__Content .btl-modal-select .btl-react-select__control .btl-react-select__value-container, .ReactModal__Content .btl-modal-select--full .btl-react-select__control .btl-react-select__value-container {
   padding-left: 15px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select .btl-react-select__control .btl-react-select__value-container .btl-react-select__single-value, .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select--full .btl-react-select__control .btl-react-select__value-container .btl-react-select__single-value {
+.ReactModal__Content .btl-modal-select .btl-react-select__control .btl-react-select__value-container .btl-react-select__single-value, .ReactModal__Content .btl-modal-select--full .btl-react-select__control .btl-react-select__value-container .btl-react-select__single-value {
   font-size: 16px;
   font-weight: 500;
   margin-left: 0;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select .btl-react-select__control .btl-react-select__value-container .btl-react-select__input input, .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select--full .btl-react-select__control .btl-react-select__value-container .btl-react-select__input input {
+.ReactModal__Content .btl-modal-select .btl-react-select__control .btl-react-select__value-container .btl-react-select__input input, .ReactModal__Content .btl-modal-select--full .btl-react-select__control .btl-react-select__value-container .btl-react-select__input input {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select .btl-react-select__control.btl-react-select__control--is-focused, .ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-modal-select--full .btl-react-select__control.btl-react-select__control--is-focused {
+.ReactModal__Content .btl-modal-select .btl-react-select__control.btl-react-select__control--is-focused, .ReactModal__Content .btl-modal-select--full .btl-react-select__control.btl-react-select__control--is-focused {
   -webkit-box-shadow: none;
           box-shadow: none;
   background-color: #fff;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-link-field-copyable {
+.ReactModal__Content .btl-modal-select--full {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  width: 100%;
+}
+
+.ReactModal__Content .btl-link-field-copyable {
+  width: calc( 100% - 210px);
   height: 55px;
   border-radius: 5px;
   background: #fafafa;
-  width: 100%;
   border: 1px solid #ebebeb;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -671,14 +880,20 @@ body.betterlinks-dark-mode {
           align-items: center;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-link-field-copyable .btl-static-link {
+@media screen and (max-width: 650px) {
+  .ReactModal__Content .btl-link-field-copyable {
+    width: 100%;
+  }
+}
+
+.ReactModal__Content .btl-link-field-copyable .btl-static-link {
   height: 100%;
   background: -webkit-gradient(linear, left top, right top, from(#1bcba0), to(#33db8d));
   background: linear-gradient(to right, #1bcba0, #33db8d);
   border-radius: 5px 3px 3px 5px;
   font-size: 18px;
   font-weight: 500;
-  padding: 0 10px 0 25px;
+  padding: 0 10px 0 15px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -692,7 +907,19 @@ body.betterlinks-dark-mode {
   font-style: italic;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-link-field-copyable .btl-dynamic-link {
+@media screen and (max-width: 1599px) {
+  .ReactModal__Content .btl-link-field-copyable .btl-static-link {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .ReactModal__Content .btl-link-field-copyable .btl-static-link {
+    font-size: 14px;
+  }
+}
+
+.ReactModal__Content .btl-link-field-copyable .btl-dynamic-link {
   background: transparent;
   font-size: 16px;
   font-weight: 500;
@@ -706,9 +933,10 @@ body.betterlinks-dark-mode {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  min-width: 100px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-link-field-copyable .btl-link-copy-button {
+.ReactModal__Content .btl-link-field-copyable .btl-link-copy-button {
   width: 20px;
   height: 20px;
   background: transparent;
@@ -721,23 +949,69 @@ body.betterlinks-dark-mode {
   margin-right: 20px;
   color: #b0b2ba;
   font-size: 18px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-link-field-copyable .btl-link-copy-button:hover {
+.ReactModal__Content .btl-link-field-copyable .btl-link-copy-button:hover {
   color: #252525;
 }
 
-.ReactModal__Content .btl-entry-content .btl-entry-content-left .btl-link-field-copyable:focus-within {
+@media screen and (max-width: 1199px) {
+  .ReactModal__Content .btl-link-field-copyable .btl-link-copy-button {
+    margin-left: 5px;
+    margin-right: 15px;
+  }
+}
+
+.ReactModal__Content .btl-link-field-copyable:focus-within {
   background: #fff;
   -webkit-box-shadow: 0 10px 15px rgba(26, 22, 61, 0.06);
           box-shadow: 0 10px 15px rgba(26, 22, 61, 0.06);
 }
 
-.ReactModal__Content .btl-entry-content .btl-modal-select--full {
-  width: 100% !important;
+.ReactModal__Content .btl-checkbox-field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  cursor: pointer;
+  margin-bottom: 40px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-modal-submit-button {
+.ReactModal__Content .btl-checkbox-field .btl-check {
+  display: none;
+}
+
+.ReactModal__Content .btl-checkbox-field .text {
+  padding-left: 40px;
+  position: relative;
+  color: #252525;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.ReactModal__Content .btl-checkbox-field .text:before {
+  position: absolute;
+  font-family: 'better-links';
+  content: '\e90c';
+  left: 0;
+  font-size: 24px;
+  color: #b0b2ba;
+}
+
+.ReactModal__Content .btl-checkbox-field .btl-check:checked + .text:before {
+  content: '\e90e';
+  color: #1bcba0;
+}
+
+.ReactModal__Content .btl-modal-submit-button {
   height: 55px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -762,52 +1036,8 @@ body.betterlinks-dark-mode {
   min-width: 190px;
 }
 
-.ReactModal__Content .btl-entry-content .btl-modal-submit-button:hover {
+.ReactModal__Content .btl-modal-submit-button:hover {
   -webkit-box-shadow: 0 22px 42px rgba(3, 98, 60, 0.18);
           box-shadow: 0 22px 42px rgba(3, 98, 60, 0.18);
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right {
-  width: 250px;
-  min-width: 250px;
-  margin-left: 40px;
-  padding-top: 15px;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right .btl-checkbox-field {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  cursor: pointer;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right .btl-checkbox-field .btl-check {
-  display: none;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right .btl-checkbox-field .text {
-  padding-left: 40px;
-  position: relative;
-  color: #252525;
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right .btl-checkbox-field .text:before {
-  position: absolute;
-  font-family: 'better-links';
-  content: '\e90c';
-  left: 0;
-  font-size: 24px;
-  color: #b0b2ba;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right .btl-checkbox-field .btl-check:checked + .text:before {
-  content: '\e90e';
-  color: #1bcba0;
-}
-
-.ReactModal__Content .btl-entry-content .btl-entry-content-right .btl-checkbox-field:not(:last-child) {
-  margin-bottom: 40px;
 }
 /*# sourceMappingURL=admin.css.map */

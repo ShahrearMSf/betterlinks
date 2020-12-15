@@ -54,7 +54,7 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                     {(props) => (
                         <Form className='w-100'>
                             <div className='btl-entry-content'>
-                                <div className='btl-entry-content-left'>
+                                <div className='btl-entry-content-left' style={{ marginBottom: '20px' }}>
                                     <div className='btl-modal-form-group'>
                                         <label
                                             className='btl-modal-form-label btl-required'
@@ -174,16 +174,6 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                             setFieldValue={props.setFieldValue}
                                         />
                                     </div>
-                                    <div className='btl-modal-form-group'>
-                                        <label className='btl-modal-form-label'></label>
-                                        <button
-                                            type='submit'
-                                            className='btl-modal-submit-button'
-                                            style={{ marginTop: '20px' }}
-                                        >
-                                            Publish
-                                        </button>
-                                    </div>
                                 </div>
                                 <div className='btl-entry-content-right'>
                                     <label className='btl-checkbox-field'>
@@ -221,6 +211,15 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                         <span className='text'>Tracking</span>
                                     </label>
                                 </div>
+                            </div>
+                            <div className='btl-modal-form-group'>
+                                <label className='btl-modal-form-label'></label>
+                                <button
+                                    type='submit'
+                                    className='btl-modal-submit-button'
+                                >
+                                    Publish
+                                </button>
                             </div>
                         </Form>
                     )}

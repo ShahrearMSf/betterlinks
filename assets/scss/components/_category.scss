@@ -3,6 +3,15 @@
   column-gap: 20px;
   orphans: 1;
   widows: 1;
+  @media screen and (max-width: 1599px) {
+    column-count: 3;
+  }
+  @media screen and (max-width: 1199px) {
+    column-count: 2;
+  }
+  @media screen and (max-width: 599px) {
+    column-count: 1;
+  }
   .dnd-category,
   .dnd-create-category{
     width: 100%;
@@ -14,7 +23,6 @@
     break-inside: avoid;
     break-inside: avoid-column;
     border-radius: 5px;
-    overflow: hidden;
   }
   .dnd-category{
     display: flex;
@@ -26,6 +34,9 @@
       align-items: center;
       height: 55px;
       background: #fff;
+      border-radius: 5px 5px 0 0;
+      padding: 0 10px;
+      text-align: center;
       .title{
         font-size: 17px;
         font-weight: 500;
@@ -33,12 +44,15 @@
         margin: 0;
         line-height: 1;
       }
-      .icon{
-        margin-left: 20px;
-        cursor: pointer;
-        display: flex;
-        color: $secondary-lighten;
-
+      .dropdown{
+        margin-left: 5px;
+        position: relative;
+        .icon{
+          cursor: pointer;
+          display: flex;
+          color: $secondary-lighten;
+          font-size: 14px;
+        }
       }
     }
     .category-body{

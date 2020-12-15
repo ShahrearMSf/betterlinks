@@ -35,16 +35,7 @@
         align-items: center;
         height: 30px;
         width: 40px;
-        z-index: 1;
-      }
-      &:before{
-        position: absolute;
-        content: "";
-        height: 30px;
-        width: 40px;
-        background-image: linear-gradient(to left, $success, $success-lighten);
         border-radius: 50px;
-        left: 0;
       }
     }
     input#theme-mood:not(:checked){
@@ -52,6 +43,7 @@
         .icon{
           &:first-child{
             color: $white;
+            background-image: linear-gradient(to left, $success, $success-lighten);
           }
           &:last-child{
             color: $secondary;
@@ -67,11 +59,8 @@
           }
           &:last-child{
             color: $white;
+            background-image: linear-gradient(to left, $success, $success-lighten);
           }
-        }
-        &:before{
-          left: unset;
-          right: 0;
         }
       }
     }
