@@ -3,6 +3,9 @@
   column-gap: 20px;
   orphans: 1;
   widows: 1;
+  &.d-flex{
+    display: flex;
+  }
   @media screen and (max-width: 1599px) {
     column-count: 3;
   }
@@ -52,6 +55,10 @@
           display: flex;
           color: $secondary-lighten;
           font-size: 14px;
+          border: none;
+          outline: none;
+          box-shadow: none;
+          background: transparent;
         }
       }
     }

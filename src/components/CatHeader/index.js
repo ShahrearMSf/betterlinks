@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
 import { Formik, Field, Form } from 'formik'
-import { modalCustomStyles } from './../../utils/helper'
+import { modalCustomSmallStyles } from './../../utils/helper'
 const CatHeader = (props) => {
     const { cat_id, cat_name } = props
     const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -41,7 +41,6 @@ const CatHeader = (props) => {
                     <button className='icon' onClick={() => catActionHandler()}>
                         <i className='btl btl-more'></i>
                     </button>
-
                     <div className='dropdown-menu'>
                         {isCatAction && (
                             <ul>
@@ -89,7 +88,7 @@ const CatHeader = (props) => {
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
-                style={modalCustomStyles}
+                style={modalCustomSmallStyles}
                 ariaHideApp={false}
             >
                 <span className='btl-close-modal' onClick={closeModal}>
@@ -107,40 +106,33 @@ const CatHeader = (props) => {
                 >
                     {(props) => (
                         <Form className='w-100'>
-                            <div className='btl-entry-content'>
-                                <div
-                                    className='btl-entry-content-left'
-                                    style={{ marginBottom: '20px' }}
+                            <div className='btl-modal-form-group'>
+                                <label
+                                    className='btl-modal-form-label btl-required'
+                                    htmlFor='link_title'
                                 >
-                                    <div className='btl-modal-form-group'>
-                                        <label
-                                            className='btl-modal-form-label btl-required'
-                                            htmlFor='link_title'
-                                        >
-                                            Title
-                                        </label>
-                                        <Field
-                                            className='btl-modal-form-control'
-                                            id='link_title'
-                                            name='link_title'
-                                            required
-                                        />
-                                    </div>
-                                    <div className='btl-modal-form-group'>
-                                        <label
-                                            className='btl-modal-form-label btl-required'
-                                            htmlFor='link_slug'
-                                        >
-                                            Slug
-                                        </label>
-                                        <Field
-                                            className='btl-modal-form-control'
-                                            id='link_slug'
-                                            name='link_slug'
-                                            required
-                                        />
-                                    </div>
-                                </div>
+                                    Title
+                                </label>
+                                <Field
+                                    className='btl-modal-form-control'
+                                    id='link_title'
+                                    name='link_title'
+                                    required
+                                />
+                            </div>
+                            <div className='btl-modal-form-group'>
+                                <label
+                                    className='btl-modal-form-label btl-required'
+                                    htmlFor='link_slug'
+                                >
+                                    Slug
+                                </label>
+                                <Field
+                                    className='btl-modal-form-control'
+                                    id='link_slug'
+                                    name='link_slug'
+                                    required
+                                />
                             </div>
                             <div className='btl-modal-form-group'>
                                 <label className='btl-modal-form-label'></label>

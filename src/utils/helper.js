@@ -68,3 +68,18 @@ export const modalCustomStyles = {
         transform: 'translate(-50%, -50%)',
     },
 }
+
+export const modalCustomSmallStyles = {
+    overlay: {
+        background: 'rgba(35, 40, 45, 0.62)',
+    },
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        width: '50%',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+}

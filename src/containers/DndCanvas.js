@@ -46,7 +46,7 @@ function DndCanvas(props) {
     }, [])
 
     return (
-        <div className='dnd-category-wrapper'>
+        <div className={`dnd-category-wrapper ${isLoaded ? '' : 'd-flex'}`}>
             {isLoaded ? (
                 <DragDropContext onDragEnd={props.onDragEnd}>
                     {settings &&
