@@ -2,25 +2,8 @@
 namespace BetterLinks\Traits;
 
 trait ArgumentSchema {
-    public function terms_schema(){
+    public function links_schema(){
         return array(
-            'term_name' => array(
-                'type'   => 'string',
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
-            'term_slug' => array(
-                'type'   => 'string',
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
-            'term_type' => array(
-                'type'   => 'string',
-                'sanitize_callback' => 'sanitize_text_field'
-            )
-        );
-    }
-    public function get_links_schema(){
-
-        return array_merge(array(
             'ID' => array(
                 'type' => 'integer',
                 'sanitize_callback' => 'absint'
@@ -85,12 +68,37 @@ trait ArgumentSchema {
                 'type'   => 'string',
                 'format' => 'date-time'
             ),
-            'limit' => array(
-                'type' => 'integer',
-                'default'   => 5,
-                'sanitize_callback' => 'absint'
+        );
+    }
+    public function terms_schema(){
+        return array(
+            'term_name' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'term_slug' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'term_type' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
             )
-        ), $this->terms_schema());
+        );
+    }
+    public function get_links_schema(){
+
+        return array_merge(
+            $this->links_schema(),
+            array(
+                'limit' => array(
+                    'type' => 'integer',
+                    'default'   => 5,
+                    'sanitize_callback' => 'absint'
+                )
+            ), 
+            $this->terms_schema()
+        );
     }
 
     public function get_terms_schema(){

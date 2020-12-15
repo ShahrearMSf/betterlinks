@@ -12,8 +12,7 @@ import {
 } from './../redux/actions/settings.actions'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import CreateCategory from './../components/CreateCategory'
-import EditLink from './../components/EditLink'
-import CreateLink from './../components/CreateLink'
+import Link from './../components/Link'
 import CatHeader from '../components/CatHeader'
 
 /**
@@ -114,11 +113,17 @@ function DndCanvas(props) {
                                                                                 <i className='btl btl-link'></i>
                                                                             </span>
                                                                         </button>
-                                                                        <EditLink
+                                                                        <Link
+                                                                            cat_id={
+                                                                                ind
+                                                                            }
+                                                                            cat_name={
+                                                                                el.term_name
+                                                                            }
                                                                             item={
                                                                                 item
                                                                             }
-                                                                            editLinkHandler={
+                                                                            submitHandler={
                                                                                 props.edit_link
                                                                             }
                                                                         />
@@ -145,10 +150,10 @@ function DndCanvas(props) {
                                             {provided.placeholder}
                                         </div>
                                         <div className='category-footer'>
-                                            <CreateLink
-                                                term_id={ind}
-                                                {...el}
-                                                createLinkHandler={
+                                            <Link
+                                                cat_id={ind}
+                                                cat_name={el.term_name}
+                                                submitHandler={
                                                     props.add_new_link
                                                 }
                                             />

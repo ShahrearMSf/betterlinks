@@ -70179,9 +70179,9 @@ const CreateCategory = ({
 
 /***/ }),
 
-/***/ "./src/components/CreateLink.js":
+/***/ "./src/components/Link/index.js":
 /*!**************************************!*\
-  !*** ./src/components/CreateLink.js ***!
+  !*** ./src/components/Link/index.js ***!
   \**************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -70192,12 +70192,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
 /* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Select */ "./src/components/Select/index.js");
+/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../Select */ "./src/components/Select/index.js");
 /* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils/data */ "./src/utils/data.js");
-/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Terms/Category */ "./src/components/Terms/Category.js");
-/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Terms/Tags */ "./src/components/Terms/Tags.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
+/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
+/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
 
 
 
@@ -70207,10 +70207,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const CreateLink = ({
-  term_id,
-  term_name,
-  createLinkHandler
+const Link = ({
+  cat_id,
+  cat_name,
+  item,
+  submitHandler
 }) => {
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
 
@@ -70249,12 +70250,14 @@ const CreateLink = ({
       sponsored: '',
       param_forwarding: '',
       track_me: '',
-      cat_id: term_id
+      cat_id,
+      cat_name,
+      ...item
     },
     onSubmit: async values => {
       console.log(values);
       setModalIsOpen(false);
-      return createLinkHandler(values);
+      return submitHandler(values);
     }
   }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], {
     className: "w-100"
@@ -70341,8 +70344,8 @@ const CreateLink = ({
     htmlFor: "cat_id"
   }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_6__["default"], {
     name: "cat_id",
-    cat_id: term_id,
-    cat_name: term_name,
+    cat_id: cat_name,
+    cat_name: cat_name,
     setFieldValue: props.setFieldValue
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
@@ -70396,146 +70399,7 @@ const CreateLink = ({
   }, "Publish"))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (CreateLink);
-
-/***/ }),
-
-/***/ "./src/components/EditLink.js":
-/*!************************************!*\
-  !*** ./src/components/EditLink.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
-
-
-
-
-
-
-const EditLink = ({
-  item,
-  editLinkHandler
-}) => {
-  const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-
-  function openModal() {
-    setModalIsOpen(true);
-  }
-
-  function closeModal() {
-    setModalIsOpen(false);
-  }
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    onClick: openModal,
-    className: "dnd-link-button"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "icon"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "btl btl-edit"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
-    isOpen: modalIsOpen,
-    onRequestClose: closeModal,
-    style: _utils_helper__WEBPACK_IMPORTED_MODULE_4__["modalCustomStyles"],
-    ariaHideApp: false
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    onClick: closeModal
-  }, "close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Formik"], {
-    initialValues: { ...item
-    },
-    onSubmit: async values => {
-      setModalIsOpen(false);
-      console.log('submit', values);
-      return editLinkHandler(values);
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "entry-content-left"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "link_title"
-  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    id: "link_title",
-    name: "link_title",
-    required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "link_slug"
-  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    id: "link_slug",
-    name: "link_slug",
-    required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_name"
-  }, "Redirect Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "redirect_type",
-    name: "redirect_type",
-    options: [{
-      value: 'chocolate',
-      label: 'Chocolate'
-    }, {
-      value: 'strawberry',
-      label: 'Strawberry'
-    }, {
-      value: 'vanilla',
-      label: 'Vanilla'
-    }],
-    isMulti: false
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_slug"
-  }, "Target URL"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    id: "target_url",
-    name: "target_url",
-    placeholder: "http://wpdeveloper.com",
-    required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_slug"
-  }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    id: "short_url",
-    name: "short_url",
-    required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "link_note"
-  }, "Notes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    id: "link_note",
-    name: "link_note"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: "term_id"
-  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    id: "term_id",
-    name: "term_id",
-    options: [{
-      value: 1,
-      label: 'Chocolate'
-    }],
-    isMulti: false
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "entry-content-right"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "No Follow"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    name: "nofollow",
-    type: "checkbox"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Sponsored"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    name: "sponsored",
-    type: "checkbox"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Parameter Forwarding"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    name: "param_forwarding",
-    type: "checkbox"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Tracking"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    name: "track_me",
-    type: "checkbox"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    type: "submit"
-  }, "Publish")))));
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (EditLink);
+/* harmony default export */ __webpack_exports__["default"] = (Link);
 
 /***/ }),
 
@@ -71905,7 +71769,7 @@ const Category = props => {
     return props.setFieldValue(field.name, option.value);
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, console.log('category: ', props.cat_id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btl-modal-select",
     id: field.id,
     name: field.name,
@@ -71976,7 +71840,7 @@ const Tags = props => {
       return props.setFieldValue(field.name, '');
     }
 
-    return option.map(item => item.value);
+    return props.setFieldValue(field.name, option.map(item => item.value));
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_creatable__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -72026,11 +71890,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../redux/actions/settings.actions */ "./src/redux/actions/settings.actions.js");
 /* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
 /* harmony import */ var _components_CreateCategory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../components/CreateCategory */ "./src/components/CreateCategory.js");
-/* harmony import */ var _components_EditLink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../components/EditLink */ "./src/components/EditLink.js");
-/* harmony import */ var _components_CreateLink__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../components/CreateLink */ "./src/components/CreateLink.js");
-/* harmony import */ var _components_CatHeader__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/CatHeader */ "./src/components/CatHeader/index.js");
+/* harmony import */ var _components_Link__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../components/Link */ "./src/components/Link/index.js");
+/* harmony import */ var _components_CatHeader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/CatHeader */ "./src/components/CatHeader/index.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 
 
 
@@ -72080,7 +71942,7 @@ function DndCanvas(props) {
     className: "dnd-category",
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
     cat_id: ind,
     cat_name: el.term_name
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -72118,9 +71980,11 @@ function DndCanvas(props) {
     className: "icon"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-link"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_EditLink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Link__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    cat_id: ind,
+    cat_name: el.term_name,
     item: item,
-    editLinkHandler: props.edit_link
+    submitHandler: props.edit_link
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     className: "dnd-link-button delete-button",
@@ -72133,11 +71997,11 @@ function DndCanvas(props) {
     className: "btl btl-delete"
   })))))))), provided.placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-footer"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateLink__WEBPACK_IMPORTED_MODULE_8__["default"], _extends({
-    term_id: ind
-  }, el, {
-    createLinkHandler: props.add_new_link
-  })))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Link__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    cat_id: ind,
+    cat_name: el.term_name,
+    submitHandler: props.add_new_link
+  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_6__["default"], {
     createCatHandler: props.add_new_cat
   })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader__WEBPACK_IMPORTED_MODULE_3__["default"], null));
 }

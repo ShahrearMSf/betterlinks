@@ -19,7 +19,11 @@ const Tags = (props) => {
         if (option == null) {
             return props.setFieldValue(field.name, '')
         }
-        return option.map((item) => item.value)
+
+        return props.setFieldValue(
+            field.name,
+            option.map((item) => item.value)
+        )
     }
 
     return (

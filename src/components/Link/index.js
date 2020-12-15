@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import Select from './Select'
+import Select from './../Select'
 import { Formik, Field, Form } from 'formik'
-import { modalCustomStyles, generateRandomSlug } from './../utils/helper'
-import { redirectType } from './../utils/data'
-import Category from './Terms/Category'
-import Tags from './Terms/Tags'
+import { modalCustomStyles, generateRandomSlug } from './../../utils/helper'
+import { redirectType } from './../../utils/data'
+import Category from './../Terms/Category'
+import Tags from './../Terms/Tags'
 
-const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
+const Link = ({ cat_id, cat_name, item, submitHandler }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
 
     function openModal() {
@@ -43,12 +43,14 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                         sponsored: '',
                         param_forwarding: '',
                         track_me: '',
-                        cat_id: term_id,
+                        cat_id,
+                        cat_name,
+                        ...item,
                     }}
                     onSubmit={async (values) => {
                         console.log(values)
                         setModalIsOpen(false)
-                        return createLinkHandler(values)
+                        return submitHandler(values)
                     }}
                 >
                     {(props) => (
@@ -160,8 +162,8 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
                                         </label>
                                         <Category
                                             name='cat_id'
-                                            cat_id={term_id}
-                                            cat_name={term_name}
+                                            cat_id={cat_name}
+                                            cat_name={cat_name}
                                             setFieldValue={props.setFieldValue}
                                         />
                                     </div>
@@ -231,4 +233,4 @@ const CreateLink = ({ term_id, term_name, createLinkHandler }) => {
         </>
     )
 }
-export default CreateLink
+export default Link
