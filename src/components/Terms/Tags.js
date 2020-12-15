@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useField } from 'formik'
-import Select2 from 'react-select'
+import CreatableSelect2 from 'react-select/creatable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetch_terms_data } from './../../redux/actions/terms.actions'
@@ -24,8 +24,9 @@ const Tags = (props) => {
 
     return (
         <React.Fragment>
-            <Select2
+            <CreatableSelect2
                 className='btl-modal-form-control btl-modal-select'
+                isClearable
                 id={field.id}
                 name={field.name}
                 onMenuOpen={() => fetchData()}
