@@ -63,21 +63,21 @@ function DndCanvas(props) {
                                                 <i className='btl btl-more'></i>
                                             </span>
                                             <div className="dropdown-menu">
-                                                {/* <ul>
+                                                <ul>
                                                     <li>
                                                         <button className="link">Edit</button>
                                                     </li>
                                                     <li>
                                                         <button className="link delete">Delete</button>
                                                     </li>
-                                                </ul> */}
-                                                <div className="btl-confirm-message">
+                                                </ul>
+                                                {/* <div className="btl-confirm-message">
                                                     <p className="action-text">Are Your Sure?</p>
                                                     <div className="action-set">
                                                         <button className="action yes">Yes</button>
                                                         <button className="action no">No</button>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>

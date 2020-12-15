@@ -1,6 +1,20 @@
+.ReactModal__Overlay {
+	z-index: 100000;
+	overflow: auto;
+}
 .ReactModal__Content {
 	overflow: visible !important;
 	padding: 60px !important;
+	width: 60%;
+  @media screen and (max-width: 1599px) {
+    width: 75%;
+  }
+  @media screen and (max-width: 1199px) {
+    width: 80%;
+  }
+	@media screen and (max-width: 650px) {
+		padding: 20px!important;
+	}
 	.btl-close-modal {
 		position: absolute;
 		right: 15px;
@@ -16,185 +30,221 @@
 	}
 	.btl-entry-content {
 		display: flex;
+		@media screen and (max-width: 1023px) {
+			flex-direction: column;
+		}
 		.btl-entry-content-left {
-			flex: 1;
-			.btl-modal-form-group {
-				display: flex;
-				align-items: center;
-				.btl-modal-form-label {
-					width: 200px;
-					min-width: 200px;
-					font-size: 20px;
-					font-weight: 500;
-					text-align: right;
-					padding-right: 40px;
-					&.btl-required {
-						&:after {
-							content: '*';
-							margin-left: 2px;
-							color: $danger;
-						}
-					}
-				}
-				input.btl-modal-form-control {
-					flex: 1;
-					height: 55px;
-					border-radius: 5px;
-					background: #fafafa;
-					padding: 0 15px;
-					width: 100%;
-					border: 1px solid #ebebeb;
-					font-size: 16px;
-					font-weight: 500;
-					outline: none;
-					&:focus {
-						background: #fff;
-						box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
-					}
-				}
-				&:not(:last-child) {
-					margin-bottom: 20px;
-				}
-			}
-			.btl-modal-select {
-				width: 300px;
-				.btl-react-select__control {
-					background-color: #fafafa;
-					height: 55px;
-					border: 1px solid #ebebeb;
-					border-radius: 5px;
-					.btl-react-select__value-container {
-						padding-left: 15px;
-						.btl-react-select__single-value {
-							font-size: 16px;
-							font-weight: 500;
-							margin-left: 0;
-						}
-						.btl-react-select__input {
-							input {
-								box-shadow: none;
-							}
-						}
-					}
-					&.btl-react-select__control--is-focused {
-						box-shadow: none;
-						background-color: #fff;
-					}
-				}
-			}
-			.btl-link-field-copyable {
-				flex: 1;
-				height: 55px;
-				border-radius: 5px;
-				background: #fafafa;
+			width: calc(100% - 260px);
+			@media screen and (max-width: 1023px) {
 				width: 100%;
-				border: 1px solid #ebebeb;
-				display: flex;
-				align-items: center;
-				.btl-static-link {
-					height: 100%;
-					background: linear-gradient(to right, $success, $success-lighten);
-					border-radius: 5px 3px 3px 5px;
-					font-size: 18px;
-					font-weight: 500;
-					padding: 0 10px 0 25px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					color: $white;
-					font-style: italic;
-				}
-				.btl-dynamic-link {
-					background: transparent;
-					font-size: 16px;
-					font-weight: 500;
-					font-style: italic;
-					color: $secondary;
-					padding: 0 10px;
-					border: none;
-					box-shadow: none;
-					outline: none;
-					flex: 1;
-				}
-				.btl-link-copy-button {
-					width: 20px;
-					height: 20px;
-					background: transparent;
-					cursor: pointer;
-					border: none;
-					outline: none;
-					box-shadow: 0;
-					margin-left: 10px;
-					margin-right: 20px;
-					color: $secondary-lighten;
-					font-size: 18px;
-					&:hover {
-						color: $dark;
-					}
-				}
-				&:focus-within {
-					background: $white;
-					box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
-				}
-			}
-		}
-		.btl-modal-select--full {
-			@extend .btl-modal-select;
-			width: 100% !important;
-		}
-		.btl-modal-submit-button {
-			height: 55px;
-			display: inline-flex;
-			justify-content: center;
-			align-items: center;
-			background: linear-gradient(to right, $success, $success-lighten);
-			border: none;
-			outline: none;
-			box-shadow: none;
-			border-radius: 5px;
-			color: $white;
-			font-size: 18px;
-			font-weight: 500;
-			padding: 0 25px;
-			min-width: 190px;
-			&:hover {
-				box-shadow: 0 22px 42px rgba(#03623c, 0.18);
 			}
 		}
 		.btl-entry-content-right {
-			width: 250px;
-			min-width: 250px;
-			margin-left: 40px;
+			width: 260px;
+			min-width: 260px;
+			padding-left: 40px;
 			padding-top: 15px;
-			.btl-checkbox-field {
-				display: flex;
-				cursor: pointer;
-				.btl-check {
-					display: none;
-				}
-				.text {
-					padding-left: 40px;
-					position: relative;
-					color: $dark;
-					font-weight: 500;
-					font-size: 16px;
-					&:before {
-						position: absolute;
-						font-family: 'better-links';
-						content: '\e90c';
-						left: 0;
-						font-size: 24px;
-						color: $secondary-lighten;
-					}
-				}
-				.btl-check:checked + .text:before {
-					content: '\e90e';
-					color: $success;
-				}
-				&:not(:last-child) {
-					margin-bottom: 40px;
+			@media screen and (max-width: 1023px) {
+				padding-left: 210px;
+			}
+			@media screen and (max-width: 650px) {
+				padding-left: 0;
+			}
+		}
+	}
+	.btl-modal-form-group {
+		display: flex;
+		align-items: center;
+		@media screen and (max-width: 650px) {
+			flex-direction: column;
+		}
+		.btl-modal-form-label {
+			width: 170px;
+			min-width: 170px;
+			font-size: 20px;
+			font-weight: 500;
+			text-align: right;
+			padding-right: 40px;
+			@media screen and (max-width: 650px) {
+				margin-bottom: 15px;
+				text-align: center;
+				padding-right: 0;
+			}
+			&.btl-required {
+				&:after {
+					content: '*';
+					margin-left: 2px;
+					color: $danger;
 				}
 			}
+		}
+		&:not(:last-child) {
+			margin-bottom: 20px;
+		}
+	}
+	input.btl-modal-form-control {
+		flex: 1;
+		width: 100%;
+		height: 55px;
+		min-height: 55px;
+		border-radius: 5px;
+		background: #fafafa;
+		padding: 0 15px;
+		border: 1px solid #ebebeb;
+		font-size: 16px;
+		font-weight: 500;
+		outline: none;
+		&:focus {
+			background: #fff;
+			box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
+		}
+	}
+	.btl-modal-select {
+		width: 300px;
+		.btl-react-select__control {
+			background-color: #fafafa;
+			height: 55px;
+			border: 1px solid #ebebeb;
+			border-radius: 5px;
+			.btl-react-select__value-container {
+				padding-left: 15px;
+				.btl-react-select__single-value {
+					font-size: 16px;
+					font-weight: 500;
+					margin-left: 0;
+				}
+				.btl-react-select__input {
+					input {
+						box-shadow: none;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				box-shadow: none;
+				background-color: #fff;
+			}
+		}
+	}
+	.btl-modal-select--full {
+		@extend .btl-modal-select;
+		flex: 1;
+		width: 100%;
+	}
+	.btl-link-field-copyable {
+		width: calc( 100% - 210px );
+		height: 55px;
+		border-radius: 5px;
+		background: #fafafa;
+		border: 1px solid #ebebeb;
+		display: flex;
+		align-items: center;
+		@media screen and (max-width: 650px) {
+			width: 100%;
+		}
+		.btl-static-link {
+			height: 100%;
+			background: linear-gradient(to right, $success, $success-lighten);
+			border-radius: 5px 3px 3px 5px;
+			font-size: 18px;
+			font-weight: 500;
+			padding: 0 10px 0 15px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: $white;
+			font-style: italic;
+			@media screen and (max-width: 1599px) {
+				font-size: 16px;
+			}
+			@media screen and (max-width: 1199px) {
+				font-size: 14px;
+			}
+		}
+		.btl-dynamic-link {
+			background: transparent;
+			font-size: 16px;
+			font-weight: 500;
+			font-style: italic;
+			color: $secondary;
+			padding: 0 10px;
+			border: none;
+			box-shadow: none;
+			outline: none;
+			flex: 1;
+			min-width: 100px;
+		}
+		.btl-link-copy-button {
+			width: 20px;
+			height: 20px;
+			background: transparent;
+			cursor: pointer;
+			border: none;
+			outline: none;
+			box-shadow: 0;
+			margin-left: 10px;
+			margin-right: 20px;
+			color: $secondary-lighten;
+			font-size: 18px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			&:hover {
+				color: $dark;
+			}
+			@media screen and (max-width: 1199px) {
+				margin-left: 5px;
+				margin-right: 15px;
+			}
+		}
+		&:focus-within {
+			background: $white;
+			box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
+		}
+	}
+	.btl-checkbox-field {
+		display: flex;
+		cursor: pointer;
+		margin-bottom: 40px;
+		.btl-check {
+			display: none;
+		}
+		.text {
+			padding-left: 40px;
+			position: relative;
+			color: $dark;
+			font-weight: 500;
+			font-size: 16px;
+			&:before {
+				position: absolute;
+				font-family: 'better-links';
+				content: '\e90c';
+				left: 0;
+				font-size: 24px;
+				color: $secondary-lighten;
+			}
+		}
+		.btl-check:checked + .text:before {
+			content: '\e90e';
+			color: $success;
+		}
+	}
+	.btl-modal-submit-button {
+		height: 55px;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		background: linear-gradient(to right, $success, $success-lighten);
+		border: none;
+		outline: none;
+		box-shadow: none;
+		border-radius: 5px;
+		color: $white;
+		font-size: 18px;
+		font-weight: 500;
+		padding: 0 25px;
+		min-width: 190px;
+		&:hover {
+			box-shadow: 0 22px 42px rgba(#03623c, 0.18);
 		}
 	}
 }
