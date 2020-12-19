@@ -66,8 +66,26 @@ class Terms extends Controller {
      */
     public function get_value($request)
     {
+        $query_params = $request->get_query_params();
+        global $wpdb;
+        $prefix = $wpdb->prefix;
         $query = \BetterLinks\Helper::DB();
-        $results = $query->table('better_terms')->get();
+        if(isset($query_params['ID'])){
+            $results = $query->query("SELECT 
+            {$prefix}better_terms.ID as term_id, 
+            {$prefix}better_terms.term_name, 
+            {$prefix}better_terms.term_slug,
+            {$prefix}better_terms.term_type
+            FROM {$prefix}better_terms
+            LEFT JOIN  {$prefix}better_terms_relationships ON {$prefix}better_terms.ID = {$prefix}better_terms_relationships.term_id
+            LEFT JOIN  {$prefix}better_links ON {$prefix}better_links.ID = {$prefix}better_terms_relationships.link_id
+            WHERE {$prefix}better_terms_relationships.link_id = {$query_params['ID']} 
+            AND {$prefix}better_terms.term_type = '{$query_params['term_type']}'
+            ")->get();
+        } else {
+            $results = $query->table('better_terms')->where('term_type', '=', $query_params['term_type'])->get();
+        }
+
 
         return new \WP_REST_Response(array(
             'success' => true,

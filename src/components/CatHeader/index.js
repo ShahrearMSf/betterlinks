@@ -99,7 +99,6 @@ const CatHeader = (props) => {
                         cat_id: '',
                     }}
                     onSubmit={async (values) => {
-                        console.log(values)
                         setModalIsOpen(false)
                         return
                     }}

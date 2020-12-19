@@ -70048,7 +70048,6 @@ const CatHeader = props => {
       cat_id: ''
     },
     onSubmit: async values => {
-      console.log(values);
       setModalIsOpen(false);
       return;
     }
@@ -70194,10 +70193,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../Select */ "./src/components/Select/index.js");
 /* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
-/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
-/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
+/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
+/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
+
+
+
 
 
 
@@ -70211,19 +70216,41 @@ const Link = ({
   cat_id,
   cat_name,
   item,
-  submitHandler
+  submitHandler,
+  terms,
+  fetch_terms_data
 }) => {
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [isEditMode, setEditMode] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
 
   function openModal() {
-    setModalIsOpen(true);
+    if (item) {
+      setEditMode(true);
+      fetch_terms_data({
+        term_type: 'tags',
+        ID: item.ID
+      }).then(() => {
+        setModalIsOpen(true);
+      });
+    } else {
+      setEditMode(false);
+      setModalIsOpen(true);
+    }
   }
 
   function closeModal() {
+    setEditMode(false);
     setModalIsOpen(false);
   }
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, item ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: openModal,
+    className: "dnd-link-button"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "icon"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "btl btl-edit"
+  }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: openModal,
     className: "btl-create-link-button"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -70231,7 +70258,7 @@ const Link = ({
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
     isOpen: modalIsOpen,
     onRequestClose: closeModal,
-    style: _utils_helper__WEBPACK_IMPORTED_MODULE_4__["modalCustomStyles"],
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_7__["modalCustomStyles"],
     ariaHideApp: false
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-close-modal",
@@ -70244,18 +70271,17 @@ const Link = ({
       link_slug: '',
       redirect_type: '',
       target_url: '',
-      short_url: Object(_utils_helper__WEBPACK_IMPORTED_MODULE_4__["generateRandomSlug"])(),
+      short_url: Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateRandomSlug"])(),
       link_note: '',
-      nofollow: '',
-      sponsored: '',
-      param_forwarding: '',
-      track_me: '',
+      nofollow: false,
+      sponsored: false,
+      param_forwarding: false,
+      track_me: false,
       cat_id,
       cat_name,
       ...item
     },
     onSubmit: async values => {
-      console.log(values);
       setModalIsOpen(false);
       return submitHandler(values);
     }
@@ -70296,7 +70322,7 @@ const Link = ({
   }, "Redirect Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Select__WEBPACK_IMPORTED_MODULE_2__["default"], {
     id: "redirect_type",
     name: "redirect_type",
-    value: _utils_data__WEBPACK_IMPORTED_MODULE_5__["redirectType"],
+    value: _utils_data__WEBPACK_IMPORTED_MODULE_8__["redirectType"],
     setFieldValue: props.setFieldValue,
     isMulti: false
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -70342,7 +70368,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "cat_id"
-  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_9__["default"], {
     name: "cat_id",
     cat_id: cat_name,
     cat_name: cat_name,
@@ -70352,8 +70378,10 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "tags_id"
-  }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Tags__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Tags__WEBPACK_IMPORTED_MODULE_10__["default"], {
     name: "tags_id",
+    terms: terms,
+    isEditMode: isEditMode,
     setFieldValue: props.setFieldValue
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-entry-content-right"
@@ -70399,7 +70427,17 @@ const Link = ({
   }, "Publish"))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Link);
+const mapStateToProps = state => ({
+  terms: state.terms
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_5__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_6__["fetch_terms_data"], dispatch)
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_4__["connect"])(mapStateToProps, mapDispatchToProps)(Link));
 
 /***/ }),
 
@@ -71756,7 +71794,9 @@ const Category = props => {
 
   const fetchData = () => {
     if (!isFetchData) {
-      props.fetch_terms_data();
+      props.fetch_terms_data({
+        term_type: 'category'
+      });
       setIsFetchData(true);
     }
   };
@@ -71830,7 +71870,9 @@ const Tags = props => {
 
   const fetchData = () => {
     if (!isFetchData) {
-      props.fetch_terms_data();
+      props.fetch_terms_data({
+        term_type: 'tags'
+      });
       setIsFetchData(true);
     }
   };
@@ -71843,15 +71885,19 @@ const Tags = props => {
     return props.setFieldValue(field.name, option.map(item => item.value));
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_creatable__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, props.terms.terms && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_creatable__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btl-modal-form-control btl-modal-select",
     isClearable: true,
     id: field.id,
     name: field.name,
     onMenuOpen: () => fetchData(),
+    defaultValue: props.isEditMode ? props.terms.terms && Object.entries(props.terms.terms).map(([key, value]) => ({
+      value: value.ID,
+      label: value.term_name
+    })) : false,
     onChange: onChange,
     classNamePrefix: "btl-react-select",
-    options: props.terms.terms && Object.entries(props.terms.terms).filter(([key, value]) => value.term_type === 'tags').map(([key, value]) => ({
+    options: props.terms.terms && Object.entries(props.terms.terms).map(([key, value]) => ({
       value: value.ID,
       label: value.term_name
     })),
@@ -72189,7 +72235,7 @@ const onDragEnd = result => async dispatch => {
     await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].put(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
       params: {
         ID: result.draggableId,
-        term_id: result.destination.droppableId
+        cat_id: result.destination.droppableId
       }
     });
   } catch (e) {
@@ -72301,12 +72347,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
 
 const FETCH_TERMS_DATA = 'FETCH_TERMS_DATA';
-const fetch_terms_data = type => async dispatch => {
+const fetch_terms_data = params => async dispatch => {
   try {
     const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].get(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'terms', {
-      params: {
-        term_type: type
-      }
+      params: params
     });
     dispatch({
       type: FETCH_TERMS_DATA,
@@ -72423,8 +72467,8 @@ function settings(state = {}, action) {
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["EDIT_LINK"]:
       return { ...state,
         settings: { ...state.settings,
-          [payload.term_id]: { ...state.settings[payload.term_id],
-            lists: [...state.settings[payload.term_id].lists.filter((item, index) => item.ID != payload.ID), payload]
+          [payload.cat_id]: { ...state.settings[payload.cat_id],
+            lists: [...state.settings[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload]
           }
         }
       };

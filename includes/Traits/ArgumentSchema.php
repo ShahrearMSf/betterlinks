@@ -72,6 +72,10 @@ trait ArgumentSchema {
     }
     public function terms_schema(){
         return array(
+            'ID' => array(
+                'type' => 'integer',
+                'sanitize_callback' => 'absint'
+            ),
             'term_name' => array(
                 'type'   => 'string',
                 'sanitize_callback' => 'sanitize_text_field'

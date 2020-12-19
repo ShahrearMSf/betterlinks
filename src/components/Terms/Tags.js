@@ -10,7 +10,7 @@ const Tags = (props) => {
     const [isFetchData, setIsFetchData] = useState(false)
     const fetchData = () => {
         if (!isFetchData) {
-            props.fetch_terms_data()
+            props.fetch_terms_data({ term_type: 'tags' })
             setIsFetchData(true)
         }
     }
@@ -25,31 +25,44 @@ const Tags = (props) => {
             option.map((item) => item.value)
         )
     }
-
     return (
         <React.Fragment>
-            <CreatableSelect2
-                className='btl-modal-form-control btl-modal-select'
-                isClearable
-                id={field.id}
-                name={field.name}
-                onMenuOpen={() => fetchData()}
-                onChange={onChange}
-                classNamePrefix='btl-react-select'
-                options={
-                    props.terms.terms &&
-                    Object.entries(props.terms.terms)
-                        .filter(([key, value]) => value.term_type === 'tags')
-                        .map(([key, value]) => ({
-                            value: value.ID,
-                            label: value.term_name,
-                        }))
-                }
-                isMulti={true}
-            />
+            {props.terms.terms && (
+                <CreatableSelect2
+                    className='btl-modal-form-control btl-modal-select'
+                    isClearable
+                    id={field.id}
+                    name={field.name}
+                    onMenuOpen={() => fetchData()}
+                    defaultValue={
+                        props.isEditMode
+                            ? props.terms.terms &&
+                              Object.entries(props.terms.terms).map(
+                                  ([key, value]) => ({
+                                      value: value.ID,
+                                      label: value.term_name,
+                                  })
+                              )
+                            : false
+                    }
+                    onChange={onChange}
+                    classNamePrefix='btl-react-select'
+                    options={
+                        props.terms.terms &&
+                        Object.entries(props.terms.terms).map(
+                            ([key, value]) => ({
+                                value: value.ID,
+                                label: value.term_name,
+                            })
+                        )
+                    }
+                    isMulti={true}
+                />
+            )}
         </React.Fragment>
     )
 }
+
 const mapStateToProps = (state) => ({
     terms: state.terms,
 })

@@ -15,7 +15,7 @@ export const onDragEnd = (result) => async (dispatch) => {
         await API.put(namespace + 'links', {
             params: {
                 ID: result.draggableId,
-                term_id: result.destination.droppableId,
+                cat_id: result.destination.droppableId,
             },
         })
     } catch (e) {

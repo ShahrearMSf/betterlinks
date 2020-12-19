@@ -2,26 +2,58 @@ import React, { useState } from 'react'
 import Modal from 'react-modal'
 import Select from './../Select'
 import { Formik, Field, Form } from 'formik'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetch_terms_data } from './../../redux/actions/terms.actions'
 import { modalCustomStyles, generateRandomSlug } from './../../utils/helper'
 import { redirectType } from './../../utils/data'
 import Category from './../Terms/Category'
 import Tags from './../Terms/Tags'
 
-const Link = ({ cat_id, cat_name, item, submitHandler }) => {
+const Link = ({
+    cat_id,
+    cat_name,
+    item,
+    submitHandler,
+    terms,
+    fetch_terms_data,
+}) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
+    const [isEditMode, setEditMode] = useState(false)
 
     function openModal() {
-        setModalIsOpen(true)
+        if (item) {
+            setEditMode(true)
+            fetch_terms_data({
+                term_type: 'tags',
+                ID: item.ID,
+            }).then(() => {
+                setModalIsOpen(true)
+            })
+        } else {
+            setEditMode(false)
+            setModalIsOpen(true)
+        }
     }
 
     function closeModal() {
+        setEditMode(false)
         setModalIsOpen(false)
     }
     return (
         <>
-            <button onClick={openModal} className='btl-create-link-button'>
-                <i className='btl btl-add'></i>
-            </button>
+            {item ? (
+                <button onClick={openModal} className='dnd-link-button'>
+                    <span className='icon'>
+                        <i className='btl btl-edit'></i>
+                    </span>
+                </button>
+            ) : (
+                <button onClick={openModal} className='btl-create-link-button'>
+                    <i className='btl btl-add'></i>
+                </button>
+            )}
+
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -39,16 +71,15 @@ const Link = ({ cat_id, cat_name, item, submitHandler }) => {
                         target_url: '',
                         short_url: generateRandomSlug(),
                         link_note: '',
-                        nofollow: '',
-                        sponsored: '',
-                        param_forwarding: '',
-                        track_me: '',
+                        nofollow: false,
+                        sponsored: false,
+                        param_forwarding: false,
+                        track_me: false,
                         cat_id,
                         cat_name,
                         ...item,
                     }}
                     onSubmit={async (values) => {
-                        console.log(values)
                         setModalIsOpen(false)
                         return submitHandler(values)
                     }}
@@ -176,6 +207,8 @@ const Link = ({ cat_id, cat_name, item, submitHandler }) => {
                                         </label>
                                         <Tags
                                             name='tags_id'
+                                            terms={terms}
+                                            isEditMode={isEditMode}
                                             setFieldValue={props.setFieldValue}
                                         />
                                     </div>
@@ -233,4 +266,13 @@ const Link = ({ cat_id, cat_name, item, submitHandler }) => {
         </>
     )
 }
-export default Link
+const mapStateToProps = (state) => ({
+    terms: state.terms,
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Link)

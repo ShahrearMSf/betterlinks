@@ -90,10 +90,10 @@ function settings(state = {}, action) {
                 ...state,
                 settings: {
                     ...state.settings,
-                    [payload.term_id]: {
-                        ...state.settings[payload.term_id],
+                    [payload.cat_id]: {
+                        ...state.settings[payload.cat_id],
                         lists: [
-                            ...state.settings[payload.term_id].lists.filter(
+                            ...state.settings[payload.cat_id].lists.filter(
                                 (item, index) => item.ID != payload.ID
                             ),
                             payload,

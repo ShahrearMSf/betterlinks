@@ -1,9 +1,9 @@
 import { API, namespace } from './../../utils/helper'
 export const FETCH_TERMS_DATA = 'FETCH_TERMS_DATA'
-export const fetch_terms_data = (type) => async (dispatch) => {
+export const fetch_terms_data = (params) => async (dispatch) => {
     try {
         const res = await API.get(namespace + 'terms', {
-            params: { term_type: type },
+            params: params,
         })
         dispatch({
             type: FETCH_TERMS_DATA,

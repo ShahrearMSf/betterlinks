@@ -10,7 +10,7 @@ const Category = (props) => {
     const [isFetchData, setIsFetchData] = useState(false)
     const fetchData = () => {
         if (!isFetchData) {
-            props.fetch_terms_data()
+            props.fetch_terms_data({ term_type: 'category' })
             setIsFetchData(true)
         }
     }
