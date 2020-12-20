@@ -27,38 +27,34 @@ const Tags = (props) => {
     }
     return (
         <React.Fragment>
-            {props.terms.terms && (
-                <CreatableSelect2
-                    className='btl-modal-form-control btl-modal-select'
-                    isClearable
-                    id={field.id}
-                    name={field.name}
-                    onMenuOpen={() => fetchData()}
-                    defaultValue={
-                        props.isEditMode
-                            ? props.terms.terms &&
-                              Object.entries(props.terms.terms).map(
-                                  ([key, value]) => ({
-                                      value: value.ID,
-                                      label: value.term_name,
-                                  })
-                              )
-                            : false
-                    }
-                    onChange={onChange}
-                    classNamePrefix='btl-react-select'
-                    options={
-                        props.terms.terms &&
-                        Object.entries(props.terms.terms).map(
-                            ([key, value]) => ({
-                                value: value.ID,
-                                label: value.term_name,
-                            })
-                        )
-                    }
-                    isMulti={true}
-                />
-            )}
+            <CreatableSelect2
+                className='btl-modal-form-control btl-modal-select'
+                isClearable
+                id={field.id}
+                name={field.name}
+                onMenuOpen={() => fetchData()}
+                defaultValue={
+                    props.isEditMode
+                        ? props.terms.terms &&
+                          Object.entries(props.terms.terms).map(
+                              ([key, value]) => ({
+                                  value: value.ID,
+                                  label: value.term_name,
+                              })
+                          )
+                        : false
+                }
+                onChange={onChange}
+                classNamePrefix='btl-react-select'
+                options={
+                    props.terms.terms &&
+                    Object.entries(props.terms.terms).map(([key, value]) => ({
+                        value: value.ID,
+                        label: value.term_name,
+                    }))
+                }
+                isMulti={true}
+            />
         </React.Fragment>
     )
 }

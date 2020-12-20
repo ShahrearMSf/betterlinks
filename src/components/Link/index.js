@@ -5,7 +5,12 @@ import { Formik, Field, Form } from 'formik'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetch_terms_data } from './../../redux/actions/terms.actions'
-import { modalCustomStyles, generateRandomSlug } from './../../utils/helper'
+import {
+    modalCustomStyles,
+    site_url,
+    generateRandomSlug,
+    copyToClipboard,
+} from './../../utils/helper'
 import { redirectType } from './../../utils/data'
 import Category from './../Terms/Category'
 import Tags from './../Terms/Tags'
@@ -20,6 +25,8 @@ const Link = ({
 }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [isEditMode, setEditMode] = useState(false)
+    const [isCopyUrl, setCopyUrl] = useState(false)
+    const randomSlug = generateRandomSlug()
 
     function openModal() {
         if (item) {
@@ -35,7 +42,10 @@ const Link = ({
             setModalIsOpen(true)
         }
     }
-
+    const copyShortUrl = (url) => {
+        copyToClipboard(url)
+        setCopyUrl(true)
+    }
     function closeModal() {
         setEditMode(false)
         setModalIsOpen(false)
@@ -69,7 +79,7 @@ const Link = ({
                         link_slug: '',
                         redirect_type: '',
                         target_url: '',
-                        short_url: generateRandomSlug(),
+                        short_url: randomSlug,
                         link_note: '',
                         nofollow: false,
                         sponsored: false,
@@ -158,7 +168,7 @@ const Link = ({
                                         </label>
                                         <div className='btl-link-field-copyable'>
                                             <span className='btl-static-link'>
-                                                http://eaeltest.local/
+                                                {site_url}
                                             </span>
                                             <Field
                                                 className='btl-dynamic-link'
@@ -166,8 +176,22 @@ const Link = ({
                                                 name='short_url'
                                                 required
                                             />
-                                            <button className='btl-link-copy-button'>
-                                                <i className='btl btl-copy'></i>
+                                            <button
+                                                type='button'
+                                                onClick={() =>
+                                                    copyShortUrl(
+                                                        site_url +
+                                                            '/' +
+                                                            randomSlug
+                                                    )
+                                                }
+                                                className='btl-link-copy-button'
+                                            >
+                                                {isCopyUrl ? (
+                                                    <span className='dashicons dashicons-yes'></span>
+                                                ) : (
+                                                    <i className='btl btl-copy'></i>
+                                                )}
                                             </button>
                                         </div>
                                     </div>
@@ -256,7 +280,7 @@ const Link = ({
                                     type='submit'
                                     className='btl-modal-submit-button'
                                 >
-                                    Publish
+                                    {item ? 'Update' : 'Publish'}
                                 </button>
                             </div>
                         </Form>

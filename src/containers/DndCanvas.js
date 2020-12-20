@@ -60,7 +60,6 @@ function DndCanvas(props) {
                                         )}
                                         {...provided.droppableProps}
                                     >
-                                        {console.log(el)}
                                         <CatHeader
                                             cat_id={ind}
                                             cat_name={el.term_name}

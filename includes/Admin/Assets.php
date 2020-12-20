@@ -28,6 +28,7 @@ class Assets
                 'namespace' => BL_PLUGIN_SLUG . '/v1/',
                 'plugin_root_url' => BL_PLUGIN_ROOT_URI,
                 'plugin_root_path' => BL_ROOT_DIR_PATH,
+                'site_url' => site_url()
             ));
         }
     }

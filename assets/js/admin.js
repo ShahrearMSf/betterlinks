@@ -70014,7 +70014,6 @@ const CatHeader = props => {
     setModalIsOpen(false);
   }
 
-  console.log(props);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-head"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
@@ -70249,6 +70248,8 @@ const Link = ({
 }) => {
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [isEditMode, setEditMode] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [isCopyUrl, setCopyUrl] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const randomSlug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateRandomSlug"])();
 
   function openModal() {
     if (item) {
@@ -70264,6 +70265,11 @@ const Link = ({
       setModalIsOpen(true);
     }
   }
+
+  const copyShortUrl = url => {
+    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["copyToClipboard"])(url);
+    setCopyUrl(true);
+  };
 
   function closeModal() {
     setEditMode(false);
@@ -70298,7 +70304,7 @@ const Link = ({
       link_slug: '',
       redirect_type: '',
       target_url: '',
-      short_url: Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateRandomSlug"])(),
+      short_url: randomSlug,
       link_note: '',
       nofollow: false,
       sponsored: false,
@@ -70372,14 +70378,18 @@ const Link = ({
     className: "btl-link-field-copyable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-static-link"
-  }, "http://eaeltest.local/"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, _utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     className: "btl-dynamic-link",
     id: "short_url",
     name: "short_url",
     required: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"] + '/' + randomSlug),
     className: "btl-link-copy-button"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+  }, isCopyUrl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "dashicons dashicons-yes"
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-copy"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
@@ -70451,7 +70461,7 @@ const Link = ({
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit",
     className: "btl-modal-submit-button"
-  }, "Publish"))))));
+  }, item ? 'Update' : 'Publish'))))));
 };
 
 const mapStateToProps = state => ({
@@ -71836,7 +71846,7 @@ const Category = props => {
     return props.setFieldValue(field.name, option.value);
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, console.log('category: ', props.cat_id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btl-modal-select",
     id: field.id,
     name: field.name,
@@ -71912,7 +71922,7 @@ const Tags = props => {
     return props.setFieldValue(field.name, option.map(item => item.value));
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, props.terms.terms && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_creatable__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_creatable__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btl-modal-form-control btl-modal-select",
     isClearable: true,
     id: field.id,
@@ -72015,7 +72025,7 @@ function DndCanvas(props) {
     className: "dnd-category",
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), console.log(el), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
+  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
     cat_id: ind,
     cat_name: el.term_name,
     cat_slug: el.term_slug
@@ -72473,7 +72483,6 @@ __webpack_require__.r(__webpack_exports__);
 
 function settings(state = {}, action) {
   const payload = action.payload;
-  console.log('state settings', state.settings);
 
   switch (action.type) {
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_INITIAL_DATA"]:
@@ -72592,7 +72601,6 @@ __webpack_require__.r(__webpack_exports__);
 
 function terms(state = {}, action) {
   const payload = action.payload;
-  console.log('terms', payload);
 
   switch (action.type) {
     case _actions_terms_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_TERMS_DATA"]:
@@ -72668,7 +72676,7 @@ const redirectType = [{
 /*!*****************************!*\
   !*** ./src/utils/helper.js ***!
   \*****************************/
-/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, API, reorder, move, generateSlug, generateRandomSlug, modalCustomStyles, modalCustomSmallStyles */
+/*! exports provided: nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, API, reorder, move, generateSlug, generateRandomSlug, modalCustomStyles, modalCustomSmallStyles, copyToClipboard */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -72678,6 +72686,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "namespace", function() { return namespace; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugin_root_url", function() { return plugin_root_url; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugin_root_path", function() { return plugin_root_path; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "site_url", function() { return site_url; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API", function() { return API; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reorder", function() { return reorder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "move", function() { return move; });
@@ -72685,6 +72694,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateRandomSlug", function() { return generateRandomSlug; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalCustomStyles", function() { return modalCustomStyles; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modalCustomSmallStyles", function() { return modalCustomSmallStyles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "copyToClipboard", function() { return copyToClipboard; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -72693,7 +72703,8 @@ const {
   rest_url,
   namespace,
   plugin_root_url,
-  plugin_root_path
+  plugin_root_path,
+  site_url
 } = window.betterLinksGlobal;
 const API = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
   baseURL: rest_url,
@@ -72750,6 +72761,15 @@ const modalCustomSmallStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)'
   }
+};
+const copyToClipboard = copyText => {
+  var tempInput = document.createElement('input');
+  tempInput.value = copyText;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempInput);
+  return;
 };
 
 /***/ })

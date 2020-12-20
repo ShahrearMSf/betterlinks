@@ -39,7 +39,6 @@ const CatHeader = (props) => {
         setCatAction(false)
         setModalIsOpen(false)
     }
-    console.log(props)
     return (
         <React.Fragment>
             <div className='category-head'>

@@ -11,7 +11,6 @@ import {
 import { move, reorder } from './../../utils/helper'
 function settings(state = {}, action) {
     const payload = action.payload
-    console.log('state settings', state.settings)
     switch (action.type) {
         case FETCH_INITIAL_DATA:
             return {

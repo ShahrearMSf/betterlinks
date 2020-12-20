@@ -24,7 +24,6 @@ const Category = (props) => {
 
     return (
         <React.Fragment>
-            {console.log('category: ', props.cat_id)}
             <Select2
                 className='btl-modal-select'
                 id={field.id}

@@ -6,6 +6,7 @@ export const {
     namespace,
     plugin_root_url,
     plugin_root_path,
+    site_url,
 } = window.betterLinksGlobal
 
 export const API = axios.create({
@@ -82,4 +83,14 @@ export const modalCustomSmallStyles = {
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
     },
+}
+
+export const copyToClipboard = (copyText) => {
+    var tempInput = document.createElement('input')
+    tempInput.value = copyText
+    document.body.appendChild(tempInput)
+    tempInput.select()
+    document.execCommand('copy')
+    document.body.removeChild(tempInput)
+    return
 }
