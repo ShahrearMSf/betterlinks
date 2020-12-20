@@ -14,6 +14,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import CreateCategory from './../components/CreateCategory'
 import Link from './../components/Link'
 import CatHeader from '../components/CatHeader'
+import LinkQuickAction from '../components/LinkQuickAction'
 
 /**
  * Moves an item from one list to another list.
@@ -99,21 +100,9 @@ function DndCanvas(props) {
                                                                         }
                                                                     </h3>
                                                                     <div className='btl-dnd-link-button-group'>
-                                                                        <button className='dnd-link-button'>
-                                                                            <span className='icon'>
-                                                                                <i className='btl btl-target'></i>
-                                                                            </span>
-                                                                        </button>
-                                                                        <button className='dnd-link-button'>
-                                                                            <span className='icon'>
-                                                                                <i className='btl btl-reload'></i>
-                                                                            </span>
-                                                                        </button>
-                                                                        <button className='dnd-link-button'>
-                                                                            <span className='icon'>
-                                                                                <i className='btl btl-link'></i>
-                                                                            </span>
-                                                                        </button>
+                                                                        <LinkQuickAction
+                                                                            {...item}
+                                                                        />
                                                                         <Link
                                                                             cat_id={
                                                                                 ind

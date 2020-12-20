@@ -70521,6 +70521,48 @@ const mapDispatchToProps = dispatch => {
 
 /***/ }),
 
+/***/ "./src/components/LinkQuickAction/index.js":
+/*!*************************************************!*\
+  !*** ./src/components/LinkQuickAction/index.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+
+
+
+const LinkQuickAction = props => {
+  const {
+    short_url
+  } = props;
+  const [isCopyUrl, setCopyUrl] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  const copyShortUrl = url => {
+    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_1__["copyToClipboard"])(url);
+    setCopyUrl(true);
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "dnd-link-button",
+    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_1__["site_url"] + '/' + short_url)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "icon"
+  }, isCopyUrl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "dashicons dashicons-yes"
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "btl btl-link"
+  }))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (LinkQuickAction);
+
+/***/ }),
+
 /***/ "./src/components/Loader/index.js":
 /*!****************************************!*\
   !*** ./src/components/Loader/index.js ***!
@@ -72018,7 +72060,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_CreateCategory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../components/CreateCategory */ "./src/components/CreateCategory.js");
 /* harmony import */ var _components_Link__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../components/Link */ "./src/components/Link/index.js");
 /* harmony import */ var _components_CatHeader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/CatHeader */ "./src/components/CatHeader/index.js");
+/* harmony import */ var _components_LinkQuickAction__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/LinkQuickAction */ "./src/components/LinkQuickAction/index.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -72089,25 +72133,7 @@ function DndCanvas(props) {
     className: "dnd-link-title"
   }, item.link_title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-dnd-link-button-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "dnd-link-button"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "icon"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "btl btl-target"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "dnd-link-button"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "icon"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "btl btl-reload"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "dnd-link-button"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "icon"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "btl btl-link"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Link__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_LinkQuickAction__WEBPACK_IMPORTED_MODULE_9__["default"], item), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Link__WEBPACK_IMPORTED_MODULE_7__["default"], {
     cat_id: ind,
     cat_name: el.term_name,
     item: item,
