@@ -69956,8 +69956,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
 /* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../redux/actions/settings.actions */ "./src/redux/actions/settings.actions.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+
+
+
 
 
 
@@ -69966,7 +69972,10 @@ __webpack_require__.r(__webpack_exports__);
 const CatHeader = props => {
   const {
     cat_id,
-    cat_name
+    cat_name,
+    cat_slug,
+    update_cat,
+    delete_cat
   } = props;
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [isCatAction, setCatAction] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
@@ -69990,7 +69999,10 @@ const CatHeader = props => {
   const confirmDelete = () => {
     setDeleteConfrim(false);
     setDeleteConfrim(false);
-    console.log('Category Delete');
+    console.log(cat_id);
+    delete_cat({
+      cat_id: cat_id
+    });
   };
 
   function openModal() {
@@ -70002,6 +70014,7 @@ const CatHeader = props => {
     setModalIsOpen(false);
   }
 
+  console.log(props);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-head"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
@@ -70036,42 +70049,45 @@ const CatHeader = props => {
   }, "No")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
     isOpen: modalIsOpen,
     onRequestClose: closeModal,
-    style: _utils_helper__WEBPACK_IMPORTED_MODULE_3__["modalCustomSmallStyles"],
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_6__["modalCustomSmallStyles"],
     ariaHideApp: false
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-close-modal",
     onClick: closeModal
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-cancel"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Formik"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
     initialValues: {
-      cat_id: ''
+      cat_id,
+      cat_name,
+      cat_slug
     },
     onSubmit: async values => {
       setModalIsOpen(false);
-      return;
+      setCatAction(false);
+      return update_cat(values);
     }
-  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], {
+  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
     className: "w-100"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
-    htmlFor: "link_title"
-  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
+    htmlFor: "cat_name"
+  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-modal-form-control",
-    id: "link_title",
-    name: "link_title",
+    id: "cat_name",
+    name: "cat_name",
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
-    htmlFor: "link_slug"
-  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
+    htmlFor: "cat_slug"
+  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-modal-form-control",
-    id: "link_slug",
-    name: "link_slug",
+    id: "cat_slug",
+    name: "cat_slug",
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
@@ -70083,7 +70099,18 @@ const CatHeader = props => {
   }, "Update"))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (CatHeader);
+const mapStateToProps = state => ({
+  settings: state.settings
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    update_cat: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__["update_cat"], dispatch),
+    delete_cat: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__["delete_cat"], dispatch)
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(CatHeader));
 
 /***/ }),
 
@@ -71988,9 +72015,10 @@ function DndCanvas(props) {
     className: "dnd-category",
     ref: provided.innerRef,
     style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
+  }, provided.droppableProps), console.log(el), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
     cat_id: ind,
-    cat_name: el.term_name
+    cat_name: el.term_name,
+    cat_slug: el.term_slug
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-body"
   }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Draggable"], {
@@ -72200,7 +72228,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /*!***********************************************!*\
   !*** ./src/redux/actions/settings.actions.js ***!
   \***********************************************/
-/*! exports provided: DRAG_AND_DROP, FETCH_INITIAL_DATA, ADD_NEW_CAT, ADD_NEW_LINK, DELETE_LINK, EDIT_LINK, onDragEnd, fetch_settings_data, add_new_cat, add_new_link, edit_link, delete_link */
+/*! exports provided: DRAG_AND_DROP, FETCH_INITIAL_DATA, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, DELETE_LINK, EDIT_LINK, onDragEnd, fetch_settings_data, add_new_cat, update_cat, delete_cat, add_new_link, edit_link, delete_link */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -72208,12 +72236,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DRAG_AND_DROP", function() { return DRAG_AND_DROP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_INITIAL_DATA", function() { return FETCH_INITIAL_DATA; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_CAT", function() { return ADD_NEW_CAT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_CAT", function() { return UPDATE_CAT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_CAT", function() { return DELETE_CAT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADD_NEW_LINK", function() { return ADD_NEW_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_LINK", function() { return DELETE_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDIT_LINK", function() { return EDIT_LINK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onDragEnd", function() { return onDragEnd; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetch_settings_data", function() { return fetch_settings_data; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_cat", function() { return add_new_cat; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update_cat", function() { return update_cat; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_cat", function() { return delete_cat; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_link", function() { return add_new_link; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edit_link", function() { return edit_link; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_link", function() { return delete_link; });
@@ -72222,6 +72254,8 @@ __webpack_require__.r(__webpack_exports__);
 const DRAG_AND_DROP = 'DRAG_AND_DROP';
 const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 const ADD_NEW_CAT = 'ADD_NEW_CAT';
+const UPDATE_CAT = 'UPDATE_CAT';
+const DELETE_CAT = 'DELETE_CAT';
 const ADD_NEW_LINK = 'ADD_NEW_LINK';
 const DELETE_LINK = 'DELETE_LINK';
 const EDIT_LINK = 'EDIT_LINK';
@@ -72272,6 +72306,40 @@ const add_new_cat = data => async dispatch => {
     console.log(e);
     dispatch({
       type: ADD_NEW_CAT,
+      payload: {}
+    });
+  }
+};
+const update_cat = params => async dispatch => {
+  try {
+    const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].put(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'terms', {
+      params: params
+    });
+    dispatch({
+      type: UPDATE_CAT,
+      payload: res.data
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: UPDATE_CAT,
+      payload: {}
+    });
+  }
+};
+const delete_cat = params => async dispatch => {
+  try {
+    const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].delete(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'terms', {
+      params: params
+    });
+    dispatch({
+      type: DELETE_CAT,
+      payload: res.data
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: DELETE_CAT,
       payload: {}
     });
   }
@@ -72405,6 +72473,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function settings(state = {}, action) {
   const payload = action.payload;
+  console.log('state settings', state.settings);
 
   switch (action.type) {
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_INITIAL_DATA"]:
@@ -72452,6 +72521,24 @@ function settings(state = {}, action) {
           [payload.data.ID]: { ...state.settings[payload.data.ID],
             ...payload.data
           }
+        }
+      };
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["UPDATE_CAT"]:
+      return { ...state,
+        settings: { ...state.settings,
+          [payload.data.cat_id]: { ...state.settings[payload.data.cat_id],
+            term_name: payload.data.cat_name,
+            term_slug: payload.data.cat_slug
+          }
+        }
+      };
+
+    case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["DELETE_CAT"]:
+      const newState = state.settings;
+      delete newState[payload.data.cat_id];
+      return { ...state,
+        settings: { ...newState
         }
       };
 
@@ -72505,6 +72592,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function terms(state = {}, action) {
   const payload = action.payload;
+  console.log('terms', payload);
 
   switch (action.type) {
     case _actions_terms_actions__WEBPACK_IMPORTED_MODULE_0__["FETCH_TERMS_DATA"]:

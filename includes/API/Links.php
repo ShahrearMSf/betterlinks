@@ -63,6 +63,7 @@ class Links extends Controller
             if(!isset($results[$item->term_ID])){
                 $results[$item->term_ID] = array(
                     'term_name' => $item->term_name,
+                    'term_slug' => $item->term_slug,
                     'term_type' => $item->term_type,
                 );
                 if($item->ID !== null){

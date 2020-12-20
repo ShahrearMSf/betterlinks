@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { update_cat, delete_cat } from './../../redux/actions/settings.actions'
 import { Formik, Field, Form } from 'formik'
 import { modalCustomSmallStyles } from './../../utils/helper'
 const CatHeader = (props) => {
-    const { cat_id, cat_name } = props
+    const { cat_id, cat_name, cat_slug, update_cat, delete_cat } = props
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [isCatAction, setCatAction] = useState(false)
     const [isDeleteConfirm, setDeleteConfrim] = useState(false)
@@ -22,7 +25,10 @@ const CatHeader = (props) => {
     const confirmDelete = () => {
         setDeleteConfrim(false)
         setDeleteConfrim(false)
-        console.log('Category Delete')
+        console.log(cat_id)
+        delete_cat({
+            cat_id: cat_id,
+        })
     }
 
     function openModal() {
@@ -33,6 +39,7 @@ const CatHeader = (props) => {
         setCatAction(false)
         setModalIsOpen(false)
     }
+    console.log(props)
     return (
         <React.Fragment>
             <div className='category-head'>
@@ -96,11 +103,14 @@ const CatHeader = (props) => {
                 </span>
                 <Formik
                     initialValues={{
-                        cat_id: '',
+                        cat_id,
+                        cat_name,
+                        cat_slug,
                     }}
                     onSubmit={async (values) => {
                         setModalIsOpen(false)
-                        return
+                        setCatAction(false)
+                        return update_cat(values)
                     }}
                 >
                     {(props) => (
@@ -108,28 +118,28 @@ const CatHeader = (props) => {
                             <div className='btl-modal-form-group'>
                                 <label
                                     className='btl-modal-form-label btl-required'
-                                    htmlFor='link_title'
+                                    htmlFor='cat_name'
                                 >
                                     Title
                                 </label>
                                 <Field
                                     className='btl-modal-form-control'
-                                    id='link_title'
-                                    name='link_title'
+                                    id='cat_name'
+                                    name='cat_name'
                                     required
                                 />
                             </div>
                             <div className='btl-modal-form-group'>
                                 <label
                                     className='btl-modal-form-label btl-required'
-                                    htmlFor='link_slug'
+                                    htmlFor='cat_slug'
                                 >
                                     Slug
                                 </label>
                                 <Field
                                     className='btl-modal-form-control'
-                                    id='link_slug'
-                                    name='link_slug'
+                                    id='cat_slug'
+                                    name='cat_slug'
                                     required
                                 />
                             </div>
@@ -149,4 +159,16 @@ const CatHeader = (props) => {
         </React.Fragment>
     )
 }
-export default CatHeader
+
+const mapStateToProps = (state) => ({
+    settings: state.settings,
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        update_cat: bindActionCreators(update_cat, dispatch),
+        delete_cat: bindActionCreators(delete_cat, dispatch),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CatHeader)

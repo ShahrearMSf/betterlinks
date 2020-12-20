@@ -120,11 +120,15 @@ class Terms extends Controller {
     public function update_value($request)
     {
         $request = $request->get_params();    
-        $id = \BetterLinks\Helper::DB()->table('better_terms')->insert($request['params']);
-        $request['params']['ID'] = $id;
-        $request['params']['lists'] = [];
+        $data = [
+            'term_name'        => $request['params']['cat_name'],
+            'term_slug' => $request['params']['cat_slug']
+        ];
+        
+        \BetterLinks\Helper::DB()->table('better_terms')->where('ID', $request['params']['cat_id'])->update($data);
+
         return new \WP_REST_Response(array(
-            'success'   => is_bool($id),
+            'success'   => is_bool($request['params']['cat_id']),
             'data'     => $request['params']
         ), 200);
     }
@@ -137,13 +141,15 @@ class Terms extends Controller {
      */
     public function delete_value($request)
     {
-       
-        \BetterLinks\Helper::DB()->table('better_links')->where('id', '=', $request['ID'])->delete();
+        $request = $request->get_params();
+        \BetterLinks\Helper::DB()->transaction(function ($qb) use($request) {
+            $qb->table('better_terms')->where('id', '=', $request['cat_id'])->delete();
+            $qb->table('better_terms_relationships')->where('term_id', '=', $request['cat_id'])->delete();
+        });
         return new \WP_REST_Response(array(
             'success'   => true,
             'data'     => [
-                'term_id' => $request['term_id'],
-                'ID' => $request['ID'],
+                'cat_id' => $request['cat_id'],
             ]
         ), 200);
     }

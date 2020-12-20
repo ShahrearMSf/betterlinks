@@ -2,6 +2,8 @@ import { API, namespace } from './../../utils/helper'
 export const DRAG_AND_DROP = 'DRAG_AND_DROP'
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
 export const ADD_NEW_CAT = 'ADD_NEW_CAT'
+export const UPDATE_CAT = 'UPDATE_CAT'
+export const DELETE_CAT = 'DELETE_CAT'
 export const ADD_NEW_LINK = 'ADD_NEW_LINK'
 export const DELETE_LINK = 'DELETE_LINK'
 export const EDIT_LINK = 'EDIT_LINK'
@@ -53,6 +55,42 @@ export const add_new_cat = (data) => async (dispatch) => {
         console.log(e)
         dispatch({
             type: ADD_NEW_CAT,
+            payload: {},
+        })
+    }
+}
+
+export const update_cat = (params) => async (dispatch) => {
+    try {
+        const res = await API.put(namespace + 'terms', {
+            params: params,
+        })
+        dispatch({
+            type: UPDATE_CAT,
+            payload: res.data,
+        })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: UPDATE_CAT,
+            payload: {},
+        })
+    }
+}
+
+export const delete_cat = (params) => async (dispatch) => {
+    try {
+        const res = await API.delete(namespace + 'terms', {
+            params: params,
+        })
+        dispatch({
+            type: DELETE_CAT,
+            payload: res.data,
+        })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: DELETE_CAT,
             payload: {},
         })
     }

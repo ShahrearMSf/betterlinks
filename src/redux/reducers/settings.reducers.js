@@ -2,6 +2,8 @@ import {
     FETCH_INITIAL_DATA,
     DRAG_AND_DROP,
     ADD_NEW_CAT,
+    UPDATE_CAT,
+    DELETE_CAT,
     ADD_NEW_LINK,
     EDIT_LINK,
     DELETE_LINK,
@@ -9,6 +11,7 @@ import {
 import { move, reorder } from './../../utils/helper'
 function settings(state = {}, action) {
     const payload = action.payload
+    console.log('state settings', state.settings)
     switch (action.type) {
         case FETCH_INITIAL_DATA:
             return {
@@ -69,6 +72,27 @@ function settings(state = {}, action) {
                         ...state.settings[payload.data.ID],
                         ...payload.data,
                     },
+                },
+            }
+        case UPDATE_CAT:
+            return {
+                ...state,
+                settings: {
+                    ...state.settings,
+                    [payload.data.cat_id]: {
+                        ...state.settings[payload.data.cat_id],
+                        term_name: payload.data.cat_name,
+                        term_slug: payload.data.cat_slug,
+                    },
+                },
+            }
+        case DELETE_CAT:
+            const newState = state.settings
+            delete newState[payload.data.cat_id]
+            return {
+                ...state,
+                settings: {
+                    ...newState,
                 },
             }
         case ADD_NEW_LINK:
