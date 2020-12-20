@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
 import Select from './../Select'
-import { Formik, Field, Form } from 'formik'
+import { useFormikContext, Formik, Field, Form } from 'formik'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetch_terms_data } from './../../redux/actions/terms.actions'
 import {
     modalCustomStyles,
     site_url,
+    generateSlug,
     generateRandomSlug,
     copyToClipboard,
 } from './../../utils/helper'
@@ -49,6 +50,22 @@ const Link = ({
     function closeModal() {
         setEditMode(false)
         setModalIsOpen(false)
+    }
+    const [nameToSlug, setNameToSlug] = useState(false)
+    const [slugToSlug, setSlugToSlug] = useState(false)
+    const AutoSlugGenerate = () => {
+        const { values } = useFormikContext()
+        React.useEffect(() => {
+            if (nameToSlug) {
+                values.link_slug = generateSlug(values.link_title)
+                setNameToSlug(false)
+            }
+            if (slugToSlug) {
+                values.link_slug = generateSlug(values.link_slug)
+                setSlugToSlug(false)
+            }
+        }, [values])
+        return null
     }
     return (
         <>
@@ -112,22 +129,20 @@ const Link = ({
                                             className='btl-modal-form-control'
                                             id='link_title'
                                             name='link_title'
+                                            onBlur={() => setNameToSlug(true)}
                                             required
                                         />
                                     </div>
                                     <div className='btl-modal-form-group'>
-                                        <label
-                                            className='btl-modal-form-label btl-required'
-                                            htmlFor='link_slug'
-                                        >
-                                            Slug
-                                        </label>
                                         <Field
+                                            type='hidden'
                                             className='btl-modal-form-control'
                                             id='link_slug'
                                             name='link_slug'
+                                            onBlur={() => setSlugToSlug(true)}
                                             required
                                         />
+                                        <AutoSlugGenerate />
                                     </div>
                                     <div className='btl-modal-form-group'>
                                         <label

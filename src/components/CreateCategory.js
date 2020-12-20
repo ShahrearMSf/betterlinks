@@ -21,9 +21,14 @@ const CreateCategory = ({ createCatHandler }) => {
         return null
     }
     return (
-        <div className="dnd-create-category">
-            <button className="dnd-create-category-button" onClick={() => setIsOpenForm(!isOpenForm)}><i className="btl btl-add"></i></button>
-            <p className="dnd-create-category-text">Add New Category</p>
+        <div className='dnd-create-category'>
+            <button
+                className='dnd-create-category-button'
+                onClick={() => setIsOpenForm(!isOpenForm)}
+            >
+                <i className='btl btl-add'></i>
+            </button>
+            <p className='dnd-create-category-text'>Add New Category</p>
             {isOpenForm && (
                 <Formik
                     initialValues={{
@@ -36,8 +41,8 @@ const CreateCategory = ({ createCatHandler }) => {
                         return createCatHandler(values)
                     }}
                 >
-                    <Form className="w-100">
-                        <span className="btl-form-group">
+                    <Form className='w-100'>
+                        <span className='btl-form-group'>
                             <Field
                                 id='term_name'
                                 name='term_name'
@@ -47,8 +52,9 @@ const CreateCategory = ({ createCatHandler }) => {
                                 required
                             />
                         </span>
-                        <span className="btl-form-group">
+                        <span className='btl-form-group'>
                             <Field
+                                type='hidden'
                                 id='term_slug'
                                 name='term_slug'
                                 placeholder='* Slug'
@@ -58,7 +64,12 @@ const CreateCategory = ({ createCatHandler }) => {
                             />
                         </span>
                         <AutoSlugGenerate />
-                        <button className="btl-create-category-submit" type='submit'>Submit</button>
+                        <button
+                            className='btl-create-category-submit'
+                            type='submit'
+                        >
+                            Submit
+                        </button>
                     </Form>
                 </Formik>
             )}

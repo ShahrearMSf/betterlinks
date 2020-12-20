@@ -70014,6 +70014,27 @@ const CatHeader = props => {
     setModalIsOpen(false);
   }
 
+  const [nameToSlug, setNameToSlug] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [slugToSlug, setSlugToSlug] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  const AutoSlugGenerate = () => {
+    const {
+      values
+    } = Object(formik__WEBPACK_IMPORTED_MODULE_5__["useFormikContext"])();
+    react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(() => {
+      if (nameToSlug) {
+        values.cat_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_6__["generateSlug"])(values.cat_name);
+        setNameToSlug(false);
+      }
+
+      if (slugToSlug) {
+        values.cat_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_6__["generateSlug"])(values.cat_slug);
+        setSlugToSlug(false);
+      }
+    }, [values]);
+    return null;
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-head"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
@@ -70077,18 +70098,18 @@ const CatHeader = props => {
     className: "btl-modal-form-control",
     id: "cat_name",
     name: "cat_name",
+    onBlur: () => setNameToSlug(true),
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    className: "btl-modal-form-label btl-required",
-    htmlFor: "cat_slug"
-  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
+    type: "hidden",
     className: "btl-modal-form-control",
     id: "cat_slug",
     name: "cat_slug",
+    onBlur: () => setSlugToSlug(true),
     required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AutoSlugGenerate, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label"
@@ -70188,6 +70209,7 @@ const CreateCategory = ({
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+    type: "hidden",
     id: "term_slug",
     name: "term_slug",
     placeholder: "* Slug",
@@ -70276,6 +70298,27 @@ const Link = ({
     setModalIsOpen(false);
   }
 
+  const [nameToSlug, setNameToSlug] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [slugToSlug, setSlugToSlug] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  const AutoSlugGenerate = () => {
+    const {
+      values
+    } = Object(formik__WEBPACK_IMPORTED_MODULE_3__["useFormikContext"])();
+    react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(() => {
+      if (nameToSlug) {
+        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateSlug"])(values.link_title);
+        setNameToSlug(false);
+      }
+
+      if (slugToSlug) {
+        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateSlug"])(values.link_slug);
+        setSlugToSlug(false);
+      }
+    }, [values]);
+    return null;
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, item ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: openModal,
     className: "dnd-link-button"
@@ -70336,18 +70379,18 @@ const Link = ({
     className: "btl-modal-form-control",
     id: "link_title",
     name: "link_title",
+    onBlur: () => setNameToSlug(true),
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    className: "btl-modal-form-label btl-required",
-    htmlFor: "link_slug"
-  }, "Slug"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+    type: "hidden",
     className: "btl-modal-form-control",
     id: "link_slug",
     name: "link_slug",
+    onBlur: () => setSlugToSlug(true),
     required: true
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AutoSlugGenerate, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",

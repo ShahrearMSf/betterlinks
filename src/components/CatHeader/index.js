@@ -3,8 +3,8 @@ import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { update_cat, delete_cat } from './../../redux/actions/settings.actions'
-import { Formik, Field, Form } from 'formik'
-import { modalCustomSmallStyles } from './../../utils/helper'
+import { useFormikContext, Formik, Field, Form } from 'formik'
+import { generateSlug, modalCustomSmallStyles } from './../../utils/helper'
 const CatHeader = (props) => {
     const { cat_id, cat_name, cat_slug, update_cat, delete_cat } = props
     const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -38,6 +38,22 @@ const CatHeader = (props) => {
     function closeModal() {
         setCatAction(false)
         setModalIsOpen(false)
+    }
+    const [nameToSlug, setNameToSlug] = useState(false)
+    const [slugToSlug, setSlugToSlug] = useState(false)
+    const AutoSlugGenerate = () => {
+        const { values } = useFormikContext()
+        React.useEffect(() => {
+            if (nameToSlug) {
+                values.cat_slug = generateSlug(values.cat_name)
+                setNameToSlug(false)
+            }
+            if (slugToSlug) {
+                values.cat_slug = generateSlug(values.cat_slug)
+                setSlugToSlug(false)
+            }
+        }, [values])
+        return null
     }
     return (
         <React.Fragment>
@@ -125,22 +141,20 @@ const CatHeader = (props) => {
                                     className='btl-modal-form-control'
                                     id='cat_name'
                                     name='cat_name'
+                                    onBlur={() => setNameToSlug(true)}
                                     required
                                 />
                             </div>
                             <div className='btl-modal-form-group'>
-                                <label
-                                    className='btl-modal-form-label btl-required'
-                                    htmlFor='cat_slug'
-                                >
-                                    Slug
-                                </label>
                                 <Field
+                                    type='hidden'
                                     className='btl-modal-form-control'
                                     id='cat_slug'
                                     name='cat_slug'
+                                    onBlur={() => setSlugToSlug(true)}
                                     required
                                 />
+                                <AutoSlugGenerate />
                             </div>
                             <div className='btl-modal-form-group'>
                                 <label className='btl-modal-form-label'></label>
