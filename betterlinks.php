@@ -63,6 +63,7 @@ final class BetterLinks
 		if(is_admin()){
 			new BetterLinks\Admin();
 		}
+		new BetterLinks\Link();
 	}
 
 	public function load_textdomain()
@@ -91,4 +92,3 @@ function BetterLinks_Start()
 
 // Plugin Start
 BetterLinks_Start();
-

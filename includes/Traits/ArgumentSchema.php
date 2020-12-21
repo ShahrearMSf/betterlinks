@@ -33,16 +33,16 @@ trait ArgumentSchema {
                 'sanitize_callback' => 'sanitize_text_field'
             ),
             'nofollow' => array(
-                'type'   => 'integer',
-                'sanitize_callback' => 'absint'
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
             ),
             'sponsored' => array(
-                'type'   => 'integer',
-                'sanitize_callback' => 'absint'
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
             ),
             'track_me' => array(
-                'type'   => 'integer',
-                'sanitize_callback' => 'absint'
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
             ),
             'param_forwarding' => array(
                 'type'   => 'string',
