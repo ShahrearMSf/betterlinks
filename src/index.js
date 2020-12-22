@@ -6,12 +6,14 @@ if (!window._babelPolyfill) {
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { page } from './utils/helper'
 import store from './redux/store'
 import Settings from './containers/Settings'
+import Clicks from './containers/Clicks'
 document.addEventListener('DOMContentLoaded', function () {
     ReactDOM.render(
         <Provider store={store}>
-            <Settings />
+            {page === 'betterlinks' ? <Settings /> : <Clicks />}
         </Provider>,
         document.getElementById('betterlinksbody')
     )

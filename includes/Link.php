@@ -15,7 +15,6 @@ class Link extends Utils {
         $request_uri = trim($request_uri, '/');
         // check slug is available or not
         $data = $this->get_slug_raw($request_uri);
-        error_log(print_r($data, true));
         if($data){
             $this->dispatch_redirect($data);
         }

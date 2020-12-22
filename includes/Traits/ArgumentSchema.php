@@ -90,6 +90,61 @@ trait ArgumentSchema {
             )
         );
     }
+    public function clicks_schema(){
+        return array(
+            'ID' => array(
+                'type' => 'integer',
+                'sanitize_callback' => 'absint'
+            ),
+            'link_id' => array(
+                'type' => 'integer',
+                'sanitize_callback' => 'absint'
+            ),
+            'ip' => array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'browser' => array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'os' => array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'referer' => array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'host' => array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'uri' => array(
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'click_count' => array(
+                'type' => 'integer',
+                'sanitize_callback' => 'absint'
+            ),
+            'visitor_id' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'term_type' => array(
+                'type'   => 'string',
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'click_order' => array(
+                'type' => 'integer',
+                'sanitize_callback' => 'absint'
+            )
+        );
+    }
+    public function get_clicks_schema(){
+        return $this->clicks_schema();
+    }
     public function get_links_schema(){
 
         return array_merge(

@@ -47,7 +47,7 @@ final class BetterLinks
 		define('BL_PLUGIN_SLUG', 'betterlinks');
 		define('BL_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
 		define('BL_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
-		define('WPSP_ASSETS_DIR_PATH', BL_ROOT_DIR_PATH . 'assets/');
+		define('BL_ASSETS_DIR_PATH', BL_ROOT_DIR_PATH . 'assets/');
 		define('BL_ASSETS_URI', BL_PLUGIN_ROOT_URI . 'assets/');
 	}
 
@@ -69,7 +69,7 @@ final class BetterLinks
 	public function load_textdomain()
 	{
 		load_plugin_textdomain(
-			'better-links',
+			'betterlinks',
 			false,
 			dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
 		);

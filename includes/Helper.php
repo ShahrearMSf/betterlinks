@@ -22,7 +22,8 @@ class Helper {
     public static function plugin_page_hook_suffix($hook)
     {
         if (
-            $hook == 'toplevel_page_' .  BL_PLUGIN_SLUG
+            $hook == 'toplevel_page_' .  BL_PLUGIN_SLUG ||
+            $hook == 'better-links_page_' .  BL_PLUGIN_SLUG . '-clicks'
         ) {
             return true;
         }

@@ -7,6 +7,7 @@ export const {
     plugin_root_url,
     plugin_root_path,
     site_url,
+    page,
 } = window.betterLinksGlobal
 
 export const API = axios.create({
