@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import DataTable from 'react-data-table-component'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import TableLoader from '../components/Loader/TableLoader'
 import { site_url } from './../utils/helper'
 import { fetch_clicks_data } from './../redux/actions/clicks.actions'
 
@@ -10,11 +11,7 @@ const columns = [
         name: 'IP',
         selector: 'ip',
         sortable: false,
-        cell: (row) => (
-            <div>
-                <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>
-            </div>
-        ),
+        cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
     },
     {
         name: 'Timestamp',
@@ -25,13 +22,7 @@ const columns = [
         name: 'Short URI',
         selector: 'short_url',
         sortable: false,
-        cell: (row) => (
-            <div>
-                <div style={{ fontWeight: 700 }}>
-                    {site_url + '/' + row.short_url}
-                </div>
-            </div>
-        ),
+        cell: (row) => <div>{site_url + '/' + row.short_url}</div>,
     },
     {
         name: 'Referrer',
@@ -66,8 +57,10 @@ const Clicks = (props) => {
 
     return (
         <React.Fragment>
-            {isLoaded && (
+            {isLoaded == true ? (
                 <DataTable title='Clicks' columns={columns} data={clicks} />
+            ) : (
+                <TableLoader />
             )}
         </React.Fragment>
     )

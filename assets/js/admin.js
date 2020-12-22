@@ -70705,6 +70705,316 @@ const LinkQuickAction = props => {
 
 /***/ }),
 
+/***/ "./src/components/Loader/TableLoader.js":
+/*!**********************************************!*\
+  !*** ./src/components/Loader/TableLoader.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-content-loader */ "./node_modules/react-content-loader/dist/react-content-loader.es.js");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+
+
+
+const TableLoader = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_content_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({
+  speed: 2,
+  width: 532,
+  height: 148,
+  viewBox: "0 0 532 148",
+  backgroundColor: "#e8e8e8",
+  foregroundColor: "#c2c2c2"
+}, props), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "2",
+  rx: "0",
+  ry: "0",
+  width: "530",
+  height: "11"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "3",
+  y: "21",
+  rx: "0",
+  ry: "0",
+  width: "527",
+  height: "10"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "46",
+  rx: "0",
+  ry: "0",
+  width: "530",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "61",
+  rx: "0",
+  ry: "0",
+  width: "530",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "76",
+  rx: "0",
+  ry: "0",
+  width: "530",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "91",
+  rx: "0",
+  ry: "0",
+  width: "530",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "106",
+  rx: "0",
+  ry: "0",
+  width: "530",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "1",
+  y: "2",
+  rx: "0",
+  ry: "0",
+  width: "3",
+  height: "107"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "529",
+  y: "2",
+  rx: "0",
+  ry: "0",
+  width: "3",
+  height: "106"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "2",
+  y: "8",
+  rx: "0",
+  ry: "0",
+  width: "8",
+  height: "16"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "25",
+  y: "8",
+  rx: "0",
+  ry: "0",
+  width: "84",
+  height: "17"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "144",
+  y: "10",
+  rx: "0",
+  ry: "0",
+  width: "83",
+  height: "14"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "264",
+  y: "9",
+  rx: "0",
+  ry: "0",
+  width: "77",
+  height: "16"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "476",
+  y: "8",
+  rx: "0",
+  ry: "0",
+  width: "54",
+  height: "18"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "374",
+  y: "8",
+  rx: "0",
+  ry: "0",
+  width: "71",
+  height: "16"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "10",
+  y: "39",
+  rx: "0",
+  ry: "0",
+  width: "16",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "110",
+  y: "38",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "227",
+  y: "38",
+  rx: "0",
+  ry: "0",
+  width: "65",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "341",
+  y: "38",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "445",
+  y: "38",
+  rx: "0",
+  ry: "0",
+  width: "54",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "10",
+  y: "55",
+  rx: "0",
+  ry: "0",
+  width: "16",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "110",
+  y: "54",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "227",
+  y: "54",
+  rx: "0",
+  ry: "0",
+  width: "58",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "341",
+  y: "54",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "445",
+  y: "54",
+  rx: "0",
+  ry: "0",
+  width: "49",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "10",
+  y: "70",
+  rx: "0",
+  ry: "0",
+  width: "16",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "110",
+  y: "69",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "227",
+  y: "69",
+  rx: "0",
+  ry: "0",
+  width: "60",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "341",
+  y: "69",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "445",
+  y: "68",
+  rx: "0",
+  ry: "0",
+  width: "56",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "10",
+  y: "85",
+  rx: "0",
+  ry: "0",
+  width: "16",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "110",
+  y: "84",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "227",
+  y: "84",
+  rx: "0",
+  ry: "0",
+  width: "54",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "341",
+  y: "84",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "445",
+  y: "84",
+  rx: "0",
+  ry: "0",
+  width: "45",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "10",
+  y: "100",
+  rx: "0",
+  ry: "0",
+  width: "16",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "110",
+  y: "99",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "227",
+  y: "99",
+  rx: "0",
+  ry: "0",
+  width: "58",
+  height: "3"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "341",
+  y: "99",
+  rx: "0",
+  ry: "0",
+  width: "39",
+  height: "2"
+}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("rect", {
+  x: "445",
+  y: "99",
+  rx: "0",
+  ry: "0",
+  width: "54",
+  height: "3"
+}));
+
+/* harmony default export */ __webpack_exports__["default"] = (TableLoader);
+
+/***/ }),
+
 /***/ "./src/components/Loader/index.js":
 /*!****************************************!*\
   !*** ./src/components/Loader/index.js ***!
@@ -72198,8 +72508,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../redux/actions/clicks.actions */ "./src/redux/actions/clicks.actions.js");
+/* harmony import */ var _components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loader/TableLoader */ "./src/components/Loader/TableLoader.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../redux/actions/clicks.actions */ "./src/redux/actions/clicks.actions.js");
+
 
 
 
@@ -72210,7 +72522,7 @@ const columns = [{
   name: 'IP',
   selector: 'ip',
   sortable: false,
-  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, row.ip + '(' + row.IPCOUNT + ')'))
+  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, row.ip + '(' + row.IPCOUNT + ')')
 }, {
   name: 'Timestamp',
   selector: 'created_at',
@@ -72219,11 +72531,7 @@ const columns = [{
   name: 'Short URI',
   selector: 'short_url',
   sortable: false,
-  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    style: {
-      fontWeight: 700
-    }
-  }, _utils_helper__WEBPACK_IMPORTED_MODULE_4__["site_url"] + '/' + row.short_url))
+  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, _utils_helper__WEBPACK_IMPORTED_MODULE_5__["site_url"] + '/' + row.short_url)
 }, {
   name: 'Referrer',
   selector: 'referrer',
@@ -72253,11 +72561,11 @@ const Clicks = props => {
       setIsLoaded(true);
     }, 3000);
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isLoaded && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_1___default.a, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isLoaded == true ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_1___default.a, {
     title: "Clicks",
     columns: columns,
     data: clicks
-  }));
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_4__["default"], null));
 };
 
 const mapStateToProps = state => ({
@@ -72266,7 +72574,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_clicks_data: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_5__["fetch_clicks_data"], dispatch)
+    fetch_clicks_data: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_6__["fetch_clicks_data"], dispatch)
   };
 };
 
