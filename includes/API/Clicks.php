@@ -60,7 +60,7 @@ class Clicks extends Controller
     
 
     /**
-     * Get wpsp
+     * Get betterlinks
      *
      * @param WP_REST_Request $request Full data about the request.
      * @return WP_Error|WP_REST_Request
@@ -78,7 +78,7 @@ class Clicks extends Controller
     }
 
     /**
-     * Create OR Update wpsp
+     * Create OR Update betterlinks
      *
      * @param WP_REST_Request $request Full data about the request.
      * @return WP_Error|WP_REST_Request
@@ -92,7 +92,7 @@ class Clicks extends Controller
     }
 
     /**
-     * Create OR Update wpsp
+     * Create OR Update betterlinks
      *
      * @param WP_REST_Request $request Full data about the request.
      * @return WP_Error|WP_REST_Request
@@ -106,7 +106,7 @@ class Clicks extends Controller
     }
 
     /**
-     * Delete wpsp
+     * Delete betterlinks
      *
      * @param WP_REST_Request $request Full data about the request.
      * @return WP_Error|WP_REST_Request

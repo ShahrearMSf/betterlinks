@@ -5,7 +5,7 @@
  * Version: 0.0.1
  * Author: WPDeveloper
  * Author URI: https://wpdeveloper.net
- * Text Domain: better-links
+ * Text Domain: betterlinks
  */
 
 if (!defined('ABSPATH')) exit;
