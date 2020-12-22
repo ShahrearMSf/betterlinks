@@ -70570,7 +70570,7 @@ const Link = ({
     required: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
-    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"] + '/' + randomSlug),
+    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"] + '/' + props.values.short_url),
     className: "btl-link-copy-button"
   }, isCopyUrl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "dashicons dashicons-yes"

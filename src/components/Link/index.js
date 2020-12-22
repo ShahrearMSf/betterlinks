@@ -197,7 +197,8 @@ const Link = ({
                                                     copyShortUrl(
                                                         site_url +
                                                             '/' +
-                                                            randomSlug
+                                                            props.values
+                                                                .short_url
                                                     )
                                                 }
                                                 className='btl-link-copy-button'
