@@ -28,8 +28,6 @@
     border-radius: 5px;
   }
   .dnd-category{
-    display: flex;
-    flex-direction: column;
     border: 1px solid transparent;
     .category-head{
       display: flex;
@@ -114,9 +112,6 @@
   }
   .dnd-create-category{
     background: $white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 10px;
     box-sizing: border-box;
     .dnd-create-category-button{
@@ -133,6 +128,8 @@
       color: $white;
       cursor: pointer;
       margin-top: 30px;
+      margin-left: auto;
+      margin-right: auto;
       &:focus{
         border: none;
         outline: none;

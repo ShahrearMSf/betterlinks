@@ -408,13 +408,6 @@
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   border: 1px solid transparent;
 }
 
@@ -536,16 +529,6 @@
 
 .betterlinks-body .dnd-category-wrapper .dnd-create-category {
   background: #fff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   padding: 10px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -572,6 +555,8 @@
   color: #fff;
   cursor: pointer;
   margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-create-category .dnd-create-category-button:focus {
