@@ -10,6 +10,11 @@ const columns = [
         name: 'IP',
         selector: 'ip',
         sortable: false,
+        cell: (row) => (
+            <div>
+                <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>
+            </div>
+        ),
     },
     {
         name: 'Timestamp',

@@ -72209,7 +72209,8 @@ __webpack_require__.r(__webpack_exports__);
 const columns = [{
   name: 'IP',
   selector: 'ip',
-  sortable: false
+  sortable: false,
+  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, row.ip + '(' + row.IPCOUNT + ')'))
 }, {
   name: 'Timestamp',
   selector: 'created_at',
