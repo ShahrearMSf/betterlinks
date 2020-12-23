@@ -26,7 +26,7 @@
         transition: margin 0.1s linear;
       }
       &:after{
-        content: "";
+        content: '\e906';
         font-family: 'better-links';
         position: absolute;
         left: 12px;
@@ -77,7 +77,6 @@
           margin-right: 27px;
         }
         &:after{
-          content: '\e906';
           visibility: visible;
           opacity: 1;
         }

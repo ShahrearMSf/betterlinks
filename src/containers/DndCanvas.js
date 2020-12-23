@@ -60,13 +60,14 @@ function DndCanvas(props) {
                                             cat_slug={el.term_slug}
                                         />
                                         <div
+                                            className="category-body"
                                             ref={provided.innerRef}
                                             style={getListStyle(
                                                 snapshot.isDraggingOver
                                             )}
                                             {...provided.droppableProps}
                                         >
-                                            <div className='category-body'>
+                                            <>
                                                 {el.lists &&
                                                     el.lists.map(
                                                         (item, index) => (
@@ -137,8 +138,13 @@ function DndCanvas(props) {
                                                         )
                                                     )}
                                                 {provided.placeholder}
-                                            </div>
-                                            <div className='category-footer'>
+                                            </>
+                                            <div 
+                                                className='category-footer'
+                                                style={getListStyle(
+                                                    snapshot.isDraggingOver
+                                                )}
+                                            >
                                                 <Link
                                                     cat_id={ind}
                                                     cat_name={el.term_name}
