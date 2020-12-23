@@ -72622,7 +72622,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
   // change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'white',
+  background: isDragging ? 'white' : 'white',
   // styles we need to apply on draggables
   ...draggableStyle
 });
@@ -72664,7 +72664,7 @@ function DndCanvas(props) {
     draggableId: item.ID,
     index: index
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-    className: "btl-dnd-link",
+    className: `btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`,
     ref: provided.innerRef
   }, provided.draggableProps, provided.dragHandleProps, {
     style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
