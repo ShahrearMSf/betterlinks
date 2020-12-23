@@ -72660,9 +72660,11 @@ function DndCanvas(props) {
     cat_slug: el.term_slug
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-body"
-  }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Draggable"], {
-    key: index,
-    draggableId: item.ID,
+  }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
+    key: `cat-${ind}-item-${index}`
+  }, item.ID && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Draggable"], {
+    key: `cat-${ind}-item_${item.ID}`,
+    draggableId: `cat-${ind}-item_${item.ID}`,
     index: index
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     className: `btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`,
@@ -72690,7 +72692,7 @@ function DndCanvas(props) {
     className: "icon"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-delete"
-  })))))))), provided.placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }))))))))), provided.placeholder), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Link__WEBPACK_IMPORTED_MODULE_7__["default"], {
     cat_id: ind,
@@ -72919,6 +72921,7 @@ const ADD_NEW_LINK = 'ADD_NEW_LINK';
 const DELETE_LINK = 'DELETE_LINK';
 const EDIT_LINK = 'EDIT_LINK';
 const onDragEnd = result => async dispatch => {
+  var [notUsed, ID] = result.draggableId.split('_');
   dispatch({
     type: DRAG_AND_DROP,
     payload: result
@@ -72927,7 +72930,7 @@ const onDragEnd = result => async dispatch => {
   try {
     await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].put(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
       params: {
-        ID: result.draggableId,
+        ID: ID,
         cat_id: result.destination.droppableId
       }
     });

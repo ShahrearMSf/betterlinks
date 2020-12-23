@@ -70,76 +70,82 @@ function DndCanvas(props) {
                                         <div className='category-body'>
                                             {el.lists &&
                                                 el.lists.map((item, index) => (
-                                                    <Draggable
-                                                        key={index}
-                                                        draggableId={item.ID}
-                                                        index={index}
+                                                    <React.Fragment
+                                                        key={`cat-${ind}-item-${index}`}
                                                     >
-                                                        {(
-                                                            provided,
-                                                            snapshot
-                                                        ) => (
-                                                            <div
-                                                                className={`btl-dnd-link ${
-                                                                    snapshot.isDragging
-                                                                        ? 'btl-dnd-link-dragging'
-                                                                        : ''
-                                                                }`}
-                                                                ref={
-                                                                    provided.innerRef
-                                                                }
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                style={getItemStyle(
-                                                                    snapshot.isDragging,
-                                                                    provided
-                                                                        .draggableProps
-                                                                        .style
-                                                                )}
+                                                        {item.ID && (
+                                                            <Draggable
+                                                                key={`cat-${ind}-item_${item.ID}`}
+                                                                draggableId={`cat-${ind}-item_${item.ID}`}
+                                                                index={index}
                                                             >
-                                                                <div className='btl-dnd-link-body'>
-                                                                    <h3 className='dnd-link-title'>
-                                                                        {
-                                                                            item.link_title
+                                                                {(
+                                                                    provided,
+                                                                    snapshot
+                                                                ) => (
+                                                                    <div
+                                                                        className={`btl-dnd-link ${
+                                                                            snapshot.isDragging
+                                                                                ? 'btl-dnd-link-dragging'
+                                                                                : ''
+                                                                        }`}
+                                                                        ref={
+                                                                            provided.innerRef
                                                                         }
-                                                                    </h3>
-                                                                    <div className='btl-dnd-link-button-group'>
-                                                                        <LinkQuickAction
-                                                                            {...item}
-                                                                        />
-                                                                        <Link
-                                                                            cat_id={
-                                                                                ind
-                                                                            }
-                                                                            cat_name={
-                                                                                el.term_name
-                                                                            }
-                                                                            item={
-                                                                                item
-                                                                            }
-                                                                            submitHandler={
-                                                                                props.edit_link
-                                                                            }
-                                                                        />
-                                                                        <button
-                                                                            type='button'
-                                                                            className='dnd-link-button delete-button'
-                                                                            onClick={() => {
-                                                                                props.delete_link(
-                                                                                    ind,
-                                                                                    item.ID
-                                                                                )
-                                                                            }}
-                                                                        >
-                                                                            <span className='icon'>
-                                                                                <i className='btl btl-delete'></i>
-                                                                            </span>
-                                                                        </button>
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        style={getItemStyle(
+                                                                            snapshot.isDragging,
+                                                                            provided
+                                                                                .draggableProps
+                                                                                .style
+                                                                        )}
+                                                                    >
+                                                                        <div className='btl-dnd-link-body'>
+                                                                            <h3 className='dnd-link-title'>
+                                                                                {
+                                                                                    item.link_title
+                                                                                }
+                                                                            </h3>
+                                                                            <div className='btl-dnd-link-button-group'>
+                                                                                <LinkQuickAction
+                                                                                    {...item}
+                                                                                />
+                                                                                <Link
+                                                                                    cat_id={
+                                                                                        ind
+                                                                                    }
+                                                                                    cat_name={
+                                                                                        el.term_name
+                                                                                    }
+                                                                                    item={
+                                                                                        item
+                                                                                    }
+                                                                                    submitHandler={
+                                                                                        props.edit_link
+                                                                                    }
+                                                                                />
+                                                                                <button
+                                                                                    type='button'
+                                                                                    className='dnd-link-button delete-button'
+                                                                                    onClick={() => {
+                                                                                        props.delete_link(
+                                                                                            ind,
+                                                                                            item.ID
+                                                                                        )
+                                                                                    }}
+                                                                                >
+                                                                                    <span className='icon'>
+                                                                                        <i className='btl btl-delete'></i>
+                                                                                    </span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
+                                                                )}
+                                                            </Draggable>
                                                         )}
-                                                    </Draggable>
+                                                    </React.Fragment>
                                                 ))}
                                             {provided.placeholder}
                                         </div>

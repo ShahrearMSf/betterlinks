@@ -9,6 +9,7 @@ export const DELETE_LINK = 'DELETE_LINK'
 export const EDIT_LINK = 'EDIT_LINK'
 
 export const onDragEnd = (result) => async (dispatch) => {
+    var [notUsed, ID] = result.draggableId.split('_')
     dispatch({
         type: DRAG_AND_DROP,
         payload: result,
@@ -16,7 +17,7 @@ export const onDragEnd = (result) => async (dispatch) => {
     try {
         await API.put(namespace + 'links', {
             params: {
-                ID: result.draggableId,
+                ID: ID,
                 cat_id: result.destination.droppableId,
             },
         })
