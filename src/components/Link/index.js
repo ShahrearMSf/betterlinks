@@ -72,7 +72,7 @@ const Link = ({
             {item ? (
                 <button onClick={openModal} className='dnd-link-button'>
                     <span className='icon'>
-                        <i className='btl btl-edit'></i>
+                        {!isEditMode ? <i className='btl btl-edit'></i> : '...'}
                     </span>
                 </button>
             ) : (
