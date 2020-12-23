@@ -75137,15 +75137,16 @@ function DndCanvas(props) {
   }, settings && Object.entries(settings).map(([ind, el]) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Droppable"], {
     key: ind,
     droppableId: ind
-  }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-    className: "dnd-category",
-    ref: provided.innerRef,
-    style: getListStyle(snapshot.isDraggingOver)
-  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
+  }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "dnd-category"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CatHeader__WEBPACK_IMPORTED_MODULE_8__["default"], {
     cat_id: ind,
     cat_name: el.term_name,
     cat_slug: el.term_slug
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+    ref: provided.innerRef,
+    style: getListStyle(snapshot.isDraggingOver)
+  }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-body"
   }, el.lists && el.lists.map((item, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
     key: `cat-${ind}-item-${index}`
@@ -75176,7 +75177,7 @@ function DndCanvas(props) {
     cat_id: ind,
     cat_name: el.term_name,
     submitHandler: props.add_new_link
-  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  })))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_CreateCategory__WEBPACK_IMPORTED_MODULE_6__["default"], {
     createCatHandler: props.add_new_cat
   })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader__WEBPACK_IMPORTED_MODULE_3__["default"], null));
 }
