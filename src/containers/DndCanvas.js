@@ -71,7 +71,7 @@ function DndCanvas(props) {
                                             {el.lists &&
                                                 el.lists.map((item, index) => (
                                                     <Draggable
-                                                        key={item.ID}
+                                                        key={index}
                                                         draggableId={item.ID}
                                                         index={index}
                                                     >

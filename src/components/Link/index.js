@@ -167,10 +167,11 @@ const Link = ({
                                             Target URL
                                         </label>
                                         <Field
+                                            type='url'
                                             className='btl-modal-form-control'
                                             id='target_url'
                                             name='target_url'
-                                            placeholder='http://wpdeveloper.com'
+                                            placeholder=''
                                             required
                                         />
                                     </div>

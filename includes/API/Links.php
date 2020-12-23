@@ -2,6 +2,7 @@
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
+use stdClass;
 
 class Links extends Controller
 {
@@ -60,19 +61,19 @@ class Links extends Controller
     public function parse_response($items){
         $results = [];
         foreach($items as $item){
-            if(!isset($results[$item->term_ID])){
-                $results[$item->term_ID] = array(
+            if(!isset($results[$item->cat_id])){
+                $results[$item->cat_id] = array(
                     'term_name' => $item->term_name,
                     'term_slug' => $item->term_slug,
                     'term_type' => $item->term_type,
                 );
                 if($item->ID !== null){
-                    $results[$item->term_ID]['lists'][] = $item;
+                    $results[$item->cat_id]['lists'][] = $item;
                 } else {
-                    $results[$item->term_ID]['lists'] =  [];
+                    $results[$item->cat_id]['lists'] =  [];
                 }
             } else {
-                $results[$item->term_ID]['lists'][] = $item;
+                $results[$item->cat_id]['lists'][] = $item;
             }
         }
         return $results;
@@ -90,7 +91,7 @@ class Links extends Controller
         $prefix = $wpdb->prefix;
         $query = \BetterLinks\Helper::DB();
         $results = $query->query("SELECT 
-            {$prefix}better_terms.ID as term_ID, 
+            {$prefix}better_terms.ID as cat_id, 
             {$prefix}better_terms.term_name, 
             {$prefix}better_terms.term_slug,
             {$prefix}better_terms.term_type, 
@@ -148,10 +149,13 @@ class Links extends Controller
                 }
             }
             $qb->table('better_terms_relationships')->insert($term_data);
+            $_SESSION["link_ID"] = $id;
         });
+        $response = array_merge($request['params'], array('ID' => strval($_SESSION["link_ID"])));
+        unset($_SESSION["link_ID"]);
         return new \WP_REST_Response(array(
             'success'   => true,
-            'data'     => $request['params']
+            'data'     => $response
         ), 200);
     }
 
