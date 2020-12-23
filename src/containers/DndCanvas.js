@@ -109,36 +109,22 @@ function DndCanvas(props) {
                                                                             </h3>
                                                                             <div className='btl-dnd-link-button-group'>
                                                                                 <LinkQuickAction
-                                                                                    {...item}
-                                                                                />
-                                                                                <Link
                                                                                     cat_id={
                                                                                         ind
                                                                                     }
                                                                                     cat_name={
                                                                                         el.term_name
                                                                                     }
+                                                                                    submitLinkHandler={
+                                                                                        props.edit_link
+                                                                                    }
+                                                                                    deleteLinkHandler={
+                                                                                        props.delete_link
+                                                                                    }
                                                                                     item={
                                                                                         item
                                                                                     }
-                                                                                    submitHandler={
-                                                                                        props.edit_link
-                                                                                    }
                                                                                 />
-                                                                                <button
-                                                                                    type='button'
-                                                                                    className='dnd-link-button delete-button'
-                                                                                    onClick={() => {
-                                                                                        props.delete_link(
-                                                                                            ind,
-                                                                                            item.ID
-                                                                                        )
-                                                                                    }}
-                                                                                >
-                                                                                    <span className='icon'>
-                                                                                        <i className='btl btl-delete'></i>
-                                                                                    </span>
-                                                                                </button>
                                                                             </div>
                                                                         </div>
                                                                     </div>

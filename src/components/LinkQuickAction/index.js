@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
+import ReactTooltip from 'react-tooltip'
+import Link from './../Link'
 import { site_url, copyToClipboard } from './../../utils/helper'
 
 const LinkQuickAction = (props) => {
-    const { short_url } = props
+    const {
+        item,
+        cat_id,
+        cat_name,
+        submitLinkHandler,
+        deleteLinkHandler,
+    } = props
     const [isCopyUrl, setCopyUrl] = useState(false)
     const copyShortUrl = (url) => {
         copyToClipboard(url)
@@ -10,6 +18,7 @@ const LinkQuickAction = (props) => {
     }
     return (
         <React.Fragment>
+            <ReactTooltip />
             {/* <button className='dnd-link-button'>
                 <span className='icon'>
                     <i className='btl btl-target'></i>
@@ -22,14 +31,34 @@ const LinkQuickAction = (props) => {
             </button> */}
             <button
                 className='dnd-link-button'
-                onClick={() => copyShortUrl(site_url + '/' + short_url)}
+                onClick={() => copyShortUrl(site_url + '/' + item.short_url)}
             >
-                <span className='icon'>
+                <span data-tip='Copy Link' className='icon'>
                     {isCopyUrl ? (
                         <span className='dashicons dashicons-yes'></span>
                     ) : (
                         <i className='btl btl-link'></i>
                     )}
+                </span>
+            </button>
+            <div data-tip='Edit Link'>
+                <Link
+                    cat_id={cat_id}
+                    cat_name={cat_name}
+                    item={item}
+                    submitHandler={submitLinkHandler}
+                />
+            </div>
+            <button
+                data-tip='Delete'
+                type='button'
+                className='dnd-link-button delete-button'
+                onClick={() => {
+                    deleteLinkHandler(ind, item.ID)
+                }}
+            >
+                <span className='icon'>
+                    <i className='btl btl-delete'></i>
                 </span>
             </button>
         </React.Fragment>
