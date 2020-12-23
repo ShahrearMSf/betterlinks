@@ -70549,7 +70549,6 @@ const Link = ({
     className: "btl-modal-form-label btl-required",
     htmlFor: "target_url"
   }, "Target URL"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
-    type: "url",
     className: "btl-modal-form-control",
     id: "target_url",
     name: "target_url",

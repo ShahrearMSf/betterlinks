@@ -11,19 +11,21 @@ class Utils {
         if($data->track_me){
             $this->start_trakcing($data);
         }
+        $target_url = $this->addScheme($data->target_url);
+
         switch($data->redirect_type) {
             case '301':
-              wp_redirect($data->target_url, 301);
-              exit;
+                wp_redirect($target_url, 301);
+                exit;
             case '302':
-              wp_redirect($data->target_url, 302);
-              exit;
+                wp_redirect($target_url, 302);
+                exit;
             case '307':
-              wp_redirect($data->target_url, 307);
-              exit;
+                wp_redirect($target_url, 307);
+                exit;
             default:
-            wp_redirect($data->target_url );
-            exit;
+                wp_redirect($target_url );
+                exit;
         }
     }
     public function start_trakcing($data){
@@ -79,5 +81,9 @@ class Utils {
             $address = $IPS[0];
         }
         return $address;
+    }
+    public function addScheme($url, $scheme = 'http://')
+    {
+        return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
     }
 }
