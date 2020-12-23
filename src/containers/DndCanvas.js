@@ -25,7 +25,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     userSelect: 'none',
 
     // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'white',
+    background: isDragging ? 'white' : 'white',
 
     // styles we need to apply on draggables
     ...draggableStyle,
@@ -80,7 +80,11 @@ function DndCanvas(props) {
                                                             snapshot
                                                         ) => (
                                                             <div
-                                                                className='btl-dnd-link'
+                                                                className={`btl-dnd-link ${
+                                                                    snapshot.isDragging
+                                                                        ? 'btl-dnd-link-dragging'
+                                                                        : ''
+                                                                }`}
                                                                 ref={
                                                                     provided.innerRef
                                                                 }
