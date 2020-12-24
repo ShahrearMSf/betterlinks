@@ -143,8 +143,10 @@ class Terms extends Controller {
     {
         $request = $request->get_params();
         \BetterLinks\Helper::DB()->transaction(function ($qb) use($request) {
-            $qb->table('better_terms')->where('id', '=', $request['cat_id'])->delete();
-            $qb->table('better_terms_relationships')->where('term_id', '=', $request['cat_id'])->delete();
+            if($request['cat_id'] != 1){
+                $qb->table('better_terms')->where('id', '=', $request['cat_id'])->delete();
+                $qb->table('better_terms_relationships')->where('term_id', '=', $request['cat_id'])->update(array('term_id' => 1));
+            }            
         });
         return new \WP_REST_Response(array(
             'success'   => true,

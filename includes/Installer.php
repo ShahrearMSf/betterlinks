@@ -110,7 +110,6 @@ class Installer {
         $result = $query->table('better_terms')->where('term_slug', '=', 'uncategorized')->get();
         if(count($result) === 0){
             try {
-            
                 $data = [
                     'term_name' => 'Uncategorized',
                     'term_slug' => 'uncategorized',

@@ -58,52 +58,59 @@ const CatHeader = (props) => {
         <React.Fragment>
             <div className='category-head'>
                 <h4 className='title'>{cat_name}</h4>
-                <div className='dropdown'>
-                    <button className='icon' onClick={() => catActionHandler()}>
-                        <i className='btl btl-more'></i>
-                    </button>
-                    <div className='dropdown-menu'>
-                        {isCatAction && (
-                            <ul>
-                                <li>
-                                    <button
-                                        onClick={openModal}
-                                        className='link'
-                                    >
-                                        Edit
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        className='link delete'
-                                        onClick={() => deleteHandler()}
-                                    >
-                                        Delete
-                                    </button>
-                                </li>
-                            </ul>
-                        )}
-                        {isDeleteConfirm && (
-                            <div className='btl-confirm-message'>
-                                <p className='action-text'>Are Your Sure?</p>
-                                <div className='action-set'>
-                                    <button
-                                        className='action yes'
-                                        onClick={confirmDelete}
-                                    >
-                                        Yes
-                                    </button>
-                                    <button
-                                        className='action no'
-                                        onClick={noDelete}
-                                    >
-                                        No
-                                    </button>
+                {cat_id != 1 && (
+                    <div className='dropdown'>
+                        <button
+                            className='icon'
+                            onClick={() => catActionHandler()}
+                        >
+                            <i className='btl btl-more'></i>
+                        </button>
+                        <div className='dropdown-menu'>
+                            {isCatAction && (
+                                <ul>
+                                    <li>
+                                        <button
+                                            onClick={openModal}
+                                            className='link'
+                                        >
+                                            Edit
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className='link delete'
+                                            onClick={() => deleteHandler()}
+                                        >
+                                            Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            )}
+                            {isDeleteConfirm && (
+                                <div className='btl-confirm-message'>
+                                    <p className='action-text'>
+                                        Are Your Sure?
+                                    </p>
+                                    <div className='action-set'>
+                                        <button
+                                            className='action yes'
+                                            onClick={confirmDelete}
+                                        >
+                                            Yes
+                                        </button>
+                                        <button
+                                            className='action no'
+                                            onClick={noDelete}
+                                        >
+                                            No
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <Modal
