@@ -70,9 +70,18 @@ const Link = ({
     return (
         <>
             {item ? (
-                <button onClick={openModal} className='dnd-link-button'>
+                <button
+                    onClick={openModal}
+                    className={`dnd-link-button ${
+                        isEditMode ? 'btl-rotating' : ''
+                    }`}
+                >
                     <span className='icon'>
-                        {!isEditMode ? <i className='btl btl-edit'></i> : '...'}
+                        {!isEditMode ? (
+                            <i className='btl btl-edit'></i>
+                        ) : (
+                            <i className='btl btl-reload'></i>
+                        )}
                     </span>
                 </button>
             ) : (
@@ -107,6 +116,7 @@ const Link = ({
                         ...item,
                     }}
                     onSubmit={async (values) => {
+                        setEditMode(false)
                         setModalIsOpen(false)
                         return submitHandler(values)
                     }}
