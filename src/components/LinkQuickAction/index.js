@@ -73,7 +73,7 @@ const LinkQuickAction = (props) => {
                 </>
             ) : (
                 <div className='btl-confirm-message'>
-                    <span>Are Your Sure?</span>
+                    <span className='action-text'>Are Your Sure?</span>
                     <div className='action-set'>
                         <button
                             className='action yes'
