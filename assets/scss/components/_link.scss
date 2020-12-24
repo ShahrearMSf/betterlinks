@@ -26,7 +26,7 @@
         transition: margin 0.1s linear;
       }
       &:after{
-        content: "";
+        content: '\e906';
         font-family: 'better-links';
         position: absolute;
         left: 12px;
@@ -35,7 +35,6 @@
         display: flex;
         align-items: center;
         color: $secondary-lighten;
-        visibility: hidden;
         transition: all 0.1s linear;
         transition-property: opacity, visibility;
         opacity: 0;
@@ -67,18 +66,14 @@
       }
     }
   }
-  &.btl-dnd-link-dragging{
-    .btl-dnd-link-body{
-      .dnd-link-title{
-        &:before{
-          margin-right: 27px;
-        }
-        &:after{
-          content: '\e906';
-          visibility: visible;
-          opacity: 1;
-        }
-      }
+}
+.btl-dnd-link-dragging{
+  .dnd-link-title{
+    &:before{
+      margin-right: 27px!important;
+    }
+    &:after{
+      opacity: 1!important;
     }
   }
 }
