@@ -42,6 +42,8 @@
         color: $dark;
         margin: 0;
         line-height: 1;
+        word-break: break-word;
+        padding: 2px;
       }
       .dropdown{
         margin-left: 5px;
