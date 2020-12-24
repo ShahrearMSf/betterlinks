@@ -72602,7 +72602,6 @@ const CatHeader = props => {
   const confirmDelete = () => {
     setDeleteConfrim(false);
     setDeleteConfrim(false);
-    console.log(cat_id);
     delete_cat({
       cat_id: cat_id
     });
@@ -73154,13 +73153,22 @@ const LinkQuickAction = props => {
     deleteLinkHandler
   } = props;
   const [isCopyUrl, setCopyUrl] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  const [isDeleteConfirm, setDeleteConfrim] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+
+  const deleteHandler = () => {
+    setDeleteConfrim(!isDeleteConfirm);
+  };
+
+  const noDelete = () => {
+    setDeleteConfrim(false);
+  };
 
   const copyShortUrl = url => {
     Object(_utils_helper__WEBPACK_IMPORTED_MODULE_3__["copyToClipboard"])(url);
     setCopyUrl(true);
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_1__["default"], null), !isDeleteConfirm ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "dnd-link-button",
     onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_3__["site_url"] + '/' + item.short_url)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -73181,14 +73189,24 @@ const LinkQuickAction = props => {
     "data-tip": "Delete",
     type: "button",
     className: "dnd-link-button delete-button",
-    onClick: () => {
-      deleteLinkHandler(ind, item.ID);
-    }
+    onClick: () => deleteHandler()
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "icon"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-delete"
-  }))));
+  })))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-confirm-message"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Are Your Sure?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "action-set"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "action yes",
+    onClick: () => {
+      deleteLinkHandler(cat_id, item.ID);
+    }
+  }, "Yes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "action no",
+    onClick: noDelete
+  }, "No"))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (LinkQuickAction);

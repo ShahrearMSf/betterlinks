@@ -25,7 +25,6 @@ const CatHeader = (props) => {
     const confirmDelete = () => {
         setDeleteConfrim(false)
         setDeleteConfrim(false)
-        console.log(cat_id)
         delete_cat({
             cat_id: cat_id,
         })

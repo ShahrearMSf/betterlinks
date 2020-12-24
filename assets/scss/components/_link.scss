@@ -23,7 +23,7 @@
         border-radius: 2px;
         background: linear-gradient(to top, $success, $success-lighten);
         margin-right: 10px;
-        transition: margin 0.1s linear;
+        transition: margin 0.05s linear;
       }
       &:after{
         content: '\e906';
@@ -34,9 +34,9 @@
         bottom: 0;
         display: flex;
         align-items: center;
-        color: $secondary-lighten;
-        transition: all 0.1s linear;
-        transition-property: opacity, visibility;
+        color: lighten( $secondary-lighten, 10% );
+        transition: all 0.05s linear;
+        visibility: hidden;
         opacity: 0;
       }
     }
@@ -66,14 +66,17 @@
       }
     }
   }
-}
-.btl-dnd-link-dragging{
-  .dnd-link-title{
-    &:before{
-      margin-right: 27px!important;
-    }
-    &:after{
-      opacity: 1!important;
+  &.btl-dnd-link-dragging{
+    .btl-dnd-link-body{
+      .dnd-link-title{
+        &:before{
+          margin-right: 27px;
+        }
+        &:after{
+          visibility: visible;
+          opacity: 1;
+        }
+      }
     }
   }
 }

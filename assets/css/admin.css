@@ -425,7 +425,6 @@
 .betterlinks-body .dnd-category-wrapper .dnd-category,
 .betterlinks-body .dnd-category-wrapper .dnd-create-category {
   width: 100%;
-  max-width: 100%;
   min-width: 100%;
   margin-bottom: 20px;
   -webkit-column-break-inside: avoid;
@@ -485,8 +484,6 @@
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-body {
-  max-height: 630px;
-  overflow-y: auto;
   text-rendering: optimizeSpeed;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -648,8 +645,8 @@
   background: -webkit-gradient(linear, left bottom, left top, from(#1bcba0), to(#33db8d));
   background: linear-gradient(to top, #1bcba0, #33db8d);
   margin-right: 10px;
-  -webkit-transition: margin 0.1s linear;
-  transition: margin 0.1s linear;
+  -webkit-transition: margin 0.05s linear;
+  transition: margin 0.05s linear;
 }
 
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title:after {
@@ -665,11 +662,10 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: #b0b2ba;
-  -webkit-transition: all 0.1s linear;
-  transition: all 0.1s linear;
-  -webkit-transition-property: opacity, visibility;
-  transition-property: opacity, visibility;
+  color: #cbcdd2;
+  -webkit-transition: all 0.05s linear;
+  transition: all 0.05s linear;
+  visibility: hidden;
   opacity: 0;
 }
 
@@ -707,12 +703,13 @@
   color: #F97272;
 }
 
-.betterlinks-body .btl-dnd-link-dragging .dnd-link-title:before {
-  margin-right: 27px !important;
+.betterlinks-body .btl-dnd-link.btl-dnd-link-dragging .btl-dnd-link-body .dnd-link-title:before {
+  margin-right: 27px;
 }
 
-.betterlinks-body .btl-dnd-link-dragging .dnd-link-title:after {
-  opacity: 1 !important;
+.betterlinks-body .btl-dnd-link.btl-dnd-link-dragging .btl-dnd-link-body .dnd-link-title:after {
+  visibility: visible;
+  opacity: 1;
 }
 
 body.betterlinks-dark-mode {
