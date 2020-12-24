@@ -9,6 +9,7 @@ class Installer {
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
         $this->run_create_tables();
+        $this->insert_terms();
     }
 
     public function run_create_tables(){
@@ -103,5 +104,22 @@ class Installer {
             key click_order (click_order)
         ) $this->charset_collate;";
         dbDelta( $sql );
+    }
+    public function insert_terms(){
+        $query = \BetterLinks\Helper::DB();
+        $result = $query->table('better_terms')->where('term_slug', '=', 'uncategorized')->get();
+        if(count($result) === 0){
+            try {
+            
+                $data = [
+                    'term_name' => 'Uncategorized',
+                    'term_slug' => 'uncategorized',
+                    'term_type' => 'category'
+                ];
+                $query->table('better_terms')->where( 'term_slug', '!', 'uncategorized')->insert($data);
+            } catch (\Throwable $th) {
+                echo $th->getMessage();
+            }
+        }
     }
 }
