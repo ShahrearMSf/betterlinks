@@ -269,6 +269,12 @@ const Link = ({
                                             className='btl-check'
                                             name='nofollow'
                                             type='checkbox'
+                                            onChange={() =>
+                                                props.setFieldValue(
+                                                    'nofollow',
+                                                    !props.values.nofollow
+                                                )
+                                            }
                                         />
                                         <span className='text'>No Follow</span>
                                     </label>
@@ -277,6 +283,12 @@ const Link = ({
                                             className='btl-check'
                                             name='sponsored'
                                             type='checkbox'
+                                            onChange={() =>
+                                                props.setFieldValue(
+                                                    'sponsored',
+                                                    !props.values.sponsored
+                                                )
+                                            }
                                         />
                                         <span className='text'>Sponsored</span>
                                     </label>
@@ -285,6 +297,13 @@ const Link = ({
                                             className='btl-check'
                                             name='param_forwarding'
                                             type='checkbox'
+                                            onChange={() =>
+                                                props.setFieldValue(
+                                                    'param_forwarding',
+                                                    !props.values
+                                                        .param_forwarding
+                                                )
+                                            }
                                         />
                                         <span className='text'>
                                             Parameter Forwarding
@@ -295,6 +314,12 @@ const Link = ({
                                             className='btl-check'
                                             name='track_me'
                                             type='checkbox'
+                                            onChange={() =>
+                                                props.setFieldValue(
+                                                    'track_me',
+                                                    !props.values.track_me
+                                                )
+                                            }
                                         />
                                         <span className='text'>Tracking</span>
                                     </label>

@@ -73075,7 +73075,8 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     className: "btl-check",
     name: "nofollow",
-    type: "checkbox"
+    type: "checkbox",
+    onChange: () => props.setFieldValue('nofollow', !props.values.nofollow)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, "No Follow")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -73083,7 +73084,8 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     className: "btl-check",
     name: "sponsored",
-    type: "checkbox"
+    type: "checkbox",
+    onChange: () => props.setFieldValue('sponsored', !props.values.sponsored)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, "Sponsored")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -73091,7 +73093,8 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     className: "btl-check",
     name: "param_forwarding",
-    type: "checkbox"
+    type: "checkbox",
+    onChange: () => props.setFieldValue('param_forwarding', !props.values.param_forwarding)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, "Parameter Forwarding")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -73099,7 +73102,8 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
     className: "btl-check",
     name: "track_me",
-    type: "checkbox"
+    type: "checkbox",
+    onChange: () => props.setFieldValue('track_me', !props.values.track_me)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, "Tracking")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
