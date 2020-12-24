@@ -3,9 +3,6 @@
   column-gap: 20px;
   orphans: 1;
   widows: 1;
-  &.d-flex{
-    display: flex;
-  }
   @media screen and (max-width: 1599px) {
     column-count: 3;
   }
@@ -14,6 +11,9 @@
   }
   @media screen and (max-width: 599px) {
     column-count: 1;
+  }
+  &.d-flex{
+    display: flex;
   }
   .dnd-category,
   .dnd-create-category{
