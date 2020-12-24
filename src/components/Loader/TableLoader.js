@@ -4,7 +4,7 @@ const TableLoader = (props) => (
     <ContentLoader
         speed={2}
         width={'100%'}
-        height={'auto'}
+        height={'100%'}
         viewBox='0 0 532 148'
         backgroundColor='#e8e8e8'
         foregroundColor='#c2c2c2'

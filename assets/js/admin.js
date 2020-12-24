@@ -73240,7 +73240,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 const TableLoader = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_content_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({
   speed: 2,
   width: '100%',
-  height: 'auto',
+  height: '100%',
   viewBox: "0 0 532 148",
   backgroundColor: "#e8e8e8",
   foregroundColor: "#c2c2c2"
@@ -73549,8 +73549,8 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 const Loader = props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_content_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({
   speed: 2,
-  width: 'auto',
-  height: 'auto',
+  height: "100%",
+  width: "100%",
   viewBox: "0 0 533 250",
   backgroundColor: "#e8e8e8",
   foregroundColor: "#c2c2c2"
