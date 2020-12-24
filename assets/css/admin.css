@@ -462,6 +462,8 @@
   color: #252525;
   margin: 0;
   line-height: 1;
+  word-break: break-word;
+  padding: 2px;
 }
 
 .betterlinks-body .dnd-category-wrapper .dnd-category .category-head .dropdown {
