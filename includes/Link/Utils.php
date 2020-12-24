@@ -11,6 +11,27 @@ class Utils {
         if($data->track_me){
             $this->start_trakcing($data);
         }
+
+        $robots_tags = array();
+        if($data->sponsored) {
+            $robots_tags[] = 'sponsored';
+        }
+        if($data->nofollow) {
+            $robots_tags[] = 'noindex';
+            $robots_tags[] = 'nofollow';
+        }
+        if(!empty($robots_tags)) {
+            header("X-Robots-Tag: " . implode(', ', $robots_tags), true);
+        }
+
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Cache-Control: no-cache");
+        header("Pragma: no-cache");
+        header("X-Redirect-Powered-By:  https://www.betterlinks.io/");
+
+
         $target_url = $this->addScheme($data->target_url);
 
         switch($data->redirect_type) {
