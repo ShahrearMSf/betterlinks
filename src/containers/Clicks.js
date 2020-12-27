@@ -49,10 +49,14 @@ const Clicks = (props) => {
     const { clicks } = props.clicks
     const [isLoaded, setIsLoaded] = useState(false)
     useEffect(() => {
-        props.fetch_clicks_data()
-        setTimeout(() => {
+        if (!clicks) {
+            props.fetch_clicks_data()
+            setTimeout(() => {
+                setIsLoaded(true)
+            }, 3000)
+        } else {
             setIsLoaded(true)
-        }, 3000)
+        }
     }, [])
 
     return (

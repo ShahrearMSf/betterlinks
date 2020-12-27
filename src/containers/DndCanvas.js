@@ -39,10 +39,14 @@ function DndCanvas(props) {
     const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
-        props.fetch_settings_data()
-        setTimeout(() => {
+        if (!settings) {
+            props.fetch_settings_data()
+            setTimeout(() => {
+                setIsLoaded(true)
+            }, 3000)
+        } else {
             setIsLoaded(true)
-        }, 3000)
+        }
     }, [])
 
     return (

@@ -42,7 +42,7 @@ class Assets
 
             wp_enqueue_style('betterlinks-admin-style', BL_ASSETS_URI . 'css/admin.css', array(), filemtime(BL_ASSETS_DIR_PATH . 'css/admin.css'), 'all');
             // js
-            wp_enqueue_script('betterlinks-admin-scripts', BL_ASSETS_URI . 'js/admin.js', array('jquery'), filemtime(BL_ASSETS_DIR_PATH . 'js/admin.js'), false);
+            wp_enqueue_script('betterlinks-admin-scripts', BL_ASSETS_URI . 'js/admin.js', array('jquery'), filemtime(BL_ASSETS_DIR_PATH . 'js/admin.js'), true);
             wp_localize_script('betterlinks-admin-scripts', 'betterLinksGlobal', array(
                 'nonce' => wp_create_nonce('wp_rest'),
                 'rest_url' => rest_url(),

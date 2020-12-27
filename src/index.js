@@ -5,15 +5,17 @@ if (!window._babelPolyfill) {
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import { page } from './utils/helper'
+import BetterLinks from './containers/BetterLinks'
 import store from './redux/store'
-import Settings from './containers/Settings'
-import Clicks from './containers/Clicks'
+
 document.addEventListener('DOMContentLoaded', function () {
     ReactDOM.render(
         <Provider store={store}>
-            {page === 'betterlinks' ? <Settings /> : <Clicks />}
+            <Router>
+                <BetterLinks />
+            </Router>
         </Provider>,
         document.getElementById('betterlinksbody')
     )
