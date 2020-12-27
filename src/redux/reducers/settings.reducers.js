@@ -86,12 +86,17 @@ function settings(state = {}, action) {
                 },
             }
         case DELETE_CAT:
-            const newState = state.settings
+            let newState = state.settings
+            const deletedCatLinks = newState[payload.data.cat_id].lists
             delete newState[payload.data.cat_id]
             return {
                 ...state,
                 settings: {
                     ...newState,
+                    [1]: {
+                        ...newState[1],
+                        lists: [...state.settings[1].lists, ...deletedCatLinks],
+                    },
                 },
             }
         case ADD_NEW_LINK:

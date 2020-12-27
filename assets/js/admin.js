@@ -78783,10 +78783,14 @@ function settings(state = {}, action) {
       };
 
     case _actions_settings_actions__WEBPACK_IMPORTED_MODULE_0__["DELETE_CAT"]:
-      const newState = state.settings;
+      let newState = state.settings;
+      const deletedCatLinks = newState[payload.data.cat_id].lists;
       delete newState[payload.data.cat_id];
       return { ...state,
-        settings: { ...newState
+        settings: { ...newState,
+          [1]: { ...newState[1],
+            lists: [...state.settings[1].lists, ...deletedCatLinks]
+          }
         }
       };
 
