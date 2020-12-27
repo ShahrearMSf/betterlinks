@@ -7,7 +7,7 @@ class Utils {
         $query = $query->table('better_links')->where('short_url', '=', $slug);
         return $query->first();
     }
-    public function dispatch_redirect($data){
+    public function dispatch_redirect($data, $param){
         if($data->track_me){
             $this->start_trakcing($data);
         }
@@ -33,6 +33,9 @@ class Utils {
 
 
         $target_url = $this->addScheme($data->target_url);
+        if($data->param_forwarding && !empty($param)){
+            $target_url = $target_url .'?'. $param;
+        }
 
         switch($data->redirect_type) {
             case '301':
