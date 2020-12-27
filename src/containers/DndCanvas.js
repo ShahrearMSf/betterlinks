@@ -36,22 +36,16 @@ const getListStyle = (isDraggingOver) => ({
 
 function DndCanvas(props) {
     const { settings } = props.settings
-    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
         if (!settings) {
             props.fetch_settings_data()
-            setTimeout(() => {
-                setIsLoaded(true)
-            }, 3000)
-        } else {
-            setIsLoaded(true)
         }
     }, [])
 
     return (
-        <div className={`dnd-category-wrapper ${isLoaded ? '' : 'd-flex'}`}>
-            {isLoaded ? (
+        <div className={`dnd-category-wrapper ${settings ? '' : 'd-flex'}`}>
+            {settings ? (
                 <DragDropContext onDragEnd={props.onDragEnd}>
                     {settings &&
                         Object.entries(settings).map(([ind, el]) => (

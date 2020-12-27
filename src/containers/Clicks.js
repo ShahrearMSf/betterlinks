@@ -47,21 +47,15 @@ const columns = [
 
 const Clicks = (props) => {
     const { clicks } = props.clicks
-    const [isLoaded, setIsLoaded] = useState(false)
     useEffect(() => {
         if (!clicks) {
             props.fetch_clicks_data()
-            setTimeout(() => {
-                setIsLoaded(true)
-            }, 3000)
-        } else {
-            setIsLoaded(true)
         }
     }, [])
 
     return (
         <React.Fragment>
-            {isLoaded == true ? (
+            {clicks ? (
                 <DataTable title='Clicks' columns={columns} data={clicks} />
             ) : (
                 <TableLoader />
