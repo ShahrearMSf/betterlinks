@@ -91,27 +91,27 @@ class Links extends Controller
         $prefix = $wpdb->prefix;
         $query = \BetterLinks\Helper::DB();
         $results = $query->query("SELECT 
-            {$prefix}better_terms.ID as cat_id, 
-            {$prefix}better_terms.term_name, 
-            {$prefix}better_terms.term_slug,
-            {$prefix}better_terms.term_type, 
-            {$prefix}better_links.ID, 
-            {$prefix}better_links.link_title,
-            {$prefix}better_links.link_slug,
-            {$prefix}better_links.link_note,
-            {$prefix}better_links.link_status,
-            {$prefix}better_links.nofollow,
-            {$prefix}better_links.sponsored,
-            {$prefix}better_links.track_me,
-            {$prefix}better_links.param_forwarding,
-            {$prefix}better_links.param_struct,
-            {$prefix}better_links.redirect_type,
-            {$prefix}better_links.target_url,
-            {$prefix}better_links.short_url
-        FROM {$prefix}better_terms
-        LEFT JOIN  {$prefix}better_terms_relationships ON {$prefix}better_terms.ID = {$prefix}better_terms_relationships.term_id
-        LEFT JOIN  {$prefix}better_links ON {$prefix}better_links.ID = {$prefix}better_terms_relationships.link_id
-        WHERE {$prefix}better_terms.term_type = 'category'
+            {$prefix}betterlinks_terms.ID as cat_id, 
+            {$prefix}betterlinks_terms.term_name, 
+            {$prefix}betterlinks_terms.term_slug,
+            {$prefix}betterlinks_terms.term_type, 
+            {$prefix}betterlinks.ID, 
+            {$prefix}betterlinks.link_title,
+            {$prefix}betterlinks.link_slug,
+            {$prefix}betterlinks.link_note,
+            {$prefix}betterlinks.link_status,
+            {$prefix}betterlinks.nofollow,
+            {$prefix}betterlinks.sponsored,
+            {$prefix}betterlinks.track_me,
+            {$prefix}betterlinks.param_forwarding,
+            {$prefix}betterlinks.param_struct,
+            {$prefix}betterlinks.redirect_type,
+            {$prefix}betterlinks.target_url,
+            {$prefix}betterlinks.short_url
+        FROM {$prefix}betterlinks_terms
+        LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
+        LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
+        WHERE {$prefix}betterlinks_terms.term_type = 'category'
         ")->get();
         return new \WP_REST_Response(array(
             'success' => is_bool($results),
@@ -132,7 +132,7 @@ class Links extends Controller
             $term_data = [];
             $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
             $params = array_intersect_key($request['params'], $lookFor);
-            $id = $qb->table('better_links')->insert($params);
+            $id = $qb->table('betterlinks')->insert($params);
             // store tags relation data
             if(isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])){
                 $term_data[] = [
@@ -148,7 +148,7 @@ class Links extends Controller
                     ];
                 }
             }
-            $qb->table('better_terms_relationships')->insert($term_data);
+            $qb->table('betterlinks_terms_relationships')->insert($term_data);
             $_SESSION["link_ID"] = $id;
         });
         $response = array_merge($request['params'], array('ID' => strval($_SESSION["link_ID"])));
@@ -172,7 +172,7 @@ class Links extends Controller
             $term_data = [];
             $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
             $params = array_intersect_key($request['params'], $lookFor);
-            $id = $qb->table('better_links')->where('ID', $params['ID'])->update($params);
+            $id = $qb->table('betterlinks')->where('ID', $params['ID'])->update($params);
             // store tags relation data
             if(isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])){
                 $term_data[] = [
@@ -188,8 +188,8 @@ class Links extends Controller
                     ];
                 }
             }
-            $qb->table('better_terms_relationships')->where('link_id', '=', $request['params']['ID'])->delete();
-            $qb->table('better_terms_relationships')->insert($term_data);
+            $qb->table('betterlinks_terms_relationships')->where('link_id', '=', $request['params']['ID'])->delete();
+            $qb->table('betterlinks_terms_relationships')->insert($term_data);
         });
         return new \WP_REST_Response(array(
             'success'   => true,
@@ -206,7 +206,7 @@ class Links extends Controller
     public function delete_value($request)
     {
        
-        \BetterLinks\Helper::DB()->table('better_links')->where('id', '=', $request['ID'])->delete();
+        \BetterLinks\Helper::DB()->table('betterlinks')->where('id', '=', $request['ID'])->delete();
         return new \WP_REST_Response(array(
             'success'   => true,
             'data'     => [

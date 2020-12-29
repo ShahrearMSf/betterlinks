@@ -23,7 +23,7 @@ class Helper {
     {
         if (
             $hook == 'toplevel_page_' .  BL_PLUGIN_SLUG ||
-            $hook == 'better-links_page_' .  BL_PLUGIN_SLUG . '-clicks'
+            $hook = BL_PLUGIN_SLUG . '_page_'.BL_PLUGIN_SLUG.'-clicks'
         ) {
             return true;
         }

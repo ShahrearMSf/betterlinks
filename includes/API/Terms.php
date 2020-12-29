@@ -72,18 +72,18 @@ class Terms extends Controller {
         $query = \BetterLinks\Helper::DB();
         if(isset($query_params['ID'])){
             $results = $query->query("SELECT 
-            {$prefix}better_terms.ID as term_id, 
-            {$prefix}better_terms.term_name, 
-            {$prefix}better_terms.term_slug,
-            {$prefix}better_terms.term_type
-            FROM {$prefix}better_terms
-            LEFT JOIN  {$prefix}better_terms_relationships ON {$prefix}better_terms.ID = {$prefix}better_terms_relationships.term_id
-            LEFT JOIN  {$prefix}better_links ON {$prefix}better_links.ID = {$prefix}better_terms_relationships.link_id
-            WHERE {$prefix}better_terms_relationships.link_id = {$query_params['ID']} 
-            AND {$prefix}better_terms.term_type = '{$query_params['term_type']}'
+            {$prefix}betterlinks_terms.ID as term_id, 
+            {$prefix}betterlinks_terms.term_name, 
+            {$prefix}betterlinks_terms.term_slug,
+            {$prefix}betterlinks_terms.term_type
+            FROM {$prefix}betterlinks_terms
+            LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
+            LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
+            WHERE {$prefix}betterlinks_terms_relationships.link_id = {$query_params['ID']} 
+            AND {$prefix}betterlinks_terms.term_type = '{$query_params['term_type']}'
             ")->get();
         } else {
-            $results = $query->table('better_terms')->where('term_type', '=', $query_params['term_type'])->get();
+            $results = $query->table('betterlinks_terms')->where('term_type', '=', $query_params['term_type'])->get();
         }
 
 
@@ -102,7 +102,7 @@ class Terms extends Controller {
     public function create_value($request)
     {
         $request = $request->get_params();    
-        $id = \BetterLinks\Helper::DB()->table('better_terms')->insert($request['params']);
+        $id = \BetterLinks\Helper::DB()->table('betterlinks_terms')->insert($request['params']);
         $request['params']['ID'] = $id;
         $request['params']['lists'] = [];
         return new \WP_REST_Response(array(
@@ -125,7 +125,7 @@ class Terms extends Controller {
             'term_slug' => $request['params']['cat_slug']
         ];
         
-        \BetterLinks\Helper::DB()->table('better_terms')->where('ID', $request['params']['cat_id'])->update($data);
+        \BetterLinks\Helper::DB()->table('betterlinks_terms')->where('ID', $request['params']['cat_id'])->update($data);
 
         return new \WP_REST_Response(array(
             'success'   => is_bool($request['params']['cat_id']),
@@ -144,8 +144,8 @@ class Terms extends Controller {
         $request = $request->get_params();
         \BetterLinks\Helper::DB()->transaction(function ($qb) use($request) {
             if($request['cat_id'] != 1){
-                $qb->table('better_terms')->where('id', '=', $request['cat_id'])->delete();
-                $qb->table('better_terms_relationships')->where('term_id', '=', $request['cat_id'])->update(array('term_id' => 1));
+                $qb->table('betterlinks_terms')->where('id', '=', $request['cat_id'])->delete();
+                $qb->table('betterlinks_terms_relationships')->where('term_id', '=', $request['cat_id'])->update(array('term_id' => 1));
             }            
         });
         return new \WP_REST_Response(array(

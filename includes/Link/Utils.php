@@ -4,7 +4,7 @@ namespace BetterLinks\Link;
 class Utils {
     public function get_slug_raw($slug){
         $query = \BetterLinks\Helper::DB();
-        $query = $query->table('better_links')->where('short_url', '=', $slug);
+        $query = $query->table('betterlinks')->where('short_url', '=', $slug);
         return $query->first();
     }
     public function dispatch_redirect($data, $param){
@@ -78,7 +78,7 @@ class Utils {
                 'created_at'     =>  $now,
                 'created_at_gmt' => $now_gmt,
             ];
-            $query->table('better_clicks')->insert($data);
+            $query->table('betterlinks_clicks')->insert($data);
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }

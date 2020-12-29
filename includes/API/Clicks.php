@@ -70,7 +70,7 @@ class Clicks extends Controller
         global $wpdb;
         $prefix = $wpdb->prefix;
         $query = \BetterLinks\Helper::DB();
-        $results = $query->query("SELECT {$prefix}better_clicks.ID as click_ID, link_id, created_at, referer, short_url, target_url, ip,(select count(id) from {$prefix}better_clicks group by ip) as IPCOUNT from {$prefix}better_clicks left join {$prefix}better_links on {$prefix}better_links.id = {$prefix}better_clicks.link_id group by {$prefix}better_clicks.id")->get();
+        $results = $query->query("SELECT {$prefix}betterlinks_clicks.ID as click_ID, link_id, created_at, referer, short_url, target_url, ip,(select count(id) from {$prefix}betterlinks_clicks group by ip) as IPCOUNT from {$prefix}betterlinks_clicks left join {$prefix}betterlinks on {$prefix}betterlinks.id = {$prefix}betterlinks_clicks.link_id group by {$prefix}betterlinks_clicks.id")->get();
         return new \WP_REST_Response(array(
             'success' => true,
             'data' => $results

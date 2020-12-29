@@ -20,10 +20,12 @@ class Installer {
         $this->createBetterClicksTable();
         // set version number
         update_option( 'betterlinks_version', BL_VERSION );
+        // set db version
+        update_option( 'betterlinks_db_version', BL_DB_VERSION);
     }
 
     public function createBetterLinksTable(){
-        $table_name = $this->wpdb->prefix . 'better_links';
+        $table_name = $this->wpdb->prefix . 'betterlinks';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             link_author bigint(20) unsigned NOT NULL default '0',
@@ -54,7 +56,7 @@ class Installer {
     }
 
     public function createBetterTermsTable (){
-        $table_name = $this->wpdb->prefix . 'better_terms';
+        $table_name = $this->wpdb->prefix . 'betterlinks_terms';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             term_name text NOT NULL,
@@ -70,7 +72,7 @@ class Installer {
     }
 
     public function createBetterTermsRelationshipsTable (){
-        $table_name = $this->wpdb->prefix . 'better_terms_relationships';
+        $table_name = $this->wpdb->prefix . 'betterlinks_terms_relationships';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             term_id bigint(20) default 0,
@@ -83,7 +85,7 @@ class Installer {
     }
 
     public function createBetterClicksTable (){
-        $table_name = $this->wpdb->prefix . 'better_clicks';
+        $table_name = $this->wpdb->prefix . 'betterlinks_clicks';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             link_id bigint(20) NOT NULL,
@@ -107,7 +109,7 @@ class Installer {
     }
     public function insert_terms(){
         $query = \BetterLinks\Helper::DB();
-        $result = $query->table('better_terms')->where('term_slug', '=', 'uncategorized')->get();
+        $result = $query->table('betterlinks_terms')->where('term_slug', '=', 'uncategorized')->get();
         if(count($result) === 0){
             try {
                 $data = [
@@ -115,7 +117,7 @@ class Installer {
                     'term_slug' => 'uncategorized',
                     'term_type' => 'category'
                 ];
-                $query->table('better_terms')->where( 'term_slug', '!', 'uncategorized')->insert($data);
+                $query->table('betterlinks_terms')->where( 'term_slug', '!', 'uncategorized')->insert($data);
             } catch (\Throwable $th) {
                 echo $th->getMessage();
             }

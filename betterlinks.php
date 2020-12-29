@@ -1,8 +1,8 @@
 <?php
 /*
- * Plugin Name: Better Links
+ * Plugin Name: BetterLinks
  * Description: Better Links
- * Version: 0.0.1
+ * Version: 1.0
  * Author: WPDeveloper
  * Author URI: https://wpdeveloper.net
  * Text Domain: betterlinks
@@ -40,7 +40,8 @@ final class BetterLinks
 		/**
 		 * Defines CONSTANTS for Whole plugins.
 		 */
-		define('BL_VERSION', '0.0.1');
+		define('BL_VERSION', '1.0');
+		define('BL_DB_VERSION', '1.0');
 		define('BL_SETTINGS_NAME', 'betterlinks_settings');
 		define('BL_PLUGIN_FILE', __FILE__);
 		define('BL_PLUGIN_BASENAME', plugin_basename(__FILE__));
