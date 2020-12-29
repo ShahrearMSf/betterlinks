@@ -1,6 +1,7 @@
 import React from 'react'
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
+import { plugin_root_url } from './../utils/helper'
 const AdminMenu = ({ query }) => {
     const currentPage = query.get('page')
     return (
@@ -14,10 +15,13 @@ const AdminMenu = ({ query }) => {
                     <div></div>
                 </div>
                 <div
-                    className='wp-menu-image dashicons-before dashicons-admin-generic'
+                    className='wp-menu-image dashicons-before'
                     aria-hidden='true'
                 >
-                    <br />
+                    <img
+                        src={plugin_root_url + 'assets/images/logo.png'}
+                        alt='logo'
+                    />
                 </div>
                 <div className='wp-menu-name'>
                     {__('BetterLinks', 'betterlinks')}

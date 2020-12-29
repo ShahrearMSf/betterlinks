@@ -19,7 +19,7 @@ class Menu
      */
     public function admin_menu()
     {
-        add_menu_page(__('BetterLinks', 'betterlinks'), __('BetterLinks', 'betterlinks'), 'manage_options', BL_PLUGIN_SLUG, [$this, 'load_main_template'], null, 30);
+        add_menu_page(__('BetterLinks', 'betterlinks'), __('BetterLinks', 'betterlinks'), 'manage_options', BL_PLUGIN_SLUG, [$this, 'load_main_template'], BL_ASSETS_URI . 'images/logo.png', 30);
         add_submenu_page(BL_PLUGIN_SLUG, __('BetterLinks', 'betterlinks'), __('BetterLinks', 'betterlinks'), 'manage_options', BL_PLUGIN_SLUG, [$this, 'load_main_template']);
         add_submenu_page(BL_PLUGIN_SLUG, __('Clicks', 'betterlinks'), __('Clicks', 'betterlinks'), 'manage_options', BL_PLUGIN_SLUG . '-clicks', [$this, 'load_main_template']);
     }
