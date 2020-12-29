@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { __ } from '@wordpress/i18n'
 import DataTable from 'react-data-table-component'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -56,7 +57,11 @@ const Clicks = (props) => {
     return (
         <React.Fragment>
             {clicks ? (
-                <DataTable title='Clicks' columns={columns} data={clicks} />
+                <DataTable
+                    title={__('Clicks', 'betterlinks')}
+                    columns={columns}
+                    data={clicks}
+                />
             ) : (
                 <TableLoader />
             )}

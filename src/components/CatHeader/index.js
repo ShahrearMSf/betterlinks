@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { __ } from '@wordpress/i18n'
 import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -74,7 +75,7 @@ const CatHeader = (props) => {
                                             onClick={openModal}
                                             className='link'
                                         >
-                                            Edit
+                                            {__('Edit', 'betterlinks')}
                                         </button>
                                     </li>
                                     <li>
@@ -82,7 +83,7 @@ const CatHeader = (props) => {
                                             className='link delete'
                                             onClick={() => deleteHandler()}
                                         >
-                                            Delete
+                                            {__('Delete', 'betterlinks')}
                                         </button>
                                     </li>
                                 </ul>
@@ -90,20 +91,20 @@ const CatHeader = (props) => {
                             {isDeleteConfirm && (
                                 <div className='btl-confirm-message'>
                                     <p className='action-text'>
-                                        Are Your Sure?
+                                        {__('Are Your Sure?', 'betterlinks')}
                                     </p>
                                     <div className='action-set'>
                                         <button
                                             className='action yes'
                                             onClick={confirmDelete}
                                         >
-                                            Yes
+                                            {__('Yes', 'betterlinks')}
                                         </button>
                                         <button
                                             className='action no'
                                             onClick={noDelete}
                                         >
-                                            No
+                                            {__('No', 'betterlinks')}
                                         </button>
                                     </div>
                                 </div>
@@ -141,7 +142,7 @@ const CatHeader = (props) => {
                                     className='btl-modal-form-label btl-required'
                                     htmlFor='cat_name'
                                 >
-                                    Title
+                                    {__('Title', 'betterlinks')}
                                 </label>
                                 <Field
                                     className='btl-modal-form-control'
@@ -168,7 +169,7 @@ const CatHeader = (props) => {
                                     type='submit'
                                     className='btl-modal-submit-button'
                                 >
-                                    Update
+                                    {__('Update', 'betterlinks')}
                                 </button>
                             </div>
                         </Form>

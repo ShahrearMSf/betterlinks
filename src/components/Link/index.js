@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { __ } from '@wordpress/i18n'
 import Modal from 'react-modal'
 import Select from './../Select'
 import { useFormikContext, Formik, Field, Form } from 'formik'
@@ -133,7 +134,7 @@ const Link = ({
                                             className='btl-modal-form-label btl-required'
                                             htmlFor='link_title'
                                         >
-                                            Title
+                                            {__('Title', 'betterlinks')}
                                         </label>
                                         <Field
                                             className='btl-modal-form-control'
@@ -159,7 +160,7 @@ const Link = ({
                                             className='btl-modal-form-label btl-required'
                                             htmlFor='redirect_type'
                                         >
-                                            Redirect Type
+                                            {__('Redirect Type', 'betterlinks')}
                                         </label>
                                         <Select
                                             id='redirect_type'
@@ -174,7 +175,7 @@ const Link = ({
                                             className='btl-modal-form-label btl-required'
                                             htmlFor='target_url'
                                         >
-                                            Target URL
+                                            {__('Target URL', 'betterlinks')}
                                         </label>
                                         <Field
                                             className='btl-modal-form-control'
@@ -189,7 +190,7 @@ const Link = ({
                                             className='btl-modal-form-label'
                                             htmlFor='short_url'
                                         >
-                                            Better Links
+                                            {__('Better Links', 'betterlinks')}
                                         </label>
                                         <div className='btl-link-field-copyable'>
                                             <span className='btl-static-link'>
@@ -226,7 +227,7 @@ const Link = ({
                                             className='btl-modal-form-label'
                                             htmlFor='link_note'
                                         >
-                                            Notes
+                                            {__('Notes', 'betterlinks')}
                                         </label>
                                         <Field
                                             className='btl-modal-form-control'
@@ -239,7 +240,7 @@ const Link = ({
                                             className='btl-modal-form-label'
                                             htmlFor='cat_id'
                                         >
-                                            Category
+                                            {__('Category', 'betterlinks')}
                                         </label>
                                         <Category
                                             name='cat_id'
@@ -253,7 +254,7 @@ const Link = ({
                                             className='btl-modal-form-label'
                                             htmlFor='tags_id'
                                         >
-                                            Tags
+                                            {__('Tags', 'betterlinks')}
                                         </label>
                                         <Tags
                                             name='tags_id'
@@ -276,7 +277,9 @@ const Link = ({
                                                 )
                                             }
                                         />
-                                        <span className='text'>No Follow</span>
+                                        <span className='text'>
+                                            {__('No Follow', 'betterlinks')}
+                                        </span>
                                     </label>
                                     <label className='btl-checkbox-field'>
                                         <Field
@@ -290,7 +293,9 @@ const Link = ({
                                                 )
                                             }
                                         />
-                                        <span className='text'>Sponsored</span>
+                                        <span className='text'>
+                                            {__('Sponsored', 'betterlinks')}
+                                        </span>
                                     </label>
                                     <label className='btl-checkbox-field'>
                                         <Field
@@ -306,7 +311,10 @@ const Link = ({
                                             }
                                         />
                                         <span className='text'>
-                                            Parameter Forwarding
+                                            {__(
+                                                'Parameter Forwarding',
+                                                'betterlinks'
+                                            )}
                                         </span>
                                     </label>
                                     <label className='btl-checkbox-field'>
@@ -321,7 +329,9 @@ const Link = ({
                                                 )
                                             }
                                         />
-                                        <span className='text'>Tracking</span>
+                                        <span className='text'>
+                                            {__('Tracking', 'betterlinks')}
+                                        </span>
                                     </label>
                                 </div>
                             </div>
@@ -331,7 +341,9 @@ const Link = ({
                                     type='submit'
                                     className='btl-modal-submit-button'
                                 >
-                                    {item ? 'Update' : 'Publish'}
+                                    {item
+                                        ? __('Update', 'betterlinks')
+                                        : __('Publish', 'betterlinks')}
                                 </button>
                             </div>
                         </Form>

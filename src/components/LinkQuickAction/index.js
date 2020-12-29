@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { __ } from '@wordpress/i18n'
 import ReactTooltip from 'react-tooltip'
 import Link from './../Link'
 import { site_url, copyToClipboard } from './../../utils/helper'
@@ -73,7 +74,9 @@ const LinkQuickAction = (props) => {
                 </>
             ) : (
                 <div className='btl-confirm-message'>
-                    <span className='action-text'>Are Your Sure?</span>
+                    <span className='action-text'>
+                        {__('Are Your Sure?', 'betterlinks')}
+                    </span>
                     <div className='action-set'>
                         <button
                             className='action yes'
@@ -81,10 +84,10 @@ const LinkQuickAction = (props) => {
                                 deleteLinkHandler(cat_id, item.ID)
                             }}
                         >
-                            Yes
+                            {__('Yes', 'betterlinks')}
                         </button>
                         <button className='action no' onClick={noDelete}>
-                            No
+                            {__('No', 'betterlinks')}
                         </button>
                     </div>
                 </div>

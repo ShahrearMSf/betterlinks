@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { __ } from '@wordpress/i18n'
 const TopBar = (props) => {
     const mode = localStorage.getItem('betterLinksIsDarkMode')
     const [isDarkMode, setIsDarkMode] = useState(mode)
@@ -24,7 +24,7 @@ const TopBar = (props) => {
     }
     return (
         <div className='topbar'>
-            <h1 className="tool-title">BetterLinks</h1>
+            <h1 className='tool-title'>{__('BetterLinks', 'betterlinks')}</h1>
             <label className='theme-mood-button' htmlFor='theme-mood'>
                 <input
                     type='checkbox'

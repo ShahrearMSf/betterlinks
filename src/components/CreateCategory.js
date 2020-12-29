@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { __ } from '@wordpress/i18n'
 import { useFormikContext, Formik, Field, Form } from 'formik'
 import { generateSlug } from './../utils/helper'
 
@@ -28,7 +29,9 @@ const CreateCategory = ({ createCatHandler }) => {
             >
                 <i className='btl btl-add'></i>
             </button>
-            <p className='dnd-create-category-text'>Add New Category</p>
+            <p className='dnd-create-category-text'>
+                {__('Add New Category', 'betterlinks')}
+            </p>
             {isOpenForm && (
                 <Formik
                     initialValues={{
@@ -46,7 +49,7 @@ const CreateCategory = ({ createCatHandler }) => {
                             <Field
                                 id='term_name'
                                 name='term_name'
-                                placeholder='* Name'
+                                placeholder={__('* Name', 'betterlinks')}
                                 className='btl-form-control'
                                 onBlur={() => setNameToSlug(true)}
                                 required
@@ -57,7 +60,7 @@ const CreateCategory = ({ createCatHandler }) => {
                                 type='hidden'
                                 id='term_slug'
                                 name='term_slug'
-                                placeholder='* Slug'
+                                placeholder={__('* Slug', 'betterlinks')}
                                 className='btl-form-control'
                                 onBlur={() => setSlugToSlug(true)}
                                 required
@@ -68,7 +71,7 @@ const CreateCategory = ({ createCatHandler }) => {
                             className='btl-create-category-submit'
                             type='submit'
                         >
-                            Submit
+                            {__('Submit', 'betterlinks')}
                         </button>
                     </Form>
                 </Formik>

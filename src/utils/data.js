@@ -1,14 +1,15 @@
+import { __ } from '@wordpress/i18n'
 export const redirectType = [
     {
         value: '307',
-        label: '307 (Temporary)',
+        label: __('307 (Temporary)', 'betterlinks'),
     },
     {
         value: '302',
-        label: '302 (Temporary)',
+        label: __('302 (Temporary)', 'betterlinks'),
     },
     {
         value: '301',
-        label: '301 (Permanent)',
+        label: __('301 (Permanent)', 'betterlinks'),
     },
 ]

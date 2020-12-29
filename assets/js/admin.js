@@ -3178,6 +3178,774 @@ var weakMemoize = function weakMemoize(func) {
 
 /***/ }),
 
+/***/ "./node_modules/@tannin/compile/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/@tannin/compile/index.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return compile; });
+/* harmony import */ var _tannin_postfix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tannin/postfix */ "./node_modules/@tannin/postfix/index.js");
+/* harmony import */ var _tannin_evaluate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tannin/evaluate */ "./node_modules/@tannin/evaluate/index.js");
+
+
+
+/**
+ * Given a C expression, returns a function which can be called to evaluate its
+ * result.
+ *
+ * @example
+ *
+ * ```js
+ * import compile from '@tannin/compile';
+ *
+ * const evaluate = compile( 'n > 1' );
+ *
+ * evaluate( { n: 2 } );
+ * // ⇒ true
+ * ```
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {(variables?:{[variable:string]:*})=>*} Compiled evaluator.
+ */
+function compile( expression ) {
+	var terms = Object(_tannin_postfix__WEBPACK_IMPORTED_MODULE_0__["default"])( expression );
+
+	return function( variables ) {
+		return Object(_tannin_evaluate__WEBPACK_IMPORTED_MODULE_1__["default"])( terms, variables );
+	};
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@tannin/evaluate/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/@tannin/evaluate/index.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return evaluate; });
+/**
+ * Operator callback functions.
+ *
+ * @type {Object}
+ */
+var OPERATORS = {
+	'!': function( a ) {
+		return ! a;
+	},
+	'*': function( a, b ) {
+		return a * b;
+	},
+	'/': function( a, b ) {
+		return a / b;
+	},
+	'%': function( a, b ) {
+		return a % b;
+	},
+	'+': function( a, b ) {
+		return a + b;
+	},
+	'-': function( a, b ) {
+		return a - b;
+	},
+	'<': function( a, b ) {
+		return a < b;
+	},
+	'<=': function( a, b ) {
+		return a <= b;
+	},
+	'>': function( a, b ) {
+		return a > b;
+	},
+	'>=': function( a, b ) {
+		return a >= b;
+	},
+	'==': function( a, b ) {
+		return a === b;
+	},
+	'!=': function( a, b ) {
+		return a !== b;
+	},
+	'&&': function( a, b ) {
+		return a && b;
+	},
+	'||': function( a, b ) {
+		return a || b;
+	},
+	'?:': function( a, b, c ) {
+		if ( a ) {
+			throw b;
+		}
+
+		return c;
+	},
+};
+
+/**
+ * Given an array of postfix terms and operand variables, returns the result of
+ * the postfix evaluation.
+ *
+ * @example
+ *
+ * ```js
+ * import evaluate from '@tannin/evaluate';
+ *
+ * // 3 + 4 * 5 / 6 ⇒ '3 4 5 * 6 / +'
+ * const terms = [ '3', '4', '5', '*', '6', '/', '+' ];
+ *
+ * evaluate( terms, {} );
+ * // ⇒ 6.333333333333334
+ * ```
+ *
+ * @param {string[]} postfix   Postfix terms.
+ * @param {Object}   variables Operand variables.
+ *
+ * @return {*} Result of evaluation.
+ */
+function evaluate( postfix, variables ) {
+	var stack = [],
+		i, j, args, getOperatorResult, term, value;
+
+	for ( i = 0; i < postfix.length; i++ ) {
+		term = postfix[ i ];
+
+		getOperatorResult = OPERATORS[ term ];
+		if ( getOperatorResult ) {
+			// Pop from stack by number of function arguments.
+			j = getOperatorResult.length;
+			args = Array( j );
+			while ( j-- ) {
+				args[ j ] = stack.pop();
+			}
+
+			try {
+				value = getOperatorResult.apply( null, args );
+			} catch ( earlyReturn ) {
+				return earlyReturn;
+			}
+		} else if ( variables.hasOwnProperty( term ) ) {
+			value = variables[ term ];
+		} else {
+			value = +term;
+		}
+
+		stack.push( value );
+	}
+
+	return stack[ 0 ];
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@tannin/plural-forms/index.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@tannin/plural-forms/index.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return pluralForms; });
+/* harmony import */ var _tannin_compile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tannin/compile */ "./node_modules/@tannin/compile/index.js");
+
+
+/**
+ * Given a C expression, returns a function which, when called with a value,
+ * evaluates the result with the value assumed to be the "n" variable of the
+ * expression. The result will be coerced to its numeric equivalent.
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {Function} Evaluator function.
+ */
+function pluralForms( expression ) {
+	var evaluate = Object(_tannin_compile__WEBPACK_IMPORTED_MODULE_0__["default"])( expression );
+
+	return function( n ) {
+		return +evaluate( { n: n } );
+	};
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@tannin/postfix/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/@tannin/postfix/index.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return postfix; });
+var PRECEDENCE, OPENERS, TERMINATORS, PATTERN;
+
+/**
+ * Operator precedence mapping.
+ *
+ * @type {Object}
+ */
+PRECEDENCE = {
+	'(': 9,
+	'!': 8,
+	'*': 7,
+	'/': 7,
+	'%': 7,
+	'+': 6,
+	'-': 6,
+	'<': 5,
+	'<=': 5,
+	'>': 5,
+	'>=': 5,
+	'==': 4,
+	'!=': 4,
+	'&&': 3,
+	'||': 2,
+	'?': 1,
+	'?:': 1,
+};
+
+/**
+ * Characters which signal pair opening, to be terminated by terminators.
+ *
+ * @type {string[]}
+ */
+OPENERS = [ '(', '?' ];
+
+/**
+ * Characters which signal pair termination, the value an array with the
+ * opener as its first member. The second member is an optional operator
+ * replacement to push to the stack.
+ *
+ * @type {string[]}
+ */
+TERMINATORS = {
+	')': [ '(' ],
+	':': [ '?', '?:' ],
+};
+
+/**
+ * Pattern matching operators and openers.
+ *
+ * @type {RegExp}
+ */
+PATTERN = /<=|>=|==|!=|&&|\|\||\?:|\(|!|\*|\/|%|\+|-|<|>|\?|\)|:/;
+
+/**
+ * Given a C expression, returns the equivalent postfix (Reverse Polish)
+ * notation terms as an array.
+ *
+ * If a postfix string is desired, simply `.join( ' ' )` the result.
+ *
+ * @example
+ *
+ * ```js
+ * import postfix from '@tannin/postfix';
+ *
+ * postfix( 'n > 1' );
+ * // ⇒ [ 'n', '1', '>' ]
+ * ```
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {string[]} Postfix terms.
+ */
+function postfix( expression ) {
+	var terms = [],
+		stack = [],
+		match, operator, term, element;
+
+	while ( ( match = expression.match( PATTERN ) ) ) {
+		operator = match[ 0 ];
+
+		// Term is the string preceding the operator match. It may contain
+		// whitespace, and may be empty (if operator is at beginning).
+		term = expression.substr( 0, match.index ).trim();
+		if ( term ) {
+			terms.push( term );
+		}
+
+		while ( ( element = stack.pop() ) ) {
+			if ( TERMINATORS[ operator ] ) {
+				if ( TERMINATORS[ operator ][ 0 ] === element ) {
+					// Substitution works here under assumption that because
+					// the assigned operator will no longer be a terminator, it
+					// will be pushed to the stack during the condition below.
+					operator = TERMINATORS[ operator ][ 1 ] || operator;
+					break;
+				}
+			} else if ( OPENERS.indexOf( element ) >= 0 || PRECEDENCE[ element ] < PRECEDENCE[ operator ] ) {
+				// Push to stack if either an opener or when pop reveals an
+				// element of lower precedence.
+				stack.push( element );
+				break;
+			}
+
+			// For each popped from stack, push to terms.
+			terms.push( element );
+		}
+
+		if ( ! TERMINATORS[ operator ] ) {
+			stack.push( operator );
+		}
+
+		// Slice matched fragment from expression to continue match.
+		expression = expression.substr( match.index + operator.length );
+	}
+
+	// Push remainder of operand, if exists, to terms.
+	expression = expression.trim();
+	if ( expression ) {
+		terms.push( expression );
+	}
+
+	// Pop remaining items from stack into terms.
+	return terms.concat( stack.reverse() );
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/i18n/build-module/create-i18n.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@wordpress/i18n/build-module/create-i18n.js ***!
+  \******************************************************************/
+/*! exports provided: createI18n */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createI18n", function() { return createI18n; });
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var tannin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tannin */ "./node_modules/tannin/index.js");
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * External dependencies
+ */
+
+/**
+ * @typedef {Record<string,any>} LocaleData
+ */
+
+/**
+ * Default locale data to use for Tannin domain when not otherwise provided.
+ * Assumes an English plural forms expression.
+ *
+ * @type {LocaleData}
+ */
+
+var DEFAULT_LOCALE_DATA = {
+  '': {
+    /** @param {number} n */
+    plural_forms: function plural_forms(n) {
+      return n === 1 ? 0 : 1;
+    }
+  }
+};
+/**
+ * An i18n instance
+ *
+ * @typedef {Object} I18n
+ * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                    Jed-formatted JSON object shape.
+ * @property {Function} __            Retrieve the translation of text.
+ * @property {Function} _x            Retrieve translated string with gettext context.
+ * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
+ *                                    number.
+ * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
+ *                                    number, with gettext context.
+ * @property {Function} isRTL         Check if current locale is RTL.
+ */
+
+/**
+ * Create an i18n instance
+ *
+ * @param {LocaleData} [initialData]    Locale data configuration.
+ * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @return {I18n}                       I18n instance
+ */
+
+var createI18n = function createI18n(initialData, initialDomain) {
+  /**
+   * The underlying instance of Tannin to which exported functions interface.
+   *
+   * @type {Tannin}
+   */
+  var tannin = new tannin__WEBPACK_IMPORTED_MODULE_1__["default"]({});
+  /**
+   * Merges locale data into the Tannin instance by domain. Accepts data in a
+   * Jed-formatted JSON object shape.
+   *
+   * @see http://messageformat.github.io/Jed/
+   *
+   * @param {LocaleData} [data]   Locale data configuration.
+   * @param {string}     [domain] Domain for which configuration applies.
+   */
+
+  var setLocaleData = function setLocaleData(data) {
+    var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+    tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
+    // a plural forms expression).
+
+    tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
+  };
+  /**
+   * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
+   * otherwise previously assigned.
+   *
+   * @param {string|undefined} domain   Domain to retrieve the translated text.
+   * @param {string|undefined} context  Context information for the translators.
+   * @param {string}           single   Text to translate if non-plural. Used as
+   *                                    fallback return value on a caught error.
+   * @param {string}           [plural] The text to be used if the number is
+   *                                    plural.
+   * @param {number}           [number] The number to compare against to use
+   *                                    either the singular or plural form.
+   *
+   * @return {string} The translated string.
+   */
+
+
+  var dcnpgettext = function dcnpgettext() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+    var context = arguments.length > 1 ? arguments[1] : undefined;
+    var single = arguments.length > 2 ? arguments[2] : undefined;
+    var plural = arguments.length > 3 ? arguments[3] : undefined;
+    var number = arguments.length > 4 ? arguments[4] : undefined;
+
+    if (!tannin.data[domain]) {
+      setLocaleData(undefined, domain);
+    }
+
+    return tannin.dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Retrieve the translation of text.
+   *
+   * @see https://developer.wordpress.org/reference/functions/__/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated text.
+   */
+
+
+  var __ = function __(text, domain) {
+    return dcnpgettext(domain, undefined, text);
+  };
+  /**
+   * Retrieve translated string with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_x/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated context string without pipe.
+   */
+
+
+  var _x = function _x(text, context, domain) {
+    return dcnpgettext(domain, context, text);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_n/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _n = function _n(single, plural, number, domain) {
+    return dcnpgettext(domain, undefined, single, plural, number);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number, with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_nx/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _nx = function _nx(single, plural, number, context, domain) {
+    return dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Check if current locale is RTL.
+   *
+   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+   *
+   * @return {boolean} Whether locale is RTL.
+   */
+
+
+  var isRTL = function isRTL() {
+    return 'rtl' === _x('ltr', 'text direction');
+  };
+
+  if (initialData) {
+    setLocaleData(initialData, initialDomain);
+  }
+
+  return {
+    setLocaleData: setLocaleData,
+    __: __,
+    _x: _x,
+    _n: _n,
+    _nx: _nx,
+    isRTL: isRTL
+  };
+};
+//# sourceMappingURL=create-i18n.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/i18n/build-module/default-i18n.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@wordpress/i18n/build-module/default-i18n.js ***!
+  \*******************************************************************/
+/*! exports provided: setLocaleData, __, _x, _n, _nx, isRTL */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setLocaleData", function() { return setLocaleData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__", function() { return __; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_x", function() { return _x; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_n", function() { return _n; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_nx", function() { return _nx; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRTL", function() { return isRTL; });
+/* harmony import */ var _create_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./create-i18n */ "./node_modules/@wordpress/i18n/build-module/create-i18n.js");
+/**
+ * Internal dependencies
+ */
+
+var i18n = Object(_create_i18n__WEBPACK_IMPORTED_MODULE_0__["createI18n"])();
+/*
+ * Comments in this file are duplicated from ./i18n due to
+ * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
+ */
+
+/**
+ * @typedef {import('./create-i18n').LocaleData} LocaleData
+ */
+
+/**
+ * Merges locale data into the Tannin instance by domain. Accepts data in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @param {LocaleData} [data]   Locale data configuration.
+ * @param {string}     [domain] Domain for which configuration applies.
+ */
+
+var setLocaleData = i18n.setLocaleData.bind(i18n);
+/**
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ *
+ * @param {string} text     Text to translate.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} Translated text.
+ */
+
+var __ = i18n.__.bind(i18n);
+/**
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ *
+ * @param {string} text     Text to translate.
+ * @param {string} context  Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} Translated context string without pipe.
+ */
+
+var _x = i18n._x.bind(i18n);
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ *
+ * @param {string} single   The text to be used if the number is singular.
+ * @param {string} plural   The text to be used if the number is plural.
+ * @param {number} number   The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+
+var _n = i18n._n.bind(i18n);
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ *
+ * @param {string} single   The text to be used if the number is singular.
+ * @param {string} plural   The text to be used if the number is plural.
+ * @param {number} number   The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} context  Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+
+var _nx = i18n._nx.bind(i18n);
+/**
+ * Check if current locale is RTL.
+ *
+ * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+ * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+ * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+ * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+ *
+ * @return {boolean} Whether locale is RTL.
+ */
+
+var isRTL = i18n.isRTL.bind(i18n);
+//# sourceMappingURL=default-i18n.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/i18n/build-module/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@wordpress/i18n/build-module/index.js ***!
+  \************************************************************/
+/*! exports provided: sprintf, createI18n, setLocaleData, __, _x, _n, _nx, isRTL */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _sprintf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sprintf */ "./node_modules/@wordpress/i18n/build-module/sprintf.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sprintf", function() { return _sprintf__WEBPACK_IMPORTED_MODULE_0__["sprintf"]; });
+
+/* harmony import */ var _create_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./create-i18n */ "./node_modules/@wordpress/i18n/build-module/create-i18n.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createI18n", function() { return _create_i18n__WEBPACK_IMPORTED_MODULE_1__["createI18n"]; });
+
+/* harmony import */ var _default_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./default-i18n */ "./node_modules/@wordpress/i18n/build-module/default-i18n.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setLocaleData", function() { return _default_i18n__WEBPACK_IMPORTED_MODULE_2__["setLocaleData"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "__", function() { return _default_i18n__WEBPACK_IMPORTED_MODULE_2__["__"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "_x", function() { return _default_i18n__WEBPACK_IMPORTED_MODULE_2__["_x"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "_n", function() { return _default_i18n__WEBPACK_IMPORTED_MODULE_2__["_n"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "_nx", function() { return _default_i18n__WEBPACK_IMPORTED_MODULE_2__["_nx"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRTL", function() { return _default_i18n__WEBPACK_IMPORTED_MODULE_2__["isRTL"]; });
+
+
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/i18n/build-module/sprintf.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@wordpress/i18n/build-module/sprintf.js ***!
+  \**************************************************************/
+/*! exports provided: sprintf */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sprintf", function() { return sprintf; });
+/* harmony import */ var memize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! memize */ "./node_modules/memize/index.js");
+/* harmony import */ var memize__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(memize__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var sprintf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sprintf-js */ "./node_modules/sprintf-js/src/sprintf.js");
+/* harmony import */ var sprintf_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sprintf_js__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * External dependencies
+ */
+
+
+/**
+ * Log to console, once per message; or more precisely, per referentially equal
+ * argument set. Because Jed throws errors, we log these to the console instead
+ * to avoid crashing the application.
+ *
+ * @param {...*} args Arguments to pass to `console.error`
+ */
+
+var logErrorOnce = memize__WEBPACK_IMPORTED_MODULE_0___default()(console.error); // eslint-disable-line no-console
+
+/**
+ * Returns a formatted string. If an error occurs in applying the format, the
+ * original format string is returned.
+ *
+ * @param {string}    format The format of the string to generate.
+ * @param {...*} args Arguments to apply to the format.
+ *
+ * @see http://www.diveintojavascript.com/projects/javascript-sprintf
+ *
+ * @return {string} The formatted string.
+ */
+
+function sprintf(format) {
+  try {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    return sprintf_js__WEBPACK_IMPORTED_MODULE_1___default.a.sprintf.apply(sprintf_js__WEBPACK_IMPORTED_MODULE_1___default.a, [format].concat(args));
+  } catch (error) {
+    logErrorOnce('sprintf error: \n\n' + error.toString());
+    return format;
+  }
+}
+//# sourceMappingURL=sprintf.js.map
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -22203,6 +22971,178 @@ function toString(value) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (toString);
+
+
+/***/ }),
+
+/***/ "./node_modules/memize/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/memize/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Memize options object.
+ *
+ * @typedef MemizeOptions
+ *
+ * @property {number} [maxSize] Maximum size of the cache.
+ */
+
+/**
+ * Internal cache entry.
+ *
+ * @typedef MemizeCacheNode
+ *
+ * @property {?MemizeCacheNode|undefined} [prev] Previous node.
+ * @property {?MemizeCacheNode|undefined} [next] Next node.
+ * @property {Array<*>}                   args   Function arguments for cache
+ *                                               entry.
+ * @property {*}                          val    Function result.
+ */
+
+/**
+ * Properties of the enhanced function for controlling cache.
+ *
+ * @typedef MemizeMemoizedFunction
+ *
+ * @property {()=>void} clear Clear the cache.
+ */
+
+/**
+ * Accepts a function to be memoized, and returns a new memoized function, with
+ * optional options.
+ *
+ * @template {Function} F
+ *
+ * @param {F}             fn        Function to memoize.
+ * @param {MemizeOptions} [options] Options object.
+ *
+ * @return {F & MemizeMemoizedFunction} Memoized function.
+ */
+function memize( fn, options ) {
+	var size = 0;
+
+	/** @type {?MemizeCacheNode|undefined} */
+	var head;
+
+	/** @type {?MemizeCacheNode|undefined} */
+	var tail;
+
+	options = options || {};
+
+	function memoized( /* ...args */ ) {
+		var node = head,
+			len = arguments.length,
+			args, i;
+
+		searchCache: while ( node ) {
+			// Perform a shallow equality test to confirm that whether the node
+			// under test is a candidate for the arguments passed. Two arrays
+			// are shallowly equal if their length matches and each entry is
+			// strictly equal between the two sets. Avoid abstracting to a
+			// function which could incur an arguments leaking deoptimization.
+
+			// Check whether node arguments match arguments length
+			if ( node.args.length !== arguments.length ) {
+				node = node.next;
+				continue;
+			}
+
+			// Check whether node arguments match arguments values
+			for ( i = 0; i < len; i++ ) {
+				if ( node.args[ i ] !== arguments[ i ] ) {
+					node = node.next;
+					continue searchCache;
+				}
+			}
+
+			// At this point we can assume we've found a match
+
+			// Surface matched node to head if not already
+			if ( node !== head ) {
+				// As tail, shift to previous. Must only shift if not also
+				// head, since if both head and tail, there is no previous.
+				if ( node === tail ) {
+					tail = node.prev;
+				}
+
+				// Adjust siblings to point to each other. If node was tail,
+				// this also handles new tail's empty `next` assignment.
+				/** @type {MemizeCacheNode} */ ( node.prev ).next = node.next;
+				if ( node.next ) {
+					node.next.prev = node.prev;
+				}
+
+				node.next = head;
+				node.prev = null;
+				/** @type {MemizeCacheNode} */ ( head ).prev = node;
+				head = node;
+			}
+
+			// Return immediately
+			return node.val;
+		}
+
+		// No cached value found. Continue to insertion phase:
+
+		// Create a copy of arguments (avoid leaking deoptimization)
+		args = new Array( len );
+		for ( i = 0; i < len; i++ ) {
+			args[ i ] = arguments[ i ];
+		}
+
+		node = {
+			args: args,
+
+			// Generate the result from original function
+			val: fn.apply( null, args ),
+		};
+
+		// Don't need to check whether node is already head, since it would
+		// have been returned above already if it was
+
+		// Shift existing head down list
+		if ( head ) {
+			head.prev = node;
+			node.next = head;
+		} else {
+			// If no head, follows that there's no tail (at initial or reset)
+			tail = node;
+		}
+
+		// Trim tail if we're reached max size and are pending cache insertion
+		if ( size === /** @type {MemizeOptions} */ ( options ).maxSize ) {
+			tail = /** @type {MemizeCacheNode} */ ( tail ).prev;
+			/** @type {MemizeCacheNode} */ ( tail ).next = null;
+		} else {
+			size++;
+		}
+
+		head = node;
+
+		return node.val;
+	}
+
+	memoized.clear = function() {
+		head = null;
+		tail = null;
+		size = 0;
+	};
+
+	if ( false ) {}
+
+	// Ignore reason: There's not a clear solution to create an intersection of
+	// the function with additional properties, where the goal is to retain the
+	// function signature of the incoming argument and add control properties
+	// on the return value.
+
+	// @ts-ignore
+	return memoized;
+}
+
+module.exports = memize;
 
 
 /***/ }),
@@ -74372,6 +75312,249 @@ module.exports = function shallowEqual(objA, objB, compare, compareContext) {
 
 /***/ }),
 
+/***/ "./node_modules/sprintf-js/src/sprintf.js":
+/*!************************************************!*\
+  !*** ./node_modules/sprintf-js/src/sprintf.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
+
+!function() {
+    'use strict'
+
+    var re = {
+        not_string: /[^s]/,
+        not_bool: /[^t]/,
+        not_type: /[^T]/,
+        not_primitive: /[^v]/,
+        number: /[diefg]/,
+        numeric_arg: /[bcdiefguxX]/,
+        json: /[j]/,
+        not_json: /[^j]/,
+        text: /^[^\x25]+/,
+        modulo: /^\x25{2}/,
+        placeholder: /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,
+        key: /^([a-z_][a-z_\d]*)/i,
+        key_access: /^\.([a-z_][a-z_\d]*)/i,
+        index_access: /^\[(\d+)\]/,
+        sign: /^[+-]/
+    }
+
+    function sprintf(key) {
+        // `arguments` is not an array, but should be fine for this call
+        return sprintf_format(sprintf_parse(key), arguments)
+    }
+
+    function vsprintf(fmt, argv) {
+        return sprintf.apply(null, [fmt].concat(argv || []))
+    }
+
+    function sprintf_format(parse_tree, argv) {
+        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, ph, pad, pad_character, pad_length, is_positive, sign
+        for (i = 0; i < tree_length; i++) {
+            if (typeof parse_tree[i] === 'string') {
+                output += parse_tree[i]
+            }
+            else if (typeof parse_tree[i] === 'object') {
+                ph = parse_tree[i] // convenience purposes only
+                if (ph.keys) { // keyword argument
+                    arg = argv[cursor]
+                    for (k = 0; k < ph.keys.length; k++) {
+                        if (arg == undefined) {
+                            throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
+                        }
+                        arg = arg[ph.keys[k]]
+                    }
+                }
+                else if (ph.param_no) { // positional argument (explicit)
+                    arg = argv[ph.param_no]
+                }
+                else { // positional argument (implicit)
+                    arg = argv[cursor++]
+                }
+
+                if (re.not_type.test(ph.type) && re.not_primitive.test(ph.type) && arg instanceof Function) {
+                    arg = arg()
+                }
+
+                if (re.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
+                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
+                }
+
+                if (re.number.test(ph.type)) {
+                    is_positive = arg >= 0
+                }
+
+                switch (ph.type) {
+                    case 'b':
+                        arg = parseInt(arg, 10).toString(2)
+                        break
+                    case 'c':
+                        arg = String.fromCharCode(parseInt(arg, 10))
+                        break
+                    case 'd':
+                    case 'i':
+                        arg = parseInt(arg, 10)
+                        break
+                    case 'j':
+                        arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width) : 0)
+                        break
+                    case 'e':
+                        arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential()
+                        break
+                    case 'f':
+                        arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg)
+                        break
+                    case 'g':
+                        arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg)
+                        break
+                    case 'o':
+                        arg = (parseInt(arg, 10) >>> 0).toString(8)
+                        break
+                    case 's':
+                        arg = String(arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 't':
+                        arg = String(!!arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'T':
+                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'u':
+                        arg = parseInt(arg, 10) >>> 0
+                        break
+                    case 'v':
+                        arg = arg.valueOf()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'x':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16)
+                        break
+                    case 'X':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
+                        break
+                }
+                if (re.json.test(ph.type)) {
+                    output += arg
+                }
+                else {
+                    if (re.number.test(ph.type) && (!is_positive || ph.sign)) {
+                        sign = is_positive ? '+' : '-'
+                        arg = arg.toString().replace(re.sign, '')
+                    }
+                    else {
+                        sign = ''
+                    }
+                    pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' '
+                    pad_length = ph.width - (sign + arg).length
+                    pad = ph.width ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
+                    output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
+                }
+            }
+        }
+        return output
+    }
+
+    var sprintf_cache = Object.create(null)
+
+    function sprintf_parse(fmt) {
+        if (sprintf_cache[fmt]) {
+            return sprintf_cache[fmt]
+        }
+
+        var _fmt = fmt, match, parse_tree = [], arg_names = 0
+        while (_fmt) {
+            if ((match = re.text.exec(_fmt)) !== null) {
+                parse_tree.push(match[0])
+            }
+            else if ((match = re.modulo.exec(_fmt)) !== null) {
+                parse_tree.push('%')
+            }
+            else if ((match = re.placeholder.exec(_fmt)) !== null) {
+                if (match[2]) {
+                    arg_names |= 1
+                    var field_list = [], replacement_field = match[2], field_match = []
+                    if ((field_match = re.key.exec(replacement_field)) !== null) {
+                        field_list.push(field_match[1])
+                        while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
+                            if ((field_match = re.key_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else {
+                                throw new SyntaxError('[sprintf] failed to parse named argument key')
+                            }
+                        }
+                    }
+                    else {
+                        throw new SyntaxError('[sprintf] failed to parse named argument key')
+                    }
+                    match[2] = field_list
+                }
+                else {
+                    arg_names |= 2
+                }
+                if (arg_names === 3) {
+                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
+                }
+
+                parse_tree.push(
+                    {
+                        placeholder: match[0],
+                        param_no:    match[1],
+                        keys:        match[2],
+                        sign:        match[3],
+                        pad_char:    match[4],
+                        align:       match[5],
+                        width:       match[6],
+                        precision:   match[7],
+                        type:        match[8]
+                    }
+                )
+            }
+            else {
+                throw new SyntaxError('[sprintf] unexpected placeholder')
+            }
+            _fmt = _fmt.substring(match[0].length)
+        }
+        return sprintf_cache[fmt] = parse_tree
+    }
+
+    /**
+     * export to either browser or node.js
+     */
+    /* eslint-disable quote-props */
+    if (true) {
+        exports['sprintf'] = sprintf
+        exports['vsprintf'] = vsprintf
+    }
+    if (typeof window !== 'undefined') {
+        window['sprintf'] = sprintf
+        window['vsprintf'] = vsprintf
+
+        if (true) {
+            !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+                return {
+                    'sprintf': sprintf,
+                    'vsprintf': vsprintf
+                }
+            }).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
+        }
+    }
+    /* eslint-enable quote-props */
+}(); // eslint-disable-line
+
+
+/***/ }),
+
 /***/ "./node_modules/styled-components/dist/styled-components.browser.esm.js":
 /*!******************************************************************************!*\
   !*** ./node_modules/styled-components/dist/styled-components.browser.esm.js ***!
@@ -74472,6 +75655,234 @@ function symbolObservablePonyfill(root) {
 	}
 
 	return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/tannin/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/tannin/index.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Tannin; });
+/* harmony import */ var _tannin_plural_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tannin/plural-forms */ "./node_modules/@tannin/plural-forms/index.js");
+
+
+/**
+ * Tannin constructor options.
+ *
+ * @typedef {Object} TanninOptions
+ *
+ * @property {string}   [contextDelimiter] Joiner in string lookup with context.
+ * @property {Function} [onMissingKey]     Callback to invoke when key missing.
+ */
+
+/**
+ * Domain metadata.
+ *
+ * @typedef {Object} TanninDomainMetadata
+ *
+ * @property {string}            [domain]       Domain name.
+ * @property {string}            [lang]         Language code.
+ * @property {(string|Function)} [plural_forms] Plural forms expression or
+ *                                              function evaluator.
+ */
+
+/**
+ * Domain translation pair respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {[string,string]} TanninTranslation
+ */
+
+/**
+ * Locale data domain. The key is used as reference for lookup, the value an
+ * array of two string entries respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {{[key:string]:TanninDomainMetadata|TanninTranslation,'':TanninDomainMetadata|TanninTranslation}} TanninLocaleDomain
+ */
+
+/**
+ * Jed-formatted locale data.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @typedef {{[domain:string]:TanninLocaleDomain}} TanninLocaleData
+ */
+
+/**
+ * Default Tannin constructor options.
+ *
+ * @type {TanninOptions}
+ */
+var DEFAULT_OPTIONS = {
+	contextDelimiter: '\u0004',
+	onMissingKey: null,
+};
+
+/**
+ * Given a specific locale data's config `plural_forms` value, returns the
+ * expression.
+ *
+ * @example
+ *
+ * ```
+ * getPluralExpression( 'nplurals=2; plural=(n != 1);' ) === '(n != 1)'
+ * ```
+ *
+ * @param {string} pf Locale data plural forms.
+ *
+ * @return {string} Plural forms expression.
+ */
+function getPluralExpression( pf ) {
+	var parts, i, part;
+
+	parts = pf.split( ';' );
+
+	for ( i = 0; i < parts.length; i++ ) {
+		part = parts[ i ].trim();
+		if ( part.indexOf( 'plural=' ) === 0 ) {
+			return part.substr( 7 );
+		}
+	}
+}
+
+/**
+ * Tannin constructor.
+ *
+ * @class
+ *
+ * @param {TanninLocaleData} data      Jed-formatted locale data.
+ * @param {TanninOptions}    [options] Tannin options.
+ */
+function Tannin( data, options ) {
+	var key;
+
+	/**
+	 * Jed-formatted locale data.
+	 *
+	 * @name Tannin#data
+	 * @type {TanninLocaleData}
+	 */
+	this.data = data;
+
+	/**
+	 * Plural forms function cache, keyed by plural forms string.
+	 *
+	 * @name Tannin#pluralForms
+	 * @type {Object<string,Function>}
+	 */
+	this.pluralForms = {};
+
+	/**
+	 * Effective options for instance, including defaults.
+	 *
+	 * @name Tannin#options
+	 * @type {TanninOptions}
+	 */
+	this.options = {};
+
+	for ( key in DEFAULT_OPTIONS ) {
+		this.options[ key ] = options !== undefined && key in options
+			? options[ key ]
+			: DEFAULT_OPTIONS[ key ];
+	}
+}
+
+/**
+ * Returns the plural form index for the given domain and value.
+ *
+ * @param {string} domain Domain on which to calculate plural form.
+ * @param {number} n      Value for which plural form is to be calculated.
+ *
+ * @return {number} Plural form index.
+ */
+Tannin.prototype.getPluralForm = function( domain, n ) {
+	var getPluralForm = this.pluralForms[ domain ],
+		config, plural, pf;
+
+	if ( ! getPluralForm ) {
+		config = this.data[ domain ][ '' ];
+
+		pf = (
+			config[ 'Plural-Forms' ] ||
+			config[ 'plural-forms' ] ||
+			// Ignore reason: As known, there's no way to document the empty
+			// string property on a key to guarantee this as metadata.
+			// @ts-ignore
+			config.plural_forms
+		);
+
+		if ( typeof pf !== 'function' ) {
+			plural = getPluralExpression(
+				config[ 'Plural-Forms' ] ||
+				config[ 'plural-forms' ] ||
+				// Ignore reason: As known, there's no way to document the empty
+				// string property on a key to guarantee this as metadata.
+				// @ts-ignore
+				config.plural_forms
+			);
+
+			pf = Object(_tannin_plural_forms__WEBPACK_IMPORTED_MODULE_0__["default"])( plural );
+		}
+
+		getPluralForm = this.pluralForms[ domain ] = pf;
+	}
+
+	return getPluralForm( n );
+};
+
+/**
+ * Translate a string.
+ *
+ * @param {string}      domain   Translation domain.
+ * @param {string|void} context  Context distinguishing terms of the same name.
+ * @param {string}      singular Primary key for translation lookup.
+ * @param {string=}     plural   Fallback value used for non-zero plural
+ *                               form index.
+ * @param {number=}     n        Value to use in calculating plural form.
+ *
+ * @return {string} Translated string.
+ */
+Tannin.prototype.dcnpgettext = function( domain, context, singular, plural, n ) {
+	var index, key, entry;
+
+	if ( n === undefined ) {
+		// Default to singular.
+		index = 0;
+	} else {
+		// Find index by evaluating plural form for value.
+		index = this.getPluralForm( domain, n );
+	}
+
+	key = singular;
+
+	// If provided, context is prepended to key with delimiter.
+	if ( context ) {
+		key = context + this.options.contextDelimiter + singular;
+	}
+
+	entry = this.data[ domain ][ key ];
+
+	// Verify not only that entry exists, but that the intended index is within
+	// range and non-empty.
+	if ( entry && entry[ index ] ) {
+		return entry[ index ];
+	}
+
+	if ( this.options.onMissingKey ) {
+		this.options.onMissingKey( singular, domain );
+	}
+
+	// If entry not found, fall back to singular vs. plural with zero index
+	// representing the singular value.
+	return index === 0 ? singular : plural;
 };
 
 
@@ -75474,13 +76885,15 @@ module.exports = function(originalModule) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../redux/actions/settings.actions */ "./src/redux/actions/settings.actions.js");
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../redux/actions/settings.actions */ "./src/redux/actions/settings.actions.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+
 
 
 
@@ -75539,15 +76952,15 @@ const CatHeader = props => {
   const AutoSlugGenerate = () => {
     const {
       values
-    } = Object(formik__WEBPACK_IMPORTED_MODULE_5__["useFormikContext"])();
+    } = Object(formik__WEBPACK_IMPORTED_MODULE_6__["useFormikContext"])();
     react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(() => {
       if (nameToSlug) {
-        values.cat_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_6__["generateSlug"])(values.cat_name);
+        values.cat_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateSlug"])(values.cat_name);
         setNameToSlug(false);
       }
 
       if (slugToSlug) {
-        values.cat_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_6__["generateSlug"])(values.cat_slug);
+        values.cat_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateSlug"])(values.cat_slug);
         setSlugToSlug(false);
       }
     }, [values]);
@@ -75570,32 +76983,32 @@ const CatHeader = props => {
   }, isCatAction && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: openModal,
     className: "link"
-  }, "Edit")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Edit', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "link delete",
     onClick: () => deleteHandler()
-  }, "Delete"))), isDeleteConfirm && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Delete', 'betterlinks')))), isDeleteConfirm && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-confirm-message"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
     className: "action-text"
-  }, "Are Your Sure?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Are Your Sure?', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "action-set"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "action yes",
     onClick: confirmDelete
-  }, "Yes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Yes', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "action no",
     onClick: noDelete
-  }, "No")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('No', 'betterlinks'))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
     isOpen: modalIsOpen,
     onRequestClose: closeModal,
-    style: _utils_helper__WEBPACK_IMPORTED_MODULE_6__["modalCustomSmallStyles"],
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_7__["modalCustomSmallStyles"],
     ariaHideApp: false
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-close-modal",
     onClick: closeModal
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-cancel"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_6__["Formik"], {
     initialValues: {
       cat_id,
       cat_name,
@@ -75606,14 +77019,14 @@ const CatHeader = props => {
       setCatAction(false);
       return update_cat(values);
     }
-  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
+  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_6__["Form"], {
     className: "w-100"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "cat_name"
-  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Title', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_6__["Field"], {
     className: "btl-modal-form-control",
     id: "cat_name",
     name: "cat_name",
@@ -75621,7 +77034,7 @@ const CatHeader = props => {
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_6__["Field"], {
     type: "hidden",
     className: "btl-modal-form-control",
     id: "cat_slug",
@@ -75635,7 +77048,7 @@ const CatHeader = props => {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit",
     className: "btl-modal-submit-button"
-  }, "Update"))))));
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Update', 'betterlinks')))))));
 };
 
 const mapStateToProps = state => ({
@@ -75644,12 +77057,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    update_cat: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__["update_cat"], dispatch),
-    delete_cat: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_4__["delete_cat"], dispatch)
+    update_cat: Object(redux__WEBPACK_IMPORTED_MODULE_4__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_5__["update_cat"], dispatch),
+    delete_cat: Object(redux__WEBPACK_IMPORTED_MODULE_4__["bindActionCreators"])(_redux_actions_settings_actions__WEBPACK_IMPORTED_MODULE_5__["delete_cat"], dispatch)
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(CatHeader));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps, mapDispatchToProps)(CatHeader));
 
 /***/ }),
 
@@ -75664,8 +77077,10 @@ const mapDispatchToProps = dispatch => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+
 
 
 
@@ -75680,15 +77095,15 @@ const CreateCategory = ({
   const AutoSlugGenerate = () => {
     const {
       values
-    } = Object(formik__WEBPACK_IMPORTED_MODULE_1__["useFormikContext"])();
+    } = Object(formik__WEBPACK_IMPORTED_MODULE_2__["useFormikContext"])();
     react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(() => {
       if (nameToSlug) {
-        values.term_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_2__["generateSlug"])(values.term_name);
+        values.term_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_3__["generateSlug"])(values.term_name);
         setNameToSlug(false);
       }
 
       if (slugToSlug) {
-        values.term_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_2__["generateSlug"])(values.term_slug);
+        values.term_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_3__["generateSlug"])(values.term_slug);
         setSlugToSlug(false);
       }
     }, [values]);
@@ -75704,7 +77119,7 @@ const CreateCategory = ({
     className: "btl btl-add"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
     className: "dnd-create-category-text"
-  }, "Add New Category"), isOpenForm && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Formik"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Add New Category', 'betterlinks')), isOpenForm && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Formik"], {
     initialValues: {
       term_name: '',
       term_slug: '',
@@ -75714,31 +77129,31 @@ const CreateCategory = ({
       setIsOpenForm(false);
       return createCatHandler(values);
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Form"], {
     className: "w-100"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
     id: "term_name",
     name: "term_name",
-    placeholder: "* Name",
+    placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('* Name', 'betterlinks'),
     className: "btl-form-control",
     onBlur: () => setNameToSlug(true),
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_2__["Field"], {
     type: "hidden",
     id: "term_slug",
     name: "term_slug",
-    placeholder: "* Slug",
+    placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('* Slug', 'betterlinks'),
     className: "btl-form-control",
     onBlur: () => setSlugToSlug(true),
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AutoSlugGenerate, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "btl-create-category-submit",
     type: "submit"
-  }, "Submit"))));
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Submit', 'betterlinks')))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CreateCategory);
@@ -75756,17 +77171,19 @@ const CreateCategory = ({
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../Select */ "./src/components/Select/index.js");
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
-/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
-/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Select */ "./src/components/Select/index.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
+/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
+/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
+
 
 
 
@@ -75790,7 +77207,7 @@ const Link = ({
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [isEditMode, setEditMode] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [isCopyUrl, setCopyUrl] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  const randomSlug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateRandomSlug"])();
+  const randomSlug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["generateRandomSlug"])();
 
   function openModal() {
     if (item) {
@@ -75808,7 +77225,7 @@ const Link = ({
   }
 
   const copyShortUrl = url => {
-    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["copyToClipboard"])(url);
+    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["copyToClipboard"])(url);
     setCopyUrl(true);
   };
 
@@ -75823,15 +77240,15 @@ const Link = ({
   const AutoSlugGenerate = () => {
     const {
       values
-    } = Object(formik__WEBPACK_IMPORTED_MODULE_3__["useFormikContext"])();
+    } = Object(formik__WEBPACK_IMPORTED_MODULE_4__["useFormikContext"])();
     react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(() => {
       if (nameToSlug) {
-        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateSlug"])(values.link_title);
+        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["generateSlug"])(values.link_title);
         setNameToSlug(false);
       }
 
       if (slugToSlug) {
-        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["generateSlug"])(values.link_slug);
+        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["generateSlug"])(values.link_slug);
         setSlugToSlug(false);
       }
     }, [values]);
@@ -75852,17 +77269,17 @@ const Link = ({
     className: "btl-create-link-button"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-add"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
     isOpen: modalIsOpen,
     onRequestClose: closeModal,
-    style: _utils_helper__WEBPACK_IMPORTED_MODULE_7__["modalCustomStyles"],
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_8__["modalCustomStyles"],
     ariaHideApp: false
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-close-modal",
     onClick: closeModal
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-cancel"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Formik"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Formik"], {
     initialValues: {
       link_title: '',
       link_slug: '',
@@ -75883,7 +77300,7 @@ const Link = ({
       setModalIsOpen(false);
       return submitHandler(values);
     }
-  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Form"], {
+  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Form"], {
     className: "w-100"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-entry-content"
@@ -75897,7 +77314,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "link_title"
-  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Title', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-modal-form-control",
     id: "link_title",
     name: "link_title",
@@ -75905,7 +77322,7 @@ const Link = ({
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     type: "hidden",
     className: "btl-modal-form-control",
     id: "link_slug",
@@ -75917,10 +77334,10 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "redirect_type"
-  }, "Redirect Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Select__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Redirect Type', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Select__WEBPACK_IMPORTED_MODULE_3__["default"], {
     id: "redirect_type",
     name: "redirect_type",
-    value: _utils_data__WEBPACK_IMPORTED_MODULE_8__["redirectType"],
+    value: _utils_data__WEBPACK_IMPORTED_MODULE_9__["redirectType"],
     setFieldValue: props.setFieldValue,
     isMulti: false
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -75928,7 +77345,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "target_url"
-  }, "Target URL"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Target URL', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-modal-form-control",
     id: "target_url",
     name: "target_url",
@@ -75939,18 +77356,18 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "short_url"
-  }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Better Links', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-link-field-copyable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-static-link"
-  }, _utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, _utils_helper__WEBPACK_IMPORTED_MODULE_8__["site_url"]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-dynamic-link",
     id: "short_url",
     name: "short_url",
     required: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
-    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"] + '/' + props.values.short_url),
+    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["site_url"] + '/' + props.values.short_url),
     className: "btl-link-copy-button"
   }, isCopyUrl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "dashicons dashicons-yes"
@@ -75961,7 +77378,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "link_note"
-  }, "Notes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Notes', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-modal-form-control",
     id: "link_note",
     name: "link_note"
@@ -75970,7 +77387,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "cat_id"
-  }, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Category', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_10__["default"], {
     name: "cat_id",
     cat_id: cat_name,
     cat_name: cat_name,
@@ -75980,7 +77397,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "tags_id"
-  }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Tags__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tags', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Tags__WEBPACK_IMPORTED_MODULE_11__["default"], {
     name: "tags_id",
     terms: terms,
     isEditMode: isEditMode,
@@ -75989,48 +77406,48 @@ const Link = ({
     className: "btl-entry-content-right"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-check",
     name: "nofollow",
     type: "checkbox",
     onChange: () => props.setFieldValue('nofollow', !props.values.nofollow)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, "No Follow")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('No Follow', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-check",
     name: "sponsored",
     type: "checkbox",
     onChange: () => props.setFieldValue('sponsored', !props.values.sponsored)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, "Sponsored")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Sponsored', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-check",
     name: "param_forwarding",
     type: "checkbox",
     onChange: () => props.setFieldValue('param_forwarding', !props.values.param_forwarding)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, "Parameter Forwarding")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Parameter Forwarding', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_3__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
     className: "btl-check",
     name: "track_me",
     type: "checkbox",
     onChange: () => props.setFieldValue('track_me', !props.values.track_me)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, "Tracking")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tracking', 'betterlinks'))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit",
     className: "btl-modal-submit-button"
-  }, item ? 'Update' : 'Publish'))))));
+  }, item ? Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Update', 'betterlinks') : Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Publish', 'betterlinks')))))));
 };
 
 const mapStateToProps = state => ({
@@ -76039,11 +77456,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_5__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_6__["fetch_terms_data"], dispatch)
+    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_6__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_7__["fetch_terms_data"], dispatch)
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_4__["connect"])(mapStateToProps, mapDispatchToProps)(Link));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_5__["connect"])(mapStateToProps, mapDispatchToProps)(Link));
 
 /***/ }),
 
@@ -76058,9 +77475,11 @@ const mapDispatchToProps = dispatch => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_tooltip__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-tooltip */ "./node_modules/react-tooltip/dist/index.es.js");
-/* harmony import */ var _Link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../Link */ "./src/components/Link/index.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+/* harmony import */ var react_tooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-tooltip */ "./node_modules/react-tooltip/dist/index.es.js");
+/* harmony import */ var _Link__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Link */ "./src/components/Link/index.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+
 
 
 
@@ -76086,13 +77505,13 @@ const LinkQuickAction = props => {
   };
 
   const copyShortUrl = url => {
-    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_3__["copyToClipboard"])(url);
+    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_4__["copyToClipboard"])(url);
     setCopyUrl(true);
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_1__["default"], null), !isDeleteConfirm ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_2__["default"], null), !isDeleteConfirm ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "dnd-link-button",
-    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_3__["site_url"] + '/' + item.short_url)
+    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_4__["site_url"] + '/' + item.short_url)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     "data-tip": "Copy Link",
     className: "icon"
@@ -76102,7 +77521,7 @@ const LinkQuickAction = props => {
     className: "btl btl-link"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     "data-tip": "Edit Link"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Link__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Link__WEBPACK_IMPORTED_MODULE_3__["default"], {
     cat_id: cat_id,
     cat_name: cat_name,
     item: item,
@@ -76120,17 +77539,17 @@ const LinkQuickAction = props => {
     className: "btl-confirm-message"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "action-text"
-  }, "Are Your Sure?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Are Your Sure?', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "action-set"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "action yes",
     onClick: () => {
       deleteLinkHandler(cat_id, item.ID);
     }
-  }, "Yes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Yes', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "action no",
     onClick: noDelete
-  }, "No"))));
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('No', 'betterlinks')))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (LinkQuickAction);
@@ -77936,7 +79355,9 @@ const mapDispatchToProps = dispatch => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
 
 
 
@@ -77944,7 +79365,7 @@ const AdminMenu = ({
   query
 }) => {
   const currentPage = query.get('page');
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
     to: "/wp-admin/admin.php?page=betterlinks",
     className: "wp-has-submenu wp-has-current-submenu wp-menu-open menu-top menu-icon-generic toplevel_page_betterlinks menu-top-last",
     "aria-haspopup": "false"
@@ -77955,20 +79376,20 @@ const AdminMenu = ({
     "aria-hidden": "true"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "wp-menu-name"
-  }, "Better Links")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('BetterLinks', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "wp-submenu wp-submenu-wrap"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "wp-submenu-head",
     "aria-hidden": "true"
-  }, "Better Links"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('BetterLinks', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: `wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
     to: "/wp-admin/admin.php?page=betterlinks"
-  }, "Better Links")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('BetterLinks', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: `wp-first-item ${currentPage == 'betterlinks-clicks' ? 'current' : ''}`
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
     to: "/wp-admin/admin.php?page=betterlinks-clicks"
-  }, "Clicks"))));
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Clicks', 'betterlinks')))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (AdminMenu);
@@ -78034,13 +79455,15 @@ const BetterLinks = props => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loader/TableLoader */ "./src/components/Loader/TableLoader.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../redux/actions/clicks.actions */ "./src/redux/actions/clicks.actions.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Loader/TableLoader */ "./src/components/Loader/TableLoader.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../redux/actions/clicks.actions */ "./src/redux/actions/clicks.actions.js");
+
 
 
 
@@ -78061,7 +79484,7 @@ const columns = [{
   name: 'Short URI',
   selector: 'short_url',
   sortable: false,
-  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, _utils_helper__WEBPACK_IMPORTED_MODULE_5__["site_url"] + '/' + row.short_url)
+  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, _utils_helper__WEBPACK_IMPORTED_MODULE_6__["site_url"] + '/' + row.short_url)
 }, {
   name: 'Referrer',
   selector: 'referrer',
@@ -78089,11 +79512,11 @@ const Clicks = props => {
       props.fetch_clicks_data();
     }
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_1___default.a, {
-    title: "Clicks",
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Clicks', 'betterlinks'),
     columns: columns,
     data: clicks
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_4__["default"], null));
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_5__["default"], null));
 };
 
 const mapStateToProps = state => ({
@@ -78102,11 +79525,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_clicks_data: Object(redux__WEBPACK_IMPORTED_MODULE_3__["bindActionCreators"])(_redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_6__["fetch_clicks_data"], dispatch)
+    fetch_clicks_data: Object(redux__WEBPACK_IMPORTED_MODULE_4__["bindActionCreators"])(_redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_7__["fetch_clicks_data"], dispatch)
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Clicks));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(mapStateToProps, mapDispatchToProps)(Clicks));
 
 /***/ }),
 
@@ -78302,6 +79725,8 @@ const Settings = () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+
 
 
 const TopBar = props => {
@@ -78331,7 +79756,7 @@ const TopBar = props => {
     className: "topbar"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
     className: "tool-title"
-  }, "BetterLinks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('BetterLinks', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "theme-mood-button",
     htmlFor: "theme-mood"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -78890,15 +80315,17 @@ if (true) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "redirectType", function() { return redirectType; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
+
 const redirectType = [{
   value: '307',
-  label: '307 (Temporary)'
+  label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('307 (Temporary)', 'betterlinks')
 }, {
   value: '302',
-  label: '302 (Temporary)'
+  label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('302 (Temporary)', 'betterlinks')
 }, {
   value: '301',
-  label: '301 (Permanent)'
+  label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('301 (Permanent)', 'betterlinks')
 }];
 
 /***/ }),

@@ -1,4 +1,5 @@
 import React from 'react'
+import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
 const AdminMenu = ({ query }) => {
     const currentPage = query.get('page')
@@ -18,11 +19,13 @@ const AdminMenu = ({ query }) => {
                 >
                     <br />
                 </div>
-                <div className='wp-menu-name'>Better Links</div>
+                <div className='wp-menu-name'>
+                    {__('BetterLinks', 'betterlinks')}
+                </div>
             </Link>
             <ul className='wp-submenu wp-submenu-wrap'>
                 <li className='wp-submenu-head' aria-hidden='true'>
-                    Better Links
+                    {__('BetterLinks', 'betterlinks')}
                 </li>
                 <li
                     className={`wp-first-item ${
@@ -30,7 +33,7 @@ const AdminMenu = ({ query }) => {
                     }`}
                 >
                     <Link to='/wp-admin/admin.php?page=betterlinks'>
-                        Better Links
+                        {__('BetterLinks', 'betterlinks')}
                     </Link>
                 </li>
                 <li
@@ -39,7 +42,7 @@ const AdminMenu = ({ query }) => {
                     }`}
                 >
                     <Link to='/wp-admin/admin.php?page=betterlinks-clicks'>
-                        Clicks
+                        {__('Clicks', 'betterlinks')}
                     </Link>
                 </li>
             </ul>
