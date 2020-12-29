@@ -69,7 +69,7 @@ class Utils {
                 'ip'             =>  $IP,
                 'browser'        => $_SERVER['HTTP_USER_AGENT'],
                 'os'             => '',
-                'referer'        => isset($_SERVER['HTTP_REFERER'])?sanitize_text_field( $_SERVER['HTTP_REFERER'] ):'',
+                'referer'        => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
                 'host'           => $IP,
                 'uri'            => $data->link_slug,
                 'click_count'    => 0,

@@ -79491,8 +79491,8 @@ const columns = [{
   sortable: false,
   cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, _utils_helper__WEBPACK_IMPORTED_MODULE_6__["site_url"] + '/' + row.short_url)
 }, {
-  name: 'Referrer',
-  selector: 'referrer',
+  name: 'Referer',
+  selector: 'referer',
   sortable: false
 }, {
   name: 'Target Link',
