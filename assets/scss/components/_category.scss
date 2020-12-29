@@ -100,7 +100,7 @@
           box-shadow: none;
         }
         &:hover{
-          background: linear-gradient(to left, $success, $success-lighten);
+          background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);;
           color: $white;
           box-shadow: 0 22px 42px rgba(#03623c, 0.18);
         }
@@ -121,7 +121,7 @@
       justify-content: center;
       align-items: center;
       font-size: 21px;
-      background: linear-gradient(to left, $success, $success-lighten);
+      background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
       color: $white;
       cursor: pointer;
       margin-top: 30px;

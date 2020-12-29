@@ -12,7 +12,7 @@
       min-width: 5px;
       height: 35px;
       border-radius: 2px;
-      background: linear-gradient(to top, $success, $success-lighten);
+      background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
       margin-right: 10px;
     }
     .dnd-link-title{
@@ -43,6 +43,16 @@
       margin-right: 5px;
       display: flex;
       align-items: center;
+      .light-tooltip {
+        background: #fff;
+        color: #373747;
+        font-size: 13px;
+        font-weight: 500;
+        filter: drop-shadow(0px 15px 12.5px rgba(0,5,41,0.18));
+        &::after {
+          border-top-color: #fff;
+        }
+      }
       .dnd-link-button{
         padding: 5px;
         border: none;

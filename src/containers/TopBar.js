@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { plugin_root_url } from './../utils/helper'
 import { __ } from '@wordpress/i18n'
 const TopBar = (props) => {
     const mode = localStorage.getItem('betterLinksIsDarkMode')
@@ -24,7 +25,12 @@ const TopBar = (props) => {
     }
     return (
         <div className='topbar'>
-            <h1 className='tool-title'>{__('BetterLinks', 'betterlinks')}</h1>
+            <div className='tool-title'>
+                <img
+                    src={plugin_root_url + 'assets/images/logo-large.png'}
+                    alt='logo'
+                />
+            </div>
             <label className='theme-mood-button' htmlFor='theme-mood'>
                 <input
                     type='checkbox'

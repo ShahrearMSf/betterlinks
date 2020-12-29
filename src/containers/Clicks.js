@@ -26,7 +26,7 @@ const columns = [
         cell: (row) => <div>{site_url + '/' + row.short_url}</div>,
     },
     {
-        name: 'Referer',
+        name: 'Referrer',
         selector: 'referer',
         sortable: false,
     },
