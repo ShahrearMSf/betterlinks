@@ -37,16 +37,16 @@ const AdminMenu = ({ query }) => {
                     }`}
                 >
                     <Link to='/wp-admin/admin.php?page=betterlinks'>
-                        {__('BetterLinks', 'betterlinks')}
+                        {__('Manage Links', 'betterlinks')}
                     </Link>
                 </li>
                 <li
                     className={`wp-first-item ${
-                        currentPage == 'betterlinks-clicks' ? 'current' : ''
+                        currentPage == 'betterlinks-analytics' ? 'current' : ''
                     }`}
                 >
-                    <Link to='/wp-admin/admin.php?page=betterlinks-clicks'>
-                        {__('Clicks', 'betterlinks')}
+                    <Link to='/wp-admin/admin.php?page=betterlinks-analytics'>
+                        {__('Analytics', 'betterlinks')}
                     </Link>
                 </li>
             </ul>

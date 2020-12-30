@@ -77172,17 +77172,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "./node_modules/@wordpress/i18n/build-module/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Select */ "./src/components/Select/index.js");
-/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
-/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
-/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
+/* harmony import */ var react_tooltip__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-tooltip */ "./node_modules/react-tooltip/dist/index.es.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-modal */ "./node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../Select */ "./src/components/Select/index.js");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! formik */ "./node_modules/formik/dist/formik.esm.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var _redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../../redux/actions/terms.actions */ "./src/redux/actions/terms.actions.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./../../utils/data */ "./src/utils/data.js");
+/* harmony import */ var _Terms_Category__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./../Terms/Category */ "./src/components/Terms/Category.js");
+/* harmony import */ var _Terms_Tags__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./../Terms/Tags */ "./src/components/Terms/Tags.js");
+
 
 
 
@@ -77207,7 +77209,7 @@ const Link = ({
   const [modalIsOpen, setModalIsOpen] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [isEditMode, setEditMode] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [isCopyUrl, setCopyUrl] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
-  const randomSlug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["generateRandomSlug"])();
+  const randomSlug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_9__["generateRandomSlug"])();
 
   function openModal() {
     if (item) {
@@ -77225,7 +77227,7 @@ const Link = ({
   }
 
   const copyShortUrl = url => {
-    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["copyToClipboard"])(url);
+    Object(_utils_helper__WEBPACK_IMPORTED_MODULE_9__["copyToClipboard"])(url);
     setCopyUrl(true);
   };
 
@@ -77240,15 +77242,15 @@ const Link = ({
   const AutoSlugGenerate = () => {
     const {
       values
-    } = Object(formik__WEBPACK_IMPORTED_MODULE_4__["useFormikContext"])();
+    } = Object(formik__WEBPACK_IMPORTED_MODULE_5__["useFormikContext"])();
     react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(() => {
       if (nameToSlug) {
-        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["generateSlug"])(values.link_title);
+        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_9__["generateSlug"])(values.link_title);
         setNameToSlug(false);
       }
 
       if (slugToSlug) {
-        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["generateSlug"])(values.link_slug);
+        values.link_slug = Object(_utils_helper__WEBPACK_IMPORTED_MODULE_9__["generateSlug"])(values.link_slug);
         setSlugToSlug(false);
       }
     }, [values]);
@@ -77269,17 +77271,17 @@ const Link = ({
     className: "btl-create-link-button"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-add"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_3___default.a, {
     isOpen: modalIsOpen,
     onRequestClose: closeModal,
-    style: _utils_helper__WEBPACK_IMPORTED_MODULE_8__["modalCustomStyles"],
+    style: _utils_helper__WEBPACK_IMPORTED_MODULE_9__["modalCustomStyles"],
     ariaHideApp: false
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-close-modal",
     onClick: closeModal
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
     className: "btl btl-cancel"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Formik"], {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Formik"], {
     initialValues: {
       link_title: '',
       link_slug: '',
@@ -77300,7 +77302,7 @@ const Link = ({
       setModalIsOpen(false);
       return submitHandler(values);
     }
-  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Form"], {
+  }, props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Form"], {
     className: "w-100"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-entry-content"
@@ -77314,7 +77316,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "link_title"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Title', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Title', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-modal-form-control",
     id: "link_title",
     name: "link_title",
@@ -77322,7 +77324,7 @@ const Link = ({
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     type: "hidden",
     className: "btl-modal-form-control",
     id: "link_slug",
@@ -77332,12 +77334,21 @@ const Link = ({
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AutoSlugGenerate, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: "btl-modal-form-label",
+    htmlFor: "link_note"
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Description', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
+    className: "btl-modal-form-control",
+    id: "link_note",
+    name: "link_note"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-modal-form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "redirect_type"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Redirect Type', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Select__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Redirect Type', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Select__WEBPACK_IMPORTED_MODULE_4__["default"], {
     id: "redirect_type",
     name: "redirect_type",
-    value: _utils_data__WEBPACK_IMPORTED_MODULE_9__["redirectType"],
+    value: _utils_data__WEBPACK_IMPORTED_MODULE_10__["redirectType"],
     setFieldValue: props.setFieldValue,
     isMulti: false
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -77345,7 +77356,7 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label btl-required",
     htmlFor: "target_url"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Target URL', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Target URL', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-modal-form-control",
     id: "target_url",
     name: "target_url",
@@ -77356,18 +77367,18 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "short_url"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Better Links', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Shortened URL', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-link-field-copyable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "btl-static-link"
-  }, _utils_helper__WEBPACK_IMPORTED_MODULE_8__["site_url"]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, _utils_helper__WEBPACK_IMPORTED_MODULE_9__["site_url"]), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-dynamic-link",
     id: "short_url",
     name: "short_url",
     required: true
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
-    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_8__["site_url"] + '/' + props.values.short_url),
+    onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_9__["site_url"] + '/' + props.values.short_url),
     className: "btl-link-copy-button"
   }, isCopyUrl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "dashicons dashicons-yes"
@@ -77377,17 +77388,8 @@ const Link = ({
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
-    htmlFor: "link_note"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Notes', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
-    className: "btl-modal-form-control",
-    id: "link_note",
-    name: "link_note"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "btl-modal-form-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    className: "btl-modal-form-label",
     htmlFor: "cat_id"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Category', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Category', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Category__WEBPACK_IMPORTED_MODULE_11__["default"], {
     name: "cat_id",
     cat_id: cat_name,
     cat_name: cat_name,
@@ -77397,50 +77399,75 @@ const Link = ({
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label",
     htmlFor: "tags_id"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tags', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Tags__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tags', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Terms_Tags__WEBPACK_IMPORTED_MODULE_12__["default"], {
     name: "tags_id",
     terms: terms,
     isEditMode: isEditMode,
     setFieldValue: props.setFieldValue
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-entry-content-right"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "link-options"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "link-options__head"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+    className: "link-options__head--title"
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Link Options', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "link-options__body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    className: "light-tooltip",
+    style: {
+      backgroundColor: '#fff'
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-check",
     name: "nofollow",
     type: "checkbox",
     onChange: () => props.setFieldValue('nofollow', !props.values.nofollow)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('No Follow', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('No Follow', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
+    class: "dashicons dashicons-info-outline"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-check",
     name: "sponsored",
     type: "checkbox",
     onChange: () => props.setFieldValue('sponsored', !props.values.sponsored)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Sponsored', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Sponsored', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
+    class: "dashicons dashicons-info-outline"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-check",
     name: "param_forwarding",
     type: "checkbox",
     onChange: () => props.setFieldValue('param_forwarding', !props.values.param_forwarding)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Parameter Forwarding', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Parameter Forwarding', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
+    class: "dashicons dashicons-info-outline"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_4__["Field"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-check",
     name: "track_me",
     type: "checkbox",
     onChange: () => props.setFieldValue('track_me', !props.values.track_me)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tracking', 'betterlinks'))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tracking', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
+    class: "dashicons dashicons-info-outline"
+  }))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-modal-form-label"
@@ -77456,11 +77483,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_6__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_7__["fetch_terms_data"], dispatch)
+    fetch_terms_data: Object(redux__WEBPACK_IMPORTED_MODULE_7__["bindActionCreators"])(_redux_actions_terms_actions__WEBPACK_IMPORTED_MODULE_8__["fetch_terms_data"], dispatch)
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_5__["connect"])(mapStateToProps, mapDispatchToProps)(Link));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_6__["connect"])(mapStateToProps, mapDispatchToProps)(Link));
 
 /***/ }),
 
@@ -79395,11 +79422,11 @@ const AdminMenu = ({
     className: `wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
     to: "/wp-admin/admin.php?page=betterlinks"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('BetterLinks', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-    className: `wp-first-item ${currentPage == 'betterlinks-clicks' ? 'current' : ''}`
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Manage Links', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: `wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-    to: "/wp-admin/admin.php?page=betterlinks-clicks"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Clicks', 'betterlinks')))));
+    to: "/wp-admin/admin.php?page=betterlinks-analytics"
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Analytics', 'betterlinks')))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (AdminMenu);

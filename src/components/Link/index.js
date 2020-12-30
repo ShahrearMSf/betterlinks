@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { __ } from '@wordpress/i18n'
+import ReactTooltip from 'react-tooltip'
 import Modal from 'react-modal'
 import Select from './../Select'
 import { useFormikContext, Formik, Field, Form } from 'formik'
@@ -157,6 +158,19 @@ const Link = ({
                                     </div>
                                     <div className='btl-modal-form-group'>
                                         <label
+                                            className='btl-modal-form-label'
+                                            htmlFor='link_note'
+                                        >
+                                            {__('Description', 'betterlinks')}
+                                        </label>
+                                        <Field
+                                            className='btl-modal-form-control'
+                                            id='link_note'
+                                            name='link_note'
+                                        />
+                                    </div>
+                                    <div className='btl-modal-form-group'>
+                                        <label
                                             className='btl-modal-form-label btl-required'
                                             htmlFor='redirect_type'
                                         >
@@ -190,7 +204,7 @@ const Link = ({
                                             className='btl-modal-form-label'
                                             htmlFor='short_url'
                                         >
-                                            {__('Better Links', 'betterlinks')}
+                                            {__('Shortened URL', 'betterlinks')}
                                         </label>
                                         <div className='btl-link-field-copyable'>
                                             <span className='btl-static-link'>
@@ -225,19 +239,6 @@ const Link = ({
                                     <div className='btl-modal-form-group'>
                                         <label
                                             className='btl-modal-form-label'
-                                            htmlFor='link_note'
-                                        >
-                                            {__('Notes', 'betterlinks')}
-                                        </label>
-                                        <Field
-                                            className='btl-modal-form-control'
-                                            id='link_note'
-                                            name='link_note'
-                                        />
-                                    </div>
-                                    <div className='btl-modal-form-group'>
-                                        <label
-                                            className='btl-modal-form-label'
                                             htmlFor='cat_id'
                                         >
                                             {__('Category', 'betterlinks')}
@@ -265,74 +266,120 @@ const Link = ({
                                     </div>
                                 </div>
                                 <div className='btl-entry-content-right'>
-                                    <label className='btl-checkbox-field'>
-                                        <Field
-                                            className='btl-check'
-                                            name='nofollow'
-                                            type='checkbox'
-                                            onChange={() =>
-                                                props.setFieldValue(
-                                                    'nofollow',
-                                                    !props.values.nofollow
-                                                )
-                                            }
-                                        />
-                                        <span className='text'>
-                                            {__('No Follow', 'betterlinks')}
-                                        </span>
-                                    </label>
-                                    <label className='btl-checkbox-field'>
-                                        <Field
-                                            className='btl-check'
-                                            name='sponsored'
-                                            type='checkbox'
-                                            onChange={() =>
-                                                props.setFieldValue(
-                                                    'sponsored',
-                                                    !props.values.sponsored
-                                                )
-                                            }
-                                        />
-                                        <span className='text'>
-                                            {__('Sponsored', 'betterlinks')}
-                                        </span>
-                                    </label>
-                                    <label className='btl-checkbox-field'>
-                                        <Field
-                                            className='btl-check'
-                                            name='param_forwarding'
-                                            type='checkbox'
-                                            onChange={() =>
-                                                props.setFieldValue(
-                                                    'param_forwarding',
-                                                    !props.values
-                                                        .param_forwarding
-                                                )
-                                            }
-                                        />
-                                        <span className='text'>
-                                            {__(
-                                                'Parameter Forwarding',
-                                                'betterlinks'
-                                            )}
-                                        </span>
-                                    </label>
-                                    <label className='btl-checkbox-field'>
-                                        <Field
-                                            className='btl-check'
-                                            name='track_me'
-                                            type='checkbox'
-                                            onChange={() =>
-                                                props.setFieldValue(
-                                                    'track_me',
-                                                    !props.values.track_me
-                                                )
-                                            }
-                                        />
-                                        <span className='text'>
-                                            {__('Tracking', 'betterlinks')}
-                                        </span>
-                                    </label>
+                                    <div className='link-options'>
+                                        <div className='link-options__head'>
+                                            <h4 className='link-options__head--title'>
+                                                {__(
+                                                    'Link Options',
+                                                    'betterlinks'
+                                                )}
+                                            </h4>
+                                        </div>
+                                        <div className='link-options__body'>
+                                            <ReactTooltip
+                                                className='light-tooltip'
+                                                style={{
+                                                    backgroundColor: '#fff',
+                                                }}
+                                            />
+                                            <label className='btl-checkbox-field'>
+                                                <Field
+                                                    className='btl-check'
+                                                    name='nofollow'
+                                                    type='checkbox'
+                                                    onChange={() =>
+                                                        props.setFieldValue(
+                                                            'nofollow',
+                                                            !props.values
+                                                                .nofollow
+                                                        )
+                                                    }
+                                                />
+                                                <span className='text'>
+                                                    {__(
+                                                        'No Follow',
+                                                        'betterlinks'
+                                                    )}
+                                                    <span
+                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
+                                                        class='dashicons dashicons-info-outline'
+                                                    ></span>
+                                                </span>
+                                            </label>
+                                            <label className='btl-checkbox-field'>
+                                                <Field
+                                                    className='btl-check'
+                                                    name='sponsored'
+                                                    type='checkbox'
+                                                    onChange={() =>
+                                                        props.setFieldValue(
+                                                            'sponsored',
+                                                            !props.values
+                                                                .sponsored
+                                                        )
+                                                    }
+                                                />
+                                                <span className='text'>
+                                                    {__(
+                                                        'Sponsored',
+                                                        'betterlinks'
+                                                    )}
+                                                    <span
+                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
+                                                        class='dashicons dashicons-info-outline'
+                                                    ></span>
+                                                </span>
+                                            </label>
+                                            <label className='btl-checkbox-field'>
+                                                <Field
+                                                    className='btl-check'
+                                                    name='param_forwarding'
+                                                    type='checkbox'
+                                                    onChange={() =>
+                                                        props.setFieldValue(
+                                                            'param_forwarding',
+                                                            !props.values
+                                                                .param_forwarding
+                                                        )
+                                                    }
+                                                />
+                                                <span className='text'>
+                                                    {__(
+                                                        'Parameter Forwarding',
+                                                        'betterlinks'
+                                                    )}
+                                                    <span
+                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
+                                                        class='dashicons dashicons-info-outline'
+                                                    ></span>
+                                                </span>
+                                            </label>
+                                            <label className='btl-checkbox-field'>
+                                                <Field
+                                                    className='btl-check'
+                                                    name='track_me'
+                                                    type='checkbox'
+                                                    onChange={() =>
+                                                        props.setFieldValue(
+                                                            'track_me',
+                                                            !props.values
+                                                                .track_me
+                                                        )
+                                                    }
+                                                />
+                                                <span className='text'>
+                                                    {__(
+                                                        'Tracking',
+                                                        'betterlinks'
+                                                    )}
+                                                    <span
+                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
+                                                        class='dashicons dashicons-info-outline'
+                                                    ></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className='btl-modal-form-group'>

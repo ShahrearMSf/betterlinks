@@ -13,6 +13,20 @@ class Helper {
         return $BLDATA;
     }
 
+    public static function get_menu_items(){
+        $menu_items = [
+            BL_PLUGIN_SLUG  => [
+                'title' => __('Manage Links', 'betterlinks'),
+                'capability' => 'manage_options'
+            ],
+            BL_PLUGIN_SLUG . '-analytics'  => [
+                'title' => __('Analytics', 'betterlinks'),
+                'capability' => 'manage_options'
+            ]
+        ];
+        return apply_filters( 'betterlinks/helper/menu_items', $menu_items );
+    }
+
     /**
      * Check Supported Post type for admin page and plugin main settings page
      * 
@@ -22,10 +36,15 @@ class Helper {
     public static function plugin_page_hook_suffix($hook)
     {
         if (
-            $hook == 'toplevel_page_' .  BL_PLUGIN_SLUG ||
-            $hook == BL_PLUGIN_SLUG . '_page_'.BL_PLUGIN_SLUG.'-clicks'
+            $hook == 'toplevel_page_' .  BL_PLUGIN_SLUG
         ) {
             return true;
+        } else {
+            foreach(self::get_menu_items() as $key => $value){
+                if($hook == BL_PLUGIN_SLUG . '_page_'.$key){
+                    return true;
+                }
+            }
         }
         return false;
     }
