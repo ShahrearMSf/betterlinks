@@ -94,7 +94,7 @@
 	}
 	.btl-modal-form-group {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		@media screen and (max-width: 650px) {
 			flex-direction: column;
 		}
@@ -105,6 +105,8 @@
 			font-weight: 500;
 			text-align: right;
 			padding-right: 40px;
+			padding-top: 18px;
+			padding-bottom: 18px;	
 			@media screen and (max-width: 650px) {
 				margin-bottom: 15px;
 				text-align: center;
@@ -122,6 +124,7 @@
 			margin-bottom: 20px;
 		}
 	}
+	textarea.btl-modal-form-control,
 	input.btl-modal-form-control {
 		flex: 1;
 		width: 100%;
@@ -138,6 +141,10 @@
 			background: #fff;
 			box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
 		}
+	}
+	textarea.btl-modal-form-control {
+		padding-top: 15px;
+		height: 80px;
 	}
 	.btl-modal-select {
 		width: 300px;

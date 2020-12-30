@@ -77338,6 +77338,7 @@ const Link = ({
     htmlFor: "link_note"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Description', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
     className: "btl-modal-form-control",
+    component: "textarea",
     id: "link_note",
     name: "link_note"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -77415,10 +77416,7 @@ const Link = ({
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Link Options', 'betterlinks'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "link-options__body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "light-tooltip",
-    style: {
-      backgroundColor: '#fff'
-    }
+    className: "light-tooltip"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
@@ -77429,8 +77427,8 @@ const Link = ({
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('No Follow', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
-    class: "dashicons dashicons-info-outline"
+    "data-tip": "This will add nofollow attribute to your link. (Recommended)",
+    className: "dashicons dashicons-info-outline"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
@@ -77441,8 +77439,8 @@ const Link = ({
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Sponsored', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
-    class: "dashicons dashicons-info-outline"
+    "data-tip": "This will add sponsored attribute to your link. (Recommended for Affiliate links)",
+    className: "dashicons dashicons-info-outline"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
@@ -77453,8 +77451,8 @@ const Link = ({
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Parameter Forwarding', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
-    class: "dashicons dashicons-info-outline"
+    "data-tip": "Forwarding- This will pass the parameters you have set in the target URL",
+    className: "dashicons dashicons-info-outline"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "btl-checkbox-field"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(formik__WEBPACK_IMPORTED_MODULE_5__["Field"], {
@@ -77465,8 +77463,8 @@ const Link = ({
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "text"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Tracking', 'betterlinks'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    "data-tip": "Lorem ipsum dolor sit amet, viverra maecenas acc",
-    class: "dashicons dashicons-info-outline"
+    "data-tip": "This will let you check Analytics report of your links",
+    className: "dashicons dashicons-info-outline"
   }))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-modal-form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -77537,10 +77535,7 @@ const LinkQuickAction = props => {
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_tooltip__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "light-tooltip",
-    style: {
-      backgroundColor: '#fff'
-    }
+    className: "light-tooltip"
   }), !isDeleteConfirm ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "dnd-link-button",
     onClick: () => copyShortUrl(_utils_helper__WEBPACK_IMPORTED_MODULE_4__["site_url"] + '/' + item.short_url)

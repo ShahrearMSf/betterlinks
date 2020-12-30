@@ -26,10 +26,7 @@ const LinkQuickAction = (props) => {
     }
     return (
         <React.Fragment>
-            <ReactTooltip
-                className='light-tooltip'
-                style={{ backgroundColor: '#fff' }}
-            />
+            <ReactTooltip className='light-tooltip' />
             {/* <button className='dnd-link-button'>
                 <span className='icon'>
                     <i className='btl btl-target'></i>

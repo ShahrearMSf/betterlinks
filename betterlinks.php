@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: BetterLinks
- * Description: Better Links
+ * Description: Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
  * Version: 1.0
  * Author: WPDeveloper
  * Author URI: https://wpdeveloper.net

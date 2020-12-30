@@ -165,6 +165,7 @@ const Link = ({
                                         </label>
                                         <Field
                                             className='btl-modal-form-control'
+                                            component='textarea'
                                             id='link_note'
                                             name='link_note'
                                         />
@@ -276,12 +277,7 @@ const Link = ({
                                             </h4>
                                         </div>
                                         <div className='link-options__body'>
-                                            <ReactTooltip
-                                                className='light-tooltip'
-                                                style={{
-                                                    backgroundColor: '#fff',
-                                                }}
-                                            />
+                                            <ReactTooltip className='light-tooltip' />
                                             <label className='btl-checkbox-field'>
                                                 <Field
                                                     className='btl-check'
@@ -301,8 +297,8 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
-                                                        class='dashicons dashicons-info-outline'
+                                                        data-tip='This will add nofollow attribute to your link. (Recommended)'
+                                                        className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
                                             </label>
@@ -325,8 +321,8 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
-                                                        class='dashicons dashicons-info-outline'
+                                                        data-tip='This will add sponsored attribute to your link. (Recommended for Affiliate links)'
+                                                        className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
                                             </label>
@@ -349,8 +345,8 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
-                                                        class='dashicons dashicons-info-outline'
+                                                        data-tip='Forwarding- This will pass the parameters you have set in the target URL'
+                                                        className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
                                             </label>
@@ -373,8 +369,8 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='Lorem ipsum dolor sit amet, viverra maecenas acc'
-                                                        class='dashicons dashicons-info-outline'
+                                                        data-tip='This will let you check Analytics report of your links'
+                                                        className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
                                             </label>
