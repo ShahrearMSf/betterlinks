@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TableLoader from '../components/Loader/TableLoader'
+import Topbar from './TopBar'
 import { site_url } from './../utils/helper'
 import { fetch_clicks_data } from './../redux/actions/clicks.actions'
 
@@ -56,6 +57,7 @@ const Clicks = (props) => {
 
     return (
         <React.Fragment>
+            <Topbar />
             {clicks ? (
                 <DataTable
                     title={__('Clicks', 'betterlinks')}

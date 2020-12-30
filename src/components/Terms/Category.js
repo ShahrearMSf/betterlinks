@@ -39,7 +39,7 @@ const Category = (props) => {
                             ([key, value]) => value.term_type === 'category'
                         )
                         .map(([key, value]) => ({
-                            value: value.ID,
+                            value: value.cat_id,
                             label: value.term_name,
                         }))
                 }

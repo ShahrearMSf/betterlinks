@@ -25,6 +25,9 @@ const Tags = (props) => {
             option.map((item) => item.value)
         )
     }
+    const onCreateOptionHandler = (inputValue, optionLabel) => {
+        console.log(inputValue, optionLabel)
+    }
     return (
         <React.Fragment>
             <CreatableSelect2
@@ -36,12 +39,12 @@ const Tags = (props) => {
                 defaultValue={
                     props.isEditMode
                         ? props.terms.terms &&
-                            Object.entries(props.terms.terms).map(
-                                ([key, value]) => ({
-                                    value: value.ID,
-                                    label: value.term_name,
-                                })
-                            )
+                          Object.entries(props.terms.terms).map(
+                              ([key, value]) => ({
+                                  value: value.term_id,
+                                  label: value.term_name,
+                              })
+                          )
                         : false
                 }
                 onChange={onChange}
@@ -49,7 +52,7 @@ const Tags = (props) => {
                 options={
                     props.terms.terms &&
                     Object.entries(props.terms.terms).map(([key, value]) => ({
-                        value: value.ID,
+                        value: value.term_id,
                         label: value.term_name,
                     }))
                 }

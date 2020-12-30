@@ -79273,7 +79273,7 @@ const Category = props => {
     onMenuOpen: () => fetchData(),
     onChange: onChange,
     options: props.terms.terms && Object.entries(props.terms.terms).filter(([key, value]) => value.term_type === 'category').map(([key, value]) => ({
-      value: value.ID,
+      value: value.cat_id,
       label: value.term_name
     }))
   }));
@@ -79337,6 +79337,10 @@ const Tags = props => {
     return props.setFieldValue(field.name, option.map(item => item.value));
   };
 
+  const onCreateOptionHandler = (inputValue, optionLabel) => {
+    console.log(inputValue, optionLabel);
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_creatable__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btl-modal-form-control btl-modal-select",
     isClearable: true,
@@ -79344,13 +79348,13 @@ const Tags = props => {
     name: field.name,
     onMenuOpen: () => fetchData(),
     defaultValue: props.isEditMode ? props.terms.terms && Object.entries(props.terms.terms).map(([key, value]) => ({
-      value: value.ID,
+      value: value.term_id,
       label: value.term_name
     })) : false,
     onChange: onChange,
     classNamePrefix: "btl-react-select",
     options: props.terms.terms && Object.entries(props.terms.terms).map(([key, value]) => ({
-      value: value.ID,
+      value: value.term_id,
       label: value.term_name
     })),
     isMulti: true
@@ -79493,8 +79497,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Loader/TableLoader */ "./src/components/Loader/TableLoader.js");
-/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
-/* harmony import */ var _redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../redux/actions/clicks.actions */ "./src/redux/actions/clicks.actions.js");
+/* harmony import */ var _TopBar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TopBar */ "./src/containers/TopBar.js");
+/* harmony import */ var _utils_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./../utils/helper */ "./src/utils/helper.js");
+/* harmony import */ var _redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./../redux/actions/clicks.actions */ "./src/redux/actions/clicks.actions.js");
+
 
 
 
@@ -79516,7 +79522,7 @@ const columns = [{
   name: 'Short URI',
   selector: 'short_url',
   sortable: false,
-  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, _utils_helper__WEBPACK_IMPORTED_MODULE_6__["site_url"] + '/' + row.short_url)
+  cell: row => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, _utils_helper__WEBPACK_IMPORTED_MODULE_7__["site_url"] + '/' + row.short_url)
 }, {
   name: 'Referrer',
   selector: 'referer',
@@ -79544,7 +79550,7 @@ const Clicks = props => {
       props.fetch_clicks_data();
     }
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TopBar__WEBPACK_IMPORTED_MODULE_6__["default"], null), clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Clicks', 'betterlinks'),
     columns: columns,
     data: clicks
@@ -79557,7 +79563,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_clicks_data: Object(redux__WEBPACK_IMPORTED_MODULE_4__["bindActionCreators"])(_redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_7__["fetch_clicks_data"], dispatch)
+    fetch_clicks_data: Object(redux__WEBPACK_IMPORTED_MODULE_4__["bindActionCreators"])(_redux_actions_clicks_actions__WEBPACK_IMPORTED_MODULE_8__["fetch_clicks_data"], dispatch)
   };
 };
 

@@ -141,11 +141,30 @@ class Links extends Controller
                 ];
             }
             if(isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])){
+                $newTagsList = [];
                 foreach($request['params']['tags_id'] as $key => $value){
-                    $term_data[] = [
-                        'term_id' =>  $value,
-                        'link_id'  => $id
-                    ];
+                    if(is_numeric($value)){
+                        $term_data[] = [
+                            'term_id' =>  $value,
+                            'link_id'  => $id
+                        ];
+                    } else {
+                        $newTagsList[] = [
+                            'term_name' => $value,
+                            'term_slug' => $value,
+                            'term_type' => 'tags',
+                        ];
+                    }
+                }
+                // insert new tags
+                if(count($newTagsList) > 0){
+                    $tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
+                    foreach($tagsList as $tagsItem){
+                        $term_data[] = [
+                            'term_id' =>  $tagsItem,
+                            'link_id'  => $id
+                        ];
+                    }
                 }
             }
             $qb->table('betterlinks_terms_relationships')->insert($term_data);
@@ -176,16 +195,35 @@ class Links extends Controller
             // store tags relation data
             if(isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])){
                 $term_data[] = [
-                    'term_id' => $request['params']['cat_id'],
+                    'term_id' => (isset($request['params']['cat_id']) ? $request['params']['cat_id'] : 1),
                     'link_id'  => (isset($params['ID']) ? $params['ID'] : $id)
                 ];
             }
             if(isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])){
+                $newTagsList = [];
                 foreach($request['params']['tags_id'] as $key => $value){
-                    $term_data[] = [
-                        'term_id' =>  $value,
-                        'link_id'  => (isset($params['ID']) ? $params['ID'] : $id)
-                    ];
+                    if(is_numeric($value)){
+                        $term_data[] = [
+                            'term_id' =>  $value,
+                            'link_id'  => (isset($params['ID']) ? $params['ID'] : $id)
+                        ];
+                    } else {
+                        $newTagsList[] = [
+                            'term_name' => $value,
+                            'term_slug' => $value,
+                            'term_type' => 'tags',
+                        ];
+                    }
+                }
+                // insert new tags
+                if(count($newTagsList) > 0){
+                    $tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
+                    foreach($tagsList as $tagsItem){
+                        $term_data[] = [
+                            'term_id' =>  $tagsItem,
+                            'link_id'  => (isset($params['ID']) ? $params['ID'] : $id)
+                        ];
+                    }
                 }
             }
             $qb->table('betterlinks_terms_relationships')->where('link_id', '=', $request['params']['ID'])->delete();
