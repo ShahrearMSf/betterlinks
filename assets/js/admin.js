@@ -79192,8 +79192,11 @@ __webpack_require__.r(__webpack_exports__);
 
 const Select = props => {
   const [field] = Object(formik__WEBPACK_IMPORTED_MODULE_1__["useField"])(props.name);
+  const defaultValue = field.value ? field.value : '307';
 
   const onChange = option => {
+    console.log(field.name);
+
     if (option == null) {
       return props.setFieldValue(field.name, '');
     }
@@ -79206,7 +79209,7 @@ const Select = props => {
     classNamePrefix: "btl-react-select",
     id: field.id,
     name: field.name,
-    defaultValue: props.value && props.value.filter(item => item.value == '307'),
+    defaultValue: props.value && props.value.filter(item => item.value == defaultValue),
     onChange: onChange,
     options: props.value && props.value.map(item => item),
     isMulti: props.isMulti
