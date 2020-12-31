@@ -297,7 +297,10 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='This will add nofollow attribute to your link. (Recommended)'
+                                                        data-tip={__(
+                                                            'This will add nofollow attribute to your link. (Recommended)',
+                                                            'betterlinks'
+                                                        )}
                                                         className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
@@ -321,7 +324,10 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='This will add sponsored attribute to your link. (Recommended for Affiliate links)'
+                                                        data-tip={__(
+                                                            'This will add sponsored attribute to your link. (Recommended for Affiliate links)',
+                                                            'betterlinks'
+                                                        )}
                                                         className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
@@ -345,7 +351,10 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='Forwarding- This will pass the parameters you have set in the target URL'
+                                                        data-tip={__(
+                                                            'This will pass the parameters you have set in the target URL',
+                                                            'betterlinks'
+                                                        )}
                                                         className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>
@@ -369,7 +378,10 @@ const Link = ({
                                                         'betterlinks'
                                                     )}
                                                     <span
-                                                        data-tip='This will let you check Analytics report of your links'
+                                                        data-tip={__(
+                                                            'This will let you check Analytics report of your links',
+                                                            'betterlinks'
+                                                        )}
                                                         className='dashicons dashicons-info-outline'
                                                     ></span>
                                                 </span>

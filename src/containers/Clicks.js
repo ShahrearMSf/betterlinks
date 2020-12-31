@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n'
 import DataTable from 'react-data-table-component'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import Analytics from './../components/Analytics'
 import TableLoader from '../components/Loader/TableLoader'
 import Topbar from './TopBar'
 import { site_url } from './../utils/helper'
@@ -55,15 +56,37 @@ const Clicks = (props) => {
         }
     }, [])
 
+    const analyticsData = (data) => {
+        let results = {}
+        data.forEach((element) => {
+            let date = element.created_at.split(' ')[0]
+            if (results.hasOwnProperty(date)) {
+                results[date] = results[date] + 1
+            } else {
+                results[date] = 1
+            }
+        })
+        return results
+    }
+    const buildData = (data) => {
+        return data.reduce(
+            (acc, curVal) => acc.concat(parseInt(curVal.IPCOUNT)),
+            []
+        )
+    }
+
     return (
         <React.Fragment>
             <Topbar />
             {clicks ? (
-                <DataTable
-                    title={__('Analytics', 'betterlinks')}
-                    columns={columns}
-                    data={clicks}
-                />
+                <React.Fragment>
+                    <Analytics data={analyticsData(clicks)} />
+                    <DataTable
+                        title={__('Analytics', 'betterlinks')}
+                        columns={columns}
+                        data={clicks}
+                    />
+                </React.Fragment>
             ) : (
                 <TableLoader />
             )}
