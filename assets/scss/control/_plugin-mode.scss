@@ -1,3 +1,11 @@
+.topbar{
+  border-color:#36405a;
+  background-color: #2c3650;
+  .theme-mood-button{
+    border-color: #738bb8;
+  }
+}
+
 .dnd-category-wrapper{
   .dnd-category{
     .category-head{
@@ -44,7 +52,7 @@
     .dnd-link-title{
       color: $white;
       &:before{
-        color: lighten( $secondary-lighten, 5% );
+        color: darken( $secondary-lighten, 10% );
       }
     }
     .btl-dnd-link-button-group{
@@ -60,9 +68,6 @@
         color: #697690;
         &:hover{
           color: $white;
-        }
-        &.delete-button:hover{
-          color: $danger;
         }
       }
     }
@@ -84,16 +89,8 @@
       }
     }
   }
-  
-  &.btl-dnd-link-dragging{
-    .dnd-link-title{
-      &:before{
-        width: 20px;
-        opacity: 1;
-      }
-    }
-  }
 }
+
 
 .btl-form-control{
   background: #36405a;
@@ -140,6 +137,28 @@
           }
         }
       }
+    }
+  }
+}
+
+.btl-analytic-table-wrapper{
+  .rdt_TableHeader{
+    background: #252f47;
+    color: $white;
+  }
+  .btl-analytic-table{
+    background: #252f47;
+    color: $white;
+    .rdt_TableHeadRow,
+    .rdt_TableRow{
+      background: #252f47;
+      color: $white;
+      .rdt_TableCol{
+        color: $white;
+      }
+    }
+    a{
+      color: $white;
     }
   }
 }

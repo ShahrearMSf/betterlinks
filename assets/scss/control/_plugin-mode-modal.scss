@@ -1,0 +1,149 @@
+
+.ReactModal__Content {
+  background-color: #252f47!important;
+  border-color: #36405a!important;
+	.btl-close-modal {
+		color: $white;
+	}
+	.btl-entry-content {
+		.btl-entry-content-right {
+			.light-tooltip {
+				background: #fff;
+				color: #707070;
+				&::after {
+					border-top-color: #fff;
+				}
+			}
+			.link-options {
+        border-color: #36405a;
+				background-color: #252f47;
+				&__head {
+					border-color: #36405a;
+					background: #252f47;
+				}
+				&__body {
+					.btl-checkbox-field {
+						.text {
+							span.dashicons.dashicons-info-outline {
+								color: #97a0b8;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.btl-modal-form-group {
+		.btl-modal-form-label {
+			&.btl-required {
+				&:after {
+					color: $danger;
+				}
+			}
+		}
+	}
+	textarea.btl-modal-form-control,
+	input.btl-modal-form-control {
+    background: #36405a;
+    color: $white;
+    border-color: #36405a;
+		&:focus {
+			background: #36405a;
+			box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
+		}
+    &::placeholder{
+      color: $secondary-lighten;
+    }
+	}
+	.btl-modal-select {
+		.btl-react-select__control {
+			background-color: #36405a!important;
+			border-color: #36405a!important;
+			.btl-react-select__value-container {
+				padding-left: 15px;
+				.btl-react-select__single-value {
+          color: $white;
+				}
+				.btl-react-select__input {
+					input {
+            color: $white!important;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				background-color: #36405a!important;
+      }
+      .btl-react-select__placeholder{
+        color: $white;
+      }
+		}
+	}
+	.btl-modal-select--full {
+		@extend .btl-modal-select;
+		flex: 1;
+		width: 100%;
+	}
+	.btl-link-field-copyable {
+		background: #36405a;
+		border: 1px solid #36405a;
+		.btl-dynamic-link {
+			color: $white;
+		}
+		.btl-link-copy-button {
+			color: #bccbee;
+			&:hover {
+				color: $white;
+			}
+		}
+		&:focus-within {
+			background: #36405a;
+		}
+	}
+	.btl-checkbox-field {
+		display: flex;
+		cursor: pointer;
+		margin-bottom: 40px;
+		.btl-check {
+			display: none;
+		}
+		.text {
+			padding-left: 40px;
+			position: relative;
+			color: $dark;
+			font-weight: 500;
+			font-size: 16px;
+			&:before {
+				position: absolute;
+				font-family: 'better-links';
+				content: '\e90c';
+				left: 0;
+				font-size: 24px;
+				color: $secondary-lighten;
+			}
+		}
+		.btl-check:checked + .text:before {
+			content: '\e90e';
+			color: $success;
+		}
+	}
+	.btl-modal-submit-button {
+		height: 55px;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+		border: none;
+		outline: none;
+		box-shadow: none;
+		border-radius: 5px;
+		color: $white;
+		font-size: 18px;
+		font-weight: 500;
+		padding: 0 25px;
+		min-width: 190px;
+		cursor: pointer;
+		&:hover {
+			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+		}
+	}
+}

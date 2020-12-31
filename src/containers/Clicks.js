@@ -59,11 +59,14 @@ const Clicks = (props) => {
         <React.Fragment>
             <Topbar />
             {clicks ? (
-                <DataTable
-                    title={__('Analytics', 'betterlinks')}
-                    columns={columns}
-                    data={clicks}
-                />
+                <div className='btl-analytic-table-wrapper'>
+                    <DataTable
+                        className="btl-analytic-table"
+                        title={__('Analytics', 'betterlinks')}
+                        columns={columns}
+                        data={clicks}
+                    />
+                </div>
             ) : (
                 <TableLoader />
             )}

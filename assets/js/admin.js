@@ -79553,11 +79553,14 @@ const Clicks = props => {
       props.fetch_clicks_data();
     }
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TopBar__WEBPACK_IMPORTED_MODULE_6__["default"], null), clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TopBar__WEBPACK_IMPORTED_MODULE_6__["default"], null), clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "btl-analytic-table-wrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
+    className: "btl-analytic-table",
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Analytics', 'betterlinks'),
     columns: columns,
     data: clicks
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_5__["default"], null));
+  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_5__["default"], null));
 };
 
 const mapStateToProps = state => ({

@@ -20,6 +20,8 @@
   @import './components/topbar';
   @import './components/category';
   @import './components/link';
+  @import './components/analytics';
+  
 }
 body{
   &.betterlinks-dark-mode{
@@ -27,6 +29,7 @@ body{
     .betterlinks-body{
       @import './control/plugin-mode';
     }
+    @import './control/plugin-mode-modal';
   }
 }
 @import './components/modal';
