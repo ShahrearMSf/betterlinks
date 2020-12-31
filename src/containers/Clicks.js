@@ -81,11 +81,14 @@ const Clicks = (props) => {
             {clicks ? (
                 <React.Fragment>
                     <Analytics data={analyticsData(clicks)} />
-                    <DataTable
-                        title={__('Analytics', 'betterlinks')}
-                        columns={columns}
-                        data={clicks}
-                    />
+                    <div className='btl-analytic-table-wrapper'>
+                        <DataTable
+                            className='btl-analytic-table'
+                            title={__('Analytics', 'betterlinks')}
+                            columns={columns}
+                            data={clicks}
+                        />
+                    </div>
                 </React.Fragment>
             ) : (
                 <TableLoader />
