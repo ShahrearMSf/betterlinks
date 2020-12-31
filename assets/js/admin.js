@@ -79647,7 +79647,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 });
 
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : '#e6e8ec'
+  background: isDraggingOver ? 'lightblue' : ''
 });
 
 function DndCanvas(props) {
@@ -79674,6 +79674,7 @@ function DndCanvas(props) {
     cat_slug: el.term_slug
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
     ref: provided.innerRef,
+    className: "dnd-category-body-wrap",
     style: getListStyle(snapshot.isDraggingOver)
   }, provided.droppableProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "category-body"
@@ -79684,11 +79685,9 @@ function DndCanvas(props) {
     draggableId: `cat-${ind}-item_${item.ID}`,
     index: index
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-    className: `btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`,
+    className: "btl-dnd-link",
     ref: provided.innerRef
-  }, provided.draggableProps, provided.dragHandleProps, {
-    style: getItemStyle(snapshot.isDragging, provided.draggableProps.style)
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, provided.draggableProps, provided.dragHandleProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-dnd-link-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
     className: "dnd-link-title"
