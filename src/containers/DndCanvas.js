@@ -31,7 +31,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     ...draggableStyle,
 })
 const getListStyle = (isDraggingOver) => ({
-    background: isDraggingOver ? 'lightblue' : '#e6e8ec',
+    background: isDraggingOver ? 'lightblue' : '',
 })
 
 function DndCanvas(props) {
@@ -59,6 +59,7 @@ function DndCanvas(props) {
                                         />
                                         <div
                                             ref={provided.innerRef}
+                                            className='dnd-category-body-wrap'
                                             style={getListStyle(
                                                 snapshot.isDraggingOver
                                             )}
@@ -84,22 +85,12 @@ function DndCanvas(props) {
                                                                             snapshot
                                                                         ) => (
                                                                             <div
-                                                                                className={`btl-dnd-link ${
-                                                                                    snapshot.isDragging
-                                                                                        ? 'btl-dnd-link-dragging'
-                                                                                        : ''
-                                                                                }`}
+                                                                                className='btl-dnd-link'
                                                                                 ref={
                                                                                     provided.innerRef
                                                                                 }
                                                                                 {...provided.draggableProps}
                                                                                 {...provided.dragHandleProps}
-                                                                                style={getItemStyle(
-                                                                                    snapshot.isDragging,
-                                                                                    provided
-                                                                                        .draggableProps
-                                                                                        .style
-                                                                                )}
                                                                             >
                                                                                 <div className='btl-dnd-link-body'>
                                                                                     <h3 className='dnd-link-title'>

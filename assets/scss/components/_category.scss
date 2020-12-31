@@ -27,6 +27,7 @@
   }
   .dnd-category{
     border: 1px solid transparent;
+    min-height: 150px;
     .category-head{
       display: flex;
       justify-content: center;
@@ -36,6 +37,8 @@
       border-radius: 5px 5px 0 0;
       padding: 0 10px;
       text-align: center;
+      border: 1.5px solid #e6e8ec;
+      border-bottom: none;
       .title{
         font-size: 17px;
         font-weight: 500;
@@ -59,6 +62,10 @@
           background: transparent;
         }
       }
+    }
+    .dnd-category-body-wrap{
+      background: #e6e8ec;
+      border-radius: 0 0 5px 5px;
     }
     .category-body{
       text-rendering: optimizeSpeed;
