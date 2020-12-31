@@ -27,7 +27,12 @@ const TopBar = (props) => {
         <div className='topbar'>
             <div className='tool-title'>
                 <img
-                    src={plugin_root_url + 'assets/images/logo-large.png'}
+                    src={
+                        plugin_root_url +
+                        `assets/images/logo-large${
+                            isDarkMode ? '-white' : ''
+                        }.png`
+                    }
                     alt='logo'
                 />
             </div>

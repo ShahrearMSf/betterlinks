@@ -60,7 +60,7 @@ const Clicks = (props) => {
             <Topbar />
             {clicks ? (
                 <DataTable
-                    title={__('Clicks', 'betterlinks')}
+                    title={__('Analytics', 'betterlinks')}
                     columns={columns}
                     data={clicks}
                 />

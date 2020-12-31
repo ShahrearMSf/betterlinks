@@ -79554,7 +79554,7 @@ const Clicks = props => {
     }
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TopBar__WEBPACK_IMPORTED_MODULE_6__["default"], null), clicks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_data_table_component__WEBPACK_IMPORTED_MODULE_2___default.a, {
-    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Clicks', 'betterlinks'),
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Analytics', 'betterlinks'),
     columns: columns,
     data: clicks
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loader_TableLoader__WEBPACK_IMPORTED_MODULE_5__["default"], null));
@@ -79799,7 +79799,7 @@ const TopBar = props => {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "tool-title"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-    src: _utils_helper__WEBPACK_IMPORTED_MODULE_1__["plugin_root_url"] + 'assets/images/logo-large.png',
+    src: _utils_helper__WEBPACK_IMPORTED_MODULE_1__["plugin_root_url"] + `assets/images/logo-large${isDarkMode ? '-white' : ''}.png`,
     alt: "logo"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     className: "theme-mood-button",
