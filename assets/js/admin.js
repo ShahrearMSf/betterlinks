@@ -79685,7 +79685,7 @@ function DndCanvas(props) {
     draggableId: `cat-${ind}-item_${item.ID}`,
     index: index
   }, (provided, snapshot) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-    className: "btl-dnd-link",
+    className: `btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`,
     ref: provided.innerRef
   }, provided.draggableProps, provided.dragHandleProps), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "btl-dnd-link-body"

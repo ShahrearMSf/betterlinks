@@ -85,7 +85,11 @@ function DndCanvas(props) {
                                                                             snapshot
                                                                         ) => (
                                                                             <div
-                                                                                className='btl-dnd-link'
+                                                                                className={`btl-dnd-link ${
+                                                                                    snapshot.isDragging
+                                                                                        ? 'btl-dnd-link-dragging'
+                                                                                        : ''
+                                                                                }`}
                                                                                 ref={
                                                                                     provided.innerRef
                                                                                 }
