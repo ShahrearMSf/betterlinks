@@ -1,4 +1,17 @@
 
+.btl-analytics-heading {
+  font-size: 25px;
+  color: #252525;
+  font-weight: 500;
+}
+.btl-analytic {
+  background: #fff;
+  padding: 35px 25px;
+  border: 1px solid #ebebeb;
+  .btl-analytics-chart {
+    margin-bottom: 50px;
+  }
+}
 .btl-analytic-table-wrapper{
   .btl-analytic-table{
     a{

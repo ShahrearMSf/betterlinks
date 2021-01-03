@@ -49,7 +49,9 @@ const Analytics = (props) => {
 
     return (
         <React.Fragment>
-            <Line data={data} options={options} />
+            <div className='btl-analytics-chart'>
+                <Line data={data} options={options} />
+            </div>
         </React.Fragment>
     )
 }
