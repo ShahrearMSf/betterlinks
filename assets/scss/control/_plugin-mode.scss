@@ -167,10 +167,19 @@
       color: $white;
       .rdt_TableCol{
         color: $white;
+        .rdt_TableCol_Sortable{
+          color: $white;
+          &:hover{
+            color: $white;
+          }
+        }
       }
     }
     a{
       color: $white;
+      &:hover{
+        color: $white;
+      }
     }
   }
 }
