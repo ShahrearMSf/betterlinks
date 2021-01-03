@@ -14,8 +14,17 @@
 }
 .btl-analytic-table-wrapper{
   .btl-analytic-table{
+    .rdt_TableCol_Sortable{
+      color: $dark;
+      &:hover{
+        color: $dark;
+      }
+    }
     a{
       color: $dark;
+      &:hover{
+        color: $dark;
+      }
     }
   }
 }

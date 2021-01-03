@@ -141,6 +141,18 @@
   }
 }
 
+.btl-analytics-heading{
+  color: $white;
+}
+
+.btl-analytic{
+  background: #252f47;
+  border-color: #252f47;
+  color: $white;
+  .btl-analytics-chart{
+    border-color: #252f47;
+  }
+}
 .btl-analytic-table-wrapper{
   .rdt_TableHeader{
     background: #252f47;
@@ -155,10 +167,19 @@
       color: $white;
       .rdt_TableCol{
         color: $white;
+        .rdt_TableCol_Sortable{
+          color: $white;
+          &:hover{
+            color: $white;
+          }
+        }
       }
     }
     a{
       color: $white;
+      &:hover{
+        color: $white;
+      }
     }
   }
 }
