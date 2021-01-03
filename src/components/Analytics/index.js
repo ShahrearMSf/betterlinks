@@ -5,10 +5,11 @@ const Analytics = (props) => {
         labels: Object.keys(props.data),
         datasets: [
             {
-                label: 'BetterLinks: All clicks on all links between',
+                label: 'Clicks',
                 fill: true,
                 lineTension: 10,
                 backgroundColor: 'rgba(129, 162, 255,0.4)',
+                defaultFontColor: '#000',
                 borderColor: '#2a62ff',
                 borderCapStyle: 'butt',
                 borderDash: [],
@@ -27,9 +28,28 @@ const Analytics = (props) => {
             },
         ],
     }
+
+    const options = {
+        tooltips: {
+            backgroundColor: 'rgb(255, 255, 255)',
+            titleFontColor: '#000',
+            callbacks: {
+                labelColor: function (tooltipItem, chart) {
+                    return {
+                        borderColor: '#2a62ff',
+                        backgroundColor: '#2a62ff',
+                    }
+                },
+                labelTextColor: function (tooltipItem, chart) {
+                    return '#000'
+                },
+            },
+        },
+    }
+
     return (
         <React.Fragment>
-            <Line data={data} />
+            <Line data={data} options={options} />
         </React.Fragment>
     )
 }
