@@ -1,6 +1,7 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 const Analytics = (props) => {
+    console.log(props.data)
     const data = {
         labels: Object.keys(props.data),
         datasets: [
@@ -26,6 +27,20 @@ const Analytics = (props) => {
     }
 
     const options = {
+        maintainAspectRatio: false,
+        responsive: true,
+        aspectRatio: 2,
+        scales: {
+            yAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                        steps: 10,
+                        stepSize: 20,
+                    },
+                },
+            ],
+        },
         tooltips: {
             backgroundColor: 'rgb(255, 255, 255)',
             titleFontColor: '#000',
