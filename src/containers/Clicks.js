@@ -6,10 +6,25 @@ import { bindActionCreators } from 'redux'
 import Analytics from './../components/Analytics'
 import TableLoader from '../components/Loader/TableLoader'
 import Topbar from './TopBar'
-import { site_url } from './../utils/helper'
+import { site_url, plugin_root_url, getBrowser } from './../utils/helper'
 import { fetch_clicks_data } from './../redux/actions/clicks.actions'
 
 const columns = [
+    {
+        name: 'browser',
+        selector: 'browser',
+        sortable: false,
+        cell: (row) => (
+            <div>
+                <img
+                    src={`${plugin_root_url}assets/images/browser/${getBrowser(
+                        row.browser
+                    )}.png`}
+                    alt=''
+                />
+            </div>
+        ),
+    },
     {
         name: 'IP',
         selector: 'ip',
@@ -50,6 +65,7 @@ const columns = [
 
 const Clicks = (props) => {
     const { clicks } = props.clicks
+    console.log(clicks)
     useEffect(() => {
         if (!clicks) {
             props.fetch_clicks_data()

@@ -95,3 +95,22 @@ export const copyToClipboard = (copyText) => {
     document.body.removeChild(tempInput)
     return
 }
+
+export const getBrowser = (agent) => {
+    var browser = ''
+    if (/Opera[\/\s](\d+\.\d+)/.test(agent)) {
+        browser = 'opera'
+    } else if (/MSIE (\d+\.\d+);/.test(agent)) {
+        browser = 'MSIE'
+    } else if (/Navigator[\/\s](\d+\.\d+)/.test(agent)) {
+        browser = 'netscape'
+    } else if (/Chrome[\/\s](\d+\.\d+)/.test(agent)) {
+        browser = 'chrome'
+    } else if (/Safari[\/\s](\d+\.\d+)/.test(agent)) {
+        browser = 'safari'
+        ;/Version[\/\s](\d+\.\d+)/.test(agent)
+    } else if (/Firefox[\/\s](\d+\.\d+)/.test(agent)) {
+        browser = 'mozilla'
+    }
+    return browser
+}
