@@ -31,7 +31,7 @@ const TopBar = (props) => {
                         plugin_root_url +
                         `assets/images/logo-large${
                             isDarkMode ? '-white' : ''
-                        }.png`
+                        }.svg`
                     }
                     alt='logo'
                 />
@@ -41,6 +41,7 @@ const TopBar = (props) => {
                     type='checkbox'
                     name='theme-mood'
                     id='theme-mood'
+                    value={isDarkMode}
                     onClick={() => darkModeHandler(!isDarkMode)}
                     checked={isDarkMode}
                 />
