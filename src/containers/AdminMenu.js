@@ -19,7 +19,7 @@ const AdminMenu = ({ query }) => {
                     aria-hidden='true'
                 >
                     <img
-                        src={plugin_root_url + 'assets/images/logo.png'}
+                        src={plugin_root_url + 'assets/images/logo.svg'}
                         alt='logo'
                     />
                 </div>
