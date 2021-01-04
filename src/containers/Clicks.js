@@ -65,7 +65,6 @@ const columns = [
 
 const Clicks = (props) => {
     const { clicks } = props.clicks
-    console.log(clicks)
     useEffect(() => {
         if (!clicks) {
             props.fetch_clicks_data()

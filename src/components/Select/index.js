@@ -7,7 +7,6 @@ const Select = (props) => {
     const defaultValue = field.value ? field.value : '307'
 
     const onChange = (option) => {
-        console.log(field.name)
         if (option == null) {
             return props.setFieldValue(field.name, '')
         }

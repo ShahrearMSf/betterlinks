@@ -48,103 +48,117 @@ function DndCanvas(props) {
             {settings ? (
                 <DragDropContext onDragEnd={props.onDragEnd}>
                     {settings &&
-                        Object.entries(settings).map(([ind, el]) => (
-                            <Droppable key={ind} droppableId={ind}>
-                                {(provided, snapshot) => (
-                                    <div className='dnd-category'>
-                                        <CatHeader
-                                            cat_id={ind}
-                                            cat_name={el.term_name}
-                                            cat_slug={el.term_slug}
-                                        />
-                                        <div
-                                            ref={provided.innerRef}
-                                            className='dnd-category-body-wrap'
-                                            style={getListStyle(
-                                                snapshot.isDraggingOver
-                                            )}
-                                            {...provided.droppableProps}
-                                        >
-                                            <div className='category-body'>
-                                                {el.lists &&
-                                                    el.lists.map(
-                                                        (item, index) => (
-                                                            <React.Fragment
-                                                                key={`cat-${ind}-item-${index}`}
-                                                            >
-                                                                {item.ID && (
-                                                                    <Draggable
-                                                                        key={`cat-${ind}-item_${item.ID}`}
-                                                                        draggableId={`cat-${ind}-item_${item.ID}`}
-                                                                        index={
-                                                                            index
-                                                                        }
-                                                                    >
-                                                                        {(
-                                                                            provided,
-                                                                            snapshot
-                                                                        ) => (
-                                                                            <div
-                                                                                className={`btl-dnd-link ${
-                                                                                    snapshot.isDragging
-                                                                                        ? 'btl-dnd-link-dragging'
-                                                                                        : ''
-                                                                                }`}
-                                                                                ref={
-                                                                                    provided.innerRef
-                                                                                }
-                                                                                {...provided.draggableProps}
-                                                                                {...provided.dragHandleProps}
-                                                                            >
-                                                                                <div className='btl-dnd-link-body'>
-                                                                                    <h3 className='dnd-link-title'>
-                                                                                        {
-                                                                                            item.link_title
-                                                                                        }
-                                                                                    </h3>
-                                                                                    <div className='btl-dnd-link-button-group'>
-                                                                                        <LinkQuickAction
-                                                                                            cat_id={
-                                                                                                ind
+                        Object.entries(settings)
+                            .filter((items, index) => {
+                                if (index === 0) {
+                                    if (
+                                        items[0] == '1' &&
+                                        items[1].lists.length == 0
+                                    ) {
+                                        return false
+                                    }
+                                    return true
+                                } else {
+                                    return true
+                                }
+                            })
+                            .map(([ind, el]) => (
+                                <Droppable key={ind} droppableId={ind}>
+                                    {(provided, snapshot) => (
+                                        <div className='dnd-category'>
+                                            <CatHeader
+                                                cat_id={ind}
+                                                cat_name={el.term_name}
+                                                cat_slug={el.term_slug}
+                                            />
+                                            <div
+                                                ref={provided.innerRef}
+                                                className='dnd-category-body-wrap'
+                                                style={getListStyle(
+                                                    snapshot.isDraggingOver
+                                                )}
+                                                {...provided.droppableProps}
+                                            >
+                                                <div className='category-body'>
+                                                    {el.lists &&
+                                                        el.lists.map(
+                                                            (item, index) => (
+                                                                <React.Fragment
+                                                                    key={`cat-${ind}-item-${index}`}
+                                                                >
+                                                                    {item.ID && (
+                                                                        <Draggable
+                                                                            key={`cat-${ind}-item_${item.ID}`}
+                                                                            draggableId={`cat-${ind}-item_${item.ID}`}
+                                                                            index={
+                                                                                index
+                                                                            }
+                                                                        >
+                                                                            {(
+                                                                                provided,
+                                                                                snapshot
+                                                                            ) => (
+                                                                                <div
+                                                                                    className={`btl-dnd-link ${
+                                                                                        snapshot.isDragging
+                                                                                            ? 'btl-dnd-link-dragging'
+                                                                                            : ''
+                                                                                    }`}
+                                                                                    ref={
+                                                                                        provided.innerRef
+                                                                                    }
+                                                                                    {...provided.draggableProps}
+                                                                                    {...provided.dragHandleProps}
+                                                                                >
+                                                                                    <div className='btl-dnd-link-body'>
+                                                                                        <h3 className='dnd-link-title'>
+                                                                                            {
+                                                                                                item.link_title
                                                                                             }
-                                                                                            cat_name={
-                                                                                                el.term_name
-                                                                                            }
-                                                                                            submitLinkHandler={
-                                                                                                props.edit_link
-                                                                                            }
-                                                                                            deleteLinkHandler={
-                                                                                                props.delete_link
-                                                                                            }
-                                                                                            item={
-                                                                                                item
-                                                                                            }
-                                                                                        />
+                                                                                        </h3>
+                                                                                        <div className='btl-dnd-link-button-group'>
+                                                                                            <LinkQuickAction
+                                                                                                cat_id={
+                                                                                                    ind
+                                                                                                }
+                                                                                                cat_name={
+                                                                                                    el.term_name
+                                                                                                }
+                                                                                                submitLinkHandler={
+                                                                                                    props.edit_link
+                                                                                                }
+                                                                                                deleteLinkHandler={
+                                                                                                    props.delete_link
+                                                                                                }
+                                                                                                item={
+                                                                                                    item
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        )}
-                                                                    </Draggable>
-                                                                )}
-                                                            </React.Fragment>
-                                                        )
-                                                    )}
-                                                {provided.placeholder}
-                                            </div>
-                                            <div className='category-footer'>
-                                                <Link
-                                                    cat_id={ind}
-                                                    cat_name={el.term_name}
-                                                    submitHandler={
-                                                        props.add_new_link
-                                                    }
-                                                />
+                                                                            )}
+                                                                        </Draggable>
+                                                                    )}
+                                                                </React.Fragment>
+                                                            )
+                                                        )}
+                                                    {provided.placeholder}
+                                                </div>
+                                                <div className='category-footer'>
+                                                    <Link
+                                                        cat_id={ind}
+                                                        cat_name={el.term_name}
+                                                        submitHandler={
+                                                            props.add_new_link
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
-                            </Droppable>
-                        ))}
+                                    )}
+                                </Droppable>
+                            ))}
                     <CreateCategory createCatHandler={props.add_new_cat} />
                 </DragDropContext>
             ) : (

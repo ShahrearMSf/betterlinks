@@ -1,7 +1,6 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 const Analytics = (props) => {
-    console.log(props.data)
     const data = {
         labels: Object.keys(props.data),
         datasets: [
