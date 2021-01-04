@@ -8,11 +8,11 @@ Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Fastest WordPress link management, SEO, branding, tracking & sharing plugin. BetterLinks helps you to create and manage short URLs with powerful analytics.
+Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
 
 == Description ==
 
-Fastest WordPress link management, SEO, branding, tracking & sharing plugin. BetterLinks helps you to create and manage short URLs with powerful analytics.
+Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
 
 
 ## 👨‍💻 DOCUMENTATION AND SUPPORT ##

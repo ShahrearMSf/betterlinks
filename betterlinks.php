@@ -1,11 +1,16 @@
 <?php
 /*
- * Plugin Name: BetterLinks
- * Description: Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
- * Version: 1.0
- * Author: WPDeveloper
- * Author URI: https://wpdeveloper.net
- * Text Domain: betterlinks
+ * Plugin Name:		BetterLinks
+ * Plugin URI:		https://betterlinks.io/
+ * Description:		Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
+ * Version:			1.0.0
+ * Author:			WPDeveloper
+ * Author URI:		https://wpdeveloper.net
+ * License:			GPL-3.0+
+ * License URI:		http://www.gnu.org/licenses/gpl-3.0.txt
+ * Author URI:		https://wpdeveloper.net
+ * Text Domain:		betterlinks
+ * Domain Path:		/languages
  */
 
 if (!defined('ABSPATH')) exit;
@@ -13,7 +18,6 @@ if (!defined('ABSPATH')) exit;
 if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 	require_once dirname(__FILE__) . '/vendor/autoload.php';
 }
-
 
 
 final class BetterLinks
@@ -40,7 +44,7 @@ final class BetterLinks
 		/**
 		 * Defines CONSTANTS for Whole plugins.
 		 */
-		define('BL_VERSION', '1.0');
+		define('BL_VERSION', '1.0.0');
 		define('BL_DB_VERSION', '1.0');
 		define('BL_SETTINGS_NAME', 'betterlinks_settings');
 		define('BL_PLUGIN_FILE', __FILE__);
