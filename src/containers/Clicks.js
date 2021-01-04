@@ -11,7 +11,7 @@ import { fetch_clicks_data } from './../redux/actions/clicks.actions'
 
 const columns = [
     {
-        name: 'browser',
+        name: 'Browser',
         selector: 'browser',
         sortable: false,
         cell: (row) => (
@@ -37,7 +37,7 @@ const columns = [
         sortable: false,
     },
     {
-        name: 'Short URI',
+        name: 'Shortened URL',
         selector: 'short_url',
         sortable: false,
         cell: (row) => <div>{site_url + '/' + row.short_url}</div>,
@@ -48,7 +48,7 @@ const columns = [
         sortable: false,
     },
     {
-        name: 'Target Link',
+        name: 'Target URL',
         selector: 'target_url',
         cell: (row) => (
             <div>
