@@ -99,11 +99,10 @@
 			flex-direction: column;
 		}
 		.btl-modal-form-label {
-			width: 170px;
-			min-width: 170px;
-			font-size: 20px;
+			min-width: 120px;
+			font-size: 16px;
 			font-weight: 500;
-			text-align: right;
+			text-align: left;
 			padding-right: 40px;
 			padding-top: 18px;
 			padding-bottom: 18px;	
@@ -192,7 +191,7 @@
 			height: 100%;
 			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 			border-radius: 5px 3px 3px 5px;
-			font-size: 18px;
+			font-size: 16px;
 			font-weight: 500;
 			padding: 0 10px 0 15px;
 			display: flex;

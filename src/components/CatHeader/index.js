@@ -142,7 +142,7 @@ const CatHeader = (props) => {
                                     className='btl-modal-form-label btl-required'
                                     htmlFor='cat_name'
                                 >
-                                    {__('Title', 'betterlinks')}
+                                    {__('Category Name', 'betterlinks')}
                                 </label>
                                 <Field
                                     className='btl-modal-form-control'
