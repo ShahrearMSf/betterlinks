@@ -21,9 +21,9 @@ class Menu
      */
     public function admin_menu()
     {
-        add_menu_page(__('BetterLinks', 'betterlinks'), __('BetterLinks', 'betterlinks'), 'manage_options', BL_PLUGIN_SLUG, [$this, 'load_main_template'], BL_ASSETS_URI . 'images/logo.svg', 30);
+        add_menu_page(__('BetterLinks', 'betterlinks'), __('BetterLinks', 'betterlinks'), 'manage_options', BETTERLINKS_PLUGIN_SLUG, [$this, 'load_main_template'], BETTERLINKS_ASSETS_URI . 'images/logo.svg', 30);
         foreach(Helper::get_menu_items() as $key => $item){
-            add_submenu_page(BL_PLUGIN_SLUG, $item['title'],$item['title'], $item['capability'], $key, [$this, 'load_main_template']);
+            add_submenu_page(BETTERLINKS_PLUGIN_SLUG, $item['title'],$item['title'], $item['capability'], $key, [$this, 'load_main_template']);
         }
     }
     public function load_main_template()

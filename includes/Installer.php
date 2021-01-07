@@ -19,9 +19,9 @@ class Installer {
         $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
         // set version number
-        update_option( 'betterlinks_version', BL_VERSION );
+        update_option( 'betterlinks_version', BETTERLINKS_VERSION );
         // set db version
-        update_option( 'betterlinks_db_version', BL_DB_VERSION);
+        update_option( 'betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }
 
     public function createBetterLinksTable(){

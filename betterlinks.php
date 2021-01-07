@@ -44,16 +44,16 @@ final class BetterLinks
 		/**
 		 * Defines CONSTANTS for Whole plugins.
 		 */
-		define('BL_VERSION', '1.0.0');
-		define('BL_DB_VERSION', '1.0');
-		define('BL_SETTINGS_NAME', 'betterlinks_settings');
-		define('BL_PLUGIN_FILE', __FILE__);
-		define('BL_PLUGIN_BASENAME', plugin_basename(__FILE__));
-		define('BL_PLUGIN_SLUG', 'betterlinks');
-		define('BL_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
-		define('BL_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
-		define('BL_ASSETS_DIR_PATH', BL_ROOT_DIR_PATH . 'assets/');
-		define('BL_ASSETS_URI', BL_PLUGIN_ROOT_URI . 'assets/');
+		define('BETTERLINKS_VERSION', '1.0.0');
+		define('BETTERLINKS_DB_VERSION', '1.0');
+		define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
+		define('BETTERLINKS_PLUGIN_FILE', __FILE__);
+		define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));
+		define('BETTERLINKS_PLUGIN_SLUG', 'betterlinks');
+		define('BETTERLINKS_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
+		define('BETTERLINKS_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
+		define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
+		define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
 	}
 
 	/**

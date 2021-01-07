@@ -15,11 +15,11 @@ class Helper {
 
     public static function get_menu_items(){
         $menu_items = [
-            BL_PLUGIN_SLUG  => [
+            BETTERLINKS_PLUGIN_SLUG  => [
                 'title' => __('Manage Links', 'betterlinks'),
                 'capability' => 'manage_options'
             ],
-            BL_PLUGIN_SLUG . '-analytics'  => [
+            BETTERLINKS_PLUGIN_SLUG . '-analytics'  => [
                 'title' => __('Analytics', 'betterlinks'),
                 'capability' => 'manage_options'
             ]
@@ -36,12 +36,12 @@ class Helper {
     public static function plugin_page_hook_suffix($hook)
     {
         if (
-            $hook == 'toplevel_page_' .  BL_PLUGIN_SLUG
+            $hook == 'toplevel_page_' .  BETTERLINKS_PLUGIN_SLUG
         ) {
             return true;
         } else {
             foreach(self::get_menu_items() as $key => $value){
-                if($hook == BL_PLUGIN_SLUG . '_page_'.$key){
+                if($hook == BETTERLINKS_PLUGIN_SLUG . '_page_'.$key){
                     return true;
                 }
             }
