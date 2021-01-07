@@ -2,25 +2,29 @@
 # This file is distributed under the same license as the BetterLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 1.0\n"
+"Project-Id-Version: BetterLinks 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-01-03T08:34:11+00:00\n"
+"POT-Creation-Date: 2021-01-07T07:43:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: betterlinks\n"
 
 #. Plugin Name of the plugin
 #: includes/Admin/Menu.php:24
-#: assets/js/admin.js:122613
-#: assets/js/admin.js:122618
+#: assets/js/betterlinks-core.js:122610
+#: assets/js/betterlinks-core.js:122615
 #: src/containers/AdminMenu.js:27
 #: src/containers/AdminMenu.js:32
 msgid "BetterLinks"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://betterlinks.io/"
 msgstr ""
 
 #. Description of the plugin
@@ -36,177 +40,180 @@ msgid "https://wpdeveloper.net"
 msgstr ""
 
 #: includes/Helper.php:19
-#: assets/js/admin.js:122622
+#: assets/js/betterlinks-core.js:122619
 #: src/containers/AdminMenu.js:40
 msgid "Manage Links"
 msgstr ""
 
 #: includes/Helper.php:23
-#: assets/js/admin.js:122626
-#: assets/js/admin.js:122774
+#: assets/js/betterlinks-core.js:122623
+#: assets/js/betterlinks-core.js:122779
 #: src/containers/AdminMenu.js:49
-#: src/containers/Clicks.js:82
+#: src/containers/Clicks.js:97
 msgid "Analytics"
 msgstr ""
 
-#: assets/js/admin.js:120181
+#: assets/js/betterlinks-core.js:120180
 #: src/components/CatHeader/index.js:78
 msgid "Edit"
 msgstr ""
 
-#: assets/js/admin.js:120184
+#: assets/js/betterlinks-core.js:120183
 #: src/components/CatHeader/index.js:86
 msgid "Delete"
 msgstr ""
 
-#: assets/js/admin.js:120188
-#: assets/js/admin.js:120764
+#: assets/js/betterlinks-core.js:120187
+#: assets/js/betterlinks-core.js:120763
 #: src/components/CatHeader/index.js:94
 msgid "Are Your Sure?"
 msgstr ""
 
-#: assets/js/admin.js:120193
-#: assets/js/admin.js:120771
+#: assets/js/betterlinks-core.js:120192
+#: assets/js/betterlinks-core.js:120770
 #: src/components/CatHeader/index.js:101
 msgid "Yes"
 msgstr ""
 
-#: assets/js/admin.js:120196
-#: assets/js/admin.js:120774
+#: assets/js/betterlinks-core.js:120195
+#: assets/js/betterlinks-core.js:120773
 #: src/components/CatHeader/index.js:107
 msgid "No"
 msgstr ""
 
-#: assets/js/admin.js:120224
-#: assets/js/admin.js:120514
+#: assets/js/betterlinks-core.js:120223
 #: src/components/CatHeader/index.js:145
-#: src/components/Link/index.js:138
-msgid "Title"
+msgid "Category Name"
 msgstr ""
 
-#: assets/js/admin.js:120246
-#: assets/js/admin.js:120670
+#: assets/js/betterlinks-core.js:120245
+#: assets/js/betterlinks-core.js:120669
 #: src/components/CatHeader/index.js:172
 #: src/components/Link/index.js:400
 msgid "Update"
 msgstr ""
 
-#: assets/js/admin.js:120317
+#: assets/js/betterlinks-core.js:120316
 #: src/components/CreateCategory.js:33
 msgid "Add New Category"
 msgstr ""
 
-#: assets/js/admin.js:120334
+#: assets/js/betterlinks-core.js:120333
 #: src/components/CreateCategory.js:52
 msgid "* Name"
 msgstr ""
 
-#: assets/js/admin.js:120344
+#: assets/js/betterlinks-core.js:120343
 #: src/components/CreateCategory.js:63
 msgid "* Slug"
 msgstr ""
 
-#: assets/js/admin.js:120351
+#: assets/js/betterlinks-core.js:120350
 #: src/components/CreateCategory.js:74
 msgid "Submit"
 msgstr ""
 
-#: assets/js/admin.js:120534
+#: assets/js/betterlinks-core.js:120513
+#: src/components/Link/index.js:138
+msgid "Title"
+msgstr ""
+
+#: assets/js/betterlinks-core.js:120533
 #: src/components/Link/index.js:164
 msgid "Description"
 msgstr ""
 
-#: assets/js/admin.js:120544
+#: assets/js/betterlinks-core.js:120543
 #: src/components/Link/index.js:178
 msgid "Redirect Type"
 msgstr ""
 
-#: assets/js/admin.js:120555
+#: assets/js/betterlinks-core.js:120554
 #: src/components/Link/index.js:193
 msgid "Target URL"
 msgstr ""
 
-#: assets/js/admin.js:120566
+#: assets/js/betterlinks-core.js:120565
 #: src/components/Link/index.js:208
 msgid "Shortened URL"
 msgstr ""
 
-#: assets/js/admin.js:120588
+#: assets/js/betterlinks-core.js:120587
 #: src/components/Link/index.js:245
 msgid "Category"
 msgstr ""
 
-#: assets/js/admin.js:120598
+#: assets/js/betterlinks-core.js:120597
 #: src/components/Link/index.js:259
 msgid "Tags"
 msgstr ""
 
-#: assets/js/admin.js:120611
+#: assets/js/betterlinks-core.js:120610
 #: src/components/Link/index.js:273
 msgid "Link Options"
 msgstr ""
 
-#: assets/js/admin.js:120624
+#: assets/js/betterlinks-core.js:120623
 #: src/components/Link/index.js:295
 msgid "No Follow"
 msgstr ""
 
-#: assets/js/admin.js:120625
+#: assets/js/betterlinks-core.js:120624
 #: src/components/Link/index.js:300
 msgid "This will add nofollow attribute to your link. (Recommended)"
 msgstr ""
 
-#: assets/js/admin.js:120636
+#: assets/js/betterlinks-core.js:120635
 #: src/components/Link/index.js:322
 msgid "Sponsored"
 msgstr ""
 
-#: assets/js/admin.js:120637
+#: assets/js/betterlinks-core.js:120636
 #: src/components/Link/index.js:327
 msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
 msgstr ""
 
-#: assets/js/admin.js:120648
+#: assets/js/betterlinks-core.js:120647
 #: src/components/Link/index.js:349
 msgid "Parameter Forwarding"
 msgstr ""
 
-#: assets/js/admin.js:120649
+#: assets/js/betterlinks-core.js:120648
 #: src/components/Link/index.js:354
 msgid "This will pass the parameters you have set in the target URL"
 msgstr ""
 
-#: assets/js/admin.js:120660
+#: assets/js/betterlinks-core.js:120659
 #: src/components/Link/index.js:376
 msgid "Tracking"
 msgstr ""
 
-#: assets/js/admin.js:120661
+#: assets/js/betterlinks-core.js:120660
 #: src/components/Link/index.js:381
 msgid "This will let you check Analytics report of your links"
 msgstr ""
 
-#: assets/js/admin.js:120670
+#: assets/js/betterlinks-core.js:120669
 #: src/components/Link/index.js:401
 msgid "Publish"
 msgstr ""
 
-#: assets/js/admin.js:122782
-#: src/containers/Clicks.js:91
+#: assets/js/betterlinks-core.js:122787
+#: src/containers/Clicks.js:106
 msgid "All Clicks"
 msgstr ""
 
-#: assets/js/admin.js:123592
+#: assets/js/betterlinks-core.js:123608
 #: src/utils/data.js:5
 msgid "307 (Temporary)"
 msgstr ""
 
-#: assets/js/admin.js:123595
+#: assets/js/betterlinks-core.js:123611
 #: src/utils/data.js:9
 msgid "302 (Temporary)"
 msgstr ""
 
-#: assets/js/admin.js:123598
+#: assets/js/betterlinks-core.js:123614
 #: src/utils/data.js:13
 msgid "301 (Permanent)"
 msgstr ""
