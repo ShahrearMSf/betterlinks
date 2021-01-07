@@ -1,0 +1,35 @@
+@import "./common/fonts";
+@import "./common/variable";
+@keyframes rotating { 
+  from { 
+      transform: rotate(0deg); 
+  } to { 
+      transform: rotate(360deg); 
+  }
+}
+.btl-rotating{
+  animation: rotating 3s linear infinite;
+}
+.betterlinks-body{
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  font-family: 'Roboto', sans-serif;
+  padding-top: 20px;
+  padding-right: 20px;
+  @import './common/reboot';
+  @import './common/form';
+  @import './components/topbar';
+  @import './components/category';
+  @import './components/link';
+  @import './components/analytics';
+  
+}
+body{
+  &.betterlinks-dark-mode{
+    background: #36405a;
+    .betterlinks-body{
+      @import './control/plugin-mode';
+    }
+    @import './control/plugin-mode-modal';
+  }
+}
+@import './components/modal';

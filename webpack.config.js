@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
 
     return {
         entry: {
-            'js/admin': path.resolve(__dirname, 'src/index.js'),
+            'js/betterlinks-core': path.resolve(__dirname, 'src/index.js'),
         },
 
         output: {
