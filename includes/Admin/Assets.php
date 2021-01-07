@@ -42,6 +42,8 @@ class Assets
 
             wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', array(), filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks.css'), 'all');
             // js
+            wp_enqueue_script('betterlinks-moment', BETTERLINKS_ASSETS_URI . 'js/lib/moment.min.js', array('jquery'), filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/lib/moment.min.js'), true);
+            wp_enqueue_script('betterlinks-chartjs', BETTERLINKS_ASSETS_URI . 'js/lib/Chart.min.js', array('jquery'), filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/lib/Chart.min.js'), true);
             wp_enqueue_script('betterlinks-admin-scripts', BETTERLINKS_ASSETS_URI . 'js/betterlinks-core.min.js', array('jquery'), filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-core.min.js'), true);
             wp_localize_script('betterlinks-admin-scripts', 'betterLinksGlobal', array(
                 'nonce' => wp_create_nonce('wp_rest'),

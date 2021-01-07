@@ -1,5 +1,6 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
+import LineChart from './../LineChart'
+
 const Analytics = (props) => {
     const data = {
         labels: Object.keys(props.data),
@@ -56,11 +57,14 @@ const Analytics = (props) => {
             },
         },
     }
-
     return (
         <React.Fragment>
             <div className='btl-analytics-chart'>
-                <Line data={data} options={options} />
+                <LineChart
+                    data={data.datasets[0].data}
+                    title={data.labels}
+                    color='#3E517A'
+                />
             </div>
         </React.Fragment>
     )
