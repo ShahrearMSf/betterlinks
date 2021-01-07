@@ -20,79 +20,84 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 }
 
 
-final class BetterLinks
-{
-	private function __construct()
+if(!class_exists('BetterLinks')) {
+	final class BetterLinks
 	{
-		$this->define_constants();
-		register_activation_hook(__FILE__, [$this, 'activate']);
-		add_action('plugins_loaded', [$this, 'init_plugin']);
-	}
-
-	public static function init()
-	{
-		static $instance = false;
-
-		if (!$instance) {
-			$instance = new self();
+		private function __construct()
+		{
+			$this->define_constants();
+			register_activation_hook(__FILE__, [$this, 'activate']);
+			add_action('plugins_loaded', [$this, 'init_plugin']);
 		}
 
-		return $instance;
-	}
-	public function define_constants()
-	{
+		public static function init()
+		{
+			static $instance = false;
+
+			if (!$instance) {
+				$instance = new self();
+			}
+
+			return $instance;
+		}
+		public function define_constants()
+		{
+			/**
+			 * Defines CONSTANTS for Whole plugins.
+			 */
+			define('BETTERLINKS_VERSION', '1.0.0');
+			define('BETTERLINKS_DB_VERSION', '1.0');
+			define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
+			define('BETTERLINKS_PLUGIN_FILE', __FILE__);
+			define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));
+			define('BETTERLINKS_PLUGIN_SLUG', 'betterlinks');
+			define('BETTERLINKS_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
+			define('BETTERLINKS_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
+			define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
+			define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
+		}
+
 		/**
-		 * Defines CONSTANTS for Whole plugins.
+		 * Initialize the plugin
+		 *
+		 * @return void
 		 */
-		define('BETTERLINKS_VERSION', '1.0.0');
-		define('BETTERLINKS_DB_VERSION', '1.0');
-		define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
-		define('BETTERLINKS_PLUGIN_FILE', __FILE__);
-		define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));
-		define('BETTERLINKS_PLUGIN_SLUG', 'betterlinks');
-		define('BETTERLINKS_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
-		define('BETTERLINKS_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
-		define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
-		define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
-	}
-
-	/**
-	 * Initialize the plugin
-	 *
-	 * @return void
-	 */
-	public function init_plugin()
-	{
-        $this->load_textdomain();
-		new BetterLinks\API();
-		if(is_admin()){
-			new BetterLinks\Admin();
+		public function init_plugin()
+		{
+			$this->load_textdomain();
+			new BetterLinks\API();
+			if(is_admin()){
+				new BetterLinks\Admin();
+			}
+			new BetterLinks\Link();
 		}
-		new BetterLinks\Link();
-	}
 
-	public function load_textdomain()
-	{
-		load_plugin_textdomain(
-			'betterlinks',
-			false,
-			dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
-		);
-	}
+		public function load_textdomain()
+		{
+			load_plugin_textdomain(
+				'betterlinks',
+				false,
+				dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
+			);
+		}
 
-	public function activate(){
-		new BetterLinks\Installer();
+		public function activate(){
+			new BetterLinks\Installer();
+		}
 	}
 }
+
 
 /**
  * Initializes the main plugin
  *
  * @return \BetterLinks
  */
-function BetterLinks_Start()
-{
-	return BetterLinks::init();
+if(!function_exists('BetterLinks_Start')){
+	function BetterLinks_Start()
+	{
+		return BetterLinks::init();
+	}
 }
 
 // Plugin Start
