@@ -18,10 +18,14 @@ class Installer {
         $this->createBetterTermsTable();
         $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
-        // set version number
-        update_option( 'betterlinks_version', BETTERLINKS_VERSION );
-        // set db version
-        update_option( 'betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        $this->create_files();
+
+        if(get_option('betterlinks_version') != BETTERLINKS_VERSION){
+            update_option( 'betterlinks_version', BETTERLINKS_VERSION );
+        }
+        if(get_option('betterlinks_db_version') != BETTERLINKS_DB_VERSION){
+            update_option( 'betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        }
     }
 
     public function createBetterLinksTable(){
@@ -123,4 +127,43 @@ class Installer {
             }
         }
     }
+
+    /**
+	 * Create files/directories.
+	 */
+	private function create_files() {
+		
+		// Install files and folders for uploading files and prevent hotlinking.
+        $upload_dir      = wp_get_upload_dir();
+        $base_dir_path        = $upload_dir['basedir'] . '/betterlinks_uploads';
+		
+		$files = array(
+			array(
+				'base'    => $base_dir_path,
+				'file'    => 'index.html',
+				'content' => '',
+			),
+			array(
+				'base'    => $base_dir_path,
+				'file'    => 'links.json',
+				'content' => '',
+			),
+			array(
+				'base'    => $base_dir_path,
+				'file'    => 'clicks.json',
+				'content' => '',
+			)
+		);
+
+		foreach ( $files as $file ) {
+			if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
+				$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); 
+				if ( $file_handle ) {
+					fwrite( $file_handle, $file['content'] );
+					fclose( $file_handle );
+				}
+			}
+		}
+	}
+
 }
