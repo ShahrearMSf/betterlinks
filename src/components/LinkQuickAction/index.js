@@ -81,7 +81,11 @@ const LinkQuickAction = (props) => {
                         <button
                             className='action yes'
                             onClick={() => {
-                                deleteLinkHandler(cat_id, item.ID)
+                                deleteLinkHandler(
+                                    cat_id,
+                                    item.ID,
+                                    item.short_url
+                                )
                             }}
                         >
                             {__('Yes', 'betterlinks')}

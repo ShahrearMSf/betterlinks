@@ -105,7 +105,7 @@ const Link = ({
                     initialValues={{
                         link_title: '',
                         link_slug: '',
-                        redirect_type: '',
+                        redirect_type: '307',
                         target_url: '',
                         short_url: randomSlug,
                         link_note: '',

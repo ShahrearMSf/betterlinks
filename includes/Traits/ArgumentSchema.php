@@ -62,7 +62,7 @@ trait ArgumentSchema {
             ),
             'short_url' => array(
                 'type'   => 'string',
-                'sanitize_callback' => 'esc_url_raw'
+                'sanitize_callback' => 'sanitize_text_field'
             ),
             'link_modified' => array(
                 'type'   => 'string',

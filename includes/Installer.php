@@ -132,11 +132,9 @@ class Installer {
 	 * Create files/directories.
 	 */
 	private function create_files() {
-		
-		// Install files and folders for uploading files and prevent hotlinking.
-        $upload_dir      = wp_get_upload_dir();
-        $base_dir_path        = $upload_dir['basedir'] . '/betterlinks_uploads';
-		
+        $upload_dir             = wp_get_upload_dir();
+        $base_dir_path          = $upload_dir['basedir'] . '/betterlinks_uploads';
+		$emptyContent           = '{}';
 		$files = array(
 			array(
 				'base'    => $base_dir_path,
@@ -146,12 +144,12 @@ class Installer {
 			array(
 				'base'    => $base_dir_path,
 				'file'    => 'links.json',
-				'content' => '',
+				'content' => $emptyContent,
 			),
 			array(
 				'base'    => $base_dir_path,
 				'file'    => 'clicks.json',
-				'content' => '',
+				'content' => $emptyContent,
 			)
 		);
 

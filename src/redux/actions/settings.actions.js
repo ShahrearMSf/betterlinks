@@ -132,10 +132,10 @@ export const edit_link = (item) => async (dispatch) => {
     }
 }
 
-export const delete_link = (catID, linID) => async (dispatch) => {
+export const delete_link = (catID, linID, short_url) => async (dispatch) => {
     try {
         const res = await API.delete(namespace + 'links', {
-            params: { ID: linID, term_id: catID },
+            params: { ID: linID, term_id: catID, short_url: short_url },
         })
         dispatch({
             type: DELETE_LINK,
