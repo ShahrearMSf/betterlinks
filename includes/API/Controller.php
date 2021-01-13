@@ -37,7 +37,6 @@ abstract class Controller {
     protected function delete_json_into_file($file, $short_url){
         $existingData = file_get_contents($file);
         $tempArray = json_decode($existingData, true);
-        error_log(print_r($short_url, true));
         if(is_array($tempArray)){
             unset($tempArray[$short_url]);
             return file_put_contents($file, json_encode($tempArray));

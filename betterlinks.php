@@ -29,7 +29,9 @@ if(!class_exists('BetterLinks')) {
 			$this->upload_dir_path();
 			$this->define_constants();
 			register_activation_hook(__FILE__, [$this, 'activate']);
+			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'init_plugin']);
+			$this->dispatch_hook();
 		}
 
 		public static function init()
@@ -79,6 +81,10 @@ if(!class_exists('BetterLinks')) {
 			new BetterLinks\Link();
 		}
 
+		public function dispatch_hook(){
+			new BetterLinks\Cron();
+		}
+
 		public function load_textdomain()
 		{
 			load_plugin_textdomain(
@@ -90,6 +96,10 @@ if(!class_exists('BetterLinks')) {
 
 		public function activate(){
 			new BetterLinks\Installer();
+		}
+
+		public function deactivate(){
+			new BetterLinks\Uninstall();
 		}
 	}
 }

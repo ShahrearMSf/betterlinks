@@ -10,6 +10,8 @@ class Installer {
         $this->charset_collate = $wpdb->get_charset_collate();
         $this->run_create_tables();
         $this->insert_terms();
+        $this->create_files();
+        $this->create_cron_jobs();
     }
 
     public function run_create_tables(){
@@ -18,7 +20,6 @@ class Installer {
         $this->createBetterTermsTable();
         $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
-        $this->create_files();
 
         if(get_option('betterlinks_version') != BETTERLINKS_VERSION){
             update_option( 'betterlinks_version', BETTERLINKS_VERSION );
@@ -160,6 +161,14 @@ class Installer {
 				}
 			}
 		}
-	}
+    }
+    
+    /**
+     * Create Cron Jobs
+     */
+    private function create_cron_jobs (){
+        wp_clear_scheduled_hook( 'betterlinks/write_json_links' );
+        wp_schedule_single_event( time() + 60, 'betterlinks/write_json_links' );
+    }
 
 }
