@@ -4,15 +4,12 @@ namespace BetterLinks\API;
 use BetterLinks\Traits\ArgumentSchema;
 class Links extends Controller
 {
-    private $links_json_directory;
     use ArgumentSchema;
     /**
      * Initialize hooks and option name
      */
     public function __construct()
     {
-        $upload_dir                  = wp_get_upload_dir();
-        $this->links_json_directory  =  $upload_dir['basedir'] . '/betterlinks_uploads';
         add_action('rest_api_init', array($this, 'register_routes'));
     }
 
@@ -133,7 +130,7 @@ class Links extends Controller
             $term_data = [];
             $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
             $params = array_intersect_key($request['params'], $lookFor);
-            $this->insert_json_into_file(trailingslashit( $this->links_json_directory ) . 'links.json', $params);
+            $this->insert_json_into_file(trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', $params);
             $id = $qb->table('betterlinks')->insert($params);
             // store tags relation data
             if(isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])){
@@ -193,7 +190,7 @@ class Links extends Controller
             $term_data = [];
             $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
             $params = array_intersect_key($request['params'], $lookFor);
-            $this->update_json_into_file(trailingslashit( $this->links_json_directory ) . 'links.json', $params);
+            $this->update_json_into_file(trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', $params);
             $id = $qb->table('betterlinks')->where('ID', $params['ID'])->update($params);
             // store tags relation data
             if(isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])){
@@ -247,7 +244,7 @@ class Links extends Controller
     public function delete_value($request)
     {
         \BetterLinks\Helper::DB()->table('betterlinks')->where('id', '=', $request['ID'])->delete();
-        $this->delete_json_into_file(trailingslashit( $this->links_json_directory ) . 'links.json', $request['short_url']);
+        $this->delete_json_into_file(trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', $request['short_url']);
         return new \WP_REST_Response(array(
             'success'   => true,
             'data'     => [

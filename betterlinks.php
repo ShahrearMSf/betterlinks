@@ -23,8 +23,10 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 if(!class_exists('BetterLinks')) {
 	final class BetterLinks
 	{
+		private $upload_dir;
 		private function __construct()
 		{
+			$this->upload_dir_path();
 			$this->define_constants();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			add_action('plugins_loaded', [$this, 'init_plugin']);
@@ -55,6 +57,11 @@ if(!class_exists('BetterLinks')) {
 			define('BETTERLINKS_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
 			define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
 			define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
+			define('BETTERLINKS_UPLOAD_DIR_PATH', $this->upload_dir['basedir'] . '/betterlinks_uploads');
+		}
+
+		public function upload_dir_path(){
+			$this->upload_dir = wp_get_upload_dir();
 		}
 
 		/**

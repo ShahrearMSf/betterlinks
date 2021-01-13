@@ -132,22 +132,20 @@ class Installer {
 	 * Create files/directories.
 	 */
 	private function create_files() {
-        $upload_dir             = wp_get_upload_dir();
-        $base_dir_path          = $upload_dir['basedir'] . '/betterlinks_uploads';
 		$emptyContent           = '{}';
 		$files = array(
 			array(
-				'base'    => $base_dir_path,
+				'base'    => BETTERLINKS_UPLOAD_DIR_PATH,
 				'file'    => 'index.html',
 				'content' => '',
 			),
 			array(
-				'base'    => $base_dir_path,
+				'base'    => BETTERLINKS_UPLOAD_DIR_PATH,
 				'file'    => 'links.json',
 				'content' => $emptyContent,
 			),
 			array(
-				'base'    => $base_dir_path,
+				'base'    => BETTERLINKS_UPLOAD_DIR_PATH,
 				'file'    => 'clicks.json',
 				'content' => $emptyContent,
 			)
