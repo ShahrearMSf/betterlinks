@@ -72,11 +72,7 @@ class QueryBuilderHandler
 		}
 
 		// Query builder adapter instance
-		$this->adapterInstance = $this->container->build(
-			'\\BetterLinks\\Query\\QueryBuilder\\Adapters\\' .
-				ucfirst($this->adapter),
-			[$this->connection]
-		);
+		$this->adapterInstance = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\Adapters\\' . ucfirst($this->adapter), [$this->connection]);
 	}
 
 	/**
@@ -104,11 +100,7 @@ class QueryBuilderHandler
 		var_dump('need to implement this');
 		die();
 
-		return $this->setFetchMode(
-			\PDO::FETCH_CLASS,
-			$className,
-			$constructorArgs
-		);
+		return $this->setFetchMode(\PDO::FETCH_CLASS, $className, $constructorArgs);
 	}
 
 	/**
@@ -133,12 +125,7 @@ class QueryBuilderHandler
 	 */
 	public function query($sql, $bindings = [])
 	{
-		$this->dbStatement = $this->container
-			->build('\\BetterLinks\\Query\\QueryBuilder\\QueryObject', [
-				$sql,
-				$bindings,
-			])
-			->getRawSql();
+		$this->dbStatement = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryObject', [$sql, $bindings])->getRawSql();
 
 		return $this;
 	}
@@ -253,9 +240,7 @@ class QueryBuilderHandler
 	protected function aggregate($type)
 	{
 		// Get the current selects
-		$mainSelects = isset($this->statements['selects'])
-			? $this->statements['selects']
-			: null;
+		$mainSelects = isset($this->statements['selects']) ? $this->statements['selects'] : null;
 		// Replace select with a scalar value like `count`
 		$this->statements['selects'] = [$this->raw($type . '(*) as field')];
 		$row = $this->get();
@@ -285,29 +270,15 @@ class QueryBuilderHandler
 	 */
 	public function getQuery($type = 'select', $dataToBePassed = [])
 	{
-		$allowedTypes = [
-			'select',
-			'insert',
-			'insertignore',
-			'replace',
-			'delete',
-			'update',
-			'criteriaonly',
-		];
+		$allowedTypes = ['select', 'insert', 'insertignore', 'replace', 'delete', 'update', 'criteriaonly'];
 
 		if (!in_array(strtolower($type), $allowedTypes)) {
 			throw new Exception($type . ' is not a known type.', 2);
 		}
 
-		$queryArr = $this->adapterInstance->$type(
-			$this->statements,
-			$dataToBePassed
-		);
+		$queryArr = $this->adapterInstance->$type($this->statements, $dataToBePassed);
 
-		return $this->container->build(
-			'\\BetterLinks\\Query\\QueryBuilder\\QueryObject',
-			[$queryArr['sql'], $queryArr['bindings']]
-		);
+		return $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryObject', [$queryArr['sql'], $queryArr['bindings']]);
 	}
 
 	/**
@@ -610,19 +581,10 @@ class QueryBuilderHandler
 	 *
 	 * @return $this
 	 */
-	public function having(
-		$key,
-		$operator = null,
-		$value = null,
-		$joiner = 'AND'
-	) {
+	public function having($key, $operator = null, $value = null, $joiner = 'AND')
+	{
 		$key = $this->addTablePrefix($key);
-		$this->statements['havings'][] = compact(
-			'key',
-			'operator',
-			'value',
-			'joiner'
-		);
+		$this->statements['havings'][] = compact('key', 'operator', 'value', 'joiner');
 
 		return $this;
 	}
@@ -764,12 +726,7 @@ class QueryBuilderHandler
 	 */
 	public function whereBetween($key, $valueFrom, $valueTo)
 	{
-		return $this->whereHandler(
-			$key,
-			'BETWEEN',
-			[$valueFrom, $valueTo],
-			'AND'
-		);
+		return $this->whereHandler($key, 'BETWEEN', [$valueFrom, $valueTo], 'AND');
 	}
 
 	/**
@@ -781,12 +738,7 @@ class QueryBuilderHandler
 	 */
 	public function orWhereBetween($key, $valueFrom, $valueTo)
 	{
-		return $this->whereHandler(
-			$key,
-			'BETWEEN',
-			[$valueFrom, $valueTo],
-			'OR'
-		);
+		return $this->whereHandler($key, 'BETWEEN', [$valueFrom, $valueTo], 'OR');
 	}
 
 	/**
@@ -827,13 +779,9 @@ class QueryBuilderHandler
 
 	protected function whereNullHandler($key, $prefix = '', $operator = '')
 	{
-		$key = $this->adapterInstance->wrapSanitizer(
-			$this->addTablePrefix($key)
-		);
+		$key = $this->adapterInstance->wrapSanitizer($this->addTablePrefix($key));
 
-		return $this->{$operator . 'Where'}(
-			$this->raw("{$key} IS {$prefix} NULL")
-		);
+		return $this->{$operator . 'Where'}($this->raw("{$key} IS {$prefix} NULL"));
 	}
 
 	/**
@@ -845,13 +793,8 @@ class QueryBuilderHandler
 	 *
 	 * @return $this
 	 */
-	public function join(
-		$table,
-		$key,
-		$operator = null,
-		$value = null,
-		$type = 'inner'
-	) {
+	public function join($table, $key, $operator = null, $value = null, $type = 'inner')
+	{
 		if (!$key instanceof \Closure) {
 			$key = function ($joinBuilder) use ($key, $operator, $value) {
 				$joinBuilder->on($key, $operator, $value);
@@ -859,10 +802,7 @@ class QueryBuilderHandler
 		}
 		// Build a new JoinBuilder class, keep it by reference so any changes made
 		// in the closure should reflect here
-		$joinBuilder = $this->container->build(
-			'\\BetterLinks\\Query\\QueryBuilder\\JoinBuilder',
-			[$this->connection]
-		);
+		$joinBuilder = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\JoinBuilder', [$this->connection]);
 		$joinBuilder = &$joinBuilder;
 		// Call the closure with our new joinBuilder object
 		$key($joinBuilder);
@@ -887,10 +827,7 @@ class QueryBuilderHandler
 			$this->db->query('START TRANSACTION');
 
 			// Get the Transaction class
-			$transaction = $this->container->build(
-				'\\BetterLinks\\Query\\QueryBuilder\\Transaction',
-				[$this->connection]
-			);
+			$transaction = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\Transaction', [$this->connection]);
 
 			// Call closure
 			$callback($transaction);
@@ -960,10 +897,7 @@ class QueryBuilderHandler
 	 */
 	public function raw($value, $bindings = [])
 	{
-		return $this->container->build(
-			'\\BetterLinks\\Query\\QueryBuilder\\Raw',
-			[$value, $bindings]
-		);
+		return $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\Raw', [$value, $bindings]);
 	}
 
 	/**
@@ -1004,19 +938,10 @@ class QueryBuilderHandler
 	 *
 	 * @return $this
 	 */
-	protected function whereHandler(
-		$key,
-		$operator = null,
-		$value = null,
-		$joiner = 'AND'
-	) {
+	protected function whereHandler($key, $operator = null, $value = null, $joiner = 'AND')
+	{
 		$key = $this->addTablePrefix($key);
-		$this->statements['wheres'][] = compact(
-			'key',
-			'operator',
-			'value',
-			'joiner'
-		);
+		$this->statements['wheres'][] = compact('key', 'operator', 'value', 'joiner');
 
 		return $this;
 	}
@@ -1062,10 +987,7 @@ class QueryBuilderHandler
 				$target = &$key;
 			}
 
-			if (
-				!$tableFieldMix ||
-				($tableFieldMix && strpos($target, '.') !== false)
-			) {
+			if (!$tableFieldMix || ($tableFieldMix && strpos($target, '.') !== false)) {
 				$target = $this->tablePrefix . $target;
 			}
 
@@ -1089,10 +1011,7 @@ class QueryBuilderHandler
 		if (!array_key_exists($key, $this->statements)) {
 			$this->statements[$key] = $value;
 		} else {
-			$this->statements[$key] = array_merge(
-				$this->statements[$key],
-				$value
-			);
+			$this->statements[$key] = array_merge($this->statements[$key], $value);
 		}
 	}
 
@@ -1122,9 +1041,7 @@ class QueryBuilderHandler
 			$table = $this->addTablePrefix($table, false);
 		}
 
-		$this->connection
-			->getEventHandler()
-			->registerEvent($event, $table, $action);
+		$this->connection->getEventHandler()->registerEvent($event, $table, $action);
 	}
 
 	/**
@@ -1151,10 +1068,7 @@ class QueryBuilderHandler
 		$params = func_get_args();
 		array_unshift($params, $this);
 
-		return call_user_func_array(
-			[$this->connection->getEventHandler(), 'fireEvents'],
-			$params
-		);
+		return call_user_func_array([$this->connection->getEventHandler(), 'fireEvents'], $params);
 	}
 
 	/**

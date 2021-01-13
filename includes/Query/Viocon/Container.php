@@ -111,10 +111,7 @@ class Container
 
 		// If the key is registered as a singleton, we can save the instance as singleton
 		// for later use
-		if (
-			isset($this->registry[$key]['singleton']) &&
-			$this->registry[$key]['singleton'] === true
-		) {
+		if (isset($this->registry[$key]['singleton']) && $this->registry[$key]['singleton'] === true) {
 			$this->singletons[$key] = $instance;
 		}
 

@@ -16,6 +16,19 @@ class Helper
 		return $BLDATA;
 	}
 
+	public static function get_links(){
+		return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
+	}
+
+	public static function get_link_from_json_file($short_url)
+	{
+		global $betterlinks;
+		if (isset($betterlinks->$short_url)) {
+			return $betterlinks->$short_url;
+		}
+		return;
+	}
+
 	public static function get_menu_items()
 	{
 		$menu_items = [

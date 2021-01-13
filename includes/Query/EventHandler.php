@@ -35,9 +35,7 @@ class EventHandler
 		if ($table instanceof Raw) {
 			return null;
 		}
-		return isset($this->events[$table][$event])
-			? $this->events[$table][$event]
-			: null;
+		return isset($this->events[$table][$event]) ? $this->events[$table][$event] : null;
 	}
 
 	/**

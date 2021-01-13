@@ -2,15 +2,7 @@ import React from 'react';
 import ContentLoader from 'react-content-loader';
 
 const Loader = (props) => (
-	<ContentLoader
-		speed={2}
-		height="100%"
-		width="100%"
-		viewBox="0 0 533 250"
-		backgroundColor="#e8e8e8"
-		foregroundColor="#c2c2c2"
-		{...props}
-	>
+	<ContentLoader speed={2} height="100%" width="100%" viewBox="0 0 533 250" backgroundColor="#e8e8e8" foregroundColor="#c2c2c2" {...props}>
 		<rect x="1" y="2" rx="0" ry="0" width="3" height="116" />
 		<rect x="123" y="2" rx="0" ry="0" width="3" height="116" />
 		<rect x="1" y="1" rx="0" ry="0" width="125" height="9" />

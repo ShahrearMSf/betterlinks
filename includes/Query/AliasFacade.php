@@ -31,10 +31,7 @@ class AliasFacade
 		}
 
 		// Call the non-static method from the class instance
-		return call_user_func_array(
-			[static::$queryBuilderInstance, $method],
-			$args
-		);
+		return call_user_func_array([static::$queryBuilderInstance, $method], $args);
 	}
 
 	/**

@@ -47,12 +47,8 @@ class Connection
 	 * @param null|string    $alias
 	 * @param null|Container $container
 	 */
-	public function __construct(
-		$wpdb,
-		array $config = [],
-		$alias = null,
-		Container $container = null
-	) {
+	public function __construct($wpdb, array $config = [], $alias = null, Container $container = null)
+	{
 		$container = $container ?: new Container();
 
 		$this->container = $container;
@@ -64,9 +60,7 @@ class Connection
 			->connect();
 
 		// Create event dependency
-		$this->eventHandler = $this->container->build(
-			'\\BetterLinks\\Query\\EventHandler'
-		);
+		$this->eventHandler = $this->container->build('\\BetterLinks\\Query\\EventHandler');
 
 		if ($alias) {
 			$this->createAlias($alias);
@@ -82,10 +76,7 @@ class Connection
 	{
 		class_alias('BetterLinks\\Query\\AliasFacade', $alias);
 
-		$builder = $this->container->build(
-			'\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler',
-			[$this]
-		);
+		$builder = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler', [$this]);
 
 		AliasFacade::setQueryBuilderInstance($builder);
 	}
@@ -95,10 +86,7 @@ class Connection
 	 */
 	public function getQueryBuilder()
 	{
-		return $this->container->build(
-			'\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler',
-			[$this]
-		);
+		return $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler', [$this]);
 	}
 
 	/**

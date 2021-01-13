@@ -1,13 +1,4 @@
-import {
-	FETCH_INITIAL_DATA,
-	DRAG_AND_DROP,
-	ADD_NEW_CAT,
-	UPDATE_CAT,
-	DELETE_CAT,
-	ADD_NEW_LINK,
-	EDIT_LINK,
-	DELETE_LINK,
-} from '../actions/settings.actions';
+import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK } from '../actions/settings.actions';
 import { move, reorder } from './../../utils/helper';
 function settings(state = {}, action) {
 	const payload = action.payload;
@@ -30,11 +21,7 @@ function settings(state = {}, action) {
 			const sInd = +source.droppableId;
 			const dInd = +destination.droppableId;
 			if (sInd === dInd) {
-				const items = reorder(
-					state.settings[sInd].lists,
-					source.index,
-					destination.index
-				);
+				const items = reorder(state.settings[sInd].lists, source.index, destination.index);
 				const newState = state.settings;
 				newState[sInd].lists = items;
 
@@ -45,12 +32,7 @@ function settings(state = {}, action) {
 					},
 				};
 			} else {
-				const result = move(
-					state.settings[sInd].lists,
-					state.settings[dInd].lists,
-					source,
-					destination
-				);
+				const result = move(state.settings[sInd].lists, state.settings[dInd].lists, source, destination);
 				const newState = state.settings;
 				newState[sInd].lists = result[sInd];
 				newState[dInd].lists = result[dInd];
@@ -117,12 +99,7 @@ function settings(state = {}, action) {
 					...state.settings,
 					[payload.cat_id]: {
 						...state.settings[payload.cat_id],
-						lists: [
-							...state.settings[payload.cat_id].lists.filter(
-								(item, index) => item.ID != payload.ID
-							),
-							payload,
-						],
+						lists: [...state.settings[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
 					},
 				},
 			};
@@ -133,9 +110,7 @@ function settings(state = {}, action) {
 					...state.settings,
 					[payload.data.term_id]: {
 						...state.settings[payload.data.term_id],
-						lists: state.settings[payload.data.term_id].lists.filter(
-							(item, index) => item.ID != payload.data.ID
-						),
+						lists: state.settings[payload.data.term_id].lists.filter((item, index) => item.ID != payload.data.ID),
 					},
 				},
 			};

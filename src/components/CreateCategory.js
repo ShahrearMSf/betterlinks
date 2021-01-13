@@ -23,15 +23,10 @@ const CreateCategory = ({ createCatHandler }) => {
 	};
 	return (
 		<div className="dnd-create-category">
-			<button
-				className="dnd-create-category-button"
-				onClick={() => setIsOpenForm(!isOpenForm)}
-			>
+			<button className="dnd-create-category-button" onClick={() => setIsOpenForm(!isOpenForm)}>
 				<i className="btl btl-add"></i>
 			</button>
-			<p className="dnd-create-category-text">
-				{__('Add New Category', 'betterlinks')}
-			</p>
+			<p className="dnd-create-category-text">{__('Add New Category', 'betterlinks')}</p>
 			{isOpenForm && (
 				<Formik
 					initialValues={{
@@ -46,14 +41,7 @@ const CreateCategory = ({ createCatHandler }) => {
 				>
 					<Form className="w-100">
 						<span className="btl-form-group">
-							<Field
-								id="term_name"
-								name="term_name"
-								placeholder={__('* Name', 'betterlinks')}
-								className="btl-form-control"
-								onBlur={() => setNameToSlug(true)}
-								required
-							/>
+							<Field id="term_name" name="term_name" placeholder={__('* Name', 'betterlinks')} className="btl-form-control" onBlur={() => setNameToSlug(true)} required />
 						</span>
 						<span className="btl-form-group">
 							<Field

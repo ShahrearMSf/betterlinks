@@ -16,12 +16,7 @@ const columns = [
 		sortable: false,
 		cell: (row) => (
 			<div>
-				<img
-					src={`${plugin_root_url}assets/images/browser/${getBrowser(
-						row.browser
-					)}.png`}
-					alt=""
-				/>
+				<img src={`${plugin_root_url}assets/images/browser/${getBrowser(row.browser)}.png`} alt="" />
 			</div>
 		),
 	},
@@ -84,29 +79,19 @@ const Clicks = (props) => {
 		return results;
 	};
 	const buildData = (data) => {
-		return data.reduce(
-			(acc, curVal) => acc.concat(parseInt(curVal.IPCOUNT)),
-			[]
-		);
+		return data.reduce((acc, curVal) => acc.concat(parseInt(curVal.IPCOUNT)), []);
 	};
 
 	return (
 		<React.Fragment>
 			<Topbar />
-			<h3 className="btl-analytics-heading">
-				{__('Analytics', 'betterlinks')}
-			</h3>
+			<h3 className="btl-analytics-heading">{__('Analytics', 'betterlinks')}</h3>
 			<div className="btl-analytic">
 				{clicks ? (
 					<React.Fragment>
 						<Analytics data={analyticsData(clicks)} />
 						<div className="btl-analytic-table-wrapper">
-							<DataTable
-								className="btl-analytic-table"
-								title={__('All Clicks', 'betterlinks')}
-								columns={columns}
-								data={clicks}
-							/>
+							<DataTable className="btl-analytic-table" title={__('All Clicks', 'betterlinks')} columns={columns} data={clicks} />
 						</div>
 					</React.Fragment>
 				) : (

@@ -136,30 +136,18 @@ class Links extends Controller
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			$term_data = [];
-			$lookFor = array_combine(
-				array_keys($this->links_schema()),
-				array_keys($this->links_schema())
-			);
+			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
-			$this->insert_json_into_file(
-				trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json',
-				$params
-			);
+			$this->insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
 			$id = $qb->table('betterlinks')->insert($params);
 			// store tags relation data
-			if (
-				isset($request['params']['cat_id']) &&
-				!empty($request['params']['cat_id'])
-			) {
+			if (isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])) {
 				$term_data[] = [
 					'term_id' => $request['params']['cat_id'],
 					'link_id' => $id,
 				];
 			}
-			if (
-				isset($request['params']['tags_id']) &&
-				is_array($request['params']['tags_id'])
-			) {
+			if (isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])) {
 				$newTagsList = [];
 				foreach ($request['params']['tags_id'] as $key => $value) {
 					if (is_numeric($value)) {
@@ -177,9 +165,7 @@ class Links extends Controller
 				}
 				// insert new tags
 				if (count($newTagsList) > 0) {
-					$tagsList = $qb
-						->table('betterlinks_terms')
-						->insert($newTagsList);
+					$tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
 					foreach ($tagsList as $tagsItem) {
 						$term_data[] = [
 							'term_id' => $tagsItem,
@@ -215,43 +201,27 @@ class Links extends Controller
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			$term_data = [];
-			$lookFor = array_combine(
-				array_keys($this->links_schema()),
-				array_keys($this->links_schema())
-			);
+			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
-			$this->update_json_into_file(
-				trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json',
-				$params
-			);
+			$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
 			$id = $qb
 				->table('betterlinks')
 				->where('ID', $params['ID'])
 				->update($params);
 			// store tags relation data
-			if (
-				isset($request['params']['cat_id']) &&
-				!empty($request['params']['cat_id'])
-			) {
+			if (isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])) {
 				$term_data[] = [
-					'term_id' => isset($request['params']['cat_id'])
-						? $request['params']['cat_id']
-						: 1,
+					'term_id' => isset($request['params']['cat_id']) ? $request['params']['cat_id'] : 1,
 					'link_id' => isset($params['ID']) ? $params['ID'] : $id,
 				];
 			}
-			if (
-				isset($request['params']['tags_id']) &&
-				is_array($request['params']['tags_id'])
-			) {
+			if (isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])) {
 				$newTagsList = [];
 				foreach ($request['params']['tags_id'] as $key => $value) {
 					if (is_numeric($value)) {
 						$term_data[] = [
 							'term_id' => $value,
-							'link_id' => isset($params['ID'])
-								? $params['ID']
-								: $id,
+							'link_id' => isset($params['ID']) ? $params['ID'] : $id,
 						];
 					} else {
 						$newTagsList[] = [
@@ -263,15 +233,11 @@ class Links extends Controller
 				}
 				// insert new tags
 				if (count($newTagsList) > 0) {
-					$tagsList = $qb
-						->table('betterlinks_terms')
-						->insert($newTagsList);
+					$tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
 					foreach ($tagsList as $tagsItem) {
 						$term_data[] = [
 							'term_id' => $tagsItem,
-							'link_id' => isset($params['ID'])
-								? $params['ID']
-								: $id,
+							'link_id' => isset($params['ID']) ? $params['ID'] : $id,
 						];
 					}
 				}
@@ -302,10 +268,7 @@ class Links extends Controller
 			->table('betterlinks')
 			->where('id', '=', $request['ID'])
 			->delete();
-		$this->delete_json_into_file(
-			trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json',
-			$request['short_url']
-		);
+		$this->delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $request['short_url']);
 		return new \WP_REST_Response(
 			[
 				'success' => true,

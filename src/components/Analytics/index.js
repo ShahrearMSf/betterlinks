@@ -60,11 +60,7 @@ const Analytics = (props) => {
 	return (
 		<React.Fragment>
 			<div className="btl-analytics-chart">
-				<LineChart
-					data={data.datasets[0].data}
-					title={data.labels}
-					color="#3E517A"
-				/>
+				<LineChart data={data.datasets[0].data} title={data.labels} color="#3E517A" />
 			</div>
 		</React.Fragment>
 	);

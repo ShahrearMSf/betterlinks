@@ -5,9 +5,7 @@ class Utils
 {
 	public function get_slug_raw($slug)
 	{
-		$query = \BetterLinks\Helper::DB();
-		$query = $query->table('betterlinks')->where('short_url', '=', $slug);
-		return $query->first();
+		return \BetterLinks\Helper::get_link_from_json_file($slug);
 	}
 	public function dispatch_redirect($data, $param)
 	{
@@ -64,12 +62,7 @@ class Utils
 		if (!isset($_COOKIE[$visitor_cookie])) {
 			$visitor_cookie_expire_time = time() + 60 * 60 * 24 * 365; // 1 year
 			$visitor_uid = uniqid('bl');
-			setcookie(
-				$visitor_cookie,
-				$visitor_uid,
-				$visitor_cookie_expire_time,
-				'/'
-			);
+			setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
 		}
 		try {
 			$data = [
@@ -77,15 +70,11 @@ class Utils
 				'ip' => $IP,
 				'browser' => $_SERVER['HTTP_USER_AGENT'],
 				'os' => '',
-				'referer' => isset($_SERVER['HTTP_REFERER'])
-					? $_SERVER['HTTP_REFERER']
-					: '',
+				'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
 				'host' => $IP,
 				'uri' => $data->link_slug,
 				'click_count' => 0,
-				'visitor_id' => isset($_COOKIE[$visitor_cookie])
-					? sanitize_text_field($_COOKIE[$visitor_cookie])
-					: '',
+				'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
 				'click_order' => 0,
 				'created_at' => $now,
 				'created_at_gmt' => $now_gmt,
@@ -97,33 +86,16 @@ class Utils
 	}
 	public function get_current_client_IP()
 	{
-		$address = isset($_SERVER['REMOTE_ADDR'])
-			? sanitize_text_field($_SERVER['REMOTE_ADDR'])
-			: '';
-		if (
-			isset($_SERVER['HTTP_CLIENT_IP']) &&
-			$_SERVER['HTTP_CLIENT_IP'] != '127.0.0.1'
-		) {
+		$address = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field($_SERVER['REMOTE_ADDR']) : '';
+		if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP'] != '127.0.0.1') {
 			$address = sanitize_text_field($_SERVER['HTTP_CLIENT_IP']);
-		} elseif (
-			isset($_SERVER['HTTP_X_FORWARDED']) &&
-			$_SERVER['HTTP_X_FORWARDED'] != '127.0.0.1'
-		) {
+		} elseif (isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED'] != '127.0.0.1') {
 			$address = sanitize_text_field($_SERVER['HTTP_X_FORWARDED']);
-		} elseif (
-			isset($_SERVER['HTTP_X_FORWARDED_FOR']) &&
-			$_SERVER['HTTP_X_FORWARDED_FOR'] != '127.0.0.1'
-		) {
+		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '127.0.0.1') {
 			$address = sanitize_text_field($_SERVER['HTTP_X_FORWARDED_FOR']);
-		} elseif (
-			isset($_SERVER['HTTP_FORWARDED']) &&
-			$_SERVER['HTTP_FORWARDED'] != '127.0.0.1'
-		) {
+		} elseif (isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED'] != '127.0.0.1') {
 			$address = sanitize_text_field($_SERVER['HTTP_FORWARDED']);
-		} elseif (
-			isset($_SERVER['HTTP_FORWARDED_FOR']) &&
-			$_SERVER['HTTP_FORWARDED_FOR'] != '127.0.0.1'
-		) {
+		} elseif (isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR'] != '127.0.0.1') {
 			$address = sanitize_text_field($_SERVER['HTTP_FORWARDED_FOR']);
 		}
 		$IPS = explode(',', $address);

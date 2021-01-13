@@ -167,14 +167,8 @@ class Installer
 		];
 
 		foreach ($files as $file) {
-			if (
-				wp_mkdir_p($file['base']) &&
-				!file_exists(trailingslashit($file['base']) . $file['file'])
-			) {
-				$file_handle = @fopen(
-					trailingslashit($file['base']) . $file['file'],
-					'wb'
-				);
+			if (wp_mkdir_p($file['base']) && !file_exists(trailingslashit($file['base']) . $file['file'])) {
+				$file_handle = @fopen(trailingslashit($file['base']) . $file['file'], 'wb');
 				if ($file_handle) {
 					fwrite($file_handle, $file['content']);
 					fclose($file_handle);

@@ -1,15 +1,7 @@
 import React from 'react';
 import ContentLoader from 'react-content-loader';
 const TableLoader = (props) => (
-	<ContentLoader
-		speed={2}
-		width={'100%'}
-		height={'100%'}
-		viewBox="0 0 532 148"
-		backgroundColor="#e8e8e8"
-		foregroundColor="#c2c2c2"
-		{...props}
-	>
+	<ContentLoader speed={2} width={'100%'} height={'100%'} viewBox="0 0 532 148" backgroundColor="#e8e8e8" foregroundColor="#c2c2c2" {...props}>
 		<rect x="2" y="2" rx="0" ry="0" width="530" height="11" />
 		<rect x="3" y="21" rx="0" ry="0" width="527" height="10" />
 		<rect x="2" y="46" rx="0" ry="0" width="530" height="3" />

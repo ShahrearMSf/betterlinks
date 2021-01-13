@@ -7,10 +7,7 @@ class Admin
 	{
 		$this->add_menu();
 		$this->add_scripts();
-		add_filter('BetterLinks/Admin/skip_no_conflict', [
-			$this,
-			'skip_no_conflict',
-		]);
+		add_filter('BetterLinks/Admin/skip_no_conflict', [$this, 'skip_no_conflict']);
 	}
 	public function add_menu()
 	{

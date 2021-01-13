@@ -30,14 +30,7 @@ class Menu
 			30
 		);
 		foreach (Helper::get_menu_items() as $key => $item) {
-			add_submenu_page(
-				BETTERLINKS_PLUGIN_SLUG,
-				$item['title'],
-				$item['title'],
-				$item['capability'],
-				$key,
-				[$this, 'load_main_template']
-			);
+			add_submenu_page(BETTERLINKS_PLUGIN_SLUG, $item['title'], $item['title'], $item['capability'], $key, [$this, 'load_main_template']);
 		}
 	}
 	public function load_main_template()

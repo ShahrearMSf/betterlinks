@@ -5,13 +5,7 @@ import Link from './../Link';
 import { site_url, copyToClipboard } from './../../utils/helper';
 
 const LinkQuickAction = (props) => {
-	const {
-		item,
-		cat_id,
-		cat_name,
-		submitLinkHandler,
-		deleteLinkHandler,
-	} = props;
+	const { item, cat_id, cat_name, submitLinkHandler, deleteLinkHandler } = props;
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
@@ -39,32 +33,15 @@ const LinkQuickAction = (props) => {
             </button> */}
 			{!isDeleteConfirm ? (
 				<>
-					<button
-						className="dnd-link-button"
-						onClick={() => copyShortUrl(site_url + '/' + item.short_url)}
-					>
+					<button className="dnd-link-button" onClick={() => copyShortUrl(site_url + '/' + item.short_url)}>
 						<span data-tip="Copy Link" className="icon">
-							{isCopyUrl ? (
-								<span className="dashicons dashicons-yes"></span>
-							) : (
-								<i className="btl btl-link"></i>
-							)}
+							{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}
 						</span>
 					</button>
 					<div data-tip="Edit Link">
-						<Link
-							cat_id={cat_id}
-							cat_name={cat_name}
-							item={item}
-							submitHandler={submitLinkHandler}
-						/>
+						<Link cat_id={cat_id} cat_name={cat_name} item={item} submitHandler={submitLinkHandler} />
 					</div>
-					<button
-						data-tip="Delete"
-						type="button"
-						className="dnd-link-button delete-button"
-						onClick={() => deleteHandler()}
-					>
+					<button data-tip="Delete" type="button" className="dnd-link-button delete-button" onClick={() => deleteHandler()}>
 						<span className="icon">
 							<i className="btl btl-delete"></i>
 						</span>
@@ -72,9 +49,7 @@ const LinkQuickAction = (props) => {
 				</>
 			) : (
 				<div className="btl-confirm-message">
-					<span className="action-text">
-						{__('Are Your Sure?', 'betterlinks')}
-					</span>
+					<span className="action-text">{__('Are Your Sure?', 'betterlinks')}</span>
 					<div className="action-set">
 						<button
 							className="action yes"

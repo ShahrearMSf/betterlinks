@@ -7,25 +7,12 @@ import { useFormikContext, Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import {
-	modalCustomStyles,
-	site_url,
-	generateSlug,
-	generateRandomSlug,
-	copyToClipboard,
-} from './../../utils/helper';
+import { modalCustomStyles, site_url, generateSlug, generateRandomSlug, copyToClipboard } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 
-const Link = ({
-	cat_id,
-	cat_name,
-	item,
-	submitHandler,
-	terms,
-	fetch_terms_data,
-}) => {
+const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }) => {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
@@ -72,17 +59,8 @@ const Link = ({
 	return (
 		<>
 			{item ? (
-				<button
-					onClick={openModal}
-					className={`dnd-link-button ${isEditMode ? 'btl-rotating' : ''}`}
-				>
-					<span className="icon">
-						{!isEditMode ? (
-							<i className="btl btl-edit"></i>
-						) : (
-							<i className="btl btl-reload"></i>
-						)}
-					</span>
+				<button onClick={openModal} className={`dnd-link-button ${isEditMode ? 'btl-rotating' : ''}`}>
+					<span className="icon">{!isEditMode ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
 				</button>
 			) : (
 				<button onClick={openModal} className="btl-create-link-button">
@@ -90,12 +68,7 @@ const Link = ({
 				</button>
 			)}
 
-			<Modal
-				isOpen={modalIsOpen}
-				onRequestClose={closeModal}
-				style={modalCustomStyles}
-				ariaHideApp={false}
-			>
+			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
@@ -124,76 +97,34 @@ const Link = ({
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
-								<div
-									className="btl-entry-content-left"
-									style={{ marginBottom: '20px' }}
-								>
+								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
-										<label
-											className="btl-modal-form-label btl-required"
-											htmlFor="link_title"
-										>
+										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Title', 'betterlinks')}
 										</label>
-										<Field
-											className="btl-modal-form-control"
-											id="link_title"
-											name="link_title"
-											onBlur={() => setNameToSlug(true)}
-											required
-										/>
+										<Field className="btl-modal-form-control" id="link_title" name="link_title" onBlur={() => setNameToSlug(true)} required />
 									</div>
 									<div className="btl-modal-form-group">
-										<Field
-											type="hidden"
-											className="btl-modal-form-control"
-											id="link_slug"
-											name="link_slug"
-											onBlur={() => setSlugToSlug(true)}
-											required
-										/>
+										<Field type="hidden" className="btl-modal-form-control" id="link_slug" name="link_slug" onBlur={() => setSlugToSlug(true)} required />
 										<AutoSlugGenerate />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">
 											{__('Description', 'betterlinks')}
 										</label>
-										<Field
-											className="btl-modal-form-control"
-											component="textarea"
-											id="link_note"
-											name="link_note"
-										/>
+										<Field className="btl-modal-form-control" component="textarea" id="link_note" name="link_note" />
 									</div>
 									<div className="btl-modal-form-group">
-										<label
-											className="btl-modal-form-label btl-required"
-											htmlFor="redirect_type"
-										>
+										<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
 											{__('Redirect Type', 'betterlinks')}
 										</label>
-										<Select
-											id="redirect_type"
-											name="redirect_type"
-											value={redirectType}
-											setFieldValue={props.setFieldValue}
-											isMulti={false}
-										/>
+										<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} isMulti={false} />
 									</div>
 									<div className="btl-modal-form-group">
-										<label
-											className="btl-modal-form-label btl-required"
-											htmlFor="target_url"
-										>
+										<label className="btl-modal-form-label btl-required" htmlFor="target_url">
 											{__('Target URL', 'betterlinks')}
 										</label>
-										<Field
-											className="btl-modal-form-control"
-											id="target_url"
-											name="target_url"
-											placeholder=""
-											required
-										/>
+										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="short_url">
@@ -201,24 +132,9 @@ const Link = ({
 										</label>
 										<div className="btl-link-field-copyable">
 											<span className="btl-static-link">{site_url}</span>
-											<Field
-												className="btl-dynamic-link"
-												id="short_url"
-												name="short_url"
-												required
-											/>
-											<button
-												type="button"
-												onClick={() =>
-													copyShortUrl(site_url + '/' + props.values.short_url)
-												}
-												className="btl-link-copy-button"
-											>
-												{isCopyUrl ? (
-													<span className="dashicons dashicons-yes"></span>
-												) : (
-													<i className="btl btl-copy"></i>
-												)}
+											<Field className="btl-dynamic-link" id="short_url" name="short_url" required />
+											<button type="button" onClick={() => copyShortUrl(site_url + '/' + props.values.short_url)} className="btl-link-copy-button">
+												{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-copy"></i>}
 											</button>
 										</div>
 									</div>
@@ -226,76 +142,35 @@ const Link = ({
 										<label className="btl-modal-form-label" htmlFor="cat_id">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Category
-											name="cat_id"
-											cat_id={cat_name}
-											cat_name={cat_name}
-											setFieldValue={props.setFieldValue}
-										/>
+										<Category name="cat_id" cat_id={cat_name} cat_name={cat_name} setFieldValue={props.setFieldValue} />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="tags_id">
 											{__('Tags', 'betterlinks')}
 										</label>
-										<Tags
-											name="tags_id"
-											terms={terms}
-											isEditMode={isEditMode}
-											setFieldValue={props.setFieldValue}
-										/>
+										<Tags name="tags_id" terms={terms} isEditMode={isEditMode} setFieldValue={props.setFieldValue} />
 									</div>
 								</div>
 								<div className="btl-entry-content-right">
 									<div className="link-options">
 										<div className="link-options__head">
-											<h4 className="link-options__head--title">
-												{__('Link Options', 'betterlinks')}
-											</h4>
+											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>
 										</div>
 										<div className="link-options__body">
 											<ReactTooltip className="light-tooltip" />
 											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="nofollow"
-													type="checkbox"
-													onChange={() =>
-														props.setFieldValue(
-															'nofollow',
-															!props.values.nofollow
-														)
-													}
-												/>
+												<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
 												<span className="text">
 													{__('No Follow', 'betterlinks')}
-													<span
-														data-tip={__(
-															'This will add nofollow attribute to your link. (Recommended)',
-															'betterlinks'
-														)}
-														className="dashicons dashicons-info-outline"
-													></span>
+													<span data-tip={__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="sponsored"
-													type="checkbox"
-													onChange={() =>
-														props.setFieldValue(
-															'sponsored',
-															!props.values.sponsored
-														)
-													}
-												/>
+												<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
 												<span className="text">
 													{__('Sponsored', 'betterlinks')}
 													<span
-														data-tip={__(
-															'This will add sponsored attribute to your link. (Recommended for Affiliate links)',
-															'betterlinks'
-														)}
+														data-tip={__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}
 														className="dashicons dashicons-info-outline"
 													></span>
 												</span>
@@ -305,45 +180,18 @@ const Link = ({
 													className="btl-check"
 													name="param_forwarding"
 													type="checkbox"
-													onChange={() =>
-														props.setFieldValue(
-															'param_forwarding',
-															!props.values.param_forwarding
-														)
-													}
+													onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
 												/>
 												<span className="text">
 													{__('Parameter Forwarding', 'betterlinks')}
-													<span
-														data-tip={__(
-															'This will pass the parameters you have set in the target URL',
-															'betterlinks'
-														)}
-														className="dashicons dashicons-info-outline"
-													></span>
+													<span data-tip={__('This will pass the parameters you have set in the target URL', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="track_me"
-													type="checkbox"
-													onChange={() =>
-														props.setFieldValue(
-															'track_me',
-															!props.values.track_me
-														)
-													}
-												/>
+												<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
 												<span className="text">
 													{__('Tracking', 'betterlinks')}
-													<span
-														data-tip={__(
-															'This will let you check Analytics report of your links',
-															'betterlinks'
-														)}
-														className="dashicons dashicons-info-outline"
-													></span>
+													<span data-tip={__('This will let you check Analytics report of your links', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
 												</span>
 											</label>
 										</div>
@@ -353,9 +201,7 @@ const Link = ({
 							<div className="btl-modal-form-group">
 								<label className="btl-modal-form-label"></label>
 								<button type="submit" className="btl-modal-submit-button">
-									{item
-										? __('Update', 'betterlinks')
-										: __('Publish', 'betterlinks')}
+									{item ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 								</button>
 							</div>
 						</Form>

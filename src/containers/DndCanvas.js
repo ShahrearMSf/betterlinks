@@ -2,14 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loader from './../components/Loader';
-import {
-	fetch_settings_data,
-	onDragEnd,
-	add_new_cat,
-	add_new_link,
-	edit_link,
-	delete_link,
-} from './../redux/actions/settings.actions';
+import { fetch_settings_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from './../redux/actions/settings.actions';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CreateCategory from './../components/CreateCategory';
 import Link from './../components/Link';
@@ -63,52 +56,29 @@ function DndCanvas(props) {
 								<Droppable key={ind} droppableId={ind}>
 									{(provided, snapshot) => (
 										<div className="dnd-category">
-											<CatHeader
-												cat_id={ind}
-												cat_name={el.term_name}
-												cat_slug={el.term_slug}
-											/>
-											<div
-												ref={provided.innerRef}
-												className="dnd-category-body-wrap"
-												style={getListStyle(snapshot.isDraggingOver)}
-												{...provided.droppableProps}
-											>
+											<CatHeader cat_id={ind} cat_name={el.term_name} cat_slug={el.term_slug} />
+											<div ref={provided.innerRef} className="dnd-category-body-wrap" style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
 												<div className="category-body">
 													{el.lists &&
 														el.lists.map((item, index) => (
 															<React.Fragment key={`cat-${ind}-item-${index}`}>
 																{item.ID && (
-																	<Draggable
-																		key={`cat-${ind}-item_${item.ID}`}
-																		draggableId={`cat-${ind}-item_${item.ID}`}
-																		index={index}
-																	>
+																	<Draggable key={`cat-${ind}-item_${item.ID}`} draggableId={`cat-${ind}-item_${item.ID}`} index={index}>
 																		{(provided, snapshot) => (
 																			<div
-																				className={`btl-dnd-link ${
-																					snapshot.isDragging
-																						? 'btl-dnd-link-dragging'
-																						: ''
-																				}`}
+																				className={`btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`}
 																				ref={provided.innerRef}
 																				{...provided.draggableProps}
 																				{...provided.dragHandleProps}
 																			>
 																				<div className="btl-dnd-link-body">
-																					<h3 className="dnd-link-title">
-																						{item.link_title}
-																					</h3>
+																					<h3 className="dnd-link-title">{item.link_title}</h3>
 																					<div className="btl-dnd-link-button-group">
 																						<LinkQuickAction
 																							cat_id={ind}
 																							cat_name={el.term_name}
-																							submitLinkHandler={
-																								props.edit_link
-																							}
-																							deleteLinkHandler={
-																								props.delete_link
-																							}
+																							submitLinkHandler={props.edit_link}
+																							deleteLinkHandler={props.delete_link}
 																							item={item}
 																						/>
 																					</div>
@@ -122,11 +92,7 @@ function DndCanvas(props) {
 													{provided.placeholder}
 												</div>
 												<div className="category-footer">
-													<Link
-														cat_id={ind}
-														cat_name={el.term_name}
-														submitHandler={props.add_new_link}
-													/>
+													<Link cat_id={ind} cat_name={el.term_name} submitHandler={props.add_new_link} />
 												</div>
 											</div>
 										</div>

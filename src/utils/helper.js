@@ -1,14 +1,6 @@
 import axios from 'axios';
 
-export const {
-	nonce,
-	rest_url,
-	namespace,
-	plugin_root_url,
-	plugin_root_path,
-	site_url,
-	page,
-} = window.betterLinksGlobal;
+export const { nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, page } = window.betterLinksGlobal;
 
 export const API = axios.create({
 	baseURL: rest_url,
@@ -23,12 +15,7 @@ export const reorder = (list, startIndex, endIndex) => {
 	result.splice(endIndex, 0, removed);
 	return result;
 };
-export const move = (
-	source,
-	destination,
-	droppableSource,
-	droppableDestination
-) => {
+export const move = (source, destination, droppableSource, droppableDestination) => {
 	const sourceClone = Array.from(source);
 	const destClone = Array.from(destination);
 	const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -51,9 +38,7 @@ export const generateSlug = (value) => {
 };
 
 export const generateRandomSlug = (length = 3) => {
-	return (
-		Math.random().toString(20).substr(2, length) + new Date().getMilliseconds()
-	);
+	return Math.random().toString(20).substr(2, length) + new Date().getMilliseconds();
 };
 
 export const modalCustomStyles = {

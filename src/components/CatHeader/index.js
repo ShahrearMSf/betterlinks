@@ -73,10 +73,7 @@ const CatHeader = (props) => {
 										</button>
 									</li>
 									<li>
-										<button
-											className="link delete"
-											onClick={() => deleteHandler()}
-										>
+										<button className="link delete" onClick={() => deleteHandler()}>
 											{__('Delete', 'betterlinks')}
 										</button>
 									</li>
@@ -84,9 +81,7 @@ const CatHeader = (props) => {
 							)}
 							{isDeleteConfirm && (
 								<div className="btl-confirm-message">
-									<p className="action-text">
-										{__('Are Your Sure?', 'betterlinks')}
-									</p>
+									<p className="action-text">{__('Are Your Sure?', 'betterlinks')}</p>
 									<div className="action-set">
 										<button className="action yes" onClick={confirmDelete}>
 											{__('Yes', 'betterlinks')}
@@ -102,12 +97,7 @@ const CatHeader = (props) => {
 				)}
 			</div>
 
-			<Modal
-				isOpen={modalIsOpen}
-				onRequestClose={closeModal}
-				style={modalCustomSmallStyles}
-				ariaHideApp={false}
-			>
+			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomSmallStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
@@ -126,29 +116,13 @@ const CatHeader = (props) => {
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-modal-form-group">
-								<label
-									className="btl-modal-form-label btl-required"
-									htmlFor="cat_name"
-								>
+								<label className="btl-modal-form-label btl-required" htmlFor="cat_name">
 									{__('Category Name', 'betterlinks')}
 								</label>
-								<Field
-									className="btl-modal-form-control"
-									id="cat_name"
-									name="cat_name"
-									onBlur={() => setNameToSlug(true)}
-									required
-								/>
+								<Field className="btl-modal-form-control" id="cat_name" name="cat_name" onBlur={() => setNameToSlug(true)} required />
 							</div>
 							<div className="btl-modal-form-group">
-								<Field
-									type="hidden"
-									className="btl-modal-form-control"
-									id="cat_slug"
-									name="cat_slug"
-									onBlur={() => setSlugToSlug(true)}
-									required
-								/>
+								<Field type="hidden" className="btl-modal-form-control" id="cat_slug" name="cat_slug" onBlur={() => setSlugToSlug(true)} required />
 								<AutoSlugGenerate />
 							</div>
 							<div className="btl-modal-form-group">

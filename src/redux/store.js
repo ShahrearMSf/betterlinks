@@ -10,8 +10,4 @@ if (process.env.NODE_ENV !== 'production') {
 	middleware = [...middleware, logger];
 }
 
-export default createStore(
-	rootReducer,
-	{},
-	composeWithDevTools(applyMiddleware(...middleware))
-);
+export default createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(...middleware)));

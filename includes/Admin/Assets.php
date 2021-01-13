@@ -20,10 +20,7 @@ class Assets
 			add_action(
 				'wp_print_scripts',
 				function () {
-					$isSkip = apply_filters(
-						'BetterLinks/Admin/skip_no_conflict',
-						false
-					);
+					$isSkip = apply_filters('BetterLinks/Admin/skip_no_conflict', false);
 
 					if ($isSkip) {
 						return;
@@ -37,35 +34,16 @@ class Assets
 					$pluginUrl = plugins_url();
 					foreach ($wp_scripts->queue as $script) {
 						$src = $wp_scripts->registered[$script]->src;
-						if (
-							strpos($src, $pluginUrl) !== false &&
-							!strpos($src, BETTERLINKS_PLUGIN_SLUG) !== false
-						) {
-							wp_dequeue_script(
-								$wp_scripts->registered[$script]->handle
-							);
+						if (strpos($src, $pluginUrl) !== false && !strpos($src, BETTERLINKS_PLUGIN_SLUG) !== false) {
+							wp_dequeue_script($wp_scripts->registered[$script]->handle);
 						}
 					}
 				},
 				1
 			);
 
-			wp_enqueue_style(
-				'betterlinks-chartjs',
-				BETTERLINKS_ASSETS_URI . 'css/lib/Chart.min.css',
-				[],
-				filemtime(
-					BETTERLINKS_ASSETS_DIR_PATH . 'css/lib/Chart.min.css'
-				),
-				'all'
-			);
-			wp_enqueue_style(
-				'betterlinks-admin-style',
-				BETTERLINKS_ASSETS_URI . 'css/betterlinks.css',
-				[],
-				filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks.css'),
-				'all'
-			);
+			wp_enqueue_style('betterlinks-chartjs', BETTERLINKS_ASSETS_URI . 'css/lib/Chart.min.css', [], filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/lib/Chart.min.css'), 'all');
+			wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks.css'), 'all');
 			// js
 			wp_enqueue_script(
 				'betterlinks-moment',
@@ -85,26 +63,18 @@ class Assets
 				'betterlinks-admin-scripts',
 				BETTERLINKS_ASSETS_URI . 'js/betterlinks-core.min.js',
 				['jquery'],
-				filemtime(
-					BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-core.min.js'
-				),
+				filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-core.min.js'),
 				true
 			);
-			wp_localize_script(
-				'betterlinks-admin-scripts',
-				'betterLinksGlobal',
-				[
-					'nonce' => wp_create_nonce('wp_rest'),
-					'rest_url' => rest_url(),
-					'namespace' => BETTERLINKS_PLUGIN_SLUG . '/v1/',
-					'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
-					'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
-					'site_url' => site_url(),
-					'page' => isset($_GET['page'])
-						? sanitize_text_field($_GET['page'])
-						: '',
-				]
-			);
+			wp_localize_script('betterlinks-admin-scripts', 'betterLinksGlobal', [
+				'nonce' => wp_create_nonce('wp_rest'),
+				'rest_url' => rest_url(),
+				'namespace' => BETTERLINKS_PLUGIN_SLUG . '/v1/',
+				'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
+				'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
+				'site_url' => site_url(),
+				'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '',
+			]);
 		}
 	}
 }

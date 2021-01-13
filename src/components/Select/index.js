@@ -10,10 +10,7 @@ const Select = (props) => {
 		if (option == null) {
 			return props.setFieldValue(field.name, '');
 		}
-		return props.setFieldValue(
-			field.name,
-			props.isMulti ? option.map((item) => item.value) : option.value
-		);
+		return props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value);
 	};
 
 	return (
@@ -23,10 +20,7 @@ const Select = (props) => {
 				classNamePrefix="btl-react-select"
 				id={field.id}
 				name={field.name}
-				defaultValue={
-					props.value &&
-					props.value.filter((item) => item.value == defaultValue)
-				}
+				defaultValue={props.value && props.value.filter((item) => item.value == defaultValue)}
 				onChange={onChange}
 				options={props.value && props.value.map((item) => item)}
 				isMulti={props.isMulti}

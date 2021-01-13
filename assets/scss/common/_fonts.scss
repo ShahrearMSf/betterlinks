@@ -1,9 +1,7 @@
 @font-face {
 	font-family: 'better-links';
 	src: url('./../fonts/better-links.eot');
-	src: url('./../fonts/better-links.eot') format('embedded-opentype'),
-		url('./../fonts/better-links.ttf') format('truetype'),
-		url('./../fonts/better-links.woff') format('woff'),
+	src: url('./../fonts/better-links.eot') format('embedded-opentype'), url('./../fonts/better-links.ttf') format('truetype'), url('./../fonts/better-links.woff') format('woff'),
 		url('./../fonts/better-links.svg') format('svg');
 	font-weight: normal;
 	font-style: normal;

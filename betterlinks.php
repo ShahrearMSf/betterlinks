@@ -29,6 +29,7 @@ if (!class_exists('BetterLinks')) {
 		{
 			$this->upload_dir_path();
 			$this->define_constants();
+			$this->set_global_settings();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'init_plugin']);
@@ -58,18 +59,9 @@ if (!class_exists('BetterLinks')) {
 			define('BETTERLINKS_PLUGIN_SLUG', 'betterlinks');
 			define('BETTERLINKS_PLUGIN_ROOT_URI', plugins_url('/', __FILE__));
 			define('BETTERLINKS_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
-			define(
-				'BETTERLINKS_ASSETS_DIR_PATH',
-				BETTERLINKS_ROOT_DIR_PATH . 'assets/'
-			);
-			define(
-				'BETTERLINKS_ASSETS_URI',
-				BETTERLINKS_PLUGIN_ROOT_URI . 'assets/'
-			);
-			define(
-				'BETTERLINKS_UPLOAD_DIR_PATH',
-				$this->upload_dir['basedir'] . '/betterlinks_uploads'
-			);
+			define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
+			define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
+			define('BETTERLINKS_UPLOAD_DIR_PATH', $this->upload_dir['basedir'] . '/betterlinks_uploads');
 		}
 
 		public function upload_dir_path()
@@ -99,11 +91,12 @@ if (!class_exists('BetterLinks')) {
 
 		public function load_textdomain()
 		{
-			load_plugin_textdomain(
-				'betterlinks',
-				false,
-				dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
-			);
+			load_plugin_textdomain('betterlinks', false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/');
+		}
+
+		public function set_global_settings()
+		{
+			$GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
 		}
 
 		public function activate()

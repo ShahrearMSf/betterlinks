@@ -22,10 +22,8 @@ class ComposerStaticInit3193da833163e5a644878c0ec3cba184
 	{
 		return \Closure::bind(
 			function () use ($loader) {
-				$loader->prefixLengthsPsr4 =
-					ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixLengthsPsr4;
-				$loader->prefixDirsPsr4 =
-					ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixDirsPsr4;
+				$loader->prefixLengthsPsr4 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixLengthsPsr4;
+				$loader->prefixDirsPsr4 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixDirsPsr4;
 			},
 			null,
 			ClassLoader::class

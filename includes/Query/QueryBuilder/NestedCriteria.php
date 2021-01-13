@@ -12,19 +12,10 @@ class NestedCriteria extends QueryBuilderHandler
 	 *
 	 * @return $this
 	 */
-	protected function whereHandler(
-		$key,
-		$operator = null,
-		$value = null,
-		$joiner = 'AND'
-	) {
+	protected function whereHandler($key, $operator = null, $value = null, $joiner = 'AND')
+	{
 		$key = $this->addTablePrefix($key);
-		$this->statements['criteria'][] = compact(
-			'key',
-			'operator',
-			'value',
-			'joiner'
-		);
+		$this->statements['criteria'][] = compact('key', 'operator', 'value', 'joiner');
 
 		return $this;
 	}

@@ -23,23 +23,11 @@ const AdminMenu = ({ query }) => {
 				<li className="wp-submenu-head" aria-hidden="true">
 					{__('BetterLinks', 'betterlinks')}
 				</li>
-				<li
-					className={`wp-first-item ${
-						currentPage == 'betterlinks' ? 'current' : ''
-					}`}
-				>
-					<Link to="/wp-admin/admin.php?page=betterlinks">
-						{__('Manage Links', 'betterlinks')}
-					</Link>
+				<li className={`wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`}>
+					<Link to="/wp-admin/admin.php?page=betterlinks">{__('Manage Links', 'betterlinks')}</Link>
 				</li>
-				<li
-					className={`wp-first-item ${
-						currentPage == 'betterlinks-analytics' ? 'current' : ''
-					}`}
-				>
-					<Link to="/wp-admin/admin.php?page=betterlinks-analytics">
-						{__('Analytics', 'betterlinks')}
-					</Link>
+				<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
+					<Link to="/wp-admin/admin.php?page=betterlinks-analytics">{__('Analytics', 'betterlinks')}</Link>
 				</li>
 			</ul>
 		</React.Fragment>

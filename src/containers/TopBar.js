@@ -26,23 +26,10 @@ const TopBar = (props) => {
 	return (
 		<div className="topbar">
 			<div className="tool-title">
-				<img
-					src={
-						plugin_root_url +
-						`assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`
-					}
-					alt="logo"
-				/>
+				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
 			<label className="theme-mood-button" htmlFor="theme-mood">
-				<input
-					type="checkbox"
-					name="theme-mood"
-					id="theme-mood"
-					value={isDarkMode}
-					onClick={() => darkModeHandler(!isDarkMode)}
-					checked={isDarkMode}
-				/>
+				<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onClick={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
 				<span className="theme-mood">
 					<span className="icon">
 						<i className="btl btl-sun"></i>
