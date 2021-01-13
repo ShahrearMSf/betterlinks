@@ -1,16 +1,15 @@
 {
-    "name": "wpdevteam/betterlinks",
-    "description": "share your url",
-    "authors": [
-        {
-            "name": "wpdevteam"
-        }
-    ],
-    "require": {
-    },
-    "autoload": {
-        "psr-4": {
-            "BetterLinks\\": "./includes"
-        }
-    }
+	"name": "wpdevteam/betterlinks",
+	"description": "share your url",
+	"authors": [
+		{
+			"name": "wpdevteam"
+		}
+	],
+	"require": {},
+	"autoload": {
+		"psr-4": {
+			"BetterLinks\\": "./includes"
+		}
+	}
 }

@@ -13,14 +13,15 @@
  * Domain Path:		/languages
  */
 
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+	exit();
+}
 
 if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 	require_once dirname(__FILE__) . '/vendor/autoload.php';
 }
 
-
-if(!class_exists('BetterLinks')) {
+if (!class_exists('BetterLinks')) {
 	final class BetterLinks
 	{
 		private $upload_dir;
@@ -55,14 +56,24 @@ if(!class_exists('BetterLinks')) {
 			define('BETTERLINKS_PLUGIN_FILE', __FILE__);
 			define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 			define('BETTERLINKS_PLUGIN_SLUG', 'betterlinks');
-			define('BETTERLINKS_PLUGIN_ROOT_URI', plugins_url("/", __FILE__));
+			define('BETTERLINKS_PLUGIN_ROOT_URI', plugins_url('/', __FILE__));
 			define('BETTERLINKS_ROOT_DIR_PATH', plugin_dir_path(__FILE__));
-			define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
-			define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
-			define('BETTERLINKS_UPLOAD_DIR_PATH', $this->upload_dir['basedir'] . '/betterlinks_uploads');
+			define(
+				'BETTERLINKS_ASSETS_DIR_PATH',
+				BETTERLINKS_ROOT_DIR_PATH . 'assets/'
+			);
+			define(
+				'BETTERLINKS_ASSETS_URI',
+				BETTERLINKS_PLUGIN_ROOT_URI . 'assets/'
+			);
+			define(
+				'BETTERLINKS_UPLOAD_DIR_PATH',
+				$this->upload_dir['basedir'] . '/betterlinks_uploads'
+			);
 		}
 
-		public function upload_dir_path(){
+		public function upload_dir_path()
+		{
 			$this->upload_dir = wp_get_upload_dir();
 		}
 
@@ -75,13 +86,14 @@ if(!class_exists('BetterLinks')) {
 		{
 			$this->load_textdomain();
 			new BetterLinks\API();
-			if(is_admin()){
+			if (is_admin()) {
 				new BetterLinks\Admin();
 			}
 			new BetterLinks\Link();
 		}
 
-		public function dispatch_hook(){
+		public function dispatch_hook()
+		{
 			new BetterLinks\Cron();
 		}
 
@@ -94,23 +106,24 @@ if(!class_exists('BetterLinks')) {
 			);
 		}
 
-		public function activate(){
+		public function activate()
+		{
 			new BetterLinks\Installer();
 		}
 
-		public function deactivate(){
+		public function deactivate()
+		{
 			new BetterLinks\Uninstall();
 		}
 	}
 }
-
 
 /**
  * Initializes the main plugin
  *
  * @return \BetterLinks
  */
-if(!function_exists('BetterLinks_Start')){
+if (!function_exists('BetterLinks_Start')) {
 	function BetterLinks_Start()
 	{
 		return BetterLinks::init();

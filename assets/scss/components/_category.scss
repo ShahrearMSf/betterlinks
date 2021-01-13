@@ -1,155 +1,155 @@
-.dnd-category-wrapper{
-  column-count: 4;
-  column-gap: 20px;
-  orphans: 1;
-  widows: 1;
-  @media screen and (max-width: 1599px) {
-    column-count: 3;
-  }
-  @media screen and (max-width: 1199px) {
-    column-count: 2;
-  }
-  @media screen and (max-width: 599px) {
-    column-count: 1;
-  }
-  &.d-flex{
-    display: flex;
-  }
-  .dnd-category,
-  .dnd-create-category{
-    width: 100%;
-    min-width: 100%;
-    margin-bottom: 20px;
-    break-inside: avoid-column;
-    display: inline-grid;
-    page-break-inside: avoid;
-    border-radius: 5px;
-  }
-  .dnd-category{
-    border: 1px solid transparent;
-    min-height: 150px;
-    .category-head{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 55px;
-      background: #fff;
-      border-radius: 5px 5px 0 0;
-      padding: 0 10px;
-      text-align: center;
-      border: 1.5px solid #e6e8ec;
-      border-bottom: none;
-      .title{
-        font-size: 17px;
-        font-weight: 500;
-        color: $dark;
-        margin: 0;
-        line-height: 1;
-        word-break: break-word;
-        padding: 2px;
-      }
-      .dropdown{
-        margin-left: 5px;
-        position: relative;
-        .icon{
-          cursor: pointer;
-          display: flex;
-          color: $secondary-lighten;
-          font-size: 14px;
-          border: none;
-          outline: none;
-          box-shadow: none;
-          background: transparent;
-        }
-      }
-    }
-    .dnd-category-body-wrap{
-      background: #e6e8ec;
-      border-radius: 0 0 5px 5px;
-    }
-    .category-body{
-      text-rendering: optimizeSpeed;
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 5px;
-        background: rgba($secondary-lighten, 0.4);
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 5px;
-        background: $secondary-lighten;
-      }
-    }
-    .category-footer{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 25px;
-      .btl-create-link-button{
-        height: 50px;
-        width: 50px;
-        min-width: 50px;
-        background: $white;
-        border: none;
-        border-radius: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 16px;
-        color: $secondary;
-        cursor: pointer;
-        &:focus{
-          border: none;
-          outline: none;
-          box-shadow: none;
-        }
-        &:hover{
-          background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);;
-          color: $white;
-          box-shadow: 0 22px 42px rgba(#003be2, 0.18);
-        }
-      }
-    }
-  }
-  .dnd-create-category{
-    background: $white;
-    padding: 10px;
-    box-sizing: border-box;
-    .dnd-create-category-button{
-      height: 70px;
-      width: 70px;
-      min-width: 70px;
-      border: none;
-      border-radius: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 21px;
-      background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-      color: $white;
-      cursor: pointer;
-      margin-top: 30px;
-      margin-left: auto;
-      margin-right: auto;
-      &:focus{
-        border: none;
-        outline: none;
-        box-shadow: none;
-      }
-      &:hover{
-        box-shadow: 0 22px 42px rgba(#003be2, 0.18);
-      }
-    }
-    .dnd-create-category-text{
-      text-align: center;
-      font-size: 17px;
-      font-weight: 500;
-      color: $dark;
-      margin-top: 15px;
-      margin-bottom: 30px;
-    }
-  }
+.dnd-category-wrapper {
+	column-count: 4;
+	column-gap: 20px;
+	orphans: 1;
+	widows: 1;
+	@media screen and (max-width: 1599px) {
+		column-count: 3;
+	}
+	@media screen and (max-width: 1199px) {
+		column-count: 2;
+	}
+	@media screen and (max-width: 599px) {
+		column-count: 1;
+	}
+	&.d-flex {
+		display: flex;
+	}
+	.dnd-category,
+	.dnd-create-category {
+		width: 100%;
+		min-width: 100%;
+		margin-bottom: 20px;
+		break-inside: avoid-column;
+		display: inline-grid;
+		page-break-inside: avoid;
+		border-radius: 5px;
+	}
+	.dnd-category {
+		border: 1px solid transparent;
+		min-height: 150px;
+		.category-head {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 55px;
+			background: #fff;
+			border-radius: 5px 5px 0 0;
+			padding: 0 10px;
+			text-align: center;
+			border: 1.5px solid #e6e8ec;
+			border-bottom: none;
+			.title {
+				font-size: 17px;
+				font-weight: 500;
+				color: $dark;
+				margin: 0;
+				line-height: 1;
+				word-break: break-word;
+				padding: 2px;
+			}
+			.dropdown {
+				margin-left: 5px;
+				position: relative;
+				.icon {
+					cursor: pointer;
+					display: flex;
+					color: $secondary-lighten;
+					font-size: 14px;
+					border: none;
+					outline: none;
+					box-shadow: none;
+					background: transparent;
+				}
+			}
+		}
+		.dnd-category-body-wrap {
+			background: #e6e8ec;
+			border-radius: 0 0 5px 5px;
+		}
+		.category-body {
+			text-rendering: optimizeSpeed;
+			scroll-behavior: smooth;
+			-webkit-font-smoothing: antialiased;
+			&::-webkit-scrollbar {
+				width: 6px;
+			}
+			&::-webkit-scrollbar-track {
+				border-radius: 5px;
+				background: rgba($secondary-lighten, 0.4);
+			}
+			&::-webkit-scrollbar-thumb {
+				border-radius: 5px;
+				background: $secondary-lighten;
+			}
+		}
+		.category-footer {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 25px;
+			.btl-create-link-button {
+				height: 50px;
+				width: 50px;
+				min-width: 50px;
+				background: $white;
+				border: none;
+				border-radius: 50px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 16px;
+				color: $secondary;
+				cursor: pointer;
+				&:focus {
+					border: none;
+					outline: none;
+					box-shadow: none;
+				}
+				&:hover {
+					background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+					color: $white;
+					box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+				}
+			}
+		}
+	}
+	.dnd-create-category {
+		background: $white;
+		padding: 10px;
+		box-sizing: border-box;
+		.dnd-create-category-button {
+			height: 70px;
+			width: 70px;
+			min-width: 70px;
+			border: none;
+			border-radius: 50px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 21px;
+			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+			color: $white;
+			cursor: pointer;
+			margin-top: 30px;
+			margin-left: auto;
+			margin-right: auto;
+			&:focus {
+				border: none;
+				outline: none;
+				box-shadow: none;
+			}
+			&:hover {
+				box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+			}
+		}
+		.dnd-create-category-text {
+			text-align: center;
+			font-size: 17px;
+			font-weight: 500;
+			color: $dark;
+			margin-top: 15px;
+			margin-bottom: 30px;
+		}
+	}
 }
