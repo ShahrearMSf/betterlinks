@@ -73,7 +73,7 @@ class Utils {
                 'host'           => $IP,
                 'uri'            => $data->link_slug,
                 'click_count'    => 0,
-                'visitor_id'     => (isset($_COOKIE[$visitor_cookie]) ? $_COOKIE[$visitor_cookie] : ''),
+                'visitor_id'     => (isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : ''),
                 'click_order'    => 0,
                 'created_at'     =>  $now,
                 'created_at_gmt' => $now_gmt,
