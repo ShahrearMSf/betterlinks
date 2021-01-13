@@ -5,6 +5,7 @@ module.exports = (env, argv) => {
 
     return {
         entry: {
+            // 'js/betterlinks-core': path.resolve(__dirname, 'src/index.js'),
             'js/betterlinks-core.min': path.resolve(__dirname, 'src/index.js'),
         },
 

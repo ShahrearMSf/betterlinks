@@ -77451,7 +77451,7 @@ const Link = ({
     initialValues: {
       link_title: '',
       link_slug: '',
-      redirect_type: '',
+      redirect_type: '307',
       target_url: '',
       short_url: randomSlug,
       link_note: '',
@@ -77737,7 +77737,7 @@ const LinkQuickAction = props => {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "action yes",
     onClick: () => {
-      deleteLinkHandler(cat_id, item.ID);
+      deleteLinkHandler(cat_id, item.ID, item.short_url);
     }
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Yes', 'betterlinks')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     className: "action no",
@@ -80265,12 +80265,13 @@ const edit_link = item => async dispatch => {
     });
   }
 };
-const delete_link = (catID, linID) => async dispatch => {
+const delete_link = (catID, linID, short_url) => async dispatch => {
   try {
     const res = await _utils_helper__WEBPACK_IMPORTED_MODULE_0__["API"].delete(_utils_helper__WEBPACK_IMPORTED_MODULE_0__["namespace"] + 'links', {
       params: {
         ID: linID,
-        term_id: catID
+        term_id: catID,
+        short_url: short_url
       }
     });
     dispatch({
