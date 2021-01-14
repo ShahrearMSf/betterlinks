@@ -37,7 +37,7 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 **💪 Fast Response:** Less Database queries resulting in faster response time. 
 
 
-## Easily Analyze and Track Your Cloked Links 📈
+## Easily Analyze and Track Your Cliked Links 📈
 
 **📈 Real Time Analytics:** Generate real-time analytics data and easily evaluate the performance of your cloaked links with just a glance
 
