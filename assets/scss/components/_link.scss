@@ -1,130 +1,130 @@
-.btl-dnd-link{
-  padding: 5px;
-  margin: 8px 8px 0px 8px;
-  border-radius: 3px;
-  background-color: $white;
-  .btl-dnd-link-body{
-    display: flex;
-    align-items: center;
-    position: relative;
-    &:before{
-      content: "";
-      width: 5px;
-      min-width: 5px;
-      height: 35px;
-      border-radius: 2px;
-      background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-      margin-right: 10px;
-    }
-    .dnd-link-title{
-      margin-right: 5px;
-      display: flex;
-      align-items: center;
-      margin-top: 0;
-      margin-bottom: 0;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.1;
-      color: $secondary-darken;
-      position: relative;
-      word-break: break-word;
-      &:before{
-        content: '\e906';
-        font-family: 'better-links';
-        display: flex;
-        align-items: center;
-        width: 0;
-        color: lighten( $secondary-lighten, 5% );
-        transition: all 0.02s linear;
-        opacity: 0;
-      }
-    }
-    .btl-dnd-link-button-group{
-      margin-left: auto;
-      margin-right: 5px;
-      display: flex;
-      align-items: center;
-      .light-tooltip {
-        background: #fff;
-        color: #373747;
-        font-size: 13px;
-        font-weight: 500;
-        filter: drop-shadow(0px 15px 12.5px rgba(0,5,41,0.18));
-        &::after {
-          border-top-color: #fff;
-        }
-      }
-      .dnd-link-button{
-        padding: 5px;
-        border: none;
-        background: none;
-        color: $secondary-lighten;
-        font-size: 12px;
-        cursor: pointer;
-        transition: color 0.2s ease 0s;
-        &:focus{
-          border: none;
-          outline: none;
-          box-shadow: none;
-        }
-        &:hover{
-          color: $success;
-        }
-        &.delete-button:hover{
-          color: $danger;
-        }
-      }
-    }
-  }
-  .btl-confirm-message{
-    display: flex;
-    align-items: center;
-    background: $white;
-    padding: 0 10px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    .action-text{
-      color: $secondary;
-      font-weight: 500;
-      margin-right: 7px;
-      white-space: nowrap;
-    }
-    .action-set{
-      display: flex;
-      .action{
-        padding: 3px 5px;
-        border: 0;
-        outline: 0;
-        box-shadow: 0;
-        color: $white;
-        width: 45%;
-        border-radius: 2px;
-        cursor: pointer;
-        text-transform: uppercase;
-        font-size: 13px;
-        font-weight: 500;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 2px;
-        &.yes{
-          background: $success-lighten;
-        }
-        &.no{
-          background: $danger;
-        }
-      }
-    }
-  }
-  
-  &.btl-dnd-link-dragging{
-    .dnd-link-title{
-      &:before{
-        width: 20px;
-        opacity: 1;
-      }
-    }
-  }
+.btl-dnd-link {
+	padding: 5px;
+	margin: 8px 8px 0px 8px;
+	border-radius: 3px;
+	background-color: $white;
+	.btl-dnd-link-body {
+		display: flex;
+		align-items: center;
+		position: relative;
+		&:before {
+			content: '';
+			width: 5px;
+			min-width: 5px;
+			height: 35px;
+			border-radius: 2px;
+			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+			margin-right: 10px;
+		}
+		.dnd-link-title {
+			margin-right: 5px;
+			display: flex;
+			align-items: center;
+			margin-top: 0;
+			margin-bottom: 0;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.1;
+			color: $secondary-darken;
+			position: relative;
+			word-break: break-word;
+			&:before {
+				content: '\e906';
+				font-family: 'better-links';
+				display: flex;
+				align-items: center;
+				width: 0;
+				color: lighten($secondary-lighten, 5%);
+				transition: all 0.02s linear;
+				opacity: 0;
+			}
+		}
+		.btl-dnd-link-button-group {
+			margin-left: auto;
+			margin-right: 5px;
+			display: flex;
+			align-items: center;
+			.light-tooltip {
+				background: #fff;
+				color: #373747;
+				font-size: 13px;
+				font-weight: 500;
+				filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
+				&::after {
+					border-top-color: #fff;
+				}
+			}
+			.dnd-link-button {
+				padding: 5px;
+				border: none;
+				background: none;
+				color: $secondary-lighten;
+				font-size: 12px;
+				cursor: pointer;
+				transition: color 0.2s ease 0s;
+				&:focus {
+					border: none;
+					outline: none;
+					box-shadow: none;
+				}
+				&:hover {
+					color: $success;
+				}
+				&.delete-button:hover {
+					color: $danger;
+				}
+			}
+		}
+	}
+	.btl-confirm-message {
+		display: flex;
+		align-items: center;
+		background: $white;
+		padding: 0 10px;
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		.action-text {
+			color: $secondary;
+			font-weight: 500;
+			margin-right: 7px;
+			white-space: nowrap;
+		}
+		.action-set {
+			display: flex;
+			.action {
+				padding: 3px 5px;
+				border: 0;
+				outline: 0;
+				box-shadow: 0;
+				color: $white;
+				width: 45%;
+				border-radius: 2px;
+				cursor: pointer;
+				text-transform: uppercase;
+				font-size: 13px;
+				font-weight: 500;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 0 2px;
+				&.yes {
+					background: $success-lighten;
+				}
+				&.no {
+					background: $danger;
+				}
+			}
+		}
+	}
+
+	&.btl-dnd-link-dragging {
+		.dnd-link-title {
+			&:before {
+				width: 20px;
+				opacity: 1;
+			}
+		}
+	}
 }

@@ -1,11 +1,14 @@
 {
-  "presets":[
-    "@babel/preset-react",
-    [ "@babel/preset-env", {
-      "targets": {
-        "browsers": "> 2%"
-      }
-    }]
-  ],
-  "plugins": ["@babel/proposal-class-properties"]
+	"presets": [
+		"@babel/preset-react",
+		[
+			"@babel/preset-env",
+			{
+				"targets": {
+					"browsers": "> 2%"
+				}
+			}
+		]
+	],
+	"plugins": ["@babel/proposal-class-properties"]
 }

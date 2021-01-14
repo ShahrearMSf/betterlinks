@@ -1,185 +1,184 @@
-.topbar{
-  border-color:#36405a;
-  background-color: #2c3650;
-  .theme-mood-button{
-    border-color: #738bb8;
-  }
+.topbar {
+	border-color: #36405a;
+	background-color: #2c3650;
+	.theme-mood-button {
+		border-color: #738bb8;
+	}
 }
 
-.dnd-category-wrapper{
-  .dnd-category{
-    .category-head{
-      background: #3d4863;
-      border-color: #252f47;
-      .title{
-        color: $white;
-      }
-    }
-    .dnd-category-body-wrap{
-      background: #252f47;
-    }
-    .category-body{
-      &::-webkit-scrollbar-track {
-        background: rgba($secondary-lighten, 0.4);
-      }
-      &::-webkit-scrollbar-thumb {
-        background: $secondary-lighten;
-      }
-    }
-    .category-footer{
-      .btl-create-link-button{
-        background: #536082;
-        color: #252f47;
-        &:hover{
-          background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);;
-          color: $white;
-          box-shadow: 0 22px 42px rgba(#003be2, 0.18);
-        }
-      }
-    }
-  }
-  .dnd-create-category{
-    background: $dark-mood-darken;
-    .dnd-create-category-text{
-      color: $white;
-    }
-  }
+.dnd-category-wrapper {
+	.dnd-category {
+		.category-head {
+			background: #3d4863;
+			border-color: #252f47;
+			.title {
+				color: $white;
+			}
+		}
+		.dnd-category-body-wrap {
+			background: #252f47;
+		}
+		.category-body {
+			&::-webkit-scrollbar-track {
+				background: rgba($secondary-lighten, 0.4);
+			}
+			&::-webkit-scrollbar-thumb {
+				background: $secondary-lighten;
+			}
+		}
+		.category-footer {
+			.btl-create-link-button {
+				background: #536082;
+				color: #252f47;
+				&:hover {
+					background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+					color: $white;
+					box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+				}
+			}
+		}
+	}
+	.dnd-create-category {
+		background: $dark-mood-darken;
+		.dnd-create-category-text {
+			color: $white;
+		}
+	}
 }
 
-.btl-dnd-link{
-  background-color: #36405a;
-  .btl-dnd-link-body{
-    .dnd-link-title{
-      color: $white;
-      &:before{
-        color: darken( $secondary-lighten, 10% );
-      }
-    }
-    .btl-dnd-link-button-group{
-      .light-tooltip {
-        background: #536082;
-        color: $white;
-        filter: drop-shadow(0px 15px 12.5px rgba(0,5,41,0.18));
-        &::after {
-          border-top-color: #536082;
-        }
-      }
-      .dnd-link-button{
-        color: #697690;
-        &:hover{
-          color: $white;
-        }
-      }
-    }
-  }
-  .btl-confirm-message{
-    background: #36405a;
-    .action-text{
-      color: $light-darken;
-    }
-    .action-set{
-      .action{
-        color: $white;
-        &.yes{
-          background: $success-lighten;
-        }
-        &.no{
-          background: $danger;
-        }
-      }
-    }
-  }
+.btl-dnd-link {
+	background-color: #36405a;
+	.btl-dnd-link-body {
+		.dnd-link-title {
+			color: $white;
+			&:before {
+				color: darken($secondary-lighten, 10%);
+			}
+		}
+		.btl-dnd-link-button-group {
+			.light-tooltip {
+				background: #536082;
+				color: $white;
+				filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
+				&::after {
+					border-top-color: #536082;
+				}
+			}
+			.dnd-link-button {
+				color: #697690;
+				&:hover {
+					color: $white;
+				}
+			}
+		}
+	}
+	.btl-confirm-message {
+		background: #36405a;
+		.action-text {
+			color: $light-darken;
+		}
+		.action-set {
+			.action {
+				color: $white;
+				&.yes {
+					background: $success-lighten;
+				}
+				&.no {
+					background: $danger;
+				}
+			}
+		}
+	}
 }
 
-
-.btl-form-control{
-  background: #36405a;
-  color: $white;
-  border-color: #36405a;
-  &::placeholder{
-    color: $secondary-lighten;
-  }
+.btl-form-control {
+	background: #36405a;
+	color: $white;
+	border-color: #36405a;
+	&::placeholder {
+		color: $secondary-lighten;
+	}
 }
-.dropdown{
-  .dropdown-menu{
-    background: #536082;
-    ul{
-      li{
-        &:not(:last-child){
-          border-color: #5e6983;
-        }
-      }
-    }
-    .link{
-      background: #536082;
-      color: $light-darken;
-      &:hover{
-        color: $white;
-      }
-      &.delete{
-        &:hover{
-          color: $danger;
-        }
-      }
-    }
-    .btl-confirm-message{
-      .action-text{
-        color: $light-darken;
-      }
-      .action-set{
-        .action{
-          color: $white;
-          &.yes{
-            background: $success-lighten;
-          }
-          &.no{
-            background: $danger;
-          }
-        }
-      }
-    }
-  }
-}
-
-.btl-analytics-heading{
-  color: $white;
+.dropdown {
+	.dropdown-menu {
+		background: #536082;
+		ul {
+			li {
+				&:not(:last-child) {
+					border-color: #5e6983;
+				}
+			}
+		}
+		.link {
+			background: #536082;
+			color: $light-darken;
+			&:hover {
+				color: $white;
+			}
+			&.delete {
+				&:hover {
+					color: $danger;
+				}
+			}
+		}
+		.btl-confirm-message {
+			.action-text {
+				color: $light-darken;
+			}
+			.action-set {
+				.action {
+					color: $white;
+					&.yes {
+						background: $success-lighten;
+					}
+					&.no {
+						background: $danger;
+					}
+				}
+			}
+		}
+	}
 }
 
-.btl-analytic{
-  background: #252f47;
-  border-color: #252f47;
-  color: $white;
-  .btl-analytics-chart{
-    border-color: #252f47;
-  }
+.btl-analytics-heading {
+	color: $white;
 }
-.btl-analytic-table-wrapper{
-  .rdt_TableHeader{
-    background: #252f47;
-    color: $white;
-  }
-  .btl-analytic-table{
-    background: #252f47;
-    color: $white;
-    .rdt_TableHeadRow,
-    .rdt_TableRow{
-      background: #252f47;
-      color: $white;
-      .rdt_TableCol{
-        color: $white;
-        .rdt_TableCol_Sortable{
-          color: $white;
-          &:hover{
-            color: $white;
-          }
-        }
-      }
-    }
-    a{
-      color: $white;
-      &:hover{
-        color: $white;
-      }
-    }
-  }
+
+.btl-analytic {
+	background: #252f47;
+	border-color: #252f47;
+	color: $white;
+	.btl-analytics-chart {
+		border-color: #252f47;
+	}
+}
+.btl-analytic-table-wrapper {
+	.rdt_TableHeader {
+		background: #252f47;
+		color: $white;
+	}
+	.btl-analytic-table {
+		background: #252f47;
+		color: $white;
+		.rdt_TableHeadRow,
+		.rdt_TableRow {
+			background: #252f47;
+			color: $white;
+			.rdt_TableCol {
+				color: $white;
+				.rdt_TableCol_Sortable {
+					color: $white;
+					&:hover {
+						color: $white;
+					}
+				}
+			}
+		}
+		a {
+			color: $white;
+			&:hover {
+				color: $white;
+			}
+		}
+	}
 }

@@ -1,9 +1,7 @@
 @font-face {
 	font-family: 'better-links';
 	src: url('./../fonts/better-links.eot');
-	src: url('./../fonts/better-links.eot') format('embedded-opentype'),
-		url('./../fonts/better-links.ttf') format('truetype'),
-		url('./../fonts/better-links.woff') format('woff'),
+	src: url('./../fonts/better-links.eot') format('embedded-opentype'), url('./../fonts/better-links.ttf') format('truetype'), url('./../fonts/better-links.woff') format('woff'),
 		url('./../fonts/better-links.svg') format('svg');
 	font-weight: normal;
 	font-style: normal;
@@ -11,65 +9,65 @@
 }
 
 .btl {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'better-links' !important;
-  speak: never;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'better-links' !important;
+	speak: never;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
 
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .btl-more:before {
-  content: "\e90f";
+	content: '\e90f';
 }
 .btl-checkbox:before {
-  content: "\e90c";
+	content: '\e90c';
 }
 .btl-checkbox-checked:before {
-  content: "\e90e";
+	content: '\e90e';
 }
 .btl-edit:before {
-  content: "\e90d";
+	content: '\e90d';
 }
 .btl-copy:before {
-  content: "\e90b";
+	content: '\e90b';
 }
 .btl-add:before {
-  content: "\e900";
+	content: '\e900';
 }
 .btl-angle-arrow-down:before {
-  content: "\e901";
+	content: '\e901';
 }
 .btl-cancel:before {
-  content: "\e902";
+	content: '\e902';
 }
 .btl-delete:before {
-  content: "\e903";
+	content: '\e903';
 }
 .btl-link:before {
-  content: "\e904";
+	content: '\e904';
 }
 .btl-moon:before {
-  content: "\e905";
+	content: '\e905';
 }
 .btl-move:before {
-  content: "\e906";
+	content: '\e906';
 }
 .btl-reload:before {
-  content: "\e907";
+	content: '\e907';
 }
 .btl-sun:before {
-  content: "\e908";
+	content: '\e908';
 }
 .btl-target:before {
-  content: "\e909";
+	content: '\e909';
 }
 .btl-toggle-double:before {
-  content: "\e90a";
+	content: '\e90a';
 }

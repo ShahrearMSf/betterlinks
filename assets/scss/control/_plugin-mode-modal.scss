@@ -1,7 +1,6 @@
-
 .ReactModal__Content {
-  background-color: #252f47!important;
-  border-color: #36405a!important;
+	background-color: #252f47 !important;
+	border-color: #36405a !important;
 	.btl-close-modal {
 		color: $white;
 	}
@@ -15,14 +14,14 @@
 				}
 			}
 			.link-options {
-        border-color: #202b42;
+				border-color: #202b42;
 				background-color: #202b42;
 				&__head {
 					border-color: #202b42;
-          background: #36405a;
-          &--title{
-            color: $white;
-          }
+					background: #36405a;
+					&--title {
+						color: $white;
+					}
 				}
 				&__body {
 					.btl-checkbox-field {
@@ -38,7 +37,7 @@
 	}
 	.btl-modal-form-group {
 		.btl-modal-form-label {
-      color: $white;
+			color: $white;
 			&.btl-required {
 				&:after {
 					color: $danger;
@@ -48,62 +47,62 @@
 	}
 	textarea.btl-modal-form-control,
 	input.btl-modal-form-control {
-    background: #36405a;
-    color: $white;
-    border-color: #36405a;
+		background: #36405a;
+		color: $white;
+		border-color: #36405a;
 		&:focus {
 			background: #36405a;
 			box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
 		}
-    &::placeholder{
-      color: $secondary-lighten;
-    }
+		&::placeholder {
+			color: $secondary-lighten;
+		}
 	}
 	.btl-modal-select {
 		.btl-react-select__control {
-			background-color: #36405a!important;
-			border-color: #36405a!important;
+			background-color: #36405a !important;
+			border-color: #36405a !important;
 			.btl-react-select__value-container {
 				.btl-react-select__single-value {
-          color: $white;
+					color: $white;
 				}
 				.btl-react-select__input {
 					input {
-            color: $white!important;
+						color: $white !important;
 					}
 				}
 			}
 			&.btl-react-select__control--is-focused {
-				background-color: #36405a!important;
-      }
-      .btl-react-select__placeholder{
-        color: $white;
-      }
-    }
-    .btl-react-select__multi-value{
-      background: #252f47!important;
-      .btl-react-select__multi-value__label{
-        color: $white!important;
-      }
-      .btl-react-select__multi-value__remove{
-        svg{
-          color: $white;
-        }
-        &:hover{
-          svg{
-            color: red;
-          }
-        }
-      }
-    }
-    .btl-react-select__indicators{
-      .btl-react-select__indicator-separator{
-        background-color: #666182;
-      }
-      .btl-react-select__indicator{
-        color: $white;
-      }
-    }
+				background-color: #36405a !important;
+			}
+			.btl-react-select__placeholder {
+				color: $white;
+			}
+		}
+		.btl-react-select__multi-value {
+			background: #252f47 !important;
+			.btl-react-select__multi-value__label {
+				color: $white !important;
+			}
+			.btl-react-select__multi-value__remove {
+				svg {
+					color: $white;
+				}
+				&:hover {
+					svg {
+						color: red;
+					}
+				}
+			}
+		}
+		.btl-react-select__indicators {
+			.btl-react-select__indicator-separator {
+				background-color: #666182;
+			}
+			.btl-react-select__indicator {
+				color: $white;
+			}
+		}
 	}
 	.btl-link-field-copyable {
 		background: #36405a;
@@ -123,7 +122,7 @@
 	}
 	.btl-checkbox-field {
 		.text {
-      color: #b2b3bd;
+			color: #b2b3bd;
 			&:before {
 				color: #9596b1;
 			}
