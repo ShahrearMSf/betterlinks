@@ -41,24 +41,9 @@ class Assets
 				},
 				1
 			);
-
-			wp_enqueue_style('betterlinks-chartjs', BETTERLINKS_ASSETS_URI . 'css/lib/Chart.min.css', [], filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/lib/Chart.min.css'), 'all');
 			wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks.css'), 'all');
+			
 			// js
-			wp_enqueue_script(
-				'betterlinks-moment',
-				BETTERLINKS_ASSETS_URI . 'js/lib/moment.min.js',
-				['jquery'],
-				filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/lib/moment.min.js'),
-				true
-			);
-			wp_enqueue_script(
-				'betterlinks-chartjs',
-				BETTERLINKS_ASSETS_URI . 'js/lib/Chart.min.js',
-				['jquery'],
-				filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/lib/Chart.min.js'),
-				true
-			);
 			wp_enqueue_script(
 				'betterlinks-admin-scripts',
 				BETTERLINKS_ASSETS_URI . 'js/betterlinks-core.min.js',
