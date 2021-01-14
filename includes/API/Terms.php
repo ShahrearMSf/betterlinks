@@ -86,17 +86,7 @@ class Terms extends Controller
 				)
 				->get();
 		} else {
-			$results = $query
-				->query(
-					"SELECT 
-            {$prefix}betterlinks_terms.ID as term_id, 
-            {$prefix}betterlinks_terms.term_name, 
-            {$prefix}betterlinks_terms.term_slug,
-            {$prefix}betterlinks_terms.term_type
-            FROM {$prefix}betterlinks_terms"
-				)
-				->where('term_type', '=', $query_params['term_type'])
-				->get();
+			$results = $query->table("betterlinks_terms")->get();
 		}
 
 		return new \WP_REST_Response(
