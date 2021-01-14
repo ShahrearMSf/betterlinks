@@ -17,12 +17,12 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 
 ## Perks of Using BetterLinks 🔥
 
--Easy-to-use & Simple Link Shortener
--Create attractive looking links instantly
--Safe Redirection URLs 
--Analyze and Track your marketing campaigns from one place
--Optimized queries to reduce load time & make faster
--Power up your affiliate marketing level
+- Easy-to-use & Simple Link Shortener
+- Create attractive looking links instantly
+- Safe Redirection URLs 
+- Analyze and Track your marketing campaigns from one place
+- Optimized queries to reduce load time & make faster
+- Power up your affiliate marketing level
 
 
 ## Simple & Fast Link Shortener 🎉
@@ -49,9 +49,9 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins:
 
-🔝[Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 1 million active users in the WordPress repository.
+🔝 [Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 1 million active users in the WordPress repository.
 
-🔔[NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
+🔔 [NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
 
 🗒️ [BetterDocs](https://betterdocs.co/) – Best Documentation & Knowledge Base Plugin for WordPress, whcih also reduce your manual support request.
 
