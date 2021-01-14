@@ -1,4 +1,4 @@
-=== BetterLinks ===
+=== BetterLinks - Shorten, Track and Manage any URL ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, tusharimran
 Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
