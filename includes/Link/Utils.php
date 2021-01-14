@@ -5,7 +5,12 @@ class Utils
 {
 	public function get_slug_raw($slug)
 	{
-		return \BetterLinks\Helper::get_link_from_json_file($slug);
+		if(file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json')){
+			return \BetterLinks\Helper::get_link_from_json_file($slug);
+		}
+		$query = \BetterLinks\Helper::DB();
+		$query = $query->table('betterlinks')->where('short_url', '=', $slug);
+		return $query->first();
 	}
 	public function dispatch_redirect($data, $param)
 	{
