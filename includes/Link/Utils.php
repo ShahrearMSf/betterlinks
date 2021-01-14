@@ -109,7 +109,7 @@ class Utils
 	{
 		$existingData = file_get_contents($file);
 		$tempArray = json_decode($existingData, true);
-		$tempArray[] = $data;
+		array_push($tempArray, $data);
 		return file_put_contents($file, json_encode($tempArray));
 	}
 }
