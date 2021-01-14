@@ -5,7 +5,7 @@ class Utils
 {
 	public function get_slug_raw($slug)
 	{
-		if(file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json')){
+		if(BETTERLINKS_EXISTS_LINKS_JSON){
 			return \BetterLinks\Helper::get_link_from_json_file($slug);
 		}
 		$query = \BetterLinks\Helper::DB();
@@ -83,7 +83,16 @@ class Utils
 			'created_at_gmt' => $now_gmt,
 		];
 
-		$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH .'/clicks.json', $data);
+		if(BETTERLINKS_EXISTS_CLICKS_JSON) {
+			$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH .'/clicks.json', $data);
+		} else {
+			try {
+				$query = \BetterLinks\Helper::DB();
+				$query->table('betterlinks_clicks')->insert($data);
+			} catch (\Throwable $th) {
+				echo $th->getMessage();
+			}
+		} 
 	}
 	public function get_current_client_IP()
 	{

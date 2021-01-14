@@ -39,18 +39,21 @@ class Cron
 	}
 	public function update_clicks_analytics()
 	{
-		$Clicks = json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'), true);
-		if($Clicks){
-			try {
-				$query = \BetterLinks\Helper::DB();
-				$results = $query->table('betterlinks_clicks')->insert($Clicks);
-				// reset file
-				if($results){
-					return file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
+		if(BETTERLINKS_EXISTS_CLICKS_JSON){
+			$Clicks = json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'), true);
+			if($Clicks){
+				try {
+					$query = \BetterLinks\Helper::DB();
+					$results = $query->table('betterlinks_clicks')->insert($Clicks);
+					// reset file
+					if($results){
+						return file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
+					}
+				} catch (\Throwable $th) {
+					echo $th->getMessage();
 				}
-			} catch (\Throwable $th) {
-				echo $th->getMessage();
 			}
 		}
+		return;
 	}
 }
