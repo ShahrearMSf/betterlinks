@@ -54,7 +54,6 @@ class Utils
 	}
 	public function start_trakcing($data)
 	{
-		$query = \BetterLinks\Helper::DB();
 		$now = current_time('mysql');
 		$now_gmt = current_time('mysql', 1);
 		$IP = $this->get_current_client_IP();
@@ -64,25 +63,22 @@ class Utils
 			$visitor_uid = uniqid('bl');
 			setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
 		}
-		try {
-			$data = [
-				'link_id' => $data->ID,
-				'ip' => $IP,
-				'browser' => $_SERVER['HTTP_USER_AGENT'],
-				'os' => '',
-				'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-				'host' => $IP,
-				'uri' => $data->link_slug,
-				'click_count' => 0,
-				'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
-				'click_order' => 0,
-				'created_at' => $now,
-				'created_at_gmt' => $now_gmt,
-			];
-			$query->table('betterlinks_clicks')->insert($data);
-		} catch (\Throwable $th) {
-			echo $th->getMessage();
-		}
+		$data = [
+			'link_id' => $data->ID,
+			'ip' => $IP,
+			'browser' => $_SERVER['HTTP_USER_AGENT'],
+			'os' => '',
+			'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+			'host' => $IP,
+			'uri' => $data->link_slug,
+			'click_count' => 0,
+			'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
+			'click_order' => 0,
+			'created_at' => $now,
+			'created_at_gmt' => $now_gmt,
+		];
+
+		$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH .'/clicks.json', $data);
 	}
 	public function get_current_client_IP()
 	{
@@ -107,5 +103,13 @@ class Utils
 	public function addScheme($url, $scheme = 'http://')
 	{
 		return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
+	}
+
+	protected function insert_json_into_file($file, $data)
+	{
+		$existingData = file_get_contents($file);
+		$tempArray = json_decode($existingData, true);
+		$tempArray[] = $data;
+		return file_put_contents($file, json_encode($tempArray));
 	}
 }
