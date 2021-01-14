@@ -138,7 +138,9 @@ class Links extends Controller
 			$term_data = [];
 			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
-			$this->insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
+			if(BETTERLINKS_EXISTS_LINKS_JSON){
+				$this->insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
+			}
 			$id = $qb->table('betterlinks')->insert($params);
 			// store tags relation data
 			if (isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])) {
