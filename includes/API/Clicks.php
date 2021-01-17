@@ -65,6 +65,10 @@ class Clicks extends Controller
 	 */
 	public function get_value($request)
 	{
+		$request = $request->get_params();
+		$from = (isset($request['from']) ? $request['from'] : date('Y-m-d', strtotime(' - 30 days')));
+		$to =  (isset($request['to']) ? $request['to'] : date('Y-m-d' ));
+		
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = \BetterLinks\Helper::DB();
@@ -73,10 +77,8 @@ class Clicks extends Controller
 				"SELECT CLICKS.ID as 
         click_ID, link_id, browser, created_at, referer, short_url, target_url, ip,
         (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
-        from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id group by CLICKS.id"
-			)
-			->get();
-
+		from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE created_at BETWEEN '{$from}' AND '{$to}' group by CLICKS.id")->get();
+		
 		return new \WP_REST_Response(
 			[
 				'success' => true,
