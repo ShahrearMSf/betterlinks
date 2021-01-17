@@ -75,7 +75,7 @@ class Clicks extends Controller
 		$results = $query
 			->query(
 				"SELECT CLICKS.ID as 
-        click_ID, link_id, browser, created_at, referer, short_url, target_url, ip,
+        click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
         (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
 		from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE created_at BETWEEN '{$from}' AND '{$to}' group by CLICKS.id")->get();
 		

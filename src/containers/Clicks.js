@@ -21,6 +21,11 @@ const columns = [
 		),
 	},
 	{
+		name: 'Link Name',
+		selector: 'link_title',
+		sortable: false,
+	},
+	{
 		name: 'IP',
 		selector: 'ip',
 		sortable: false,
