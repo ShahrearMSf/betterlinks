@@ -23,6 +23,7 @@
 		"react-chartjs-2": "^2.11.1",
 		"react-content-loader": "^5.1.4",
 		"react-data-table-component": "^6.11.6",
+		"react-date-picker": "^8.0.6",
 		"react-datepicker": "^3.3.0",
 		"react-dom": "^16.5.2",
 		"react-modal": "^3.12.1",
@@ -43,12 +44,14 @@
 		"@prettier/plugin-php": "^0.16.1",
 		"babel-eslint": "^10.0.1",
 		"babel-loader": "^8.0.4",
+		"css-loader": "^5.0.1",
 		"eslint": "^5.6.1",
 		"eslint-plugin-import": "^2.14.0",
 		"eslint-plugin-react": "^7.11.1",
 		"prettier": "^2.2.1",
 		"redux-devtools-extension": "^2.13.8",
 		"redux-logger": "^3.0.6",
+		"style-loader": "^2.0.0",
 		"webpack": "^4.20.2",
 		"webpack-cli": "^3.1.2"
 	}
