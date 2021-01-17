@@ -25,9 +25,6 @@ const Tags = (props) => {
 			option.map((item) => item.value)
 		);
 	};
-	const onCreateOptionHandler = (inputValue, optionLabel) => {
-		console.log(inputValue, optionLabel);
-	};
 	return (
 		<React.Fragment>
 			<CreatableSelect2
@@ -36,6 +33,7 @@ const Tags = (props) => {
 				id={field.id}
 				name={field.name}
 				onMenuOpen={() => fetchData()}
+				noOptionsMessage={() => 'Tags Fetching..'}
 				defaultValue={
 					props.isEditMode
 						? props.terms.terms &&
@@ -49,10 +47,12 @@ const Tags = (props) => {
 				classNamePrefix="btl-react-select"
 				options={
 					props.terms.terms &&
-					Object.entries(props.terms.terms).map(([key, value]) => ({
-						value: value.term_id,
-						label: value.term_name,
-					}))
+					Object.entries(props.terms.terms)
+						.filter(([key, value]) => value.term_type == 'tags')
+						.map(([key, value]) => ({
+							value: value.ID,
+							label: value.term_name,
+						}))
 				}
 				isMulti={true}
 			/>

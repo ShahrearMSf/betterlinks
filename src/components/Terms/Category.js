@@ -32,12 +32,13 @@ const Category = (props) => {
 				classNamePrefix="btl-react-select"
 				onMenuOpen={() => fetchData()}
 				onChange={onChange}
+				noOptionsMessage={() => 'Category Fetching..'}
 				options={
 					props.terms.terms &&
 					Object.entries(props.terms.terms)
-						.filter(([key, value]) => value.term_type === 'category')
+						.filter(([key, value]) => value.term_type == 'category' && value.ID != 1)
 						.map(([key, value]) => ({
-							value: value.cat_id,
+							value: value.ID,
 							label: value.term_name,
 						}))
 				}
