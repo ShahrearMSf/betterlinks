@@ -75,7 +75,6 @@ const Analytics = (props) => {
 					<DatePicker onChange={setDateFrom} value={dateFrom} format={'y-MM-dd'} clearIcon={false} calendarIcon={false} />
 					{__('From', 'betterlinks')}
 					<DatePicker onChange={setDateTo} value={dateTo} format={'y-MM-dd'} clearIcon={false} calendarIcon={false} />
-					{console.log(formatDate(new Date(dateTo), 'yyyy-mm-dd'))}
 					<button
 						onClick={() => {
 							props.fetch_clicks_data({ from: formatDate(dateFrom, 'yyyy-mm-dd'), to: formatDate(new Date(dateTo), 'yyyy-mm-dd') });

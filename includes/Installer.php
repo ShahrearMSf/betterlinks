@@ -183,6 +183,6 @@ class Installer
 	private function create_cron_jobs()
 	{
 		wp_clear_scheduled_hook('betterlinks/write_json_links');
-		wp_schedule_single_event(time() + 60, 'betterlinks/write_json_links');
+		wp_schedule_single_event(time() + 30, 'betterlinks/write_json_links');
 	}
 }
