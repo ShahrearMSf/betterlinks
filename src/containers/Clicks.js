@@ -21,9 +21,10 @@ const columns = [
 		),
 	},
 	{
-		name: 'Link Name',
-		selector: 'link_title',
+		name: 'Name',
+		selector: 'name',
 		sortable: false,
+		cell: (row) => <div>{row.link_title}</div>,
 	},
 	{
 		name: 'IP',
@@ -63,7 +64,15 @@ const columns = [
 	},
 ];
 
+const FilterComponent = ({ filterText, onFilter, onClear }) => (
+	<>
+		<input id="search" type="text" placeholder="Filter By Name" aria-label="Search Input" value={filterText} onChange={onFilter} />
+	</>
+);
+
 const Clicks = (props) => {
+	const [filterText, setFilterText] = useState('');
+	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
 	useEffect(() => {
 		const currentDate = new Date();
@@ -86,20 +95,39 @@ const Clicks = (props) => {
 		});
 		return results;
 	};
-	const buildData = (data) => {
-		return data.reduce((acc, curVal) => acc.concat(parseInt(curVal.IPCOUNT)), []);
-	};
+
+	const subHeaderComponentMemo = React.useMemo(() => {
+		const handleClear = () => {
+			if (filterText) {
+				setResetPaginationToggle(!resetPaginationToggle);
+				setFilterText('');
+			}
+		};
+		return <FilterComponent onFilter={(e) => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+	}, [filterText, resetPaginationToggle]);
 
 	return (
 		<React.Fragment>
 			<Topbar />
+
 			<h3 className="btl-analytics-heading">{__('Analytics', 'betterlinks')}</h3>
 			<div className="btl-analytic">
 				{clicks ? (
 					<React.Fragment>
 						<Analytics data={analyticsData(clicks)} />
 						<div className="btl-analytic-table-wrapper">
-							<DataTable className="btl-analytic-table" title={__('All Clicks', 'betterlinks')} columns={columns} data={clicks} />
+							<DataTable
+								className="btl-analytic-table"
+								title={__('All Clicks', 'betterlinks')}
+								columns={columns}
+								data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+								pagination
+								paginationResetDefaultPage={resetPaginationToggle}
+								subHeader
+								subHeaderComponent={subHeaderComponentMemo}
+								selectableRows
+								persistTableHead
+							/>
 						</div>
 					</React.Fragment>
 				) : (
