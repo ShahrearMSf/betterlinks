@@ -21,11 +21,15 @@ const LinkQuickAction = (props) => {
 	return (
 		<React.Fragment>
 			<ReactTooltip className="light-tooltip" />
-			{/* <button className='dnd-link-button'>
-                <span className='icon'>
-                    <i className='btl btl-target'></i>
-                </span>
-            </button>
+			{item.analytic && (
+				<button className="dnd-link-button">
+					<span data-tip={item.analytic.ip.map((item) => Object.keys(item) + '(' + Object.values(item) + ')')} className="icon">
+						{item.analytic.link_count}
+					</span>
+				</button>
+			)}
+
+			{/* 
             <button className='dnd-link-button'>
                 <span className='icon'>
                     <i className='btl btl-reload'></i>

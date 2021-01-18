@@ -13,12 +13,17 @@ class Cron
 			wp_schedule_event( time(), 'hourly', 'betterlinks/update_clicks_analytics' );
 		}
 		add_action( 'betterlinks/update_clicks_analytics', array($this, 'update_clicks_analytics') ); 
+		
+		if ( ! wp_next_scheduled( 'betterlinks/analytics' ) ) {
+			wp_schedule_event( time(), 'every_one_and_half_hours', 'betterlinks/analytics' );
+		}
+		add_action( 'betterlinks/analytics', array($this, 'analytics') ); 
 	}
 	public function add_cron_schedule($schedules)
 	{
-		$schedules['every_six_hours'] = array(
-			'interval' => 21600, // Every 6 hours
-			'display'  => __( 'Every 6 hours' ),
+		$schedules['every_one_and_half_hours'] = array(
+			'interval' => 5400, // Every 90 Minutes
+			'display'  => __( 'Every 90 Minutes' ),
 		);
 		return $schedules;
 	}
@@ -53,6 +58,32 @@ class Cron
 					echo $th->getMessage();
 				}
 			}
+		}
+		return;
+	}
+
+	public function analytics()
+	{
+		try {
+			global $wpdb;
+			$prefix = $wpdb->prefix;
+			$query = Helper::DB();
+			$items = (array) $query->query("SELECT DISTINCT link_id, ip,
+			(select count(ip) from {$prefix}betterlinks_clicks WHERE CLICKS.ip = {$prefix}betterlinks_clicks.ip  group by ip) as IPCOUNT,
+			(select count(link_id) from {$prefix}betterlinks_clicks WHERE CLICKS.link_id = {$prefix}betterlinks_clicks.link_id group by link_id) as LINKCOUNT
+			from {$prefix}betterlinks_clicks as CLICKS group by CLICKS.id")->get();
+			$results = [];
+			if(!empty($items)){
+				foreach($items as $item){
+					$results[$item->link_id]['link_count'] = $item->LINKCOUNT;
+					$results[$item->link_id]['ip'][] = [
+						$item->ip => $item->IPCOUNT
+					];
+				}
+			}
+			return update_option('betterlinks_analytics_data', json_encode($results));
+		} catch (\Throwable $th) {
+			return $th->getMessage();
 		}
 		return;
 	}

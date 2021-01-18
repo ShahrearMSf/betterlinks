@@ -56,10 +56,17 @@ class Links extends Controller
 		]);
 	}
 
-	public function parse_response($items)
+	public function parse_response($items, $analytic)
 	{
+		
 		$results = [];
 		foreach ($items as $item) {
+			// insert analytic data
+			if(isset($analytic[$item->ID])){
+				$item->analytic = $analytic[$item->ID];
+			}
+			
+			// formatting response
 			if (!isset($results[$item->cat_id])) {
 				$results[$item->cat_id] = [
 					'term_name' => $item->term_name,
@@ -89,6 +96,8 @@ class Links extends Controller
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = \BetterLinks\Helper::DB();
+		$analytic = get_option('betterlinks_analytics_data');
+		$analytic = ($analytic ? json_decode($analytic, true) : [] );
 		$results = $query
 			->query(
 				"SELECT 
@@ -112,14 +121,12 @@ class Links extends Controller
         FROM {$prefix}betterlinks_terms
         LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
         LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-        WHERE {$prefix}betterlinks_terms.term_type = 'category'
-        "
-			)
-			->get();
+        WHERE {$prefix}betterlinks_terms.term_type = 'category'  and {$prefix}betterlinks.ID IS NOT NULL")->get();
+		
 		return new \WP_REST_Response(
 			[
 				'success' => is_bool($results),
-				'data' => $this->parse_response($results),
+				'data' => $this->parse_response($results, $analytic),
 			],
 			200
 		);
