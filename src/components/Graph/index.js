@@ -76,6 +76,7 @@ const Graph = (props) => {
 					{__('From', 'betterlinks')}
 					<DatePicker onChange={setDateTo} value={dateTo} format={'y-MM-dd'} clearIcon={false} calendarIcon={false} />
 					<button
+						className="btl-filter-action"
 						onClick={() => {
 							props.fetch_clicks_data({ from: formatDate(dateFrom, 'yyyy-mm-dd'), to: formatDate(new Date(dateTo), 'yyyy-mm-dd') });
 						}}

@@ -65,9 +65,10 @@ const columns = [
 ];
 
 const FilterComponent = ({ filterText, onFilter, onClear }) => (
-	<>
+	<div className="btl-click-filter">
 		<input id="search" type="text" placeholder="Filter By Name" aria-label="Search Input" value={filterText} onChange={onFilter} />
-	</>
+		<button className='btl-search-button'>Search Click</button>
+	</div>
 );
 
 const Analytics = (props) => {
