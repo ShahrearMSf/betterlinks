@@ -10,7 +10,6 @@ class Uninstall
 	public function clear_cron_events()
 	{
 		wp_clear_scheduled_hook('betterlinks/write_json_links');
-		wp_clear_scheduled_hook('betterlinks/update_clicks_analytics');
 		wp_clear_scheduled_hook('betterlinks/analytics');
 	}
 }
