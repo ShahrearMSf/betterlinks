@@ -21,7 +21,7 @@ const columns = [
 		),
 	},
 	{
-		name: 'Name',
+		name: 'Link Name',
 		selector: 'name',
 		sortable: false,
 		cell: (row) => <div>{row.link_title}</div>,
@@ -125,7 +125,6 @@ const Analytics = (props) => {
 								paginationResetDefaultPage={resetPaginationToggle}
 								subHeader
 								subHeaderComponent={subHeaderComponentMemo}
-								selectableRows
 								persistTableHead
 							/>
 						</div>
