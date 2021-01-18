@@ -1,8 +1,8 @@
 import React from 'react';
-import Settings from './Settings';
-import Clicks from './Clicks';
+import ManageLinks from './pages/ManageLinks';
+import Analytics from './pages/Analytics';
 
 const Dashboard = ({ query }) => {
-	return <React.Fragment>{query.get('page') == 'betterlinks' ? <Settings /> : <Clicks />}</React.Fragment>;
+	return <React.Fragment>{query.get('page') == 'betterlinks' ? <ManageLinks /> : <Analytics />}</React.Fragment>;
 };
 export default Dashboard;
