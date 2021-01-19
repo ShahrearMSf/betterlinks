@@ -1,8 +1,22 @@
 import React from 'react';
-import Settings from './Settings';
-import Clicks from './Clicks';
+import ManageLinks from './pages/ManageLinks';
+import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
+
+const renderSwitch = (param) => {
+	switch (param) {
+		case 'betterlinks':
+			return <ManageLinks />;
+		case 'betterlinks-analytics':
+			return <Analytics />;
+		case 'betterlinks-settings':
+			return <Settings />;
+		default:
+			return;
+	}
+};
 
 const Dashboard = ({ query }) => {
-	return <React.Fragment>{query.get('page') == 'betterlinks' ? <Settings /> : <Clicks />}</React.Fragment>;
+	return <React.Fragment>{renderSwitch(query.get('page'))}</React.Fragment>;
 };
 export default Dashboard;

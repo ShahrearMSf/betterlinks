@@ -11,10 +11,96 @@
 		margin-bottom: 50px;
 	}
 }
+.btl-analytics-filter {
+	display: flex;
+	align-items: center;
+	.btl-analytics-filter__control {
+		margin-left: auto;
+	}
+}
+.react-date-picker{
+	margin-left: 20px;
+	margin-right: 20px;
+	.react-date-picker__wrapper {
+		border-color: #ebebeb;
+		border-radius: 4px;
+		min-height: 40px;
+		.react-date-picker__inputGroup {
+			.react-date-picker__inputGroup__input {
+				border: none;
+				&:focus {
+					box-shadow: none;
+					outline: none;
+				}
+			}
+		}
+		.react-date-picker__clear-button,
+		.react-date-picker__calendar-button {
+			display: none;
+		}
+	}
+}
+.btl-filter-action{
+	height: 40px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 20px;
+	background: #0742e7;
+	border: none;
+	outline: none;
+	box-shadow: none;
+	border-radius: 4px;
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.3s ease-in-out;
+	&:hover{
+		background: #0338c9;
+	}
+}
+
+
+// analytic table
 .btl-analytic-table-wrapper {
 	.rdt_TableHeader {
+		display: none;
 		.sc-fFubgz {
 			font-weight: 600;
+		}
+	}
+	.sc-idOhPF{
+		justify-content: flex-start;
+		padding-left: 0;
+	}
+	.btl-click-filter{
+		margin-bottom: 20px;
+		input{
+			border-color: #ebebeb;
+			height: 40px;
+			border-radius: 4px 0 0 4px;
+			border-right: 0px;
+			outline: none;
+			box-shadow: none;
+			min-width: 240px;
+			padding-left: 15px;
+		}
+		.btl-search-button{
+			height: 40px;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			padding: 0 20px;
+			background: #0742e7;
+			border: none;
+			outline: none;
+			box-shadow: none;
+			border-radius:0 4px 4px 0;
+			color: #fff;
+			cursor: pointer;
+			transition: background 0.3s ease-in-out;
+			&:hover{
+				background: #0338c9;
+			}
 		}
 	}
 	.btl-analytic-table {
@@ -36,4 +122,34 @@
 			}
 		}
 	}
+	.sc-cxFLnm{
+		svg{
+			display: none;
+		}
+	}
+	.sc-giIncl{
+		.sc-iJuUWI{
+			padding: 0px;
+			border-radius: 4px;
+			height: 24px;
+			width: 24px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 2px;
+			svg{
+				height: 20px;
+				width: 20px;
+			}
+			&:hover{
+				background: #0742e7;
+				svg{
+					fill: #fff;
+				}
+			}
+		}
+	}
+}
+.react-calendar{
+	border-color: #ebebeb;
 }
