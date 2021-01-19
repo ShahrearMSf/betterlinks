@@ -29,6 +29,9 @@ const AdminMenu = ({ query }) => {
 				<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
 					<Link to="/wp-admin/admin.php?page=betterlinks-analytics">{__('Analytics', 'betterlinks')}</Link>
 				</li>
+				<li className={`wp-first-item ${currentPage == 'betterlinks-settings' ? 'current' : ''}`}>
+					<Link to="/wp-admin/admin.php?page=betterlinks-settings">{__('Settings', 'betterlinks')}</Link>
+				</li>
 			</ul>
 		</React.Fragment>
 	);

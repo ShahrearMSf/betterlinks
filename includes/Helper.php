@@ -43,6 +43,10 @@ class Helper
 				'title' => __('Analytics', 'betterlinks'),
 				'capability' => 'manage_options',
 			],
+			BETTERLINKS_PLUGIN_SLUG . '-settings' => [
+				'title' => __('Settings', 'betterlinks'),
+				'capability' => 'manage_options',
+			],
 		];
 		return apply_filters('betterlinks/helper/menu_items', $menu_items);
 	}
