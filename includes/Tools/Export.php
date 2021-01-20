@@ -17,7 +17,7 @@ class Export
         if( $page === 'betterlinks-settings' && $export == true){
             $content = $this->process_data((isset($_POST['content']) ? $_POST['content'] : ''));
             $fileDownload = FileDownload::createFromString(json_encode($content));
-            $filename = 'betterlinks.' . date('Y-m-d H:i:s') . '.json';
+            $filename = 'betterlinks.' . date('Y-m-d') . '.json';
             $fileDownload->sendDownload($filename);
         }
     }
