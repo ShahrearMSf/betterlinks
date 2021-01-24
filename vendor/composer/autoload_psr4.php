@@ -5,6 +5,7 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return [
-	'BetterLinks\\' => [$baseDir . '/includes'],
-];
+return array(
+    'BetterLinks\\' => array($baseDir . '/includes'),
+    'Apfelbox\\FileDownload\\' => array($vendorDir . '/apfelbox/php-file-download/src'),
+);

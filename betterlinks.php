@@ -84,6 +84,7 @@ if (!class_exists('BetterLinks')) {
 				new BetterLinks\Admin();
 			}
 			new BetterLinks\Link();
+			new BetterLinks\Tools();
 		}
 
 		public function dispatch_hook()

@@ -13,6 +13,8 @@ abstract class Controller
 	protected function json_link_formatter($data)
 	{
 		return [
+			'ID' => $data['ID'],
+			'link_slug' => $data['link_slug'],
 			'redirect_type' => $data['redirect_type'],
 			'target_url' => $data['target_url'],
 			'nofollow' => $data['nofollow'],
