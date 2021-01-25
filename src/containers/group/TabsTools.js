@@ -1,11 +1,25 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
 	const importerModeHandler = (changeEvent) => {
 		setImporterMode(changeEvent.target.value);
 	};
+
+	useEffect(() => {
+		if (query.get('import')) {
+			axios.get(ajaxurl + '?action=betterlinks/tools/get_import_info').then(
+				(response) => {
+					console.log(response);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		}
+	}, []);
+
 	return (
 		<React.Fragment>
 			<div>

@@ -11,8 +11,7 @@ import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 const Settings = () => {
 	const query = useQuery();
-	const currentTab = query.get('export');
-	console.log(currentTab);
+	const currentTab = query.get('import');
 	return (
 		<React.Fragment>
 			<Topbar />

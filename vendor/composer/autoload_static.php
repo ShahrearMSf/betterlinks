@@ -11,30 +11,12 @@ class ComposerStaticInit3193da833163e5a644878c0ec3cba184
         array (
             'BetterLinks\\' => 12,
         ),
-        'A' => 
-        array (
-            'Apfelbox\\FileDownload\\' => 22,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'BetterLinks\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
-        ),
-        'Apfelbox\\FileDownload\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/apfelbox/php-file-download/src',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'S' => 
-        array (
-            'Skyzyx\\Components\\Mimetypes' => 
-            array (
-                0 => __DIR__ . '/..' . '/skyzyx/mimetypes/src',
-            ),
         ),
     );
 
@@ -43,7 +25,6 @@ class ComposerStaticInit3193da833163e5a644878c0ec3cba184
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

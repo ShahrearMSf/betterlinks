@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'BetterLinks\\' => array($baseDir . '/includes'),
-    'Apfelbox\\FileDownload\\' => array($vendorDir . '/apfelbox/php-file-download/src'),
 );
