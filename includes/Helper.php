@@ -84,4 +84,89 @@ class Helper
 		$str = substr($str, 0, 100);
 		return $str;
 	}
+
+	public static function link_exists($title, $slug = ''){
+		global $wpdb;
+
+		$link_title   = wp_unslash( sanitize_post_field( 'link_title', $title, 0, 'db' ) );
+		$short_url = wp_unslash( sanitize_post_field( 'short_url', $slug, 0, 'db' ) );
+		$betterlinks = $wpdb->prefix . 'betterlinks';
+		$query = "SELECT link_title, short_url FROM  $betterlinks WHERE ";
+		$args  = array();
+
+		if ( ! empty( $title ) ) {
+			$query .= ' link_title = %s';
+			$args[] = $link_title;
+		}
+
+		if ( ! empty( $slug ) ) {
+			$query .= ' AND short_url = %s';
+			$args[] = $short_url;
+		}
+
+		if ( ! empty( $args ) ) {
+			$results =  $wpdb->get_var( $wpdb->prepare( $query, $args ) );
+			if(!empty($results)){
+				return true;
+			}
+			return;
+		}
+		return;
+	} 
+	public static function term_exists($slug, $type = ''){
+		global $wpdb;
+		$term_slug   = wp_unslash( sanitize_post_field( 'term_slug', $slug, 0, 'db' ) );
+		$term_type = wp_unslash( sanitize_post_field( 'term_type', $type, 0, 'db' ) );
+		$betterlinks = $wpdb->prefix . 'betterlinks_terms';
+		$query = "SELECT term_slug, term_type FROM  $betterlinks WHERE ";
+		$args  = array();
+
+		if ( ! empty( $slug ) ) {
+			$query .= ' term_slug = %s';
+			$args[] = $term_slug;
+		}
+
+		if ( ! empty( $type ) ) {
+			$query .= ' AND term_type = %s';
+			$args[] = $term_type;
+		}
+
+		if ( ! empty( $args ) ) {
+			$results =  $wpdb->get_var( $wpdb->prepare( $query, $args ) );
+			if(!empty($results)){
+				return true;
+			}
+			return;
+		}
+		return;
+	} 
+	public static function click_exists($ID){
+		global $wpdb;
+		$click_ID   = wp_unslash( sanitize_post_field( 'ID', $ID, 0, 'db' ) );
+		$betterlinks = $wpdb->prefix . 'betterlinks_clicks';
+		$query = "SELECT ID FROM  $betterlinks WHERE ";
+		$args  = array();
+
+		if ( ! empty( $slug ) ) {
+			$query .= ' ID = %d';
+			$args[] = $click_ID;
+		}
+
+		if ( ! empty( $args ) ) {
+			$results =  $wpdb->get_var( $wpdb->prepare( $query, $args ) );
+			if(!empty($results)){
+				return true;
+			}
+			return;
+		}
+		return;
+	} 
+
+	public static function csv_to_associative_arrays($csv){
+		$keys = array_shift($csv);
+		foreach ($csv as $i=>$row) {
+			$csv[$i] = array_combine($keys, $row);
+		}
+		return $csv;
+	}
 }

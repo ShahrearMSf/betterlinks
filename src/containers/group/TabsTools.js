@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
+	const [importResponse, setImportResponse] = useState({});
 	const importerModeHandler = (changeEvent) => {
 		setImporterMode(changeEvent.target.value);
 	};
@@ -11,7 +12,7 @@ const TabsTools = ({ query }) => {
 		if (query.get('import')) {
 			axios.get(ajaxurl + '?action=betterlinks/tools/get_import_info').then(
 				(response) => {
-					console.log(response);
+					setImportResponse(JSON.parse(response.data.data));
 				},
 				(error) => {
 					console.log(error);
@@ -77,6 +78,7 @@ const TabsTools = ({ query }) => {
 						</p>
 					</div>
 				</form>
+				<div id="response">{Object.entries(importResponse).map(([index, item]) => item.map((childItem) => <div>{childItem}</div>))}</div>
 			</div>
 		</React.Fragment>
 	);
