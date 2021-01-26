@@ -62,11 +62,11 @@ const TabsTools = ({ query }) => {
 						<div>
 							<label>
 								<input type="radio" name="mode" value="default" checked={importerMode === 'default'} onChange={importerModeHandler}></input>
-								Default
+								BetterLinks
 							</label>
 							<label>
 								<input type="radio" id="female" name="mode" value="prettylinks" checked={importerMode === 'prettylinks'} onChange={importerModeHandler}></input>
-								Pretty Links
+								PrettyLinks
 							</label>
 						</div>
 						<p>

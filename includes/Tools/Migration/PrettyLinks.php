@@ -7,7 +7,7 @@ class PrettyLinks {
 	{
 		$this->DB = $DB;
 	}
-    public function process_data($data){
+    public function process_links_data($data){
 		$links = [];
 		$categories = [];
 		$author_id = get_current_user_id();
@@ -105,5 +105,49 @@ class PrettyLinks {
 		if(count($termRelationList) > 0){
 			$this->DB->table('betterlinks_terms_relationships')->insert($termRelationList);
 		}
+	}
+
+	public function process_clicks_data($data){
+		$clicks = [];
+        $message = [];
+		foreach($data as $key => $item) {
+			/*
+			Clicks Header
+			(
+				[0] => Browser [1] => Browser Version [2] => Platform
+				[3] => IP [4] => Visitor ID [5] => Timestamp
+				[6] => Host [7] => URI [8] => Referrer [9] => Link
+			)
+			*/
+			// skip csv header row
+			if($key === 0 && !isset($item[7])) {
+				continue;
+			}
+
+			$link = $this->DB->table('betterlinks')->where('short_url', '=', \ltrim($item[7], '/'))->get();
+			if(!empty($link)){
+				$clicks[] = [
+					'link_id' => $link[0]->ID,
+					'ip' => $item[3],
+					'browser' => $item[0],
+					'os' => $item[2],
+					'referer' => $item[8],
+					'host' => $item[6],
+					'uri' => $item[7],
+					'click_count' => '',
+					'visitor_id' => $item[4],
+					'click_order' => '',
+					'created_at' => $item[5],
+					'created_at_gmt' => $item[5],
+				];
+				$message[] = 'import succesfully "' . $item[7] . '"';
+			}
+		}
+		if(count($clicks) > 0){
+            $this->DB->table('betterlinks_clicks')->insert($clicks);
+		}
+        return [
+			'clicks' => $message,
+		];
 	}
 }

@@ -27,7 +27,13 @@ class Import
 					$csv = array_map("str_getcsv", file($_FILES['upload_file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
 					if(is_array($csv) && count($csv) > 0){
 						$PrettyLinks = new Migration\PrettyLinks($this->DB);
-						$results = $PrettyLinks->process_data($csv);
+						if( isset($csv[0][0]) && $csv[0][0] === 'Browser'){
+							// import clicks data
+							$results = $PrettyLinks->process_clicks_data($csv);
+						} else {
+							// import link data
+							$results = $PrettyLinks->process_links_data($csv);
+						}
 						$_SESSION['betterlinks_import_info'] = json_encode($results);
 					}
 				}
