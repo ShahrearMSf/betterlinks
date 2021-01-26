@@ -1,19 +1,21 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PrettyLinks {
+class PrettyLinks
+{
 	private $DB;
 	public function __construct($DB)
 	{
 		$this->DB = $DB;
 	}
-    public function process_links_data($data){
+	public function process_links_data($data)
+	{
 		$links = [];
 		$categories = [];
 		$author_id = get_current_user_id();
 		$catMessage = [];
-        $message = [];
-		foreach($data as $key => $item) {
+		$message = [];
+		foreach ($data as $key => $item) {
 			/*
 			Link Header
 			(
@@ -24,12 +26,12 @@ class PrettyLinks {
 			)
 			*/
 			// skip csv header row
-			if($key === 0 || empty($item[3])) {
+			if ($key === 0 || empty($item[3])) {
 				continue;
 			}
 
 			$slug = \BetterLinks\Helper::make_slug($item[3]);
-			if( ! \BetterLinks\Helper::link_exists($item[3], $item[2]) ){
+			if (!\BetterLinks\Helper::link_exists($item[3], $item[2])) {
 				$links[] = [
 					'link_author' => $author_id,
 					'link_date' => $item[11],
@@ -38,49 +40,50 @@ class PrettyLinks {
 					'link_slug' => $slug,
 					'link_note' => '',
 					'link_status' => 'publish',
-					'nofollow' => (isset($item[6]) ? $item[6] : ''),
-					'sponsored' => (isset($item[7]) ? $item[7] : ''),
-					'track_me' => (isset($item[5]) ? $item[5] : ''),
-					'param_forwarding' => (isset($item[8]) ? $item[8] : ''),
+					'nofollow' => isset($item[6]) ? $item[6] : '',
+					'sponsored' => isset($item[7]) ? $item[7] : '',
+					'track_me' => isset($item[5]) ? $item[5] : '',
+					'param_forwarding' => isset($item[8]) ? $item[8] : '',
 					'param_struct' => '',
-					'redirect_type' => (isset($item[4]) ? $item[4] : ''),
-					'target_url' => (isset($item[1]) ? $item[1] : ''),
-					'short_url' => (isset($item[2]) ? $item[2] : ''),
+					'redirect_type' => isset($item[4]) ? $item[4] : '',
+					'target_url' => isset($item[1]) ? $item[1] : '',
+					'short_url' => isset($item[2]) ? $item[2] : '',
 					'link_order' => 0,
-					'link_modified' => (isset($item[12]) ? $item[12] : ''),
-					'link_modified_gmt' => (isset($item[12]) ? $item[12] : ''),
+					'link_modified' => isset($item[12]) ? $item[12] : '',
+					'link_modified_gmt' => isset($item[12]) ? $item[12] : '',
 				];
-				if(isset($item[13]) && !empty($item[13])){
+				if (isset($item[13]) && !empty($item[13])) {
 					$categories[$slug] = $item[13];
 				}
 
-                $message[] = 'import succesfully "' . $item[3] . '"';
+				$message[] = 'import succesfully "' . $item[3] . '"';
 			} else {
-                $message[] = 'import failed "' . $item[3] . '" already exists';
-            }
+				$message[] = 'import failed "' . $item[3] . '" already exists';
+			}
 		}
-		if(count($links) > 0){
-            $this->DB->table('betterlinks')->insert($links);
+		if (count($links) > 0) {
+			$this->DB->table('betterlinks')->insert($links);
 		}
 
-		if(count($categories) > 0){
+		if (count($categories) > 0) {
 			$catMessage = $this->terms_insert($categories);
 		}
-        return [
+		return [
 			'links' => $message,
-			'terms' => $catMessage
+			'terms' => $catMessage,
 		];
 	}
 
-	public function terms_insert($categories){
+	public function terms_insert($categories)
+	{
 		$termsList = [];
 		$message = [];
-		foreach($categories as $slug => $catName){
-			if( ! \BetterLinks\Helper::term_exists($catName) ){
+		foreach ($categories as $slug => $catName) {
+			if (!\BetterLinks\Helper::term_exists($catName)) {
 				$termsList[] = [
 					'term_name' => $catName,
 					'term_slug' => \BetterLinks\Helper::make_slug($catName),
-					'term_type' => 'category'
+					'term_type' => 'category',
 				];
 				$message[] = 'import succesfully "' . $catName . '"';
 			} else {
@@ -92,25 +95,33 @@ class PrettyLinks {
 		return $message;
 	}
 
-	public function terms_relationship_insert($categories){
+	public function terms_relationship_insert($categories)
+	{
 		$termRelationList = [];
-		foreach($categories as $slug => $catName){
-			$link = $this->DB->table('betterlinks')->where('link_slug', '=', $slug)->get();
-			$term = $this->DB->table('betterlinks_terms')->where('term_name', '=', $catName)->get();
+		foreach ($categories as $slug => $catName) {
+			$link = $this->DB
+				->table('betterlinks')
+				->where('link_slug', '=', $slug)
+				->get();
+			$term = $this->DB
+				->table('betterlinks_terms')
+				->where('term_name', '=', $catName)
+				->get();
 			$termRelationList[] = [
 				'term_id' => $term[0]->ID,
-				'link_id' => $link[0]->ID
+				'link_id' => $link[0]->ID,
 			];
 		}
-		if(count($termRelationList) > 0){
+		if (count($termRelationList) > 0) {
 			$this->DB->table('betterlinks_terms_relationships')->insert($termRelationList);
 		}
 	}
 
-	public function process_clicks_data($data){
+	public function process_clicks_data($data)
+	{
 		$clicks = [];
-        $message = [];
-		foreach($data as $key => $item) {
+		$message = [];
+		foreach ($data as $key => $item) {
 			/*
 			Clicks Header
 			(
@@ -120,12 +131,15 @@ class PrettyLinks {
 			)
 			*/
 			// skip csv header row
-			if($key === 0 && !isset($item[7])) {
+			if ($key === 0 && !isset($item[7])) {
 				continue;
 			}
 
-			$link = $this->DB->table('betterlinks')->where('short_url', '=', \ltrim($item[7], '/'))->get();
-			if(!empty($link)){
+			$link = $this->DB
+				->table('betterlinks')
+				->where('short_url', '=', \ltrim($item[7], '/'))
+				->get();
+			if (!empty($link)) {
 				$clicks[] = [
 					'link_id' => $link[0]->ID,
 					'ip' => $item[3],
@@ -143,10 +157,10 @@ class PrettyLinks {
 				$message[] = 'import succesfully "' . $item[7] . '"';
 			}
 		}
-		if(count($clicks) > 0){
-            $this->DB->table('betterlinks_clicks')->insert($clicks);
+		if (count($clicks) > 0) {
+			$this->DB->table('betterlinks_clicks')->insert($clicks);
 		}
-        return [
+		return [
 			'clicks' => $message,
 		];
 	}
