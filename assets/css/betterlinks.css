@@ -827,13 +827,49 @@
 }
 .betterlinks-body .btl-tab-inner-divider {
   display: grid;
-  grid-column: repeat(1fr, 2);
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
 }
 .betterlinks-body .btl-tab-panel-inner {
   background: #fff;
   padding: 25px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+.betterlinks-body .btl-tab-panel-inner h3:first-child {
+  margin-top: 0;
+}
+.betterlinks-body .btl-radio-group .btl-radio {
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.betterlinks-body .btl-radio-group .btl-radio input + span {
+  margin-left: 5px;
+  color: #707070;
+}
+.betterlinks-body .btl-radio-group .btl-radio input:checked + span {
+  color: #003be2;
+}
+.betterlinks-body .btl-export-download-button {
+  margin-top: 10px;
+  border: 1px solid #e1e1e1;
+  border-radius: 3px;
+  padding: 7px 12px;
+  background-color: #f7f8fa;
+  color: #707070;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.betterlinks-body .btl-export-download-button:hover {
+  border-color: #003be2;
+  background-color: #003be2;
+  color: #fff;
+}
+.betterlinks-body .btl-file-chooser label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
 }
 
 body.betterlinks-dark-mode {
@@ -1034,7 +1070,7 @@ body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-list .react-tabs__
 body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-list .react-tabs__tab.react-tabs__tab--selected {
   background-color: #252f47;
 }
-body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-panel {
+body.betterlinks-dark-mode .betterlinks-body .btl-tab-panel-inner {
   background: #2c3650;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-form-group .btl-form-label {

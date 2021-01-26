@@ -1,29 +1,65 @@
 .react-tabs__tab-list {
 	border-bottom: none;
 	.react-tabs__tab {
-    background-color: $light;
-    padding: 15px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    color: $dark;
-    text-decoration: none;
-    border: none;
-    border-top: 3px solid transparent;
-    &.react-tabs__tab--selected{
-      background-color: $white;
-      border-radius: 0;
-      border-color: $success;
-    }
+		background-color: $light;
+		padding: 15px 20px;
+		font-size: 14px;
+		font-weight: 600;
+		color: $dark;
+		text-decoration: none;
+		border: none;
+		border-top: 3px solid transparent;
+		&.react-tabs__tab--selected {
+			background-color: $white;
+			border-radius: 0;
+			border-color: $success;
+		}
 	}
 }
 
-.btl-tab-inner-divider{
-  display: grid;
-  grid-column: repeat(1fr, 2);
-  grid-gap: 20px;
+.btl-tab-inner-divider {
+	display: grid;
+  grid-template-columns: repeat(2, 1fr);
+	grid-gap: 20px;
 }
-.btl-tab-panel-inner{
-  background: $white;
-  padding: 25px;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 7%);
+.btl-tab-panel-inner {
+	background: $white;
+	padding: 25px;
+	box-shadow: 0 1px 4px rgb(0 0 0 / 7%);
+}
+.btl-tab-panel-inner h3:first-child{
+  margin-top: 0;
+}
+.btl-radio-group .btl-radio{
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.btl-radio-group .btl-radio input + span{
+  margin-left: 5px;
+  color: $secondary;
+}
+.btl-radio-group .btl-radio input:checked + span{
+  color: $success;
+}
+.btl-export-download-button{
+  margin-top: 10px;
+  border: 1px solid #e1e1e1;
+  border-radius: 3px;
+  padding: 7px 12px;
+  background-color: $light;
+  color: $secondary;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.btl-export-download-button:hover{
+  border-color: $success;
+  background-color: $success;
+  color: $white;
+}
+.btl-file-chooser label{
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
 }
