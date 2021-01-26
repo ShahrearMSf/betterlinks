@@ -825,7 +825,12 @@
   border-radius: 0;
   border-color: #003be2;
 }
-.betterlinks-body .react-tabs__tab-panel {
+.betterlinks-body .btl-tab-inner-divider {
+  display: grid;
+  grid-column: repeat(1fr, 2);
+  grid-gap: 20px;
+}
+.betterlinks-body .btl-tab-panel-inner {
   background: #fff;
   padding: 25px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);

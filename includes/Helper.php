@@ -16,8 +16,9 @@ class Helper
 		return $BLDATA;
 	}
 
-	public static function get_links(){
-		if(BETTERLINKS_EXISTS_LINKS_JSON) {
+	public static function get_links()
+	{
+		if (BETTERLINKS_EXISTS_LINKS_JSON) {
 			return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
 		}
 		return;
@@ -69,5 +70,102 @@ class Helper
 			}
 		}
 		return false;
+	}
+
+	public static function make_slug($str)
+	{
+		if (empty($str)) {
+			return;
+		}
+		if ($str !== mb_convert_encoding(mb_convert_encoding($str, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32')) {
+			$str = mb_convert_encoding($str, 'UTF-8', mb_detect_encoding($str));
+		}
+		$str = htmlentities($str, ENT_NOQUOTES, 'UTF-8');
+		$str = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\\1', $str);
+		$str = html_entity_decode($str, ENT_NOQUOTES, 'UTF-8');
+		$str = preg_replace(['`[^a-z0-9]`i', '`[-]+`'], '-', $str);
+		$str = strtolower(trim($str, '-'));
+		$str = substr($str, 0, 100);
+		return $str;
+	}
+
+	public static function link_exists($title, $slug = '')
+	{
+		global $wpdb;
+
+		$link_title = wp_unslash(sanitize_post_field('link_title', $title, 0, 'db'));
+		$short_url = wp_unslash(sanitize_post_field('short_url', $slug, 0, 'db'));
+		$betterlinks = $wpdb->prefix . 'betterlinks';
+		$query = "SELECT link_title, short_url FROM  $betterlinks WHERE ";
+		$args = [];
+
+		if (!empty($title)) {
+			$query .= ' link_title = %s';
+			$args[] = $link_title;
+		}
+
+		if (!empty($slug)) {
+			$query .= ' AND short_url = %s';
+			$args[] = $short_url;
+		}
+
+		if (!empty($args)) {
+			$results = $wpdb->get_var($wpdb->prepare($query, $args));
+			if (!empty($results)) {
+				return true;
+			}
+			return;
+		}
+		return;
+	}
+	public static function term_exists($slug, $type = '')
+	{
+		global $wpdb;
+		$term_slug = wp_unslash(sanitize_post_field('term_slug', $slug, 0, 'db'));
+		$term_type = wp_unslash(sanitize_post_field('term_type', $type, 0, 'db'));
+		$betterlinks = $wpdb->prefix . 'betterlinks_terms';
+		$query = "SELECT term_slug, term_type FROM  $betterlinks WHERE ";
+		$args = [];
+
+		if (!empty($slug)) {
+			$query .= ' term_slug = %s';
+			$args[] = $term_slug;
+		}
+
+		if (!empty($type)) {
+			$query .= ' AND term_type = %s';
+			$args[] = $term_type;
+		}
+
+		if (!empty($args)) {
+			$results = $wpdb->get_var($wpdb->prepare($query, $args));
+			if (!empty($results)) {
+				return true;
+			}
+			return;
+		}
+		return;
+	}
+	public static function click_exists($ID)
+	{
+		global $wpdb;
+		$click_ID = wp_unslash(sanitize_post_field('ID', $ID, 0, 'db'));
+		$betterlinks = $wpdb->prefix . 'betterlinks_clicks';
+		$query = "SELECT ID FROM  $betterlinks WHERE ";
+		$args = [];
+
+		if (!empty($slug)) {
+			$query .= ' ID = %d';
+			$args[] = $click_ID;
+		}
+
+		if (!empty($args)) {
+			$results = $wpdb->get_var($wpdb->prepare($query, $args));
+			if (!empty($results)) {
+				return true;
+			}
+			return;
+		}
+		return;
 	}
 }
