@@ -25,10 +25,9 @@ class Import
 					}
 				} else if($_POST['mode'] == 'prettylinks') {
 					$csv = array_map("str_getcsv", file($_FILES['upload_file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
-					$data = \BetterLinks\Helper::csv_to_associative_arrays($csv);
-					if(is_array($data) && count($data) > 0){
-						$PrettyLinks = new Migration\PrettyLinks();
-						$results = $PrettyLinks->process_data($data);
+					if(is_array($csv) && count($csv) > 0){
+						$PrettyLinks = new Migration\PrettyLinks($this->DB);
+						$results = $PrettyLinks->process_data($csv);
 						$_SESSION['betterlinks_import_info'] = json_encode($results);
 					}
 				}

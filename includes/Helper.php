@@ -74,6 +74,7 @@ class Helper
 	
 	public static function make_slug($str)
 	{ 
+		if(empty($str)) return;
 		if($str !== mb_convert_encoding( mb_convert_encoding($str, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
 			$str = mb_convert_encoding($str, 'UTF-8', mb_detect_encoding($str));
 		$str = htmlentities($str, ENT_NOQUOTES, 'UTF-8');
@@ -161,12 +162,4 @@ class Helper
 		}
 		return;
 	} 
-
-	public static function csv_to_associative_arrays($csv){
-		$keys = array_shift($csv);
-		foreach ($csv as $i=>$row) {
-			$csv[$i] = array_combine($keys, $row);
-		}
-		return $csv;
-	}
 }
