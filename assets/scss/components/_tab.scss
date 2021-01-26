@@ -18,6 +18,13 @@
 }
 
 .react-tabs__tab-panel {
+}
+.btl-tab-inner-divider{
+  display: grid;
+  grid-column: repeat(1fr, 2);
+  grid-gap: 20px;
+}
+.btl-tab-panel-inner{
   background: $white;
   padding: 25px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 7%);
