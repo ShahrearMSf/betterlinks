@@ -143,6 +143,9 @@
 .btl-analytics-heading {
 	color: $white;
 }
+.btl-analytics-filter__heading{
+	color: $white;
+}
 
 .btl-analytic {
 	background: #252f47;
@@ -157,9 +160,31 @@
 		background: #252f47;
 		color: $white;
 	}
+	.sc-idOhPF{
+		background: #252f47;
+		.btl-click-filter{
+			input{
+				background: #252f47;
+				border-color: #36405a;
+				color: $white;
+				&::placeholder{
+					color: $light-darken;
+				}
+			}
+		}
+	}
+	.sc-bBXqnf{
+		background: #252f47;
+		color: $white;
+	}
 	.btl-analytic-table {
 		background: #252f47;
 		color: $white;
+		.rdt_TableCol_Sortable{
+			div{
+				color: $white;
+			}
+		}
 		.rdt_TableHeadRow,
 		.rdt_TableRow {
 			background: #252f47;
@@ -180,5 +205,66 @@
 				color: $white;
 			}
 		}
+	}
+	.rdt_Pagination{
+		background-color: #252f47;
+		color: $white;
+		.sc-giIncl{
+			.sc-iJuUWI{
+				svg{
+					fill: $white;
+				}
+			}
+		}
+	}
+}
+
+.react-date-picker{
+	.react-date-picker__wrapper {
+		border-color: #36405a;
+		.react-date-picker__inputGroup {
+			.react-date-picker__inputGroup__input {
+				color: $white;
+			}
+		}
+	}
+}
+
+// for tab
+.react-tabs__tab-list {
+	.react-tabs__tab {
+		background-color: #2c3650;
+		color: $white;
+    &.react-tabs__tab--selected{
+      background-color: #252f47;
+    }
+	}
+}
+.react-tabs__tab-panel {
+  background: #2c3650;
+}
+
+// form data
+.btl-form-group {
+	.btl-form-label {
+		color: $light-darken;
+	}
+	.btl-select {
+		width: 300px;
+		.btl-react-select__control {
+			background-color: #36405a;
+			border: 1px solid #36405a;
+			&.btl-react-select__control--is-focused {
+				background-color: #36405a;
+			}
+		}
+	}
+}
+.btl-checkbox-field {
+	.text {
+		color: $white;
+	}
+	.btl-check:checked + .text:before {
+		color: lighten($success, 10%);
 	}
 }
