@@ -1,8 +1,6 @@
 <?php
 namespace BetterLinks\Tools;
 
-use Apfelbox\FileDownload\FileDownload;
-
 class Export 
 {
     private $wpdb_prefix;
@@ -15,10 +13,21 @@ class Export
         $page = (isset($_GET['page']) ? $_GET['page'] : '');
         $export = (isset($_GET['export']) ? $_GET['export'] : false);
         if( $page === 'betterlinks-settings' && $export == true){
-            $content = $this->process_data((isset($_POST['content']) ? $_POST['content'] : ''));
-            $fileDownload = FileDownload::createFromString(json_encode($content));
+            $fileContent = $this->process_data((isset($_POST['content']) ? $_POST['content'] : ''));
+            $content = json_encode($fileContent);
             $filename = 'betterlinks.' . date('Y-m-d') . '.json';
-            $fileDownload->sendDownload($filename);
+            $file = fopen($filename, "w") or die("Unable to open file!");
+            fwrite($file, $content);
+            fclose($file);
+            header("Content-Disposition: attachment; filename=\"" . $filename . "\"");
+            header("Content-Type: application/force-download");
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header("Content-Type: text/plain");
+
+            echo $content;
+            exit;
         }
     }
     public function process_data($type){
