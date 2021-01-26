@@ -110,21 +110,109 @@
 .betterlinks-body .w-100 {
   width: 100%;
 }
-.betterlinks-body .btl-form-group:not(:last-child) {
-  margin-bottom: 15px;
+.betterlinks-body .btl-form-group {
   display: flex;
+  align-items: center;
 }
-.betterlinks-body .btl-form-control {
+@media screen and (max-width: 650px) {
+  .betterlinks-body .btl-form-group {
+    flex-direction: column;
+  }
+}
+.betterlinks-body .btl-form-group .btl-form-label {
+  min-width: 120px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  padding-right: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  min-width: 200px;
+}
+@media screen and (max-width: 650px) {
+  .betterlinks-body .btl-form-group .btl-form-label {
+    margin-bottom: 5px;
+    text-align: center;
+    padding-right: 0;
+  }
+}
+.betterlinks-body .btl-form-group .btl-form-label.btl-required:after {
+  content: "*";
+  margin-left: 2px;
+  color: #f97272;
+}
+.betterlinks-body .btl-form-group textarea.btl-form-control,
+.betterlinks-body .btl-form-group input.btl-form-control {
   height: 44px;
   border-radius: 5px;
   background: #f7f8fa;
   padding: 0 10px;
   width: 100%;
+  max-width: 400px;
   border: 1px solid #f7f8fa;
 }
-.betterlinks-body .btl-form-control:focus {
+.betterlinks-body .btl-form-group textarea.btl-form-control:focus,
+.betterlinks-body .btl-form-group input.btl-form-control:focus {
   border: 1px solid #ebebeb;
   outline: none;
+  box-shadow: none;
+}
+.betterlinks-body .btl-form-group textarea.btl-form-control {
+  padding-top: 15px;
+  height: 80px;
+}
+.betterlinks-body .btl-form-group .btl-select {
+  width: 300px;
+}
+.betterlinks-body .btl-form-group .btl-select .btl-react-select__control {
+  background-color: #f7f8fa;
+  height: 55px;
+  border: 1px solid #f7f8fa;
+  border-radius: 5px;
+}
+.betterlinks-body .btl-form-group .btl-select .btl-react-select__control .btl-react-select__value-container {
+  padding-left: 15px;
+}
+.betterlinks-body .btl-form-group .btl-select .btl-react-select__control .btl-react-select__value-container .btl-react-select__single-value {
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 0;
+}
+.betterlinks-body .btl-form-group .btl-select .btl-react-select__control .btl-react-select__value-container .btl-react-select__input input {
+  box-shadow: none;
+}
+.betterlinks-body .btl-form-group .btl-select .btl-react-select__control.btl-react-select__control--is-focused {
+  box-shadow: none;
+  background-color: #fff;
+}
+.betterlinks-body .btl-form-group:not(:last-child) {
+  margin-bottom: 20px;
+}
+.betterlinks-body .btl-checkbox-field {
+  display: flex;
+  cursor: pointer;
+}
+.betterlinks-body .btl-checkbox-field .btl-check {
+  display: none;
+}
+.betterlinks-body .btl-checkbox-field .text {
+  padding-left: 40px;
+  position: relative;
+  color: #252525;
+  font-weight: 500;
+  font-size: 16px;
+}
+.betterlinks-body .btl-checkbox-field .text:before {
+  position: absolute;
+  font-family: "better-links";
+  content: "";
+  left: 0;
+  font-size: 24px;
+  color: #b0b2ba;
+}
+.betterlinks-body .btl-checkbox-field .btl-check:checked + .text:before {
+  content: "";
+  color: #003be2;
 }
 .betterlinks-body .btl-create-category-submit {
   height: 44px;
@@ -607,6 +695,7 @@
 }
 .betterlinks-body .react-date-picker .react-date-picker__wrapper .react-date-picker__inputGroup .react-date-picker__inputGroup__input {
   border: none;
+  background-color: transparent;
 }
 .betterlinks-body .react-date-picker .react-date-picker__wrapper .react-date-picker__inputGroup .react-date-picker__inputGroup__input:focus {
   box-shadow: none;
@@ -717,6 +806,29 @@
 }
 .betterlinks-body .react-calendar {
   border-color: #ebebeb;
+}
+.betterlinks-body .react-tabs__tab-list {
+  border-bottom: none;
+}
+.betterlinks-body .react-tabs__tab-list .react-tabs__tab {
+  background-color: #f7f8fa;
+  padding: 15px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #252525;
+  text-decoration: none;
+  border: none;
+  border-top: 3px solid transparent;
+}
+.betterlinks-body .react-tabs__tab-list .react-tabs__tab.react-tabs__tab--selected {
+  background-color: #fff;
+  border-radius: 0;
+  border-color: #003be2;
+}
+.betterlinks-body .react-tabs__tab-panel {
+  background: #fff;
+  padding: 25px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
 }
 
 body.betterlinks-dark-mode {
@@ -837,6 +949,9 @@ body.betterlinks-dark-mode .betterlinks-body .dropdown .dropdown-menu .btl-confi
 body.betterlinks-dark-mode .betterlinks-body .btl-analytics-heading {
   color: #fff;
 }
+body.betterlinks-dark-mode .betterlinks-body .btl-analytics-filter__heading {
+  color: #fff;
+}
 body.betterlinks-dark-mode .betterlinks-body .btl-analytic {
   background: #252f47;
   border-color: #252f47;
@@ -849,8 +964,26 @@ body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .rdt_Ta
   background: #252f47;
   color: #fff;
 }
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .sc-idOhPF {
+  background: #252f47;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .sc-idOhPF .btl-click-filter input {
+  background: #252f47;
+  border-color: #36405a;
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .sc-idOhPF .btl-click-filter input::placeholder {
+  color: #ebebeb;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .sc-bBXqnf {
+  background: #252f47;
+  color: #fff;
+}
 body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .btl-analytic-table {
   background: #252f47;
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .btl-analytic-table .rdt_TableCol_Sortable div {
   color: #fff;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .btl-analytic-table .rdt_TableHeadRow,
@@ -875,6 +1008,48 @@ body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .btl-an
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .btl-analytic-table a:hover {
   color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .rdt_Pagination {
+  background-color: #252f47;
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-analytic-table-wrapper .rdt_Pagination .sc-giIncl .sc-iJuUWI svg {
+  fill: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .react-date-picker .react-date-picker__wrapper {
+  border-color: #36405a;
+}
+body.betterlinks-dark-mode .betterlinks-body .react-date-picker .react-date-picker__wrapper .react-date-picker__inputGroup .react-date-picker__inputGroup__input {
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-list .react-tabs__tab {
+  background-color: #2c3650;
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-list .react-tabs__tab.react-tabs__tab--selected {
+  background-color: #252f47;
+}
+body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-panel {
+  background: #2c3650;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-form-group .btl-form-label {
+  color: #ebebeb;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-form-group .btl-select {
+  width: 300px;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-form-group .btl-select .btl-react-select__control {
+  background-color: #36405a;
+  border: 1px solid #36405a;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-form-group .btl-select .btl-react-select__control.btl-react-select__control--is-focused {
+  background-color: #36405a;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-checkbox-field .text {
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-checkbox-field .btl-check:checked + .text:before {
+  color: #1653ff;
 }
 body.betterlinks-dark-mode .ReactModal__Content {
   background-color: #252f47 !important;

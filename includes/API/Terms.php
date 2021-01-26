@@ -86,7 +86,7 @@ class Terms extends Controller
 				)
 				->get();
 		} else {
-			$results = $query->table("betterlinks_terms")->get();
+			$results = $query->table('betterlinks_terms')->get();
 		}
 
 		return new \WP_REST_Response(
