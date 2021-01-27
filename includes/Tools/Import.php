@@ -140,6 +140,7 @@ class Import
 	{
 		$results = json_encode([]);
 		if (isset($_SESSION['betterlinks_import_info'])) {
+			\BetterLinks\Helper::create_cron_jobs_for_json_links();
 			$results = $_SESSION['betterlinks_import_info'];
 			unset($_SESSION['betterlinks_import_info']);
 		}
