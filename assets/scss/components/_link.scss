@@ -49,9 +49,10 @@
 				color: #373747;
 				font-size: 13px;
 				font-weight: 500;
-				filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
+				box-shadow: 0px 0 1px rgba(0, 5, 41, 0.007);
 				&::after {
-					border-top-color: #fff;
+					border-top-color: rgba(0, 5, 41, 0.007);
+					
 				}
 			}
 			.dnd-link-button {

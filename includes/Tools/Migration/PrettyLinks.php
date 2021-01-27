@@ -54,6 +54,8 @@ class PrettyLinks
 				];
 				if (isset($item[13]) && !empty($item[13])) {
 					$categories[$slug] = $item[13];
+				} else {
+					$categories[$slug] = 'uncategorized';
 				}
 
 				$message[] = 'import succesfully "' . $item[3] . '"';
@@ -81,7 +83,7 @@ class PrettyLinks
 		foreach ($categories as $slug => $catName) {
 			if (!\BetterLinks\Helper::term_exists($catName)) {
 				$termsList[] = [
-					'term_name' => $catName,
+					'term_name' => str_replace('-', ' ', ucwords($catName, '-')),
 					'term_slug' => \BetterLinks\Helper::make_slug($catName),
 					'term_type' => 'category',
 				];
@@ -105,7 +107,7 @@ class PrettyLinks
 				->get();
 			$term = $this->DB
 				->table('betterlinks_terms')
-				->where('term_name', '=', $catName)
+				->where('term_slug', '=', $catName)
 				->get();
 			$termRelationList[] = [
 				'term_id' => $term[0]->ID,

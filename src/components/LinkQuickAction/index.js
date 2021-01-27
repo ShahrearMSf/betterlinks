@@ -23,8 +23,8 @@ const LinkQuickAction = (props) => {
 			<ReactTooltip className="light-tooltip" />
 			{item.analytic && (
 				<button className="dnd-link-button">
-					<span data-tip={item.analytic.ip.map((item) => Object.keys(item) + '(' + Object.values(item) + ')')} className="icon">
-						{item.analytic.link_count}
+					<span data-tip={'Clicks: ' + item.analytic.link_count + ' / ' + 'Unique Clicks: ' + item.analytic.ip.length} className="icon">
+						{item.analytic.link_count + '/' + item.analytic.ip.length}
 					</span>
 				</button>
 			)}
