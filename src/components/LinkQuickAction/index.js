@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import ReactTooltip from 'react-tooltip';
 import Link from './../Link';
 import { site_url, copyToClipboard } from './../../utils/helper';
 

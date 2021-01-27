@@ -4,4 +4,4 @@ package-lock.json
 assets/scss/prepros.config
 .git
 *.xml
-*.map
+**/*.map
