@@ -26,7 +26,7 @@ class PrettyLinks
 			)
 			*/
 			// skip csv header row
-			if ($key === 0 || empty($item[3])) {
+			if ($key === 0 || empty($item[3]) || $item[3] == 1) {
 				continue;
 			}
 
