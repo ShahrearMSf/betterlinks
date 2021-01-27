@@ -593,10 +593,10 @@
   color: #373747;
   font-size: 13px;
   font-weight: 500;
-  filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
+  box-shadow: 0px 0 1px rgba(0, 5, 41, 0.007);
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .light-tooltip::after {
-  border-top-color: #fff;
+  border-top-color: rgba(0, 5, 41, 0.007);
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button {
   padding: 5px;
