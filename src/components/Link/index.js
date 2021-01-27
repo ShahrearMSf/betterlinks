@@ -16,7 +16,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const randomSlug = generateRandomSlug();
-	const currentData = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 
 	const initialValues = {
 		link_title: '',
@@ -29,17 +29,17 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 		sponsored: false,
 		param_forwarding: false,
 		track_me: false,
-		link_date: currentData,
-		link_date_gmt: currentData,
-		link_modified: currentData,
-		link_modified_gmt: currentData,
+		link_date: currentDate,
+		link_date_gmt: currentDate,
+		link_modified: currentDate,
+		link_modified_gmt: currentDate,
 		cat_id,
 		cat_name,
 	};
 
 	const initialUpdateValues = {
-		link_modified: currentData,
-		link_modified_gmt: currentData,
+		link_modified: currentDate,
+		link_modified_gmt: currentDate,
 		cat_id,
 		cat_name,
 		...item,
@@ -83,7 +83,6 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 		}, [values]);
 		return null;
 	};
-	console.log(currentData);
 	return (
 		<>
 			{item ? (
