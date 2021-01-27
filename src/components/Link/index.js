@@ -6,7 +6,7 @@ import { useFormikContext, Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, site_url, generateSlug, generateRandomSlug, copyToClipboard } from './../../utils/helper';
+import { modalCustomStyles, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -16,6 +16,34 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const randomSlug = generateRandomSlug();
+	const currentData = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+
+	const initialValues = {
+		link_title: '',
+		link_slug: '',
+		redirect_type: '307',
+		target_url: '',
+		short_url: randomSlug,
+		link_note: '',
+		nofollow: false,
+		sponsored: false,
+		param_forwarding: false,
+		track_me: false,
+		link_date: currentData,
+		link_date_gmt: currentData,
+		link_modified: currentData,
+		link_modified_gmt: currentData,
+		cat_id,
+		cat_name,
+	};
+
+	const initialUpdateValues = {
+		link_modified: currentData,
+		link_modified_gmt: currentData,
+		cat_id,
+		cat_name,
+		...item,
+	};
 
 	function openModal() {
 		if (item) {
@@ -55,6 +83,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 		}, [values]);
 		return null;
 	};
+	console.log(currentData);
 	return (
 		<>
 			{item ? (
@@ -66,27 +95,12 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 					<i className="btl btl-add"></i>
 				</button>
 			)}
-
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={{
-						link_title: '',
-						link_slug: '',
-						redirect_type: '307',
-						target_url: '',
-						short_url: randomSlug,
-						link_note: '',
-						nofollow: false,
-						sponsored: false,
-						param_forwarding: false,
-						track_me: false,
-						cat_id,
-						cat_name,
-						...item,
-					}}
+					initialValues={item ? initialUpdateValues : initialValues}
 					onSubmit={async (values) => {
 						setEditMode(false);
 						setModalIsOpen(false);
