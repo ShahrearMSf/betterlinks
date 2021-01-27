@@ -588,16 +588,6 @@
   display: flex;
   align-items: center;
 }
-.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .light-tooltip {
-  background: #fff;
-  color: #373747;
-  font-size: 13px;
-  font-weight: 500;
-  box-shadow: 0px 0 1px rgba(0, 5, 41, 0.007);
-}
-.betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .light-tooltip::after {
-  border-top-color: rgba(0, 5, 41, 0.007);
-}
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button {
   padding: 5px;
   border: none;
@@ -1240,6 +1230,28 @@ body.betterlinks-dark-mode .ReactModal__Content .btl-modal-submit-button {
 }
 body.betterlinks-dark-mode .ReactModal__Content .btl-modal-submit-button:hover {
   box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
+}
+
+.btl-tooltip {
+  position: relative;
+  display: inline-block;
+}
+.btl-tooltip .btl-tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-left: -60px;
+  z-index: 1;
+}
+.btl-tooltip:hover .btl-tooltiptext {
+  visibility: visible;
 }
 
 .ReactModal__Overlay {

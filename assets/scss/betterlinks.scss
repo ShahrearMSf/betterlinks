@@ -33,4 +33,26 @@ body {
 		@import './control/plugin-mode-modal';
 	}
 }
+
+.btl-tooltip {
+	position: relative;
+	display: inline-block;
+	.btl-tooltiptext {
+		visibility: hidden;
+		width: 120px;
+		background-color: black;
+		color: #fff;
+		text-align: center;
+		border-radius: 6px;
+		padding: 10px;
+		position: absolute;
+		bottom: 100%;
+		left: 0;
+		margin-left: -60px;
+		z-index: 1;
+	}
+	&:hover .btl-tooltiptext {
+		visibility: visible;
+	}
+}
 @import './components/modal';

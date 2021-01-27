@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import ReactTooltip from 'react-tooltip';
 import Modal from 'react-modal';
 import Select from './../Select';
 import { useFormikContext, Formik, Field, Form } from 'formik';
@@ -157,22 +156,24 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>
 										</div>
 										<div className="link-options__body">
-											<ReactTooltip className="light-tooltip" />
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
 												<span className="text">
 													{__('No Follow', 'betterlinks')}
-													<span data-tip={__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
 												<span className="text">
 													{__('Sponsored', 'betterlinks')}
-													<span
-														data-tip={__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}
-														className="dashicons dashicons-info-outline"
-													></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
@@ -184,14 +185,20 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 												/>
 												<span className="text">
 													{__('Parameter Forwarding', 'betterlinks')}
-													<span data-tip={__('This will pass the parameters you have set in the target URL', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
 												<span className="text">
 													{__('Tracking', 'betterlinks')}
-													<span data-tip={__('This will let you check Analytics report of your links', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 										</div>
