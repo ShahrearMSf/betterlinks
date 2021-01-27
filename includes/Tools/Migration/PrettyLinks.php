@@ -81,8 +81,8 @@ class PrettyLinks
 		$termsList = [];
 		$message = [];
 		foreach ($categories as $slug => $catName) {
-			if (!\BetterLinks\Helper::term_exists($catName)) {
-				$termsList[] = [
+			if (!\BetterLinks\Helper::term_exists($catName) && !isset($termsList[\BetterLinks\Helper::make_slug($catName)])) {
+				$termsList[\BetterLinks\Helper::make_slug($catName)] = [
 					'term_name' => str_replace('-', ' ', ucwords($catName, '-')),
 					'term_slug' => \BetterLinks\Helper::make_slug($catName),
 					'term_type' => 'category',
