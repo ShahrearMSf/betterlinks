@@ -8,12 +8,17 @@
 		color: $dark;
 		text-decoration: none;
 		border: none;
-		border-top: 3px solid transparent;
+    border-top: 3px solid transparent;
+    box-shadow: none;
 		&.react-tabs__tab--selected {
 			background-color: $white;
 			border-radius: 0;
 			border-color: $success;
-		}
+    }
+    &:after,
+    &:before{
+      display: none;
+    }
 	}
 }
 
@@ -27,7 +32,7 @@
 	padding: 25px;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 7%);
 }
-.btl-tab-panel-inner h3:first-child{
+.btl-tab-panel-inner .btl-tab-panel-header:first-child{
   margin-top: 0;
 }
 .btl-radio-group .btl-radio{
@@ -43,23 +48,40 @@
 }
 .btl-export-download-button{
   margin-top: 10px;
-  border: 1px solid #e1e1e1;
+  border: none;
+  background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
   border-radius: 3px;
   padding: 7px 12px;
-  background-color: $light;
-  color: $secondary;
+  color: $white;
   outline: none;
   box-shadow: none;
   cursor: pointer;
   transition: all 0.2s linear;
 }
 .btl-export-download-button:hover{
-  border-color: $success;
-  background-color: $success;
-  color: $white;
+  box-shadow: 0 5px 10px rgb(0 59 226 / 15%);
 }
 .btl-file-chooser label{
   font-weight: 600;
   margin-bottom: 5px;
   display: block;
+}
+.btl-file-chooser input{
+  color: $secondary;
+}
+button.button-primary,
+.submit input{
+  background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+button.button-primary:hover,
+button.button-primary:focus,
+.submit input:hover,
+.submit input:focus{
+  box-shadow: 0 5px 10px rgb(0 59 226 / 15%);
+  border: none;
+  background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  outline: none;
 }

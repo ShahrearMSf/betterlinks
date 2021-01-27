@@ -59,7 +59,7 @@
 			.light-tooltip {
 				background: #536082;
 				color: $white;
-				filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
+				filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
 				&::after {
 					border-top-color: #536082;
 				}
@@ -243,6 +243,9 @@
 .btl-tab-panel-inner {
   background: #2c3650;
 }
+.btl-tab-panel-inner .btl-tab-panel-header{
+  color: #fff;
+}
 
 // form data
 .btl-form-group {
@@ -267,4 +270,16 @@
 	.btl-check:checked + .text:before {
 		color: lighten($success, 10%);
 	}
+}
+.btl-radio-group .btl-radio input + span{
+  color: $secondary-lighten;
+}
+.btl-radio-group .btl-radio input:checked + span{
+  color: $white;
+}
+.btl-file-chooser label{
+	color: $white;
+}
+.btl-file-chooser input{
+	color: $white;
 }

@@ -593,7 +593,7 @@
   color: #373747;
   font-size: 13px;
   font-weight: 500;
-  filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
+  filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .light-tooltip::after {
   border-top-color: #fff;
@@ -819,11 +819,15 @@
   text-decoration: none;
   border: none;
   border-top: 3px solid transparent;
+  box-shadow: none;
 }
 .betterlinks-body .react-tabs__tab-list .react-tabs__tab.react-tabs__tab--selected {
   background-color: #fff;
   border-radius: 0;
   border-color: #003be2;
+}
+.betterlinks-body .react-tabs__tab-list .react-tabs__tab:after, .betterlinks-body .react-tabs__tab-list .react-tabs__tab:before {
+  display: none;
 }
 .betterlinks-body .btl-tab-inner-divider {
   display: grid;
@@ -835,7 +839,7 @@
   padding: 25px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
 }
-.betterlinks-body .btl-tab-panel-inner h3:first-child {
+.betterlinks-body .btl-tab-panel-inner .btl-tab-panel-header:first-child {
   margin-top: 0;
 }
 .betterlinks-body .btl-radio-group .btl-radio {
@@ -851,25 +855,42 @@
 }
 .betterlinks-body .btl-export-download-button {
   margin-top: 10px;
-  border: 1px solid #e1e1e1;
+  border: none;
+  background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
   border-radius: 3px;
   padding: 7px 12px;
-  background-color: #f7f8fa;
-  color: #707070;
+  color: #fff;
   outline: none;
   box-shadow: none;
   cursor: pointer;
   transition: all 0.2s linear;
 }
 .betterlinks-body .btl-export-download-button:hover {
-  border-color: #003be2;
-  background-color: #003be2;
-  color: #fff;
+  box-shadow: 0 5px 10px rgba(0, 59, 226, 0.15);
 }
 .betterlinks-body .btl-file-chooser label {
   font-weight: 600;
   margin-bottom: 5px;
   display: block;
+}
+.betterlinks-body .btl-file-chooser input {
+  color: #707070;
+}
+.betterlinks-body button.button-primary,
+.betterlinks-body .submit input {
+  background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.betterlinks-body button.button-primary:hover,
+.betterlinks-body button.button-primary:focus,
+.betterlinks-body .submit input:hover,
+.betterlinks-body .submit input:focus {
+  box-shadow: 0 5px 10px rgba(0, 59, 226, 0.15);
+  border: none;
+  background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  outline: none;
 }
 
 body.betterlinks-dark-mode {
@@ -925,7 +946,7 @@ body.betterlinks-dark-mode .betterlinks-body .btl-dnd-link .btl-dnd-link-body .d
 body.betterlinks-dark-mode .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .light-tooltip {
   background: #536082;
   color: #fff;
-  filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
+  filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .light-tooltip::after {
   border-top-color: #536082;
@@ -1073,6 +1094,9 @@ body.betterlinks-dark-mode .betterlinks-body .react-tabs__tab-list .react-tabs__
 body.betterlinks-dark-mode .betterlinks-body .btl-tab-panel-inner {
   background: #2c3650;
 }
+body.betterlinks-dark-mode .betterlinks-body .btl-tab-panel-inner .btl-tab-panel-header {
+  color: #fff;
+}
 body.betterlinks-dark-mode .betterlinks-body .btl-form-group .btl-form-label {
   color: #ebebeb;
 }
@@ -1091,6 +1115,18 @@ body.betterlinks-dark-mode .betterlinks-body .btl-checkbox-field .text {
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-checkbox-field .btl-check:checked + .text:before {
   color: #1653ff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-radio-group .btl-radio input + span {
+  color: #b0b2ba;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-radio-group .btl-radio input:checked + span {
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-file-chooser label {
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-file-chooser input {
+  color: #fff;
 }
 body.betterlinks-dark-mode .ReactModal__Content {
   background-color: #252f47 !important;
@@ -1280,7 +1316,7 @@ body.betterlinks-dark-mode .ReactModal__Content .btl-modal-submit-button:hover {
   color: #707070;
   font-size: 13px;
   font-weight: 400;
-  filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.05));
+  filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
 }
 .ReactModal__Content .btl-entry-content .btl-entry-content-right .light-tooltip::after {
   border-top-color: #fff;

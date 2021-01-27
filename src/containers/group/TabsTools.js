@@ -25,7 +25,7 @@ const TabsTools = ({ query }) => {
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
 			<div className="btl-tab-panel-inner">
-				<h3>Choose what to export</h3>
+				<h3 className="btl-tab-panel-header">Choose what to export</h3>
 				<form action={'admin.php?page=' + query.get('page') + '&export=true'} method="POST">
 					<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 						<div>
@@ -57,7 +57,7 @@ const TabsTools = ({ query }) => {
 				</form>
 				</div>
 				<div className="btl-tab-panel-inner">
-				<h3>Choose what to import</h3>
+				<h3 className="btl-tab-panel-header">Choose what to import</h3>
 				<form action={'admin.php?page=' + query.get('page') + '&import=true'} method="POST" enctype="multipart/form-data">
 					<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 						<div>
