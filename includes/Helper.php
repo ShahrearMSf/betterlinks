@@ -118,27 +118,24 @@ class Helper
 		}
 		return;
 	}
-	public static function term_exists($slug, $type = '')
+	public static function term_exists($slug)
 	{
 		global $wpdb;
+
 		$term_slug = wp_unslash(sanitize_post_field('term_slug', $slug, 0, 'db'));
-		$term_type = wp_unslash(sanitize_post_field('term_type', $type, 0, 'db'));
 		$betterlinks = $wpdb->prefix . 'betterlinks_terms';
-		$query = "SELECT term_slug, term_type FROM  $betterlinks WHERE ";
+		$query = "SELECT term_slug FROM  $betterlinks WHERE ";
 		$args = [];
 
+	
 		if (!empty($slug)) {
 			$query .= ' term_slug = %s';
 			$args[] = $term_slug;
 		}
 
-		if (!empty($type)) {
-			$query .= ' AND term_type = %s';
-			$args[] = $term_type;
-		}
-
 		if (!empty($args)) {
 			$results = $wpdb->get_var($wpdb->prepare($query, $args));
+			error_log(print_r($results, true));
 			if (!empty($results)) {
 				return true;
 			}
