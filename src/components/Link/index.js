@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import ReactTooltip from 'react-tooltip';
 import Modal from 'react-modal';
 import Select from './../Select';
 import { useFormikContext, Formik, Field, Form } from 'formik';
@@ -157,7 +156,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>
 										</div>
 										<div className="link-options__body">
-											<ReactTooltip className="light-tooltip" />
+											{/* <ReactTooltip className="light-tooltip" /> */}
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
 												<span className="text">
