@@ -8,6 +8,7 @@ class Admin
 		$this->add_menu();
 		$this->add_scripts();
 		add_filter('BetterLinks/Admin/skip_no_conflict', [$this, 'skip_no_conflict']);
+		$this->dispath_notice();
 	}
 	public function add_menu()
 	{
@@ -16,6 +17,9 @@ class Admin
 	public function add_scripts()
 	{
 		new Admin\Assets();
+	}
+	public function dispath_notice(){
+		new Admin\Notice();
 	}
 	public function skip_no_conflict()
 	{
