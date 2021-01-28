@@ -18,7 +18,8 @@ class Admin
 	{
 		new Admin\Assets();
 	}
-	public function dispath_notice(){
+	public function dispath_notice()
+	{
 		new Admin\Ajax();
 		new Admin\Notice();
 	}

@@ -127,7 +127,6 @@ class Helper
 		$query = "SELECT term_slug FROM  $betterlinks WHERE ";
 		$args = [];
 
-	
 		if (!empty($slug)) {
 			$query .= ' term_slug = %s';
 			$args[] = $term_slug;
@@ -166,7 +165,8 @@ class Helper
 		return;
 	}
 
-	public static function create_cron_jobs_for_json_links(){
+	public static function create_cron_jobs_for_json_links()
+	{
 		wp_clear_scheduled_hook('betterlinks/write_json_links');
 		wp_schedule_single_event(time() + 30, 'betterlinks/write_json_links');
 	}

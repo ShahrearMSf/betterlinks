@@ -1,7 +1,7 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PrettyLinksDB
+class PTLOneClick extends PTLBase
 {
 	private $DB;
 	public function __construct($DB)
@@ -44,11 +44,11 @@ class PrettyLinksDB
 					'link_modified_gmt' => isset($item->last_updated_at) ? $item->last_updated_at : '',
 				];
 				if (isset($item->link_cpt_id) && !empty($item->link_cpt_id)) {
-                    $term = get_the_terms( $item->link_cpt_id, 'pretty-link-category' );
-                    $categories[$slug] = $term[0]->slug;
+					$term = get_the_terms($item->link_cpt_id, 'pretty-link-category');
+					$categories[$slug] = $term[0]->slug;
 				} else {
 					$categories[$slug] = 'uncategorized';
-                }
+				}
 				$message[] = 'import succesfully "' . $item->name . '"';
 			} else {
 				$message[] = 'import failed "' . $item->name . '" already exists';
@@ -65,49 +65,6 @@ class PrettyLinksDB
 			'links' => $message,
 			'terms' => $catMessage,
 		];
-	}
-
-	public function terms_insert($categories)
-	{
-		$termsList = [];
-		$message = [];
-		foreach ($categories as $slug => $catName) {
-			if (!\BetterLinks\Helper::term_exists($catName) && !isset($termsList[\BetterLinks\Helper::make_slug($catName)])) {
-				$termsList[\BetterLinks\Helper::make_slug($catName)] = [
-					'term_name' => str_replace('-', ' ', ucwords($catName, '-')),
-					'term_slug' => \BetterLinks\Helper::make_slug($catName),
-					'term_type' => 'category',
-				];
-				$message[] = 'import succesfully "' . $catName . '"';
-			} else {
-				$message[] = 'import failed "' . $catName . '" already exists';
-			}
-		}
-		$this->DB->table('betterlinks_terms')->insert($termsList);
-		$this->terms_relationship_insert($categories);
-		return $message;
-	}
-
-	public function terms_relationship_insert($categories)
-	{
-		$termRelationList = [];
-		foreach ($categories as $slug => $catName) {
-			$link = $this->DB
-				->table('betterlinks')
-				->where('link_slug', '=', $slug)
-				->get();
-			$term = $this->DB
-				->table('betterlinks_terms')
-				->where('term_slug', '=', $catName)
-				->get();
-			$termRelationList[] = [
-				'term_id' => $term[0]->ID,
-				'link_id' => $link[0]->ID,
-			];
-		}
-		if (count($termRelationList) > 0) {
-			$this->DB->table('betterlinks_terms_relationships')->insert($termRelationList);
-		}
 	}
 
 	public function process_clicks_data($data)

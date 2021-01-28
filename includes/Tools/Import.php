@@ -27,7 +27,7 @@ class Import
 				} elseif ($_POST['mode'] == 'prettylinks') {
 					$csv = array_map('str_getcsv', file($_FILES['upload_file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
 					if (is_array($csv) && count($csv) > 0) {
-						$PrettyLinks = new Migration\PrettyLinks($this->DB);
+						$PrettyLinks = new Migration\PTLImportCSV($this->DB);
 						if (isset($csv[0][0]) && $csv[0][0] === 'Browser') {
 							// import clicks data
 							$results = $PrettyLinks->process_clicks_data($csv);
