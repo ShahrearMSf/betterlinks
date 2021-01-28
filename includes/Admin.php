@@ -19,6 +19,7 @@ class Admin
 		new Admin\Assets();
 	}
 	public function dispath_notice(){
+		new Admin\Ajax();
 		new Admin\Notice();
 	}
 	public function skip_no_conflict()

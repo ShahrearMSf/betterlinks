@@ -9,9 +9,11 @@ import 'react-tabs/style/react-tabs.css';
 import Topbar from './../group/TopBar';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
+import Migration from './../group/Migration';
 const Settings = () => {
 	const query = useQuery();
 	const currentTab = query.get('import');
+	const migration = query.get('migration');
 	return (
 		<React.Fragment>
 			<Topbar />
@@ -28,6 +30,7 @@ const Settings = () => {
 					<TabsTools query={query} />
 				</TabPanel>
 			</Tabs>
+			{migration && <Migration />}
 		</React.Fragment>
 	);
 };
