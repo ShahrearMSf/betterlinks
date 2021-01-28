@@ -16,6 +16,9 @@ const LinkQuickAction = (props) => {
 	const copyShortUrl = (url) => {
 		copyToClipboard(url);
 		setCopyUrl(true);
+		window.setTimeout(function () {
+			setCopyUrl(false);
+		}, 3000);
 	};
 	return (
 		<React.Fragment>
