@@ -14,11 +14,14 @@ const columns = [
 		name: 'Browser',
 		selector: 'browser',
 		sortable: false,
-		cell: (row) => (
-			<div>
-				<img src={`${plugin_root_url}assets/images/browser/${row.browser}.png`} alt="icon" />
-			</div>
-		),
+		cell: (row) => {
+			const browser = getBrowser(row.browser);
+			return (
+				<div>
+					<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}.svg`} alt="icon" />
+				</div>
+			);
+		},
 	},
 	{
 		name: 'Link Name',

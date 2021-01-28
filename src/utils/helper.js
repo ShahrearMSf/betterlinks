@@ -83,19 +83,24 @@ export const copyToClipboard = (copyText) => {
 
 export const getBrowser = (agent) => {
 	var browser = '';
-	if (/Opera[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'opera';
-	} else if (/MSIE (\d+\.\d+);/.test(agent)) {
-		browser = 'MSIE';
-	} else if (/Navigator[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'netscape';
-	} else if (/Chrome[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'chrome';
-	} else if (/Safari[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'safari';
-		/Version[\/\s](\d+\.\d+)/.test(agent);
-	} else if (/Firefox[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'mozilla';
+	if (/Opera[\/\s](\d+\.\d+)/.test(agent) || 'Opera' == agent) {
+		browser = 'opera-browser';
+	} else if (/IE (\d+\.\d+);/.test(agent) || 'IE' == agent) {
+		browser = 'internet-explorer-browser';
+	} else if (/Navigator[\/\s](\d+\.\d+)/.test(agent) || 'Navigator' == agent) {
+		browser = 'netscape-browser';
+	} else if (/Chrome[\/\s](\d+\.\d+)/.test(agent) || 'Chrome' == agent) {
+		browser = 'chrome-browser';
+	} else if (/Safari[\/\s](\d+\.\d+)/.test(agent) || 'Safari' == agent) {
+		browser = 'safari-browser';
+	} else if (/Firefox[\/\s](\d+\.\d+)/.test(agent) || 'Firefox' == agent) {
+		browser = 'firefox-browser';
+	} else if (/Yandex[\/\s](\d+\.\d+)/.test(agent) || 'Yandex' == agent) {
+		browser = 'yandex-browser';
+	} else if (/Facebook[\/\s](\d+\.\d+)/.test(agent) || 'Facebook' == agent) {
+		browser = 'facebook-browser';
+	} else {
+		browser = 'web-browser';
 	}
 	return browser;
 };
