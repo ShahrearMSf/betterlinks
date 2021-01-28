@@ -18,6 +18,10 @@ trait ArgumentSchema
 				'type' => 'string',
 				'format' => 'date-time',
 			],
+			'link_date_gmt' => [
+				'type' => 'string',
+				'format' => 'date-time',
+			],
 			'link_title' => [
 				'type' => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
@@ -67,6 +71,10 @@ trait ArgumentSchema
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 			'link_modified' => [
+				'type' => 'string',
+				'format' => 'date-time',
+			],
+			'link_modified_gmt' => [
 				'type' => 'string',
 				'format' => 'date-time',
 			],

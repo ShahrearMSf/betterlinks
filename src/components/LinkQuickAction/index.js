@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import ReactTooltip from 'react-tooltip';
 import Link from './../Link';
 import { site_url, copyToClipboard } from './../../utils/helper';
 
@@ -20,35 +19,27 @@ const LinkQuickAction = (props) => {
 	};
 	return (
 		<React.Fragment>
-			{/* <ReactTooltip className="light-tooltip" /> */}
 			{item.analytic && (
-				<button className="dnd-link-button">
-					<span data-tip={'Clicks: ' + item.analytic.link_count + ' / ' + 'Unique Clicks: ' + item.analytic.ip.length} className="icon">
-						{item.analytic.link_count + '/' + item.analytic.ip.length}
-					</span>
+				<button className="dnd-link-button btl-tooltip">
+					<span className="btl-tooltiptext">{'Clicks: ' + item.analytic.link_count + ' / ' + 'Unique Clicks: ' + item.analytic.ip.length}</span>
+					<span className="icon">{item.analytic.link_count + '/' + item.analytic.ip.length}</span>
 				</button>
 			)}
-
-			{/* 
-            <button className='dnd-link-button'>
-                <span className='icon'>
-                    <i className='btl btl-reload'></i>
-                </span>
-            </button> */}
 			{!isDeleteConfirm ? (
 				<>
-					<button className="dnd-link-button" onClick={() => copyShortUrl(site_url + '/' + item.short_url)}>
-						<span data-tip="Copy Link" className="icon">
-							{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}
-						</span>
+					<button className="dnd-link-button btl-tooltip" onClick={() => copyShortUrl(site_url + '/' + item.short_url)}>
+						<span className="icon">{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}</span>
+						<span className="btl-tooltiptext">{__('Copy Link', 'betterlinks')}</span>
 					</button>
-					<div data-tip="Edit Link">
+					<div className="btl-tooltip">
 						<Link cat_id={cat_id} cat_name={cat_name} item={item} submitHandler={submitLinkHandler} />
+						<span className="btl-tooltiptext">{__('Edit Link', 'betterlinks')}</span>
 					</div>
-					<button data-tip="Delete" type="button" className="dnd-link-button delete-button" onClick={() => deleteHandler()}>
+					<button type="button" className="dnd-link-button delete-button btl-tooltip" onClick={() => deleteHandler()}>
 						<span className="icon">
 							<i className="btl btl-delete"></i>
 						</span>
+						<span className="btl-tooltiptext">{__('Delete', 'betterlinks')}</span>
 					</button>
 				</>
 			) : (

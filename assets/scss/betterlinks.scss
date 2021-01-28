@@ -33,4 +33,37 @@ body {
 		@import './control/plugin-mode-modal';
 	}
 }
+
+.btl-tooltip {
+	position: relative;
+	display: inline-block;
+	.btl-tooltiptext {
+		visibility: hidden;
+		width: 120px;
+		background: linear-gradient(202deg,#2961ff 0%,#003be2 100%);
+		font-size: 14px;
+		color: #fff;
+		text-align: center;
+		border-radius: 6px;
+		padding: 10px;
+		position: absolute;
+		z-index: 1;
+		bottom: 150%;
+		left: 50%;
+		margin-left: -68px;
+		&::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: #003be2 transparent transparent transparent;
+		}
+	}
+	&:hover .btl-tooltiptext {
+		visibility: visible;
+	}
+}
 @import './components/modal';

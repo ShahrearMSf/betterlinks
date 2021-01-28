@@ -26,7 +26,7 @@ class PrettyLinks
 			)
 			*/
 			// skip csv header row
-			if ($key === 0 || empty($item[3])) {
+			if ($key === 0 || empty($item[3]) || $item[3] == 1) {
 				continue;
 			}
 
@@ -40,10 +40,10 @@ class PrettyLinks
 					'link_slug' => $slug,
 					'link_note' => '',
 					'link_status' => 'publish',
-					'nofollow' => isset($item[6]) ? $item[6] : '',
-					'sponsored' => isset($item[7]) ? $item[7] : '',
-					'track_me' => isset($item[5]) ? $item[5] : '',
-					'param_forwarding' => isset($item[8]) ? $item[8] : '',
+					'nofollow' => isset($item[6]) && $item[6] == 1 ? $item[6] : '',
+					'sponsored' => isset($item[7]) && $item[7] == 1 ? $item[7] : '',
+					'track_me' => isset($item[5]) && $item[5] == 1 ? $item[5] : '',
+					'param_forwarding' => isset($item[8]) && $item[8] == 1 ? $item[8] : '',
 					'param_struct' => '',
 					'redirect_type' => isset($item[4]) ? $item[4] : '',
 					'target_url' => isset($item[1]) ? $item[1] : '',

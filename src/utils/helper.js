@@ -105,6 +105,9 @@ export const formatDate = (date, format) => {
 		mm: date.getMonth() + 1,
 		dd: date.getDate(),
 		yyyy: date.getFullYear(),
+		h: date.getHours(),
+		m: date.getMinutes(),
+		s: date.getSeconds(),
 	};
-	return format.replace(/mm|dd|yyyy/gi, (matched) => map[matched]);
+	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };

@@ -3,7 +3,7 @@ import { plugin_root_url } from '../../utils/helper';
 import { __ } from '@wordpress/i18n';
 const TopBar = (props) => {
 	const mode = localStorage.getItem('betterLinksIsDarkMode');
-	const [isDarkMode, setIsDarkMode] = useState(mode);
+	const [isDarkMode, setIsDarkMode] = useState(mode ? mode : false);
 	useEffect(() => {
 		if (mode) {
 			document.body.classList.add('betterlinks-dark-mode');
@@ -29,7 +29,7 @@ const TopBar = (props) => {
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
 			<label className="theme-mood-button" htmlFor="theme-mood">
-				<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onClick={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
+				<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
 				<span className="theme-mood">
 					<span className="icon">
 						<i className="btl btl-sun"></i>
