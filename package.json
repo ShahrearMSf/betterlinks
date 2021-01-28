@@ -10,7 +10,6 @@
 	"author": "wpdevteam",
 	"dependencies": {
 		"@babel/polyfill": "^7.0.0",
-		"@wordpress/hooks": "^2.10.0",
 		"@wordpress/i18n": "^3.15.0",
 		"axios": "^0.21.1",
 		"chart.js": "^2.9.4",
