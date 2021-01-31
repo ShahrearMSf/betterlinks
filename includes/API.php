@@ -27,6 +27,7 @@ class API
 	public function whitelist_API($endpoints)
     {
         $endpoints[] = '/wp-json/' . BETTERLINKS_PLUGIN_SLUG . '/v1/*';
+        $endpoints[] = '/index.php?rest_route=/' . BETTERLINKS_PLUGIN_SLUG . '/v1/*';
         return $endpoints;
     }
 }
