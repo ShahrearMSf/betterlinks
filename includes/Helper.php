@@ -134,7 +134,6 @@ class Helper
 
 		if (!empty($args)) {
 			$results = $wpdb->get_var($wpdb->prepare($query, $args));
-			error_log(print_r($results, true));
 			if (!empty($results)) {
 				return true;
 			}

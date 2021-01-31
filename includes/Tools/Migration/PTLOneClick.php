@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 class PTLOneClick extends PTLBase
 {
-	private $DB;
+	public $DB;
 	public function __construct($DB)
 	{
 		$this->DB = $DB;
@@ -43,12 +43,17 @@ class PTLOneClick extends PTLBase
 					'link_modified' => isset($item->last_updated_at) ? $item->last_updated_at : '',
 					'link_modified_gmt' => isset($item->last_updated_at) ? $item->last_updated_at : '',
 				];
+
 				if (isset($item->link_cpt_id) && !empty($item->link_cpt_id)) {
 					$term = get_the_terms($item->link_cpt_id, 'pretty-link-category');
+				}
+
+				if(isset($term[0]->slug)){
 					$categories[$slug] = $term[0]->slug;
 				} else {
 					$categories[$slug] = 'uncategorized';
 				}
+
 				$message[] = 'import succesfully "' . $item->name . '"';
 			} else {
 				$message[] = 'import failed "' . $item->name . '" already exists';

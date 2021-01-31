@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 class PTLImportCSV extends PTLBase
 {
-	private $DB;
+	public $DB;
 	public function __construct($DB)
 	{
 		$this->DB = $DB;
