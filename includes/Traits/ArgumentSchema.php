@@ -177,4 +177,9 @@ trait ArgumentSchema
 	{
 		return $this->terms_schema();
 	}
+
+	public function get_settings_schema()
+	{
+		return [];
+	}
 }
