@@ -8,6 +8,8 @@ class Ajax
 	{
 		add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
 		add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
+		add_action('wp_ajax_betterlinks/admin/migration_notice_hide', [$this, 'migration_notice_hide']);
+		add_action('wp_ajax_betterlinks/admin/deactive_prettylinks', [$this, 'deactive_prettylinks']);
 	}
 
 	public function get_prettylinks_data()
@@ -37,6 +39,21 @@ class Ajax
 		}
 		update_option('betterlink_notice_ptl_migrate', true);
 		wp_send_json_success($resutls);
+		wp_die();
+	}
+
+	public function migration_notice_hide(){
+		$type = (isset($_POST['type']) ? $_POST['type'] : '');
+		if($type == 'deactive'){
+			update_option('betterlink_hide_notice_ptl_deactive', true);
+		} else if($type == 'migrate') {
+			update_option('betterlink_hide_notice_ptl_migrate', true);
+		}
+		wp_die();
+	}
+	public function deactive_prettylinks(){
+		$deactivate = deactivate_plugins( 'pretty-link/pretty-link.php' );
+		wp_send_json_success($deactivate);
 		wp_die();
 	}
 }

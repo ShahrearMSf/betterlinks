@@ -71,7 +71,7 @@ const TabsTools = ({ query }) => {
 							<div>
 								<label className="btl-radio">
 									<input type="radio" id="female" name="mode" value="prettylinks" checked={importerMode === 'prettylinks'} onChange={importerModeHandler}></input>
-									<span>PrettyLinks</span>
+									<span>Pretty Links</span>
 								</label>
 							</div>
 							<p className="btl-file-chooser">
