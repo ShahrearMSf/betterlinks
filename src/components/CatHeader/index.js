@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { update_cat, delete_cat } from './../../redux/actions/settings.actions';
+import { update_cat, delete_cat } from './../../redux/actions/links.actions';
 import { useFormikContext, Formik, Field, Form } from 'formik';
 import { generateSlug, modalCustomSmallStyles } from './../../utils/helper';
 const CatHeader = (props) => {
@@ -140,7 +140,7 @@ const CatHeader = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-	settings: state.settings,
+	links: state.links,
 });
 
 const mapDispatchToProps = (dispatch) => {

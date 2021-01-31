@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loader from './../../components/Loader';
-import { fetch_settings_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/settings.actions';
+import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CreateCategory from './../../components/CreateCategory';
 import Link from './../../components/Link';
@@ -14,20 +14,20 @@ const getListStyle = (isDraggingOver) => ({
 });
 
 function DndCanvas(props) {
-	const { settings } = props.settings;
+	const { links } = props.links;
 
 	useEffect(() => {
-		if (!settings) {
-			props.fetch_settings_data();
+		if (!links) {
+			props.fetch_links_data();
 		}
 	}, []);
 
 	return (
-		<div className={`dnd-category-wrapper ${settings ? '' : 'd-flex'}`}>
-			{settings ? (
+		<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
+			{links ? (
 				<DragDropContext onDragEnd={props.onDragEnd}>
-					{settings &&
-						Object.entries(settings)
+					{links &&
+						Object.entries(links)
 							.filter((items, index) => {
 								if (index === 0) {
 									if (items[0] == '1' && items[1].lists.length == 0) {
@@ -95,12 +95,12 @@ function DndCanvas(props) {
 }
 
 const mapStateToProps = (state) => ({
-	settings: state.settings,
+	links: state.links,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+		fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
 		onDragEnd: bindActionCreators(onDragEnd, dispatch),
 		add_new_cat: bindActionCreators(add_new_cat, dispatch),
 		add_new_link: bindActionCreators(add_new_link, dispatch),

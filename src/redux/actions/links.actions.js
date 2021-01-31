@@ -1,4 +1,4 @@
-import { API, namespace } from './../../utils/helper';
+import { API, namespace } from '../../utils/helper';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const ADD_NEW_CAT = 'ADD_NEW_CAT';
@@ -25,7 +25,7 @@ export const onDragEnd = (result) => async (dispatch) => {
 		console.log(e);
 	}
 };
-export const fetch_settings_data = () => async (dispatch) => {
+export const fetch_links_data = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'links', {
 			params: {},

@@ -1,12 +1,12 @@
-import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK } from '../actions/settings.actions';
-import { move, reorder } from './../../utils/helper';
-function settings(state = {}, action) {
+import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK } from '../actions/links.actions';
+import { move, reorder } from '../../utils/helper';
+function links(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_INITIAL_DATA:
 			return {
 				...state,
-				settings: {
+				links: {
 					...payload.data,
 				},
 			};
@@ -21,25 +21,25 @@ function settings(state = {}, action) {
 			const sInd = +source.droppableId;
 			const dInd = +destination.droppableId;
 			if (sInd === dInd) {
-				const items = reorder(state.settings[sInd].lists, source.index, destination.index);
-				const newState = state.settings;
+				const items = reorder(state.links[sInd].lists, source.index, destination.index);
+				const newState = state.links;
 				newState[sInd].lists = items;
 
 				return {
 					...state,
-					settings: {
+					links: {
 						...newState,
 					},
 				};
 			} else {
-				const result = move(state.settings[sInd].lists, state.settings[dInd].lists, source, destination);
-				const newState = state.settings;
+				const result = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
+				const newState = state.links;
 				newState[sInd].lists = result[sInd];
 				newState[dInd].lists = result[dInd];
 
 				return {
 					...state,
-					settings: {
+					links: {
 						...newState,
 					},
 				};
@@ -47,10 +47,10 @@ function settings(state = {}, action) {
 		case ADD_NEW_CAT:
 			return {
 				...state,
-				settings: {
-					...state.settings,
+				links: {
+					...state.links,
 					[payload.data.ID]: {
-						...state.settings[payload.data.ID],
+						...state.links[payload.data.ID],
 						...payload.data,
 					},
 				},
@@ -58,59 +58,59 @@ function settings(state = {}, action) {
 		case UPDATE_CAT:
 			return {
 				...state,
-				settings: {
-					...state.settings,
+				links: {
+					...state.links,
 					[payload.data.cat_id]: {
-						...state.settings[payload.data.cat_id],
+						...state.links[payload.data.cat_id],
 						term_name: payload.data.cat_name,
 						term_slug: payload.data.cat_slug,
 					},
 				},
 			};
 		case DELETE_CAT:
-			let newState = state.settings;
+			let newState = state.links;
 			const deletedCatLinks = newState[payload.data.cat_id].lists;
 			delete newState[payload.data.cat_id];
 			return {
 				...state,
-				settings: {
+				links: {
 					...newState,
 					[1]: {
 						...newState[1],
-						lists: [...state.settings[1].lists, ...deletedCatLinks],
+						lists: [...state.links[1].lists, ...deletedCatLinks],
 					},
 				},
 			};
 		case ADD_NEW_LINK:
 			return {
 				...state,
-				settings: {
-					...state.settings,
+				links: {
+					...state.links,
 					[payload.data.cat_id]: {
-						...state.settings[payload.data.cat_id],
-						lists: [...state.settings[payload.data.cat_id].lists, payload.data],
+						...state.links[payload.data.cat_id],
+						lists: [...state.links[payload.data.cat_id].lists, payload.data],
 					},
 				},
 			};
 		case EDIT_LINK:
 			return {
 				...state,
-				settings: {
-					...state.settings,
+				links: {
+					...state.links,
 					[payload.cat_id]: {
-						...state.settings[payload.cat_id],
-						lists: [...state.settings[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
+						...state.links[payload.cat_id],
+						lists: [...state.links[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
 					},
 				},
 			};
 		case DELETE_LINK:
 			return {
 				...state,
-				settings: {
-					...state.settings,
+				links: {
+					...state.links,
 					[payload.data.term_id]: {
-						...state.settings[payload.data.term_id],
-						lists: state.settings[payload.data.term_id].lists.filter((item, index) => item.ID != payload.data.ID),
+						...state.links[payload.data.term_id],
+						lists: state.links[payload.data.term_id].lists.filter((item, index) => item.ID != payload.data.ID),
 					},
 				},
 			};
@@ -118,4 +118,4 @@ function settings(state = {}, action) {
 			return state;
 	}
 }
-export default settings;
+export default links;
