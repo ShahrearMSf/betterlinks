@@ -180,6 +180,27 @@ trait ArgumentSchema
 
 	public function get_settings_schema()
 	{
-		return [];
+		return [
+			'nofollow' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'sponsored' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'track_me' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'param_forwarding' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'redirect_type' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			]
+		];
 	}
 }

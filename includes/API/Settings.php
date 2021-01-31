@@ -31,26 +31,8 @@ class Settings extends Controller
 
 		register_rest_route($this->namespace, $endpoint, [
 			[
-				'methods' => \WP_REST_Server::CREATABLE,
-				'callback' => [$this, 'create_value'],
-				'permission_callback' => [$this, 'permissions_check'],
-				'args' => $this->get_settings_schema(),
-			],
-		]);
-
-		register_rest_route($this->namespace, $endpoint, [
-			[
 				'methods' => \WP_REST_Server::EDITABLE,
 				'callback' => [$this, 'update_value'],
-				'permission_callback' => [$this, 'permissions_check'],
-				'args' => $this->get_settings_schema(),
-			],
-		]);
-
-		register_rest_route($this->namespace, $endpoint, [
-			[
-				'methods' => \WP_REST_Server::DELETABLE,
-				'callback' => [$this, 'delete_value'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_settings_schema(),
 			],
@@ -66,10 +48,11 @@ class Settings extends Controller
 	 */
 	public function get_value($request)
 	{
+        $response = get_option(BETTERLINKS_LINKS_OPTION_NAME);
 		return new \WP_REST_Response(
 			[
-				'success' => is_bool([]),
-				'data' => [],
+				'success' => true,
+				'data' => $response ? $response : [],
 			],
 			200
 		);
@@ -83,7 +66,6 @@ class Settings extends Controller
 	 */
 	public function create_value($request)
 	{
-		
 		return new \WP_REST_Response(
 			[
 				'success' => true,
@@ -101,11 +83,14 @@ class Settings extends Controller
 	 */
 	public function update_value($request)
 	{
-		
+        $response = json_encode($request->get_params());
+        if($response){
+            update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
+        }
 		return new \WP_REST_Response(
 			[
 				'success' => true,
-				'data' => [],
+				'data' => $response ? $response : [],
 			],
 			200
 		);

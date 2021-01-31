@@ -5,13 +5,14 @@ import Select from './../Select';
 import { useFormikContext, Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
 import { modalCustomStyles, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 
-const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }) => {
+const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, settings, fetch_settings_data }) => {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
@@ -21,20 +22,16 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 	const initialValues = {
 		link_title: '',
 		link_slug: '',
-		redirect_type: '307',
 		target_url: '',
 		short_url: randomSlug,
 		link_note: '',
-		nofollow: false,
-		sponsored: false,
-		param_forwarding: false,
-		track_me: false,
 		link_date: currentDate,
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id,
 		cat_name,
+		...settings.settings,
 	};
 
 	const initialUpdateValues = {
@@ -56,7 +53,13 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 			});
 		} else {
 			setEditMode(false);
-			setModalIsOpen(true);
+			if (Object.keys(settings).length === 0) {
+				fetch_settings_data().then(() => {
+					setModalIsOpen(true);
+				});
+			} else {
+				setModalIsOpen(true);
+			}
 		}
 	}
 	const copyShortUrl = (url) => {
@@ -232,11 +235,13 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 	);
 };
 const mapStateToProps = (state) => ({
+	settings: state.settings,
 	terms: state.terms,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };
