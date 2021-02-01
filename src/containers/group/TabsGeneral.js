@@ -11,6 +11,7 @@ import { exists_links_json } from './../../utils/helper';
 const TabsGeneral = ({ settings, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Clear Cache');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
+	const [formSubmitText, setFormSubmitText] = useState('Save');
 	const [fastRedirectStatus, setFastRedirectStatus] = useState(exists_links_json);
 	const writeJSONHandler = () => {
 		setFastRedirectButtonText('Request Sending...');
@@ -47,6 +48,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 					initialValues={{ ...settings }}
 					onSubmit={(values) => {
 						update_option(values);
+						setFormSubmitText('Saved!');
 					}}
 				>
 					{(props) => (
@@ -122,7 +124,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 									</div>
 								</span>
 								<button className="button-primary" type="submit">
-									Save
+									{formSubmitText}
 								</button>
 							</div>
 						</Form>

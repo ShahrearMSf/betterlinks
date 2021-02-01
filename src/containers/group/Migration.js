@@ -6,6 +6,7 @@ import { modalCustomStyles } from './../../utils/helper';
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
+	const [migrationSubmitText, setMigrationSubmitText] = useState('Migrate Now');
 	const [modalIsOpen, setIsOpen] = useState(true);
 	const [prettyLinksRes, setPrettyLinksRes] = useState({});
 	const [migrateRes, setMigrateRes] = useState({});
@@ -37,12 +38,14 @@ const Migration = (props) => {
 							checked: [],
 						}}
 						onSubmit={(values) => {
+							setMigrationSubmitText('Request Sending...');
 							let form_data = new FormData();
 							form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
 							form_data.append('type', values.checked);
 							axios.post(ajaxurl, form_data).then(
 								(response) => {
 									if (response.data) {
+										setMigrationSubmitText('Done!');
 										setMigrateRes(response.data.data);
 									}
 								},
@@ -77,7 +80,7 @@ const Migration = (props) => {
 								</div>
 								<p>
 									<button className="button button-primary" type="submit">
-										Migrate Now
+										{migrationSubmitText}
 									</button>{' '}
 									<button className="button button-secondary" onClick={closeModal}>
 										Close Migrate
