@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Formik, Field, Form } from 'formik';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
 	const [importResponse, setImportResponse] = useState({});

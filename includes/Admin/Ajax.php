@@ -2,6 +2,8 @@
 
 namespace BetterLinks\Admin;
 
+use BetterLinks\Cron;
+
 class Ajax
 {
 	public function __construct()
@@ -10,6 +12,8 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
 		add_action('wp_ajax_betterlinks/admin/migration_notice_hide', [$this, 'migration_notice_hide']);
 		add_action('wp_ajax_betterlinks/admin/deactive_prettylinks', [$this, 'deactive_prettylinks']);
+		add_action('wp_ajax_betterlinks/admin/write_json_links', [$this, 'write_json_links']);
+		add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
 	}
 
 	public function get_prettylinks_data()
@@ -54,6 +58,20 @@ class Ajax
 	public function deactive_prettylinks(){
 		$deactivate = deactivate_plugins( 'pretty-link/pretty-link.php' );
 		wp_send_json_success($deactivate);
+		wp_die();
+	}
+	public function write_json_links()
+	{
+		$Cron = new Cron();
+		$resutls = $Cron->write_json_links();
+		wp_send_json_success($resutls);
+		wp_die();
+	}
+	public function analytics() 
+	{
+		$Cron = new Cron();
+		$resutls = $Cron->analytics();
+		wp_send_json_success($resutls);
 		wp_die();
 	}
 }

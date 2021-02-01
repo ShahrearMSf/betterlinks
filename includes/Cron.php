@@ -5,15 +5,17 @@ use BetterLinks\Helper;
 
 class Cron
 {
-	public function __construct()
+	public static function init()
 	{
-		add_filter('cron_schedules', [$this, 'add_cron_schedule']);
-		add_action('betterlinks/write_json_links', [$this, 'write_json_links']);
+		$self = new self();
+		add_filter('cron_schedules', [$self, 'add_cron_schedule']);
+		add_action('betterlinks/write_json_links', [$self, 'write_json_links']);
 		if (!wp_next_scheduled('betterlinks/analytics')) {
 			wp_schedule_event(time(), 'hourly', 'betterlinks/analytics');
 		}
-		add_action('betterlinks/analytics', [$this, 'analytics']);
+		add_action('betterlinks/analytics', [$self, 'analytics']);
 	}
+	
 	public function add_cron_schedule($schedules)
 	{
 		$schedules['every_one_and_half_hours'] = [

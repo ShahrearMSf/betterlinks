@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const { nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, page } = window.betterLinksGlobal;
+export const { nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, exists_links_json, page } = window.betterLinksGlobal;
 
 export const API = axios.create({
 	baseURL: rest_url,

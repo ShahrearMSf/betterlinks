@@ -58,6 +58,7 @@ class Assets
 				'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
 				'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
 				'site_url' => site_url(),
+				'exists_links_json' => BETTERLINKS_EXISTS_LINKS_JSON,
 				'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '',
 			]);
 		}

@@ -1,12 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Select from './../../components/Select';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
+import { exists_links_json } from './../../utils/helper';
 const TabsGeneral = ({ settings, update_option }) => {
+	const [cacheButtonText, setCacheButtonText] = useState('Clear Cache');
+	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
+	const [fastRedirectStatus, setFastRedirectStatus] = useState(exists_links_json);
+	const writeJSONHandler = () => {
+		setFastRedirectButtonText('Request Sending...');
+		axios.get(ajaxurl + '?action=betterlinks/admin/write_json_links').then(
+			(response) => {
+				if (response.data) {
+					setFastRedirectButtonText('Done!');
+					setFastRedirectStatus(true);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
+	const analyticClicksHandler = () => {
+		setCacheButtonText('Request Sending...');
+		axios.get(ajaxurl + '?action=betterlinks/admin/analytics').then(
+			(response) => {
+				if (response.data) {
+					setCacheButtonText('Done!');
+					console.log(response);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
 	return (
 		<React.Fragment>
 			{settings && (
@@ -21,11 +54,18 @@ const TabsGeneral = ({ settings, update_option }) => {
 							<div className="btl-tab-panel-inner">
 								<span className="btl-form-group">
 									<label className="btl-form-label">Fast Redirect Status</label>
-									<button className="button button-primary">Active</button>
+									<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
+									{!fastRedirectStatus && (
+										<button type="button" onClick={writeJSONHandler} className="button button-primary">
+											{fastRedirectButtonText}
+										</button>
+									)}
 								</span>
 								<span className="btl-form-group">
 									<label className="btl-form-label">Analytic Cache Clear</label>
-									<button className="button button-primary">Clear Cache</button>
+									<button type="button" onClick={analyticClicksHandler} className="button button-primary">
+										{cacheButtonText}
+									</button>
 								</span>
 								<span className="btl-form-group">
 									<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>

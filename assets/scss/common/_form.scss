@@ -74,6 +74,9 @@
 	&:not(:last-child) {
 		margin-bottom: 20px;
 	}
+	.active-status {
+		margin: 0 10px;
+	}
 }
 .btl-checkbox-field {
 	display: flex;

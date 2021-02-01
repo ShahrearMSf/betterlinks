@@ -90,7 +90,7 @@ if (!class_exists('BetterLinks')) {
 
 		public function dispatch_hook()
 		{
-			new BetterLinks\Cron();
+			BetterLinks\Cron::init();
 		}
 
 		public function load_textdomain()
