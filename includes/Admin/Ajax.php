@@ -13,6 +13,7 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/migration_notice_hide', [$this, 'migration_notice_hide']);
 		add_action('wp_ajax_betterlinks/admin/deactive_prettylinks', [$this, 'deactive_prettylinks']);
 		add_action('wp_ajax_betterlinks/admin/write_json_links', [$this, 'write_json_links']);
+		add_action('wp_ajax_betterlinks/admin/write_json_clicks', [$this, 'write_json_clicks']);
 		add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
 	}
 
@@ -73,6 +74,21 @@ class Ajax
 		$Cron = new Cron();
 		$resutls = $Cron->write_json_links();
 		wp_send_json_success($resutls);
+		wp_die();
+	}
+	public function write_json_clicks()
+	{
+		if (!BETTERLINKS_EXISTS_CLICKS_JSON) {
+			$emptyContent = '{}';
+			$file_handle = @fopen(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'clicks.json', 'wb');
+			if ($file_handle) {
+				fwrite($file_handle, $emptyContent);
+				fclose($file_handle);
+			}
+			wp_send_json_success(true);
+			wp_die();
+		}
+		wp_send_json_error(false);
 		wp_die();
 	}
 	public function analytics() 

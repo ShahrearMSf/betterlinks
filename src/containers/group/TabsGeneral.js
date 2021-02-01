@@ -7,19 +7,35 @@ import { bindActionCreators } from 'redux';
 import Select from './../../components/Select';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
-import { exists_links_json } from './../../utils/helper';
+import { exists_clicks_json, exists_links_json } from './../../utils/helper';
 const TabsGeneral = ({ settings, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Clear Cache');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
 	const [formSubmitText, setFormSubmitText] = useState('Save');
 	const [fastRedirectStatus, setFastRedirectStatus] = useState(exists_links_json);
-	const writeJSONHandler = () => {
+	const [fastClicksButtonText, setFastClicksButtonText] = useState('Active Now');
+	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
+	const writeLinkJSONHandler = () => {
 		setFastRedirectButtonText('Request Sending...');
 		axios.get(ajaxurl + '?action=betterlinks/admin/write_json_links').then(
 			(response) => {
 				if (response.data) {
 					setFastRedirectButtonText('Done!');
 					setFastRedirectStatus(true);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
+	const writeClicksJSONHandler = () => {
+		setFastClicksButtonText('Request Sending...');
+		axios.get(ajaxurl + '?action=betterlinks/admin/write_json_clicks').then(
+			(response) => {
+				if (response.data) {
+					setFastClicksButtonText('Done!');
+					setFastClicksStatus(true);
 				}
 			},
 			(error) => {
@@ -58,16 +74,23 @@ const TabsGeneral = ({ settings, update_option }) => {
 									<label className="btl-form-label">Fast Redirect Status</label>
 									<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
 									{!fastRedirectStatus && (
-										<button type="button" onClick={writeJSONHandler} className="button button-primary">
+										<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
 											{fastRedirectButtonText}
 										</button>
 									)}
 								</span>
 								<span className="btl-form-group">
-									<label className="btl-form-label">Analytic Cache Clear</label>
-									<button type="button" onClick={analyticClicksHandler} className="button button-primary">
-										{cacheButtonText}
-									</button>
+									<label className="btl-form-label">Analytic Cache Status</label>
+									<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
+									{!fastClicksStatus ? (
+										<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
+											{fastClicksButtonText}
+										</button>
+									) : (
+										<button type="button" onClick={analyticClicksHandler} className="button button-primary">
+											{cacheButtonText}
+										</button>
+									)}
 								</span>
 								<span className="btl-form-group">
 									<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
