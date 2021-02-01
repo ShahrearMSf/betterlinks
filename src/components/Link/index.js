@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import Select from './../Select';
@@ -16,6 +17,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
+	const [slugIsExists, setSlugIsExists] = useState(false);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 
@@ -86,6 +88,21 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 		}, [values]);
 		return null;
 	};
+	const shortURLUniqueCheck = (slug) => {
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
+		form_data.append('slug', slug);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					setSlugIsExists(response.data.data);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
 	return (
 		<>
 			{item ? (
@@ -103,10 +120,12 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 				</span>
 				<Formik
 					initialValues={item ? initialUpdateValues : initialValues}
-					onSubmit={async (values) => {
-						setEditMode(false);
-						setModalIsOpen(false);
-						return submitHandler(values);
+					onSubmit={(values) => {
+						if (slugIsExists == false) {
+							setEditMode(false);
+							setModalIsOpen(false);
+							return submitHandler(values);
+						}
 					}}
 				>
 					{(props) => (
@@ -141,13 +160,23 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 										</label>
 										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
 									</div>
-									<div className="btl-modal-form-group">
+									<div className="btl-modal-form-group shorturl">
 										<label className="btl-modal-form-label" htmlFor="short_url">
 											{__('Shortened URL', 'betterlinks')}
 										</label>
-										<div className="btl-link-field-copyable">
+										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
 											<span className="btl-static-link">{site_url}</span>
-											<Field className="btl-dynamic-link" id="short_url" name="short_url" required />
+											<Field
+												className="btl-dynamic-link"
+												id="short_url"
+												name="short_url"
+												onChange={(e) => {
+													props.setFieldValue('short_url', e.target.value);
+													shortURLUniqueCheck(e.target.value);
+												}}
+												required
+											/>
+											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 											<button type="button" onClick={() => copyShortUrl(site_url + '/' + props.values.short_url)} className="btl-link-copy-button">
 												{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-copy"></i>}
 											</button>

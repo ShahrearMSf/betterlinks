@@ -187,6 +187,19 @@
 		@media screen and (max-width: 650px) {
 			width: 100%;
 		}
+		&.is-invalid {
+			position: relative;
+			border-color: red;
+			.errorlog {
+				position: absolute;
+				left: 100%;
+				top: 35%;
+				width: 150px;
+				font-weight: 500;
+				padding-left: 10px;
+				color: red;
+			}
+		}
 		.btl-static-link {
 			height: 100%;
 			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
