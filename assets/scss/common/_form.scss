@@ -77,10 +77,47 @@
 	.active-status {
 		margin: 0 10px;
 	}
+	.btl-modal-select {
+		width: 300px;
+		.btl-react-select__control {
+			background-color: #fafafa;
+			height: 55px;
+			border: 1px solid #ebebeb;
+			border-radius: 5px;
+			.btl-react-select__value-container {
+				padding-left: 15px;
+				.btl-react-select__single-value {
+					font-size: 16px;
+					font-weight: 500;
+					margin-left: 0;
+				}
+				.btl-react-select__input {
+					input {
+						box-shadow: none;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				box-shadow: none;
+				background-color: #fff;
+			}
+		}
+	}
+	.btl-modal-select--full {
+		@extend .btl-modal-select;
+		width: 200px;
+	}
 }
 .btl-checkbox-field {
 	display: flex;
 	cursor: pointer;
+	&.block {
+		display: inline-block;
+		margin-right: 20px;
+		.btl-tooltip {
+			margin-left: 5px;
+		}
+	}
 	.btl-check {
 		display: none;
 	}

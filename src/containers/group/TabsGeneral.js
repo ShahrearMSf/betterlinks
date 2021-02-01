@@ -49,7 +49,6 @@ const TabsGeneral = ({ settings, update_option }) => {
 			(response) => {
 				if (response.data) {
 					setCacheButtonText('Done!');
-					console.log(response);
 				}
 			},
 			(error) => {
@@ -94,12 +93,20 @@ const TabsGeneral = ({ settings, update_option }) => {
 								</span>
 								<span className="btl-form-group">
 									<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
-									<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} isMulti={false} />
+									<Select
+										className="btl-modal-select--full"
+										classNamePrefix="btl-react-select"
+										id="redirect_type"
+										name="redirect_type"
+										value={redirectType}
+										setFieldValue={props.setFieldValue}
+										isMulti={false}
+									/>
 								</span>
 								<span className="btl-form-group">
 									<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
 									<div className="link-options__body">
-										<label className="btl-checkbox-field">
+										<label className="btl-checkbox-field block">
 											<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
 											<span className="text">
 												{__('No Follow', 'betterlinks')}
@@ -109,7 +116,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 												</div>
 											</span>
 										</label>
-										<label className="btl-checkbox-field">
+										<label className="btl-checkbox-field block">
 											<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
 											<span className="text">
 												{__('Sponsored', 'betterlinks')}
@@ -119,7 +126,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 												</div>
 											</span>
 										</label>
-										<label className="btl-checkbox-field">
+										<label className="btl-checkbox-field block">
 											<Field
 												className="btl-check"
 												name="param_forwarding"
@@ -134,7 +141,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 												</div>
 											</span>
 										</label>
-										<label className="btl-checkbox-field">
+										<label className="btl-checkbox-field block">
 											<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
 											<span className="text">
 												{__('Tracking', 'betterlinks')}
