@@ -35,10 +35,12 @@ class Ajax
 		$migrator = new \BetterLinks\Tools\Migration\PTLOneClick($DB);
 		$resutls = [];
 		foreach ($type as $item) {
-			if ($item === 'links') {
-				$resutls[] = $migrator->process_links_data($prettylinks[$item]);
-			} elseif ($item === 'clicks') {
-				$resutls[] = $migrator->process_clicks_data($prettylinks[$item]);
+			if(isset($prettylinks[$item]) && count($prettylinks[$item]) > 0){
+				if ($item === 'links') {
+					$resutls[] = $migrator->process_links_data($prettylinks[$item]);
+				} elseif ($item === 'clicks') {
+					$resutls[] = $migrator->process_clicks_data($prettylinks[$item]);
+				}
 			}
 		}
 		update_option('betterlink_notice_ptl_migrate', true);
