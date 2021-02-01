@@ -28,24 +28,29 @@ class Ajax
 
 	public function run_prettylinks_migration()
 	{
-		$type = isset($_POST['type']) ? $_POST['type'] : '';
-		$type = explode(',', $type);
-		$prettylinks = get_transient('betterlinks_migration_data_prettylinks');
-		$DB = \BetterLinks\Helper::DB();
-		$migrator = new \BetterLinks\Tools\Migration\PTLOneClick($DB);
-		$resutls = [];
-		foreach ($type as $item) {
-			if(isset($prettylinks[$item]) && count($prettylinks[$item]) > 0){
-				if ($item === 'links') {
-					$resutls[] = $migrator->process_links_data($prettylinks[$item]);
-				} elseif ($item === 'clicks') {
-					$resutls[] = $migrator->process_clicks_data($prettylinks[$item]);
+		try {
+			$type = isset($_POST['type']) ? $_POST['type'] : '';
+			$type = explode(',', $type);
+			$prettylinks = get_transient('betterlinks_migration_data_prettylinks');
+			$DB = \BetterLinks\Helper::DB();
+			$migrator = new \BetterLinks\Tools\Migration\PTLOneClick($DB);
+			$resutls = [];
+			foreach ($type as $item) {
+				if(isset($prettylinks[$item]) && count($prettylinks[$item]) > 0){
+					if ($item === 'links') {
+						$resutls[] = $migrator->process_links_data($prettylinks[$item]);
+					} elseif ($item === 'clicks') {
+						$resutls[] = $migrator->process_clicks_data($prettylinks[$item]);
+					}
 				}
 			}
+			update_option('betterlink_notice_ptl_migrate', true);
+			wp_send_json_success($resutls);
+			wp_die();
+		} catch (\Throwable $th) {
+			wp_send_json_error($th->getMessage());
+			wp_die();
 		}
-		update_option('betterlink_notice_ptl_migrate', true);
-		wp_send_json_success($resutls);
-		wp_die();
 	}
 
 	public function migration_notice_hide(){
