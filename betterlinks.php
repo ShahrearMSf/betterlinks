@@ -32,7 +32,8 @@ if (!class_exists('BetterLinks')) {
 			$this->set_global_settings();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-			add_action('plugins_loaded', [$this, 'init_plugin']);
+			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
+			add_action('betterlinks_loaded', [$this, 'init_plugin']);
 			$this->dispatch_hook();
 		}
 
@@ -70,6 +71,10 @@ if (!class_exists('BetterLinks')) {
 		public function upload_dir_path()
 		{
 			$this->upload_dir = wp_get_upload_dir();
+		}
+
+		public function on_plugins_loaded() {
+			do_action( 'betterlinks_loaded' );
 		}
 
 		/**
