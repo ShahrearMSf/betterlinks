@@ -149,7 +149,7 @@ class Helper
 		$query = "SELECT ID FROM  $betterlinks WHERE ";
 		$args = [];
 
-		if (!empty($slug)) {
+		if (!empty($click_ID)) {
 			$query .= ' ID = %d';
 			$args[] = $click_ID;
 		}

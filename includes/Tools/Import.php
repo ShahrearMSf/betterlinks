@@ -64,11 +64,13 @@ class Import
 		$links = [];
 		$linkImportMessage = [];
 		foreach ($data as $item) {
-			if (!\BetterLinks\Helper::link_exists($item['term_name'], $item['short_url'])) {
-				$links[] = $item;
-				$linkImportMessage[] = 'import succesfully "' . $item['link_title'] . '"';
-			} else {
-				$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
+			if(!empty($item['link_title']) && !empty($item['short_url'])){
+				if (!\BetterLinks\Helper::link_exists($item['link_title'], $item['short_url'])) {
+					$links[] = $item;
+					$linkImportMessage[] = 'import succesfully "' . $item['link_title'] . '"';
+				} else {
+					$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
+				}
 			}
 		}
 		if (count($links) > 0) {
@@ -82,7 +84,7 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
-			if (!\BetterLinks\Helper::term_exists($item['term_slug'], $item['term_type'])) {
+			if (!empty($item['term_slug']) && !\BetterLinks\Helper::term_exists($item['term_slug'])) {
 				$terms[] = $item;
 				$message[] = 'import succesfully "' . $item['term_name'] . '"';
 			} else {
@@ -104,11 +106,13 @@ class Import
 			if (in_array($item['ID'], $this->term_IDs)) {
 				continue;
 			} else {
-				if (!\BetterLinks\Helper::term_exists($item['term_slug'], $item['term_type'])) {
-					$terms[] = $item;
-					$message[] = 'import succesfully "' . $item['term_name'] . '"';
-				} else {
-					$message[] = 'import failed "' . $item['term_name'] . '" already exists';
+				if(!empty($item['term_slug'])){
+					if (!\BetterLinks\Helper::term_exists($item['term_slug'])) {
+						$terms[] = $item;
+						$message[] = 'import succesfully "' . $item['term_name'] . '"';
+					} else {
+						$message[] = 'import failed "' . $item['term_name'] . '" already exists';
+					}
 				}
 			}
 		}
