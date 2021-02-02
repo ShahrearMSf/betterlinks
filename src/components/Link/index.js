@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
+import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -91,6 +91,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 	const shortURLUniqueCheck = (slug) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
+		form_data.append('security', nonce);
 		form_data.append('slug', slug);
 		axios.post(ajaxurl, form_data).then(
 			(response) => {

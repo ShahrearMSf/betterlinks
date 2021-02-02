@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import Select from './../../components/Select';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
-import { exists_clicks_json, exists_links_json } from './../../utils/helper';
+import { exists_clicks_json, nonce, exists_links_json } from './../../utils/helper';
 const TabsGeneral = ({ settings, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Clear Cache');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
@@ -17,7 +17,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 	const writeLinkJSONHandler = () => {
 		setFastRedirectButtonText('Request Sending...');
-		axios.get(ajaxurl + '?action=betterlinks/admin/write_json_links').then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
 					setFastRedirectButtonText('Done!');
@@ -31,7 +31,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 	};
 	const writeClicksJSONHandler = () => {
 		setFastClicksButtonText('Request Sending...');
-		axios.get(ajaxurl + '?action=betterlinks/admin/write_json_clicks').then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_clicks&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
 					setFastClicksButtonText('Done!');
@@ -45,7 +45,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 	};
 	const analyticClicksHandler = () => {
 		setCacheButtonText('Request Sending...');
-		axios.get(ajaxurl + '?action=betterlinks/admin/analytics').then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/analytics&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
 					setCacheButtonText('Done!');

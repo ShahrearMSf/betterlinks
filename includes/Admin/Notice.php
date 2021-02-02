@@ -57,12 +57,15 @@ class Notice
         <?php
 	}
 	public function admin_notice_scripts(){
-		echo "<script type='text/javascript'>\n";
-		echo "jQuery( document ).ready(function() {
+		$nonce = wp_create_nonce( 'wp_rest' );
+	?>
+		<script type='text/javascript'>
+		jQuery( document ).ready(function() {
 			jQuery('.betterlinks-notice-deactive-prettylinks a.deactive').on('click', function(e){
 				e.preventDefault();
 				jQuery.post(ajaxurl, {
-					'action': 'betterlinks/admin/deactive_prettylinks'
+					'action': 'betterlinks/admin/deactive_prettylinks',
+					'security': "<?php echo $nonce; ?>"
 				}, function(response) {
 					if(response.success){
 						location.reload(true); 
@@ -72,16 +75,19 @@ class Notice
 			jQuery('.betterlinks-notice-deactive-prettylinks button.notice-dismiss').on('click', function(){
 				jQuery.post(ajaxurl, {
 					'action': 'betterlinks/admin/migration_notice_hide',
+					'security': "<?php echo $nonce; ?>",
 					'type': 'deactive'
 				}, function(response) {});
 			})
 			jQuery('.betterlinks-notice-pt-migrate button.notice-dismiss').on('click', function(){
 				jQuery.post(ajaxurl, {
 					'action': 'betterlinks/admin/migration_notice_hide',
+					'security': "<?php echo $nonce; ?>",
 					'type': 'migrate'
 				}, function(response) {});
 			})
-		});"; 
-		echo "\n</script>"; 
+		});
+		</script>
+		<?php
 	}
 }

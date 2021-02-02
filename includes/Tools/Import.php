@@ -138,6 +138,7 @@ class Import
 
 	public function get_import_info()
 	{
+		check_ajax_referer( 'wp_rest', 'security' );
 		$results = json_encode([]);
 		if (isset($_SESSION['betterlinks_import_info'])) {
 			\BetterLinks\Helper::create_cron_jobs_for_json_links();

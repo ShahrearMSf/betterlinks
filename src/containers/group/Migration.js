@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { modalCustomStyles } from './../../utils/helper';
+import { nonce, modalCustomStyles } from './../../utils/helper';
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
@@ -13,7 +13,7 @@ const Migration = (props) => {
 	let history = useHistory();
 
 	useEffect(() => {
-		axios.get(ajaxurl + '?action=betterlinks/admin/get_prettylinks_data').then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/get_prettylinks_data&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
 					setPrettyLinksRes(response.data.data);
@@ -41,6 +41,7 @@ const Migration = (props) => {
 							setMigrationSubmitText('Request Sending...');
 							let form_data = new FormData();
 							form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
+							form_data.append('security', nonce);
 							form_data.append('type', values.checked);
 							axios.post(ajaxurl, form_data).then(
 								(response) => {
