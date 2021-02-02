@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { nonce, modalCustomStyles } from './../../utils/helper';
+import { nonce, route_path, modalCustomStyles } from './../../utils/helper';
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
@@ -27,7 +27,7 @@ const Migration = (props) => {
 
 	function closeModal() {
 		setIsOpen(false);
-		history.push('/wp-admin/admin.php?page=betterlinks');
+		history.push(route_path + 'admin.php?page=betterlinks');
 	}
 	return (
 		<React.Fragment>
