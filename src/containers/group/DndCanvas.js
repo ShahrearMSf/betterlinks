@@ -58,7 +58,7 @@ function DndCanvas(props) {
 																				{...provided.dragHandleProps}
 																			>
 																				<div className="btl-dnd-link-body">
-																					<h3 className="dnd-link-title">{item.link_title}</h3>
+																					<h3 className="dnd-link-title" dangerouslySetInnerHTML={{ __html: item.link_title }}></h3>
 																					<div className="btl-dnd-link-button-group">
 																						<LinkQuickAction
 																							cat_id={ind}
