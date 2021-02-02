@@ -116,7 +116,8 @@ class Links extends Controller
             {$prefix}betterlinks.param_struct,
             {$prefix}betterlinks.redirect_type,
             {$prefix}betterlinks.target_url,
-            {$prefix}betterlinks.short_url
+            {$prefix}betterlinks.short_url,
+            {$prefix}betterlinks.link_date
         FROM {$prefix}betterlinks_terms
         LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
         LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
