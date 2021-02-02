@@ -11,7 +11,7 @@ import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 
 const columns = [
 	{
-		name: 'Browser',
+		name: __('Browser', 'betterlinks'),
 		selector: 'browser',
 		sortable: false,
 		cell: (row) => {
@@ -24,35 +24,35 @@ const columns = [
 		},
 	},
 	{
-		name: 'Link Name',
+		name: __('Link Name', 'betterlinks'),
 		selector: 'name',
 		sortable: false,
 		cell: (row) => <div>{row.link_title}</div>,
 	},
 	{
-		name: 'IP',
+		name: __('IP', 'betterlinks'),
 		selector: 'ip',
 		sortable: false,
 		cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 	},
 	{
-		name: 'Timestamp',
+		name: __('Timestamp', 'betterlinks'),
 		selector: 'created_at',
 		sortable: false,
 	},
 	{
-		name: 'Shortened URL',
+		name: __('Shortened URL', 'betterlinks'),
 		selector: 'short_url',
 		sortable: false,
 		cell: (row) => <div>{site_url + '/' + row.short_url}</div>,
 	},
 	{
-		name: 'Referrer',
+		name: __('Referrer', 'betterlinks'),
 		selector: 'referer',
 		sortable: false,
 	},
 	{
-		name: 'Target URL',
+		name: __('Target URL', 'betterlinks'),
 		selector: 'target_url',
 		cell: (row) => (
 			<div>
@@ -69,8 +69,8 @@ const columns = [
 
 const FilterComponent = ({ filterText, onFilter, onClear }) => (
 	<div className="btl-click-filter">
-		<input id="search" type="text" placeholder="Filter By Name" aria-label="Search Input" value={filterText} onChange={onFilter} />
-		<button className="btl-search-button">Search Click</button>
+		<input id="search" type="text" placeholder={__('Filter By Name', 'betterlinks')} value={filterText} onChange={onFilter} />
+		<button className="btl-search-button">{__('Search Click', 'betterlinks')}</button>
 	</div>
 );
 

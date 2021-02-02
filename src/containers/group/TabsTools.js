@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { __ } from '@wordpress/i18n';
 import { nonce } from './../../utils/helper';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
@@ -25,61 +26,61 @@ const TabsTools = ({ query }) => {
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
 				<div className="btl-tab-panel-inner">
-					<h3 className="btl-tab-panel-header">Choose what to export</h3>
+					<h3 className="btl-tab-panel-header">{__('Choose what to export', 'betterlinks')}</h3>
 					<form action={'admin.php?page=' + query.get('page') + '&export=true'} method="POST">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="all" />
-									<span>All Content (This will contain all of your links, analytic and settings.)</span>
+									<span>{__('All Content (This will contain all of your links, analytic and settings.)', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="links" />
-									<span>Manage Links</span>
+									<span>{__('Manage Links', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="clicks" />
-									<span>Analytic</span>
+									<span>{__('Analytic', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="settings" />
-									<span>Settings</span>
+									<span>{__('Settings', 'betterlinks')}</span>
 								</label>
 							</div>
 						</div>
 						<button type="submit" className="btl-export-download-button">
-							Download Export File
+							{__('Download Export File', 'betterlinks')}
 						</button>
 					</form>
 				</div>
 				<div className="btl-tab-panel-inner">
-					<h3 className="btl-tab-panel-header">Choose what to import</h3>
+					<h3 className="btl-tab-panel-header">{__('Choose what to import', 'betterlinks')}</h3>
 					<form action={'admin.php?page=' + query.get('page') + '&import=true'} method="POST" encType="multipart/form-data">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="mode" value="default" checked={importerMode === 'default'} onChange={importerModeHandler}></input>
-									<span>BetterLinks</span>
+									<span>{__('BetterLinks', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
 									<input type="radio" id="female" name="mode" value="prettylinks" checked={importerMode === 'prettylinks'} onChange={importerModeHandler}></input>
-									<span>Pretty Links</span>
+									<span>{__('Pretty Links', 'betterlinks')}</span>
 								</label>
 							</div>
 							<p className="btl-file-chooser">
-								<label htmlFor="upload">Choose a file from your computer: (Maximum size: 512 MB)</label>
+								<label htmlFor="upload">{__('Choose a file from your computer: (Maximum size: 512 MB)', 'betterlinks')}</label>
 								<input type="file" id="upload_file" name="upload_file" size="25" />
 							</p>
 							<p className="submit">
-								<input type="submit" name="submit" id="submit" className="button button-primary" value="Upload file and import" disabled="" />
+								<input type="submit" name="submit" id="submit" className="button button-primary" value={__('Upload file and import', 'betterlinks')} disabled="" />
 							</p>
 						</div>
 					</form>

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -28,8 +29,8 @@ const Settings = (props) => {
 			<Topbar />
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
 				<TabList>
-					<Tab>General</Tab>
-					<Tab>Tools</Tab>
+					<Tab>{__('General', 'betterlinks')}</Tab>
+					<Tab>{__('Tools', 'betterlinks')}</Tab>
 				</TabList>
 
 				<TabPanel>

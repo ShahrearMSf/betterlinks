@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
 import Modal from 'react-modal';
 import axios from 'axios';
@@ -65,18 +66,18 @@ const Migration = (props) => {
 											{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
 												<label>
 													<Field type="checkbox" name="checked" value="links" />
-													Links
+													{__('Links', 'betterlinks')}
 												</label>
 											)}
 											{prettyLinksRes.clicks && prettyLinksRes.clicks.length > 0 && (
 												<label>
 													<Field type="checkbox" name="checked" value="clicks" />
-													Clicks
+													{__('Clicks', 'betterlinks')}
 												</label>
 											)}
 										</div>
 									) : (
-										<div>Please Wait...</div>
+										<div>{__('Please Wait...', 'betterlinks')}</div>
 									)}
 								</div>
 								<p>
@@ -84,7 +85,7 @@ const Migration = (props) => {
 										{migrationSubmitText}
 									</button>{' '}
 									<button className="button button-secondary" onClick={closeModal}>
-										Close Migrate
+										{__('Close Migrate', 'betterlinks')}
 									</button>
 								</p>
 							</Form>
@@ -104,7 +105,7 @@ const Migration = (props) => {
 							)}
 						</div>
 						<button className="button button-secondary" onClick={closeModal}>
-							Close Migrate
+							{__('Close Migrate', 'betterlinks')}
 						</button>
 					</>
 				)}

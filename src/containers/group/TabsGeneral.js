@@ -70,7 +70,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 						<Form>
 							<div className="btl-tab-panel-inner">
 								<span className="btl-form-group">
-									<label className="btl-form-label">Fast Redirect Status</label>
+									<label className="btl-form-label">{__('Fast Redirect Status', 'betterlinks')}</label>
 									<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
 									{!fastRedirectStatus && (
 										<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
@@ -79,7 +79,7 @@ const TabsGeneral = ({ settings, update_option }) => {
 									)}
 								</span>
 								<span className="btl-form-group">
-									<label className="btl-form-label">Analytic Cache Status</label>
+									<label className="btl-form-label">{__('Analytic Cache Status', 'betterlinks')}</label>
 									<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
 									{!fastClicksStatus ? (
 										<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
