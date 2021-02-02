@@ -106,14 +106,7 @@ class Import
 			if (in_array($item['ID'], $this->term_IDs)) {
 				continue;
 			} else {
-				if(!empty($item['term_slug'])){
-					if (!\BetterLinks\Helper::term_exists($item['term_slug'])) {
-						$terms[] = $item;
-						$message[] = 'import succesfully "' . $item['term_name'] . '"';
-					} else {
-						$message[] = 'import failed "' . $item['term_name'] . '" already exists';
-					}
-				}
+				$terms[] = $item;
 			}
 		}
 		if (count($terms) > 0) {
