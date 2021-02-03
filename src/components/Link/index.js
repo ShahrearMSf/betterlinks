@@ -11,7 +11,6 @@ import { fetch_terms_data } from './../../redux/actions/terms.actions';
 import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
-import Tags from './../Terms/Tags';
 
 const Link = (props) => {
 	const { cat_id, item, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;

@@ -30,16 +30,21 @@ const TopBar = (props) => {
 	};
 	return (
 		<div className="topbar">
+			{console.log(props)}
 			<div className="tool-title">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
-			<div className="btl-create-links">
-				<Link submitHandler={props.add_new_link} />
-			</div>
-			<div className="btl-view-control">
-				<button onClick={() => props.linksView('list')}>List View</button>
-				<button onClick={() => props.linksView('grid')}>Grid View</button>
-			</div>
+			{props.currentPage === 'betterlinks' && (
+				<React.Fragment>
+					<div className="btl-create-links">
+						<Link submitHandler={props.add_new_link} />
+					</div>
+					<div className="btl-view-control">
+						<button onClick={() => props.linksView('list')}>List View</button>
+						<button onClick={() => props.linksView('grid')}>Grid View</button>
+					</div>
+				</React.Fragment>
+			)}
 			<label className="theme-mood-button" htmlFor="theme-mood">
 				<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
 				<span className="theme-mood">

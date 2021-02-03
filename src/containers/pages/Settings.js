@@ -26,7 +26,6 @@ const Settings = (props) => {
 	}, []);
 	return (
 		<React.Fragment>
-			<Topbar />
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
 				<TabList>
 					<Tab>{__('General', 'betterlinks')}</Tab>
