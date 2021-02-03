@@ -5,71 +5,76 @@ import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
-import CreateCategory from './../../components/CreateCategory';
-import Link from './../../components/Link';
-import CatHeader from './../../components/CatHeader';
 import LinkQuickAction from './../../components/LinkQuickAction';
-const columns = [
-	{
-		name: __('', 'betterlinks'),
-		selector: '',
-		sortable: false,
-		cell: (row) => {
-			return (
+
+const getColumnData = (props) => {
+	return [
+		{
+			name: __('Title', 'betterlinks'),
+			selector: 'link_title',
+			sortable: false,
+			cell: (row) => {
+				return <div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>;
+			},
+		},
+		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => {
+				return (
+					<div className="btl-short-url-wrapper">
+						<span className="btl-short-url">{row.short_url}</span>
+						<button className="btl-short-url-copy-button">
+							<i className="btl btl-link"></i>
+						</button>
+					</div>
+				);
+			},
+		},
+		{
+			name: __('Redirect Type', 'betterlinks'),
+			selector: 'redirect_type',
+			sortable: false,
+			cell: (row) => <div>{row.redirect_type}</div>,
+		},
+		{
+			name: __('Clicks', 'betterlinks'),
+			selector: '',
+			sortable: false,
+			cell: (row) => <div>Clicks</div>,
+		},
+		{
+			name: __('Date', 'betterlinks'),
+			selector: 'link_date',
+			sortable: false,
+			cell: (row) => <div>{row.link_date}</div>,
+		},
+		{
+			name: __('Action', 'betterlinks'),
+			selector: '',
+			sortable: false,
+			cell: (row) => (
 				<div>
-					<input type="checkbox" />
+					<LinkQuickAction cat_id={row.cat_id} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} item={row} />
 				</div>
-			);
+			),
 		},
-	},
-	{
-		name: __('Title', 'betterlinks'),
-		selector: 'link_title',
-		sortable: false,
-		cell: (row) => {
-			return <div className="btl-link-title">{row.link_title}</div>;
-		},
-	},
-	{
-		name: __('Shortened URL', 'betterlinks'),
-		selector: 'short_url',
-		sortable: false,
-		cell: (row) => {
-			return <div className="btl-short-url-wrapper">
-				<span className="btl-short-url">{row.short_url}</span>
-				<button className="btl-short-url-copy-button"><i className="btl btl-link"></i></button>
-			</div>
-		},
-	},
-	{
-		name: __('Redirect Type', 'betterlinks'),
-		selector: 'redirect_type',
-		sortable: false,
-		cell: (row) => <div>{row.redirect_type}</div>,
-	},
-	{
-		name: __('Clicks', 'betterlinks'),
-		selector: '',
-		sortable: false,
-		cell: (row) => <div>Clicks</div>,
-	},
-	{
-		name: __('Date', 'betterlinks'),
-		selector: 'link_date',
-		sortable: false,
-		cell: (row) => <div>{row.link_date}</div>,
-	},
-	{
-		name: __('Action', 'betterlinks'),
-		selector: '',
-		sortable: false,
-		cell: (row) => <div>Action</div>,
-	},
-];
+	];
+};
 
 const FilterComponent = ({ filterText, onFilter, onClear }) => (
 	<React.Fragment>
 		<div className="btl-links-filter">
+			<div className="btl-bulk-actions">
+				<Select
+					className="btl-list-view-select"
+					classNamePrefix="btl-react-select"
+					defaultValue={{ value: '', label: 'Bulk Actions' }}
+					options={[{ value: 'delete', label: 'Delete' }]}
+				/>
+				<button className="btl-link-apply-button">Apply</button>
+			</div>
 			<div className="btl-click-filter">
 				<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
 			</div>
@@ -101,17 +106,6 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 			<input className="btl-link-input-field" placeholder="Links to Show" />
 			<button className="btl-link-filter-button">Filter</button>
 		</div>
-		<div className="btl-bulk-actions">
-			<Select
-				className="btl-list-view-select"
-				classNamePrefix="btl-react-select"
-				options={[
-					{ value: '', label: 'Bulk Actions' },
-					{ value: 'delete', label: 'Delete' },
-				]}
-			/>
-			<button className="btl-link-apply-button">Apply</button>
-		</div>
 	</React.Fragment>
 );
 
@@ -139,13 +133,18 @@ const ListCanvas = (props) => {
 			<div className="btl-list-view">
 				<DataTable
 					className="btl-list-view-table"
-					columns={columns}
+					columns={getColumnData(props)}
 					data={stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
 					pagination
 					paginationResetDefaultPage={resetPaginationToggle}
 					subHeader
 					subHeaderComponent={subHeaderComponentMemo}
 					persistTableHead
+					selectableRows
+					selectableRowsVisibleOnly
+					onSelectedRowsChange={(e) => {
+						console.log(e);
+					}}
 				/>
 			</div>
 		</React.Fragment>

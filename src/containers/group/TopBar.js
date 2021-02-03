@@ -30,7 +30,6 @@ const TopBar = (props) => {
 	};
 	return (
 		<div className="topbar">
-			{console.log(props)}
 			<div className="tool-title">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
