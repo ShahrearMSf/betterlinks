@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
+import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
+import Link from './../../components/Link';
 import { plugin_root_url } from '../../utils/helper';
 import { linksView } from './../../redux/actions/activity.actions';
 const TopBar = (props) => {
@@ -28,13 +30,21 @@ const TopBar = (props) => {
 	};
 	return (
 		<div className="topbar">
+			{console.log(props)}
 			<div className="tool-title">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
-			<div>
-				<button onClick={() => props.linksView('list')}>List View</button>
-				<button onClick={() => props.linksView('grid')}>Grid View</button>
-			</div>
+			{props.currentPage === 'betterlinks' && (
+				<React.Fragment>
+					<div className="btl-create-links">
+						<Link submitHandler={props.add_new_link} />
+					</div>
+					<div className="btl-view-control">
+						<button onClick={() => props.linksView('list')}>List View</button>
+						<button onClick={() => props.linksView('grid')}>Grid View</button>
+					</div>
+				</React.Fragment>
+			)}
 			<label className="theme-mood-button" htmlFor="theme-mood">
 				<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
 				<span className="theme-mood">
@@ -57,6 +67,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
 	return {
 		linksView: bindActionCreators(linksView, dispatch),
+		add_new_link: bindActionCreators(add_new_link, dispatch),
 	};
 };
 

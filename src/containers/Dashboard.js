@@ -2,6 +2,7 @@ import React from 'react';
 import ManageLinks from './pages/ManageLinks';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import Topbar from './group/TopBar';
 
 const renderSwitch = (param) => {
 	switch (param) {
@@ -17,6 +18,11 @@ const renderSwitch = (param) => {
 };
 
 const Dashboard = ({ query }) => {
-	return <React.Fragment>{renderSwitch(query.get('page'))}</React.Fragment>;
+	return (
+		<React.Fragment>
+			<Topbar currentPage={query.get('page')} />
+			{renderSwitch(query.get('page'))}
+		</React.Fragment>
+	);
 };
 export default Dashboard;
