@@ -34,14 +34,18 @@ const TopBar = (props) => {
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
 			<div className="btl-create-links">
-				<Link submitHandler={props.add_new_link} />
+				<Link isIcon={false} submitHandler={props.add_new_link} />
 			</div>
 			<div className="topbar-inner">
 				{props.currentPage === 'betterlinks' && (
 					<React.Fragment>
 						<div className="btl-view-control">
-							<button className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`} onClick={() => props.linksView('list')}><i className="btl btl-list"></i></button>
-							<button className={`btl-link-view-toggler ${props.activity.linksView != 'list' ? 'active' : ''}`} onClick={() => props.linksView('grid')}><i className="btl btl-grid"></i></button>
+							<button className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`} onClick={() => props.linksView('list')}>
+								<i className="btl btl-list"></i>
+							</button>
+							<button className={`btl-link-view-toggler ${props.activity.linksView != 'list' ? 'active' : ''}`} onClick={() => props.linksView('grid')}>
+								<i className="btl btl-grid"></i>
+							</button>
 						</div>
 					</React.Fragment>
 				)}

@@ -13,7 +13,7 @@ import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 
 const Link = (props) => {
-	const { cat_id, item, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
+	const { isIcon, cat_id, item, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
@@ -104,7 +104,7 @@ const Link = (props) => {
 				</button>
 			) : (
 				<button onClick={openModal} className="btl-create-link-button">
-					<i className="btl btl-add"></i>
+					{isIcon ? <i className="btl btl-add"></i> : 'Add New Link'}
 				</button>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>

@@ -78,7 +78,7 @@ function DndCanvas(props) {
 													{provided.placeholder}
 												</div>
 												<div className="category-footer">
-													<Link cat_id={ind} cat_name={el.term_name} submitHandler={props.add_new_link} />
+													<Link isIcon={true} cat_id={ind} cat_name={el.term_name} submitHandler={props.add_new_link} />
 												</div>
 											</div>
 										</div>
