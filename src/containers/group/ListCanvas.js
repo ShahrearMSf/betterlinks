@@ -123,9 +123,9 @@ const ListCanvas = (props) => {
 
 	return (
 		<React.Fragment>
-			<div>
+			<div className="btl-list-view">
 				<DataTable
-					className="btl-analytic-table"
+					className="btl-list-view-table"
 					columns={columns}
 					data={stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
 					pagination
