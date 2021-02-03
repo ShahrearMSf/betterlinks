@@ -12,12 +12,43 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		margin-right: 15px;
 		img {
 			display: inline-block;
 		}
 	}
-	.theme-mood-button {
+	.topbar-inner{
 		margin-left: auto;
+		display: flex;
+		align-items: center;
+	}
+	.btl-view-control{
+		.btl-link-view-toggler {
+			height: 40px;
+			width: 40px;
+			min-width: 40px;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			border: 1px solid $light-darken;
+			background: $white;
+			color: $secondary-lighten;
+			border-radius: 50px;
+			outline: none;
+			margin-right: 10px;
+			transition: all 0.2s ease-in-out;
+			font-size: 14px;
+			&.active,
+			&:hover,
+			&:hover{
+				background: $success;
+				cursor: pointer;
+				color: $white;
+				border-color: $success;
+			}
+		}
+	}
+	.theme-mood-button {
 		height: 40px;
 		border: 1px solid $light-darken;
 		border-radius: 50px;
