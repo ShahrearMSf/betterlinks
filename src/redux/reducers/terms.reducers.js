@@ -5,9 +5,7 @@ function terms(state = {}, action) {
 		case FETCH_TERMS_DATA:
 			return {
 				...state,
-				terms: {
-					...payload.data,
-				},
+				terms: payload.data,
 			};
 		default:
 			return state;

@@ -13,7 +13,8 @@ import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 
-const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, settings, fetch_settings_data }) => {
+const Link = (props) => {
+	const { cat_id, item, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
@@ -32,7 +33,6 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id,
-		cat_name,
 		...settings.settings,
 	};
 
@@ -40,29 +40,22 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id,
-		cat_name,
 		...item,
 	};
 
 	function openModal() {
+		if (!props.settings.settings) {
+			fetch_settings_data();
+		}
+		if (!props.terms.terms) {
+			fetch_terms_data();
+		}
 		if (item) {
 			setEditMode(true);
-			fetch_terms_data({
-				term_type: 'tags',
-				ID: item.ID,
-			}).then(() => {
-				setModalIsOpen(true);
-			});
 		} else {
 			setEditMode(false);
-			if (Object.keys(settings).length === 0) {
-				fetch_settings_data().then(() => {
-					setModalIsOpen(true);
-				});
-			} else {
-				setModalIsOpen(true);
-			}
 		}
+		setModalIsOpen(true);
 	}
 	const copyShortUrl = (url) => {
 		copyToClipboard(url);
@@ -187,13 +180,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data, 
 										<label className="btl-modal-form-label" htmlFor="cat_id">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Category name="cat_id" cat_id={cat_name} cat_name={cat_name} setFieldValue={props.setFieldValue} />
-									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="tags_id">
-											{__('Tags', 'betterlinks')}
-										</label>
-										<Tags name="tags_id" terms={terms} isEditMode={isEditMode} setFieldValue={props.setFieldValue} />
+										<Category name="cat_id" cat_id={cat_id} data={terms} setFieldValue={props.setFieldValue} />
 									</div>
 								</div>
 								<div className="btl-entry-content-right">

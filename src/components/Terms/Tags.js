@@ -1,20 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useField } from 'formik';
 import CreatableSelect2 from 'react-select/creatable';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetch_terms_data } from './../../redux/actions/terms.actions';
 
 const Tags = (props) => {
+	const { data } = props;
 	const [field] = useField(props.name);
-	const [isFetchData, setIsFetchData] = useState(false);
-	const fetchData = () => {
-		if (!isFetchData) {
-			props.fetch_terms_data({ term_type: 'tags' });
-			setIsFetchData(true);
-		}
-	};
-
 	const onChange = (option) => {
 		if (option == null) {
 			return props.setFieldValue(field.name, '');
@@ -32,26 +22,16 @@ const Tags = (props) => {
 				isClearable
 				id={field.id}
 				name={field.name}
-				onMenuOpen={() => fetchData()}
-				noOptionsMessage={() => 'Tags Fetching..'}
-				defaultValue={
-					props.isEditMode
-						? props.terms.terms &&
-						  Object.entries(props.terms.terms).map(([key, value]) => ({
-								value: value.term_id,
-								label: value.term_name,
-						  }))
-						: false
-				}
+				defaultValue={[]}
 				onChange={onChange}
 				classNamePrefix="btl-react-select"
 				options={
-					props.terms.terms &&
-					Object.entries(props.terms.terms)
-						.filter(([key, value]) => value.term_type == 'tags')
-						.map(([key, value]) => ({
-							value: value.ID,
-							label: value.term_name,
+					data.terms &&
+					data.terms
+						.filter((item) => item.term_type == 'tags')
+						.map((item) => ({
+							value: item.ID,
+							label: item.term_name,
 						}))
 				}
 				isMulti={true}
@@ -60,13 +40,4 @@ const Tags = (props) => {
 	);
 };
 
-const mapStateToProps = (state) => ({
-	terms: state.terms,
-});
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
-	};
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Tags);
+export default Tags;
