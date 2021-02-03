@@ -33,28 +33,30 @@ const TopBar = (props) => {
 			<div className="tool-title">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
-			{props.currentPage === 'betterlinks' && (
-				<React.Fragment>
-					<div className="btl-create-links">
-						<Link submitHandler={props.add_new_link} />
-					</div>
-					<div className="btl-view-control">
-						<button onClick={() => props.linksView('list')}>List View</button>
-						<button onClick={() => props.linksView('grid')}>Grid View</button>
-					</div>
-				</React.Fragment>
-			)}
-			<label className="theme-mood-button" htmlFor="theme-mood">
-				<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
-				<span className="theme-mood">
-					<span className="icon">
-						<i className="btl btl-sun"></i>
+			<div className="btl-create-links">
+				<Link submitHandler={props.add_new_link} />
+			</div>
+			<div className="topbar-inner">
+				{props.currentPage === 'betterlinks' && (
+					<React.Fragment>
+						<div className="btl-view-control">
+							<button className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`} onClick={() => props.linksView('list')}><i className="btl btl-list"></i></button>
+							<button className={`btl-link-view-toggler ${props.activity.linksView != 'list' ? 'active' : ''}`} onClick={() => props.linksView('grid')}><i className="btl btl-grid"></i></button>
+						</div>
+					</React.Fragment>
+				)}
+				<label className="theme-mood-button" htmlFor="theme-mood">
+					<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
+					<span className="theme-mood">
+						<span className="icon">
+							<i className="btl btl-sun"></i>
+						</span>
+						<span className="icon">
+							<i className="btl btl-moon"></i>
+						</span>
 					</span>
-					<span className="icon">
-						<i className="btl btl-moon"></i>
-					</span>
-				</span>
-			</label>
+				</label>
+			</div>
 		</div>
 	);
 };

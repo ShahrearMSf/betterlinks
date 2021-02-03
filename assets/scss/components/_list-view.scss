@@ -26,6 +26,7 @@
         margin-right: 12px;
         position: relative;
         color: $secondary;
+        margin-bottom: 0;
         input{
           height: 100%;
           background: transparent;
@@ -53,7 +54,7 @@
           width: 40px;
           justify-content: center;
           align-items: center;
-          font-size: 16px;
+          font-size: 15px;
           color: $secondary-lighten;
           padding-left: 3px;
         }
@@ -230,15 +231,22 @@
               line-height: 1.25;
             }
             .btl-short-url-wrapper{
+              display: flex;
+              align-items: center;
+              padding: 5px 0;
+              flex-wrap: nowrap;
               .btl-short-url{
                 font-size: 14px;
                 background: rgba($success, 0.05);
                 font-weight: 700;
-                padding: 10px 15px;
+                padding: 2px 12px;
+                min-height: 26px;
                 max-width: 310px;
                 border: 1.5px solid $success;
                 border-radius: 5px;
                 color: $success;
+                display: inline-flex;
+                align-items: center;
               }
               .btl-short-url-copy-button{
                 border: none;
@@ -257,5 +265,39 @@
   }
   .rdt_Pagination{
     background: transparent;
+    border: none;
+    .sc-cxFLnm{
+      svg{
+        display: none;
+      }
+    }
+    .sc-giIncl{
+      .sc-iJuUWI{
+        padding: 0px;
+        border-radius: 4px;
+        height: 24px;
+        width: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2px;
+        svg{
+          height: 20px;
+          width: 20px;
+          fill: $dark;
+        }
+        &:disabled{
+          svg{
+            fill: $secondary;
+          }
+        }
+        &:hover{
+          background: #0742e7;
+          svg{
+            fill: #fff;
+          }
+        }
+      }
+    }
   }
 }
