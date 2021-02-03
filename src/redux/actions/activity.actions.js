@@ -4,4 +4,5 @@ export const linksView = (data) => (dispatch) => {
 		type: CHANGE_LINKS_VIEW,
 		payload: data,
 	});
+	localStorage.setItem('betterLinksView', data);
 };

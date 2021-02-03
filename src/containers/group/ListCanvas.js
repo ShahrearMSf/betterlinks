@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -111,12 +111,20 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 
 const ListCanvas = (props) => {
 	const { links } = props.links;
+	useEffect(() => {
+		if (!links) {
+			props.fetch_links_data();
+		}
+	}, []);
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	var stored = Object.values(links).reduce(function (total, item) {
-		total = [...total, ...item.lists];
-		return total;
-	}, []);
+
+	var stored =
+		links &&
+		Object.values(links).reduce(function (total, item) {
+			total = [...total, ...item.lists];
+			return total;
+		}, []);
 
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
@@ -131,21 +139,23 @@ const ListCanvas = (props) => {
 	return (
 		<React.Fragment>
 			<div className="btl-list-view">
-				<DataTable
-					className="btl-list-view-table"
-					columns={getColumnData(props)}
-					data={stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
-					pagination
-					paginationResetDefaultPage={resetPaginationToggle}
-					subHeader
-					subHeaderComponent={subHeaderComponentMemo}
-					persistTableHead
-					selectableRows
-					selectableRowsVisibleOnly
-					onSelectedRowsChange={(e) => {
-						console.log(e);
-					}}
-				/>
+				{links && (
+					<DataTable
+						className="btl-list-view-table"
+						columns={getColumnData(props)}
+						data={stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+						pagination
+						paginationResetDefaultPage={resetPaginationToggle}
+						subHeader
+						subHeaderComponent={subHeaderComponentMemo}
+						persistTableHead
+						selectableRows
+						selectableRowsVisibleOnly
+						onSelectedRowsChange={(e) => {
+							console.log(e);
+						}}
+					/>
+				)}
 			</div>
 		</React.Fragment>
 	);

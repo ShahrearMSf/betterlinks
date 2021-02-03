@@ -1,5 +1,6 @@
 import { CHANGE_LINKS_VIEW } from './../actions/activity.actions';
-function activity(state = {}, action) {
+const linksView = localStorage.getItem('betterLinksView');
+function activity(state = { linksView: linksView ? linksView : 'grid' }, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case CHANGE_LINKS_VIEW:

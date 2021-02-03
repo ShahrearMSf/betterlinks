@@ -43,7 +43,7 @@ const TopBar = (props) => {
 							<button className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`} onClick={() => props.linksView('list')}>
 								<i className="btl btl-list"></i>
 							</button>
-							<button className={`btl-link-view-toggler ${props.activity.linksView != 'list' ? 'active' : ''}`} onClick={() => props.linksView('grid')}>
+							<button className={`btl-link-view-toggler ${props.activity.linksView == 'grid' ? 'active' : ''}`} onClick={() => props.linksView('grid')}>
 								<i className="btl btl-grid"></i>
 							</button>
 						</div>
