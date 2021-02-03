@@ -69,8 +69,8 @@ const ListCanvas = (props) => {
 	}, []);
 	return (
 		<React.Fragment>
-			<div>
-				<DataTable className="btl-analytic-table" columns={columns} data={stored} pagination persistTableHead />
+			<div className="btl-list-view">
+				<DataTable className="btl-list-view-table" columns={columns} data={stored} pagination persistTableHead />
 			</div>
 		</React.Fragment>
 	);

@@ -1,0 +1,32 @@
+.btl-list-view{
+  .sc-fodVxV{
+    display: none;
+  }
+  .btl-list-view-table{
+    .rdt_Table{
+      background-color: transparent;
+      .rdt_TableHead{
+        margin-bottom: 12px;
+        .rdt_TableHeadRow{
+          border: 1px solid $light-darken;
+          background: $white;
+          border-radius: 5px;
+          min-height: 65px;
+          .rdt_TableCol{
+            .rdt_TableCol_Sortable{
+              color: $dark;
+              font-size: 15px;
+              font-weight: 500;
+              &:hover{
+                color: $dark;
+              }
+            }
+          }
+        }
+      }
+      .rdt_TableBody{
+
+      }
+    }
+  }
+}
