@@ -6,9 +6,7 @@ function links(state = {}, action) {
 		case FETCH_INITIAL_DATA:
 			return {
 				...state,
-				links: {
-					...payload.data,
-				},
+				links: payload.data,
 			};
 		case DRAG_AND_DROP:
 			const { source, destination } = payload;

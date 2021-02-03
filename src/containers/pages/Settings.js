@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import 'react-tabs/style/react-tabs.css';
-import Topbar from './../group/TopBar';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
@@ -31,7 +30,6 @@ const Settings = (props) => {
 					<Tab>{__('General', 'betterlinks')}</Tab>
 					<Tab>{__('Tools', 'betterlinks')}</Tab>
 				</TabList>
-
 				<TabPanel>
 					<TabsGeneral settings={settings} />
 				</TabPanel>

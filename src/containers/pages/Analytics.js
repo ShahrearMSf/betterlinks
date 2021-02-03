@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Graph from './../../components/Graph';
 import TableLoader from './../../components/Loader/TableLoader';
-import Topbar from './../group/TopBar';
 import { site_url, plugin_root_url, getBrowser, formatDate } from './../../utils/helper';
 import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 

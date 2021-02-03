@@ -5,7 +5,7 @@ function clicks(state = {}, action) {
 		case FETCH_CLICKS_DATA:
 			return {
 				...state,
-				clicks: [...payload.data],
+				clicks: payload.data,
 			};
 		default:
 			return state;
