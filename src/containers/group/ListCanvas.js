@@ -27,14 +27,19 @@ const columns = [
 		selector: 'link_title',
 		sortable: false,
 		cell: (row) => {
-			return <div>{row.link_title}</div>;
+			return <div className="btl-link-title">{row.link_title}</div>;
 		},
 	},
 	{
 		name: __('Shortened URL', 'betterlinks'),
 		selector: 'short_url',
 		sortable: false,
-		cell: (row) => <div>{row.short_url}</div>,
+		cell: (row) => {
+			return <div className="btl-short-url-wrapper">
+				<span className="btl-short-url">{row.short_url}</span>
+				<button className="btl-short-url-copy-button"><i className="btl btl-link"></i></button>
+			</div>
+		},
 	},
 	{
 		name: __('Redirect Type', 'betterlinks'),
@@ -69,12 +74,16 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 				<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
 			</div>
 			<Select
+				className="btl-list-view-select"
+				classNamePrefix="btl-react-select"
 				options={[
 					{ value: '', label: 'Categories' },
 					{ value: 'shop', label: 'shop' },
 				]}
 			/>
 			<Select
+				className="btl-list-view-select"
+				classNamePrefix="btl-react-select"
 				options={[
 					{ value: '', label: 'Short by Clicks' },
 					{ value: 'unique', label: 'Unique Clicks' },
@@ -82,22 +91,26 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 				]}
 			/>
 			<Select
+				className="btl-list-view-select"
+				classNamePrefix="btl-react-select"
 				options={[
 					{ value: '', label: 'All Dates' },
 					{ value: 'Jan 2021', label: 'Unique Clicks' },
 				]}
 			/>
-			<input placeholder="Links to Show" />
-			<button>Filter</button>
+			<input className="btl-link-input-field" placeholder="Links to Show" />
+			<button className="btl-link-filter-button">Filter</button>
 		</div>
 		<div className="btl-bulk-actions">
 			<Select
+				className="btl-list-view-select"
+				classNamePrefix="btl-react-select"
 				options={[
 					{ value: '', label: 'Bulk Actions' },
 					{ value: 'delete', label: 'Delete' },
 				]}
 			/>
-			<button>Apply</button>
+			<button className="btl-link-apply-button">Apply</button>
 		</div>
 	</React.Fragment>
 );

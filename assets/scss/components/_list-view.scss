@@ -2,6 +2,193 @@
   .sc-fodVxV{
     display: none;
   }
+  .sc-idOhPF{
+    margin-bottom: 15px;
+    background: transparent;
+    justify-content: space-between;
+    padding: 0;
+    flex-wrap: wrap;
+    .btl-links-filter,
+    .btl-bulk-actions{
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .btl-links-filter{
+      margin-right: 12px;
+      .btl-click-filter{
+        margin-bottom: 5px;
+        width: 285px;
+        height: 36px;
+        background: $white;
+        border: 1px solid $light-darken;
+        border-radius: 5px;
+        padding-left: 25px;
+        margin-right: 12px;
+        position: relative;
+        color: $secondary;
+        input{
+          height: 100%;
+          background: transparent;
+          padding: 0 15px;
+          width: 100%;
+          border: none;
+          outline: none;
+          box-shadow: none;
+          font-size: 14px;
+          &:hover,
+          &:focus{
+            border: none;
+            outline: none;
+            box-shadow: none;
+          }
+        }
+        &:before{
+          font-family: 'better-links' !important;
+          content: "\e912";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          display: inline-flex;
+          left: 0;
+          width: 40px;
+          justify-content: center;
+          align-items: center;
+          font-size: 16px;
+          color: $secondary-lighten;
+          padding-left: 3px;
+        }
+      }
+      .btl-list-view-select{
+        height: 38px;
+        min-width: 125px;
+        margin-right: 12px;
+        .btl-react-select__control{
+          min-height: 36px;
+          background: $white;
+          border: 1px solid $light-darken;
+          border-radius: 5px;
+          &:focus,
+          &--is-focused{
+            box-shadow: none;
+            .btl-react-select__input{
+              input{
+                box-shadow: none;
+                border: none;
+                outline: none;
+              }
+            }
+          }
+          .btl-react-select__value-container{
+            height: 36px;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
+          .btl-react-select__indicators{
+            .btl-react-select__indicator-separator{
+              display: none;
+            }
+            .btl-react-select__indicator{
+              padding: 3px 8px;
+            }
+          }
+        }
+      }
+      .btl-link-input-field{
+        height: 38px;
+        padding: 0 15px;
+        border: 1px solid $light-darken;
+        border-radius: 5px;
+        background: $white;
+        color: $secondary;
+        margin-right: 12px;
+        min-width: 200px;
+        &:focus{
+          outline: none;
+        }
+      }
+      .btl-link-filter-button{
+        cursor: pointer;
+        height: 38px;
+        border: none;
+        outline: none;
+        box-shadow: none;
+        background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+        color: $white;
+        font-size: 14px;
+        padding: 0 25px;
+        border-radius: 5px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 700;
+        transition: box-shadow 0.2s ease;
+        &:hover {
+          box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+        }
+      }
+    }
+    .btl-bulk-actions{
+      .btl-list-view-select{
+        height: 38px;
+        min-width: 150px;
+        margin-right: 12px;
+        .btl-react-select__control{
+          min-height: 36px;
+          background: $white;
+          border: 1px solid $light-darken;
+          border-radius: 5px;
+          &:focus,
+          &--is-focused{
+            box-shadow: none;
+            .btl-react-select__input{
+              input{
+                box-shadow: none;
+                border: none;
+                outline: none;
+              }
+            }
+          }
+          .btl-react-select__value-container{
+            height: 36px;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
+          .btl-react-select__indicators{
+            .btl-react-select__indicator-separator{
+              display: none;
+            }
+            .btl-react-select__indicator{
+              padding: 3px 8px;
+            }
+          }
+        }
+      }
+      .btl-link-apply-button{
+        cursor: pointer;
+        height: 38px;
+        border: 1px solid $success;
+        outline: none;
+        box-shadow: none;
+        background: rgba($success, 0.05);
+        color: $success;
+        font-size: 14px;
+        padding: 0 25px;
+        border-radius: 5px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 700;
+        transition: box-shadow 0.2s linear;
+        transition-property: background, color, box-shadow;
+        &:hover {
+          background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+          border-color: transparent;
+          color: $white;
+          box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+        }
+      }
+    }
+  }
   .btl-list-view-table{
     .rdt_Table{
       background-color: transparent;
@@ -16,7 +203,7 @@
             .rdt_TableCol_Sortable{
               color: $dark;
               font-size: 15px;
-              font-weight: 500;
+              font-weight: 700;
               &:hover{
                 color: $dark;
               }
@@ -25,8 +212,50 @@
         }
       }
       .rdt_TableBody{
-
+        .rdt_TableRow{
+          margin-bottom: 12px;
+          min-height: 65px;
+          border: 1px solid $light-darken;
+          border-radius: 5px;
+          box-shadow: 0 3px 4px rgba(#00094e, 0.03);
+          .rdt_TableCell{
+            div{
+              font-size: 15px;
+              color: $secondary;
+            }
+            .btl-link-title{
+              font-size: 15px;
+              font-weight: 700;
+              color: $dark;
+              line-height: 1.25;
+            }
+            .btl-short-url-wrapper{
+              .btl-short-url{
+                font-size: 14px;
+                background: rgba($success, 0.05);
+                font-weight: 700;
+                padding: 10px 15px;
+                max-width: 310px;
+                border: 1.5px solid $success;
+                border-radius: 5px;
+                color: $success;
+              }
+              .btl-short-url-copy-button{
+                border: none;
+                outline: none;
+                background: transparent;
+                padding: 5px;
+                font-size: 18px;
+                color: $success;
+                margin-left: 5px;
+              }
+            }
+          }
+        }
       }
     }
+  }
+  .rdt_Pagination{
+    background: transparent;
   }
 }
