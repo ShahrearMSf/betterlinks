@@ -118,14 +118,15 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
-					defaultValue={{ value: '', label: 'Categories' }}
+					placeholder="Categories"
 					options={catItems}
 					onChange={(e) => categorySelectHandler(e)}
+					isClearable={true}
 				/>
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
-					defaultValue={{ value: '', label: 'Short by Clicks' }}
+					placeholder="Short by Clicks"
 					options={[
 						{ value: 'mostClicks', label: 'Most Clicks' },
 						{ value: 'leastClicks', label: 'Least Clicks' },
@@ -133,17 +134,19 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 						{ value: 'leastUniqueClicks', label: 'Least Unique Clicks' },
 					]}
 					onChange={(e) => clicksTypeHandler(e)}
+					isClearable={true}
 				/>
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
-					defaultValue={{ value: '', label: 'All Dates' }}
+					placeholder="All Dates"
 					options={[
 						{ value: 'mostRecent', label: 'Most Recent' },
 						{ value: 'leastRecent', label: 'Least Recent' },
 						{ value: 'custom', label: 'Custom' },
 					]}
 					onChange={(e) => dateHandler(e)}
+					isClearable={true}
 				/>
 				<button className="btl-link-filter-button">Filter</button>
 			</div>
@@ -176,8 +179,10 @@ const ListCanvas = (props) => {
 
 	const dateFilterControl = (type) => {
 		setDateType(type);
-		if (type.value == 'custom') {
+		if (type && type.value == 'custom') {
 			setIsOpenCustomDateFilter(!isOpenCustomDateFilter);
+		} else {
+			setIsOpenCustomDateFilter(false);
 		}
 	};
 
