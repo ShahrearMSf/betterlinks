@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
-import { site_url, formatDate } from './../../utils/helper';
+import { linksFilterData, site_url, formatDate } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 
@@ -204,37 +204,6 @@ const ListCanvas = (props) => {
 		setBulkActionData(e);
 	};
 
-	const getData = () => {
-		let results = stored;
-		results = stored.filter((item) => item.link_title.toLowerCase().includes(filterText.toLowerCase()));
-		if (selectedCategory.value) {
-			results = results.filter((item) => item.cat_id == selectedCategory.value);
-		}
-		if (selectedClicksType.value == 'mostClicks') {
-			results = results.filter((item) => item.analytic != undefined);
-			results = results.sort((a, b) => (parseInt(a.analytic.link_count) < parseInt(b.analytic.link_count) ? 1 : -1));
-		}
-		if (selectedClicksType.value == 'leastClicks') {
-			results = results.filter((item) => item.analytic != undefined);
-			results = results.sort((a, b) => (parseInt(a.analytic.link_count) > parseInt(b.analytic.link_count) ? 1 : -1));
-		}
-		if (selectedClicksType.value == 'mostUniqueClicks') {
-			results = results.filter((item) => item.analytic != undefined);
-			results = results.sort((a, b) => (a.analytic.ip.length < b.analytic.ip.length ? 1 : -1));
-		}
-		if (selectedClicksType.value == 'leastUniqueClicks') {
-			results = results.filter((item) => item.analytic != undefined);
-			results = results.sort((a, b) => (a.analytic.ip.length > b.analytic.ip.length ? 1 : -1));
-		}
-		if (selectedDateType.value == 'mostRecent') {
-			results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
-		}
-		if (selectedDateType.value == 'leastRecent') {
-			results = results.sort((a, b) => new Date(a.link_date) - new Date(b.link_date));
-		}
-		return results;
-	};
-
 	return (
 		<React.Fragment>
 			<div className="btl-list-view">
@@ -242,7 +211,7 @@ const ListCanvas = (props) => {
 					<DataTable
 						className="btl-list-view-table"
 						columns={getColumnData(props)}
-						data={getData()}
+						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader

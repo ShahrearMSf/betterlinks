@@ -116,3 +116,34 @@ export const formatDate = (date, format) => {
 	};
 	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };
+
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType) => {
+	let results = stored;
+	results = stored.filter((item) => item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+	if (selectedCategory.value) {
+		results = results.filter((item) => item.cat_id == selectedCategory.value);
+	}
+	if (selectedClicksType.value == 'mostClicks') {
+		results = results.filter((item) => item.analytic != undefined);
+		results = results.sort((a, b) => (parseInt(a.analytic.link_count) < parseInt(b.analytic.link_count) ? 1 : -1));
+	}
+	if (selectedClicksType.value == 'leastClicks') {
+		results = results.filter((item) => item.analytic != undefined);
+		results = results.sort((a, b) => (parseInt(a.analytic.link_count) > parseInt(b.analytic.link_count) ? 1 : -1));
+	}
+	if (selectedClicksType.value == 'mostUniqueClicks') {
+		results = results.filter((item) => item.analytic != undefined);
+		results = results.sort((a, b) => (a.analytic.ip.length < b.analytic.ip.length ? 1 : -1));
+	}
+	if (selectedClicksType.value == 'leastUniqueClicks') {
+		results = results.filter((item) => item.analytic != undefined);
+		results = results.sort((a, b) => (a.analytic.ip.length > b.analytic.ip.length ? 1 : -1));
+	}
+	if (selectedDateType.value == 'mostRecent') {
+		results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
+	}
+	if (selectedDateType.value == 'leastRecent') {
+		results = results.sort((a, b) => new Date(a.link_date) - new Date(b.link_date));
+	}
+	return results;
+};
