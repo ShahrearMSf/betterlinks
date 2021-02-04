@@ -973,6 +973,32 @@
   color: #003be2;
   margin-left: 5px;
 }
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button {
+  padding: 5px;
+  border: none;
+  background: none;
+  color: #b0b2ba;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s ease 0s;
+}
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button:hover {
+  color: #003be2;
+}
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button.delete-button:hover {
+  color: #f97272;
+}
 .betterlinks-body .btl-list-view .rdt_Pagination {
   background: transparent;
   border: none;
