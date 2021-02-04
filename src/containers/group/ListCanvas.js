@@ -93,6 +93,20 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 	const [bulkAction, setBulkAction] = useState({});
 	return (
 		<React.Fragment>
+			{bulkActionData.selectedCount > 0 && (
+				<div className="btl-bulk-actions">
+					<Select
+						className="btl-list-view-select"
+						classNamePrefix="btl-react-select"
+						defaultValue={{ value: '', label: 'Bulk Actions' }}
+						options={[{ value: 'delete', label: 'Delete' }]}
+						onChange={(e) => setBulkAction(e)}
+					/>
+					<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(bulkActionData.selectedRows, bulkAction, deleteLinkHandler)}>
+						Apply
+					</button>
+				</div>
+			)}
 			<div className="btl-links-filter">
 				<div className="btl-click-filter">
 					<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
@@ -125,20 +139,6 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 				<input className="btl-link-input-field" placeholder="Links to Show" />
 				<button className="btl-link-filter-button">Filter</button>
 			</div>
-			{bulkActionData.selectedCount > 0 && (
-				<div className="btl-bulk-actions">
-					<Select
-						className="btl-list-view-select"
-						classNamePrefix="btl-react-select"
-						defaultValue={{ value: '', label: 'Bulk Actions' }}
-						options={[{ value: 'delete', label: 'Delete' }]}
-						onChange={(e) => setBulkAction(e)}
-					/>
-					<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(bulkActionData.selectedRows, bulkAction, deleteLinkHandler)}>
-						Apply
-					</button>
-				</div>
-			)}
 		</React.Fragment>
 	);
 };

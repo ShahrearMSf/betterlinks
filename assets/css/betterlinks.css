@@ -759,7 +759,7 @@
 .betterlinks-body .btl-list-view .sc-idOhPF {
   margin-bottom: 15px;
   background: transparent;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 0;
   flex-wrap: wrap;
 }
@@ -768,8 +768,62 @@
   display: flex;
   flex-wrap: wrap;
 }
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter {
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions {
   margin-right: 12px;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select {
+  height: 38px;
+  min-width: 150px;
+  margin-right: 12px;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control {
+  min-height: 36px;
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control:focus, .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control--is-focused {
+  box-shadow: none;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control:focus .btl-react-select__input input, .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control--is-focused .btl-react-select__input input {
+  box-shadow: none;
+  border: none;
+  outline: none;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__value-container {
+  height: 36px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator-separator {
+  display: none;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator {
+  padding: 3px 8px;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button {
+  cursor: pointer;
+  height: 38px;
+  border: 1px solid #003be2;
+  outline: none;
+  box-shadow: none;
+  background: rgba(0, 59, 226, 0.05);
+  color: #003be2;
+  font-size: 14px;
+  padding: 0 25px;
+  border-radius: 5px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  transition: box-shadow 0.2s linear;
+  transition-property: background, color, box-shadow;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button:hover {
+  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-click-filter {
   margin-bottom: 5px;
@@ -875,60 +929,6 @@
   transition: box-shadow 0.2s ease;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-link-filter-button:hover {
-  box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select {
-  height: 38px;
-  min-width: 150px;
-  margin-right: 12px;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control {
-  min-height: 36px;
-  background: #fff;
-  border: 1px solid #ebebeb;
-  border-radius: 5px;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control:focus, .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control--is-focused {
-  box-shadow: none;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control:focus .btl-react-select__input input, .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control--is-focused .btl-react-select__input input {
-  box-shadow: none;
-  border: none;
-  outline: none;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__value-container {
-  height: 36px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator-separator {
-  display: none;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator {
-  padding: 3px 8px;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button {
-  cursor: pointer;
-  height: 38px;
-  border: 1px solid #003be2;
-  outline: none;
-  box-shadow: none;
-  background: rgba(0, 59, 226, 0.05);
-  color: #003be2;
-  font-size: 14px;
-  padding: 0 25px;
-  border-radius: 5px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  transition: box-shadow 0.2s linear;
-  transition-property: background, color, box-shadow;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button:hover {
-  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-  border-color: transparent;
-  color: #fff;
   box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
 }
 .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table {
@@ -1528,13 +1528,30 @@ body.betterlinks-dark-mode .betterlinks-body .btl-file-chooser label {
 body.betterlinks-dark-mode .betterlinks-body .btl-file-chooser input {
   color: #fff;
 }
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter,
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions {
-  display: flex;
-  flex-wrap: wrap;
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control {
+  background-color: #2c3650;
+  border-color: #2c3650;
 }
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter {
-  margin-right: 12px;
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__input input {
+  color: #f7f8fa !important;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__placeholder {
+  color: #f7f8fa;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__single-value {
+  color: #fff;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator svg {
+  fill: #f7f8fa;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button {
+  background-color: #2c3650;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button:hover {
+  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-click-filter {
   border-color: #2c3650;
@@ -1574,95 +1591,34 @@ body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-link
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-link-input-field::placeholder {
   color: #f7f8fa;
 }
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control {
-  background-color: #2c3650;
-  border-color: #2c3650;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__input input {
-  color: #f7f8fa !important;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__placeholder {
-  color: #f7f8fa;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__single-value {
-  color: #fff;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator svg {
-  fill: #f7f8fa;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button {
-  background-color: #2c3650;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button:hover {
-  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-  border-color: transparent;
-  color: #fff;
-  box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table {
-  background-color: transparent;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableHead {
-  margin-bottom: 12px;
-}
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableHead .rdt_TableHeadRow {
-  border: 1px solid #ebebeb;
-  background: #fff;
-  border-radius: 5px;
-  min-height: 65px;
+  border-color: #2c3650;
+  background-color: #2c3650;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol .rdt_TableCol_Sortable {
-  color: #252525;
-  font-size: 15px;
-  font-weight: 700;
+  color: #fff;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol .rdt_TableCol_Sortable:hover {
-  color: #252525;
+  color: #fff;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow {
-  margin-bottom: 12px;
-  min-height: 65px;
-  border: 1px solid #ebebeb;
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 9, 78, 0.03);
+  border-color: #2c3650;
+  background-color: #2c3650;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell div {
-  font-size: 15px;
-  color: #707070;
+  color: #f7f8fa;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-link-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #252525;
-  line-height: 1.25;
-}
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-short-url-wrapper {
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-  flex-wrap: nowrap;
+  color: #fff;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-short-url-wrapper .btl-short-url {
-  font-size: 14px;
-  background: rgba(0, 59, 226, 0.05);
-  font-weight: 700;
-  padding: 2px 12px;
-  min-height: 26px;
-  max-width: 310px;
-  border: 1.5px solid #003be2;
-  border-radius: 5px;
-  color: #003be2;
-  display: inline-flex;
-  align-items: center;
+  background: rgba(0, 59, 226, 0.1);
 }
-body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-short-url-wrapper .btl-short-url-copy-button {
-  border: none;
-  outline: none;
-  background: transparent;
-  padding: 5px;
-  font-size: 18px;
-  color: #003be2;
-  margin-left: 5px;
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button {
+  color: #ebebeb;
+}
+body.betterlinks-dark-mode .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button:hover {
+  color: #fff;
 }
 body.betterlinks-dark-mode .betterlinks-body .btl-list-view .rdt_Pagination {
   background: transparent;

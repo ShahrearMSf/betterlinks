@@ -302,13 +302,42 @@
 
 .btl-list-view{
   .sc-idOhPF{
-    .btl-links-filter,
     .btl-bulk-actions{
-      display: flex;
-      flex-wrap: wrap;
+      .btl-list-view-select{
+        .btl-react-select__control{
+					background-color: #2c3650;
+					border-color: #2c3650;
+					.btl-react-select__input{
+						input{
+							color: $light!important;
+						}
+					}
+					.btl-react-select__placeholder{
+						color: $light;
+					}
+					.btl-react-select__single-value{
+						color: $white;
+					}
+          .btl-react-select__indicators{
+            .btl-react-select__indicator{
+							svg{
+								fill: $light;
+							}
+            }
+          }
+        }
+      }
+      .btl-link-apply-button{
+				background-color: #2c3650;
+        &:hover {
+          background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+          border-color: transparent;
+          color: $white;
+          box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+        }
+      }
     }
     .btl-links-filter{
-      margin-right: 12px;
       .btl-click-filter{
 				border-color: #2c3650;
 				background-color: #2c3650;
@@ -356,59 +385,18 @@
 				}
       }
     }
-    .btl-bulk-actions{
-      .btl-list-view-select{
-        .btl-react-select__control{
-					background-color: #2c3650;
-					border-color: #2c3650;
-					.btl-react-select__input{
-						input{
-							color: $light!important;
-						}
-					}
-					.btl-react-select__placeholder{
-						color: $light;
-					}
-					.btl-react-select__single-value{
-						color: $white;
-					}
-          .btl-react-select__indicators{
-            .btl-react-select__indicator{
-							svg{
-								fill: $light;
-							}
-            }
-          }
-        }
-      }
-      .btl-link-apply-button{
-				background-color: #2c3650;
-        &:hover {
-          background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-          border-color: transparent;
-          color: $white;
-          box-shadow: 0 22px 42px rgba(#003be2, 0.18);
-        }
-      }
-    }
   }
   .btl-list-view-table{
     .rdt_Table{
-      background-color: transparent;
       .rdt_TableHead{
-        margin-bottom: 12px;
         .rdt_TableHeadRow{
-          border: 1px solid $light-darken;
-          background: $white;
-          border-radius: 5px;
-          min-height: 65px;
+					border-color: #2c3650;
+					background-color: #2c3650;
           .rdt_TableCol{
             .rdt_TableCol_Sortable{
-              color: $dark;
-              font-size: 15px;
-              font-weight: 700;
+              color: $white;
               &:hover{
-                color: $dark;
+                color: $white;
               }
             }
           }
@@ -416,50 +404,26 @@
       }
       .rdt_TableBody{
         .rdt_TableRow{
-          margin-bottom: 12px;
-          min-height: 65px;
-          border: 1px solid $light-darken;
-          border-radius: 5px;
-          box-shadow: 0 3px 4px rgba(#00094e, 0.03);
+					border-color: #2c3650;
+					background-color: #2c3650;
           .rdt_TableCell{
             div{
-              font-size: 15px;
-              color: $secondary;
+              color: $light;
             }
             .btl-link-title{
-              font-size: 15px;
-              font-weight: 700;
-              color: $dark;
-              line-height: 1.25;
+              color: $white;
             }
             .btl-short-url-wrapper{
-              display: flex;
-              align-items: center;
-              padding: 5px 0;
-              flex-wrap: nowrap;
               .btl-short-url{
-                font-size: 14px;
-                background: rgba($success, 0.05);
-                font-weight: 700;
-                padding: 2px 12px;
-                min-height: 26px;
-                max-width: 310px;
-                border: 1.5px solid $success;
-                border-radius: 5px;
-                color: $success;
-                display: inline-flex;
-                align-items: center;
+                background: rgba($success, 0.1);
               }
-              .btl-short-url-copy-button{
-                border: none;
-                outline: none;
-                background: transparent;
-                padding: 5px;
-                font-size: 18px;
-                color: $success;
-                margin-left: 5px;
-              }
-            }
+						}
+						.dnd-link-button {
+							color: $light-darken;
+							&:hover {
+								color: $white;
+							}
+						}
           }
         }
       }
