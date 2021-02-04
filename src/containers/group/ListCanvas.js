@@ -89,7 +89,7 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	}
 };
 
-const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, clicksTypeHandler }) => {
+const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, dateHandler, clicksTypeHandler, limitHandler }) => {
 	const [bulkAction, setBulkAction] = useState({});
 	return (
 		<React.Fragment>
@@ -134,9 +134,13 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
 					defaultValue={{ value: '', label: 'All Dates' }}
-					options={[{ value: 'Jan 2021', label: 'Unique Clicks' }]}
+					options={[
+						{ value: 'mostRecent', label: 'Most Recent' },
+						{ value: 'leastRecent', label: 'Least Recent' },
+					]}
+					onChange={(e) => dateHandler(e)}
 				/>
-				<input className="btl-link-input-field" placeholder="Links to Show" />
+				<input className="btl-link-input-field" placeholder="Links to Show" onChange={(e) => limitHandler(parseInt(e.target.value))} />
 				<button className="btl-link-filter-button">Filter</button>
 			</div>
 		</React.Fragment>
@@ -150,6 +154,8 @@ const ListCanvas = (props) => {
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [selectedCategory, setCategory] = useState({});
 	const [selectedClicksType, setClicksType] = useState({});
+	const [selectedDateType, setDateType] = useState({});
+	const [paginationPerPage, setPaginationPerPage] = useState(10);
 
 	useEffect(() => {
 		if (!links) {
@@ -186,6 +192,8 @@ const ListCanvas = (props) => {
 				onFilter={(e) => setFilterText(e.target.value)}
 				categorySelectHandler={setCategory}
 				clicksTypeHandler={setClicksType}
+				limitHandler={setPaginationPerPage}
+				dateHandler={setDateType}
 				onClear={handleClear}
 				filterText={filterText}
 			/>
@@ -218,6 +226,12 @@ const ListCanvas = (props) => {
 			results = results.filter((item) => item.analytic != undefined);
 			results = results.sort((a, b) => (a.analytic.ip.length > b.analytic.ip.length ? 1 : -1));
 		}
+		if (selectedDateType.value == 'mostRecent') {
+			results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
+		}
+		if (selectedDateType.value == 'leastRecent') {
+			results = results.sort((a, b) => new Date(a.link_date) - new Date(b.link_date));
+		}
 		return results;
 	};
 
@@ -237,6 +251,7 @@ const ListCanvas = (props) => {
 						selectableRows
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
+						paginationPerPage={paginationPerPage}
 					/>
 				)}
 			</div>
