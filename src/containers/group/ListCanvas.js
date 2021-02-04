@@ -55,7 +55,7 @@ const getColumnData = (props) => {
 			selector: '',
 			sortable: false,
 			cell: (row) => (
-				<div>
+				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction cat_id={row.cat_id} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} item={row} />
 				</div>
 			),
