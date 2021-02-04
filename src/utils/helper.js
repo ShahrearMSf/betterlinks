@@ -117,7 +117,7 @@ export const formatDate = (date, format) => {
 	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };
 
-export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType) => {
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
 	let results = stored;
 	results = stored.filter((item) => item.link_title.toLowerCase().includes(filterText.toLowerCase()));
 	if (selectedCategory.value) {
@@ -144,6 +144,11 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 	}
 	if (selectedDateType.value == 'leastRecent') {
 		results = results.sort((a, b) => new Date(a.link_date) - new Date(b.link_date));
+	}
+	if (selectedDateType.value == 'custom') {
+		results = results.filter((item) => {
+			return new Date(item.link_date).getTime() >= customDateFilter[0].startDate.getTime() && new Date(item.link_date).getTime() <= customDateFilter[0].endDate.getTime();
+		});
 	}
 	return results;
 };

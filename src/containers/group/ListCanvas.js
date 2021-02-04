@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
+import { DateRangePicker } from 'react-date-range';
+import { subDays } from 'date-fns';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 import { linksFilterData, site_url, formatDate } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
@@ -89,7 +93,7 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	}
 };
 
-const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, dateHandler, clicksTypeHandler, limitHandler }) => {
+const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, dateHandler, clicksTypeHandler }) => {
 	const [bulkAction, setBulkAction] = useState({});
 	return (
 		<React.Fragment>
@@ -137,10 +141,10 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 					options={[
 						{ value: 'mostRecent', label: 'Most Recent' },
 						{ value: 'leastRecent', label: 'Least Recent' },
+						{ value: 'custom', label: 'Custom' },
 					]}
 					onChange={(e) => dateHandler(e)}
 				/>
-				<input className="btl-link-input-field" placeholder="Links to Show" onChange={(e) => limitHandler(parseInt(e.target.value))} />
 				<button className="btl-link-filter-button">Filter</button>
 			</div>
 		</React.Fragment>
@@ -155,13 +159,27 @@ const ListCanvas = (props) => {
 	const [selectedCategory, setCategory] = useState({});
 	const [selectedClicksType, setClicksType] = useState({});
 	const [selectedDateType, setDateType] = useState({});
-	const [paginationPerPage, setPaginationPerPage] = useState(10);
+	const [isOpenCustomDateFilter, setIsOpenCustomDateFilter] = useState(false);
+	const [customDateFilter, setCustomDateFilter] = useState([
+		{
+			startDate: new Date(),
+			endDate: subDays(new Date(), 30),
+			key: 'selection',
+		},
+	]);
 
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
 		}
 	}, []);
+
+	const dateFilterControl = (type) => {
+		setDateType(type);
+		if (type.value == 'custom') {
+			setIsOpenCustomDateFilter(!isOpenCustomDateFilter);
+		}
+	};
 
 	var stored =
 		links &&
@@ -192,8 +210,7 @@ const ListCanvas = (props) => {
 				onFilter={(e) => setFilterText(e.target.value)}
 				categorySelectHandler={setCategory}
 				clicksTypeHandler={setClicksType}
-				limitHandler={setPaginationPerPage}
-				dateHandler={setDateType}
+				dateHandler={dateFilterControl}
 				onClear={handleClear}
 				filterText={filterText}
 			/>
@@ -206,12 +223,22 @@ const ListCanvas = (props) => {
 
 	return (
 		<React.Fragment>
+			{isOpenCustomDateFilter && (
+				<DateRangePicker
+					onChange={(item) => setCustomDateFilter([item.selection])}
+					showSelectionPreview={true}
+					moveRangeOnFirstSelection={false}
+					months={2}
+					ranges={customDateFilter}
+					direction="horizontal"
+				/>
+			)}
 			<div className="btl-list-view">
 				{links && (
 					<DataTable
 						className="btl-list-view-table"
 						columns={getColumnData(props)}
-						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType)}
+						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
@@ -220,7 +247,6 @@ const ListCanvas = (props) => {
 						selectableRows
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
-						paginationPerPage={paginationPerPage}
 					/>
 				)}
 			</div>
