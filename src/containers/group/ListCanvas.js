@@ -19,6 +19,18 @@ const getColumnData = (props) => {
 			},
 		},
 		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => {
+				return (
+					<div className="btl-short-url-wrapper">
+						<span className="btl-short-url">{site_url + '/' + row.short_url}</span>
+					</div>
+				);
+			},
+		},
+		{
 			name: __('Redirect Type', 'betterlinks'),
 			selector: 'redirect_type',
 			sortable: false,
@@ -51,18 +63,6 @@ const getColumnData = (props) => {
 			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
 		},
 		{
-			name: __('Shortened URL', 'betterlinks'),
-			selector: 'short_url',
-			sortable: false,
-			cell: (row) => {
-				return (
-					<div className="btl-short-url-wrapper">
-						<span className="btl-short-url">{site_url + '/' + row.short_url}</span>
-					</div>
-				);
-			},
-		},
-		{
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
@@ -89,7 +89,7 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	}
 };
 
-const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler }) => {
+const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, clicksTypeHandler }) => {
 	const [bulkAction, setBulkAction] = useState({});
 	return (
 		<React.Fragment>
@@ -115,16 +115,20 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
 					defaultValue={{ value: '', label: 'Categories' }}
-					options={[{ value: 'shop', label: 'shop' }]}
+					options={catItems}
+					onChange={(e) => categorySelectHandler(e)}
 				/>
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
 					defaultValue={{ value: '', label: 'Short by Clicks' }}
 					options={[
-						{ value: 'unique', label: 'Unique Clicks' },
-						{ value: 'clicks', label: 'All Clicks' },
+						{ value: 'mostClicks', label: 'Most Clicks' },
+						{ value: 'leastClicks', label: 'Least Clicks' },
+						{ value: 'mostUniqueClicks', label: 'Most Unique Clicks' },
+						{ value: 'leastUniqueClicks', label: 'Least Unique Clicks' },
 					]}
+					onChange={(e) => clicksTypeHandler(e)}
 				/>
 				<Select
 					className="btl-list-view-select"
@@ -142,18 +146,28 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 const ListCanvas = (props) => {
 	const { links } = props.links;
 	const [bulkActionData, setBulkActionData] = useState({});
+	const [filterText, setFilterText] = useState('');
+	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+	const [selectedCategory, setCategory] = useState({});
+	const [selectedClicksType, setClicksType] = useState({});
+
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
 		}
 	}, []);
-	const [filterText, setFilterText] = useState('');
-	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
 	var stored =
 		links &&
 		Object.values(links).reduce(function (total, item) {
 			total = [...total, ...item.lists];
+			return total;
+		}, []);
+
+	var categories =
+		links &&
+		Object.entries(links).reduce(function (total, [key, item]) {
+			total = [...total, { value: key, label: item.term_name }];
 			return total;
 		}, []);
 
@@ -167,16 +181,44 @@ const ListCanvas = (props) => {
 		return (
 			<FilterComponent
 				deleteLinkHandler={props.delete_link}
+				catItems={categories}
 				bulkActionData={bulkActionData}
 				onFilter={(e) => setFilterText(e.target.value)}
+				categorySelectHandler={setCategory}
+				clicksTypeHandler={setClicksType}
 				onClear={handleClear}
 				filterText={filterText}
 			/>
 		);
-	}, [filterText, resetPaginationToggle, bulkActionData, delete_link]);
+	}, [filterText, resetPaginationToggle, bulkActionData, delete_link, categories]);
 
 	const onSelectedRowsChange = (e) => {
 		setBulkActionData(e);
+	};
+
+	const getData = () => {
+		let results = stored;
+		results = stored.filter((item) => item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+		if (selectedCategory.value) {
+			results = results.filter((item) => item.cat_id == selectedCategory.value);
+		}
+		if (selectedClicksType.value == 'mostClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (parseInt(a.analytic.link_count) < parseInt(b.analytic.link_count) ? 1 : -1));
+		}
+		if (selectedClicksType.value == 'leastClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (parseInt(a.analytic.link_count) > parseInt(b.analytic.link_count) ? 1 : -1));
+		}
+		if (selectedClicksType.value == 'mostUniqueClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (a.analytic.ip.length < b.analytic.ip.length ? 1 : -1));
+		}
+		if (selectedClicksType.value == 'leastUniqueClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (a.analytic.ip.length > b.analytic.ip.length ? 1 : -1));
+		}
+		return results;
 	};
 
 	return (
@@ -186,7 +228,7 @@ const ListCanvas = (props) => {
 					<DataTable
 						className="btl-list-view-table"
 						columns={getColumnData(props)}
-						data={stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+						data={getData()}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
