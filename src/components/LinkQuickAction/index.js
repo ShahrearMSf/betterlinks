@@ -4,7 +4,7 @@ import Link from './../Link';
 import { site_url, copyToClipboard } from './../../utils/helper';
 
 const LinkQuickAction = (props) => {
-	const { item, cat_id, cat_name, submitLinkHandler, deleteLinkHandler } = props;
+	const { isShowAnalytics, item, cat_id, cat_name, submitLinkHandler, deleteLinkHandler } = props;
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
@@ -22,7 +22,7 @@ const LinkQuickAction = (props) => {
 	};
 	return (
 		<React.Fragment>
-			{item.analytic && (
+			{isShowAnalytics && item.analytic && (
 				<button className="dnd-link-button btl-tooltip">
 					<span className="btl-tooltiptext">{'Clicks: ' + item.analytic.link_count + ' / ' + 'Unique Clicks: ' + item.analytic.ip.length}</span>
 					<span className="icon">{item.analytic.link_count + '/' + item.analytic.ip.length}</span>

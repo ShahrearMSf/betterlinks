@@ -42,7 +42,21 @@ const getColumnData = (props) => {
 			name: __('Clicks', 'betterlinks'),
 			selector: '',
 			sortable: false,
-			cell: (row) => <div>Clicks</div>,
+			cell: (row) => (
+				<div>
+					{row.analytic ? (
+						<button className="dnd-link-button btl-tooltip">
+							<span className="btl-tooltiptext">{'Clicks: ' + row.analytic.link_count + ' / ' + 'Unique Clicks: ' + row.analytic.ip.length}</span>
+							<span className="icon">{row.analytic.link_count + '/' + row.analytic.ip.length}</span>
+						</button>
+					) : (
+						<button className="dnd-link-button btl-tooltip">
+							<span className="btl-tooltiptext">{'Clicks: 0 / ' + 'Unique Clicks: 0'}</span>
+							<span className="icon">0/0</span>
+						</button>
+					)}
+				</div>
+			),
 		},
 		{
 			name: __('Date', 'betterlinks'),
@@ -56,7 +70,7 @@ const getColumnData = (props) => {
 			sortable: false,
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
-					<LinkQuickAction cat_id={row.cat_id} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} item={row} />
+					<LinkQuickAction isShowAnalytics={false} cat_id={row.cat_id} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} item={row} />
 				</div>
 			),
 		},

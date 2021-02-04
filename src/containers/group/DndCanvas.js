@@ -61,6 +61,7 @@ function DndCanvas(props) {
 																					<h3 className="dnd-link-title" dangerouslySetInnerHTML={{ __html: item.link_title }}></h3>
 																					<div className="btl-dnd-link-button-group">
 																						<LinkQuickAction
+																							isShowAnalytics={true}
 																							cat_id={ind}
 																							cat_name={el.term_name}
 																							submitLinkHandler={props.edit_link}
