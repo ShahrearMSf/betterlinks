@@ -63,54 +63,75 @@ const getColumnData = (props) => {
 	];
 };
 
-const FilterComponent = ({ filterText, onFilter, onClear }) => (
-	<React.Fragment>
-		<div className="btl-links-filter">
-			<div className="btl-bulk-actions">
+const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
+	let deleteItemLists = [];
+	selectedRows.map((item) => {
+		deleteItemLists.push({
+			ID: item.ID,
+			term_id: item.cat_id,
+			short_url: item.short_url,
+		});
+	});
+	deleteLinkHandler(deleteItemLists);
+};
+
+const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler }) => {
+	const [bulkAction, setBulkAction] = useState({});
+	return (
+		<React.Fragment>
+			<div className="btl-links-filter">
+				<div className="btl-click-filter">
+					<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
+				</div>
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
-					defaultValue={{ value: '', label: 'Bulk Actions' }}
-					options={[{ value: 'delete', label: 'Delete' }]}
+					options={[
+						{ value: '', label: 'Categories' },
+						{ value: 'shop', label: 'shop' },
+					]}
 				/>
-				<button className="btl-link-apply-button">Apply</button>
+				<Select
+					className="btl-list-view-select"
+					classNamePrefix="btl-react-select"
+					options={[
+						{ value: '', label: 'Short by Clicks' },
+						{ value: 'unique', label: 'Unique Clicks' },
+						{ value: 'clicks', label: 'All Clicks' },
+					]}
+				/>
+				<Select
+					className="btl-list-view-select"
+					classNamePrefix="btl-react-select"
+					options={[
+						{ value: '', label: 'All Dates' },
+						{ value: 'Jan 2021', label: 'Unique Clicks' },
+					]}
+				/>
+				<input className="btl-link-input-field" placeholder="Links to Show" />
+				<button className="btl-link-filter-button">Filter</button>
 			</div>
-			<div className="btl-click-filter">
-				<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
-			</div>
-			<Select
-				className="btl-list-view-select"
-				classNamePrefix="btl-react-select"
-				options={[
-					{ value: '', label: 'Categories' },
-					{ value: 'shop', label: 'shop' },
-				]}
-			/>
-			<Select
-				className="btl-list-view-select"
-				classNamePrefix="btl-react-select"
-				options={[
-					{ value: '', label: 'Short by Clicks' },
-					{ value: 'unique', label: 'Unique Clicks' },
-					{ value: 'clicks', label: 'All Clicks' },
-				]}
-			/>
-			<Select
-				className="btl-list-view-select"
-				classNamePrefix="btl-react-select"
-				options={[
-					{ value: '', label: 'All Dates' },
-					{ value: 'Jan 2021', label: 'Unique Clicks' },
-				]}
-			/>
-			<input className="btl-link-input-field" placeholder="Links to Show" />
-			<button className="btl-link-filter-button">Filter</button>
-		</div>
-	</React.Fragment>
-);
+			{bulkActionData.selectedCount > 0 && (
+				<div className="btl-bulk-actions">
+					<Select
+						className="btl-list-view-select"
+						classNamePrefix="btl-react-select"
+						defaultValue={{ value: '', label: 'Bulk Actions' }}
+						options={[{ value: 'delete', label: 'Delete' }]}
+						onChange={(e) => setBulkAction(e)}
+					/>
+					<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(bulkActionData.selectedRows, bulkAction, deleteLinkHandler)}>
+						Apply
+					</button>
+				</div>
+			)}
+		</React.Fragment>
+	);
+};
 
 const ListCanvas = (props) => {
 	const { links } = props.links;
+	const [bulkActionData, setBulkActionData] = useState({});
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
@@ -133,8 +154,20 @@ const ListCanvas = (props) => {
 				setFilterText('');
 			}
 		};
-		return <FilterComponent onFilter={(e) => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
-	}, [filterText, resetPaginationToggle]);
+		return (
+			<FilterComponent
+				deleteLinkHandler={props.delete_link}
+				bulkActionData={bulkActionData}
+				onFilter={(e) => setFilterText(e.target.value)}
+				onClear={handleClear}
+				filterText={filterText}
+			/>
+		);
+	}, [filterText, resetPaginationToggle, bulkActionData, delete_link]);
+
+	const onSelectedRowsChange = (e) => {
+		setBulkActionData(e);
+	};
 
 	return (
 		<React.Fragment>
@@ -151,9 +184,7 @@ const ListCanvas = (props) => {
 						persistTableHead
 						selectableRows
 						selectableRowsVisibleOnly
-						onSelectedRowsChange={(e) => {
-							console.log(e);
-						}}
+						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
 					/>
 				)}
 			</div>
