@@ -33,9 +33,11 @@ const TopBar = (props) => {
 			<div className="tool-title">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
-			<div className="btl-create-links">
-				<Link isIcon={false} submitHandler={props.add_new_link} />
-			</div>
+			{props.activity.linksView == 'list' && (
+				<div className="btl-create-links">
+					<Link isIcon={false} submitHandler={props.add_new_link} />
+				</div>
+			)}
 			<div className="topbar-inner">
 				{props.currentPage === 'betterlinks' && (
 					<React.Fragment>

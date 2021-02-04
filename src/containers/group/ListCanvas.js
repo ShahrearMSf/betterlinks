@@ -108,22 +108,34 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 				</div>
 			)}
 			<div className="btl-links-filter">
+				{bulkActionData.selectedCount > 0 && (
+					<div className="btl-bulk-actions">
+						<Select
+							className="btl-list-view-select"
+							classNamePrefix="btl-react-select"
+							defaultValue={{ value: '', label: 'Bulk Actions' }}
+							options={[{ value: 'delete', label: 'Delete' }]}
+							onChange={(e) => setBulkAction(e)}
+						/>
+						<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(bulkActionData.selectedRows, bulkAction, deleteLinkHandler)}>
+							Apply
+						</button>
+					</div>
+				)}
 				<div className="btl-click-filter">
 					<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
 				</div>
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
-					options={[
-						{ value: '', label: 'Categories' },
-						{ value: 'shop', label: 'shop' },
-					]}
+					defaultValue={{ value: '', label: 'Categories' }}
+					options={[{ value: 'shop', label: 'shop' }]}
 				/>
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
+					defaultValue={{ value: '', label: 'Short by Clicks' }}
 					options={[
-						{ value: '', label: 'Short by Clicks' },
 						{ value: 'unique', label: 'Unique Clicks' },
 						{ value: 'clicks', label: 'All Clicks' },
 					]}
@@ -131,10 +143,8 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 				<Select
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
-					options={[
-						{ value: '', label: 'All Dates' },
-						{ value: 'Jan 2021', label: 'Unique Clicks' },
-					]}
+					defaultValue={{ value: '', label: 'All Dates' }}
+					options={[{ value: 'Jan 2021', label: 'Unique Clicks' }]}
 				/>
 				<input className="btl-link-input-field" placeholder="Links to Show" />
 				<button className="btl-link-filter-button">Filter</button>
