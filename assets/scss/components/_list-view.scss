@@ -226,9 +226,9 @@
             }
             .btl-link-title{
               font-size: 15px;
-              font-weight: 700;
+              font-weight: 500;
               color: $dark;
-              line-height: 1.25;
+              line-height: 1.1;
             }
             .btl-short-url-wrapper{
               display: flex;
@@ -261,27 +261,27 @@
             .btl-list-view-action-wrapper{
               display: flex;
               align-items: center;
-              justify-content: flex-end;
+              justify-content: flex-start;
               width: 100%;
-              .dnd-link-button {
-                padding: 5px 5px 5px 20px;
+            }
+            .dnd-link-button {
+              padding: 5px 5px 5px 20px;
+              border: none;
+              background: none;
+              color: $secondary-lighten;
+              font-size: 12px;
+              cursor: pointer;
+              transition: color 0.2s ease 0s;
+              &:focus {
                 border: none;
-                background: none;
-                color: $secondary-lighten;
-                font-size: 12px;
-                cursor: pointer;
-                transition: color 0.2s ease 0s;
-                &:focus {
-                  border: none;
-                  outline: none;
-                  box-shadow: none;
-                }
-                &:hover {
-                  color: $success;
-                }
-                &.delete-button:hover {
-                  color: $danger;
-                }
+                outline: none;
+                box-shadow: none;
+              }
+              &:hover {
+                color: $success;
+              }
+              &.delete-button:hover {
+                color: $danger;
               }
             }
           }

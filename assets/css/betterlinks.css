@@ -964,9 +964,9 @@
 }
 .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-link-title {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
   color: #252525;
-  line-height: 1.25;
+  line-height: 1.1;
 }
 .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-short-url-wrapper {
   display: flex;
@@ -999,10 +999,10 @@
 .betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   width: 100%;
 }
-.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button {
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button {
   padding: 5px 5px 5px 20px;
   border: none;
   background: none;
@@ -1011,15 +1011,15 @@
   cursor: pointer;
   transition: color 0.2s ease 0s;
 }
-.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button:focus {
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button:focus {
   border: none;
   outline: none;
   box-shadow: none;
 }
-.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button:hover {
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button:hover {
   color: #003be2;
 }
-.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .dnd-link-button.delete-button:hover {
+.betterlinks-body .btl-list-view .btl-list-view-table .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button.delete-button:hover {
   color: #f97272;
 }
 .betterlinks-body .btl-list-view .rdt_Pagination {
