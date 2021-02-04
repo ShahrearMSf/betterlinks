@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
+import { site_url, formatDate } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 
@@ -15,21 +16,6 @@ const getColumnData = (props) => {
 			sortable: false,
 			cell: (row) => {
 				return <div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>;
-			},
-		},
-		{
-			name: __('Shortened URL', 'betterlinks'),
-			selector: 'short_url',
-			sortable: false,
-			cell: (row) => {
-				return (
-					<div className="btl-short-url-wrapper">
-						<span className="btl-short-url">{row.short_url}</span>
-						<button className="btl-short-url-copy-button">
-							<i className="btl btl-link"></i>
-						</button>
-					</div>
-				);
 			},
 		},
 		{
@@ -62,7 +48,19 @@ const getColumnData = (props) => {
 			name: __('Date', 'betterlinks'),
 			selector: 'link_date',
 			sortable: false,
-			cell: (row) => <div>{row.link_date}</div>,
+			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
+		},
+		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => {
+				return (
+					<div className="btl-short-url-wrapper">
+						<span className="btl-short-url">{site_url + '/' + row.short_url}</span>
+					</div>
+				);
+			},
 		},
 		{
 			name: __('Action', 'betterlinks'),
@@ -78,15 +76,17 @@ const getColumnData = (props) => {
 };
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
-	let deleteItemLists = [];
-	selectedRows.map((item) => {
-		deleteItemLists.push({
-			ID: item.ID,
-			term_id: item.cat_id,
-			short_url: item.short_url,
+	if (action.value === 'delete') {
+		let deleteItemLists = [];
+		selectedRows.map((item) => {
+			deleteItemLists.push({
+				ID: item.ID,
+				term_id: item.cat_id,
+				short_url: item.short_url,
+			});
 		});
-	});
-	deleteLinkHandler(deleteItemLists);
+		deleteLinkHandler(deleteItemLists);
+	}
 };
 
 const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler }) => {
