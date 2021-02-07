@@ -103,7 +103,7 @@
 			}
 		}
 	}
-	.btl-analytic-table {
+	.rdt_Table{
 		.rdt_TableCell{
 			padding-top: 5px;
 			padding-bottom: 5px;
@@ -130,11 +130,6 @@
 		svg {
 			display: none;
 		}
-		&:disabled{
-			svg{
-				fill: $secondary;
-			}
-		}
 	}
 	.sc-giIncl {
 		.sc-iJuUWI {
@@ -149,6 +144,12 @@
 			svg {
 				height: 20px;
 				width: 20px;
+				fill: $dark;
+			}
+			&:disabled{
+				svg{
+					fill: $secondary;
+				}
 			}
 			&:hover {
 				background: #0742e7;

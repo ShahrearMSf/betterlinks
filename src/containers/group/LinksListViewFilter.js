@@ -39,7 +39,7 @@ const LinksListViewFilter = (props) => {
 					<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={props.filterText} onChange={props.onFilter} />
 				</div>
 				<Select
-					className="btl-list-view-select"
+					className="btl-list-view-select btl-category-filter"
 					classNamePrefix="btl-react-select"
 					placeholder="Categories"
 					value={props.selectedCategory}
@@ -48,7 +48,7 @@ const LinksListViewFilter = (props) => {
 					isClearable={true}
 				/>
 				<Select
-					className="btl-list-view-select"
+					className="btl-list-view-select btl-shortable-filter"
 					classNamePrefix="btl-react-select"
 					placeholder="Short by Clicks"
 					options={[
