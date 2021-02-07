@@ -155,6 +155,5 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 			});
 		}
 	}
-
 	return results;
 };

@@ -1,37 +1,34 @@
+const webpack = require('webpack');
 const path = require('path');
 
-module.exports = (env, argv) => {
-	let production = argv.mode === 'production';
-
-	return {
-		entry: {
-			// 'js/betterlinks-core': path.resolve(__dirname, 'src/index.js'),
-			'js/betterlinks-core.min': path.resolve(__dirname, 'src/index.js'),
+const config = {
+	entry: ['react-hot-loader/patch', './src/index.js'],
+	output: {
+		filename: 'betterlinks-core.min.js',
+		path: path.resolve(__dirname, 'assets/js'),
+	},
+	module: {
+		rules: [
+			{
+				test: /\.(js|jsx)$/,
+				use: 'babel-loader',
+				exclude: /node_modules/,
+			},
+			{
+				test: /\.css$/,
+				use: ['style-loader', 'css-loader'],
+			},
+		],
+	},
+	resolve: {
+		extensions: ['.js', '.jsx'],
+		alias: {
+			'react-dom': '@hot-loader/react-dom',
 		},
-
-		output: {
-			filename: '[name].js',
-			path: path.resolve(__dirname, 'assets'),
-		},
-
-		devtool: production ? '' : 'source-map',
-
-		resolve: {
-			extensions: ['.js', '.jsx', '.json'],
-		},
-
-		module: {
-			rules: [
-				{
-					test: /\.css$/,
-					use: ['style-loader', 'css-loader'],
-				},
-				{
-					test: /\.jsx?$/,
-					exclude: /node_modules/,
-					loader: 'babel-loader',
-				},
-			],
-		},
-	};
+	},
+	devServer: {
+		contentBase: './dist',
+	},
 };
+
+module.exports = config;
