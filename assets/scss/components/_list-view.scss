@@ -191,6 +191,14 @@
 					box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 				}
 			}
+			> .rdrDateRangePickerWrapper {
+				position: absolute;
+				top: 100%;
+				z-index: 9999;
+				justify-content: center;
+				left: 0;
+				right: 0;
+			}
 		}
 	}
   .rdt_Table {

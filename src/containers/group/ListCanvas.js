@@ -3,12 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
-import { DateRangePicker } from 'react-date-range';
 import { subDays } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import LinksListViewFilter from './LinksListViewFilter';
-import { linksFilterData, site_url, formatDate } from './../../utils/helper';
+import { linksFilterData, site_url, formatDate, insertOverlayElement } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 
@@ -119,6 +118,7 @@ const ListCanvas = (props) => {
 	const dateFilterControl = (type) => {
 		setDateType(type);
 		if (type && type.value == 'custom') {
+			insertOverlayElement();
 			setIsOpenCustomDateFilter(!isOpenCustomDateFilter);
 		} else {
 			setIsOpenCustomDateFilter(false);
@@ -156,25 +156,30 @@ const ListCanvas = (props) => {
 				setClicksType={setClicksType}
 				selectedDateType={selectedDateType}
 				dateHandler={dateFilterControl}
+				customDateFilter={customDateFilter}
+				setCustomDateFilter={setCustomDateFilter}
+				isOpenCustomDateFilter={isOpenCustomDateFilter}
+				setIsOpenCustomDateFilter={setIsOpenCustomDateFilter}
 				onClear={handleClear}
 				filterText={filterText}
 				resetFilterHandler={resetFilterHandler}
 			/>
 		);
-	}, [filterText, resetPaginationToggle, bulkActionData, delete_link, categories, resetFilterHandler]);
+	}, [
+		filterText,
+		resetPaginationToggle,
+		bulkActionData,
+		delete_link,
+		categories,
+		customDateFilter,
+		setCustomDateFilter,
+		isOpenCustomDateFilter,
+		setIsOpenCustomDateFilter,
+		resetFilterHandler,
+	]);
 
 	return (
 		<React.Fragment>
-			{isOpenCustomDateFilter && (
-				<DateRangePicker
-					onChange={(item) => setCustomDateFilter([item.selection])}
-					showSelectionPreview={true}
-					moveRangeOnFirstSelection={false}
-					months={2}
-					ranges={customDateFilter}
-					direction="horizontal"
-				/>
-			)}
 			<div className="btl-list-view">
 				{links && (
 					<DataTable

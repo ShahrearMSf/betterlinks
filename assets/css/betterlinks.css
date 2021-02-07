@@ -934,6 +934,14 @@
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-link-filter-button:hover {
   box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
 }
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .rdrDateRangePickerWrapper {
+  position: absolute;
+  top: 100%;
+  z-index: 9999;
+  justify-content: center;
+  left: 0;
+  right: 0;
+}
 .betterlinks-body .btl-list-view .rdt_Table {
   background-color: transparent;
 }
@@ -1841,6 +1849,17 @@ body.betterlinks-dark-mode .ReactModal__Content .btl-modal-submit-button {
 }
 body.betterlinks-dark-mode .ReactModal__Content .btl-modal-submit-button:hover {
   box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
+}
+body > .btl-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #000;
+  z-index: 99;
+  opacity: 0.65;
+  overflow-y: scroll;
 }
 
 .btl-tooltip {

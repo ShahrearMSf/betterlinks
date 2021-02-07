@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
+import { DateRangePicker } from 'react-date-range';
+import { formatDate, removeOverlayElement } from './../../utils/helper';
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	if (action.value === 'delete') {
@@ -18,6 +20,13 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 
 const LinksListViewFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState({});
+	const dateRangePickerOnChangeHandler = (item) => {
+		props.setCustomDateFilter([item.selection]);
+		if (item.selection.endDate != item.selection.startDate) {
+			removeOverlayElement();
+			props.setIsOpenCustomDateFilter(false);
+		}
+	};
 	return (
 		<React.Fragment>
 			<div className="btl-links-filter">
@@ -50,7 +59,7 @@ const LinksListViewFilter = (props) => {
 				<Select
 					className="btl-list-view-select btl-shortable-filter"
 					classNamePrefix="btl-react-select"
-					placeholder="Short by Clicks"
+					placeholder="Sort by Clicks"
 					options={[
 						{ value: 'mostClicks', label: 'Most Clicks' },
 						{ value: 'leastClicks', label: 'Least Clicks' },
@@ -74,9 +83,33 @@ const LinksListViewFilter = (props) => {
 					onChange={(e) => props.dateHandler(e)}
 					isClearable={true}
 				/>
+				{props.selectedDateType && props.selectedDateType.value === 'custom' && (
+					<React.Fragment>
+						{console.log(props.customDateFilter[0].startDate)}
+						<button className="btl-list-view-calendar" onClick={() => props.dateHandler({ value: 'custom', label: 'Custom' })}>
+							<span className="dashicons dashicons-calendar"></span>
+							{String(props.customDateFilter[0].startDate).slice(4, 15)}
+						</button>
+						<button className="btl-list-view-calendar" onClick={() => props.dateHandler({ value: 'custom', label: 'Custom' })}>
+							<span className="dashicons dashicons-calendar"></span>
+							{String(props.customDateFilter[0].endDate).slice(4, 15)}
+						</button>
+					</React.Fragment>
+				)}
+
 				<button className="btl-link-filter-button" onClick={props.resetFilterHandler}>
 					Reset Filter
 				</button>
+				{props.isOpenCustomDateFilter && (
+					<DateRangePicker
+						onChange={(item) => dateRangePickerOnChangeHandler(item)}
+						showSelectionPreview={true}
+						moveRangeOnFirstSelection={false}
+						months={2}
+						ranges={props.customDateFilter}
+						direction="horizontal"
+					/>
+				)}
 			</div>
 		</React.Fragment>
 	);

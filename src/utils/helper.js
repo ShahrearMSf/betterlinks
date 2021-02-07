@@ -157,3 +157,14 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 	}
 	return results;
 };
+
+export const insertOverlayElement = () => {
+	var newNode = document.createElement('div');
+	newNode.className = 'btl-overlay';
+	document.body.appendChild(newNode);
+};
+
+export const removeOverlayElement = () => {
+	var elem = document.querySelector('.btl-overlay');
+	elem.parentNode.removeChild(elem);
+};
