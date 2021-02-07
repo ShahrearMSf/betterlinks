@@ -103,7 +103,11 @@
 			}
 		}
 	}
-	.btl-analytic-table {
+	.rdt_Table{
+		.rdt_TableCell{
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
 		.rdt_TableCol_Sortable {
 			color: $dark;
 			> div {
@@ -140,6 +144,12 @@
 			svg {
 				height: 20px;
 				width: 20px;
+				fill: $dark;
+			}
+			&:disabled{
+				svg{
+					fill: $secondary;
+				}
 			}
 			&:hover {
 				background: #0742e7;
