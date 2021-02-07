@@ -3,16 +3,16 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
-import Select from 'react-select';
 import { DateRangePicker } from 'react-date-range';
 import { subDays } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
+import LinksListViewFilter from './LinksListViewFilter';
 import { linksFilterData, site_url, formatDate } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 
-const getColumnData = (props) => {
+const getLinksListViewColumnData = (props) => {
 	return [
 		{
 			name: __('Title', 'betterlinks'),
@@ -79,87 +79,6 @@ const getColumnData = (props) => {
 	];
 };
 
-const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
-	if (action.value === 'delete') {
-		let deleteItemLists = [];
-		selectedRows.map((item) => {
-			deleteItemLists.push({
-				ID: item.ID,
-				term_id: item.cat_id,
-				short_url: item.short_url,
-			});
-		});
-		deleteLinkHandler(deleteItemLists);
-	}
-};
-
-const FilterComponent = (props) => {
-	const { filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, dateHandler, setClicksType, resetFilterHandler } = props;
-	const [bulkAction, setBulkAction] = useState({});
-	return (
-		<React.Fragment>
-			<div className="btl-links-filter">
-				{bulkActionData.selectedCount > 0 && (
-					<div className="btl-bulk-actions">
-						<Select
-							className="btl-list-view-select"
-							classNamePrefix="btl-react-select"
-							defaultValue={{ value: '', label: 'Bulk Actions' }}
-							options={[{ value: 'delete', label: 'Delete' }]}
-							onChange={(e) => setBulkAction(e)}
-						/>
-						<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(bulkActionData.selectedRows, bulkAction, deleteLinkHandler)}>
-							Apply
-						</button>
-					</div>
-				)}
-				<div className="btl-click-filter">
-					<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={filterText} onChange={onFilter} />
-				</div>
-				<Select
-					className="btl-list-view-select"
-					classNamePrefix="btl-react-select"
-					placeholder="Categories"
-					value={props.selectedCategory}
-					options={catItems}
-					onChange={(e) => categorySelectHandler(e)}
-					isClearable={true}
-				/>
-				<Select
-					className="btl-list-view-select"
-					classNamePrefix="btl-react-select"
-					placeholder="Short by Clicks"
-					options={[
-						{ value: 'mostClicks', label: 'Most Clicks' },
-						{ value: 'leastClicks', label: 'Least Clicks' },
-						{ value: 'mostUniqueClicks', label: 'Most Unique Clicks' },
-						{ value: 'leastUniqueClicks', label: 'Least Unique Clicks' },
-					]}
-					value={props.selectedClicksType}
-					onChange={(e) => setClicksType(e)}
-					isClearable={true}
-				/>
-				<Select
-					className="btl-list-view-select"
-					classNamePrefix="btl-react-select"
-					placeholder="All Dates"
-					options={[
-						{ value: 'mostRecent', label: 'Most Recent' },
-						{ value: 'leastRecent', label: 'Least Recent' },
-						{ value: 'custom', label: 'Custom' },
-					]}
-					value={props.selectedDateType}
-					onChange={(e) => dateHandler(e)}
-					isClearable={true}
-				/>
-				<button className="btl-link-filter-button" onClick={resetFilterHandler}>
-					Reset Filter
-				</button>
-			</div>
-		</React.Fragment>
-	);
-};
-
 const ListCanvas = (props) => {
 	const { links } = props.links;
 	const [bulkActionData, setBulkActionData] = useState({});
@@ -183,6 +102,20 @@ const ListCanvas = (props) => {
 		}
 	}, []);
 
+	var stored =
+		links &&
+		Object.values(links).reduce(function (total, item) {
+			total = [...total, ...item.lists];
+			return total;
+		}, []);
+
+	var categories =
+		links &&
+		Object.entries(links).reduce(function (total, [key, item]) {
+			total = [...total, { value: key, label: item.term_name }];
+			return total;
+		}, []);
+
 	const dateFilterControl = (type) => {
 		setDateType(type);
 		if (type && type.value == 'custom') {
@@ -200,19 +133,9 @@ const ListCanvas = (props) => {
 		setIsOpenCustomDateFilter(false);
 	};
 
-	var stored =
-		links &&
-		Object.values(links).reduce(function (total, item) {
-			total = [...total, ...item.lists];
-			return total;
-		}, []);
-
-	var categories =
-		links &&
-		Object.entries(links).reduce(function (total, [key, item]) {
-			total = [...total, { value: key, label: item.term_name }];
-			return total;
-		}, []);
+	const onSelectedRowsChange = (e) => {
+		setBulkActionData(e);
+	};
 
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
@@ -222,7 +145,7 @@ const ListCanvas = (props) => {
 			}
 		};
 		return (
-			<FilterComponent
+			<LinksListViewFilter
 				deleteLinkHandler={props.delete_link}
 				catItems={categories}
 				bulkActionData={bulkActionData}
@@ -240,10 +163,6 @@ const ListCanvas = (props) => {
 		);
 	}, [filterText, resetPaginationToggle, bulkActionData, delete_link, categories, resetFilterHandler]);
 
-	const onSelectedRowsChange = (e) => {
-		setBulkActionData(e);
-	};
-
 	return (
 		<React.Fragment>
 			{isOpenCustomDateFilter && (
@@ -260,7 +179,7 @@ const ListCanvas = (props) => {
 				{links && (
 					<DataTable
 						className="btl-list-view-table"
-						columns={getColumnData(props)}
+						columns={getLinksListViewColumnData(props)}
 						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
