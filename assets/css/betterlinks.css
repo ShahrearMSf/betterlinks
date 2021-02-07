@@ -639,24 +639,15 @@
   margin-bottom: 30px;
 }
 .betterlinks-body .btl-dnd-link {
-  padding: 5px;
   margin: 8px 8px 0px 8px;
-  border-radius: 3px;
   background-color: #fff;
+  border-left: 1px solid #003be2;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body {
+  padding: 5px;
   display: flex;
   align-items: center;
-  position: relative;
-}
-.betterlinks-body .btl-dnd-link .btl-dnd-link-body:before {
-  content: "";
-  width: 5px;
-  min-width: 5px;
-  height: 35px;
-  border-radius: 2px;
-  background: #003be2;
-  margin-right: 10px;
+  min-height: 35px;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title {
   margin-right: 5px;
@@ -668,18 +659,17 @@
   font-weight: 500;
   line-height: 1.1;
   color: #6e7178;
-  position: relative;
   word-break: break-word;
+  padding-left: 2px;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title:before {
-  content: "";
+  content: "";
   font-family: "better-links";
   display: flex;
   align-items: center;
   width: 0;
+  margin-right: 15px;
   color: #bebfc6;
-  transition: all 0.02s linear;
-  opacity: 0;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group {
   margin-left: auto;
@@ -749,10 +739,6 @@
 .betterlinks-body .btl-dnd-link .btl-confirm-message .action-set .action.no {
   background: #f97272;
 }
-.betterlinks-body .btl-dnd-link.btl-dnd-link-dragging .dnd-link-title:before {
-  width: 20px;
-  opacity: 1;
-}
 .betterlinks-body .btl-list-view .sc-idOhPF {
   margin-bottom: 15px;
   background: transparent;
@@ -770,7 +756,7 @@
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select {
   height: 38px;
-  min-width: 150px;
+  min-width: 160px;
   margin-right: 12px;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control {
@@ -796,7 +782,7 @@
   display: none;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator {
-  padding: 3px 8px;
+  padding: 3px 8px 3px 0;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-bulk-actions .btl-link-apply-button {
   cursor: pointer;
@@ -824,7 +810,7 @@
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-click-filter {
   margin-bottom: 5px;
-  width: 200px;
+  width: 180px;
   height: 36px;
   background: #fff;
   border: 1px solid #ebebeb;
@@ -867,7 +853,7 @@
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-list-view-select {
   height: 38px;
-  min-width: 125px;
+  min-width: 130px;
   margin-right: 12px;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-list-view-select .btl-react-select__control {
@@ -893,7 +879,14 @@
   display: none;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator {
-  padding: 3px 8px;
+  padding: 3px 8px 3px 0;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator.btl-react-select__clear-indicator {
+  padding: 3px 0;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-list-view-select .btl-react-select__control .btl-react-select__indicators .btl-react-select__indicator.btl-react-select__clear-indicator svg {
+  height: 16px;
+  width: 16px;
 }
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-list-view-select.btl-shortable-filter {
   min-width: 150px;
@@ -982,7 +975,7 @@
   line-height: 1;
   background: rgba(0, 59, 226, 0.05);
   font-weight: 700;
-  padding: 3px 12px;
+  padding: 3px 10px;
   min-height: 26px;
   max-width: 310px;
   border: 1.5px solid #003be2;
