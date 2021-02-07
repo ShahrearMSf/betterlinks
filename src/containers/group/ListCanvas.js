@@ -93,7 +93,8 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	}
 };
 
-const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, dateHandler, clicksTypeHandler }) => {
+const FilterComponent = (props) => {
+	const { filterText, onFilter, onClear, bulkActionData, deleteLinkHandler, catItems, categorySelectHandler, dateHandler, setClicksType, resetFilterHandler } = props;
 	const [bulkAction, setBulkAction] = useState({});
 	return (
 		<React.Fragment>
@@ -119,6 +120,7 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 					className="btl-list-view-select"
 					classNamePrefix="btl-react-select"
 					placeholder="Categories"
+					value={props.selectedCategory}
 					options={catItems}
 					onChange={(e) => categorySelectHandler(e)}
 					isClearable={true}
@@ -133,7 +135,8 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 						{ value: 'mostUniqueClicks', label: 'Most Unique Clicks' },
 						{ value: 'leastUniqueClicks', label: 'Least Unique Clicks' },
 					]}
-					onChange={(e) => clicksTypeHandler(e)}
+					value={props.selectedClicksType}
+					onChange={(e) => setClicksType(e)}
 					isClearable={true}
 				/>
 				<Select
@@ -145,10 +148,13 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 						{ value: 'leastRecent', label: 'Least Recent' },
 						{ value: 'custom', label: 'Custom' },
 					]}
+					value={props.selectedDateType}
 					onChange={(e) => dateHandler(e)}
 					isClearable={true}
 				/>
-				<button className="btl-link-filter-button">Filter</button>
+				<button className="btl-link-filter-button" onClick={resetFilterHandler}>
+					Reset Filter
+				</button>
 			</div>
 		</React.Fragment>
 	);
@@ -159,9 +165,9 @@ const ListCanvas = (props) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	const [selectedCategory, setCategory] = useState({});
-	const [selectedClicksType, setClicksType] = useState({});
-	const [selectedDateType, setDateType] = useState({});
+	const [selectedCategory, setCategory] = useState(null);
+	const [selectedClicksType, setClicksType] = useState(null);
+	const [selectedDateType, setDateType] = useState(null);
 	const [isOpenCustomDateFilter, setIsOpenCustomDateFilter] = useState(false);
 	const [customDateFilter, setCustomDateFilter] = useState([
 		{
@@ -184,6 +190,14 @@ const ListCanvas = (props) => {
 		} else {
 			setIsOpenCustomDateFilter(false);
 		}
+	};
+
+	const resetFilterHandler = () => {
+		setFilterText('');
+		setCategory(null);
+		setClicksType(null);
+		setDateType(null);
+		setIsOpenCustomDateFilter(false);
 	};
 
 	var stored =
@@ -213,14 +227,18 @@ const ListCanvas = (props) => {
 				catItems={categories}
 				bulkActionData={bulkActionData}
 				onFilter={(e) => setFilterText(e.target.value)}
+				selectedCategory={selectedCategory}
 				categorySelectHandler={setCategory}
-				clicksTypeHandler={setClicksType}
+				selectedClicksType={selectedClicksType}
+				setClicksType={setClicksType}
+				selectedDateType={selectedDateType}
 				dateHandler={dateFilterControl}
 				onClear={handleClear}
 				filterText={filterText}
+				resetFilterHandler={resetFilterHandler}
 			/>
 		);
-	}, [filterText, resetPaginationToggle, bulkActionData, delete_link, categories]);
+	}, [filterText, resetPaginationToggle, bulkActionData, delete_link, categories, resetFilterHandler]);
 
 	const onSelectedRowsChange = (e) => {
 		setBulkActionData(e);
