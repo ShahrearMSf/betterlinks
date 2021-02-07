@@ -145,15 +145,15 @@ class Installer
 
 	private function set_default_option()
 	{
-		if(!get_option(BETTERLINKS_LINKS_OPTION_NAME)){
+		if (!get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
 			$value = [
-				'redirect_type' 	=> '307',
-				'nofollow'			=> true,
-				'sponsored'			=> '',
-				'track_me'			=> true,
-				'param_forwarding' 	=> ''
+				'redirect_type' => '307',
+				'nofollow' => true,
+				'sponsored' => '',
+				'track_me' => true,
+				'param_forwarding' => '',
 			];
-			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));	
+			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
 		}
 	}
 

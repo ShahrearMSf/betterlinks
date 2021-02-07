@@ -15,7 +15,7 @@ class Cron
 		}
 		add_action('betterlinks/analytics', [$self, 'analytics']);
 	}
-	
+
 	public function add_cron_schedule($schedules)
 	{
 		$schedules['every_one_and_half_hours'] = [

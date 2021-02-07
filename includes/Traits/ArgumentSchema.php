@@ -200,7 +200,7 @@ trait ArgumentSchema
 			'redirect_type' => [
 				'type' => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			]
+			],
 		];
 	}
 }

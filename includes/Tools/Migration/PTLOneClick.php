@@ -46,9 +46,9 @@ class PTLOneClick extends PTLBase
 
 				if (isset($item->link_cpt_id) && !empty($item->link_cpt_id)) {
 					$term = get_the_terms($item->link_cpt_id, 'pretty-link-category');
-					$term = (!empty($term) ? current($term) : $term);
+					$term = !empty($term) ? current($term) : $term;
 				}
-				if(!empty($term->slug)){
+				if (!empty($term->slug)) {
 					$categories[$slug] = $term->slug;
 				} else {
 					$categories[$slug] = 'uncategorized';

@@ -17,9 +17,9 @@
 			display: inline-block;
 		}
 	}
-	.btl-create-links{
+	.btl-create-links {
 		margin-left: 30px;
-		.btl-create-link-button{
+		.btl-create-link-button {
 			cursor: pointer;
 			height: 38px;
 			border: none;
@@ -40,12 +40,12 @@
 			}
 		}
 	}
-	.topbar-inner{
+	.topbar-inner {
 		margin-left: auto;
 		display: flex;
 		align-items: center;
 	}
-	.btl-view-control{
+	.btl-view-control {
 		.btl-link-view-toggler {
 			height: 40px;
 			width: 40px;
@@ -63,7 +63,7 @@
 			font-size: 14px;
 			&.active,
 			&:hover,
-			&:hover{
+			&:hover {
 				background: $success;
 				cursor: pointer;
 				color: $white;

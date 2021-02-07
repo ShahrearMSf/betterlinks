@@ -41,7 +41,7 @@ body {
 	.btl-tooltiptext {
 		visibility: hidden;
 		width: 120px;
-		background: linear-gradient(202deg,#2961ff 0%,#003be2 100%);
+		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 		font-size: 14px;
 		color: #fff;
 		text-align: center;
@@ -53,7 +53,7 @@ body {
 		left: 50%;
 		margin-left: -68px;
 		&::after {
-			content: "";
+			content: '';
 			position: absolute;
 			top: 100%;
 			left: 50%;

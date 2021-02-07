@@ -73,8 +73,9 @@ if (!class_exists('BetterLinks')) {
 			$this->upload_dir = wp_get_upload_dir();
 		}
 
-		public function on_plugins_loaded() {
-			do_action( 'betterlinks_loaded' );
+		public function on_plugins_loaded()
+		{
+			do_action('betterlinks_loaded');
 		}
 
 		/**
