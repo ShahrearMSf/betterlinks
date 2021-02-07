@@ -105,6 +105,10 @@
 		}
 	}
 	.btl-analytic-table {
+		.rdt_TableCell{
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
 		.rdt_TableCol_Sortable {
 			color: $dark;
 			> div {
@@ -126,6 +130,11 @@
 	.sc-cxFLnm{
 		svg{
 			display: none;
+		}
+		&:disabled{
+			svg{
+				fill: $secondary;
+			}
 		}
 	}
 	.sc-giIncl{

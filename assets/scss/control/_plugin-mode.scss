@@ -229,6 +229,11 @@
 				svg{
 					fill: $white;
 				}
+        &:disabled{
+          svg{
+            fill: $light-darken;
+          }
+        }
 			}
 		}
 	}
@@ -429,41 +434,19 @@
       }
     }
   }
-  .rdt_Pagination{
-    background: transparent;
-    border: none;
-    .sc-cxFLnm{
-      svg{
-        display: none;
-      }
-    }
-    .sc-giIncl{
-      .sc-iJuUWI{
-        padding: 0px;
-        border-radius: 4px;
-        height: 24px;
-        width: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 2px;
-        svg{
-          height: 20px;
-          width: 20px;
-          fill: $dark;
-        }
+	.rdt_Pagination{
+		color: $white;
+		.sc-giIncl{
+			.sc-iJuUWI{
+				svg{
+					fill: $white;
+				}
         &:disabled{
           svg{
-            fill: $secondary;
+            fill: $light-darken;
           }
         }
-        &:hover{
-          background: #0742e7;
-          svg{
-            fill: #fff;
-          }
-        }
-      }
-    }
-  }
+			}
+		}
+	}
 }

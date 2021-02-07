@@ -78,7 +78,7 @@
     .btl-links-filter{
       .btl-click-filter{
         margin-bottom: 5px;
-        width: 285px;
+        width: 200px;
         height: 36px;
         background: $white;
         border: 1px solid $light-darken;
@@ -154,6 +154,9 @@
             }
           }
         }
+        &.btl-sort-selector{
+          min-width: 150px;
+        }
       }
       .btl-link-input-field{
         height: 38px;
@@ -163,7 +166,7 @@
         background: $white;
         color: $secondary;
         margin-right: 12px;
-        min-width: 200px;
+        width: 120px;
         &:focus{
           outline: none;
         }
