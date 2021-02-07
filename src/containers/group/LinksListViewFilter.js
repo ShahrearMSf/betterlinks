@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import { DateRangePicker } from 'react-date-range';
-import { formatDate, removeOverlayElement } from './../../utils/helper';
+import { removeOverlayElement } from './../../utils/helper';
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	if (action.value === 'delete') {
@@ -26,6 +26,11 @@ const LinksListViewFilter = (props) => {
 			removeOverlayElement();
 			props.setIsOpenCustomDateFilter(false);
 		}
+	};
+	const closeDatePicker = () => {
+		removeOverlayElement();
+		props.setIsOpenCustomDateFilter(false);
+		props.dateHandler(null);
 	};
 	return (
 		<React.Fragment>
@@ -85,14 +90,9 @@ const LinksListViewFilter = (props) => {
 				/>
 				{props.selectedDateType && props.selectedDateType.value === 'custom' && (
 					<React.Fragment>
-						{console.log(props.customDateFilter[0].startDate)}
 						<button className="btl-list-view-calendar" onClick={() => props.dateHandler({ value: 'custom', label: 'Custom' })}>
 							<span className="dashicons dashicons-calendar"></span>
-							{String(props.customDateFilter[0].startDate).slice(4, 15)}
-						</button>
-						<button className="btl-list-view-calendar" onClick={() => props.dateHandler({ value: 'custom', label: 'Custom' })}>
-							<span className="dashicons dashicons-calendar"></span>
-							{String(props.customDateFilter[0].endDate).slice(4, 15)}
+							{String(props.customDateFilter[0].startDate).slice(4, 15)} - {String(props.customDateFilter[0].endDate).slice(4, 15)}
 						</button>
 					</React.Fragment>
 				)}
@@ -101,14 +101,21 @@ const LinksListViewFilter = (props) => {
 					Reset Filter
 				</button>
 				{props.isOpenCustomDateFilter && (
-					<DateRangePicker
-						onChange={(item) => dateRangePickerOnChangeHandler(item)}
-						showSelectionPreview={true}
-						moveRangeOnFirstSelection={false}
-						months={2}
-						ranges={props.customDateFilter}
-						direction="horizontal"
-					/>
+					<div className="btl-date-range-picker-wrap">
+						<div className="btl-date-range-picker">
+							<button className="btn-date-range-close" onClick={() => closeDatePicker()}>
+								<span className="dashicons dashicons-no-alt"></span>
+							</button>
+							<DateRangePicker
+								onChange={(item) => dateRangePickerOnChangeHandler(item)}
+								showSelectionPreview={true}
+								moveRangeOnFirstSelection={false}
+								months={2}
+								ranges={props.customDateFilter}
+								direction="horizontal"
+							/>
+						</div>
+					</div>
 				)}
 			</div>
 		</React.Fragment>

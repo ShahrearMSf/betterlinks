@@ -949,13 +949,35 @@
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-link-filter-button:hover {
   box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
 }
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .rdrDateRangePickerWrapper {
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap {
   position: absolute;
   top: 100%;
   z-index: 9999;
   justify-content: center;
   left: 0;
   right: 0;
+  text-align: center;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap .btl-date-range-picker {
+  position: relative;
+  display: inline-block;
+  padding: 30px;
+  background: white;
+  border-radius: 4px;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap .btl-date-range-picker .btn-date-range-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  border: 0;
+  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  outline: none;
+  color: #fff;
+  padding: 3px 3px;
+}
+.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap .btl-date-range-picker .rdrDateRangePickerWrapper .rdrInputRanges {
+  display: none;
 }
 .betterlinks-body .btl-list-view .rdt_Table {
   background-color: transparent;
