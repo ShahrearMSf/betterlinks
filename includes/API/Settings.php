@@ -39,7 +39,6 @@ class Settings extends Controller
 		]);
 	}
 
-
 	/**
 	 * Get betterlinks
 	 *
@@ -48,7 +47,7 @@ class Settings extends Controller
 	 */
 	public function get_value($request)
 	{
-        $response = get_option(BETTERLINKS_LINKS_OPTION_NAME);
+		$response = get_option(BETTERLINKS_LINKS_OPTION_NAME);
 		return new \WP_REST_Response(
 			[
 				'success' => true,
@@ -83,10 +82,10 @@ class Settings extends Controller
 	 */
 	public function update_value($request)
 	{
-        $response = json_encode($request->get_params());
-        if($response){
-            update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
-        }
+		$response = json_encode($request->get_params());
+		if ($response) {
+			update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
+		}
 		return new \WP_REST_Response(
 			[
 				'success' => true,

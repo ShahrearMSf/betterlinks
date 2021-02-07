@@ -3,12 +3,16 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
-import Select from 'react-select';
-import { site_url, formatDate } from './../../utils/helper';
+import { DateRangePicker } from 'react-date-range';
+import { subDays } from 'date-fns';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import LinksListViewFilter from './LinksListViewFilter';
+import { linksFilterData, site_url, formatDate } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 
-const getColumnData = (props) => {
+const getLinksListViewColumnData = (props) => {
 	return [
 		{
 			name: __('Title', 'betterlinks'),
@@ -16,6 +20,18 @@ const getColumnData = (props) => {
 			sortable: false,
 			cell: (row) => {
 				return <div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>;
+			},
+		},
+		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => {
+				return (
+					<div className="btl-short-url-wrapper">
+						<span className="btl-short-url">{site_url + '/' + row.short_url}</span>
+					</div>
+				);
 			},
 		},
 		{
@@ -51,18 +67,6 @@ const getColumnData = (props) => {
 			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
 		},
 		{
-			name: __('Shortened URL', 'betterlinks'),
-			selector: 'short_url',
-			sortable: false,
-			cell: (row) => {
-				return (
-					<div className="btl-short-url-wrapper">
-						<span className="btl-short-url">{site_url + '/' + row.short_url}</span>
-					</div>
-				);
-			},
-		},
-		{
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
@@ -75,6 +79,7 @@ const getColumnData = (props) => {
 	];
 };
 
+<<<<<<< HEAD
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	if (action.value === 'delete') {
 		let deleteItemLists = [];
@@ -139,16 +144,30 @@ const FilterComponent = ({ filterText, onFilter, onClear, bulkActionData, delete
 	);
 };
 
+=======
+>>>>>>> 9398ec2163ef2a41c3e265b95c9860e095505fcc
 const ListCanvas = (props) => {
 	const { links } = props.links;
 	const [bulkActionData, setBulkActionData] = useState({});
+	const [filterText, setFilterText] = useState('');
+	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+	const [selectedCategory, setCategory] = useState(null);
+	const [selectedClicksType, setClicksType] = useState(null);
+	const [selectedDateType, setDateType] = useState(null);
+	const [isOpenCustomDateFilter, setIsOpenCustomDateFilter] = useState(false);
+	const [customDateFilter, setCustomDateFilter] = useState([
+		{
+			startDate: new Date(),
+			endDate: subDays(new Date(), 30),
+			key: 'selection',
+		},
+	]);
+
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
 		}
 	}, []);
-	const [filterText, setFilterText] = useState('');
-	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
 	var stored =
 		links &&
@@ -156,6 +175,34 @@ const ListCanvas = (props) => {
 			total = [...total, ...item.lists];
 			return total;
 		}, []);
+
+	var categories =
+		links &&
+		Object.entries(links).reduce(function (total, [key, item]) {
+			total = [...total, { value: key, label: item.term_name }];
+			return total;
+		}, []);
+
+	const dateFilterControl = (type) => {
+		setDateType(type);
+		if (type && type.value == 'custom') {
+			setIsOpenCustomDateFilter(!isOpenCustomDateFilter);
+		} else {
+			setIsOpenCustomDateFilter(false);
+		}
+	};
+
+	const resetFilterHandler = () => {
+		setFilterText('');
+		setCategory(null);
+		setClicksType(null);
+		setDateType(null);
+		setIsOpenCustomDateFilter(false);
+	};
+
+	const onSelectedRowsChange = (e) => {
+		setBulkActionData(e);
+	};
 
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
@@ -165,28 +212,42 @@ const ListCanvas = (props) => {
 			}
 		};
 		return (
-			<FilterComponent
+			<LinksListViewFilter
 				deleteLinkHandler={props.delete_link}
+				catItems={categories}
 				bulkActionData={bulkActionData}
 				onFilter={(e) => setFilterText(e.target.value)}
+				selectedCategory={selectedCategory}
+				categorySelectHandler={setCategory}
+				selectedClicksType={selectedClicksType}
+				setClicksType={setClicksType}
+				selectedDateType={selectedDateType}
+				dateHandler={dateFilterControl}
 				onClear={handleClear}
 				filterText={filterText}
+				resetFilterHandler={resetFilterHandler}
 			/>
 		);
-	}, [filterText, resetPaginationToggle, bulkActionData, delete_link]);
-
-	const onSelectedRowsChange = (e) => {
-		setBulkActionData(e);
-	};
+	}, [filterText, resetPaginationToggle, bulkActionData, delete_link, categories, resetFilterHandler]);
 
 	return (
 		<React.Fragment>
+			{isOpenCustomDateFilter && (
+				<DateRangePicker
+					onChange={(item) => setCustomDateFilter([item.selection])}
+					showSelectionPreview={true}
+					moveRangeOnFirstSelection={false}
+					months={2}
+					ranges={customDateFilter}
+					direction="horizontal"
+				/>
+			)}
 			<div className="btl-list-view">
 				{links && (
 					<DataTable
 						className="btl-list-view-table"
-						columns={getColumnData(props)}
-						data={stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+						columns={getLinksListViewColumnData(props)}
+						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
