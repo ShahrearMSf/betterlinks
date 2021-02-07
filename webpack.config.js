@@ -2,10 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 
 const config = {
-	entry: ['react-hot-loader/patch', './src/index.js'],
+	entry: ['./src/index.js'],
 	output: {
-		filename: 'betterlinks-core.min.js',
 		path: path.resolve(__dirname, 'assets/js'),
+		filename: 'betterlinks-core.min.js',
 	},
 	module: {
 		rules: [
@@ -17,17 +17,34 @@ const config = {
 			{
 				test: /\.css$/,
 				use: ['style-loader', 'css-loader'],
+				exclude: /\.module\.css$/,
+			},
+			{
+				test: /\.scss$/,
+				use: ['style-loader', 'css-loader', 'sass-loader'],
+			},
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+							modules: true,
+						},
+					},
+				],
+				include: /\.module\.css$/,
+			},
+			{
+				test: /\.svg$/,
+				use: 'file-loader',
 			},
 		],
 	},
 	resolve: {
 		extensions: ['.js', '.jsx'],
-		alias: {
-			'react-dom': '@hot-loader/react-dom',
-		},
-	},
-	devServer: {
-		contentBase: './dist',
 	},
 };
 
