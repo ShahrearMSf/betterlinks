@@ -25,7 +25,6 @@ const TopBar = (props) => {
 			document.body.classList.remove('betterlinks-dark-mode');
 			localStorage.removeItem('betterLinksIsDarkMode');
 		}
-
 		setIsDarkMode(mode);
 	};
 	return (
@@ -33,7 +32,8 @@ const TopBar = (props) => {
 			<div className="tool-title">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 			</div>
-			{props.activity.linksView == 'list' && (
+
+			{props.currentPage === 'betterlinks' && (
 				<div className="btl-create-links">
 					<Link isIcon={false} submitHandler={props.add_new_link} />
 				</div>
