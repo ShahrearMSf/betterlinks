@@ -154,6 +154,8 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 				return new Date(item.link_date).getTime() >= customDateFilter[0].startDate.getTime() && new Date(item.link_date).getTime() <= customDateFilter[0].endDate.getTime();
 			});
 		}
+	} else {
+		results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	}
 	return results;
 };
