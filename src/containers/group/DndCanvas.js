@@ -28,15 +28,11 @@ function DndCanvas(props) {
 				<DragDropContext onDragEnd={props.onDragEnd}>
 					{links &&
 						Object.entries(links)
-							.filter((items, index) => {
-								if (index === 0) {
-									if (items[0] == '1' && items[1].lists.length == 0) {
-										return false;
-									}
-									return true;
-								} else {
-									return true;
+							.filter((items) => {
+								if (items[1].lists.length === 0 && items[1].term_slug === 'uncategorized') {
+									return false;
 								}
+								return true;
 							})
 							.map(([ind, el]) => (
 								<Droppable key={ind} droppableId={ind}>

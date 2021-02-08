@@ -5,7 +5,7 @@ import Select2 from 'react-select';
 
 const propTypes = {
 	catId: PropTypes.number,
-	data: PropTypes.array,
+	data: PropTypes.object,
 	fieldName: PropTypes.string,
 	setFieldValue: PropTypes.func,
 };

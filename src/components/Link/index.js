@@ -44,7 +44,7 @@ const Link = (props) => {
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
-		cat_id: catId,
+		cat_id: catId ? catId : null,
 		...settings.settings,
 	};
 
@@ -77,9 +77,6 @@ const Link = (props) => {
 		setEditMode(false);
 		setModalIsOpen(false);
 	}
-	const [nameToSlug, setNameToSlug] = useState(false);
-	const [slugToSlug, setSlugToSlug] = useState(false);
-
 	const shortURLUniqueCheck = (slug) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
@@ -96,6 +93,20 @@ const Link = (props) => {
 			}
 		);
 	};
+	const onSubmit = (values) => {
+		if (!values.cat_id) {
+			const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
+			values.cat_id = ID;
+		}
+		if (!values.link_slug) {
+			values.link_slug = generateSlug(values.link_title);
+		}
+		if (values.cat_id && slugIsExists == false) {
+			setEditMode(false);
+			setModalIsOpen(false);
+			return submitHandler(values);
+		}
+	};
 	return (
 		<>
 			{data ? (
@@ -111,18 +122,7 @@ const Link = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<Formik
-					enableReinitialize
-					initialValues={data ? initialUpdateValues : initialValues}
-					onSubmit={(values) => {
-						values.link_slug = generateSlug(values.link_title);
-						if (slugIsExists == false) {
-							setEditMode(false);
-							setModalIsOpen(false);
-							return submitHandler(values);
-						}
-					}}
-				>
+				<Formik enableReinitialize initialValues={data ? initialUpdateValues : initialValues} onSubmit={(values) => onSubmit(values)}>
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
