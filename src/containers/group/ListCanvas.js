@@ -67,6 +67,7 @@ const getLinksListViewColumnData = (props) => {
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction
+						isShowVisitLink={true}
 						isShowAnalytics={false}
 						isShowCopyLink={false}
 						catId={parseInt(row.cat_id)}

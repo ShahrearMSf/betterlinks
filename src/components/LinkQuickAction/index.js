@@ -6,6 +6,7 @@ import { site_url, copyToClipboard } from './../../utils/helper';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
+	isShowVisitLink: PropTypes.bool,
 	isShowCopyLink: PropTypes.bool,
 	isShowEditLink: PropTypes.bool,
 	isShowDeleteLink: PropTypes.bool,
@@ -18,12 +19,13 @@ const propTypes = {
 
 const defaultProps = {
 	isShowAnalytics: false,
+	isShowVisitLink: false,
 	isShowCopyLink: true,
 	isShowEditLink: true,
 	isShowDeleteLink: true,
 };
 
-const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowEditLink, isShowDeleteLink, data, catId, catName, submitLinkHandler, deleteLinkHandler }) => {
+const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isShowEditLink, isShowDeleteLink, data, catId, catName, submitLinkHandler, deleteLinkHandler }) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
@@ -54,6 +56,14 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowEditLink, isSh
 							<span className="icon">{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}</span>
 							<span className="btl-tooltiptext">{__('Copy Link', 'betterlinks')}</span>
 						</button>
+					)}
+					{isShowVisitLink && (
+						<div className="btl-tooltip">
+							<a href={data.short_url} target="_blank">
+								<span className="dashicons dashicons-external"></span>
+							</a>
+							<span className="btl-tooltiptext">{__('Visit Link', 'betterlinks')}</span>
+						</div>
 					)}
 					{isShowEditLink && (
 						<div className="btl-tooltip">
