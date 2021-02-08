@@ -58,109 +58,103 @@ const TabsGeneral = ({ settings, update_option }) => {
 	};
 	return (
 		<React.Fragment>
-			{settings && (
-				<Formik
-					initialValues={{ ...settings }}
-					onSubmit={(values) => {
-						update_option(values);
-						setFormSubmitText('Saved!');
-					}}
-				>
-					{(props) => (
-						<Form>
-							<div className="btl-tab-panel-inner">
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Fast Redirect Status', 'betterlinks')}</label>
-									<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
-									{!fastRedirectStatus && (
-										<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
-											{fastRedirectButtonText}
-										</button>
-									)}
-								</span>
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Analytic Cache Status', 'betterlinks')}</label>
-									<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
-									{!fastClicksStatus ? (
-										<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
-											{fastClicksButtonText}
-										</button>
-									) : (
-										<button type="button" onClick={analyticClicksHandler} className="button button-primary">
-											{cacheButtonText}
-										</button>
-									)}
-								</span>
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
-									<Select
-										className="btl-modal-select--full"
-										classNamePrefix="btl-react-select"
-										id="redirect_type"
-										name="redirect_type"
-										value={redirectType}
-										setFieldValue={props.setFieldValue}
-										isMulti={false}
-									/>
-								</span>
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
-											<span className="text">
-												{__('No Follow', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
-											<span className="text">
-												{__('Sponsored', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-										<label className="btl-checkbox-field block">
-											<Field
-												className="btl-check"
-												name="param_forwarding"
-												type="checkbox"
-												onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
-											/>
-											<span className="text">
-												{__('Parameter Forwarding', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
-											<span className="text">
-												{__('Tracking', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-								<button className="button-primary" type="submit">
-									{formSubmitText}
-								</button>
-							</div>
-						</Form>
-					)}
-				</Formik>
-			)}
+			<Formik
+				enableReinitialize
+				initialValues={{ ...settings }}
+				onSubmit={(values) => {
+					update_option(values);
+					setFormSubmitText('Saved!');
+				}}
+			>
+				{(props) => (
+					<Form>
+						<div className="btl-tab-panel-inner">
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Fast Redirect Status', 'betterlinks')}</label>
+								<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
+								{!fastRedirectStatus && (
+									<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
+										{fastRedirectButtonText}
+									</button>
+								)}
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Analytic Cache Status', 'betterlinks')}</label>
+								<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
+								{!fastClicksStatus ? (
+									<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
+										{fastClicksButtonText}
+									</button>
+								) : (
+									<button type="button" onClick={analyticClicksHandler} className="button button-primary">
+										{cacheButtonText}
+									</button>
+								)}
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
+								<Select
+									className="btl-modal-select--full"
+									classNamePrefix="btl-react-select"
+									id="redirect_type"
+									name="redirect_type"
+									value={redirectType}
+									setFieldValue={props.setFieldValue}
+									isMulti={false}
+								/>
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
+										<span className="text">
+											{__('No Follow', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
+										<span className="text">
+											{__('Sponsored', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="param_forwarding" type="checkbox" onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)} />
+										<span className="text">
+											{__('Parameter Forwarding', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
+										<span className="text">
+											{__('Tracking', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+							<button className="button-primary" type="submit">
+								{formSubmitText}
+							</button>
+						</div>
+					</Form>
+				)}
+			</Formik>
 		</React.Fragment>
 	);
 };
