@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
-import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import LinksListViewFilter from './LinksListViewFilter';
 import { linksFilterData, site_url, formatDate, insertOverlayElement } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
@@ -89,8 +87,8 @@ const ListCanvas = (props) => {
 	const [isOpenCustomDateFilter, setIsOpenCustomDateFilter] = useState(false);
 	const [customDateFilter, setCustomDateFilter] = useState([
 		{
-			startDate: new Date(),
-			endDate: subDays(new Date(), 30),
+			startDate: subDays(new Date(), 30),
+			endDate: new Date(),
 			key: 'selection',
 		},
 	]);

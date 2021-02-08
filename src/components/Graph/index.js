@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Line } from 'react-chartjs-2';
-import DatePicker from 'react-date-picker';
+import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { formatDate } from '../../utils/helper';
-import { fetch_clicks_data } from '../../redux/actions/clicks.actions';
+import { subDays } from 'date-fns';
+import { API, namespace } from './../../utils/helper';
+import { formatDate, insertOverlayElement, removeOverlayElement } from '../../utils/helper';
+import { fetchCustomClicksData } from '../../redux/actions/clicks.actions';
 
 const Graph = (props) => {
 	const data = {
@@ -62,26 +64,78 @@ const Graph = (props) => {
 			},
 		},
 	};
-	const currentDate = new Date();
-	let pastDate = new Date();
-	pastDate = pastDate.setDate(currentDate.getDate() - 30);
-	const [dateFrom, setDateFrom] = useState(new Date(pastDate));
-	const [dateTo, setDateTo] = useState(new Date());
+	const [filterButtonText, setFilterButtonText] = useState('Filter');
+	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
+	const [customDateFilter, setCustomDateFilter] = useState([
+		{
+			startDate: subDays(new Date(), 30),
+			endDate: new Date(),
+			key: 'selection',
+		},
+	]);
+
+	const dateRangePickerOnChangeHandler = (item) => {
+		setCustomDateFilter([item.selection]);
+		if (item.selection.endDate != item.selection.startDate) {
+			removeOverlayElement();
+			setOPenCustomDateFilter(false);
+		}
+	};
+
+	const customCalendarToggleHandler = () => {
+		insertOverlayElement();
+		setOPenCustomDateFilter(!isOpenCustomDateFilter);
+	};
+
+	const filterHandler = async () => {
+		setFilterButtonText('Filtering...');
+		try {
+			const res = await API.get(namespace + 'clicks', {
+				params: { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') },
+			});
+			props.fetchCustomClicksData(res.data);
+			setFilterButtonText('Done!');
+			window.setTimeout(function () {
+				setFilterButtonText('Filter');
+			}, 3000);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const closeDatePicker = () => {
+		removeOverlayElement();
+		setOPenCustomDateFilter(false);
+	};
+
 	return (
 		<React.Fragment>
 			<div className="btl-analytics-filter">
 				<h3 className="btl-analytics-filter__heading">{__('BetterLinks: All clicks on all links between', 'betterlinks')}</h3>
 				<div className="btl-analytics-filter__control">
-					<DatePicker onChange={setDateFrom} value={dateFrom} format={'y-MM-dd'} clearIcon={false} calendarIcon={false} />
-					{__('From', 'betterlinks')}
-					<DatePicker onChange={setDateTo} value={dateTo} format={'y-MM-dd'} clearIcon={false} calendarIcon={false} />
-					<button
-						className="btl-filter-action"
-						onClick={() => {
-							props.fetch_clicks_data({ from: formatDate(dateFrom, 'yyyy-mm-dd'), to: formatDate(new Date(dateTo), 'yyyy-mm-dd') });
-						}}
-					>
-						Filter
+					<button onClick={customCalendarToggleHandler} className="btl-list-view-calendar">
+						<span className="dashicons dashicons-calendar"></span>
+						{String(customDateFilter[0].startDate).slice(4, 15)} - {String(customDateFilter[0].endDate).slice(4, 15)}
+					</button>
+					{isOpenCustomDateFilter && (
+						<div className="btl-date-range-picker-wrap">
+							<div className="btl-date-range-picker">
+								<button onClick={closeDatePicker} className="btn-date-range-close">
+									<span className="dashicons dashicons-no-alt"></span>
+								</button>
+								<DateRangePicker
+									onChange={(item) => dateRangePickerOnChangeHandler(item)}
+									showSelectionPreview={true}
+									moveRangeOnFirstSelection={false}
+									months={2}
+									ranges={customDateFilter}
+									direction="horizontal"
+								/>
+							</div>
+						</div>
+					)}
+					<button className="btl-filter-action" onClick={filterHandler}>
+						{filterButtonText}
 					</button>
 				</div>
 			</div>
@@ -98,7 +152,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
+		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
 	};
 };
 

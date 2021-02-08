@@ -1,4 +1,6 @@
 @charset "UTF-8";
+@import './../../node_modules/react-date-range/dist/styles.css';
+@import './../../node_modules/react-date-range/dist/theme/default.css';
 @font-face {
   font-family: "better-links";
   src: url("./../fonts/better-links.eot?f0943u");
@@ -949,36 +951,6 @@
 .betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter .btl-link-filter-button:hover {
   box-shadow: 0 22px 42px rgba(0, 59, 226, 0.18);
 }
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap {
-  position: absolute;
-  top: 100%;
-  z-index: 9999;
-  justify-content: center;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap .btl-date-range-picker {
-  position: relative;
-  display: inline-block;
-  padding: 30px;
-  background: white;
-  border-radius: 4px;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap .btl-date-range-picker .btn-date-range-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 999;
-  border: 0;
-  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-  outline: none;
-  color: #fff;
-  padding: 3px 3px;
-}
-.betterlinks-body .btl-list-view .sc-idOhPF .btl-links-filter > .btl-date-range-picker-wrap .btl-date-range-picker .rdrDateRangePickerWrapper .rdrInputRanges {
-  display: none;
-}
 .betterlinks-body .btl-list-view .rdt_Table {
   background-color: transparent;
 }
@@ -1117,11 +1089,38 @@
   margin-bottom: 50px;
 }
 .betterlinks-body .btl-analytics-filter {
+  position: relative;
   display: flex;
   align-items: center;
 }
 .betterlinks-body .btl-analytics-filter .btl-analytics-filter__control {
+  display: flex;
   margin-left: auto;
+}
+.betterlinks-body .btl-analytics-filter .btl-analytics-filter__control .btl-list-view-calendar {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+  background: #fff;
+  color: #707070;
+  margin-right: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.betterlinks-body .btl-analytics-filter .btl-analytics-filter__control .btl-list-view-calendar .dashicons {
+  font-size: 15px;
+  margin-right: 2px;
+  display: inline-flex;
+  align-items: center;
+}
+.betterlinks-body .btl-analytics-filter .btl-analytics-filter__control .btl-list-view-calendar:focus {
+  border: 1px solid #ebebeb;
+  outline: none;
+}
+.betterlinks-body .btl-analytics-filter .btl-date-range-picker-wrap {
+  text-align: right;
 }
 .betterlinks-body .react-date-picker {
   margin-left: 20px;
@@ -1903,6 +1902,38 @@ body > .btl-overlay {
   z-index: 99;
   opacity: 0.65;
   overflow-y: scroll;
+}
+
+.btl-date-range-picker-wrap {
+  position: absolute;
+  top: 100%;
+  z-index: 9999;
+  justify-content: center;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.btl-date-range-picker-wrap .btl-date-range-picker {
+  position: relative;
+  display: inline-block;
+  padding: 30px;
+  background: white;
+  border-radius: 4px;
+}
+.btl-date-range-picker-wrap .btl-date-range-picker .btn-date-range-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  border: 0;
+  background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+  outline: none;
+  color: #fff;
+  padding: 3px 3px;
+  cursor: pointer;
+}
+.btl-date-range-picker-wrap .btl-date-range-picker .rdrDateRangePickerWrapper .rdrInputRanges {
+  display: none;
 }
 
 .btl-tooltip {

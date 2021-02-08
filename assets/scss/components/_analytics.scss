@@ -12,10 +12,37 @@
 	}
 }
 .btl-analytics-filter {
+	position: relative;
 	display: flex;
 	align-items: center;
 	.btl-analytics-filter__control {
+		display: flex;
 		margin-left: auto;
+		.btl-list-view-calendar{
+			height: 40px;
+			padding: 0 12px;
+			border: 1px solid $light-darken;
+			border-radius: 5px;
+			background: $white;
+			color: $secondary;
+			margin-right: 12px;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			.dashicons{
+				font-size: 15px;
+				margin-right: 2px;
+				display: inline-flex;
+				align-items: center;
+			}
+			&:focus{
+				border: 1px solid $light-darken;
+				outline: none;
+			}
+		}
+	}
+	.btl-date-range-picker-wrap {
+		text-align: right;
 	}
 }
 .react-date-picker {
