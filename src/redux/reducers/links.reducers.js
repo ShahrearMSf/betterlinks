@@ -60,7 +60,7 @@ function links(state = {}, action) {
 					...state.links,
 					[payload.data.cat_id]: {
 						...state.links[payload.data.cat_id],
-						term_name: payload.data.cat_name,
+						term_name: payload.data.catName,
 						term_slug: payload.data.cat_slug,
 					},
 				},

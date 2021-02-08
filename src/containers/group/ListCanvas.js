@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
+import LinkCopyUrl from './../../components/LinkCopyUrl';
 import LinksListViewFilter from './LinksListViewFilter';
-import { linksFilterData, site_url, formatDate, insertOverlayElement } from './../../utils/helper';
+import { linksFilterData, formatDate, insertOverlayElement } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 
@@ -24,11 +25,7 @@ const getLinksListViewColumnData = (props) => {
 			selector: 'short_url',
 			sortable: false,
 			cell: (row) => {
-				return (
-					<div className="btl-short-url-wrapper">
-						<span className="btl-short-url">{site_url + '/' + row.short_url}</span>
-					</div>
-				);
+				return <LinkCopyUrl shortUrl={row.short_url} />;
 			},
 		},
 		{
@@ -69,7 +66,7 @@ const getLinksListViewColumnData = (props) => {
 			sortable: false,
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
-					<LinkQuickAction isShowAnalytics={false} cat_id={row.cat_id} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} item={row} />
+					<LinkQuickAction isShowAnalytics={false} isShowCopyLink={false} catId={row.catId} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} data={row} />
 				</div>
 			),
 		},

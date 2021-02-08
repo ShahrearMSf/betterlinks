@@ -18,7 +18,7 @@ export const onDragEnd = (result) => async (dispatch) => {
 		await API.put(namespace + 'links', {
 			params: {
 				ID: ID,
-				cat_id: result.destination.droppableId,
+				catId: result.destination.droppableId,
 			},
 		});
 	} catch (e) {
@@ -80,6 +80,7 @@ export const update_cat = (params) => async (dispatch) => {
 };
 
 export const delete_cat = (params) => async (dispatch) => {
+	console.log(params);
 	try {
 		const res = await API.delete(namespace + 'terms', {
 			params: params,

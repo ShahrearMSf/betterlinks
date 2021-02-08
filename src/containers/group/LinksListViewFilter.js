@@ -5,6 +5,7 @@ import { DateRangePicker } from 'react-date-range';
 import { removeOverlayElement } from './../../utils/helper';
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
+	console.log(selectedRows);
 	if (action.value === 'delete') {
 		let deleteItemLists = [];
 		selectedRows.map((item) => {

@@ -35,7 +35,7 @@ const TopBar = (props) => {
 
 			{props.currentPage === 'betterlinks' && (
 				<div className="btl-create-links">
-					<Link isIcon={false} submitHandler={props.add_new_link} />
+					<Link isShowIcon={false} submitHandler={props.add_new_link} />
 				</div>
 			)}
 			<div className="topbar-inner">

@@ -1,21 +1,30 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useField } from 'formik';
 import Select2 from 'react-select';
 
-const Category = (props) => {
-	const { data, cat_id } = props;
-	const [field] = useField(props.name);
+const propTypes = {
+	catId: PropTypes.number,
+	data: PropTypes.array,
+	fieldName: PropTypes.string,
+	setFieldValue: PropTypes.func,
+};
+
+const defaultProps = {};
+
+const Category = ({ catId, data, fieldName, setFieldValue }) => {
+	const [field] = useField(fieldName);
 
 	const onChange = (option) => {
 		if (option == null) {
-			return props.setFieldValue(field.name, '');
+			return setFieldValue(field.name, '');
 		}
-		return props.setFieldValue(field.name, option.value);
+		return setFieldValue(field.name, option.value);
 	};
 
 	const defaultValue = () => {
-		if (cat_id) {
-			const { ID, term_name } = data.terms.filter((item) => item.ID == cat_id)[0];
+		if (catId) {
+			const { ID, term_name } = data.terms.filter((item) => item.ID == catId)[0];
 			return { value: ID, label: term_name };
 		} else {
 			const { ID, term_name } = data.terms.filter((item) => item.term_slug == 'uncategorized')[0];
@@ -48,3 +57,5 @@ const Category = (props) => {
 	);
 };
 export default Category;
+Category.propTypes = propTypes;
+Category.defaultProps = defaultProps;

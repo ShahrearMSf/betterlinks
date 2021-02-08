@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import Select from './../Select';
-import { useFormikContext, Formik, Field, Form } from 'formik';
+import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
@@ -12,8 +13,22 @@ import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, c
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 
+const propTypes = {
+	isShowIcon: PropTypes.bool,
+	catId: PropTypes.number,
+	catName: PropTypes.string,
+	data: PropTypes.object,
+	submitHandler: PropTypes.func,
+	settings: PropTypes.any,
+	terms: PropTypes.any,
+};
+
+const defaultProps = {
+	isShowIcon: true,
+};
+
 const Link = (props) => {
-	const { isIcon, cat_id, item, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
+	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
 	const [isCopyUrl, setCopyUrl] = useState(false);
@@ -31,15 +46,15 @@ const Link = (props) => {
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
-		cat_id,
+		cat_id: catId,
 		...settings.settings,
 	};
 
 	const initialUpdateValues = {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
-		cat_id,
-		...item,
+		cat_id: catId,
+		...data,
 	};
 
 	function openModal() {
@@ -49,7 +64,7 @@ const Link = (props) => {
 		if (!props.terms.terms) {
 			fetch_terms_data();
 		}
-		if (item) {
+		if (data) {
 			setEditMode(true);
 		} else {
 			setEditMode(false);
@@ -66,20 +81,7 @@ const Link = (props) => {
 	}
 	const [nameToSlug, setNameToSlug] = useState(false);
 	const [slugToSlug, setSlugToSlug] = useState(false);
-	const AutoSlugGenerate = () => {
-		const { values } = useFormikContext();
-		React.useEffect(() => {
-			if (nameToSlug) {
-				values.link_slug = generateSlug(values.link_title);
-				setNameToSlug(false);
-			}
-			if (slugToSlug) {
-				values.link_slug = generateSlug(values.link_slug);
-				setSlugToSlug(false);
-			}
-		}, [values]);
-		return null;
-	};
+
 	const shortURLUniqueCheck = (slug) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
@@ -98,13 +100,13 @@ const Link = (props) => {
 	};
 	return (
 		<>
-			{item ? (
+			{data ? (
 				<button onClick={openModal} className={`dnd-link-button ${isEditMode ? 'btl-rotating' : ''}`}>
 					<span className="icon">{!isEditMode ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
 				</button>
 			) : (
 				<button onClick={openModal} className="btl-create-link-button">
-					{isIcon ? <i className="btl btl-add"></i> : 'Add New Link'}
+					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'}
 				</button>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -112,8 +114,10 @@ const Link = (props) => {
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={item ? initialUpdateValues : initialValues}
+					enableReinitialize
+					initialValues={data ? initialUpdateValues : initialValues}
 					onSubmit={(values) => {
+						values.link_slug = generateSlug(values.link_title);
 						if (slugIsExists == false) {
 							setEditMode(false);
 							setModalIsOpen(false);
@@ -129,11 +133,7 @@ const Link = (props) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Title', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" id="link_title" name="link_title" onBlur={() => setNameToSlug(true)} required />
-									</div>
-									<div className="btl-modal-form-group">
-										<Field type="hidden" className="btl-modal-form-control" id="link_slug" name="link_slug" onBlur={() => setSlugToSlug(true)} required />
-										<AutoSlugGenerate />
+										<Field className="btl-modal-form-control" id="link_title" name="link_title" required />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">
@@ -176,10 +176,10 @@ const Link = (props) => {
 										</div>
 									</div>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="cat_id">
+										<label className="btl-modal-form-label" htmlFor="catId">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Category name="cat_id" cat_id={cat_id} data={terms} setFieldValue={props.setFieldValue} />
+										<Category catId={catId} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} />
 									</div>
 								</div>
 								<div className="btl-entry-content-right">
@@ -240,7 +240,7 @@ const Link = (props) => {
 							<div className="btl-modal-form-group">
 								<label className="btl-modal-form-label"></label>
 								<button type="submit" className="btl-modal-submit-button">
-									{item ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+									{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 								</button>
 							</div>
 						</Form>
@@ -262,3 +262,5 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);
+Link.propTypes = propTypes;
+Link.defaultProps = defaultProps;

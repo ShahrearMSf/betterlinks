@@ -7,7 +7,7 @@ import { update_cat, delete_cat } from './../../redux/actions/links.actions';
 import { useFormikContext, Formik, Field, Form } from 'formik';
 import { generateSlug, modalCustomSmallStyles } from './../../utils/helper';
 const CatHeader = (props) => {
-	const { cat_id, cat_name, cat_slug, update_cat, delete_cat } = props;
+	const { catId, catName, cat_slug, update_cat, delete_cat } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isCatAction, setCatAction] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
@@ -27,7 +27,7 @@ const CatHeader = (props) => {
 		setDeleteConfrim(false);
 		setDeleteConfrim(false);
 		delete_cat({
-			cat_id: cat_id,
+			catId: catId,
 		});
 	};
 
@@ -45,7 +45,7 @@ const CatHeader = (props) => {
 		const { values } = useFormikContext();
 		React.useEffect(() => {
 			if (nameToSlug) {
-				values.cat_slug = generateSlug(values.cat_name);
+				values.cat_slug = generateSlug(values.catName);
 				setNameToSlug(false);
 			}
 			if (slugToSlug) {
@@ -58,8 +58,8 @@ const CatHeader = (props) => {
 	return (
 		<React.Fragment>
 			<div className="category-head">
-				<h4 className="title">{cat_name}</h4>
-				{cat_id != 1 && (
+				<h4 className="title">{catName}</h4>
+				{catId != 1 && (
 					<div className="dropdown">
 						<button className="icon" onClick={() => catActionHandler()}>
 							<i className="btl btl-more"></i>
@@ -103,8 +103,8 @@ const CatHeader = (props) => {
 				</span>
 				<Formik
 					initialValues={{
-						cat_id,
-						cat_name,
+						catId,
+						catName,
 						cat_slug,
 					}}
 					onSubmit={async (values) => {
@@ -116,10 +116,10 @@ const CatHeader = (props) => {
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-modal-form-group">
-								<label className="btl-modal-form-label btl-required" htmlFor="cat_name">
+								<label className="btl-modal-form-label btl-required" htmlFor="catName">
 									{__('Category Name', 'betterlinks')}
 								</label>
-								<Field className="btl-modal-form-control" id="cat_name" name="cat_name" onBlur={() => setNameToSlug(true)} required />
+								<Field className="btl-modal-form-control" id="catName" name="catName" onBlur={() => setNameToSlug(true)} required />
 							</div>
 							<div className="btl-modal-form-group">
 								<Field type="hidden" className="btl-modal-form-control" id="cat_slug" name="cat_slug" onBlur={() => setSlugToSlug(true)} required />

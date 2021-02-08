@@ -42,7 +42,7 @@ function DndCanvas(props) {
 								<Droppable key={ind} droppableId={ind}>
 									{(provided, snapshot) => (
 										<div className="dnd-category">
-											<CatHeader cat_id={ind} cat_name={el.term_name} cat_slug={el.term_slug} />
+											<CatHeader catId={ind} catName={el.term_name} cat_slug={el.term_slug} />
 											<div ref={provided.innerRef} className="dnd-category-body-wrap" style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
 												<div className="category-body">
 													{el.lists &&
@@ -62,11 +62,11 @@ function DndCanvas(props) {
 																					<div className="btl-dnd-link-button-group">
 																						<LinkQuickAction
 																							isShowAnalytics={true}
-																							cat_id={ind}
-																							cat_name={el.term_name}
+																							catId={ind}
+																							catName={el.term_name}
 																							submitLinkHandler={props.edit_link}
 																							deleteLinkHandler={props.delete_link}
-																							item={item}
+																							data={item}
 																						/>
 																					</div>
 																				</div>
@@ -79,7 +79,7 @@ function DndCanvas(props) {
 													{provided.placeholder}
 												</div>
 												<div className="category-footer">
-													<Link isIcon={true} cat_id={ind} cat_name={el.term_name} submitHandler={props.add_new_link} />
+													<Link catId={ind} catName={el.term_name} submitHandler={props.add_new_link} />
 												</div>
 											</div>
 										</div>
