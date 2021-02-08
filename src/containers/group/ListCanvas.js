@@ -66,7 +66,14 @@ const getLinksListViewColumnData = (props) => {
 			sortable: false,
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
-					<LinkQuickAction isShowAnalytics={false} isShowCopyLink={false} catId={row.catId} submitLinkHandler={props.edit_link} deleteLinkHandler={props.delete_link} data={row} />
+					<LinkQuickAction
+						isShowAnalytics={false}
+						isShowCopyLink={false}
+						catId={parseInt(row.cat_id)}
+						submitLinkHandler={props.edit_link}
+						deleteLinkHandler={props.delete_link}
+						data={row}
+					/>
 				</div>
 			),
 		},

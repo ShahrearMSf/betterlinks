@@ -57,7 +57,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowEditLink, isSh
 					)}
 					{isShowEditLink && (
 						<div className="btl-tooltip">
-							<Link catId={catId} catName={catName} data={data} submitHandler={submitLinkHandler} />
+							<Link catId={parseInt(catId)} catName={catName} data={data} submitHandler={submitLinkHandler} />
 							<span className="btl-tooltiptext">{__('Edit Link', 'betterlinks')}</span>
 						</div>
 					)}

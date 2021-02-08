@@ -62,7 +62,7 @@ function DndCanvas(props) {
 																					<div className="btl-dnd-link-button-group">
 																						<LinkQuickAction
 																							isShowAnalytics={true}
-																							catId={ind}
+																							catId={parseInt(ind)}
 																							catName={el.term_name}
 																							submitLinkHandler={props.edit_link}
 																							deleteLinkHandler={props.delete_link}
@@ -79,7 +79,7 @@ function DndCanvas(props) {
 													{provided.placeholder}
 												</div>
 												<div className="category-footer">
-													<Link catId={ind} catName={el.term_name} submitHandler={props.add_new_link} />
+													<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
 												</div>
 											</div>
 										</div>

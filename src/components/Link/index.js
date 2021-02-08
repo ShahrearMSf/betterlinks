@@ -19,8 +19,6 @@ const propTypes = {
 	catName: PropTypes.string,
 	data: PropTypes.object,
 	submitHandler: PropTypes.func,
-	settings: PropTypes.any,
-	terms: PropTypes.any,
 };
 
 const defaultProps = {
@@ -179,7 +177,7 @@ const Link = (props) => {
 										<label className="btl-modal-form-label" htmlFor="catId">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Category catId={catId} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} />
+										<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} />
 									</div>
 								</div>
 								<div className="btl-entry-content-right">

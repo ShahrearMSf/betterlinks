@@ -45,7 +45,7 @@ const CatHeader = (props) => {
 		const { values } = useFormikContext();
 		React.useEffect(() => {
 			if (nameToSlug) {
-				values.cat_slug = generateSlug(values.catName);
+				values.cat_slug = generateSlug(values.cat_name);
 				setNameToSlug(false);
 			}
 			if (slugToSlug) {
@@ -103,9 +103,9 @@ const CatHeader = (props) => {
 				</span>
 				<Formik
 					initialValues={{
-						catId,
-						catName,
-						cat_slug,
+						cat_id: catId,
+						cat_name: catName,
+						cat_slug: cat_slug,
 					}}
 					onSubmit={async (values) => {
 						setModalIsOpen(false);
@@ -116,10 +116,10 @@ const CatHeader = (props) => {
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-modal-form-group">
-								<label className="btl-modal-form-label btl-required" htmlFor="catName">
+								<label className="btl-modal-form-label btl-required" htmlFor="cat_name">
 									{__('Category Name', 'betterlinks')}
 								</label>
-								<Field className="btl-modal-form-control" id="catName" name="catName" onBlur={() => setNameToSlug(true)} required />
+								<Field className="btl-modal-form-control" id="cat_name" name="cat_name" onBlur={() => setNameToSlug(true)} required />
 							</div>
 							<div className="btl-modal-form-group">
 								<Field type="hidden" className="btl-modal-form-control" id="cat_slug" name="cat_slug" onBlur={() => setSlugToSlug(true)} required />
