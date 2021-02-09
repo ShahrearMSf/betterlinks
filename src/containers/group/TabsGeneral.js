@@ -5,10 +5,11 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Select from './../../components/Select';
+import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
 import { exists_clicks_json, nonce, exists_links_json } from './../../utils/helper';
-const TabsGeneral = ({ settings, update_option }) => {
+const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Clear Cache');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
 	const [formSubmitText, setFormSubmitText] = useState('Save');
@@ -49,6 +50,8 @@ const TabsGeneral = ({ settings, update_option }) => {
 			(response) => {
 				if (response.data) {
 					setCacheButtonText('Done!');
+					// update analytic data
+					fetch_clicks_data();
 				}
 			},
 			(error) => {
@@ -159,10 +162,15 @@ const TabsGeneral = ({ settings, update_option }) => {
 	);
 };
 
+const mapStateToProps = (state) => ({
+	clicks: state.clicks,
+});
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		update_option: bindActionCreators(update_option, dispatch),
+		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 	};
 };
 
-export default connect(null, mapDispatchToProps)(TabsGeneral);
+export default connect(mapStateToProps, mapDispatchToProps)(TabsGeneral);
