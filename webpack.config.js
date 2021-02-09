@@ -1,32 +1,51 @@
-const path = require('path')
+const webpack = require('webpack');
+const path = require('path');
 
-module.exports = (env, argv) => {
-    let production = argv.mode === 'production'
+const config = {
+	entry: ['./src/index.js'],
+	output: {
+		path: path.resolve(__dirname, 'assets/js'),
+		filename: 'betterlinks-core.min.js',
+	},
+	module: {
+		rules: [
+			{
+				test: /\.(js|jsx)$/,
+				use: 'babel-loader',
+				exclude: /node_modules/,
+			},
+			{
+				test: /\.css$/,
+				use: ['style-loader', 'css-loader'],
+				exclude: /\.module\.css$/,
+			},
+			{
+				test: /\.scss$/,
+				use: ['style-loader', 'css-loader', 'sass-loader'],
+			},
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+							modules: true,
+						},
+					},
+				],
+				include: /\.module\.css$/,
+			},
+			{
+				test: /\.svg$/,
+				use: 'file-loader',
+			},
+		],
+	},
+	resolve: {
+		extensions: ['.js', '.jsx'],
+	},
+};
 
-    return {
-        entry: {
-            'js/admin': path.resolve(__dirname, 'src/index.js'),
-        },
-
-        output: {
-            filename: '[name].js',
-            path: path.resolve(__dirname, 'assets'),
-        },
-
-        devtool: production ? '' : 'source-map',
-
-        resolve: {
-            extensions: ['.js', '.jsx', '.json'],
-        },
-
-        module: {
-            rules: [
-                {
-                    test: /\.jsx?$/,
-                    exclude: /node_modules/,
-                    loader: 'babel-loader',
-                },
-            ],
-        },
-    }
-}
+module.exports = config;

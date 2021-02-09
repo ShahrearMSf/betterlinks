@@ -4,24 +4,23 @@ namespace BetterLinks\Query\QueryBuilder;
 
 class Transaction extends QueryBuilderHandler
 {
+	/**
+	 * Commit the database changes
+	 */
+	public function commit()
+	{
+		$this->db->query('COMMIT');
 
-    /**
-     * Commit the database changes
-     */
-    public function commit()
-    {
-        $this->db->query('COMMIT');
+		throw new TransactionHaltException();
+	}
 
-        throw new TransactionHaltException();
-    }
+	/**
+	 * Rollback the database changes
+	 */
+	public function rollback()
+	{
+		$this->db->query('ROLLBACK');
 
-    /**
-     * Rollback the database changes
-     */
-    public function rollback()
-    {
-        $this->db->query('ROLLBACK');
-
-        throw new TransactionHaltException();
-    }
+		throw new TransactionHaltException();
+	}
 }

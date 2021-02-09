@@ -6,14 +6,14 @@
 	overflow: visible !important;
 	padding: 60px !important;
 	width: 60%;
-  @media screen and (max-width: 1599px) {
-    width: 75%;
-  }
-  @media screen and (max-width: 1199px) {
-    width: 80%;
-  }
+	@media screen and (max-width: 1599px) {
+		width: 75%;
+	}
+	@media screen and (max-width: 1199px) {
+		width: 80%;
+	}
 	@media screen and (max-width: 650px) {
-		padding: 20px!important;
+		padding: 20px !important;
 	}
 	.btl-close-modal {
 		position: absolute;
@@ -34,37 +34,78 @@
 			flex-direction: column;
 		}
 		.btl-entry-content-left {
-			width: calc(100% - 260px);
+			width: calc(100% - 280px);
 			@media screen and (max-width: 1023px) {
 				width: 100%;
 			}
 		}
 		.btl-entry-content-right {
-			width: 260px;
-			min-width: 260px;
+			width: 280px;
+			min-width: 280px;
 			padding-left: 40px;
-			padding-top: 15px;
 			@media screen and (max-width: 1023px) {
 				padding-left: 210px;
 			}
 			@media screen and (max-width: 650px) {
 				padding-left: 0;
 			}
+			.light-tooltip {
+				background: #fff;
+				color: #707070;
+				font-size: 13px;
+				font-weight: 400;
+				filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
+				&::after {
+					border-top-color: #fff;
+				}
+			}
+			.link-options {
+				border: 1px solid #ebebeb;
+				background-color: #fafafa;
+				border-radius: 4px;
+				margin-bottom: 20px;
+				&__head {
+					border-bottom: 1px solid #ebebeb;
+					background: #fff;
+					padding: 15px;
+					&--title {
+						font-size: 17px;
+						color: #373757;
+						font-weight: 700;
+						margin: 0;
+						text-align: center;
+					}
+				}
+				&__body {
+					padding: 35px 0 15px 25px;
+					.btl-checkbox-field {
+						margin-bottom: 30px;
+						.text {
+							font-weight: 400;
+							span.dashicons.dashicons-info-outline {
+								margin-left: 10px;
+								color: #a6a8ad;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	.btl-modal-form-group {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		@media screen and (max-width: 650px) {
 			flex-direction: column;
 		}
 		.btl-modal-form-label {
-			width: 170px;
-			min-width: 170px;
-			font-size: 20px;
+			min-width: 120px;
+			font-size: 16px;
 			font-weight: 500;
-			text-align: right;
+			text-align: left;
 			padding-right: 40px;
+			padding-top: 18px;
+			padding-bottom: 18px;
 			@media screen and (max-width: 650px) {
 				margin-bottom: 15px;
 				text-align: center;
@@ -82,6 +123,7 @@
 			margin-bottom: 20px;
 		}
 	}
+	textarea.btl-modal-form-control,
 	input.btl-modal-form-control {
 		flex: 1;
 		width: 100%;
@@ -98,6 +140,10 @@
 			background: #fff;
 			box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
 		}
+	}
+	textarea.btl-modal-form-control {
+		padding-top: 15px;
+		height: 80px;
 	}
 	.btl-modal-select {
 		width: 300px;
@@ -131,7 +177,7 @@
 		width: 100%;
 	}
 	.btl-link-field-copyable {
-		width: calc( 100% - 210px );
+		width: calc(100% - 210px);
 		height: 55px;
 		border-radius: 5px;
 		background: #fafafa;
@@ -141,11 +187,24 @@
 		@media screen and (max-width: 650px) {
 			width: 100%;
 		}
+		&.is-invalid {
+			position: relative;
+			border-color: red;
+			.errorlog {
+				position: absolute;
+				left: 100%;
+				top: 35%;
+				width: 150px;
+				font-weight: 500;
+				padding-left: 10px;
+				color: red;
+			}
+		}
 		.btl-static-link {
 			height: 100%;
-			background: linear-gradient(to right, $success, $success-lighten);
+			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 			border-radius: 5px 3px 3px 5px;
-			font-size: 18px;
+			font-size: 16px;
 			font-weight: 500;
 			padding: 0 10px 0 15px;
 			display: flex;
@@ -233,7 +292,7 @@
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		background: linear-gradient(to right, $success, $success-lighten);
+		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 		border: none;
 		outline: none;
 		box-shadow: none;
@@ -245,7 +304,7 @@
 		min-width: 190px;
 		cursor: pointer;
 		&:hover {
-			box-shadow: 0 22px 42px rgba(#03623c, 0.18);
+			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 		}
 	}
 }

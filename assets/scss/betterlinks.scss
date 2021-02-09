@@ -1,0 +1,113 @@
+@import './calendar/style';
+@import './calendar/theme';
+@import './common/fonts';
+@import './common/variable';
+@keyframes rotating {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+.btl-rotating {
+	animation: rotating 3s linear infinite;
+}
+.betterlinks-body {
+	@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+	font-family: 'Roboto', sans-serif;
+	padding-top: 20px;
+	padding-right: 20px;
+	@import './common/reboot';
+	@import './common/form';
+	@import './components/topbar';
+	@import './components/category';
+	@import './components/link';
+	@import './components/list-view';
+	@import './components/analytics';
+	@import './components/tab';
+}
+body {
+	&.betterlinks-dark-mode {
+		background: #36405a;
+		.betterlinks-body {
+			@import './control/plugin-mode';
+		}
+		@import './control/plugin-mode-modal';
+	}
+	> .btl-overlay {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: #000;
+		z-index: 99;
+		opacity: .65;
+		overflow-y: scroll;
+	}
+}
+.btl-date-range-picker-wrap {
+	position: absolute;
+	top: 100%;
+	z-index: 9999;
+	justify-content: center;
+	left: 0;
+	right: 0;
+	text-align: center;
+	.btl-date-range-picker {
+		position: relative;
+		display: inline-block;
+		padding: 30px;
+		background: white;
+		border-radius: 4px;
+		.btn-date-range-close {
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 999;
+			border: 0;
+			background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+			outline: none;
+			color: #fff;
+			padding: 3px 3px;
+			cursor: pointer;
+		}
+		.rdrDateRangePickerWrapper .rdrInputRanges {
+			display: none;
+		}
+	}
+}
+.btl-tooltip {
+	position: relative;
+	display: inline-block;
+	.btl-tooltiptext {
+		visibility: hidden;
+		width: 120px;
+		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+		font-size: 14px;
+		color: #fff;
+		text-align: center;
+		border-radius: 6px;
+		padding: 10px;
+		position: absolute;
+		z-index: 1;
+		bottom: 150%;
+		left: 50%;
+		margin-left: -68px;
+		&::after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: #003be2 transparent transparent transparent;
+		}
+	}
+	&:hover .btl-tooltiptext {
+		visibility: visible;
+	}
+}
+@import './components/modal';

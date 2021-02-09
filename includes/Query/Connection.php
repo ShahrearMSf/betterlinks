@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace BetterLinks\Query;
 
@@ -6,183 +6,183 @@ use BetterLinks\Query\Viocon\Container;
 
 class Connection
 {
+	/**
+	 * @var Container
+	 */
+	protected $container;
 
-    /**
-     * @var Container
-     */
-    protected $container;
+	/**
+	 * @var string
+	 */
+	protected $adapter;
 
-    /**
-     * @var string
-     */
-    protected $adapter;
+	/**
+	 * @var array
+	 */
+	protected $adapterConfig;
 
-    /**
-     * @var array
-     */
-    protected $adapterConfig;
+	/**
+	 * @var \wpdb $wpdb
+	 */
+	protected $dbInstance;
 
-    /**
-     * @var \wpdb $wpdb
-     */
-    protected $dbInstance;
+	/**
+	 * @var \wpdb $wpdb
+	 */
+	protected $wpdb;
 
-    /**
-     * @var \wpdb $wpdb
-     */
-    protected $wpdb;
+	/**
+	 * @var Connection
+	 */
+	protected static $storedConnection;
 
-    /**
-     * @var Connection
-     */
-    protected static $storedConnection;
+	/**
+	 * @var EventHandler
+	 */
+	protected $eventHandler;
 
-    /**
-     * @var EventHandler
-     */
-    protected $eventHandler;
+	/**
+	 * @param                $wpdb
+	 * @param array          $adapterConfig
+	 * @param null|string    $alias
+	 * @param null|Container $container
+	 */
+	public function __construct($wpdb, array $config = [], $alias = null, Container $container = null)
+	{
+		$container = $container ?: new Container();
 
-    /**
-     * @param                $wpdb
-     * @param array          $adapterConfig
-     * @param null|string    $alias
-     * @param null|Container $container
-     */
-    public function __construct($wpdb, array $config = array(), $alias = null, Container $container = null)
-    {
-        $container = $container ? : new Container();
+		$this->container = $container;
 
-        $this->container = $container;
+		$this->wpdb = $wpdb;
 
-        $this->wpdb = $wpdb;
+		$this->setAdapter()
+			->setAdapterConfig($config)
+			->connect();
 
-        $this->setAdapter()->setAdapterConfig($config)->connect();
+		// Create event dependency
+		$this->eventHandler = $this->container->build('\\BetterLinks\\Query\\EventHandler');
 
-        // Create event dependency
-        $this->eventHandler = $this->container->build('\\BetterLinks\\Query\\EventHandler');
+		if ($alias) {
+			$this->createAlias($alias);
+		}
+	}
 
-        if ($alias) {
-            $this->createAlias($alias);
-        }
-    }
+	/**
+	 * Create an easily accessible query builder alias
+	 *
+	 * @param $alias
+	 */
+	public function createAlias($alias)
+	{
+		class_alias('BetterLinks\\Query\\AliasFacade', $alias);
 
-    /**
-     * Create an easily accessible query builder alias
-     *
-     * @param $alias
-     */
-    public function createAlias($alias)
-    {
-        class_alias('BetterLinks\\Query\\AliasFacade', $alias);
+		$builder = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler', [$this]);
 
-        $builder = $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler', array($this));
+		AliasFacade::setQueryBuilderInstance($builder);
+	}
 
-        AliasFacade::setQueryBuilderInstance($builder);
-    }
+	/**
+	 * Returns an instance of Query Builder
+	 */
+	public function getQueryBuilder()
+	{
+		return $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler', [$this]);
+	}
 
-    /**
-     * Returns an instance of Query Builder
-     */
-    public function getQueryBuilder()
-    {
-        return $this->container->build('\\BetterLinks\\Query\\QueryBuilder\\QueryBuilderHandler', array($this));
-    }
+	/**
+	 * Create the connection adapter
+	 */
+	protected function connect()
+	{
+		$this->setDbInstance($this->wpdb);
 
+		// Preserve the first database connection with a static property
+		if (!static::$storedConnection) {
+			static::$storedConnection = $this;
+		}
+	}
 
-    /**
-     * Create the connection adapter
-     */
-    protected function connect()
-    {
-        $this->setDbInstance($this->wpdb);
+	/**
+	 * @param $db
+	 *
+	 * @return $this
+	 */
+	public function setDbInstance($db)
+	{
+		$this->dbInstance = $db;
 
-        // Preserve the first database connection with a static property
-        if (! static::$storedConnection) {
-            static::$storedConnection = $this;
-        }
-    }
+		return $this;
+	}
 
-    /**
-     * @param $db
-     *
-     * @return $this
-     */
-    public function setDbInstance($db)
-    {
-        $this->dbInstance = $db;
+	/**
+	 * @return \wpdb
+	 */
+	public function getDbInstance()
+	{
+		return $this->dbInstance;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param $adapter
+	 *
+	 * @return $this
+	 */
+	public function setAdapter($adapter = 'mysql')
+	{
+		$this->adapter = $adapter;
 
-    /**
-     * @return \wpdb
-     */
-    public function getDbInstance()
-    {
-        return $this->dbInstance;
-    }
+		return $this;
+	}
 
-    /**
-     * @param $adapter
-     *
-     * @return $this
-     */
-    public function setAdapter($adapter = 'mysql')
-    {
-        $this->adapter = $adapter;
+	/**
+	 * @return string
+	 */
+	public function getAdapter()
+	{
+		return $this->adapter;
+	}
 
-        return $this;
-    }
+	/**
+	 * @param array $adapterConfig
+	 *
+	 * @return $this
+	 */
+	public function setAdapterConfig(array $adapterConfig)
+	{
+		$this->adapterConfig = $adapterConfig;
 
-    /**
-     * @return string
-     */
-    public function getAdapter()
-    {
-        return $this->adapter;
-    }
+		return $this;
+	}
 
-    /**
-     * @param array $adapterConfig
-     *
-     * @return $this
-     */
-    public function setAdapterConfig(array $adapterConfig)
-    {
-        $this->adapterConfig = $adapterConfig;
+	/**
+	 * @return array
+	 */
+	public function getAdapterConfig()
+	{
+		return $this->adapterConfig;
+	}
 
-        return $this;
-    }
+	/**
+	 * @return Container
+	 */
+	public function getContainer()
+	{
+		return $this->container;
+	}
 
-    /**
-     * @return array
-     */
-    public function getAdapterConfig()
-    {
-        return $this->adapterConfig;
-    }
+	/**
+	 * @return EventHandler
+	 */
+	public function getEventHandler()
+	{
+		return $this->eventHandler;
+	}
 
-    /**
-     * @return Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * @return EventHandler
-     */
-    public function getEventHandler()
-    {
-        return $this->eventHandler;
-    }
-
-    /**
-     * @return Connection
-     */
-    public static function getStoredConnection()
-    {
-        return static::$storedConnection;
-    }
+	/**
+	 * @return Connection
+	 */
+	public static function getStoredConnection()
+	{
+		return static::$storedConnection;
+	}
 }
