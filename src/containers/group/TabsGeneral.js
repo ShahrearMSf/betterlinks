@@ -73,7 +73,16 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 					<Form>
 						<div className="btl-tab-panel-inner">
 							<span className="btl-form-group">
-								<label className="btl-form-label">{__('Fast Redirect Status', 'betterlinks')}</label>
+								<label className="btl-form-label">
+									{__('Link Redirection Status (Fast Mode)', 'betterlinks')}
+									<br />
+									<span>
+										{__(
+											"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
+											'betterlinks'
+										)}
+									</span>
+								</label>
 								<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
 								{!fastRedirectStatus && (
 									<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
@@ -82,7 +91,18 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								)}
 							</span>
 							<span className="btl-form-group">
-								<label className="btl-form-label">{__('Analytic Cache Status', 'betterlinks')}</label>
+								<label className="btl-form-label">
+									{!fastClicksStatus ? __('Click Data Status (Fast Mode)', 'betterlinks') : __('Fetch Analytics Data', 'betterlinks')}
+									<br />
+									<span>
+										{!fastClicksStatus
+											? __(
+													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
+													'betterlinks'
+											  )
+											: __("Analytics data is updated within 1 hour interval. Hit the 'Clear Cache' button to instantly update your analytics data", 'betterlinks')}
+									</span>
+								</label>
 								<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
 								{!fastClicksStatus ? (
 									<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
