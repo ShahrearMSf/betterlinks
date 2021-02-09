@@ -49,6 +49,14 @@ class Cron
 			// insert clicks json data into db
 			if (BETTERLINKS_EXISTS_CLICKS_JSON) {
 				$Clicks = json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'), true);
+				// link id already exists or not in links table
+				if(is_array($Clicks)){
+					foreach($Clicks as $key => $item){
+						if(!$query->table('users')->find($item->link_id)){
+							unset($Clicks[$key]);
+						}
+					}
+				}
 				if ($Clicks) {
 					$query = \BetterLinks\Helper::DB();
 					$results = $query->table('betterlinks_clicks')->insert($Clicks);
@@ -56,6 +64,9 @@ class Cron
 					if ($results) {
 						file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
 					}
+				}
+				if(is_array($Clicks) && count($Clicks) == 0) {
+					file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
 				}
 			}
 
