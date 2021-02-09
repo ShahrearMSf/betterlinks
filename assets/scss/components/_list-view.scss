@@ -232,6 +232,9 @@
         border-radius: 5px;
         min-height: 65px;
         .rdt_TableCol {
+					&:nth-child(3){
+						min-width: 300px;
+					}
           .rdt_TableCol_Sortable {
             color: $dark;
             font-size: 15px;
@@ -251,6 +254,9 @@
         border-radius: 5px;
         box-shadow: 0 3px 4px rgba(#00094e, 0.03);
         .rdt_TableCell {
+					&#cell-2-undefined{
+						min-width: 300px;
+					}
           div {
             font-size: 15px;
             color: $secondary;

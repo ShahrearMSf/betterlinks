@@ -76,7 +76,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								<label className="btl-form-label">
 									{__('Link Redirection Status (Fast Mode)', 'betterlinks')}
 									<br />
-									<span>
+									<span className="short-description">
 										{__(
 											"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
 											'betterlinks'
@@ -94,7 +94,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								<label className="btl-form-label">
 									{!fastClicksStatus ? __('Click Data Status (Fast Mode)', 'betterlinks') : __('Fetch Analytics Data', 'betterlinks')}
 									<br />
-									<span>
+									<span className="short-description">
 										{!fastClicksStatus
 											? __(
 													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
