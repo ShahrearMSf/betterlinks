@@ -1,82 +1,87 @@
 @font-face {
-	font-family: 'better-links';
-	src: url('./../fonts/better-links.eot?f0943u');
-	src: url('./../fonts/better-links.eot?f0943u#iefix') format('embedded-opentype'), url('./../fonts/better-links.ttf?f0943u') format('truetype'),
-		url('./../fonts/better-links.woff?f0943u') format('woff'), url('./../fonts/better-links.svg?f0943u#better-links') format('svg');
-	font-weight: normal;
-	font-style: normal;
-	font-display: block;
+  font-family: 'better-links';
+  src:  url('./../fonts/better-links.eot?nqg4ib');
+  src:  url('./../fonts/better-links.eot?nqg4ib#iefix') format('embedded-opentype'),
+    url('./../fonts/better-links.ttf?nqg4ib') format('truetype'),
+    url('./../fonts/better-links.woff?nqg4ib') format('woff'),
+    url('./../fonts/better-links.svg?nqg4ib#better-links') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
 
 .btl {
-	/* use !important to prevent issues with browser extensions that change fonts */
-	font-family: 'better-links' !important;
-	speak: never;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'better-links' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.btl-grid:before {
-	content: '\e910';
-}
-.btl-list:before {
-	content: '\e911';
-}
-.btl-search:before {
-	content: '\e912';
-}
-.btl-more:before {
-	content: '\e90f';
-}
-.btl-checkbox:before {
-	content: '\e90c';
-}
-.btl-checkbox-checked:before {
-	content: '\e90e';
-}
-.btl-edit:before {
-	content: '\e90d';
-}
-.btl-copy:before {
-	content: '\e90b';
-}
-.btl-add:before {
-	content: '\e900';
-}
-.btl-angle-arrow-down:before {
-	content: '\e901';
-}
-.btl-cancel:before {
-	content: '\e902';
-}
-.btl-delete:before {
-	content: '\e903';
+.btl-visit-url:before {
+  content: "\e913";
 }
 .btl-link:before {
-	content: '\e904';
+  content: "\e904";
+}
+.btl-grid:before {
+  content: "\e910";
+}
+.btl-list:before {
+  content: "\e911";
+}
+.btl-search:before {
+  content: "\e912";
+}
+.btl-more:before {
+  content: "\e90f";
+}
+.btl-checkbox:before {
+  content: "\e90c";
+}
+.btl-checkbox-checked:before {
+  content: "\e90e";
+}
+.btl-edit:before {
+  content: "\e90d";
+}
+.btl-copy:before {
+  content: "\e90b";
+}
+.btl-add:before {
+  content: "\e900";
+}
+.btl-angle-arrow-down:before {
+  content: "\e901";
+}
+.btl-cancel:before {
+  content: "\e902";
+}
+.btl-delete:before {
+  content: "\e903";
 }
 .btl-moon:before {
-	content: '\e905';
+  content: "\e905";
 }
 .btl-move:before {
-	content: '\e906';
+  content: "\e906";
 }
 .btl-reload:before {
-	content: '\e907';
+  content: "\e907";
 }
 .btl-sun:before {
-	content: '\e908';
+  content: "\e908";
 }
 .btl-target:before {
-	content: '\e909';
+  content: "\e909";
 }
 .btl-toggle-double:before {
-	content: '\e90a';
+  content: "\e90a";
 }
