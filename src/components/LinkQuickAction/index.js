@@ -59,8 +59,8 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 					)}
 					{isShowVisitLink && (
 						<div className="btl-tooltip">
-							<a href={site_url + '/' + data.short_url} target="_blank">
-								<span className="dashicons dashicons-external"></span>
+							<a className="dnd-link-button" href={site_url + '/' + data.short_url} target="_blank">
+								<i className="btl btl-visit-url"></i>
 							</a>
 							<span className="btl-tooltiptext">{__('Visit Link', 'betterlinks')}</span>
 						</div>

@@ -546,8 +546,8 @@
 
 @font-face {
   font-family: "better-links";
-  src: url("./../fonts/better-links.eot?f0943u");
-  src: url("./../fonts/better-links.eot?f0943u#iefix") format("embedded-opentype"), url("./../fonts/better-links.ttf?f0943u") format("truetype"), url("./../fonts/better-links.woff?f0943u") format("woff"), url("./../fonts/better-links.svg?f0943u#better-links") format("svg");
+  src: url("./../fonts/better-links.eot?nqg4ib");
+  src: url("./../fonts/better-links.eot?nqg4ib#iefix") format("embedded-opentype"), url("./../fonts/better-links.ttf?nqg4ib") format("truetype"), url("./../fonts/better-links.woff?nqg4ib") format("woff"), url("./../fonts/better-links.svg?nqg4ib#better-links") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -564,6 +564,14 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.btl-visit-url:before {
+  content: "";
+}
+
+.btl-link:before {
+  content: "";
 }
 
 .btl-grid:before {
@@ -612,10 +620,6 @@
 
 .btl-delete:before {
   content: "";
-}
-
-.btl-link:before {
-  content: "";
 }
 
 .btl-moon:before {
@@ -1231,6 +1235,7 @@
   font-size: 12px;
   cursor: pointer;
   transition: color 0.2s ease 0s;
+  text-decoration: none;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button:focus {
   border: none;
@@ -1542,7 +1547,7 @@
   font-size: 14px;
   line-height: 1;
   background: rgba(0, 59, 226, 0.05);
-  font-weight: 700;
+  font-weight: 500;
   padding: 3px 10px;
   min-height: 26px;
   max-width: 310px;
@@ -1556,16 +1561,61 @@
   border: none;
   outline: none;
   background: transparent;
-  padding: 5px;
-  font-size: 18px;
+  height: 30px;
+  width: 30px;
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
   color: #003be2;
   margin-left: 5px;
+  cursor: pointer;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .btl-confirm-message {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 0 10px;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .btl-confirm-message .action-text {
+  color: #707070;
+  font-weight: 500;
+  margin-right: 7px;
+  white-space: nowrap;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .btl-confirm-message .action-set {
+  display: flex;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .btl-confirm-message .action-set .action {
+  padding: 3px 5px;
+  border: 0;
+  outline: 0;
+  box-shadow: 0;
+  color: #fff;
+  width: 45%;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 2px;
+  word-break: keep-all;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .btl-confirm-message .action-set .action.yes {
+  background: #2961ff;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-list-view-action-wrapper .btl-confirm-message .action-set .action.no {
+  background: #f97272;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button {
   padding: 5px 5px 5px 5px;
@@ -1576,6 +1626,7 @@
   font-size: 12px;
   cursor: pointer;
   transition: color 0.2s ease 0s;
+  text-decoration: none;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button:focus {
   border: none;
