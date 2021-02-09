@@ -42,8 +42,8 @@ const Graph = (props) => {
 				{
 					ticks: {
 						beginAtZero: true,
-						steps: 10,
-						stepSize: 20,
+						steps: 20,
+						stepSize: 500,
 					},
 				},
 			],
