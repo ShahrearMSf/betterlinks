@@ -111,7 +111,7 @@ const Graph = (props) => {
 	return (
 		<React.Fragment>
 			<div className="btl-analytics-filter">
-				<h3 className="btl-analytics-filter__heading">{__('BetterLinks: All clicks on all links between', 'betterlinks')}</h3>
+				<h3 className="btl-analytics-filter__heading">{__('Click Analytics', 'betterlinks')}</h3>
 				<div className="btl-analytics-filter__control">
 					<button onClick={customCalendarToggleHandler} className="btl-list-view-calendar">
 						<span className="dashicons dashicons-calendar"></span>

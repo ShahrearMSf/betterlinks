@@ -8,13 +8,20 @@
 	border-color: $light-darken;
 	background-color: $white;
 	border-radius: 5px;
-	.tool-title {
+	&__logo {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		margin-right: 15px;
 		img {
 			display: inline-block;
+		}
+		&__text {
+			font-size: 18px;
+			text-transform: capitalize;
+			font-weight: 600;
+			color: #252525;
+			margin-left: 3px;
 		}
 	}
 	.btl-create-links {

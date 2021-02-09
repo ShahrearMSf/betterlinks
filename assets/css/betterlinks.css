@@ -936,14 +936,21 @@
   background-color: #fff;
   border-radius: 5px;
 }
-.betterlinks-body .topbar .tool-title {
+.betterlinks-body .topbar__logo {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 15px;
 }
-.betterlinks-body .topbar .tool-title img {
+.betterlinks-body .topbar__logo img {
   display: inline-block;
+}
+.betterlinks-body .topbar__logo__text {
+  font-size: 18px;
+  text-transform: capitalize;
+  font-weight: 600;
+  color: #252525;
+  margin-left: 3px;
 }
 .betterlinks-body .topbar .btl-create-links {
   margin-left: 30px;

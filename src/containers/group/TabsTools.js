@@ -60,7 +60,7 @@ const TabsTools = ({ query }) => {
 					</form>
 				</div>
 				<div className="btl-tab-panel-inner">
-					<h3 className="btl-tab-panel-header">{__('Choose what to import', 'betterlinks')}</h3>
+					<h3 className="btl-tab-panel-header">{__('Choose the Plugin You Want to Import from', 'betterlinks')}</h3>
 					<form action={'admin.php?page=' + query.get('page') + '&import=true'} method="POST" encType="multipart/form-data">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
@@ -76,11 +76,11 @@ const TabsTools = ({ query }) => {
 								</label>
 							</div>
 							<p className="btl-file-chooser">
-								<label htmlFor="upload">{__('Choose a file from your computer: (Maximum size: 512 MB)', 'betterlinks')}</label>
+								<label htmlFor="upload">{__('Choose the File You Want to Import', 'betterlinks')}</label>
 								<input type="file" id="upload_file" name="upload_file" size="25" />
 							</p>
 							<p className="submit">
-								<input type="submit" name="submit" id="submit" className="button button-primary" value={__('Upload file and import', 'betterlinks')} disabled="" />
+								<input type="submit" name="submit" id="submit" className="button button-primary" value={__('Import File', 'betterlinks')} disabled="" />
 							</p>
 						</div>
 					</form>
