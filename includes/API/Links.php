@@ -281,6 +281,17 @@ class Links extends Controller
 			->table('betterlinks')
 			->where('id', '=', $request['ID'])
 			->delete();
+
+		\BetterLinks\Helper::DB()
+			->table('betterlinks_clicks')
+			->where('link_id', '=', $request['ID'])
+			->delete();
+
+		\BetterLinks\Helper::DB()
+			->table('betterlinks_terms_relationships')
+			->where('link_id', '=', $request['ID'])
+			->delete();
+
 		$this->delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $request['short_url']);
 		return new \WP_REST_Response(
 			[
