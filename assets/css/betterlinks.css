@@ -681,7 +681,6 @@
   }
 }
 .betterlinks-body .btl-form-group .btl-form-label {
-  min-width: 120px;
   font-size: 16px;
   font-weight: 500;
   text-align: left;
@@ -696,6 +695,14 @@
     text-align: center;
     padding-right: 0;
   }
+}
+.betterlinks-body .btl-form-group .btl-form-label .short-description {
+  font-size: 12px;
+  color: #707070;
+  width: 200px;
+  display: inline-flex;
+  text-align: justify;
+  line-height: 1.2;
 }
 .betterlinks-body .btl-form-group .btl-form-label.btl-required:after {
   content: "*";
@@ -1512,6 +1519,9 @@
   border-radius: 5px;
   min-height: 65px;
 }
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol:nth-child(3) {
+  min-width: 300px;
+}
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol .rdt_TableCol_Sortable {
   color: #252525;
   font-size: 15px;
@@ -1526,6 +1536,9 @@
   border: 1px solid #ebebeb;
   border-radius: 5px;
   box-shadow: 0 3px 4px rgba(0, 9, 78, 0.03);
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell#cell-2-undefined {
+  min-width: 300px;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell div {
   font-size: 15px;
