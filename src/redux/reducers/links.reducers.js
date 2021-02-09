@@ -73,9 +73,9 @@ function links(state = {}, action) {
 				...state,
 				links: {
 					...newState,
-					[1]: {
-						...newState[1],
-						lists: [...state.links[1].lists, ...deletedCatLinks],
+					[Object.keys(newState)[0]]: {
+						...newState[Object.keys(newState)[0]],
+						lists: [...state.links[Object.keys(newState)[0]].lists, ...deletedCatLinks],
 					},
 				},
 			};

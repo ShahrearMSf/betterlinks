@@ -27,7 +27,7 @@ const CatHeader = (props) => {
 		setDeleteConfrim(false);
 		setDeleteConfrim(false);
 		delete_cat({
-			catId: catId,
+			cat_id: catId,
 		});
 	};
 
