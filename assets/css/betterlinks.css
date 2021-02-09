@@ -1217,6 +1217,7 @@
   color: #bebfc6;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group {
+  position: relative;
   margin-left: auto;
   margin-right: 5px;
   display: flex;
