@@ -26,7 +26,7 @@ const TabsTools = ({ query }) => {
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
 				<div className="btl-tab-panel-inner">
-					<h3 className="btl-tab-panel-header">{__('Choose what to export', 'betterlinks')}</h3>
+					<h3 className="btl-tab-panel-header">{__('Choose an Option You want to Export', 'betterlinks')}</h3>
 					<form action={'admin.php?page=' + query.get('page') + '&export=true'} method="POST">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
@@ -38,13 +38,13 @@ const TabsTools = ({ query }) => {
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="links" />
-									<span>{__('Manage Links', 'betterlinks')}</span>
+									<span>{__('Links', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="clicks" />
-									<span>{__('Analytic', 'betterlinks')}</span>
+									<span>{__('Analytics', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
