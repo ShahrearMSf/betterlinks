@@ -56,14 +56,14 @@ class Links extends Controller
 		]);
 	}
 
-	public function parse_response($items, $analytic)
+	public function parse_response($items)
 	{
 		$results = [];
 		foreach ($items as $item) {
 			// insert analytic data
-			if (isset($analytic[$item->ID])) {
-				$item->analytic = $analytic[$item->ID];
-			}
+			// if (isset($analytic[$item->ID])) {
+			// 	$item->analytic = $analytic[$item->ID];
+			// }
 
 			// formatting response
 			if (!isset($results[$item->cat_id])) {
@@ -95,8 +95,8 @@ class Links extends Controller
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = \BetterLinks\Helper::DB();
-		$analytic = get_option('betterlinks_analytics_data');
-		$analytic = $analytic ? json_decode($analytic, true) : [];
+		// $analytic = get_option('betterlinks_analytics_data');
+		// $analytic = $analytic ? json_decode($analytic, true) : [];
 		$results = $query
 			->query(
 				"SELECT 
@@ -127,7 +127,7 @@ class Links extends Controller
 		return new \WP_REST_Response(
 			[
 				'success' => is_bool($results),
-				'data' => $this->parse_response($results, $analytic),
+				'data' => $this->parse_response($results),
 			],
 			200
 		);
