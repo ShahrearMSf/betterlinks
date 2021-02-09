@@ -167,6 +167,6 @@ class Helper
 	public static function create_cron_jobs_for_json_links()
 	{
 		wp_clear_scheduled_hook('betterlinks/write_json_links');
-		wp_schedule_single_event(time() + 30, 'betterlinks/write_json_links');
+		wp_schedule_single_event(time() + 5, 'betterlinks/write_json_links');
 	}
 }
