@@ -1246,15 +1246,6 @@
   word-break: break-word;
   padding-left: 2px;
 }
-.betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title:before {
-  content: "";
-  font-family: "better-links";
-  display: flex;
-  align-items: center;
-  width: 0;
-  margin-right: 15px;
-  color: #bebfc6;
-}
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group {
   position: relative;
   margin-left: auto;

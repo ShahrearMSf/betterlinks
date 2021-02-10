@@ -9,10 +9,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
+import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
+import Copy from './../../components/Copy';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -30,7 +31,6 @@ const Link = (props) => {
 	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
-	const [isCopyUrl, setCopyUrl] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -70,10 +70,7 @@ const Link = (props) => {
 		}
 		setModalIsOpen(true);
 	}
-	const copyShortUrl = (url) => {
-		copyToClipboard(url);
-		setCopyUrl(true);
-	};
+
 	function closeModal() {
 		setEditMode(false);
 		setModalIsOpen(false);
@@ -169,9 +166,7 @@ const Link = (props) => {
 												required
 											/>
 											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
-											<button type="button" onClick={() => copyShortUrl(site_url + '/' + props.values.short_url)} className="btl-link-copy-button">
-												{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-copy"></i>}
-											</button>
+											<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
 										</div>
 									</div>
 									<div className="btl-modal-form-group">

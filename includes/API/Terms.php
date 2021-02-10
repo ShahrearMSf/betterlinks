@@ -106,6 +106,7 @@ class Terms extends Controller
 	 */
 	public function create_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		$id = \BetterLinks\Helper::DB()
 			->table('betterlinks_terms')
@@ -129,6 +130,7 @@ class Terms extends Controller
 	 */
 	public function update_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		$data = [
 			'term_name' => $request['params']['cat_name'],
@@ -157,6 +159,7 @@ class Terms extends Controller
 	 */
 	public function delete_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			if ($request['cat_id'] != 1) {

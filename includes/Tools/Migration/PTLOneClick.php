@@ -49,9 +49,9 @@ class PTLOneClick extends PTLBase
 					$term = !empty($term) ? current($term) : $term;
 				}
 				if (!empty($term->slug)) {
-					$categories[$slug] = $term->slug;
+					$categories[$item[2]] = $term->slug;
 				} else {
-					$categories[$slug] = 'uncategorized';
+					$categories[$item[2]] = 'uncategorized';
 				}
 
 				$message[] = 'import succesfully "' . $item->name . '"';

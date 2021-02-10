@@ -40,8 +40,11 @@ class Cron
 		return;
 	}
 
+	
+
 	public function analytics()
 	{
+		Helper::clear_query_cache();
 		try {
 			global $wpdb;
 			$prefix = $wpdb->prefix;

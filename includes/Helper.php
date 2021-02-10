@@ -169,4 +169,9 @@ class Helper
 		wp_clear_scheduled_hook('betterlinks/write_json_links');
 		wp_schedule_single_event(time() + 5, 'betterlinks/write_json_links');
 	}
+
+	public static function clear_query_cache()
+	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+	}
 }
