@@ -235,6 +235,9 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
+					&:nth-child(2){
+						justify-content: flex-start;
+					}
 					&:nth-child(3){
 						min-width: 300px;
 						#column-2{
@@ -244,7 +247,7 @@
 					}
           .rdt_TableCol_Sortable {
             color: $dark;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             &:hover {
               color: $dark;
@@ -264,15 +267,20 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
+					padding-top: 3px;
+					padding-bottom: 3px;
+					&#cell-1-undefined{
+						justify-content: flex-start;
+					}
 					&#cell-2-undefined{
 						min-width: 300px;
 					}
           div {
-            font-size: 15px;
+            font-size: 14px;
             color: $secondary;
           }
           .btl-link-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             color: $dark;
             line-height: 1.1;
@@ -287,14 +295,16 @@
 							line-height: 1;
               background: rgba($success, 0.05);
               font-weight: 500;
-              padding: 3px 10px;
+              padding: 5px 10px;
               min-height: 26px;
-              max-width: 310px;
+              width: 233px;
+              min-width: 233px;
               border: 1.5px solid $success;
               border-radius: 5px;
               color: $success;
               display: inline-flex;
               align-items: center;
+							word-break: break-all;
             }
             .btl-short-url-copy-button {
               border: none;

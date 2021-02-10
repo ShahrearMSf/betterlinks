@@ -151,3 +151,79 @@ button.button-primary:focus,
 	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 	outline: none;
 }
+
+
+// toggler button
+
+.btl-toggle-button, .knobs, .layer
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.btl-toggle-button {
+    position: relative;
+    top: 50%;
+    width: 100px;
+    height: 36px;
+    overflow: hidden;
+		border-radius: 100px;
+		.checkbox {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+				opacity: 0;
+				cursor: pointer;
+				z-index: 3;
+				&:active + .knobs:before {
+						width: 46px;
+						border-radius: 100px;
+				}
+				&:checked:active + .knobs:before {
+						margin-left: -26px;
+				}
+				&:checked + .knobs:before {
+						content: 'Disable';
+						left: 42px;
+						background-color: $danger;
+				}
+				&:checked ~ .layer {
+						background-color: #fcebeb;
+				}
+				&:disabled{
+					cursor: default;
+				}
+		}
+		.layer {
+				border-radius: 100px;
+				width: 100%;
+				background-color: #ebf7fc;
+				transition: 0.3s ease all;
+				z-index: 1;
+		}
+		.knobs {
+				z-index: 2;
+				&:before {
+						content: 'Active';
+						position: absolute;
+						top: 4px;
+						left: 4px;
+						height: 10px;
+						width: 46px;
+						color: #fff;
+						font-size: 10px;
+						font-weight: bold;
+						text-align: center;
+						line-height: 1;
+						padding: 9px 4px;
+						background-color: $success;
+						border-radius: 50px;
+						transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+				}
+		}
+}

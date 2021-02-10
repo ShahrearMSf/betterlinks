@@ -79,7 +79,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</label>
 								<div className="btl-form-field">
 									<div className="status">
-										<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
+										<div className={`active-status ${fastRedirectStatus? "Active" : 'Disable' }`}>{fastRedirectStatus ? 'Active' : 'Disable'}</div>
 										{!fastRedirectStatus && (
 											<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
 												{fastRedirectButtonText}
@@ -87,6 +87,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										)}
 									</div>
 									<div className="short-description">
+										<b style={{fontWeight: 700}}>{__("Note: ")}</b>
 										{__(
 											"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
 											'betterlinks'
@@ -106,7 +107,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</label>
 								<div className="btl-form-field">
 									<div className="status">
-										<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
+										<div className={`active-status ${fastClicksStatus? "Active" : 'Disable' }`}>{fastClicksStatus ? 'Active' : 'Disable'}</div>
 										{!fastClicksStatus ? (
 											<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
 												{fastClicksButtonText}
@@ -118,6 +119,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										)}
 									</div>
 									<div className="short-description">
+										<b style={{fontWeight: 700}}>{__("Note: ")}</b>
 										{!fastClicksStatus
 											? __(
 													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
