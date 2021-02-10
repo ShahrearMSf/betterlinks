@@ -53,9 +53,9 @@ class PTLImportCSV extends PTLBase
 					'link_modified_gmt' => isset($item[12]) ? $item[12] : '',
 				];
 				if (isset($item[13]) && !empty($item[13])) {
-					$categories[$slug] = $item[13];
+					$categories[$item[2]] = $item[13];
 				} else {
-					$categories[$slug] = 'uncategorized';
+					$categories[$item[2]] = 'uncategorized';
 				}
 
 				$message[] = 'import succesfully "' . $item[3] . '"';

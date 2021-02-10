@@ -7,7 +7,7 @@ class PTLBase
 	{
 		$termsList = [];
 		$message = [];
-		foreach ($categories as $slug => $catName) {
+		foreach ($categories as $short_url => $catName) {
 			if (!\BetterLinks\Helper::term_exists($catName) && !isset($termsList[\BetterLinks\Helper::make_slug($catName)])) {
 				$termsList[\BetterLinks\Helper::make_slug($catName)] = [
 					'term_name' => str_replace('-', ' ', ucwords($catName, '-')),
@@ -27,10 +27,10 @@ class PTLBase
 	public function terms_relationship_insert($categories)
 	{
 		$termRelationList = [];
-		foreach ($categories as $slug => $catName) {
+		foreach ($categories as $short_url => $catName) {
 			$link = $this->DB
 				->table('betterlinks')
-				->where('link_slug', '=', $slug)
+				->where('short_url', '=', $short_url)
 				->get();
 			$term = $this->DB
 				->table('betterlinks_terms')
