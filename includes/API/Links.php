@@ -2,6 +2,7 @@
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
+
 class Links extends Controller
 {
 	use ArgumentSchema;
@@ -56,14 +57,14 @@ class Links extends Controller
 		]);
 	}
 
-	public function parse_response($items)
+	public function parse_response($items, $analytic)
 	{
 		$results = [];
 		foreach ($items as $item) {
-			// insert analytic data
-			// if (isset($analytic[$item->ID])) {
-			// 	$item->analytic = $analytic[$item->ID];
-			// }
+			//insert analytic data
+			if (isset($analytic[$item->ID])) {
+				$item->analytic = $analytic[$item->ID];
+			}
 
 			// formatting response
 			if (!isset($results[$item->cat_id])) {
@@ -92,42 +93,56 @@ class Links extends Controller
 	 */
 	public function get_value($request)
 	{
-		global $wpdb;
-		$prefix = $wpdb->prefix;
-		$query = \BetterLinks\Helper::DB();
-		// $analytic = get_option('betterlinks_analytics_data');
-		// $analytic = $analytic ? json_decode($analytic, true) : [];
-		$results = $query
-			->query(
-				"SELECT 
-            {$prefix}betterlinks_terms.ID as cat_id, 
-            {$prefix}betterlinks_terms.term_name, 
-            {$prefix}betterlinks_terms.term_slug,
-            {$prefix}betterlinks_terms.term_type, 
-            {$prefix}betterlinks.ID, 
-            {$prefix}betterlinks.link_title,
-            {$prefix}betterlinks.link_slug,
-            {$prefix}betterlinks.link_note,
-            {$prefix}betterlinks.link_status,
-            {$prefix}betterlinks.nofollow,
-            {$prefix}betterlinks.sponsored,
-            {$prefix}betterlinks.track_me,
-            {$prefix}betterlinks.param_forwarding,
-            {$prefix}betterlinks.param_struct,
-            {$prefix}betterlinks.redirect_type,
-            {$prefix}betterlinks.target_url,
-            {$prefix}betterlinks.short_url,
-            {$prefix}betterlinks.link_date
-        FROM {$prefix}betterlinks_terms
-        LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
-        LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-        WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_date DESC"
-			)->get();
-
+		$cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
+		if(!$cache_data) {
+			global $wpdb;
+			$prefix = $wpdb->prefix;
+			$query = \BetterLinks\Helper::DB();
+			$analytic = get_option('betterlinks_analytics_data');
+			$analytic = $analytic ? json_decode($analytic, true) : [];
+			$results = $query
+				->query(
+					"SELECT 
+				{$prefix}betterlinks_terms.ID as cat_id, 
+				{$prefix}betterlinks_terms.term_name, 
+				{$prefix}betterlinks_terms.term_slug,
+				{$prefix}betterlinks_terms.term_type, 
+				{$prefix}betterlinks.ID, 
+				{$prefix}betterlinks.link_title,
+				{$prefix}betterlinks.link_slug,
+				{$prefix}betterlinks.link_note,
+				{$prefix}betterlinks.link_status,
+				{$prefix}betterlinks.nofollow,
+				{$prefix}betterlinks.sponsored,
+				{$prefix}betterlinks.track_me,
+				{$prefix}betterlinks.param_forwarding,
+				{$prefix}betterlinks.param_struct,
+				{$prefix}betterlinks.redirect_type,
+				{$prefix}betterlinks.target_url,
+				{$prefix}betterlinks.short_url,
+				{$prefix}betterlinks.link_date
+			FROM {$prefix}betterlinks_terms
+			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
+			LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
+			WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_date DESC"
+				)->get();
+			
+			$results = $this->parse_response($results, $analytic);
+			set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
+			return new \WP_REST_Response(
+				[
+					'success' => true,
+					'cache' => false,
+					'data' => $results,
+				],
+				200
+			);
+		}
 		return new \WP_REST_Response(
 			[
-				'success' => is_bool($results),
-				'data' => $this->parse_response($results),
+				'success' => true,
+				'cache' => true,
+				'data' => json_decode($cache_data),
 			],
 			200
 		);
@@ -141,6 +156,7 @@ class Links extends Controller
 	 */
 	public function create_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			$term_data = [];
@@ -210,6 +226,7 @@ class Links extends Controller
 	 */
 	public function update_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			$term_data = [];
@@ -276,6 +293,7 @@ class Links extends Controller
 	 */
 	public function delete_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		\BetterLinks\Helper::DB()
 			->table('betterlinks')
 			->where('id', '=', $request['ID'])

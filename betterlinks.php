@@ -66,6 +66,7 @@ if (!class_exists('BetterLinks')) {
 			define('BETTERLINKS_EXISTS_LINKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
 			define('BETTERLINKS_EXISTS_CLICKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'));
 			define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
+			define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
 		}
 
 		public function upload_dir_path()
