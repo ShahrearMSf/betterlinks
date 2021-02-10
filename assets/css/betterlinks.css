@@ -751,6 +751,20 @@
 .betterlinks-body .btl-form-group .active-status {
   margin: 0 10px;
 }
+.betterlinks-body .btl-form-group .active-status:before {
+  content: "";
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+.betterlinks-body .btl-form-group .active-status.Active:before {
+  background: #26C17C;
+}
+.betterlinks-body .btl-form-group .active-status.Disable:before {
+  background: #FF4343;
+}
 .betterlinks-body .btl-form-group .btl-modal-select, .betterlinks-body .btl-form-group .btl-modal-select--full {
   width: 300px;
 }
@@ -1232,6 +1246,7 @@
   margin-right: 5px;
   display: flex;
   align-items: center;
+  min-height: 25px;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button {
   padding: 5px;
@@ -1258,7 +1273,7 @@
   display: flex;
   align-items: center;
   background: #fff;
-  padding: 0 10px;
+  padding-left: 10px;
   position: absolute;
   right: 0;
   top: 0;
@@ -1523,6 +1538,9 @@
   justify-content: center;
   align-items: center;
 }
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol:nth-child(2) {
+  justify-content: flex-start;
+}
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol:nth-child(3) {
   min-width: 300px;
 }
@@ -1531,7 +1549,7 @@
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol .rdt_TableCol_Sortable {
   color: #252525;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableHead .rdt_TableHeadRow .rdt_TableCol .rdt_TableCol_Sortable:hover {
@@ -1548,16 +1566,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell#cell-1-undefined {
+  justify-content: flex-start;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell#cell-2-undefined {
   min-width: 300px;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell div {
-  font-size: 15px;
+  font-size: 14px;
   color: #707070;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-link-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: #252525;
   line-height: 1.1;
@@ -1573,14 +1596,16 @@
   line-height: 1;
   background: rgba(0, 59, 226, 0.05);
   font-weight: 500;
-  padding: 3px 10px;
+  padding: 5px 10px;
   min-height: 26px;
-  max-width: 310px;
+  width: 233px;
+  min-width: 233px;
   border: 1.5px solid #003be2;
   border-radius: 5px;
   color: #003be2;
   display: inline-flex;
   align-items: center;
+  word-break: break-all;
 }
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-short-url-wrapper .btl-short-url-copy-button {
   border: none;
@@ -2016,6 +2041,76 @@
   border: none;
   background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
   outline: none;
+}
+.betterlinks-body .btl-toggle-button, .betterlinks-body .knobs, .betterlinks-body .layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.betterlinks-body .btl-toggle-button {
+  position: relative;
+  top: 50%;
+  width: 100px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 100px;
+}
+.betterlinks-body .btl-toggle-button .checkbox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+.betterlinks-body .btl-toggle-button .checkbox:active + .knobs:before {
+  width: 46px;
+  border-radius: 100px;
+}
+.betterlinks-body .btl-toggle-button .checkbox:checked:active + .knobs:before {
+  margin-left: -26px;
+}
+.betterlinks-body .btl-toggle-button .checkbox:checked + .knobs:before {
+  content: "Disable";
+  left: 42px;
+  background-color: #f97272;
+}
+.betterlinks-body .btl-toggle-button .checkbox:checked ~ .layer {
+  background-color: #fcebeb;
+}
+.betterlinks-body .btl-toggle-button .checkbox:disabled {
+  cursor: default;
+}
+.betterlinks-body .btl-toggle-button .layer {
+  border-radius: 100px;
+  width: 100%;
+  background-color: #ebf7fc;
+  transition: 0.3s ease all;
+  z-index: 1;
+}
+.betterlinks-body .btl-toggle-button .knobs {
+  z-index: 2;
+}
+.betterlinks-body .btl-toggle-button .knobs:before {
+  content: "Active";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: 10px;
+  width: 46px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+  padding: 9px 4px;
+  background-color: #003be2;
+  border-radius: 50px;
+  transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
 }
 
 body.betterlinks-dark-mode {
