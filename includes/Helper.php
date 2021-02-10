@@ -173,6 +173,5 @@ class Helper
 	public static function clear_query_cache()
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-		delete_transient(BETTERLINKS_CACHE_CLICKS_NAME);
 	}
 }
