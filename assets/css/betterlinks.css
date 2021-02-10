@@ -1244,7 +1244,11 @@
   line-height: 1.1;
   color: #6e7178;
   word-break: break-word;
-  padding-left: 2px;
+  padding-left: 3px;
+}
+.betterlinks-body .btl-dnd-link .btl-dnd-link-body .dnd-link-title .icon {
+  margin-right: 8px;
+  display: inline-flex;
 }
 .betterlinks-body .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group {
   position: relative;
