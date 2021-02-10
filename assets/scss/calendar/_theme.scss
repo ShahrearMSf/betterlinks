@@ -1,21 +1,25 @@
 .rdrCalendarWrapper{
     color: #000000;
     font-size: 12px;
+    padding: 30px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
   
   .rdrDateDisplayWrapper{
-    background-color: rgb(239, 242, 247);
+    background: transparent;
   }
   
   .rdrDateDisplay{
-    margin: 0.833em;
+    margin: 0;
   }
   
   .rdrDateDisplayItem{
     border-radius: 4px;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 1px 2px 0 rgba(35, 57, 66, 0.21);
+    background-color: #f4f6f8;
+    box-shadow: 0 1px 2px 0 #ebebeb;
     border: 1px solid transparent;
+    text-align: start;
   }
   
   .rdrDateDisplayItem input{
@@ -25,7 +29,11 @@
       border: 0px;
       background: transparent;
       width: 100%;
-      color: #849095;
+      color: #252525;
+      padding: 5px 20px;
+      font-weight: 700;
+      font-size: 12px;
+      height: 38px;
     }
   
   .rdrDateDisplayItemActive{
@@ -79,11 +87,12 @@
     padding: 0;
     border: 0;
     border-radius: 5px;
-    background: #EFF2F7
+    background: transparent;
+    border: 1px solid #e9ecf0;
   }
   
   .rdrNextPrevButton:hover{
-      background: #E1E7F0;
+      background: #ebebeb;
     }
   
   .rdrNextPrevButton i {
@@ -100,7 +109,7 @@
   
   .rdrPprevButton i {
       border-width: 4px 6px 4px 4px;
-      border-color: transparent rgb(52, 73, 94) transparent transparent;
+      border-color: transparent #3d91ff transparent transparent;
       -webkit-transform: translate(-3px, 0px);
               transform: translate(-3px, 0px);
     }
@@ -108,7 +117,7 @@
   .rdrNextButton i {
       margin: 0 0 0 7px;
       border-width: 4px 4px 4px 6px;
-      border-color: transparent transparent transparent rgb(52, 73, 94);
+      border-color: transparent transparent transparent #3d91ff;
       -webkit-transform: translate(3px, 0px);
               transform: translate(3px, 0px);
     }
@@ -210,46 +219,45 @@
     right: 2px;
   }
   
-  .rdrInRange{}
   
   .rdrStartEdge{
-    border-top-left-radius: 1.042em;
-    border-bottom-left-radius: 1.042em;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
     left: 2px;
   }
   
   .rdrEndEdge{
-    border-top-right-radius: 1.042em;
-    border-bottom-right-radius: 1.042em;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     right: 2px;
   }
   
   .rdrSelected{
-    border-radius: 1.042em;
+    border-radius: 6px;
   }
   
   .rdrDayStartOfMonth .rdrInRange, .rdrDayStartOfMonth .rdrEndEdge, .rdrDayStartOfWeek .rdrInRange, .rdrDayStartOfWeek .rdrEndEdge{
-      border-top-left-radius: 1.042em;
-      border-bottom-left-radius: 1.042em;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
       left: 2px;
     }
   
   .rdrDayEndOfMonth .rdrInRange,  .rdrDayEndOfMonth .rdrStartEdge,  .rdrDayEndOfWeek .rdrInRange,  .rdrDayEndOfWeek .rdrStartEdge{
-      border-top-right-radius: 1.042em;
-      border-bottom-right-radius: 1.042em;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
       right: 2px;
     }
   
   .rdrDayStartOfMonth .rdrDayInPreview, .rdrDayStartOfMonth .rdrDayEndPreview, .rdrDayStartOfWeek .rdrDayInPreview, .rdrDayStartOfWeek .rdrDayEndPreview{
-      border-top-left-radius: 1.333em;
-      border-bottom-left-radius: 1.333em;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
       border-left-width: 1px;
       left: 0px;
     }
   
   .rdrDayEndOfMonth .rdrDayInPreview, .rdrDayEndOfMonth .rdrDayStartPreview, .rdrDayEndOfWeek .rdrDayInPreview, .rdrDayEndOfWeek .rdrDayStartPreview{
-     border-top-right-radius: 1.333em;
-     border-bottom-right-radius: 1.333em;
+     border-top-right-radius: 6px;
+     border-bottom-right-radius: 6px;
      border-right-width: 1px;
      right: 0px;
    }
@@ -270,8 +278,8 @@
     border-top-width: 1px;
     border-left-width: 1px;
     border-bottom-width: 1px;
-    border-top-left-radius: 1.333em;
-    border-bottom-left-radius: 1.333em;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
     left: 0px;
   }
   
@@ -284,8 +292,8 @@
     border-top-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 1px;
-    border-top-right-radius: 1.333em;
-    border-bottom-right-radius: 1.333em;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     right: 2px;
     right: 0px;
   }
@@ -295,25 +303,33 @@
     width: 226px;
     border-right: solid 1px #eff2f7;
     background: #fff;
+    width: 140px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    padding: 10px 0;
   }
   
   .rdrDefinedRangesWrapper .rdrStaticRangeSelected{
       color: currentColor;
       font-weight: 600;
+      border-right: 1px solid #3d91ff;
+      .rdrStaticRangeLabel{
+        background: #f4f6f8;
+      }
     }
   
   .rdrStaticRange{
-    border: 0;
+    border: none;
+    font-weight: 700;
     cursor: pointer;
     display: block;
     outline: 0;
-    border-bottom: 1px solid #eff2f7;
     padding: 0;
     background: #fff
   }
   
   .rdrStaticRange:hover .rdrStaticRangeLabel,.rdrStaticRange:focus .rdrStaticRangeLabel{
-        background: #eff2f7;
+        background: #f4f6f8;
       }
   
   .rdrStaticRangeLabel{
@@ -354,7 +370,7 @@
   .rdrCalendarWrapper:not(.rdrDateRangeWrapper) .rdrDayHovered .rdrDayNumber:after{
     content: '';
     border: 1px solid currentColor;
-    border-radius: 1.333em;
+    border-radius: 6px;
     position: absolute;
     top: -2px;
     bottom: -2px;
