@@ -74,46 +74,60 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 						<div className="btl-tab-panel-inner">
 							<span className="btl-form-group">
 								<label className="btl-form-label">
-									{__('Link Redirection Status (Fast Mode)', 'betterlinks')}
-									<br />
-									<span className="short-description">
+									{__('Link Redirection Status', 'betterlinks')} <br />
+									{__('(Fast Mode)', 'betterlinks')}
+								</label>
+								<div className="btl-form-field">
+									<div className="status">
+										<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
+										{!fastRedirectStatus && (
+											<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
+												{fastRedirectButtonText}
+											</button>
+										)}
+									</div>
+									<div className="short-description">
 										{__(
 											"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
 											'betterlinks'
 										)}
-									</span>
-								</label>
-								<div className="active-status">{fastRedirectStatus ? 'Active' : 'Disable'}</div>
-								{!fastRedirectStatus && (
-									<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
-										{fastRedirectButtonText}
-									</button>
-								)}
+									</div>
+								</div>
 							</span>
 							<span className="btl-form-group">
 								<label className="btl-form-label">
-									{!fastClicksStatus ? __('Click Data Status (Fast Mode)', 'betterlinks') : __('Fetch Analytics Data', 'betterlinks')}
-									<br />
-									<span className="short-description">
+									{!fastClicksStatus ? (
+										<React.Fragment>
+											{__('Click Data Status ', 'betterlinks')} <br /> {__('(Fast Mode)', 'betterlinks')}
+										</React.Fragment>
+									) : (
+										__('Fetch Analytics Data', 'betterlinks')
+									)}
+								</label>
+								<div className="btl-form-field">
+									<div className="status">
+										<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
+										{!fastClicksStatus ? (
+											<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
+												{fastClicksButtonText}
+											</button>
+										) : (
+											<button type="button" onClick={analyticClicksHandler} className="button button-primary">
+												{cacheButtonText}
+											</button>
+										)}
+									</div>
+									<div className="short-description">
 										{!fastClicksStatus
 											? __(
 													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
 													'betterlinks'
 											  )
 											: __("Analytics data is updated within 1 hour interval. Hit the 'Clear Cache' button to instantly update your analytics data", 'betterlinks')}
-									</span>
-								</label>
-								<div className="active-status">{fastClicksStatus ? 'Active' : 'Disable'}</div>
-								{!fastClicksStatus ? (
-									<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
-										{fastClicksButtonText}
-									</button>
-								) : (
-									<button type="button" onClick={analyticClicksHandler} className="button button-primary">
-										{cacheButtonText}
-									</button>
-								)}
+									</div>
+								</div>
 							</span>
+
 							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
 								<Select

@@ -119,7 +119,7 @@ export const formatDate = (date, format) => {
 
 export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
 	let results = stored;
-	results = stored.filter((item) => item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+	results = stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
 	if (selectedCategory && selectedCategory.value) {
 		results = results.filter((item) => item.cat_id == selectedCategory.value);
 	}

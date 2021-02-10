@@ -29,8 +29,9 @@ const TopBar = (props) => {
 	};
 	return (
 		<div className="topbar">
-			<div className="tool-title">
+			<div className="topbar__logo">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
+				<span className="topbar__logo__text">{props.currentPage.replace('-', ' ')}</span>
 			</div>
 
 			{props.currentPage === 'betterlinks' && (

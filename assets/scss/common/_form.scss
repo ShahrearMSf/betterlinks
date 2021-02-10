@@ -17,14 +17,6 @@
 			text-align: center;
 			padding-right: 0;
 		}
-		.short-description{
-			font-size: 12px;
-			color: $secondary;
-			width: 200px;
-			display: inline-flex;
-			text-align: justify;
-			line-height: 1.2;
-		}
 		&.btl-required {
 			&:after {
 				content: '*';

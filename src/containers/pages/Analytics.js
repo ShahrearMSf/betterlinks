@@ -111,7 +111,6 @@ const Analytics = (props) => {
 
 	return (
 		<React.Fragment>
-			<h3 className="btl-analytics-heading">{__('Analytics', 'betterlinks')}</h3>
 			<div className="btl-analytic">
 				{clicks ? (
 					<React.Fragment>

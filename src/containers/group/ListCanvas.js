@@ -9,6 +9,7 @@ import LinksListViewFilter from './LinksListViewFilter';
 import { linksFilterData, formatDate, insertOverlayElement } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
+import TableLoader from './../../components/Loader/TableLoader';
 
 const getLinksListViewColumnData = (props) => {
 	return [
@@ -184,7 +185,7 @@ const ListCanvas = (props) => {
 	return (
 		<React.Fragment>
 			<div className="btl-list-view">
-				{links && (
+				{links ? (
 					<DataTable
 						className="btl-list-view-table"
 						columns={getLinksListViewColumnData(props)}
@@ -198,6 +199,8 @@ const ListCanvas = (props) => {
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
 					/>
+				) : (
+					<TableLoader />
 				)}
 			</div>
 		</React.Fragment>

@@ -57,6 +57,20 @@
 			}
 		}
 	}
+	.btl-form-group {
+		.btl-form-field {
+			.status {
+				display: flex;
+				align-items: center;
+			}
+		}
+		.short-description {
+			padding: 15px;
+			background: #f2f2f2;
+			margin-top: 15px;
+		}
+	}
+	
 }
 .btl-tab-panel-inner .btl-tab-panel-header:first-child {
 	margin-top: 0;
