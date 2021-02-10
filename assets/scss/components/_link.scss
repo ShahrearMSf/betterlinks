@@ -19,15 +19,6 @@
 			color: $secondary-darken;
 			word-break: break-word;
 			padding-left: 2px;
-			&:before {
-				content: '\e90a';
-				font-family: 'better-links';
-				display: flex;
-				align-items: center;
-				width: 0;
-				margin-right: 15px;
-				color: lighten($secondary-lighten, 5%);
-			}
 		}
 		.btl-dnd-link-button-group {
 			position: relative;
