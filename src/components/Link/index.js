@@ -12,6 +12,7 @@ import { fetch_terms_data } from './../../redux/actions/terms.actions';
 import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, copyToClipboard, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
+import Tags from './../Terms/Tags';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -178,6 +179,12 @@ const Link = (props) => {
 											{__('Category', 'betterlinks')}
 										</label>
 										<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} />
+									</div>
+									<div className="btl-modal-form-group">
+										<label className="btl-modal-form-label" htmlFor="tags">
+											{__('Tags', 'betterlinks')}
+										</label>
+										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
 									</div>
 								</div>
 								<div className="btl-entry-content-right">
