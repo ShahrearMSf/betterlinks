@@ -112,7 +112,12 @@ Yes, it will work with any standard WordPress theme.
 
 = 1.0.0 - 11/01/2021 =
 
-* Initial stable release
+- Added: 'List View' to manage links
+- Added: 'Analytics' Feature 
+- Added: Migration from PrettyLinks
+- Added: General Settings panel
+- Improved: optimized code for faster response
+- Few minor bug fix and improvements
 
 
 = 0.0.1 - 14/01/2021 =
