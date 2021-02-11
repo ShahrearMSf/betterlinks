@@ -28,14 +28,15 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 ## Simple & Fast Link Shortener 🎉
 
 
-**✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place.
+**✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place
 
-**💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly.
+**💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly
 
 **⚙️ Easy Configuration:** Easily setup your Link Redirects (301, 302 and 307) and all your Link options
 
-**💪 Fast Response:** Less Database queries resulting in faster response time. 
+**💪 Fast Response:** Less Database queries resulting in faster response time
 
+** 🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks with one-click
 
 ## Easily Analyze and Track Your Cloaked Links 📈
 
@@ -45,6 +46,7 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 
 **📊 Generate Reports:** Gather analytics reports to evaulate and run successful marketing campaigns
 
+**📅 Interactive Calendar to Filter Clicks:** Easily Filter your clokaed links based on certain dates from the interactive Calendar
 
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins:
