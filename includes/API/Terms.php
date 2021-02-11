@@ -86,17 +86,7 @@ class Terms extends Controller
 				)
 				->get();
 		} else {
-			$results = $query
-				->query(
-					"SELECT 
-            {$prefix}betterlinks_terms.ID as term_id, 
-            {$prefix}betterlinks_terms.term_name, 
-            {$prefix}betterlinks_terms.term_slug,
-            {$prefix}betterlinks_terms.term_type
-            FROM {$prefix}betterlinks_terms"
-				)
-				->where('term_type', '=', $query_params['term_type'])
-				->get();
+			$results = $query->table('betterlinks_terms')->get();
 		}
 
 		return new \WP_REST_Response(
@@ -116,6 +106,7 @@ class Terms extends Controller
 	 */
 	public function create_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		$id = \BetterLinks\Helper::DB()
 			->table('betterlinks_terms')
@@ -139,6 +130,7 @@ class Terms extends Controller
 	 */
 	public function update_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		$data = [
 			'term_name' => $request['params']['cat_name'],
@@ -167,15 +159,21 @@ class Terms extends Controller
 	 */
 	public function delete_value($request)
 	{
+		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			if ($request['cat_id'] != 1) {
 				$qb->table('betterlinks_terms')
 					->where('id', '=', $request['cat_id'])
 					->delete();
+				
+				$term = current($qb->table('betterlinks_terms')
+				->where('term_slug', '=', 'uncategorized')
+				->get());
+
 				$qb->table('betterlinks_terms_relationships')
 					->where('term_id', '=', $request['cat_id'])
-					->update(['term_id' => 1]);
+					->update(['term_id' => $term->ID]);
 			}
 		});
 		return new \WP_REST_Response(

@@ -1,57 +1,61 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useField } from 'formik';
 import Select2 from 'react-select';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetch_terms_data } from './../../redux/actions/terms.actions';
 
-const Category = (props) => {
-	const [field] = useField(props.name);
-	const [isFetchData, setIsFetchData] = useState(false);
-	const fetchData = () => {
-		if (!isFetchData) {
-			props.fetch_terms_data({ term_type: 'category' });
-			setIsFetchData(true);
-		}
-	};
+const propTypes = {
+	catId: PropTypes.number,
+	data: PropTypes.object,
+	fieldName: PropTypes.string,
+	setFieldValue: PropTypes.func,
+};
+
+const defaultProps = {};
+
+const Category = ({ catId, data, fieldName, setFieldValue }) => {
+	const [field] = useField(fieldName);
 
 	const onChange = (option) => {
 		if (option == null) {
-			return props.setFieldValue(field.name, '');
+			return setFieldValue(field.name, '');
 		}
-		return props.setFieldValue(field.name, option.value);
+		return setFieldValue(field.name, option.value);
 	};
 
+	const defaultValue = () => {
+		if (catId) {
+			const { ID, term_name } = data.terms.filter((item) => item.ID == catId)[0];
+			return { value: ID, label: term_name };
+		} else {
+			const { ID, term_name } = data.terms.filter((item) => item.term_slug == 'uncategorized')[0];
+			return { value: ID, label: term_name };
+		}
+	};
 	return (
 		<React.Fragment>
-			<Select2
-				className="btl-modal-select"
-				id={field.id}
-				name={field.name}
-				defaultValue={{ label: props.cat_name, value: props.cat_id }}
-				classNamePrefix="btl-react-select"
-				onMenuOpen={() => fetchData()}
-				onChange={onChange}
-				options={
-					props.terms.terms &&
-					Object.entries(props.terms.terms)
-						.filter(([key, value]) => value.term_type === 'category')
-						.map(([key, value]) => ({
-							value: value.cat_id,
-							label: value.term_name,
-						}))
-				}
-			/>
+			{data.terms ? (
+				<Select2
+					className="btl-modal-select"
+					id={field.id}
+					name={field.name}
+					defaultValue={defaultValue()}
+					classNamePrefix="btl-react-select"
+					onChange={onChange}
+					options={data.terms
+						.filter((item) => item.term_type == 'category' && item.term_slug != 'uncategorized')
+						.map((item) => ({
+							value: item.ID,
+							label: item.term_name,
+						}))}
+				/>
+			) : (
+				<div>
+					<Select2 className="btl-modal-select" id={field.id} classNamePrefix="btl-react-select" />
+				</div>
+			)}
 		</React.Fragment>
 	);
 };
-const mapStateToProps = (state) => ({
-	terms: state.terms,
-});
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
-	};
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Category);
+export default Category;
+Category.propTypes = propTypes;
+Category.defaultProps = defaultProps;

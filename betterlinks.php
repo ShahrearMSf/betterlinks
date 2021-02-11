@@ -3,7 +3,7 @@
  * Plugin Name:		BetterLinks
  * Plugin URI:		https://betterlinks.io/
  * Description:		Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
- * Version:			0.0.1
+ * Version:			1.0.0
  * Author:			WPDeveloper
  * Author URI:		https://wpdeveloper.net
  * License:			GPL-3.0+
@@ -32,7 +32,8 @@ if (!class_exists('BetterLinks')) {
 			$this->set_global_settings();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-			add_action('plugins_loaded', [$this, 'init_plugin']);
+			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
+			add_action('betterlinks_loaded', [$this, 'init_plugin']);
 			$this->dispatch_hook();
 		}
 
@@ -51,7 +52,7 @@ if (!class_exists('BetterLinks')) {
 			/**
 			 * Defines CONSTANTS for Whole plugins.
 			 */
-			define('BETTERLINKS_VERSION', '0.0.1');
+			define('BETTERLINKS_VERSION', '1.0.0');
 			define('BETTERLINKS_DB_VERSION', '0.0.1');
 			define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
 			define('BETTERLINKS_PLUGIN_FILE', __FILE__);
@@ -64,11 +65,18 @@ if (!class_exists('BetterLinks')) {
 			define('BETTERLINKS_UPLOAD_DIR_PATH', $this->upload_dir['basedir'] . '/betterlinks_uploads');
 			define('BETTERLINKS_EXISTS_LINKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
 			define('BETTERLINKS_EXISTS_CLICKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'));
+			define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
+			define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
 		}
 
 		public function upload_dir_path()
 		{
 			$this->upload_dir = wp_get_upload_dir();
+		}
+
+		public function on_plugins_loaded()
+		{
+			do_action('betterlinks_loaded');
 		}
 
 		/**
@@ -84,11 +92,12 @@ if (!class_exists('BetterLinks')) {
 				new BetterLinks\Admin();
 			}
 			new BetterLinks\Link();
+			new BetterLinks\Tools();
 		}
 
 		public function dispatch_hook()
 		{
-			new BetterLinks\Cron();
+			BetterLinks\Cron::init();
 		}
 
 		public function load_textdomain()

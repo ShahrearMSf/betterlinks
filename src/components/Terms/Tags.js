@@ -1,72 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useField } from 'formik';
 import CreatableSelect2 from 'react-select/creatable';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetch_terms_data } from './../../redux/actions/terms.actions';
+import { API, namespace } from './../../utils/helper';
 
-const Tags = (props) => {
-	const [field] = useField(props.name);
-	const [isFetchData, setIsFetchData] = useState(false);
-	const fetchData = () => {
-		if (!isFetchData) {
-			props.fetch_terms_data({ term_type: 'tags' });
-			setIsFetchData(true);
+const propTypes = {
+	linkId: PropTypes.number,
+	data: PropTypes.object,
+	fieldName: PropTypes.string,
+	setFieldValue: PropTypes.func,
+};
+
+const defaultProps = {};
+
+const Tags = ({ fieldName, linkId, setFieldValue, data }) => {
+	const [saveTags, setSaveTags] = useState(null);
+	useEffect(async () => {
+		if (linkId) {
+			const res = await API.get(namespace + 'terms', {
+				params: {
+					ID: linkId,
+					term_type: 'tags',
+				},
+			});
+			if (res.data.data) {
+				setSaveTags(
+					res.data.data.map((item) => ({
+						value: item.term_id,
+						label: item.term_name,
+					}))
+				);
+			}
+		} else {
+			setSaveTags([]);
 		}
-	};
-
+	}, []);
+	const [field] = useField(fieldName);
 	const onChange = (option) => {
 		if (option == null) {
-			return props.setFieldValue(field.name, '');
+			return setFieldValue(field.name, '');
 		}
 
-		return props.setFieldValue(
+		return setFieldValue(
 			field.name,
 			option.map((item) => item.value)
 		);
 	};
-	const onCreateOptionHandler = (inputValue, optionLabel) => {
-		console.log(inputValue, optionLabel);
-	};
 	return (
 		<React.Fragment>
-			<CreatableSelect2
-				className="btl-modal-form-control btl-modal-select"
-				isClearable
-				id={field.id}
-				name={field.name}
-				onMenuOpen={() => fetchData()}
-				defaultValue={
-					props.isEditMode
-						? props.terms.terms &&
-						  Object.entries(props.terms.terms).map(([key, value]) => ({
-								value: value.term_id,
-								label: value.term_name,
-						  }))
-						: false
-				}
-				onChange={onChange}
-				classNamePrefix="btl-react-select"
-				options={
-					props.terms.terms &&
-					Object.entries(props.terms.terms).map(([key, value]) => ({
-						value: value.term_id,
-						label: value.term_name,
-					}))
-				}
-				isMulti={true}
-			/>
+			{saveTags && (
+				<CreatableSelect2
+					className="btl-modal-form-control btl-modal-select"
+					isClearable
+					id={field.id}
+					name={field.name}
+					defaultValue={saveTags}
+					onChange={onChange}
+					classNamePrefix="btl-react-select"
+					options={
+						data.terms &&
+						data.terms
+							.filter((item) => item.term_type == 'tags')
+							.map((item) => ({
+								value: item.ID,
+								label: item.term_name,
+							}))
+					}
+					isMulti={true}
+				/>
+			)}
 		</React.Fragment>
 	);
 };
 
-const mapStateToProps = (state) => ({
-	terms: state.terms,
-});
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
-	};
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Tags);
+export default Tags;
+Tags.propTypes = propTypes;
+Tags.defaultProps = defaultProps;

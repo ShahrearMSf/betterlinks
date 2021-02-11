@@ -17,3 +17,9 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 		});
 	}
 };
+export const fetchCustomClicksData = (data) => (dispatch) => {
+	dispatch({
+		type: FETCH_CLICKS_DATA,
+		payload: data,
+	});
+};

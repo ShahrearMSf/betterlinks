@@ -1,21 +1,12 @@
 .btl-dnd-link {
-	padding: 5px;
 	margin: 8px 8px 0px 8px;
-	border-radius: 3px;
 	background-color: $white;
+	border-left: 1px solid $success;
 	.btl-dnd-link-body {
+		padding: 5px;
 		display: flex;
 		align-items: center;
-		position: relative;
-		&:before {
-			content: '';
-			width: 5px;
-			min-width: 5px;
-			height: 35px;
-			border-radius: 2px;
-			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
-			margin-right: 10px;
-		}
+		min-height: 35px;
 		.dnd-link-title {
 			margin-right: 5px;
 			display: flex;
@@ -26,34 +17,20 @@
 			font-weight: 500;
 			line-height: 1.1;
 			color: $secondary-darken;
-			position: relative;
 			word-break: break-word;
-			&:before {
-				content: '\e906';
-				font-family: 'better-links';
-				display: flex;
-				align-items: center;
-				width: 0;
-				color: lighten($secondary-lighten, 5%);
-				transition: all 0.02s linear;
-				opacity: 0;
+			padding-left: 3px;
+			.icon{
+				margin-right: 8px;
+				display: inline-flex;
 			}
 		}
 		.btl-dnd-link-button-group {
+			position: relative;
 			margin-left: auto;
 			margin-right: 5px;
 			display: flex;
 			align-items: center;
-			.light-tooltip {
-				background: #fff;
-				color: #373747;
-				font-size: 13px;
-				font-weight: 500;
-				filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
-				&::after {
-					border-top-color: #fff;
-				}
-			}
+			min-height: 25px;
 			.dnd-link-button {
 				padding: 5px;
 				border: none;
@@ -62,6 +39,7 @@
 				font-size: 12px;
 				cursor: pointer;
 				transition: color 0.2s ease 0s;
+				text-decoration: none;
 				&:focus {
 					border: none;
 					outline: none;
@@ -80,7 +58,7 @@
 		display: flex;
 		align-items: center;
 		background: $white;
-		padding: 0 10px;
+		padding-left: 10px;
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -115,15 +93,6 @@
 				&.no {
 					background: $danger;
 				}
-			}
-		}
-	}
-
-	&.btl-dnd-link-dragging {
-		.dnd-link-title {
-			&:before {
-				width: 20px;
-				opacity: 1;
 			}
 		}
 	}

@@ -1,10 +1,10 @@
-=== BetterLinks (Simple Link Management Plugin to Shorten & Track Your Affiliate Links) ===
+=== BetterLinks - Shorten, Track and Manage any URL ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, tusharimran
 Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
 Requires at least: 4.0
 Tested up to: 5.6
-Stable tag: 0.0.1
+Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -17,12 +17,12 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 
 ## Perks of Using BetterLinks 🔥
 
--Easy-to-use & Simple Link Shortener
--Create attractive looking links instantly
--Safe Redirection URLs 
--Analyze and Track your marketing campaigns from one place
--Optimized queries to reduce load time & make faster
--Power up your affiliate marketing level
+- Easy-to-use & Simple Link Shortener
+- Create attractive looking links instantly
+- Safe Redirection URLs 
+- Analyze and Track your marketing campaigns from one place
+- Optimized queries to reduce load time & make faster
+- Power up your affiliate marketing level
 
 
 ## Simple & Fast Link Shortener 🎉
@@ -37,7 +37,7 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 **💪 Fast Response:** Less Database queries resulting in faster response time. 
 
 
-## Easily Analyze and Track Your Cloked Links 📈
+## Easily Analyze and Track Your Cloaked Links 📈
 
 **📈 Real Time Analytics:** Generate real-time analytics data and easily evaluate the performance of your cloaked links with just a glance
 
@@ -49,9 +49,9 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins:
 
-🔝[Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 1 million active users in the WordPress repository.
+🔝 [Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 1 million active users in the WordPress repository.
 
-🔔[NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
+🔔 [NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
 
 🗒️ [BetterDocs](https://betterdocs.co/) – Best Documentation & Knowledge Base Plugin for WordPress, whcih also reduce your manual support request.
 
@@ -109,6 +109,16 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 1.0.0 - 11/01/2021 =
+
+- Added: 'List View' to manage links
+- Added: 'Analytics' Feature 
+- Added: Migration from PrettyLinks
+- Added: General Settings panel
+- Improved: optimized code for faster response
+- Few minor bug fix and improvements
+
 
 = 0.0.1 - 14/01/2021 =
 

@@ -65,15 +65,19 @@ class Clicks extends Controller
 	 */
 	public function get_value($request)
 	{
+		$request = $request->get_params();
+		$from = isset($request['from']) ? $request['from'] : date('Y-m-d', strtotime(' - 30 days'));
+		$to = isset($request['to']) ? $request['to'] : date('Y-m-d');
+
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = \BetterLinks\Helper::DB();
 		$results = $query
 			->query(
 				"SELECT CLICKS.ID as 
-        click_ID, link_id, browser, created_at, referer, short_url, target_url, ip,
+        click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
         (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
-        from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id group by CLICKS.id"
+		from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE created_at BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:00' group by CLICKS.id"
 			)
 			->get();
 

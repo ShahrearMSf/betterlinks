@@ -1,19 +1,162 @@
 .btl-form-group {
+	display: flex;
+	align-items: center;
+	@media screen and (max-width: 650px) {
+		flex-direction: column;
+	}
+	.btl-form-label {
+		font-size: 16px;
+		font-weight: 500;
+		text-align: left;
+		padding-right: 20px;
+		padding-top: 8px;
+		padding-bottom: 8px;
+		min-width: 200px;
+		@media screen and (max-width: 650px) {
+			margin-bottom: 5px;
+			text-align: center;
+			padding-right: 0;
+		}
+		&.btl-required {
+			&:after {
+				content: '*';
+				margin-left: 2px;
+				color: $danger;
+			}
+		}
+	}
+
+	textarea.btl-form-control,
+	input.btl-form-control {
+		height: 44px;
+		border-radius: 5px;
+		background: $light;
+		padding: 0 10px;
+		width: 100%;
+		max-width: 400px;
+		border: 1px solid $light;
+		&:focus {
+			border: 1px solid $light-darken;
+			outline: none;
+			box-shadow: none;
+		}
+	}
+	textarea.btl-form-control {
+		padding-top: 15px;
+		height: 80px;
+	}
+	.btl-select {
+		width: 300px;
+		.btl-react-select__control {
+			background-color: $light;
+			height: 55px;
+			border: 1px solid $light;
+			border-radius: 5px;
+			.btl-react-select__value-container {
+				padding-left: 15px;
+				.btl-react-select__single-value {
+					font-size: 16px;
+					font-weight: 500;
+					margin-left: 0;
+				}
+				.btl-react-select__input {
+					input {
+						box-shadow: none;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				box-shadow: none;
+				background-color: #fff;
+			}
+		}
+	}
 	&:not(:last-child) {
-		margin-bottom: 15px;
-		display: flex;
+		margin-bottom: 20px;
+	}
+	.active-status {
+		margin: 0 10px;
+		&:before{
+			content: "";
+			display: inline-block;
+			height: 10px;
+			width: 10px;
+			border-radius: 10px;
+			margin-right: 5px;
+		}
+		&.Active{
+			&:before{
+				background: #26C17C;
+			}
+		}
+		&.Disable{
+			&:before{
+				background: #FF4343;
+			}
+		}
+	}
+	.btl-modal-select {
+		width: 300px;
+		.btl-react-select__control {
+			background-color: #fafafa;
+			height: 55px;
+			border: 1px solid #ebebeb;
+			border-radius: 5px;
+			.btl-react-select__value-container {
+				padding-left: 15px;
+				.btl-react-select__single-value {
+					font-size: 16px;
+					font-weight: 500;
+					margin-left: 0;
+				}
+				.btl-react-select__input {
+					input {
+						box-shadow: none;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				box-shadow: none;
+				background-color: #fff;
+			}
+		}
+	}
+	.btl-modal-select--full {
+		@extend .btl-modal-select;
+		width: 200px;
 	}
 }
-.btl-form-control {
-	height: 44px;
-	border-radius: 5px;
-	background: $light;
-	padding: 0 10px;
-	width: 100%;
-	border: 1px solid $light;
-	&:focus {
-		border: 1px solid $light-darken;
-		outline: none;
+.btl-checkbox-field {
+	display: flex;
+	cursor: pointer;
+	&.block {
+		display: inline-block;
+		margin-right: 20px;
+		.btl-tooltip {
+			margin-left: 5px;
+		}
+	}
+	.btl-check {
+		display: none;
+	}
+	.text {
+		padding-left: 40px;
+		position: relative;
+		color: $dark;
+		font-weight: 500;
+		font-size: 16px;
+		&:before {
+			position: absolute;
+			font-family: 'better-links';
+			content: '\e90c';
+			left: 0;
+			font-size: 24px;
+			color: $secondary-lighten;
+		}
+	}
+	.btl-check:checked + .text:before {
+		content: '\e90e';
+		color: $success;
 	}
 }
 .btl-create-category-submit {

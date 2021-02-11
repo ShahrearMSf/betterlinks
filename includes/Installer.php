@@ -12,6 +12,7 @@ class Installer
 		$this->run_create_tables();
 		$this->insert_terms();
 		$this->create_files();
+		$this->set_default_option();
 		$this->create_cron_jobs();
 	}
 
@@ -142,6 +143,20 @@ class Installer
 		}
 	}
 
+	private function set_default_option()
+	{
+		if (!get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
+			$value = [
+				'redirect_type' => '307',
+				'nofollow' => true,
+				'sponsored' => '',
+				'track_me' => true,
+				'param_forwarding' => '',
+			];
+			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
+		}
+	}
+
 	/**
 	 * Create files/directories.
 	 */
@@ -182,7 +197,6 @@ class Installer
 	 */
 	private function create_cron_jobs()
 	{
-		wp_clear_scheduled_hook('betterlinks/write_json_links');
-		wp_schedule_single_event(time() + 60, 'betterlinks/write_json_links');
+		Helper::create_cron_jobs_for_json_links();
 	}
 }

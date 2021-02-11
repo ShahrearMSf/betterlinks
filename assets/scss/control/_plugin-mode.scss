@@ -1,6 +1,21 @@
 .topbar {
 	border-color: #36405a;
 	background-color: #2c3650;
+	.btl-view-control {
+		.btl-link-view-toggler {
+			border-color: #738bb8;
+			background: #2c3650;
+			color: #738bb8;
+			&.active,
+			&:hover,
+			&:hover {
+				background: $success;
+				cursor: pointer;
+				color: $white;
+				border-color: $success;
+			}
+		}
+	}
 	.theme-mood-button {
 		border-color: #738bb8;
 	}
@@ -59,7 +74,7 @@
 			.light-tooltip {
 				background: #536082;
 				color: $white;
-				filter: drop-shadow(0px 15px 12.5px rgba(0, 5, 41, 0.18));
+				filter: drop-shadow(0px 4px 10.5px rgba(0, 5, 41, 0.04));
 				&::after {
 					border-top-color: #536082;
 				}
@@ -143,6 +158,9 @@
 .btl-analytics-heading {
 	color: $white;
 }
+.btl-analytics-filter__heading {
+	color: $white;
+}
 
 .btl-analytic {
 	background: #252f47;
@@ -157,9 +175,31 @@
 		background: #252f47;
 		color: $white;
 	}
-	.btl-analytic-table {
+	.sc-idOhPF {
+		background: #252f47;
+		.btl-click-filter {
+			input {
+				background: #252f47;
+				border-color: #36405a;
+				color: $white;
+				&::placeholder {
+					color: $light-darken;
+				}
+			}
+		}
+	}
+	.sc-bBXqnf {
 		background: #252f47;
 		color: $white;
+	}
+	.rdt_Table {
+		background: #252f47;
+		color: $white;
+		.rdt_TableCol_Sortable {
+			div {
+				color: $white;
+			}
+		}
 		.rdt_TableHeadRow,
 		.rdt_TableRow {
 			background: #252f47;
@@ -178,6 +218,283 @@
 			color: $white;
 			&:hover {
 				color: $white;
+			}
+		}
+	}
+	.rdt_Pagination {
+		background-color: #252f47;
+		color: $white;
+		.sc-giIncl {
+			.sc-iJuUWI {
+				svg {
+					fill: $white;
+				}
+        &:disabled{
+          svg{
+            fill: $secondary-lighten;
+          }
+        }
+			}
+		}
+	}
+}
+
+.react-date-picker {
+	.react-date-picker__wrapper {
+		border-color: #36405a;
+		.react-date-picker__inputGroup {
+			.react-date-picker__inputGroup__input {
+				color: $white;
+			}
+		}
+	}
+}
+
+// for tab
+.react-tabs__tab-list {
+	.react-tabs__tab {
+		background-color: #2c3650;
+		color: $white;
+		&.react-tabs__tab--selected {
+			background-color: #252f47;
+		}
+	}
+}
+.btl-tab-panel-inner {
+	background: #2c3650;
+}
+.btl-tab-panel-inner .btl-tab-panel-header {
+	color: #fff;
+}
+
+// form data
+.btl-form-group {
+	.btl-form-label {
+		color: $light-darken;
+	}
+	.active-status{
+		color: $light;
+	}
+	.btl-modal-select--full {
+		.btl-react-select__control {
+			background-color: #36405a !important;
+			border-color: #36405a !important;
+			.btl-react-select__value-container {
+				.btl-react-select__single-value {
+					color: $white;
+				}
+				.btl-react-select__input {
+					input {
+						color: $white !important;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				background-color: #36405a !important;
+			}
+			.btl-react-select__placeholder {
+				color: $white;
+			}
+		}
+		.btl-react-select__multi-value {
+			background: #252f47 !important;
+			.btl-react-select__multi-value__label {
+				color: $white !important;
+			}
+			.btl-react-select__multi-value__remove {
+				svg {
+					color: $white;
+				}
+				&:hover {
+					svg {
+						color: red;
+					}
+				}
+			}
+		}
+		.btl-react-select__indicators {
+			.btl-react-select__indicator-separator {
+				background-color: #666182;
+			}
+			.btl-react-select__indicator {
+				color: $white;
+			}
+		}
+	}
+}
+.btl-checkbox-field {
+	.text {
+		color: $white;
+	}
+	.btl-check:checked + .text:before {
+		color: lighten($success, 10%);
+	}
+}
+.btl-radio-group .btl-radio input + span {
+	color: $secondary-lighten;
+}
+.btl-radio-group .btl-radio input:checked + span {
+	color: $white;
+}
+.btl-file-chooser label {
+	color: $white;
+}
+.btl-file-chooser input {
+	color: $white;
+}
+
+.btl-list-view {
+	.sc-idOhPF {
+		.btl-links-filter {
+			margin-right: 12px;
+			.btl-click-filter {
+				border-color: #2c3650;
+				background-color: #2c3650;
+				color: $light;
+				input {
+					color: $white;
+					&::placeholder {
+						color: $light;
+					}
+				}
+				&:before {
+					color: $light;
+				}
+			}
+			.btl-list-view-select {
+				.btl-react-select__control {
+					background-color: #2c3650;
+					border-color: #2c3650;
+					.btl-react-select__input {
+						input {
+							color: $light !important;
+						}
+					}
+					.btl-react-select__placeholder {
+						color: $light;
+					}
+					.btl-react-select__single-value {
+						color: $white;
+					}
+					.btl-react-select__indicators {
+						.btl-react-select__indicator {
+							svg {
+								fill: $light;
+							}
+						}
+					}
+				}
+			}
+			.btl-list-view-calendar{
+				background-color: #2c3650;
+				border-color: #2c3650;
+				color: $light;
+				margin-right: 12px;
+			}
+			.btl-link-input-field {
+				background-color: #2c3650;
+				border-color: #2c3650;
+				color: $white;
+				&::placeholder {
+					color: $light;
+				}
+			}
+		}
+		.btl-bulk-actions {
+			.btl-list-view-select {
+				.btl-react-select__control {
+					background-color: #2c3650;
+					border-color: #2c3650;
+					.btl-react-select__input {
+						input {
+							color: $light !important;
+						}
+					}
+					.btl-react-select__placeholder {
+						color: $light;
+					}
+					.btl-react-select__single-value {
+						color: $white;
+					}
+					.btl-react-select__indicators {
+						.btl-react-select__indicator {
+							svg {
+								fill: $light;
+							}
+            }
+          }
+        }
+      }
+      .btl-link-input-field{
+				background-color: #2c3650;
+				border-color: #2c3650;
+				color: $white;
+				&::placeholder{
+					color: $light;
+				}
+      }
+			.btl-link-apply-button{
+				background: $success;
+				color: $white;
+				border-color: $success;
+			}
+    }
+  }
+	.rdt_Table{
+		.rdt_TableHead{
+			.rdt_TableHeadRow{
+				border-color: #2c3650;
+				background-color: #2c3650;
+				.rdt_TableCol{
+					.rdt_TableCol_Sortable{
+						color: $white;
+						&:hover{
+							color: $white;
+						}
+					}
+				}
+			}
+		}
+		.rdt_TableBody{
+			.rdt_TableRow{
+				border-color: #2c3650;
+				background-color: #2c3650;
+				.rdt_TableCell{
+					div{
+						color: $light;
+					}
+					.btl-link-title{
+						color: $white;
+					}
+					.btl-short-url-wrapper{
+						.btl-short-url{
+							background: rgba($success, 0.3);
+							color: $white;
+              font-weight: 500;
+						}
+					}
+					.dnd-link-button {
+						color: $light-darken;
+						&:hover {
+							color: $white;
+						}
+					}
+				}
+			}
+		}
+	}
+	.rdt_Pagination{
+		color: $white;
+		.sc-giIncl{
+			.sc-iJuUWI{
+				svg{
+					fill: $white;
+				}
+        &:disabled{
+          svg{
+            fill: $secondary-lighten;
+          }
+        }
 			}
 		}
 	}

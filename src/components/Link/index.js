@@ -1,99 +1,126 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 import { __ } from '@wordpress/i18n';
-import ReactTooltip from 'react-tooltip';
 import Modal from 'react-modal';
 import Select from './../Select';
-import { useFormikContext, Formik, Field, Form } from 'formik';
+import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, site_url, generateSlug, generateRandomSlug, copyToClipboard } from './../../utils/helper';
+import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
+import Copy from './../../components/Copy';
 
-const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }) => {
+const propTypes = {
+	isShowIcon: PropTypes.bool,
+	catId: PropTypes.number,
+	catName: PropTypes.string,
+	data: PropTypes.object,
+	submitHandler: PropTypes.func,
+};
+
+const defaultProps = {
+	isShowIcon: true,
+};
+
+const Link = (props) => {
+	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isEditMode, setEditMode] = useState(false);
-	const [isCopyUrl, setCopyUrl] = useState(false);
+	const [slugIsExists, setSlugIsExists] = useState(false);
 	const randomSlug = generateRandomSlug();
+	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+
+	const initialValues = {
+		link_title: '',
+		link_slug: '',
+		target_url: '',
+		short_url: randomSlug,
+		link_note: '',
+		link_date: currentDate,
+		link_date_gmt: currentDate,
+		link_modified: currentDate,
+		link_modified_gmt: currentDate,
+		cat_id: catId ? catId : null,
+		...settings.settings,
+	};
+
+	const initialUpdateValues = {
+		link_modified: currentDate,
+		link_modified_gmt: currentDate,
+		cat_id: catId,
+		...data,
+	};
 
 	function openModal() {
-		if (item) {
+		if (!props.settings.settings) {
+			fetch_settings_data();
+		}
+		if (!props.terms.terms) {
+			fetch_terms_data();
+		}
+		if (data) {
 			setEditMode(true);
-			fetch_terms_data({
-				term_type: 'tags',
-				ID: item.ID,
-			}).then(() => {
-				setModalIsOpen(true);
-			});
 		} else {
 			setEditMode(false);
-			setModalIsOpen(true);
 		}
+		setModalIsOpen(true);
 	}
-	const copyShortUrl = (url) => {
-		copyToClipboard(url);
-		setCopyUrl(true);
-	};
+
 	function closeModal() {
 		setEditMode(false);
 		setModalIsOpen(false);
 	}
-	const [nameToSlug, setNameToSlug] = useState(false);
-	const [slugToSlug, setSlugToSlug] = useState(false);
-	const AutoSlugGenerate = () => {
-		const { values } = useFormikContext();
-		React.useEffect(() => {
-			if (nameToSlug) {
-				values.link_slug = generateSlug(values.link_title);
-				setNameToSlug(false);
+	const shortURLUniqueCheck = (slug) => {
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
+		form_data.append('security', nonce);
+		form_data.append('slug', slug);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					setSlugIsExists(response.data.data);
+				}
+			},
+			(error) => {
+				console.log(error);
 			}
-			if (slugToSlug) {
-				values.link_slug = generateSlug(values.link_slug);
-				setSlugToSlug(false);
-			}
-		}, [values]);
-		return null;
+		);
+	};
+	const onSubmit = (values) => {
+		if (!values.cat_id) {
+			const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
+			values.cat_id = ID;
+		}
+		if (!values.link_slug) {
+			values.link_slug = generateSlug(values.link_title);
+		}
+		if (values.cat_id && slugIsExists == false) {
+			setEditMode(false);
+			setModalIsOpen(false);
+			return submitHandler(values);
+		}
 	};
 	return (
 		<>
-			{item ? (
+			{data ? (
 				<button onClick={openModal} className={`dnd-link-button ${isEditMode ? 'btl-rotating' : ''}`}>
 					<span className="icon">{!isEditMode ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
 				</button>
 			) : (
 				<button onClick={openModal} className="btl-create-link-button">
-					<i className="btl btl-add"></i>
+					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'}
 				</button>
 			)}
-
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<Formik
-					initialValues={{
-						link_title: '',
-						link_slug: '',
-						redirect_type: '307',
-						target_url: '',
-						short_url: randomSlug,
-						link_note: '',
-						nofollow: false,
-						sponsored: false,
-						param_forwarding: false,
-						track_me: false,
-						cat_id,
-						cat_name,
-						...item,
-					}}
-					onSubmit={async (values) => {
-						setEditMode(false);
-						setModalIsOpen(false);
-						return submitHandler(values);
-					}}
-				>
+				<Formik enableReinitialize initialValues={data ? initialUpdateValues : initialValues} onSubmit={(values) => onSubmit(values)}>
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
@@ -102,11 +129,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Title', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" id="link_title" name="link_title" onBlur={() => setNameToSlug(true)} required />
-									</div>
-									<div className="btl-modal-form-group">
-										<Field type="hidden" className="btl-modal-form-control" id="link_slug" name="link_slug" onBlur={() => setSlugToSlug(true)} required />
-										<AutoSlugGenerate />
+										<Field className="btl-modal-form-control" id="link_title" name="link_title" required />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">
@@ -126,29 +149,37 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 										</label>
 										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
 									</div>
-									<div className="btl-modal-form-group">
+									<div className="btl-modal-form-group shorturl">
 										<label className="btl-modal-form-label" htmlFor="short_url">
 											{__('Shortened URL', 'betterlinks')}
 										</label>
-										<div className="btl-link-field-copyable">
+										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
 											<span className="btl-static-link">{site_url}</span>
-											<Field className="btl-dynamic-link" id="short_url" name="short_url" required />
-											<button type="button" onClick={() => copyShortUrl(site_url + '/' + props.values.short_url)} className="btl-link-copy-button">
-												{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-copy"></i>}
-											</button>
+											<Field
+												className="btl-dynamic-link"
+												id="short_url"
+												name="short_url"
+												onChange={(e) => {
+													props.setFieldValue('short_url', e.target.value);
+													shortURLUniqueCheck(e.target.value);
+												}}
+												required
+											/>
+											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
+											<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
 										</div>
 									</div>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="cat_id">
+										<label className="btl-modal-form-label" htmlFor="catId">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Category name="cat_id" cat_id={cat_name} cat_name={cat_name} setFieldValue={props.setFieldValue} />
+										<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} />
 									</div>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="tags_id">
+										<label className="btl-modal-form-label" htmlFor="tags">
 											{__('Tags', 'betterlinks')}
 										</label>
-										<Tags name="tags_id" terms={terms} isEditMode={isEditMode} setFieldValue={props.setFieldValue} />
+										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
 									</div>
 								</div>
 								<div className="btl-entry-content-right">
@@ -157,22 +188,24 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>
 										</div>
 										<div className="link-options__body">
-											<ReactTooltip className="light-tooltip" />
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
 												<span className="text">
 													{__('No Follow', 'betterlinks')}
-													<span data-tip={__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
 												<span className="text">
 													{__('Sponsored', 'betterlinks')}
-													<span
-														data-tip={__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}
-														className="dashicons dashicons-info-outline"
-													></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
@@ -184,14 +217,20 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 												/>
 												<span className="text">
 													{__('Parameter Forwarding', 'betterlinks')}
-													<span data-tip={__('This will pass the parameters you have set in the target URL', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
 												<span className="text">
 													{__('Tracking', 'betterlinks')}
-													<span data-tip={__('This will let you check Analytics report of your links', 'betterlinks')} className="dashicons dashicons-info-outline"></span>
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
+													</div>
 												</span>
 											</label>
 										</div>
@@ -201,7 +240,7 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 							<div className="btl-modal-form-group">
 								<label className="btl-modal-form-label"></label>
 								<button type="submit" className="btl-modal-submit-button">
-									{item ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+									{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 								</button>
 							</div>
 						</Form>
@@ -212,12 +251,16 @@ const Link = ({ cat_id, cat_name, item, submitHandler, terms, fetch_terms_data }
 	);
 };
 const mapStateToProps = (state) => ({
+	settings: state.settings,
 	terms: state.terms,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);
+Link.propTypes = propTypes;
+Link.defaultProps = defaultProps;

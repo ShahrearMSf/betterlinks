@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import Dashboard from './Dashboard';
-import AdminMenu from './AdminMenu';
+import AdminMenu from './group/AdminMenu';
 
 // Let’s clear the current menu content
 const menuPage = document.getElementById('toplevel_page_betterlinks');

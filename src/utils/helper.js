@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const { nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, page } = window.betterLinksGlobal;
+export const { nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, route_path, exists_links_json, exists_clicks_json, page } = window.betterLinksGlobal;
 
 export const API = axios.create({
 	baseURL: rest_url,
@@ -83,19 +83,88 @@ export const copyToClipboard = (copyText) => {
 
 export const getBrowser = (agent) => {
 	var browser = '';
-	if (/Opera[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'opera';
-	} else if (/MSIE (\d+\.\d+);/.test(agent)) {
-		browser = 'MSIE';
-	} else if (/Navigator[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'netscape';
-	} else if (/Chrome[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'chrome';
-	} else if (/Safari[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'safari';
-		/Version[\/\s](\d+\.\d+)/.test(agent);
-	} else if (/Firefox[\/\s](\d+\.\d+)/.test(agent)) {
-		browser = 'mozilla';
+	if (/Opera[\/\s](\d+\.\d+)/.test(agent) || 'Opera' == agent) {
+		browser = 'opera-browser';
+	} else if (/IE (\d+\.\d+);/.test(agent) || 'IE' == agent) {
+		browser = 'internet-explorer-browser';
+	} else if (/Navigator[\/\s](\d+\.\d+)/.test(agent) || 'Navigator' == agent) {
+		browser = 'netscape-browser';
+	} else if (/Chrome[\/\s](\d+\.\d+)/.test(agent) || 'Chrome' == agent) {
+		browser = 'chrome-browser';
+	} else if (/Safari[\/\s](\d+\.\d+)/.test(agent) || 'Safari' == agent) {
+		browser = 'safari-browser';
+	} else if (/Firefox[\/\s](\d+\.\d+)/.test(agent) || 'Firefox' == agent) {
+		browser = 'firefox-browser';
+	} else if (/Yandex[\/\s](\d+\.\d+)/.test(agent) || 'Yandex' == agent) {
+		browser = 'yandex-browser';
+	} else if (/Facebook[\/\s](\d+\.\d+)/.test(agent) || 'Facebook' == agent) {
+		browser = 'facebook-browser';
+	} else {
+		browser = 'web-browser';
 	}
 	return browser;
+};
+
+export const formatDate = (date, format) => {
+	const map = {
+		mm: date.getMonth() + 1,
+		dd: date.getDate(),
+		yyyy: date.getFullYear(),
+		h: date.getHours(),
+		m: date.getMinutes(),
+		s: date.getSeconds(),
+	};
+	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
+};
+
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
+	let results = stored;
+	results = stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+	if (selectedCategory && selectedCategory.value) {
+		results = results.filter((item) => item.cat_id == selectedCategory.value);
+	}
+	if (selectedClicksType) {
+		if (selectedClicksType.value == 'mostClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (parseInt(a.analytic.link_count) < parseInt(b.analytic.link_count) ? 1 : -1));
+		}
+		if (selectedClicksType.value == 'leastClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (parseInt(a.analytic.link_count) > parseInt(b.analytic.link_count) ? 1 : -1));
+		}
+		if (selectedClicksType.value == 'mostUniqueClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (a.analytic.ip.length < b.analytic.ip.length ? 1 : -1));
+		}
+		if (selectedClicksType.value == 'leastUniqueClicks') {
+			results = results.filter((item) => item.analytic != undefined);
+			results = results.sort((a, b) => (a.analytic.ip.length > b.analytic.ip.length ? 1 : -1));
+		}
+	}
+
+	if (selectedDateType) {
+		if (selectedDateType.value == 'mostRecent') {
+			results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
+		}
+		if (selectedDateType.value == 'leastRecent') {
+			results = results.sort((a, b) => new Date(a.link_date) - new Date(b.link_date));
+		}
+		if (selectedDateType.value == 'custom') {
+			results = results.filter((item) => {
+				return new Date(item.link_date).getTime() >= customDateFilter[0].startDate.getTime() && new Date(item.link_date).getTime() <= customDateFilter[0].endDate.getTime();
+			});
+		}
+	}
+	return results;
+};
+
+export const insertOverlayElement = () => {
+	var newNode = document.createElement('div');
+	newNode.className = 'btl-overlay';
+	document.body.appendChild(newNode);
+};
+
+export const removeOverlayElement = () => {
+	var elem = document.querySelector('.btl-overlay');
+	elem.parentNode.removeChild(elem);
 };

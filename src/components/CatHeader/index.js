@@ -3,11 +3,11 @@ import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { update_cat, delete_cat } from './../../redux/actions/settings.actions';
+import { update_cat, delete_cat } from './../../redux/actions/links.actions';
 import { useFormikContext, Formik, Field, Form } from 'formik';
 import { generateSlug, modalCustomSmallStyles } from './../../utils/helper';
 const CatHeader = (props) => {
-	const { cat_id, cat_name, cat_slug, update_cat, delete_cat } = props;
+	const { catId, catName, cat_slug, update_cat, delete_cat } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isCatAction, setCatAction] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
@@ -27,7 +27,7 @@ const CatHeader = (props) => {
 		setDeleteConfrim(false);
 		setDeleteConfrim(false);
 		delete_cat({
-			cat_id: cat_id,
+			cat_id: catId,
 		});
 	};
 
@@ -58,8 +58,8 @@ const CatHeader = (props) => {
 	return (
 		<React.Fragment>
 			<div className="category-head">
-				<h4 className="title">{cat_name}</h4>
-				{cat_id != 1 && (
+				<h4 className="title">{catName}</h4>
+				{catId != 1 && (
 					<div className="dropdown">
 						<button className="icon" onClick={() => catActionHandler()}>
 							<i className="btl btl-more"></i>
@@ -103,9 +103,9 @@ const CatHeader = (props) => {
 				</span>
 				<Formik
 					initialValues={{
-						cat_id,
-						cat_name,
-						cat_slug,
+						cat_id: catId,
+						cat_name: catName,
+						cat_slug: cat_slug,
 					}}
 					onSubmit={async (values) => {
 						setModalIsOpen(false);
@@ -140,7 +140,7 @@ const CatHeader = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-	settings: state.settings,
+	links: state.links,
 });
 
 const mapDispatchToProps = (dispatch) => {

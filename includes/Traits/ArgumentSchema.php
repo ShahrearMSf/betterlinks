@@ -18,6 +18,10 @@ trait ArgumentSchema
 				'type' => 'string',
 				'format' => 'date-time',
 			],
+			'link_date_gmt' => [
+				'type' => 'string',
+				'format' => 'date-time',
+			],
 			'link_title' => [
 				'type' => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
@@ -67,6 +71,10 @@ trait ArgumentSchema
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 			'link_modified' => [
+				'type' => 'string',
+				'format' => 'date-time',
+			],
+			'link_modified_gmt' => [
 				'type' => 'string',
 				'format' => 'date-time',
 			],
@@ -168,5 +176,31 @@ trait ArgumentSchema
 	public function get_terms_schema()
 	{
 		return $this->terms_schema();
+	}
+
+	public function get_settings_schema()
+	{
+		return [
+			'nofollow' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'sponsored' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'track_me' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'param_forwarding' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'redirect_type' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
 	}
 }
