@@ -16,6 +16,7 @@ class Import
 		$page = isset($_GET['page']) ? $_GET['page'] : '';
 		$import = isset($_GET['import']) ? $_GET['import'] : false;
 		if ($page === 'betterlinks-settings' && $import == true) {
+			\BetterLinks\Helper::clear_query_cache();
 			$this->DB = \BetterLinks\Helper::DB();
 			if (isset($_FILES['upload_file'])) {
 				if ($_POST['mode'] == 'default') {
@@ -138,6 +139,7 @@ class Import
 		check_ajax_referer('wp_rest', 'security');
 		$results = json_encode([]);
 		if (isset($_SESSION['betterlinks_import_info'])) {
+			\BetterLinks\Helper::clear_query_cache();
 			\BetterLinks\Helper::create_cron_jobs_for_json_links();
 			$results = $_SESSION['betterlinks_import_info'];
 			unset($_SESSION['betterlinks_import_info']);
