@@ -49,6 +49,7 @@ class Ajax
 				}
 			}
 			\BetterLinks\Helper::create_cron_jobs_for_json_links();
+			\BetterLinks\Helper::clear_query_cache();
 			update_option('betterlink_notice_ptl_migrate', true);
 			wp_send_json_success($resutls);
 			wp_die();

@@ -19,7 +19,9 @@ class PTLBase
 				$message[] = 'import failed "' . $catName . '" already exists';
 			}
 		}
-		$this->DB->table('betterlinks_terms')->insert($termsList);
+		if(count($termsList) > 0){
+			$this->DB->table('betterlinks_terms')->insert($termsList);
+		}
 		$this->terms_relationship_insert($categories);
 		return $message;
 	}
@@ -36,10 +38,12 @@ class PTLBase
 				->table('betterlinks_terms')
 				->where('term_slug', '=', $catName)
 				->get();
-			$termRelationList[] = [
-				'term_id' => $term[0]->ID,
-				'link_id' => $link[0]->ID,
-			];
+			if($link[0]->ID > 0){
+				$termRelationList[] = [
+					'term_id' => $term[0]->ID,
+					'link_id' => $link[0]->ID,
+				];
+			}
 		}
 		if (count($termRelationList) > 0) {
 			$this->DB->table('betterlinks_terms_relationships')->insert($termRelationList);
