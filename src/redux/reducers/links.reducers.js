@@ -86,7 +86,7 @@ function links(state = {}, action) {
 					...state.links,
 					[payload.data.cat_id]: {
 						...state.links[payload.data.cat_id],
-						lists: [...state.links[payload.data.cat_id].lists, payload.data],
+						lists: [payload.data, ...state.links[payload.data.cat_id].lists],
 					},
 				},
 			};
