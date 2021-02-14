@@ -4,7 +4,7 @@ Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
 Requires at least: 4.0
 Tested up to: 5.6
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -28,14 +28,15 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 ## Simple & Fast Link Shortener 🎉
 
 
-**✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place.
+**✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place
 
-**💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly.
+**💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly
 
 **⚙️ Easy Configuration:** Easily setup your Link Redirects (301, 302 and 307) and all your Link options
 
-**💪 Fast Response:** Less Database queries resulting in faster response time. 
+**💪 Fast Response:** Less Database queries resulting in faster response time
 
+**🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks with one-click
 
 ## Easily Analyze and Track Your Cloaked Links 📈
 
@@ -45,6 +46,7 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 
 **📊 Generate Reports:** Gather analytics reports to evaulate and run successful marketing campaigns
 
+**📅 Interactive Calendar to Filter Clicks:** Easily Filter your clokaed links based on certain dates from the interactive Calendar
 
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins:
@@ -109,6 +111,11 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 1.0.1 - 14/01/2021 =
+
+- Fixed: Migration not working
+- Few minor bug fix and improvements
 
 = 1.0.0 - 11/01/2021 =
 
