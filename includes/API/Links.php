@@ -126,30 +126,6 @@ class Links extends Controller
 			LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
 			WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.ID DESC"
 				)->get();
-
-			error_log(print_r("SELECT 
-			{$prefix}betterlinks_terms.ID as cat_id, 
-			{$prefix}betterlinks_terms.term_name, 
-			{$prefix}betterlinks_terms.term_slug,
-			{$prefix}betterlinks_terms.term_type, 
-			{$prefix}betterlinks.ID, 
-			{$prefix}betterlinks.link_title,
-			{$prefix}betterlinks.link_slug,
-			{$prefix}betterlinks.link_note,
-			{$prefix}betterlinks.link_status,
-			{$prefix}betterlinks.nofollow,
-			{$prefix}betterlinks.sponsored,
-			{$prefix}betterlinks.track_me,
-			{$prefix}betterlinks.param_forwarding,
-			{$prefix}betterlinks.param_struct,
-			{$prefix}betterlinks.redirect_type,
-			{$prefix}betterlinks.target_url,
-			{$prefix}betterlinks.short_url,
-			{$prefix}betterlinks.link_date
-		FROM {$prefix}betterlinks_terms
-		LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
-		LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-		WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.ID DESC", true));
 			
 			$results = $this->parse_response($results, $analytic);
 			set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
