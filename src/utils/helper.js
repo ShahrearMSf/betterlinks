@@ -120,7 +120,7 @@ export const formatDate = (date, format) => {
 export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
 	let results = stored;
 	results = stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
-	results = results.sort((a, b) => (a.ID < b.ID ? 1 : -1));
+	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
 		results = results.filter((item) => item.cat_id == selectedCategory.value);
 	}
