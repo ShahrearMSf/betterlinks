@@ -36,7 +36,7 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 
 **💪 Fast Response:** Less Database queries resulting in faster response time
 
-** 🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks with one-click
+**🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks with one-click
 
 ## Easily Analyze and Track Your Cloaked Links 📈
 
