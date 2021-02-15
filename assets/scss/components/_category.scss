@@ -24,6 +24,20 @@
 		display: inline-grid;
 		page-break-inside: avoid;
 		border-radius: 5px;
+		form.is-invalid {
+			.btl-form-group {
+				margin-bottom: 10px;
+				> input {
+					border: 1px solid red;
+				}
+			}
+			.errorlog {
+				margin-bottom: 10px;
+				display: block;
+				color: red;
+				text-align: center;
+			}
+		}
 	}
 	.dnd-category {
 		border: 1px solid transparent;

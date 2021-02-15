@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { __ } from '@wordpress/i18n';
-import { useFormikContext, Formik, Field, Form } from 'formik';
-import { generateSlug } from './../utils/helper';
+import { Formik, Field, Form } from 'formik';
+import { nonce, generateSlug } from './../utils/helper';
 
 const CreateCategory = ({ createCatHandler }) => {
 	const [isOpenForm, setIsOpenForm] = useState(false);
-	const [nameToSlug, setNameToSlug] = useState(false);
-	const [slugToSlug, setSlugToSlug] = useState(false);
-	const AutoSlugGenerate = () => {
-		const { values } = useFormikContext();
-		React.useEffect(() => {
-			if (nameToSlug) {
-				values.term_slug = generateSlug(values.term_name);
-				setNameToSlug(false);
+	const [slugIsExists, setSlugIsExists] = useState(false);
+
+	const catSlugUniqueCheck = (slug) => {
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/cat_slug_unique_checker');
+		form_data.append('security', nonce);
+		form_data.append('slug', slug);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					setSlugIsExists(response.data.data);
+				}
+			},
+			(error) => {
+				console.log(error);
 			}
-			if (slugToSlug) {
-				values.term_slug = generateSlug(values.term_slug);
-				setSlugToSlug(false);
-			}
-		}, [values]);
-		return null;
+		);
 	};
 	return (
 		<div className="dnd-create-category">
@@ -35,30 +38,35 @@ const CreateCategory = ({ createCatHandler }) => {
 						term_type: 'category',
 					}}
 					onSubmit={async (values) => {
-						setIsOpenForm(false);
-						return createCatHandler(values);
+						if (!slugIsExists) {
+							setIsOpenForm(false);
+							return createCatHandler(values);
+						}
 					}}
 				>
-					<Form className="w-100">
-						<span className="btl-form-group">
-							<Field id="term_name" name="term_name" placeholder={__('* Name', 'betterlinks')} className="btl-form-control" onBlur={() => setNameToSlug(true)} required />
-						</span>
-						<span className="btl-form-group">
-							<Field
-								type="hidden"
-								id="term_slug"
-								name="term_slug"
-								placeholder={__('* Slug', 'betterlinks')}
-								className="btl-form-control"
-								onBlur={() => setSlugToSlug(true)}
-								required
-							/>
-						</span>
-						<AutoSlugGenerate />
-						<button className="btl-create-category-submit" type="submit">
-							{__('Submit', 'betterlinks')}
-						</button>
-					</Form>
+					{(props) => (
+						<Form className={slugIsExists ? 'w-100 is-invalid' : 'w-100'}>
+							<span className="btl-form-group">
+								<Field
+									id="term_name"
+									name="term_name"
+									placeholder={__('* Name', 'betterlinks')}
+									className="btl-form-control"
+									onChange={(e) => {
+										const slug = generateSlug(e.target.value);
+										props.setFieldValue('term_name', e.target.value);
+										props.setFieldValue('term_slug', slug);
+										catSlugUniqueCheck(slug);
+									}}
+									required
+								/>
+							</span>
+							{slugIsExists == true && <span className="errorlog">Already Exists</span>}
+							<button className="btl-create-category-submit" type="submit">
+								{__('Submit', 'betterlinks')}
+							</button>
+						</Form>
+					)}
 				</Formik>
 			)}
 		</div>
