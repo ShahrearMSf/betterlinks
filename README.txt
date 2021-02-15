@@ -112,7 +112,7 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
-= 1.0.1 - 14/01/2021 =
+= 1.0.1 - 15/01/2021 =
 
 - Fixed: Migration not working
 - Few minor bug fix and improvements
