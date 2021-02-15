@@ -1,6 +1,9 @@
 .topbar {
 	border-color: #36405a;
 	background-color: #2c3650;
+	&__logo__text {
+		color: #fff;
+	}
 	.btl-view-control {
 		.btl-link-view-toggler {
 			border-color: #738bb8;
