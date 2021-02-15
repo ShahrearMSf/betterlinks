@@ -228,11 +228,13 @@ class Links extends Controller
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
+		error_log(print_r($request['params'], true));
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			$term_data = [];
 			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
-			$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
+			$old_short_url = (isset($request['params']['old_short_url']) ? $request['params']['old_short_url'] : '');
+			$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
 			$id = $qb
 				->table('betterlinks')
 				->where('ID', $params['ID'])

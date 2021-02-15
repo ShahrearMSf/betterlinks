@@ -168,6 +168,10 @@ trait ArgumentSchema
 					'default' => 5,
 					'sanitize_callback' => 'absint',
 				],
+				'old_short_url' => [
+					'type' => 'string',
+					'sanitize_callback' => 'sanitize_text_field',
+				],
 			],
 			$this->terms_schema()
 		);
