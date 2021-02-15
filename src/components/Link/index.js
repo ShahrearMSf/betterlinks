@@ -53,6 +53,7 @@ const Link = (props) => {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id: catId,
+		old_short_url: data ? data.short_url : '',
 		...data,
 	};
 

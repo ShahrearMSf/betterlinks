@@ -30,11 +30,14 @@ abstract class Controller
 		$tempArray[$data['short_url']] = $this->json_link_formatter($data);
 		return file_put_contents($file, json_encode($tempArray));
 	}
-	protected function update_json_into_file($file, $data)
+	protected function update_json_into_file($file, $data, $old_short_url = '')
 	{
 		$existingData = file_get_contents($file);
 		$tempArray = json_decode($existingData, true);
 		if (is_array($tempArray) && isset($data['short_url'])) {
+			if(!empty($old_short_url) && isset($tempArray[$old_short_url])) {
+				unset($tempArray[$old_short_url]);
+			}
 			$tempArray[$data['short_url']] = $this->json_link_formatter($data);
 			return file_put_contents($file, json_encode($tempArray));
 		}
