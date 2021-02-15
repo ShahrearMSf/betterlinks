@@ -60,15 +60,12 @@ const Link = (props) => {
 		if (!props.settings.settings) {
 			fetch_settings_data();
 		}
-		if (!props.terms.terms) {
-			fetch_terms_data();
-		}
+		fetch_terms_data().then(() => setModalIsOpen(true));
 		if (data) {
 			setEditMode(true);
 		} else {
 			setEditMode(false);
 		}
-		setModalIsOpen(true);
 	}
 
 	function closeModal() {
