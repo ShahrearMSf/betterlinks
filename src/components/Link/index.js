@@ -98,9 +98,13 @@ const Link = (props) => {
 			values.link_slug = generateSlug(values.link_title);
 		}
 		if (values.cat_id && slugIsExists == false) {
-			setEditMode(false);
-			setModalIsOpen(false);
-			return submitHandler(values);
+			const link_title = values.link_title.trim();
+			if (link_title) {
+				values.link_title = link_title;
+				setEditMode(false);
+				setModalIsOpen(false);
+				return submitHandler(values);
+			}
 		}
 	};
 	return (

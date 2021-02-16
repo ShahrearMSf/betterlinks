@@ -55,7 +55,7 @@ class Cron
 				// link id already exists or not in links table
 				if(is_array($Clicks)){
 					foreach($Clicks as $key => $item){
-						if(!$query->table('users')->find($item->link_id)){
+						if(!$query->table('betterlinks')->find($item['link_id'])){
 							unset($Clicks[$key]);
 						}
 					}
@@ -67,9 +67,6 @@ class Cron
 					if ($results) {
 						file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
 					}
-				}
-				if(is_array($Clicks) && count($Clicks) == 0) {
-					file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
 				}
 			}
 
