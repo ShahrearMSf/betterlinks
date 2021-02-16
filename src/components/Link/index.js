@@ -61,7 +61,11 @@ const Link = (props) => {
 		if (!props.settings.settings) {
 			fetch_settings_data();
 		}
-		fetch_terms_data().then(() => setModalIsOpen(true));
+		if (!props.terms.terms) {
+			fetch_terms_data().then(() => setModalIsOpen(true));
+		} else {
+			setModalIsOpen(true);
+		}
 		if (data) {
 			setEditMode(true);
 		} else {
