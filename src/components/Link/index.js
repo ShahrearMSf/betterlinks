@@ -30,7 +30,7 @@ const defaultProps = {
 const Link = (props) => {
 	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
-	const [isEditMode, setEditMode] = useState(false);
+	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -62,19 +62,17 @@ const Link = (props) => {
 			fetch_settings_data();
 		}
 		if (!props.terms.terms) {
-			fetch_terms_data().then(() => setModalIsOpen(true));
+			setIsFetchTerms(true);
+			fetch_terms_data().then(() => {
+				setModalIsOpen(true);
+				setIsFetchTerms(false);
+			});
 		} else {
 			setModalIsOpen(true);
-		}
-		if (data) {
-			setEditMode(true);
-		} else {
-			setEditMode(false);
 		}
 	}
 
 	function closeModal() {
-		setEditMode(false);
 		setModalIsOpen(false);
 	}
 	const shortURLUniqueCheck = (slug) => {
@@ -105,7 +103,6 @@ const Link = (props) => {
 			const link_title = values.link_title.trim();
 			if (link_title) {
 				values.link_title = link_title;
-				setEditMode(false);
 				setModalIsOpen(false);
 				return submitHandler(values);
 			}
@@ -114,12 +111,12 @@ const Link = (props) => {
 	return (
 		<>
 			{data ? (
-				<button onClick={openModal} className={`dnd-link-button ${isEditMode ? 'btl-rotating' : ''}`}>
-					<span className="icon">{!isEditMode ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
+				<button onClick={openModal} className={`dnd-link-button ${isFetchTerms ? 'btl-rotating' : ''}`}>
+					<span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
 				</button>
 			) : (
-				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && modalIsOpen ? 'btl-rotating' : ''}`}>
-					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'} {modalIsOpen ? ' ...' : ''}
+				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
+					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'} {!isShowIcon && isFetchTerms ? ' ...' : ''}
 				</button>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
