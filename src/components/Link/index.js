@@ -118,8 +118,8 @@ const Link = (props) => {
 					<span className="icon">{!isEditMode ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
 				</button>
 			) : (
-				<button onClick={openModal} className="btl-create-link-button">
-					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'}
+				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && modalIsOpen ? 'btl-rotating' : ''}`}>
+					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'} {modalIsOpen ? ' ...' : ''}
 				</button>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
