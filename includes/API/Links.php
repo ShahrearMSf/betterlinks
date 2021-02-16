@@ -259,7 +259,6 @@ class Links extends Controller
 	}
 
 	public function terms_insert($qb, $link_id, $request, $is_update = false){
-		error_log(print_r($link_id, true));
 		$term_data = [];
 		// store tags relation data
 		if (isset($request['cat_id']) && !empty($request['cat_id'])) {
@@ -286,12 +285,27 @@ class Links extends Controller
 			}
 			// insert new tags
 			if (count($newTagsList) > 0) {
-				$tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
-				foreach ($tagsList as $tagsItem) {
-					$term_data[] = [
-						'term_id' => $tagsItem,
-						'link_id' => $link_id,
-					];
+				// stop duplicate tags insert
+				foreach ($newTagsList as $item) {
+					$terms = $qb->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
+					if(count($terms) > 0){
+						$terms = current($terms);
+						$term_data[] = [
+							'term_id' => $terms->ID,
+							'link_id' => $link_id,
+						];
+					} else {
+						$terms = $qb->table('betterlinks_terms')->insert([[
+							'term_name' => $item['term_name'],
+							'term_slug' => $item['term_slug'],
+							'term_type' => 'tags',
+						]]);
+						$term_id = current($terms);
+						$term_data[] = [
+							'term_id' => $term_id,
+							'link_id' => $link_id,
+						];
+					}
 				}
 			}
 		}
