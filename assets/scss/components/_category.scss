@@ -24,6 +24,20 @@
 		display: inline-grid;
 		page-break-inside: avoid;
 		border-radius: 5px;
+		form.is-invalid {
+			.btl-form-group {
+				margin-bottom: 10px;
+				> input {
+					border: 1px solid red;
+				}
+			}
+			.errorlog {
+				margin-bottom: 10px;
+				display: block;
+				color: red;
+				text-align: center;
+			}
+		}
 	}
 	.dnd-category {
 		border: 1px solid transparent;
@@ -32,10 +46,10 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			height: 55px;
+			min-height: 55px;
 			background: #fff;
 			border-radius: 5px 5px 0 0;
-			padding: 0 10px;
+			padding: 0 10px ;
 			text-align: center;
 			border: 1.5px solid #e6e8ec;
 			border-bottom: none;
@@ -46,7 +60,7 @@
 				margin: 0;
 				line-height: 1;
 				word-break: break-word;
-				padding: 2px;
+				padding: 2px 2px 5px;
 			}
 			.dropdown {
 				margin-left: 5px;

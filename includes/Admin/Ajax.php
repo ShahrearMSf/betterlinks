@@ -16,6 +16,7 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/write_json_clicks', [$this, 'write_json_clicks']);
 		add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
 		add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
+		add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
 	}
 
 	public function get_prettylinks_data()
@@ -118,6 +119,20 @@ class Ajax
 			$query = \BetterLinks\Helper::DB()
 				->table('betterlinks')
 				->where('short_url', '=', $slug);
+			$resutls = $query->get();
+		}
+		wp_send_json_success(count($resutls) > 0 ? true : false);
+		wp_die();
+	}
+	public function cat_slug_unique_checker()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$slug = isset($_POST['slug']) ? $_POST['slug'] : '';
+		$resutls = [];
+		if (!empty($slug)) {
+			$query = \BetterLinks\Helper::DB()
+				->table('betterlinks_terms')
+				->where('term_slug', '=', $slug);
 			$resutls = $query->get();
 		}
 		wp_send_json_success(count($resutls) > 0 ? true : false);

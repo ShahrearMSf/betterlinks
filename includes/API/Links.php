@@ -159,7 +159,6 @@ class Links extends Controller
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
-			$term_data = [];
 			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
 			$params['link_author'] = get_current_user_id();
@@ -168,41 +167,7 @@ class Links extends Controller
 				$params['ID'] = $id;
 				$this->insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
 			}
-			// store tags relation data
-			if (isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])) {
-				$term_data[] = [
-					'term_id' => $request['params']['cat_id'],
-					'link_id' => $id,
-				];
-			}
-			if (isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])) {
-				$newTagsList = [];
-				foreach ($request['params']['tags_id'] as $key => $value) {
-					if (is_numeric($value)) {
-						$term_data[] = [
-							'term_id' => $value,
-							'link_id' => $id,
-						];
-					} else {
-						$newTagsList[] = [
-							'term_name' => $value,
-							'term_slug' => $value,
-							'term_type' => 'tags',
-						];
-					}
-				}
-				// insert new tags
-				if (count($newTagsList) > 0) {
-					$tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
-					foreach ($tagsList as $tagsItem) {
-						$term_data[] = [
-							'term_id' => $tagsItem,
-							'link_id' => $id,
-						];
-					}
-				}
-			}
-			$qb->table('betterlinks_terms_relationships')->insert($term_data);
+			$this->terms_insert($qb, $id, $request['params']);
 			$_SESSION['link_ID'] = $id;
 		});
 		$response = array_merge($request['params'], [
@@ -229,52 +194,12 @@ class Links extends Controller
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
-			$term_data = [];
 			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
-			$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
-			$id = $qb
-				->table('betterlinks')
-				->where('ID', $params['ID'])
-				->update($params);
-			// store tags relation data
-			if (isset($request['params']['cat_id']) && !empty($request['params']['cat_id'])) {
-				$term_data[] = [
-					'term_id' => isset($request['params']['cat_id']) ? $request['params']['cat_id'] : 1,
-					'link_id' => isset($params['ID']) ? $params['ID'] : $id,
-				];
-			}
-			if (isset($request['params']['tags_id']) && is_array($request['params']['tags_id'])) {
-				$newTagsList = [];
-				foreach ($request['params']['tags_id'] as $key => $value) {
-					if (is_numeric($value)) {
-						$term_data[] = [
-							'term_id' => $value,
-							'link_id' => isset($params['ID']) ? $params['ID'] : $id,
-						];
-					} else {
-						$newTagsList[] = [
-							'term_name' => $value,
-							'term_slug' => $value,
-							'term_type' => 'tags',
-						];
-					}
-				}
-				// insert new tags
-				if (count($newTagsList) > 0) {
-					$tagsList = $qb->table('betterlinks_terms')->insert($newTagsList);
-					foreach ($tagsList as $tagsItem) {
-						$term_data[] = [
-							'term_id' => $tagsItem,
-							'link_id' => isset($params['ID']) ? $params['ID'] : $id,
-						];
-					}
-				}
-			}
-			$qb->table('betterlinks_terms_relationships')
-				->where('link_id', '=', $request['params']['ID'])
-				->delete();
-			$qb->table('betterlinks_terms_relationships')->insert($term_data);
+			$old_short_url = (isset($request['params']['old_short_url']) ? $request['params']['old_short_url'] : '');
+			$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
+			$qb->table('betterlinks')->where('ID', $params['ID'])->update($params);
+			$this->terms_insert($qb, $params['ID'], $request['params'], true);
 		});
 		return new \WP_REST_Response(
 			[
@@ -331,5 +256,64 @@ class Links extends Controller
 	public function permissions_check($request)
 	{
 		return current_user_can('manage_options');
+	}
+
+	public function terms_insert($qb, $link_id, $request, $is_update = false){
+		$term_data = [];
+		// store tags relation data
+		if (isset($request['cat_id']) && !empty($request['cat_id'])) {
+			$term_data[] = [
+				'term_id' => $request['cat_id'],
+				'link_id' => $link_id,
+			];
+		}
+		if (isset($request['tags_id']) && is_array($request['tags_id'])) {
+			$newTagsList = [];
+			foreach ($request['tags_id'] as $key => $value) {
+				if (is_numeric($value)) {
+					$term_data[] = [
+						'term_id' => $value,
+						'link_id' => $link_id,
+					];
+				} else {
+					$newTagsList[] = [
+						'term_name' => $value,
+						'term_slug' => $value,
+						'term_type' => 'tags',
+					];
+				}
+			}
+			// insert new tags
+			if (count($newTagsList) > 0) {
+				// stop duplicate tags insert
+				foreach ($newTagsList as $item) {
+					$terms = $qb->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
+					if(count($terms) > 0){
+						$terms = current($terms);
+						$term_data[] = [
+							'term_id' => $terms->ID,
+							'link_id' => $link_id,
+						];
+					} else {
+						$terms = $qb->table('betterlinks_terms')->insert([[
+							'term_name' => $item['term_name'],
+							'term_slug' => $item['term_slug'],
+							'term_type' => 'tags',
+						]]);
+						$term_id = current($terms);
+						$term_data[] = [
+							'term_id' => $term_id,
+							'link_id' => $link_id,
+						];
+					}
+				}
+			}
+		}
+		if($is_update){
+			$qb->table('betterlinks_terms_relationships')
+				->where('link_id', '=', $request['ID'])
+				->delete();
+		}
+		$qb->table('betterlinks_terms_relationships')->insert($term_data);
 	}
 }

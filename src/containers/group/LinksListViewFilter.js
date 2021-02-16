@@ -50,7 +50,7 @@ const LinksListViewFilter = (props) => {
 					</div>
 				)}
 				<div className="btl-click-filter">
-					<input id="search" type="text" placeholder={__('Search short link', 'betterlinks')} value={props.filterText} onChange={props.onFilter} />
+					<input id="search" type="text" placeholder={__('Search by title', 'betterlinks')} value={props.filterText} onChange={props.onFilter} />
 				</div>
 				<Select
 					className="btl-list-view-select btl-category-filter"

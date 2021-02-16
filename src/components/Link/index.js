@@ -30,7 +30,7 @@ const defaultProps = {
 const Link = (props) => {
 	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
-	const [isEditMode, setEditMode] = useState(false);
+	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -53,6 +53,7 @@ const Link = (props) => {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id: catId,
+		old_short_url: data ? data.short_url : '',
 		...data,
 	};
 
@@ -61,18 +62,17 @@ const Link = (props) => {
 			fetch_settings_data();
 		}
 		if (!props.terms.terms) {
-			fetch_terms_data();
-		}
-		if (data) {
-			setEditMode(true);
+			setIsFetchTerms(true);
+			fetch_terms_data().then(() => {
+				setModalIsOpen(true);
+				setIsFetchTerms(false);
+			});
 		} else {
-			setEditMode(false);
+			setModalIsOpen(true);
 		}
-		setModalIsOpen(true);
 	}
 
 	function closeModal() {
-		setEditMode(false);
 		setModalIsOpen(false);
 	}
 	const shortURLUniqueCheck = (slug) => {
@@ -100,20 +100,23 @@ const Link = (props) => {
 			values.link_slug = generateSlug(values.link_title);
 		}
 		if (values.cat_id && slugIsExists == false) {
-			setEditMode(false);
-			setModalIsOpen(false);
-			return submitHandler(values);
+			const link_title = values.link_title.trim();
+			if (link_title) {
+				values.link_title = link_title;
+				setModalIsOpen(false);
+				return submitHandler(values);
+			}
 		}
 	};
 	return (
 		<>
 			{data ? (
-				<button onClick={openModal} className={`dnd-link-button ${isEditMode ? 'btl-rotating' : ''}`}>
-					<span className="icon">{!isEditMode ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
+				<button onClick={openModal} className={`dnd-link-button ${isFetchTerms ? 'btl-rotating' : ''}`}>
+					<span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
 				</button>
 			) : (
-				<button onClick={openModal} className="btl-create-link-button">
-					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'}
+				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
+					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'} {!isShowIcon && isFetchTerms ? ' ...' : ''}
 				</button>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
