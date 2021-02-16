@@ -39,8 +39,12 @@ const CreateCategory = ({ createCatHandler }) => {
 					}}
 					onSubmit={async (values) => {
 						if (!slugIsExists) {
-							setIsOpenForm(false);
-							return createCatHandler(values);
+							const term_name = values.term_name.trim();
+							if (term_name) {
+								values.term_name = term_name;
+								setIsOpenForm(false);
+								return createCatHandler(values);
+							}
 						}
 					}}
 				>
