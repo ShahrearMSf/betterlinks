@@ -10,10 +10,6 @@ import CatHeader from './../../components/CatHeader';
 import LinkQuickAction from './../../components/LinkQuickAction';
 import { plugin_root_url } from './../../utils/helper';
 
-const getListStyle = (isDraggingOver) => ({
-	background: isDraggingOver ? 'lightblue' : '',
-});
-
 export class List extends React.Component {
 	render() {
 		return (
@@ -72,7 +68,7 @@ class CatWrap extends React.PureComponent {
 		return (
 			<div className="dnd-category">
 				<CatHeader catId={ind} catName={el.term_name} cat_slug={el.term_slug} />
-				<div ref={provided.innerRef} className="dnd-category-body-wrap" style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
+				<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
 					<div className="category-body">
 						<InnerList edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={el.lists} />
 						{provided.placeholder}
