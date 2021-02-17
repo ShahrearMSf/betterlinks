@@ -16,18 +16,17 @@ function links(state = {}, action) {
 					...state,
 				};
 			}
+
 			const sInd = +source.droppableId;
 			const dInd = +destination.droppableId;
+
 			if (sInd === dInd) {
 				const items = reorder(state.links[sInd].lists, source.index, destination.index);
 				const newState = state.links;
 				newState[sInd].lists = items;
-
 				return {
 					...state,
-					links: {
-						...newState,
-					},
+					newState,
 				};
 			} else {
 				const result = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
@@ -37,9 +36,7 @@ function links(state = {}, action) {
 
 				return {
 					...state,
-					links: {
-						...newState,
-					},
+					newState,
 				};
 			}
 		case ADD_NEW_CAT:
