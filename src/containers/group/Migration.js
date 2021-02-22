@@ -45,7 +45,7 @@ const Migration = (props) => {
 							checked: [],
 						}}
 						onSubmit={(values) => {
-							setMigrationSubmitText('Request Sending...');
+							setMigrationSubmitText('Importing is in progress...');
 							let form_data = new FormData();
 							form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
 							form_data.append('security', nonce);
@@ -74,7 +74,10 @@ const Migration = (props) => {
 												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
 													<>
 														<Field id="links" type="checkbox" name="checked" value="links" />
-														<label htmlFor="links">{__('Links', 'betterlinks')}</label>
+														<label htmlFor="links">
+															{__('Links ', 'betterlinks')}
+															{`(${prettyLinksRes.links.length})`}
+														</label>
 													</>
 												)}
 											</div>
@@ -82,7 +85,10 @@ const Migration = (props) => {
 												{prettyLinksRes.clicks && prettyLinksRes.clicks.length > 0 && (
 													<>
 														<Field id="clicks" type="checkbox" name="checked" value="clicks" />
-														<label htmlFor="clicks">{__('Clicks', 'betterlinks')}</label>
+														<label htmlFor="clicks">
+															{__('Clicks ', 'betterlinks')}
+															{`(${prettyLinksRes.clicks.length})`}
+														</label>
 													</>
 												)}
 											</div>
