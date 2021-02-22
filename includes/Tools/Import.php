@@ -104,7 +104,7 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
-			if (in_array($item['ID'], $this->term_IDs)) {
+			if (in_array($item['term_id'], $this->term_IDs)) {
 				continue;
 			} else {
 				$terms[] = $item;

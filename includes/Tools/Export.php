@@ -66,6 +66,6 @@ class Export
 	}
 	public function get_terms_relationships()
 	{
-		return $this->DB->query("SELECT * from {$this->wpdb_prefix}betterlinks_terms_relationships")->get();
+		return $this->DB->query("SELECT term_id, link_id from {$this->wpdb_prefix}betterlinks_terms_relationships")->get();
 	}
 }
