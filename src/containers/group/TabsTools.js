@@ -4,9 +4,13 @@ import { __ } from '@wordpress/i18n';
 import { nonce } from './../../utils/helper';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
+	const [exportMode, setExportMode] = useState('all');
 	const [importResponse, setImportResponse] = useState({});
 	const importerModeHandler = (changeEvent) => {
 		setImporterMode(changeEvent.target.value);
+	};
+	const exportModeHandler = (changeEvent) => {
+		setExportMode(changeEvent.target.value);
 	};
 
 	useEffect(() => {
@@ -31,26 +35,20 @@ const TabsTools = ({ query }) => {
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
 								<label className="btl-radio">
-									<input type="radio" name="content" value="all" />
-									<span>{__('All Content (This will contain all of your links, analytic and settings.)', 'betterlinks')}</span>
+									<input type="radio" name="content" value="all" checked={exportMode === 'all'} onChange={exportModeHandler} />
+									<span>{__('All Content (This will contain all of your links and analytic.)', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
-									<input type="radio" name="content" value="links" />
+									<input type="radio" name="content" value="links" checked={exportMode === 'links'} onChange={exportModeHandler} />
 									<span>{__('Links', 'betterlinks')}</span>
 								</label>
 							</div>
 							<div>
 								<label className="btl-radio">
-									<input type="radio" name="content" value="clicks" />
+									<input type="radio" name="content" value="clicks" checked={exportMode === 'clicks'} onChange={exportModeHandler} />
 									<span>{__('Analytics', 'betterlinks')}</span>
-								</label>
-							</div>
-							<div>
-								<label className="btl-radio">
-									<input type="radio" name="content" value="settings" />
-									<span>{__('Settings', 'betterlinks')}</span>
 								</label>
 							</div>
 						</div>

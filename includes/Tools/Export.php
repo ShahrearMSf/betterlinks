@@ -42,6 +42,10 @@ class Export
 			$content['terms'] = $this->get_terms();
 			$content['terms_relationships'] = $this->get_terms_relationships();
 			$content['clicks'] = $this->get_clicks();
+		} elseif ($type == 'links') {
+			$content['links'] = $this->get_links();
+			$content['terms'] = $this->get_terms();
+			$content['terms_relationships'] = $this->get_terms_relationships();
 		} elseif ($type == 'clicks') {
 			$content['clicks'] = $this->get_clicks();
 		}
