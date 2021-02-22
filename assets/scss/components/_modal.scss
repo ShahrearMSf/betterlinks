@@ -160,10 +160,10 @@
 			margin-bottom: 30px;
 		}
 		&__item {
-			width: 100px;
+			width: 200px;
 			margin: auto;
-			text-align: left;
 			display: flex;
+			justify-content: center;
 			margin-bottom: 30px;
 			input {
 				width: 25px;
