@@ -75,15 +75,17 @@ const Link = (props) => {
 	function closeModal() {
 		setModalIsOpen(false);
 	}
-	const shortURLUniqueCheck = (slug) => {
+	const shortURLUniqueCheck = (slug, ID) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
 		form_data.append('security', nonce);
+		form_data.append('ID', ID);
 		form_data.append('slug', slug);
-		axios.post(ajaxurl, form_data).then(
+		return axios.post(ajaxurl, form_data).then(
 			(response) => {
 				if (response.data) {
 					setSlugIsExists(response.data.data);
+					return response.data.data;
 				}
 			},
 			(error) => {
@@ -92,21 +94,25 @@ const Link = (props) => {
 		);
 	};
 	const onSubmit = (values) => {
-		if (!values.cat_id) {
-			const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
-			values.cat_id = ID;
-		}
-		if (!values.link_slug) {
-			values.link_slug = generateSlug(values.link_title);
-		}
-		if (values.cat_id && slugIsExists == false) {
-			const link_title = values.link_title.trim();
-			if (link_title) {
-				values.link_title = link_title;
-				setModalIsOpen(false);
-				return submitHandler(values);
+		shortURLUniqueCheck(values.short_url, values.ID).then((isUnique) => {
+			if (!isUnique) {
+				if (!values.cat_id) {
+					const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
+					values.cat_id = ID;
+				}
+				if (!values.link_slug) {
+					values.link_slug = generateSlug(values.link_title);
+				}
+				if (values.cat_id) {
+					const link_title = values.link_title.trim();
+					if (link_title) {
+						values.link_title = link_title;
+						setModalIsOpen(false);
+						return submitHandler(values);
+					}
+				}
 			}
-		}
+		});
 	};
 	return (
 		<>
@@ -123,7 +129,7 @@ const Link = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<Formik enableReinitialize initialValues={data ? initialUpdateValues : initialValues} onSubmit={(values) => onSubmit(values)}>
+				<Formik initialValues={data ? initialUpdateValues : initialValues} onSubmit={(values) => onSubmit(values)}>
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
@@ -158,16 +164,7 @@ const Link = (props) => {
 										</label>
 										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
 											<span className="btl-static-link">{site_url}</span>
-											<Field
-												className="btl-dynamic-link"
-												id="short_url"
-												name="short_url"
-												onChange={(e) => {
-													props.setFieldValue('short_url', e.target.value);
-													shortURLUniqueCheck(e.target.value);
-												}}
-												required
-											/>
+											<Field className="btl-dynamic-link" id="short_url" name="short_url" required />
 											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 											<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
 										</div>
