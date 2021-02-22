@@ -58,6 +58,17 @@
 			color: $secondary-lighten;
 		}
 	}
+	.btl-modal-migration {
+		&__title {
+			color: #fff;
+		}
+		&__sub-title {
+			color: #fff;
+		} 
+		label {
+			color: #fff;
+		}
+	}
 	.btl-modal-select {
 		.btl-react-select__control {
 			background-color: #36405a !important;

@@ -31,6 +31,10 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 	const deleteHandler = () => {
 		setDeleteConfrim(!isDeleteConfirm);
 	};
+	const confirmDelete = () => {
+		setDeleteConfrim(false);
+		deleteLinkHandler([{ ID: data.ID, term_id: catId, short_url: data.short_url }]);
+	};
 	const noDelete = () => {
 		setDeleteConfrim(false);
 	};
@@ -84,12 +88,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 				<div className="btl-confirm-message">
 					<span className="action-text">{__('Are Your Sure?', 'betterlinks')}</span>
 					<div className="action-set">
-						<button
-							className="action yes"
-							onClick={() => {
-								deleteLinkHandler([{ ID: data.ID, term_id: catId, short_url: data.short_url }]);
-							}}
-						>
+						<button className="action yes" onClick={() => confirmDelete()}>
 							{__('Yes', 'betterlinks')}
 						</button>
 						<button className="action no" onClick={noDelete}>

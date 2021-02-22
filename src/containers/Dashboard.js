@@ -1,8 +1,8 @@
-import React from 'react';
-import ManageLinks from './pages/ManageLinks';
-import Analytics from './pages/Analytics';
-import Settings from './pages/Settings';
+import React, { Suspense } from 'react';
 import Topbar from './group/TopBar';
+const ManageLinks = React.lazy(() => import('./pages/ManageLinks'));
+const Analytics = React.lazy(() => import('./pages/Analytics'));
+const Settings = React.lazy(() => import('./pages/Settings'));
 
 const renderSwitch = (param) => {
 	switch (param) {
@@ -21,7 +21,7 @@ const Dashboard = ({ query }) => {
 	return (
 		<React.Fragment>
 			<Topbar currentPage={query.get('page')} />
-			{renderSwitch(query.get('page'))}
+			<Suspense fallback="">{renderSwitch(query.get('page'))}</Suspense>
 		</React.Fragment>
 	);
 };

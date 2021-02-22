@@ -10,9 +10,77 @@ import CatHeader from './../../components/CatHeader';
 import LinkQuickAction from './../../components/LinkQuickAction';
 import { plugin_root_url } from './../../utils/helper';
 
-const getListStyle = (isDraggingOver) => ({
-	background: isDraggingOver ? 'lightblue' : '',
-});
+export class List extends React.Component {
+	render() {
+		return (
+			<Draggable key={`cat-${this.props.catId}-item_${this.props.item.ID}`} draggableId={`cat-${this.props.catId}-item_${this.props.item.ID}`} index={this.props.index}>
+				{(provided, snapshot) => (
+					<div className={`btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+						<div className="btl-dnd-link-body">
+							<h3 className="dnd-link-title">
+								<span className="icon">
+									<img src={plugin_root_url + 'assets/images/move-icon.svg'} alt="icon" />
+								</span>
+								<span className="text" dangerouslySetInnerHTML={{ __html: this.props.item.link_title }}></span>
+							</h3>
+							<div className="btl-dnd-link-button-group">
+								<LinkQuickAction
+									isShowAnalytics={true}
+									catId={parseInt(this.props.catId)}
+									catName={this.props.term_name}
+									submitLinkHandler={this.props.edit_link}
+									deleteLinkHandler={this.props.delete_link}
+									data={this.props.item}
+								/>
+							</div>
+						</div>
+					</div>
+				)}
+			</Draggable>
+		);
+	}
+}
+
+class InnerList extends React.Component {
+	shouldComponentUpdate(nextProps) {
+		if (nextProps.lists === this.props.lists) {
+			return false;
+		}
+		return true;
+	}
+	render() {
+		return this.props.lists.map((list, index) => (
+			<List
+				edit_link={this.props.edit_link}
+				delete_link={this.props.delete_link}
+				catId={this.props.catId}
+				key={`cat-${this.props.catId}-item-${index}`}
+				item={list}
+				index={index}
+			/>
+		));
+	}
+}
+
+class CatWrap extends React.PureComponent {
+	render() {
+		const { ind, el, snapshot, provided, props } = this.props;
+		return (
+			<div className="dnd-category">
+				<CatHeader catId={ind} catName={el.term_name} cat_slug={el.term_slug} />
+				<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
+					<div className="category-body">
+						<InnerList edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={el.lists} />
+						{provided.placeholder}
+					</div>
+					<div className="category-footer">
+						<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
 
 function DndCanvas(props) {
 	const { links } = props.links;
@@ -37,55 +105,7 @@ function DndCanvas(props) {
 							})
 							.map(([ind, el]) => (
 								<Droppable key={ind} droppableId={ind}>
-									{(provided, snapshot) => (
-										<div className="dnd-category">
-											<CatHeader catId={ind} catName={el.term_name} cat_slug={el.term_slug} />
-											<div ref={provided.innerRef} className="dnd-category-body-wrap" style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
-												<div className="category-body">
-													{el.lists &&
-														el.lists.map((item, index) => (
-															<React.Fragment key={`cat-${ind}-item-${index}`}>
-																{item.ID && (
-																	<Draggable key={`cat-${ind}-item_${item.ID}`} draggableId={`cat-${ind}-item_${item.ID}`} index={index}>
-																		{(provided, snapshot) => (
-																			<div
-																				className={`btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`}
-																				ref={provided.innerRef}
-																				{...provided.draggableProps}
-																				{...provided.dragHandleProps}
-																			>
-																				<div className="btl-dnd-link-body">
-																					<h3 className="dnd-link-title">
-																						<span className="icon">
-																							<img src={plugin_root_url + 'assets/images/move-icon.svg'} alt="icon" />
-																						</span>
-																						<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }}></span>
-																					</h3>
-																					<div className="btl-dnd-link-button-group">
-																						<LinkQuickAction
-																							isShowAnalytics={true}
-																							catId={parseInt(ind)}
-																							catName={el.term_name}
-																							submitLinkHandler={props.edit_link}
-																							deleteLinkHandler={props.delete_link}
-																							data={item}
-																						/>
-																					</div>
-																				</div>
-																			</div>
-																		)}
-																	</Draggable>
-																)}
-															</React.Fragment>
-														))}
-													{provided.placeholder}
-												</div>
-												<div className="category-footer">
-													<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
-												</div>
-											</div>
-										</div>
-									)}
+									{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
 								</Droppable>
 							))}
 					<CreateCategory createCatHandler={props.add_new_cat} />

@@ -145,6 +145,64 @@
 		padding-top: 15px;
 		height: 80px;
 	}
+	.btl-modal-migration {
+		text-align: center;
+		&__title {
+			font-size: 27px;
+			color: $dark;
+			margin-top: 0;
+			margin-bottom: 10px;
+		}
+		&__sub-title {
+			font-size: 23px;
+			color: $dark;
+			margin-top: 0;
+			margin-bottom: 30px;
+		}
+		&__item {
+			width: 100px;
+			margin: auto;
+			text-align: left;
+			display: flex;
+			margin-bottom: 30px;
+			input {
+				width: 25px;
+				height: 25px;
+				padding: 0 !important;
+				text-align: center;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				line-height: 36px;
+				margin-right: 15px;
+				&[type=checkbox]:checked + label {
+					border-color: #003be2;
+					color: #003be2;
+				}
+			}
+			label {
+				font-size: 21px;
+				color: #727272;
+			}
+		}
+		.button.button-primary {
+			padding-left: 45px;
+			padding-right: 45px;
+			height: 45px;
+			color: #fff;
+			font-size: 15px;
+			background-image: linear-gradient(229deg, #2961ff 0%, #003be2 100%);
+		}
+		#response {
+			max-height: 650px;
+			overflow: scroll;
+			font-size: 15px;
+			line-height: 33px;
+			color: #252525;
+			font-weight: 400;
+			text-align: left;
+		}
+	}
 	.btl-modal-select {
 		width: 300px;
 		.btl-react-select__control {

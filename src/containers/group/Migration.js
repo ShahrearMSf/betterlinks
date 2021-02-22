@@ -30,9 +30,15 @@ const Migration = (props) => {
 		setIsOpen(false);
 		history.push(route_path + 'admin.php?page=betterlinks');
 	}
+
+	console.log(prettyLinksRes);
+
 	return (
 		<React.Fragment>
 			<Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={false} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
+				<span className="btl-close-modal" onClick={closeModal}>
+					<i className="btl btl-cancel"></i>
+				</span>
 				{Object.keys(migrateRes).length === 0 ? (
 					<Formik
 						initialValues={{
@@ -59,40 +65,44 @@ const Migration = (props) => {
 					>
 						{({ values }) => (
 							<Form>
-								<div role="group" aria-labelledby="checkbox-group">
+								<div className="btl-modal-migration" role="group" aria-labelledby="checkbox-group">
 									{Object.keys(prettyLinksRes).length > 0 ? (
-										<div>
-											<h3>Select Data</h3>
-											{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
-												<label>
-													<Field type="checkbox" name="checked" value="links" />
-													{__('Links', 'betterlinks')}
-												</label>
-											)}
-											{prettyLinksRes.clicks && prettyLinksRes.clicks.length > 0 && (
-												<label>
-													<Field type="checkbox" name="checked" value="clicks" />
-													{__('Clicks', 'betterlinks')}
-												</label>
-											)}
-										</div>
+										<>
+											<h3 className="btl-modal-migration__title">Pick Data That</h3>
+											<p className="btl-modal-migration__sub-title">you want to import</p>
+											<div className="btl-modal-migration__item">
+												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
+													<>
+														<Field id="links" type="checkbox" name="checked" value="links" />
+														<label htmlFor="links">{__('Links', 'betterlinks')}</label>
+													</>
+												)}
+											</div>
+											<div className="btl-modal-migration__item">
+												{prettyLinksRes.clicks && prettyLinksRes.clicks.length > 0 && (
+													<>
+														<Field id="clicks" type="checkbox" name="checked" value="clicks" />
+														<label htmlFor="clicks">{__('Clicks', 'betterlinks')}</label>
+													</>
+												)}
+											</div>
+										</>
 									) : (
 										<div>{__('Please Wait...', 'betterlinks')}</div>
 									)}
+									{prettyLinksRes.links && prettyLinksRes.links.length == 0 && prettyLinksRes.clicks && prettyLinksRes.clicks.length == 0 ? (
+										<h3>{__('Nothing Found To Import', 'betterlinks')}</h3>
+									) : (
+										<button className="button button-primary" type="submit">
+											{migrationSubmitText}
+										</button>
+									)}
 								</div>
-								<p>
-									<button className="button button-primary" type="submit">
-										{migrationSubmitText}
-									</button>{' '}
-									<button className="button button-secondary" onClick={closeModal}>
-										{__('Close Migrate', 'betterlinks')}
-									</button>
-								</p>
 							</Form>
 						)}
 					</Formik>
 				) : (
-					<>
+					<div className="btl-modal-migration">
 						<div id="response">
 							{Object.entries(migrateRes).map(([index, item]) =>
 								Object.entries(item).map(([chiildIndex, childItem]) => (
@@ -104,10 +114,7 @@ const Migration = (props) => {
 								))
 							)}
 						</div>
-						<button className="button button-secondary" onClick={closeModal}>
-							{__('Close Migrate', 'betterlinks')}
-						</button>
-					</>
+					</div>
 				)}
 			</Modal>
 		</React.Fragment>

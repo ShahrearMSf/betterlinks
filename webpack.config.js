@@ -1,11 +1,25 @@
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 
 const config = {
-	entry: ['./src/index.js'],
+	entry: {
+		'betterlinks-core.min': './src/index.js',
+	},
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),
-		filename: 'betterlinks-core.min.js',
+		filename: '[name].js',
+	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				vendor: {
+					test: /[\\/]node_modules[\\/](react|react-dom|react-chartjs-2|moment|chartjs)[\\/]/,
+					name: 'betterlinks-vendor.min',
+					chunks: 'all',
+				},
+			},
+		},
 	},
 	module: {
 		rules: [
@@ -46,6 +60,7 @@ const config = {
 	resolve: {
 		extensions: ['.js', '.jsx'],
 	},
+	plugins: [new CleanWebpackPlugin()],
 };
 
 module.exports = config;

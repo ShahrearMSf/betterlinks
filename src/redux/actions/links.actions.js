@@ -10,19 +10,21 @@ export const EDIT_LINK = 'EDIT_LINK';
 
 export const onDragEnd = (result) => async (dispatch) => {
 	var [notUsed, ID] = result.draggableId.split('_');
-	dispatch({
-		type: DRAG_AND_DROP,
-		payload: result,
-	});
-	try {
-		await API.put(namespace + 'links', {
-			params: {
-				ID: ID,
-				cat_id: result.destination.droppableId,
-			},
+	if (result.destination) {
+		dispatch({
+			type: DRAG_AND_DROP,
+			payload: result,
 		});
-	} catch (e) {
-		console.log(e);
+		try {
+			await API.put(namespace + 'links', {
+				params: {
+					ID: ID,
+					cat_id: result.destination.droppableId,
+				},
+			});
+		} catch (e) {
+			console.log(e);
+		}
 	}
 };
 export const fetch_links_data = () => async (dispatch) => {
