@@ -42,6 +42,10 @@ class Export
 			$content['terms'] = $this->get_terms();
 			$content['terms_relationships'] = $this->get_terms_relationships();
 			$content['clicks'] = $this->get_clicks();
+		} elseif ($type == 'links') {
+			$content['links'] = $this->get_links();
+			$content['terms'] = $this->get_terms();
+			$content['terms_relationships'] = $this->get_terms_relationships();
 		} elseif ($type == 'clicks') {
 			$content['clicks'] = $this->get_clicks();
 		}
@@ -62,6 +66,6 @@ class Export
 	}
 	public function get_terms_relationships()
 	{
-		return $this->DB->query("SELECT * from {$this->wpdb_prefix}betterlinks_terms_relationships")->get();
+		return $this->DB->query("SELECT term_id, link_id from {$this->wpdb_prefix}betterlinks_terms_relationships")->get();
 	}
 }

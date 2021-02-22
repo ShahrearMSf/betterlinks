@@ -18,7 +18,7 @@ class Import
 		if ($page === 'betterlinks-settings' && $import == true) {
 			\BetterLinks\Helper::clear_query_cache();
 			$this->DB = \BetterLinks\Helper::DB();
-			if (isset($_FILES['upload_file'])) {
+			if (!empty($_FILES['upload_file']['tmp_name'])) {
 				if ($_POST['mode'] == 'default') {
 					$fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
 					if (!empty($fileContent)) {
@@ -104,7 +104,7 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
-			if (in_array($item['ID'], $this->term_IDs)) {
+			if (in_array($item['term_id'], $this->term_IDs)) {
 				continue;
 			} else {
 				$terms[] = $item;
