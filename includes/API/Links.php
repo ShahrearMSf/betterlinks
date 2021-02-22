@@ -23,7 +23,7 @@ class Links extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::READABLE,
-				'callback' => [$this, 'get_value'],
+				'callback' => [$this, 'get_items'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_links_schema(),
 			],
@@ -32,7 +32,7 @@ class Links extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::CREATABLE,
-				'callback' => [$this, 'create_value'],
+				'callback' => [$this, 'create_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_links_schema(),
 			],
@@ -41,7 +41,7 @@ class Links extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::EDITABLE,
-				'callback' => [$this, 'update_value'],
+				'callback' => [$this, 'update_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_links_schema(),
 			],
@@ -50,11 +50,49 @@ class Links extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::DELETABLE,
-				'callback' => [$this, 'delete_value'],
+				'callback' => [$this, 'delete_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_links_schema(),
 			],
 		]);
+
+		register_rest_route(
+			$this->namespace,
+			$endpoint . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => [$this, 'permissions_check'],
+					'args'                => [],
+				),
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => [$this, 'permissions_check'],
+					'args'                => [],
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => [$this, 'permissions_check'],
+					'args'                => array(
+						'force' => array(
+							'type'        => 'boolean',
+							'default'     => false,
+							'description' => __( 'Whether to bypass Trash and force deletion.' ),
+						),
+					),
+				),
+				// 'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
 	}
 
 	public function parse_response($items, $analytic)
@@ -91,7 +129,7 @@ class Links extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function get_value($request)
+	public function get_items($request)
 	{
 		$cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		if(!$cache_data) {
@@ -154,7 +192,7 @@ class Links extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function create_value($request)
+	public function create_item($request)
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
@@ -189,7 +227,7 @@ class Links extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function update_value($request)
+	public function update_item($request)
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
@@ -216,7 +254,7 @@ class Links extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function delete_value($request)
+	public function delete_item($request)
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		\BetterLinks\Helper::DB()

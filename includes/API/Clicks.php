@@ -23,7 +23,7 @@ class Clicks extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::READABLE,
-				'callback' => [$this, 'get_value'],
+				'callback' => [$this, 'get_items'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_clicks_schema(),
 			],
@@ -32,7 +32,7 @@ class Clicks extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::CREATABLE,
-				'callback' => [$this, 'create_value'],
+				'callback' => [$this, 'create_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_clicks_schema(),
 			],
@@ -41,7 +41,7 @@ class Clicks extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::EDITABLE,
-				'callback' => [$this, 'update_value'],
+				'callback' => [$this, 'update_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_clicks_schema(),
 			],
@@ -50,7 +50,7 @@ class Clicks extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::DELETABLE,
-				'callback' => [$this, 'delete_value'],
+				'callback' => [$this, 'delete_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_clicks_schema(),
 			],
@@ -63,7 +63,7 @@ class Clicks extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function get_value($request)
+	public function get_items($request)
 	{
 		$request = $request->get_params();
 		$from = isset($request['from']) ? $request['from'] : date('Y-m-d', strtotime(' - 30 days'));
@@ -96,7 +96,7 @@ class Clicks extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function create_value($request)
+	public function create_item($request)
 	{
 		return new \WP_REST_Response(
 			[
@@ -113,7 +113,7 @@ class Clicks extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function update_value($request)
+	public function update_item($request)
 	{
 		return new \WP_REST_Response(
 			[
@@ -130,7 +130,7 @@ class Clicks extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function delete_value($request)
+	public function delete_item($request)
 	{
 		return new \WP_REST_Response(
 			[
