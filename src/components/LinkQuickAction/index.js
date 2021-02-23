@@ -33,7 +33,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 	};
 	const confirmDelete = () => {
 		setDeleteConfrim(false);
-		deleteLinkHandler([{ ID: data.ID, term_id: catId, short_url: data.short_url }]);
+		deleteLinkHandler(data.ID);
 	};
 	const noDelete = () => {
 		setDeleteConfrim(false);

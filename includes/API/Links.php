@@ -58,7 +58,7 @@ class Links extends Controller
 
 		register_rest_route(
 			$this->namespace,
-			$endpoint . '/(?P<id>[\d]+)',
+			$endpoint . '(?P<id>[\d]+)',
 			array(
 				'args'   => array(
 					'id' => array(
@@ -181,6 +181,17 @@ class Links extends Controller
 				'success' => true,
 				'cache' => true,
 				'data' => json_decode($cache_data),
+			],
+			200
+		);
+	}
+
+	public function get_item($request) 
+	{
+		return new \WP_REST_Response(
+			[
+				'success' => true,
+				'data' => [],
 			],
 			200
 		);
