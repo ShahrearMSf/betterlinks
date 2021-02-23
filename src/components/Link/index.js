@@ -61,15 +61,12 @@ const Link = (props) => {
 		if (!props.settings.settings) {
 			fetch_settings_data();
 		}
-		if (!props.terms.terms) {
-			setIsFetchTerms(true);
-			fetch_terms_data().then(() => {
-				setModalIsOpen(true);
-				setIsFetchTerms(false);
-			});
-		} else {
+
+		setIsFetchTerms(true);
+		fetch_terms_data().then(() => {
 			setModalIsOpen(true);
-		}
+			setIsFetchTerms(false);
+		});
 	}
 
 	function closeModal() {
