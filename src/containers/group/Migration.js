@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { nonce, route_path, modalCustomStyles } from './../../utils/helper';
+import { nonce, route_path, plugin_root_url, modalCustomStyles } from './../../utils/helper';
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
@@ -67,7 +67,9 @@ const Migration = (props) => {
 									{Object.keys(prettyLinksRes).length > 0 ? (
 										<>
 											<h3 className="btl-modal-migration__title">Pick Data That</h3>
-											<p className="btl-modal-migration__sub-title">you want to import</p>
+											<p className="btl-modal-migration__sub-title">
+												you want to import <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
+											</p>
 											<div className="btl-modal-migration__item">
 												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
 													<>
@@ -108,7 +110,9 @@ const Migration = (props) => {
 				) : (
 					<div className="btl-modal-migration">
 						<div id="response">
-							<h3>Migration is Complete</h3>
+							<h3>
+								Migration is Complete <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
+							</h3>
 							{Object.entries(migrateRes).map(([index, item]) =>
 								Object.entries(item).map(([chiildIndex, childItem]) => (
 									<div key={chiildIndex}>

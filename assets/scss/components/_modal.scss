@@ -169,6 +169,9 @@
 			color: $dark;
 			margin-top: 0;
 			margin-bottom: 30px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 		&__item {
 			width: 200px;
@@ -212,6 +215,13 @@
 			color: #252525;
 			font-weight: 400;
 			text-align: left;
+			h3 {
+				display: flex;
+				align-items: center;
+				> img {
+					margin-left: 5px;
+				}
+			}
 		}
 	}
 	.btl-modal-select {
