@@ -123,6 +123,17 @@
 			margin-bottom: 20px;
 		}
 	}
+	form.is-invalid {
+		.btl-modal-form-group>input {
+			border: 1px solid red;
+		}
+		.errorlog {
+			margin-bottom: 10px;
+			display: block;
+			color: red;
+			padding-left: 165px;
+		}
+	}
 	textarea.btl-modal-form-control,
 	input.btl-modal-form-control {
 		flex: 1;

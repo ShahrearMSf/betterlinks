@@ -54,7 +54,7 @@ class PTLOneClick extends PTLBase
 					$categories[$item->slug] = 'uncategorized';
 				}
 
-				$message[] = 'import succesfully "' . $item->name . '"';
+				$message[] = 'Imported Successfully "' . $item->name . '"';
 			} else {
 				$message[] = 'import failed "' . $item->name . '" already exists';
 			}
@@ -101,7 +101,7 @@ class PTLOneClick extends PTLBase
 					'created_at' => $item->created_at,
 					'created_at_gmt' => $item->created_at,
 				];
-				$message[] = 'import succesfully "' . $item->uri . '"';
+				$message[] = 'Imported Successfully "' . $item->uri . '"';
 			}
 		}
 		if (count($clicks) > 0) {

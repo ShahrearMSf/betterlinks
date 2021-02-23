@@ -53,7 +53,7 @@ const TabsTools = ({ query }) => {
 							</div>
 						</div>
 						<button type="submit" className="btl-export-download-button">
-							{__('Download Export File', 'betterlinks')}
+							{__('Export File', 'betterlinks')}
 						</button>
 					</form>
 				</div>
