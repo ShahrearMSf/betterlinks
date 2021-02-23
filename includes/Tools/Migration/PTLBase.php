@@ -14,7 +14,7 @@ class PTLBase
 					'term_slug' => \BetterLinks\Helper::make_slug($catName),
 					'term_type' => 'category',
 				];
-				$message[] = 'import succesfully "' . $catName . '"';
+				$message[] = 'Imported Successfully "' . $catName . '"';
 			} else {
 				$message[] = 'import failed "' . $catName . '" already exists';
 			}

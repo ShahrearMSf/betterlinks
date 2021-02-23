@@ -29,10 +29,8 @@ const Migration = (props) => {
 	function closeModal() {
 		setIsOpen(false);
 		history.push(route_path + 'admin.php?page=betterlinks');
+		history.go(0);
 	}
-
-	console.log(prettyLinksRes);
-
 	return (
 		<React.Fragment>
 			<Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={false} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -110,6 +108,7 @@ const Migration = (props) => {
 				) : (
 					<div className="btl-modal-migration">
 						<div id="response">
+							<h3>Migration is Complete</h3>
 							{Object.entries(migrateRes).map(([index, item]) =>
 								Object.entries(item).map(([chiildIndex, childItem]) => (
 									<div key={chiildIndex}>

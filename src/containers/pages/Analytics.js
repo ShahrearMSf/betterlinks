@@ -43,12 +43,29 @@ const columns = [
 		name: __('Shortened URL', 'betterlinks'),
 		selector: 'short_url',
 		sortable: false,
-		cell: (row) => <div>{site_url + '/' + row.short_url}</div>,
+		cell: (row) => (
+			<div>
+				<div style={{ fontWeight: 700 }}>
+					<a href={site_url + '/' + row.short_url} target="_blank">
+						{site_url + '/' + row.short_url}
+					</a>
+				</div>
+			</div>
+		),
 	},
 	{
 		name: __('Referrer', 'betterlinks'),
 		selector: 'referer',
 		sortable: false,
+		cell: (row) => (
+			<div>
+				<div style={{ fontWeight: 700 }}>
+					<a href={row.referer} target="_blank">
+						{row.referer}
+					</a>
+				</div>
+			</div>
+		),
 	},
 	{
 		name: __('Target URL', 'betterlinks'),

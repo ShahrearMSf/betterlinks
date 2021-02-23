@@ -10,9 +10,9 @@ import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
 import { exists_clicks_json, nonce, exists_links_json } from './../../utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
-	const [cacheButtonText, setCacheButtonText] = useState('Clear Cache');
+	const [cacheButtonText, setCacheButtonText] = useState('Refresh Stats');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
-	const [formSubmitText, setFormSubmitText] = useState('Save');
+	const [formSubmitText, setFormSubmitText] = useState('Save Settings');
 	const [fastRedirectStatus, setFastRedirectStatus] = useState(exists_links_json);
 	const [fastClicksButtonText, setFastClicksButtonText] = useState('Active Now');
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
@@ -79,7 +79,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</label>
 								<div className="btl-form-field">
 									<div className="status">
-										<div className={`active-status ${fastRedirectStatus? "Active" : 'Disable' }`}>{fastRedirectStatus ? 'Active' : 'Disable'}</div>
+										<div className={`active-status ${fastRedirectStatus ? 'Active' : 'Disable'}`}>{fastRedirectStatus ? 'Active' : 'Disable'}</div>
 										{!fastRedirectStatus && (
 											<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
 												{fastRedirectButtonText}
@@ -87,7 +87,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										)}
 									</div>
 									<div className="short-description">
-										<b style={{fontWeight: 700}}>{__("Note: ")}</b>
+										<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
 										{__(
 											"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
 											'betterlinks'
@@ -107,7 +107,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</label>
 								<div className="btl-form-field">
 									<div className="status">
-										<div className={`active-status ${fastClicksStatus? "Active" : 'Disable' }`}>{fastClicksStatus ? 'Active' : 'Disable'}</div>
+										<div className={`active-status ${fastClicksStatus ? 'Active' : 'Disable'}`}>{fastClicksStatus ? 'Active' : 'Disable'}</div>
 										{!fastClicksStatus ? (
 											<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
 												{fastClicksButtonText}
@@ -119,13 +119,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										)}
 									</div>
 									<div className="short-description">
-										<b style={{fontWeight: 700}}>{__("Note: ")}</b>
+										<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
 										{!fastClicksStatus
 											? __(
 													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
 													'betterlinks'
 											  )
-											: __("Analytics data is updated within 1 hour interval. Hit the 'Clear Cache' button to instantly update your analytics data", 'betterlinks')}
+											: __("Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data", 'betterlinks')}
 									</div>
 								</div>
 							</span>
@@ -187,7 +187,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
-							<button className="button-primary" type="submit">
+							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
 						</div>
