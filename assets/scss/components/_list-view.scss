@@ -393,9 +393,7 @@
             cursor: pointer;
             transition: color 0.2s ease 0s;
 						text-decoration: none;
-						&:not(:last-child){
-							margin-right: 15px;
-						}
+						margin: 0 7px;
             &:focus {
               border: none;
               outline: none;
