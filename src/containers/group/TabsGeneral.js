@@ -50,6 +50,9 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 			(response) => {
 				if (response.data) {
 					setCacheButtonText('Done!');
+					window.setTimeout(function () {
+						setCacheButtonText('Refresh Stats');
+					}, 3000);
 					// update analytic data
 					fetch_clicks_data();
 				}
