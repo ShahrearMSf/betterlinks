@@ -68,7 +68,7 @@ class Import
 			if (!empty($item['link_title']) && !empty($item['short_url'])) {
 				if (!\BetterLinks\Helper::link_exists($item['link_title'], $item['short_url'])) {
 					$links[] = $item;
-					$linkImportMessage[] = 'import succesfully "' . $item['link_title'] . '"';
+					$linkImportMessage[] = 'Imported Successfully "' . $item['link_title'] . '"';
 				} else {
 					$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
 				}
@@ -87,7 +87,7 @@ class Import
 		foreach ($data as $item) {
 			if (!empty($item['term_slug']) && !\BetterLinks\Helper::term_exists($item['term_slug'])) {
 				$terms[] = $item;
-				$message[] = 'import succesfully "' . $item['term_name'] . '"';
+				$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
 			} else {
 				$this->term_IDs[] = $item['ID'];
 				$message[] = 'import failed "' . $item['term_name'] . '" already exists';
@@ -123,7 +123,7 @@ class Import
 		foreach ($data as $item) {
 			if (!\BetterLinks\Helper::click_exists($item['ID'])) {
 				$clicks[] = $item;
-				$message[] = 'import succesfully "' . $item['uri'] . '"';
+				$message[] = 'Imported Successfully "' . $item['uri'] . '"';
 			} else {
 				$message[] = 'import failed "' . $item['uri'] . '" already exists';
 			}

@@ -58,7 +58,7 @@ class PTLImportCSV extends PTLBase
 					$categories[$item[2]] = 'uncategorized';
 				}
 
-				$message[] = 'import succesfully "' . $item[3] . '"';
+				$message[] = 'Imported Successfully "' . $item[3] . '"';
 			} else {
 				$message[] = 'import failed "' . $item[3] . '" already exists';
 			}
@@ -113,7 +113,7 @@ class PTLImportCSV extends PTLBase
 					'created_at' => $item[5],
 					'created_at_gmt' => $item[5],
 				];
-				$message[] = 'import succesfully "' . $item[7] . '"';
+				$message[] = 'Imported Successfully "' . $item[7] . '"';
 			}
 		}
 		if (count($clicks) > 0) {

@@ -55,10 +55,10 @@ function links(state = {}, action) {
 				...state,
 				links: {
 					...state.links,
-					[payload.data.cat_id]: {
-						...state.links[payload.data.cat_id],
-						term_name: payload.data.cat_name,
-						term_slug: payload.data.cat_slug,
+					[payload.data.ID]: {
+						...state.links[payload.data.ID],
+						term_name: payload.data.term_name,
+						term_slug: payload.data.term_slug,
 					},
 				},
 			};

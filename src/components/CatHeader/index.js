@@ -4,8 +4,8 @@ import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_cat, delete_cat } from './../../redux/actions/links.actions';
-import { useFormikContext, Formik, Field, Form } from 'formik';
-import { generateSlug, modalCustomSmallStyles } from './../../utils/helper';
+import { modalCustomSmallStyles } from './../../utils/helper';
+import CatForm from '../Terms/CatForm';
 const CatHeader = (props) => {
 	const { catId, catName, cat_slug, update_cat, delete_cat } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -39,27 +39,11 @@ const CatHeader = (props) => {
 		setCatAction(false);
 		setModalIsOpen(false);
 	}
-	const [nameToSlug, setNameToSlug] = useState(false);
-	const [slugToSlug, setSlugToSlug] = useState(false);
-	const AutoSlugGenerate = () => {
-		const { values } = useFormikContext();
-		React.useEffect(() => {
-			if (nameToSlug) {
-				values.cat_slug = generateSlug(values.cat_name);
-				setNameToSlug(false);
-			}
-			if (slugToSlug) {
-				values.cat_slug = generateSlug(values.cat_slug);
-				setSlugToSlug(false);
-			}
-		}, [values]);
-		return null;
-	};
 	return (
 		<React.Fragment>
 			<div className="category-head">
 				<h4 className="title">{catName}</h4>
-				{catId != 1 && (
+				{cat_slug != 'uncategorized' && (
 					<div className="dropdown">
 						<button className="icon" onClick={() => catActionHandler()}>
 							<i className="btl btl-more"></i>
@@ -101,39 +85,7 @@ const CatHeader = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<Formik
-					initialValues={{
-						cat_id: catId,
-						cat_name: catName,
-						cat_slug: cat_slug,
-					}}
-					onSubmit={async (values) => {
-						setModalIsOpen(false);
-						setCatAction(false);
-						return update_cat(values);
-					}}
-				>
-					{(props) => (
-						<Form className="w-100">
-							<div className="btl-modal-form-group">
-								<label className="btl-modal-form-label btl-required" htmlFor="cat_name">
-									{__('Category Name', 'betterlinks')}
-								</label>
-								<Field className="btl-modal-form-control" id="cat_name" name="cat_name" onBlur={() => setNameToSlug(true)} required />
-							</div>
-							<div className="btl-modal-form-group">
-								<Field type="hidden" className="btl-modal-form-control" id="cat_slug" name="cat_slug" onBlur={() => setSlugToSlug(true)} required />
-								<AutoSlugGenerate />
-							</div>
-							<div className="btl-modal-form-group">
-								<label className="btl-modal-form-label"></label>
-								<button type="submit" className="btl-modal-submit-button">
-									{__('Update', 'betterlinks')}
-								</button>
-							</div>
-						</Form>
-					)}
-				</Formik>
+				<CatForm catId={parseInt(catId)} catName={catName} catSlug={cat_slug} submitHandler={update_cat} hideHandler={setModalIsOpen} />
 			</Modal>
 		</React.Fragment>
 	);

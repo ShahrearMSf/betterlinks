@@ -151,7 +151,11 @@ button.button-primary:focus,
 	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 	outline: none;
 }
-
+button.btn-save-settings {
+	padding-left: 35px;
+	padding-right: 35px;
+	height: 50px;
+}
 
 // toggler button
 
