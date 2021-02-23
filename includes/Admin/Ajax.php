@@ -136,15 +136,24 @@ class Ajax
 	public function cat_slug_unique_checker()
 	{
 		check_ajax_referer('wp_rest', 'security');
+		$ID = isset($_POST['ID']) ? $_POST['ID'] : '';
 		$slug = isset($_POST['slug']) ? $_POST['slug'] : '';
+		$alreadyExists = false;
 		$resutls = [];
 		if (!empty($slug)) {
 			$query = \BetterLinks\Helper::DB()
 				->table('betterlinks_terms')
 				->where('term_slug', '=', $slug);
 			$resutls = $query->get();
+			if(count($resutls) > 0){
+				$alreadyExists = true;
+				$resutls = current($resutls);
+				if($resutls->ID == $ID){
+					$alreadyExists = false;
+				}
+			}
 		}
-		wp_send_json_success(count($resutls) > 0 ? true : false);
+		wp_send_json_success($alreadyExists);
 		wp_die();
 	}
 }
