@@ -112,6 +112,14 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 1.0.2 - 24/02/2021 =
+
+- Fixed: Analytics not showing instantly after regenerating stats
+- Fixed: Clicks count not working
+- Fixed: Most Recent click data not showing at the top in Analytics
+- Improved: overall UI/UX 
+- Few minor bug fix and improvements
+
 = 1.0.1 - 15/01/2021 =
 
 - Fixed: Migration not working
@@ -125,7 +133,6 @@ Yes, it will work with any standard WordPress theme.
 - Added: General Settings panel
 - Improved: optimized code for faster response
 - Few minor bug fix and improvements
-
 
 = 0.0.1 - 14/01/2021 =
 
