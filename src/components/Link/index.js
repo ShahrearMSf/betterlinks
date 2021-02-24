@@ -161,7 +161,16 @@ const Link = (props) => {
 										</label>
 										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
 											<span className="btl-static-link">{site_url}</span>
-											<Field className="btl-dynamic-link" id="short_url" name="short_url" required />
+											<Field
+												className="btl-dynamic-link"
+												id="short_url"
+												name="short_url"
+												onChange={(e) => {
+													props.setFieldValue('short_url', e.target.value);
+													setSlugIsExists(false);
+												}}
+												required
+											/>
 											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 											<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
 										</div>

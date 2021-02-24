@@ -80,6 +80,7 @@ export default function CatForm({ catId, catName, catSlug, submitHandler, hideHa
 									const slug = generateSlug(e.target.value);
 									props.setFieldValue('term_name', e.target.value);
 									props.setFieldValue('term_slug', slug);
+									setSlugIsExists(false);
 								}}
 								required
 							/>
