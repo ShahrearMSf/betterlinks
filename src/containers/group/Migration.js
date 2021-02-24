@@ -67,7 +67,7 @@ const Migration = (props) => {
 									{Object.keys(prettyLinksRes).length > 0 ? (
 										<>
 											<h3 className="btl-modal-migration__title">
-												{__('Pick data that you want to import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
+												{__('Pick Data that You want to Import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
 											</h3>
 											<div className="btl-modal-migration__item">
 												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (

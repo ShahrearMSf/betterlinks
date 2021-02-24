@@ -35,9 +35,9 @@ const CatHeader = (props) => {
 		setModalIsOpen(true);
 	}
 
-	function closeModal() {
-		setCatAction(false);
-		setModalIsOpen(false);
+	function closeModal(isHide = false) {
+		setCatAction(isHide);
+		setModalIsOpen(isHide);
 	}
 	return (
 		<React.Fragment>
@@ -85,7 +85,7 @@ const CatHeader = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<CatForm catId={parseInt(catId)} catName={catName} catSlug={cat_slug} submitHandler={update_cat} hideHandler={setModalIsOpen} />
+				<CatForm catId={parseInt(catId)} catName={catName} catSlug={cat_slug} submitHandler={update_cat} hideHandler={closeModal} />
 			</Modal>
 		</React.Fragment>
 	);
