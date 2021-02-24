@@ -166,10 +166,13 @@ class Terms extends Controller
 				$qb->table('betterlinks_terms')
 					->where('id', '=', $request['cat_id'])
 					->delete();
-				
-				$term = current($qb->table('betterlinks_terms')
-				->where('term_slug', '=', 'uncategorized')
-				->get());
+
+				$term = current(
+					$qb
+						->table('betterlinks_terms')
+						->where('term_slug', '=', 'uncategorized')
+						->get()
+				);
 
 				$qb->table('betterlinks_terms_relationships')
 					->where('term_id', '=', $request['cat_id'])
