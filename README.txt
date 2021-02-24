@@ -120,8 +120,7 @@ Yes, it will work with any standard WordPress theme.
 - Improved: overall UI/UX 
 - Few minor bug fix and improvements
 
-
-= 1.0.1 - 15/02/2021 =
+= 1.0.1 - 15/01/2021 =
 
 - Fixed: Migration not working
 - Few minor bug fix and improvements
@@ -134,7 +133,6 @@ Yes, it will work with any standard WordPress theme.
 - Added: General Settings panel
 - Improved: optimized code for faster response
 - Few minor bug fix and improvements
-
 
 = 0.0.1 - 14/01/2021 =
 
