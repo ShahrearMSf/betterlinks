@@ -94,7 +94,7 @@ class Links extends Controller
 	public function get_value($request)
 	{
 		$cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
-		if(!$cache_data) {
+		if (!$cache_data) {
 			global $wpdb;
 			$prefix = $wpdb->prefix;
 			$query = \BetterLinks\Helper::DB();
@@ -125,8 +125,9 @@ class Links extends Controller
 			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
 			LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
 			WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_date DESC"
-				)->get();
-			
+				)
+				->get();
+
 			$results = $this->parse_response($results, $analytic);
 			set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
 			return new \WP_REST_Response(
@@ -196,9 +197,11 @@ class Links extends Controller
 		\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
 			$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 			$params = array_intersect_key($request['params'], $lookFor);
-			$old_short_url = (isset($request['params']['old_short_url']) ? $request['params']['old_short_url'] : '');
+			$old_short_url = isset($request['params']['old_short_url']) ? $request['params']['old_short_url'] : '';
 			$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
-			$qb->table('betterlinks')->where('ID', $params['ID'])->update($params);
+			$qb->table('betterlinks')
+				->where('ID', $params['ID'])
+				->update($params);
 			$this->terms_insert($qb, $params['ID'], $request['params'], true);
 		});
 		return new \WP_REST_Response(
@@ -258,7 +261,8 @@ class Links extends Controller
 		return current_user_can('manage_options');
 	}
 
-	public function terms_insert($qb, $link_id, $request, $is_update = false){
+	public function terms_insert($qb, $link_id, $request, $is_update = false)
+	{
 		$term_data = [];
 		// store tags relation data
 		if (isset($request['cat_id']) && !empty($request['cat_id'])) {
@@ -287,19 +291,24 @@ class Links extends Controller
 			if (count($newTagsList) > 0) {
 				// stop duplicate tags insert
 				foreach ($newTagsList as $item) {
-					$terms = $qb->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
-					if(count($terms) > 0){
+					$terms = $qb
+						->table('betterlinks_terms')
+						->where('term_slug', '=', $item['term_slug'])
+						->get();
+					if (count($terms) > 0) {
 						$terms = current($terms);
 						$term_data[] = [
 							'term_id' => $terms->ID,
 							'link_id' => $link_id,
 						];
 					} else {
-						$terms = $qb->table('betterlinks_terms')->insert([[
-							'term_name' => $item['term_name'],
-							'term_slug' => $item['term_slug'],
-							'term_type' => 'tags',
-						]]);
+						$terms = $qb->table('betterlinks_terms')->insert([
+							[
+								'term_name' => $item['term_name'],
+								'term_slug' => $item['term_slug'],
+								'term_type' => 'tags',
+							],
+						]);
 						$term_id = current($terms);
 						$term_data[] = [
 							'term_id' => $term_id,
@@ -309,7 +318,7 @@ class Links extends Controller
 				}
 			}
 		}
-		if($is_update){
+		if ($is_update) {
 			$qb->table('betterlinks_terms_relationships')
 				->where('link_id', '=', $request['ID'])
 				->delete();

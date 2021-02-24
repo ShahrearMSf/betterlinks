@@ -40,8 +40,6 @@ class Cron
 		return;
 	}
 
-	
-
 	public function analytics()
 	{
 		Helper::clear_query_cache();
@@ -53,9 +51,9 @@ class Cron
 			if (BETTERLINKS_EXISTS_CLICKS_JSON) {
 				$Clicks = json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'), true);
 				// link id already exists or not in links table
-				if(is_array($Clicks)){
-					foreach($Clicks as $key => $item){
-						if(!$query->table('betterlinks')->find($item['link_id'])){
+				if (is_array($Clicks)) {
+					foreach ($Clicks as $key => $item) {
+						if (!$query->table('betterlinks')->find($item['link_id'])) {
 							unset($Clicks[$key]);
 						}
 					}
