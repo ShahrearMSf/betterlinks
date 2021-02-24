@@ -43,7 +43,7 @@ const Migration = (props) => {
 							checked: [],
 						}}
 						onSubmit={(values) => {
-							setMigrationSubmitText('Importing is in progress...');
+							setMigrationSubmitText(__('Migration is in Progress...', 'betterlinks'));
 							let form_data = new FormData();
 							form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
 							form_data.append('security', nonce);
@@ -66,10 +66,9 @@ const Migration = (props) => {
 								<div className="btl-modal-migration" role="group" aria-labelledby="checkbox-group">
 									{Object.keys(prettyLinksRes).length > 0 ? (
 										<>
-											<h3 className="btl-modal-migration__title">Pick Data That</h3>
-											<p className="btl-modal-migration__sub-title">
-												you want to import <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
-											</p>
+											<h3 className="btl-modal-migration__title">
+												{__('Pick data that you want to import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
+											</h3>
 											<div className="btl-modal-migration__item">
 												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
 													<>
@@ -111,7 +110,7 @@ const Migration = (props) => {
 					<div className="btl-modal-migration">
 						<div id="response">
 							<h3>
-								Migration is Complete <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
+								{__('Migration is Complete', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
 							</h3>
 							{Object.entries(migrateRes).map(([index, item]) =>
 								Object.entries(item).map(([chiildIndex, childItem]) => (
