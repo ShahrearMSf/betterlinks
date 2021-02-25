@@ -117,7 +117,8 @@ Yes, it will work with any standard WordPress theme.
 - Fixed: Analytics not showing instantly after regenerating stats
 - Fixed: Clicks count not working
 - Fixed: Most Recent click data not showing at the top in Analytics
-- Improved: overall UI/UX 
+- Improved: Overall UI/UX 
+- Improved: Migration from Pretty Links
 - Few minor bug fix and improvements
 
 = 1.0.1 - 15/01/2021 =
