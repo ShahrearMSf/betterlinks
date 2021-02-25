@@ -170,6 +170,12 @@ class Helper
 		wp_schedule_single_event(time() + 5, 'betterlinks/write_json_links');
 	}
 
+	public static function create_cron_jobs_for_analytics()
+	{
+		wp_clear_scheduled_hook('betterlinks/analytics');
+		wp_schedule_single_event(time() + 5, 'betterlinks/analytics');
+	}
+
 	public static function clear_query_cache()
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);

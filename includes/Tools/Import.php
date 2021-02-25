@@ -1,6 +1,7 @@
 <?php
 namespace BetterLinks\Tools;
 
+
 class Import
 {
 	private $DB;
@@ -40,6 +41,7 @@ class Import
 					}
 				}
 			}
+			\BetterLinks\Helper::create_cron_jobs_for_analytics();
 		}
 	}
 	public function process_data($type)
