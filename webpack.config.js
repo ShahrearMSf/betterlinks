@@ -4,18 +4,18 @@ const path = require('path');
 
 const config = {
 	entry: {
-		'betterlinks-core.min': './src/index.js',
+		'betterlinks.core.min': './src/index.js',
 	},
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),
 		filename: '[name].js',
+		chunkFilename: 'betterlinks.[id].chunk.js',
 	},
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
-				vendor: {
-					test: /[\\/]node_modules[\\/](react|react-dom|react-chartjs-2|moment|chartjs)[\\/]/,
-					name: 'betterlinks-vendor.min',
+				defaultVendors: {
+					test: /[\\/]node_modules[\\/](react-chartjs-2|moment|chartjs)[\\/]/,
 					chunks: 'all',
 				},
 			},
