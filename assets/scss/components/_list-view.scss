@@ -238,15 +238,20 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
+					text-align: center;
 					&:nth-child(2){
 						justify-content: flex-start;
+						text-align: left;
 					}
 					&:nth-child(3){
 						min-width: 300px;
 						#column-2{
 							margin-right: 35px;
 						}
-
+					}
+					&:nth-child(4),
+					&:nth-child(5){
+						min-width: 70px;
 					}
           .rdt_TableCol_Sortable {
             color: $dark;
@@ -277,6 +282,10 @@
 					}
 					&#cell-2-undefined{
 						min-width: 300px;
+					}
+					&#cell-3-undefined,
+					&#cell-4-undefined{
+						min-width: 70px;
 					}
           div {
             font-size: 14px;
@@ -326,7 +335,7 @@
             }
           }
           .btl-list-view-action-wrapper {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 100%;
@@ -335,6 +344,8 @@
 							align-items: center;
 							background: $white;
 							padding: 0 10px;
+							flex-wrap: wrap;
+							justify-content: center;
 							.action-text {
 								color: $secondary;
 								font-weight: 500;
@@ -369,6 +380,9 @@
 								}
 							}
 						}
+						.btl-tooltiptext{
+							width: 70px;
+						}
           }
           .dnd-link-button {
             padding: 5px 5px 5px 5px;
@@ -379,9 +393,7 @@
             cursor: pointer;
             transition: color 0.2s ease 0s;
 						text-decoration: none;
-						&:not(:last-child){
-							margin-right: 15px;
-						}
+						margin: 0 7px;
             &:focus {
               border: none;
               outline: none;

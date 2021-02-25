@@ -61,15 +61,12 @@ const Link = (props) => {
 		if (!props.settings.settings) {
 			fetch_settings_data();
 		}
-		if (!props.terms.terms) {
-			setIsFetchTerms(true);
-			fetch_terms_data().then(() => {
-				setModalIsOpen(true);
-				setIsFetchTerms(false);
-			});
-		} else {
+
+		setIsFetchTerms(true);
+		fetch_terms_data().then(() => {
 			setModalIsOpen(true);
-		}
+			setIsFetchTerms(false);
+		});
 	}
 
 	function closeModal() {
@@ -164,7 +161,16 @@ const Link = (props) => {
 										</label>
 										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
 											<span className="btl-static-link">{site_url}</span>
-											<Field className="btl-dynamic-link" id="short_url" name="short_url" required />
+											<Field
+												className="btl-dynamic-link"
+												id="short_url"
+												name="short_url"
+												onChange={(e) => {
+													props.setFieldValue('short_url', e.target.value);
+													setSlugIsExists(false);
+												}}
+												required
+											/>
 											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 											<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
 										</div>

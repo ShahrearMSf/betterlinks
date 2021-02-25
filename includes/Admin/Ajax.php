@@ -122,10 +122,10 @@ class Ajax
 				->table('betterlinks')
 				->where('short_url', '=', $slug);
 			$resutls = $query->get();
-			if(count($resutls) > 0){
+			if (count($resutls) > 0) {
 				$alreadyExists = true;
 				$resutls = current($resutls);
-				if($resutls->ID == $ID){
+				if ($resutls->ID == $ID) {
 					$alreadyExists = false;
 				}
 			}
@@ -145,10 +145,10 @@ class Ajax
 				->table('betterlinks_terms')
 				->where('term_slug', '=', $slug);
 			$resutls = $query->get();
-			if(count($resutls) > 0){
+			if (count($resutls) > 0) {
 				$alreadyExists = true;
 				$resutls = current($resutls);
-				if($resutls->ID == $ID){
+				if ($resutls->ID == $ID) {
 					$alreadyExists = false;
 				}
 			}

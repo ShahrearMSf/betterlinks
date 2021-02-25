@@ -14,7 +14,7 @@ class Utils
 	}
 	public function dispatch_redirect($data, $param)
 	{
-		if ($data->track_me) {
+		if (intval($data->track_me)) {
 			$this->start_trakcing($data);
 		}
 

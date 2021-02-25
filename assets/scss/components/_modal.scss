@@ -162,20 +162,23 @@
 			font-size: 27px;
 			color: $dark;
 			margin-top: 0;
-			margin-bottom: 10px;
+			margin-bottom: 25px;
 		}
 		&__sub-title {
 			font-size: 23px;
 			color: $dark;
 			margin-top: 0;
 			margin-bottom: 30px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 		&__item {
 			width: 200px;
 			margin: auto;
 			display: flex;
 			justify-content: center;
-			margin-bottom: 30px;
+			margin-bottom: 25px;
 			input {
 				width: 25px;
 				height: 25px;
@@ -205,13 +208,20 @@
 			background-image: linear-gradient(229deg, #2961ff 0%, #003be2 100%);
 		}
 		#response {
-			max-height: 650px;
-			overflow: scroll;
+			max-height: 450px;
+			overflow-y: scroll;
 			font-size: 15px;
 			line-height: 33px;
 			color: #252525;
 			font-weight: 400;
 			text-align: left;
+			h3 {
+				display: flex;
+				align-items: center;
+				> img {
+					margin-left: 5px;
+				}
+			}
 		}
 	}
 	.btl-modal-select {

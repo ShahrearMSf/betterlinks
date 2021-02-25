@@ -96,7 +96,7 @@ body {
 		z-index: 1;
 		bottom: 150%;
 		left: 50%;
-		margin-left: -68px;
+		transform: translateX(-50%);
 		&::after {
 			content: '';
 			position: absolute;
