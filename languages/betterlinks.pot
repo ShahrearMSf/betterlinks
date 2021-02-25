@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the BetterLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 0.0.1\n"
+"Project-Id-Version: BetterLinks 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-02-02T09:36:59+00:00\n"
+"POT-Creation-Date: 2021-02-25T03:47:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: betterlinks\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: includes/Admin/Menu.php:25
 #: src/containers/group/AdminMenu.js:20
 #: src/containers/group/AdminMenu.js:24
-#: src/containers/group/TabsTools.js:69
+#: src/containers/group/TabsTools.js:67
 msgid "BetterLinks"
 msgstr ""
 
@@ -47,271 +47,317 @@ msgstr ""
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Admin/Notice.php:53
+#: includes/Admin/Notice.php:56
 msgid "All Pretty Links has been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website."
 msgstr ""
 
-#: includes/Admin/Notice.php:54
+#: includes/Admin/Notice.php:57
 msgid "Deactivate Pretty Links"
 msgstr ""
 
 #: includes/Helper.php:40
 #: src/containers/group/AdminMenu.js:27
-#: src/containers/group/TabsTools.js:41
 msgid "Manage Links"
 msgstr ""
 
 #: includes/Helper.php:44
 #: src/containers/group/AdminMenu.js:30
-#: src/containers/pages/Analytics.js:117
+#: src/containers/group/TabsTools.js:51
 msgid "Analytics"
 msgstr ""
 
 #: includes/Helper.php:48
 #: src/containers/group/AdminMenu.js:33
-#: src/containers/group/TabsTools.js:53
 msgid "Settings"
 msgstr ""
 
-#: src/components/CatHeader/index.js:72
+#: src/components/CatHeader/index.js:56
 msgid "Edit"
 msgstr ""
 
-#: src/components/CatHeader/index.js:77
-#: src/components/LinkQuickAction/index.js:45
+#: src/components/CatHeader/index.js:61
+#: src/components/LinkQuickAction/index.js:83
 msgid "Delete"
 msgstr ""
 
-#: src/components/CatHeader/index.js:84
-#: src/components/LinkQuickAction/index.js:50
+#: src/components/CatHeader/index.js:68
+#: src/components/LinkQuickAction/index.js:89
 msgid "Are Your Sure?"
 msgstr ""
 
-#: src/components/CatHeader/index.js:87
-#: src/components/LinkQuickAction/index.js:58
+#: src/components/CatHeader/index.js:71
+#: src/components/LinkQuickAction/index.js:92
 msgid "Yes"
 msgstr ""
 
-#: src/components/CatHeader/index.js:90
-#: src/components/LinkQuickAction/index.js:61
+#: src/components/CatHeader/index.js:74
+#: src/components/LinkQuickAction/index.js:95
 msgid "No"
 msgstr ""
 
-#: src/components/CatHeader/index.js:120
-msgid "Category Name"
-msgstr ""
-
-#: src/components/CatHeader/index.js:131
-#: src/components/Link/index.js:257
-msgid "Update"
-msgstr ""
-
-#: src/components/CreateCategory.js:29
+#: src/components/CreateCategory.js:12
 msgid "Add New Category"
 msgstr ""
 
-#: src/components/CreateCategory.js:44
-msgid "* Name"
+#: src/components/Graph/index.js:114
+msgid "Click Analytics"
 msgstr ""
 
-#: src/components/CreateCategory.js:51
-msgid "* Slug"
-msgstr ""
-
-#: src/components/CreateCategory.js:59
-msgid "Submit"
-msgstr ""
-
-#: src/components/Graph/index.js:73
-msgid "BetterLinks: All clicks on all links between"
-msgstr ""
-
-#: src/components/Graph/index.js:76
-msgid "From"
-msgstr ""
-
-#: src/components/Link/index.js:138
+#: src/components/Link/index.js:136
+#: src/containers/group/ListCanvas.js:17
 msgid "Title"
 msgstr ""
 
-#: src/components/Link/index.js:148
+#: src/components/Link/index.js:142
 msgid "Description"
 msgstr ""
 
-#: src/components/Link/index.js:154
-#: src/containers/group/TabsGeneral.js:95
+#: src/components/Link/index.js:148
+#: src/containers/group/ListCanvas.js:33
+#: src/containers/group/TabsGeneral.js:137
 msgid "Redirect Type"
 msgstr ""
 
-#: src/components/Link/index.js:160
-#: src/containers/pages/Analytics.js:55
+#: src/components/Link/index.js:154
+#: src/containers/pages/Analytics.js:71
 msgid "Target URL"
 msgstr ""
 
-#: src/components/Link/index.js:166
-#: src/containers/pages/Analytics.js:44
+#: src/components/Link/index.js:160
+#: src/containers/group/ListCanvas.js:25
+#: src/containers/pages/Analytics.js:43
 msgid "Shortened URL"
 msgstr ""
 
-#: src/components/Link/index.js:188
+#: src/components/Link/index.js:180
 msgid "Category"
 msgstr ""
 
-#: src/components/Link/index.js:194
+#: src/components/Link/index.js:186
 msgid "Tags"
 msgstr ""
 
-#: src/components/Link/index.js:202
-#: src/containers/group/TabsGeneral.js:107
+#: src/components/Link/index.js:194
+#: src/containers/group/TabsGeneral.js:149
 msgid "Link Options"
 msgstr ""
 
-#: src/components/Link/index.js:208
-#: src/containers/group/TabsGeneral.js:112
+#: src/components/Link/index.js:200
+#: src/containers/group/TabsGeneral.js:154
 msgid "No Follow"
 msgstr ""
 
-#: src/components/Link/index.js:211
-#: src/containers/group/TabsGeneral.js:115
+#: src/components/Link/index.js:203
+#: src/containers/group/TabsGeneral.js:157
 msgid "This will add nofollow attribute to your link. (Recommended)"
 msgstr ""
 
-#: src/components/Link/index.js:218
-#: src/containers/group/TabsGeneral.js:122
+#: src/components/Link/index.js:210
+#: src/containers/group/TabsGeneral.js:164
 msgid "Sponsored"
 msgstr ""
 
-#: src/components/Link/index.js:221
-#: src/containers/group/TabsGeneral.js:125
+#: src/components/Link/index.js:213
+#: src/containers/group/TabsGeneral.js:167
 msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
 msgstr ""
 
-#: src/components/Link/index.js:233
-#: src/containers/group/TabsGeneral.js:137
+#: src/components/Link/index.js:225
+#: src/containers/group/TabsGeneral.js:174
 msgid "Parameter Forwarding"
 msgstr ""
 
-#: src/components/Link/index.js:236
-#: src/containers/group/TabsGeneral.js:140
+#: src/components/Link/index.js:228
+#: src/containers/group/TabsGeneral.js:177
 msgid "This will pass the parameters you have set in the target URL"
 msgstr ""
 
-#: src/components/Link/index.js:243
-#: src/containers/group/TabsGeneral.js:147
+#: src/components/Link/index.js:235
+#: src/containers/group/TabsGeneral.js:184
 msgid "Tracking"
 msgstr ""
 
-#: src/components/Link/index.js:246
-#: src/containers/group/TabsGeneral.js:150
+#: src/components/Link/index.js:238
+#: src/containers/group/TabsGeneral.js:187
 msgid "This will let you check Analytics report of your links"
 msgstr ""
 
-#: src/components/Link/index.js:257
+#: src/components/Link/index.js:249
+#: src/components/Terms/CatForm.js:93
+msgid "Update"
+msgstr ""
+
+#: src/components/Link/index.js:249
 msgid "Publish"
 msgstr ""
 
-#: src/components/LinkQuickAction/index.js:35
+#: src/components/LinkCopyUrl/index.js:21
+#: src/components/LinkQuickAction/index.js:61
 msgid "Copy Link"
 msgstr ""
 
-#: src/components/LinkQuickAction/index.js:39
+#: src/components/LinkQuickAction/index.js:69
+msgid "Visit Link"
+msgstr ""
+
+#: src/components/LinkQuickAction/index.js:75
 msgid "Edit Link"
 msgstr ""
 
-#: src/containers/group/Migration.js:69
-msgid "Links"
+#: src/components/Terms/CatForm.js:71
+msgid "Category Name"
 msgstr ""
 
-#: src/containers/group/Migration.js:75
+#: src/components/Terms/CatForm.js:77
+msgid "* Name"
+msgstr ""
+
+#: src/components/Terms/CatForm.js:98
+msgid "Submit"
+msgstr ""
+
+#: src/containers/group/LinksListViewFilter.js:53
+msgid "Search by Title"
+msgstr ""
+
+#: src/containers/group/ListCanvas.js:39
 msgid "Clicks"
 msgstr ""
 
-#: src/containers/group/Migration.js:80
-msgid "Please Wait..."
+#: src/containers/group/ListCanvas.js:59
+msgid "Date"
+msgstr ""
+
+#: src/containers/group/ListCanvas.js:65
+msgid "Action"
+msgstr ""
+
+#: src/containers/group/Migration.js:46
+msgid "Migration is in Progress..."
+msgstr ""
+
+#: src/containers/group/Migration.js:70
+msgid "Pick Data that You want to Import"
+msgstr ""
+
+#: src/containers/group/Migration.js:77
+msgid "Links "
 msgstr ""
 
 #: src/containers/group/Migration.js:88
-#: src/containers/group/Migration.js:108
-msgid "Close Migrate"
+msgid "Clicks "
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:73
-msgid "Fast Redirect Status"
+#: src/containers/group/Migration.js:96
+msgid "Please Wait..."
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:82
-msgid "Analytic Cache Status"
+#: src/containers/group/Migration.js:99
+msgid "Nothing Found To Import"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:29
-msgid "Choose what to export"
+#: src/containers/group/Migration.js:113
+msgid "Migration is Complete"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:35
-msgid "All Content (This will contain all of your links, analytic and settings.)"
+#: src/containers/group/TabsGeneral.js:80
+msgid "Link Redirection Status"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:47
-msgid "Analytic"
+#: src/containers/group/TabsGeneral.js:81
+#: src/containers/group/TabsGeneral.js:105
+msgid "(Fast Mode)"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:58
-msgid "Download Export File"
+#: src/containers/group/TabsGeneral.js:94
+msgid "If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:63
-msgid "Choose what to import"
+#: src/containers/group/TabsGeneral.js:105
+msgid "Click Data Status "
 msgstr ""
 
-#: src/containers/group/TabsTools.js:75
+#: src/containers/group/TabsGeneral.js:108
+msgid "Fetch Analytics Data"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:127
+msgid "If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:131
+msgid "Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:33
+msgid "Choose an Option You want to Export"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:39
+msgid "All Content (This will contain all of your links and analytic.)"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:45
+msgid "Links"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:56
+msgid "Export File"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:61
+msgid "Choose the Plugin You Want to Import from"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:73
 msgid "Pretty Links"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:79
-msgid "Choose a file from your computer: (Maximum size: 512 MB)"
+#: src/containers/group/TabsTools.js:77
+msgid "Choose the File You Want to Import"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:83
-msgid "Upload file and import"
+#: src/containers/group/TabsTools.js:81
+msgid "Import File"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:14
+#: src/containers/pages/Analytics.js:13
 msgid "Browser"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:27
+#: src/containers/pages/Analytics.js:26
 msgid "Link Name"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:33
+#: src/containers/pages/Analytics.js:32
 msgid "IP"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:39
+#: src/containers/pages/Analytics.js:38
 msgid "Timestamp"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:50
+#: src/containers/pages/Analytics.js:57
 msgid "Referrer"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:72
+#: src/containers/pages/Analytics.js:88
 msgid "Filter By Name"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:73
+#: src/containers/pages/Analytics.js:89
 msgid "Search Click"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:125
+#: src/containers/pages/Analytics.js:138
 msgid "All Clicks"
 msgstr ""
 
-#: src/containers/pages/Settings.js:32
+#: src/containers/pages/Settings.js:30
 msgid "General"
 msgstr ""
 
-#: src/containers/pages/Settings.js:33
+#: src/containers/pages/Settings.js:31
 msgid "Tools"
 msgstr ""
 
