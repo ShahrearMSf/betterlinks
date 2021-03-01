@@ -6,12 +6,20 @@ import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
 import LinkCopyUrl from './../../components/LinkCopyUrl';
 import LinksListViewFilter from './LinksListViewFilter';
-import { linksFilterData, formatDate, insertOverlayElement } from './../../utils/helper';
+import { linksFilterData, formatDate, route_path, insertOverlayElement } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 import TableLoader from './../../components/Loader/TableLoader';
 
 const getLinksListViewColumnData = (props) => {
+	const analytic = (analytic, ID) => {
+		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
+		if (isLinkAble) {
+			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{analytic.link_count + '/' + analytic.ip.length}</a>;
+		}
+		return analytic.link_count + '/' + analytic.ip.length;
+	};
+
 	return [
 		{
 			name: __('Title', 'betterlinks'),
@@ -44,7 +52,7 @@ const getLinksListViewColumnData = (props) => {
 					{row.analytic ? (
 						<button className="dnd-link-button btl-tooltip">
 							<span className="btl-tooltiptext">{'Clicks: ' + row.analytic.link_count + ' / ' + 'Unique Clicks: ' + row.analytic.ip.length}</span>
-							<span className="icon">{row.analytic.link_count + '/' + row.analytic.ip.length}</span>
+							<span className="icon">{analytic(row.analytic, row.ID)}</span>
 						</button>
 					) : (
 						<button className="dnd-link-button btl-tooltip">

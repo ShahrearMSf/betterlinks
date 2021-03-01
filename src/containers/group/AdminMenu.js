@@ -2,8 +2,8 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Link } from 'react-router-dom';
 import { route_path, plugin_root_url } from '../../utils/helper';
-const AdminMenu = ({ query }) => {
-	const currentPage = query.get('page');
+const AdminMenu = () => {
+	const currentPage = betterLinksQuery.get('page');
 	return (
 		<React.Fragment>
 			<Link

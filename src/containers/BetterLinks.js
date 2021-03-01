@@ -16,13 +16,13 @@ function useQuery() {
 }
 
 const BetterLinks = (props) => {
-	let query = useQuery();
+	window.betterLinksQuery = useQuery();
 	return (
 		<React.Fragment>
 			<MenuPortal>
-				<AdminMenu query={query} />
+				<AdminMenu />
 			</MenuPortal>
-			<Dashboard query={query} />
+			<Dashboard />
 		</React.Fragment>
 	);
 };

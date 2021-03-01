@@ -51,6 +51,12 @@
 				&.delete-button:hover {
 					color: $danger;
 				}
+				span.icon {
+					a {
+						color: #b0b2ba;
+						text-decoration: none;
+					}
+				}
 			}
 		}
 	}

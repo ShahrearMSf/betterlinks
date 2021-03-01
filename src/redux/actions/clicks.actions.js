@@ -1,8 +1,9 @@
 import { API, namespace } from './../../utils/helper';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const fetch_clicks_data = (params) => async (dispatch) => {
+	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
 	try {
-		const res = await API.get(namespace + 'clicks', {
+		const res = await API.get(endPoint, {
 			params: params,
 		});
 		dispatch({
