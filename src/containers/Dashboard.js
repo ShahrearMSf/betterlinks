@@ -17,11 +17,11 @@ const renderSwitch = (param) => {
 	}
 };
 
-const Dashboard = ({ query }) => {
+const Dashboard = () => {
 	return (
 		<React.Fragment>
-			<Topbar currentPage={query.get('page')} />
-			<Suspense fallback="">{renderSwitch(query.get('page'))}</Suspense>
+			<Topbar currentPage={betterLinksQuery.get('page')} />
+			<Suspense fallback="">{renderSwitch(betterLinksQuery.get('page'))}</Suspense>
 		</React.Fragment>
 	);
 };

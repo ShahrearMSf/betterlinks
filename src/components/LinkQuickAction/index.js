@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from './../Link';
-import { site_url, copyToClipboard } from './../../utils/helper';
+import { site_url, route_path, copyToClipboard } from './../../utils/helper';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
@@ -45,12 +45,19 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 			setCopyUrl(false);
 		}, 3000);
 	};
+	const analytic = (analytic) => {
+		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
+		if (isLinkAble) {
+			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + data.ID}>{analytic.link_count + '/' + analytic.ip.length}</a>;
+		}
+		return analytic.link_count + '/' + analytic.ip.length;
+	};
 	return (
 		<React.Fragment>
 			{isShowAnalytics && data.analytic && (
 				<button className="dnd-link-button btl-tooltip">
 					<span className="btl-tooltiptext">{'Clicks: ' + data.analytic.link_count + ' / ' + 'Unique Clicks: ' + data.analytic.ip.length}</span>
-					<span className="icon">{data.analytic.link_count + '/' + data.analytic.ip.length}</span>
+					<span className="icon">{analytic(data.analytic)}</span>
 				</button>
 			)}
 			{!isDeleteConfirm ? (

@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { subDays } from 'date-fns';
 import Graph from './../../components/Graph';
 import TableLoader from './../../components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate } from './../../utils/helper';
@@ -96,8 +97,7 @@ const Analytics = (props) => {
 	const { clicks } = props.clicks;
 	useEffect(() => {
 		const currentDate = new Date();
-		let pastDate = new Date();
-		pastDate = pastDate.setDate(currentDate.getDate() - 30);
+		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
 		if (!clicks) {
 			props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
 		}
