@@ -52,10 +52,23 @@ class S301ROneClick extends Base
 		}
 		if (count($categories) > 0) {
 			$catMessage = $this->terms_insert($categories);
-        }
+		}
+		$update_option = $this->save_option();
 		return [
             'links' => $message,
-            'terms' => $catMessage,
+			'terms' => $catMessage,
+			'wildcard' => ($update_option ? ['Import Successfully Wildcards'] : [])
 		];
+	}
+
+	public function save_option()
+	{
+		$wildcard = get_option('301_redirects_wildcard');
+		if($wildcard == true){
+			$links = json_decode(get_option('betterlinks_links'));
+			$links->wildcards = $wildcard;
+			return update_option('betterlinks_links', json_encode($links));
+		}
+		return;
 	}
 }
