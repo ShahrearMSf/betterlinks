@@ -1,7 +1,7 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PTLBase
+class Base
 {
 	public function terms_insert($categories)
 	{

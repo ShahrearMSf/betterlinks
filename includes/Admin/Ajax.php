@@ -10,13 +10,17 @@ class Ajax
 	{
 		add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
 		add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
-		add_action('wp_ajax_betterlinks/admin/migration_notice_hide', [$this, 'migration_notice_hide']);
+		add_action('wp_ajax_betterlinks/admin/migration_prettylinks_notice_hide', [$this, 'migration_prettylinks_notice_hide']);
 		add_action('wp_ajax_betterlinks/admin/deactive_prettylinks', [$this, 'deactive_prettylinks']);
 		add_action('wp_ajax_betterlinks/admin/write_json_links', [$this, 'write_json_links']);
 		add_action('wp_ajax_betterlinks/admin/write_json_clicks', [$this, 'write_json_clicks']);
 		add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
 		add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
 		add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
+		add_action('wp_ajax_betterlinks/admin/get_simple301redirects_data', [$this, 'get_simple301redirects_data']);
+		add_action('wp_ajax_betterlinks/admin/run_simple301redirects_migration', [$this, 'run_simple301redirects_migration']);
+		add_action('wp_ajax_betterlinks/admin/migration_simple301redirects_notice_hide', [$this, 'migration_simple301redirects_notice_hide']);
+		add_action('wp_ajax_betterlinks/admin/deactive_simple301redirects', [$this, 'deactive_simple301redirects']);
 	}
 
 	public function get_prettylinks_data()
@@ -61,7 +65,7 @@ class Ajax
 		}
 	}
 
-	public function migration_notice_hide()
+	public function migration_prettylinks_notice_hide()
 	{
 		check_ajax_referer('wp_rest', 'security');
 		$type = isset($_POST['type']) ? $_POST['type'] : '';
@@ -155,6 +159,49 @@ class Ajax
 			}
 		}
 		wp_send_json_success($alreadyExists);
+		wp_die();
+	}
+	public function get_simple301redirects_data()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$links = get_option('301_redirects');
+		wp_send_json_success($links);
+		wp_die();
+	}
+	public function run_simple301redirects_migration()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		try {
+			$simple_301_redirects = get_option('301_redirects');
+			$DB = \BetterLinks\Helper::DB();
+			$migrator = new \BetterLinks\Tools\Migration\S301ROneClick($DB);
+			$resutls = $migrator->process_links_data($simple_301_redirects);
+			\BetterLinks\Helper::create_cron_jobs_for_json_links();
+			\BetterLinks\Helper::clear_query_cache();
+			update_option('betterlink_notice_s301r_migrate', true);
+			wp_send_json_success($resutls);
+			wp_die();
+		} catch (\Throwable $th) {
+			wp_send_json_error($th->getMessage());
+			wp_die();
+		}
+	}
+	public function migration_simple301redirects_notice_hide()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$type = isset($_POST['type']) ? $_POST['type'] : '';
+		if ($type == 'deactive') {
+			update_option('betterlink_hide_notice_s301r_deactive', true);
+		} elseif ($type == 'migrate') {
+			update_option('betterlink_notice_s301r_migrate', true);
+		}
+		wp_die();
+	}
+	public function deactive_simple301redirects()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$deactivate = deactivate_plugins('simple-301-redirects/wp-simple-301-redirects.php');
+		wp_send_json_success($deactivate);
 		wp_die();
 	}
 }

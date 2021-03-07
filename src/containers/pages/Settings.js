@@ -37,7 +37,7 @@ const Settings = (props) => {
 					<TabsTools query={query} />
 				</TabPanel>
 			</Tabs>
-			{migration && <Migration />}
+			{migration && <Migration mode={migration} />}
 		</React.Fragment>
 	);
 };

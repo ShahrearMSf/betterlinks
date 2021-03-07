@@ -9,22 +9,64 @@ import { useHistory } from 'react-router-dom';
 const Migration = (props) => {
 	const [migrationSubmitText, setMigrationSubmitText] = useState('Migrate Now');
 	const [modalIsOpen, setIsOpen] = useState(true);
+	const [dataIsFetch, setDataIsFetch] = useState(false);
 	const [prettyLinksRes, setPrettyLinksRes] = useState({});
+	const [simple301RedirectRes, setSimple301RedirectRes] = useState({});
 	const [migrateRes, setMigrateRes] = useState({});
 	let history = useHistory();
-
 	useEffect(() => {
-		axios.post(`${ajaxurl}?action=betterlinks/admin/get_prettylinks_data&security=${nonce}`).then(
+		if (props.mode === 'simple301redirects') {
+			setDataIsFetch(true);
+			axios.post(`${ajaxurl}?action=betterlinks/admin/get_simple301redirects_data&security=${nonce}`).then(
+				(response) => {
+					console.log(response);
+					if (response) {
+						setSimple301RedirectRes(response.data.data);
+						setDataIsFetch(false);
+					}
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		} else if (props.mode === 'prettylinks') {
+			setDataIsFetch(true);
+			axios.post(`${ajaxurl}?action=betterlinks/admin/get_prettylinks_data&security=${nonce}`).then(
+				(response) => {
+					if (response.data) {
+						setPrettyLinksRes(response.data.data);
+						setDataIsFetch(false);
+					}
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		}
+	}, []);
+
+	const onSubmitHandler = (values) => {
+		setMigrationSubmitText(__('Migration is in Progress...', 'betterlinks'));
+		let form_data = new FormData();
+		if (props.mode === 'prettylinks') {
+			form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
+		} else if (props.mode === 'simple301redirects') {
+			form_data.append('action', 'betterlinks/admin/run_simple301redirects_migration');
+		}
+		form_data.append('security', nonce);
+		form_data.append('type', values.checked);
+		axios.post(ajaxurl, form_data).then(
 			(response) => {
 				if (response.data) {
-					setPrettyLinksRes(response.data.data);
+					setMigrationSubmitText('Done!');
+					setMigrateRes(response.data.data);
 				}
 			},
 			(error) => {
 				console.log(error);
 			}
 		);
-	}, []);
+	};
 
 	function closeModal() {
 		setIsOpen(false);
@@ -42,29 +84,14 @@ const Migration = (props) => {
 						initialValues={{
 							checked: [],
 						}}
-						onSubmit={(values) => {
-							setMigrationSubmitText(__('Migration is in Progress...', 'betterlinks'));
-							let form_data = new FormData();
-							form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
-							form_data.append('security', nonce);
-							form_data.append('type', values.checked);
-							axios.post(ajaxurl, form_data).then(
-								(response) => {
-									if (response.data) {
-										setMigrationSubmitText('Done!');
-										setMigrateRes(response.data.data);
-									}
-								},
-								(error) => {
-									console.log(error);
-								}
-							);
-						}}
+						onSubmit={(values) => onSubmitHandler(values)}
 					>
 						{({ values }) => (
 							<Form>
 								<div className="btl-modal-migration" role="group" aria-labelledby="checkbox-group">
-									{Object.keys(prettyLinksRes).length > 0 ? (
+									{dataIsFetch && <div>{__('Please Wait...', 'betterlinks')}</div>}
+
+									{Object.keys(prettyLinksRes).length > 0 && (
 										<>
 											<h3 className="btl-modal-migration__title">
 												{__('Pick Data that You want to Import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
@@ -92,9 +119,27 @@ const Migration = (props) => {
 												)}
 											</div>
 										</>
-									) : (
-										<div>{__('Please Wait...', 'betterlinks')}</div>
 									)}
+
+									{Object.keys(simple301RedirectRes).length > 0 && (
+										<>
+											<h3 className="btl-modal-migration__title">
+												{__('Pick Data that You want to Import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
+											</h3>
+											<div className="btl-modal-migration__item">
+												{simple301RedirectRes && Object.keys(simple301RedirectRes).length > 0 && (
+													<>
+														<Field id="links" type="checkbox" name="checked" value="links" />
+														<label htmlFor="links">
+															{__('Links ', 'betterlinks')}
+															{`(${Object.keys(simple301RedirectRes).length})`}
+														</label>
+													</>
+												)}
+											</div>
+										</>
+									)}
+
 									{prettyLinksRes.links && prettyLinksRes.links.length == 0 && prettyLinksRes.clicks && prettyLinksRes.clicks.length == 0 ? (
 										<h3>{__('Nothing Found To Import', 'betterlinks')}</h3>
 									) : (
@@ -112,14 +157,13 @@ const Migration = (props) => {
 							<h3>
 								{__('Migration is Complete', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
 							</h3>
-							{Object.entries(migrateRes).map(([index, item]) =>
-								Object.entries(item).map(([chiildIndex, childItem]) => (
-									<div key={chiildIndex}>
-										{childItem.map((item, index) => (
-											<div key={index}>{item}</div>
-										))}
-									</div>
-								))
+							{console.log(migrateRes)}
+							{Object.entries(migrateRes).map(
+								([index, item]) =>
+									Object.entries(item).length > 0 &&
+									Object.entries(item).map(([chiildIndex, childItem]) => (
+										<div key={chiildIndex}>{Array.isArray(childItem) ? childItem.map((item, index) => <div key={index}>{item}</div>) : childItem}</div>
+									))
 							)}
 						</div>
 					</div>
