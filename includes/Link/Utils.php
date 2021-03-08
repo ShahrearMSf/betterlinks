@@ -14,15 +14,15 @@ class Utils
 	}
 	public function dispatch_redirect($data, $param)
 	{
-		if (intval($data->track_me)) {
+		if (intval($data['track_me'])) {
 			$this->start_trakcing($data);
 		}
 
 		$robots_tags = [];
-		if ($data->sponsored) {
+		if ($data['sponsored']) {
 			$robots_tags[] = 'sponsored';
 		}
-		if ($data->nofollow) {
+		if ($data['nofollow']) {
 			$robots_tags[] = 'noindex';
 			$robots_tags[] = 'nofollow';
 		}
@@ -37,40 +37,12 @@ class Utils
 		header('Pragma: no-cache');
 		header('X-Redirect-Powered-By:  https://www.betterlinks.io/');
 
-		$target_url = $this->addScheme($data->target_url);
-		if ($data->param_forwarding && !empty($param)) {
+		$target_url = $this->addScheme($data['target_url']);
+		if ($data['param_forwarding'] && !empty($param)) {
 			$target_url = $target_url . '?' . $param;
 		}
 
-		if ($data->wildcard === true && strpos($data->short_url,'*') !== false) {
-			// wildcard redirect
-			$userrequest = $this->str_ireplace(get_option('home'),'',$this->get_address());
-			$userrequest = rtrim($userrequest,'/');
-			
-			// don't allow people to accidentally lock themselves out of admin
-			if ( strpos($userrequest, '/wp-login') !== 0 && strpos($userrequest, '/wp-admin') !== 0 ) {
-				// Make sure it gets all the proper decoding and rtrim action
-				$data->short_url = str_replace('*','(.*)',$data->short_url);
-				$pattern = '/^' . str_replace( '/', '\/', rtrim( $data->short_url, '/' ) ) . '/';
-				$destination = str_replace('*','$1',$data->target_url);
-				$output = preg_replace($pattern, $destination, $userrequest);
-				if ($output !== $userrequest) {
-					$do_redirect = $output;
-					// redirect. the second condition here prevents redirect loops as a result of wildcards.
-					if ($do_redirect !== '' && trim($do_redirect,'/') !== trim($userrequest,'/')) {
-						// check if destination needs the domain prepended
-						if (strpos($do_redirect,'/') === 0){
-							$do_redirect = home_url().$do_redirect;
-						}
-						header ('HTTP/1.1 301 Moved Permanently');
-						header ('Location: ' . $do_redirect);
-						exit();
-					}
-				}
-			}
-		}
-
-		switch ($data->redirect_type) {
+		switch ($data['redirect_type']) {
 			case '301':
 				wp_redirect($target_url, 301);
 				exit();
@@ -97,13 +69,13 @@ class Utils
 			setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
 		}
 		$data = [
-			'link_id' => $data->ID,
+			'link_id' => $data['ID'],
 			'ip' => $IP,
 			'browser' => $_SERVER['HTTP_USER_AGENT'],
 			'os' => '',
 			'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
 			'host' => $IP,
-			'uri' => $data->link_slug,
+			'uri' => $data['link_slug'],
 			'click_count' => 0,
 			'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
 			'click_order' => 0,
@@ -154,28 +126,4 @@ class Utils
 		array_push($tempArray, $data);
 		return file_put_contents($file, json_encode($tempArray));
 	}
-	public function get_address() {
-		
-		return $this->get_protocol().'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	}
-	public function get_protocol() {
-		// Set the base protocol to http
-		$protocol = 'http';
-		// check for https
-		if ( isset( $_SERVER["HTTPS"] ) && strtolower( $_SERVER["HTTPS"] ) == "on" ) {
-			$protocol .= "s";
-		}
-		return $protocol;
-	} 
-	public function str_ireplace($search,$replace,$subject){
-        $token = chr(1);
-        $haystack = strtolower($subject);
-        $needle = strtolower($search);
-        while (($pos=strpos($haystack,$needle))!==FALSE){
-            $subject = substr_replace($subject,$token,$pos,strlen($search));
-            $haystack = substr_replace($haystack,$token,$pos,strlen($search));
-        }
-        $subject = str_replace($token,$replace,$subject);
-        return $subject;
-    }
 }

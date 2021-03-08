@@ -19,7 +19,7 @@ class Helper
 	public static function get_links()
 	{
 		if (BETTERLINKS_EXISTS_LINKS_JSON) {
-			return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
+			return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'), true);
 		}
 		return;
 	}
@@ -27,8 +27,18 @@ class Helper
 	public static function get_link_from_json_file($short_url)
 	{
 		global $betterlinks;
-		if (isset($betterlinks->$short_url)) {
-			return $betterlinks->$short_url;
+		if($betterlinks['wildcards_is_active']){
+			if(is_array($betterlinks['wildcards']) && count($betterlinks['wildcards']) > 0){
+				foreach($betterlinks['wildcards'] as $key => $item){
+					$postion = strpos($key, '/*');
+					if(substr($key, 0, $postion) == substr($short_url, 0, $postion)){
+						return $item;
+					}
+				}
+			}
+		}
+		if (isset($betterlinks['links'][$short_url])) {
+			return $betterlinks['links'][$short_url];
 		}
 		return;
 	}
