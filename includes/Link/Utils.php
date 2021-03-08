@@ -42,6 +42,34 @@ class Utils
 			$target_url = $target_url . '?' . $param;
 		}
 
+		if ($data->wildcard === true && strpos($data->short_url,'*') !== false) {
+			// wildcard redirect
+			$userrequest = $this->str_ireplace(get_option('home'),'',$this->get_address());
+			$userrequest = rtrim($userrequest,'/');
+			
+			// don't allow people to accidentally lock themselves out of admin
+			if ( strpos($userrequest, '/wp-login') !== 0 && strpos($userrequest, '/wp-admin') !== 0 ) {
+				// Make sure it gets all the proper decoding and rtrim action
+				$data->short_url = str_replace('*','(.*)',$data->short_url);
+				$pattern = '/^' . str_replace( '/', '\/', rtrim( $data->short_url, '/' ) ) . '/';
+				$destination = str_replace('*','$1',$data->target_url);
+				$output = preg_replace($pattern, $destination, $userrequest);
+				if ($output !== $userrequest) {
+					$do_redirect = $output;
+					// redirect. the second condition here prevents redirect loops as a result of wildcards.
+					if ($do_redirect !== '' && trim($do_redirect,'/') !== trim($userrequest,'/')) {
+						// check if destination needs the domain prepended
+						if (strpos($do_redirect,'/') === 0){
+							$do_redirect = home_url().$do_redirect;
+						}
+						header ('HTTP/1.1 301 Moved Permanently');
+						header ('Location: ' . $do_redirect);
+						exit();
+					}
+				}
+			}
+		}
+
 		switch ($data->redirect_type) {
 			case '301':
 				wp_redirect($target_url, 301);
@@ -126,4 +154,28 @@ class Utils
 		array_push($tempArray, $data);
 		return file_put_contents($file, json_encode($tempArray));
 	}
+	public function get_address() {
+		
+		return $this->get_protocol().'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+	}
+	public function get_protocol() {
+		// Set the base protocol to http
+		$protocol = 'http';
+		// check for https
+		if ( isset( $_SERVER["HTTPS"] ) && strtolower( $_SERVER["HTTPS"] ) == "on" ) {
+			$protocol .= "s";
+		}
+		return $protocol;
+	} 
+	public function str_ireplace($search,$replace,$subject){
+        $token = chr(1);
+        $haystack = strtolower($subject);
+        $needle = strtolower($search);
+        while (($pos=strpos($haystack,$needle))!==FALSE){
+            $subject = substr_replace($subject,$token,$pos,strlen($search));
+            $haystack = substr_replace($haystack,$token,$pos,strlen($search));
+        }
+        $subject = str_replace($token,$replace,$subject);
+        return $subject;
+    }
 }
