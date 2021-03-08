@@ -86,6 +86,8 @@ class Settings extends Controller
 		if ($response) {
 			update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
 		}
+		// regenerate links for wildcards option update
+		\BetterLinks\Helper::create_cron_jobs_for_json_links();
 		return new \WP_REST_Response(
 			[
 				'success' => true,
