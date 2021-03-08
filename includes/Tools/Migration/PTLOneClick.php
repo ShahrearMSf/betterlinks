@@ -1,7 +1,7 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PTLOneClick extends PTLBase
+class PTLOneClick extends Base
 {
 	public $DB;
 	public function __construct($DB)

@@ -30,9 +30,11 @@ class Cron
 		$prefix = $wpdb->prefix;
 		$query = Helper::DB();
 		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,target_url,nofollow,sponsored,param_forwarding,track_me FROM {$prefix}betterlinks")->get();
+		$options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
 		if (is_array($items) && count($items) > 0) {
 			$formattedArray = [];
 			foreach ($items as $item) {
+				$item->wildcards = $options->wildcards;
 				$formattedArray[$item->short_url] = $item;
 			}
 			return file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json', json_encode($formattedArray));

@@ -12,6 +12,7 @@ abstract class Controller
 
 	protected function json_link_formatter($data)
 	{
+		$options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
 		return [
 			'ID' => $data['ID'],
 			'link_slug' => $data['link_slug'],
@@ -21,6 +22,7 @@ abstract class Controller
 			'sponsored' => $data['sponsored'],
 			'param_forwarding' => $data['param_forwarding'],
 			'track_me' => $data['track_me'],
+			'wildcards' => $options->wildcards
 		];
 	}
 	protected function insert_json_into_file($file, $data)

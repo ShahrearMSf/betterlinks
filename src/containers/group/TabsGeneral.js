@@ -190,6 +190,21 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="wildcards" type="checkbox" onChange={() => props.setFieldValue('wildcards', !props.values.wildcards)} />
+										<span className="text">
+											{__('Use Wildcards?', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('To use wildcards, put an asterisk (*) after the folder name that you want to redirect.', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
