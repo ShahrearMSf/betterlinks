@@ -33,8 +33,10 @@ class Helper
 			if(isset($betterlinks['wildcards']) && count($betterlinks['wildcards']) > 0){
 				foreach($betterlinks['wildcards'] as $key => $item){
 					$postion = strpos($key, '/*');
-					if(substr($key, 0, $postion) == substr($short_url, 0, $postion)){
-						return $item;
+					if($postion !== false){
+						if(substr($key, 0, $postion) == substr($short_url, 0, $postion)){
+							return $item;
+						}
 					}
 				}
 			}
