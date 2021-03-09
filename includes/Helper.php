@@ -27,8 +27,11 @@ class Helper
 	public static function get_link_from_json_file($short_url)
 	{
 		global $betterlinks;
+		if (isset($betterlinks['links'][$short_url])) {
+			return $betterlinks['links'][$short_url];
+		}
 		if($betterlinks['wildcards_is_active']){
-			if(is_array($betterlinks['wildcards']) && count($betterlinks['wildcards']) > 0){
+			if(isset($betterlinks['wildcards']) && count($betterlinks['wildcards']) > 0){
 				foreach($betterlinks['wildcards'] as $key => $item){
 					$postion = strpos($key, '/*');
 					if(substr($key, 0, $postion) == substr($short_url, 0, $postion)){
@@ -36,9 +39,6 @@ class Helper
 					}
 				}
 			}
-		}
-		if (isset($betterlinks['links'][$short_url])) {
-			return $betterlinks['links'][$short_url];
 		}
 		return;
 	}

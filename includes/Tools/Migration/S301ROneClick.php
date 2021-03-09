@@ -40,6 +40,7 @@ class S301ROneClick extends Base
 					'link_order' => 0,
 					'link_modified' => $now,
 					'link_modified_gmt' => $now_gmt,
+					'wildcards' 		=> (strpos($request, '/*') !== false ? 1 : 0),
                 ];
 				$categories[ltrim($request, '/')] = 'simple-301-redirects';
 				$message[] = 'Imported Successfully "' . $destination . '"';
