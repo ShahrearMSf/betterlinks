@@ -9,8 +9,22 @@ class Utils
 			return \BetterLinks\Helper::get_link_from_json_file($slug);
 		}
 		$query = \BetterLinks\Helper::DB();
-		$query = $query->table('betterlinks')->where('short_url', '=', $slug);
-		return $query->first();
+		$results = $query->table('betterlinks')->where('short_url', '=', $slug)->first();
+		if(!empty($results)){
+			return json_decode(json_encode($results),true);
+		}
+		// wildcards
+		$links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+		if(isset($links_option['wildcards']) && $links_option['wildcards']){
+			$results = $query->table('betterlinks')->where('wildcards', '=', 1)->get();
+			foreach($results as $key => $item){
+				$postion = strpos($key, '/*');
+				if(substr($key, 0, $postion) == substr($slug, 0, $postion)){
+					return json_decode(json_encode($item),true);
+				}
+			}
+		}
+		return;
 	}
 	public function dispatch_redirect($data, $param)
 	{
