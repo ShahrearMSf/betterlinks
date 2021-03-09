@@ -21,7 +21,6 @@ class Helper
 		if (BETTERLINKS_EXISTS_LINKS_JSON) {
 			return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'), true);
 		}
-		return;
 	}
 
 	public static function get_link_from_json_file($short_url)

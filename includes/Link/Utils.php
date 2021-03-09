@@ -18,13 +18,14 @@ class Utils
 		if(isset($links_option['wildcards']) && $links_option['wildcards']){
 			$results = $query->table('betterlinks')->where('wildcards', '=', 1)->get();
 			foreach($results as $key => $item){
-				$postion = strpos($key, '/*');
-				if(substr($key, 0, $postion) == substr($slug, 0, $postion)){
-					return json_decode(json_encode($item),true);
+				$postion = strpos($item->short_url, '/*');
+				if($postion !== false){
+					if(substr($item->short_url, 0, $postion) == substr($slug, 0, $postion)){
+						return json_decode(json_encode($item),true);
+					}
 				}
 			}
 		}
-		return;
 	}
 	public function dispatch_redirect($data, $param)
 	{
