@@ -25,7 +25,7 @@ class S301ROneClick extends Base
 					'link_author' => $author_id,
 					'link_date' => $now,
 					'link_date_gmt' => $now_gmt,
-					'link_title' => 'Simple 301 Redirects- ' . $destination,
+					'link_title' => 'Simple 301 Redirects -' . $request,
 					'link_slug' => \BetterLinks\Helper::make_slug('Simple 301 Redirects- ' . $destination),
 					'link_note' => '',
 					'link_status' => 'publish',
@@ -36,12 +36,12 @@ class S301ROneClick extends Base
 					'param_struct' => '',
 					'redirect_type' => '301',
 					'target_url' => $destination,
-					'short_url' => $request,
+					'short_url' => ltrim($request, '/'),
 					'link_order' => 0,
 					'link_modified' => $now,
 					'link_modified_gmt' => $now_gmt,
                 ];
-				$categories[$request] = 'simple-301-redirects';
+				$categories[ltrim($request, '/')] = 'simple-301-redirects';
 				$message[] = 'Imported Successfully "' . $destination . '"';
 			} else {
 				$message[] = 'import failed "' . $destination . '" already exists';
