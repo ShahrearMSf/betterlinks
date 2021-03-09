@@ -30,7 +30,7 @@ class Helper
 		if (isset($betterlinks['links'][$short_url])) {
 			return $betterlinks['links'][$short_url];
 		}
-		if($betterlinks['wildcards_is_active']){
+		if(isset($betterlinks['wildcards_is_active']) && $betterlinks['wildcards_is_active']){
 			if(isset($betterlinks['wildcards']) && count($betterlinks['wildcards']) > 0){
 				foreach($betterlinks['wildcards'] as $key => $item){
 					$postion = strpos($key, '/*');
