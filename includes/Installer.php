@@ -27,9 +27,6 @@ class Installer
 		if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
 			update_option('betterlinks_version', BETTERLINKS_VERSION);
 		}
-		if (get_option('betterlinks_db_version') != BETTERLINKS_DB_VERSION) {
-			update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
-		}
 	}
 
 	public function createBetterLinksTable()
@@ -55,6 +52,7 @@ class Installer
             link_order tinyint(11) default 0,
             link_modified datetime NOT NULL default '0000-00-00 00:00:00',
             link_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
+			wildcards boolean NOT NULL default 0,
             PRIMARY KEY  (ID),
             KEY link_slug (link_slug(191)),
             KEY type_status_date (link_status,link_date,ID),
