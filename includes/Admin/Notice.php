@@ -68,7 +68,7 @@ class Notice
 		?>
         <div class="notice notice-error betterlinks-notice-deactive-prettylinks <?php echo $this->pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('All Pretty Links has been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website.', 'betterlinks'); ?>
+                <?php _e('All Pretty Links have been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website.', 'betterlinks'); ?>
                 <a href="#" class="button button-primary deactive"><?php _e('Deactivate Pretty Links', 'betterlinks'); ?></a>
             </p>
         </div>
@@ -94,7 +94,7 @@ class Notice
 		?>
         <div class="notice notice-error betterlinks-notice-deactive-simple301redirects <?php echo $this->pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('All Simple 301 Redirects has been successfully migrated to BetterLinks. You can now safely deactivate Simple 301 Redirects on your website.', 'betterlinks'); ?>
+                <?php _e('All Simple 301 Redirects have been successfully migrated to BetterLinks. You can now safely deactivate Simple 301 Redirects on your website.', 'betterlinks'); ?>
                 <a href="#" class="button button-primary deactive"><?php _e('Deactivate Simple 301 Redirects', 'betterlinks'); ?></a>
             </p>
         </div>
