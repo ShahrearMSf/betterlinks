@@ -20,13 +20,13 @@ class S301ROneClick extends Base
         $now_gmt = current_time('mysql', 1);
         $betterlinks_links = json_decode(get_option('betterlinks_links'));        
 		foreach ($data as $request => $destination) {
-			if (!\BetterLinks\Helper::link_exists('Simple 301 Redirects- ' . $destination, $request)) {
+			if (!\BetterLinks\Helper::link_exists('Simple 301 Redirects - ' . ltrim($request, '/'), ltrim($request, '/'))) {
 				$links[] = [
 					'link_author' => $author_id,
 					'link_date' => $now,
 					'link_date_gmt' => $now_gmt,
-					'link_title' => 'Simple 301 Redirects -' . $request,
-					'link_slug' => \BetterLinks\Helper::make_slug('Simple 301 Redirects- ' . $destination),
+					'link_title' => 'Simple 301 Redirects - ' . ltrim($request, '/'),
+					'link_slug' => \BetterLinks\Helper::make_slug('Simple 301 Redirects - ' . $destination),
 					'link_note' => '',
 					'link_status' => 'publish',
 					'nofollow' => $betterlinks_links->nofollow,
