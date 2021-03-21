@@ -4,7 +4,7 @@ Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
 Requires at least: 4.0
 Tested up to: 5.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -117,7 +117,8 @@ Yes, it will work with any standard WordPress theme.
 - Fixed: Analytics not showing instantly after regenerating stats
 - Fixed: Clicks count not working
 - Fixed: Most Recent click data not showing at the top in Analytics
-- Improved: overall UI/UX 
+- Improved: Overall UI/UX 
+- Improved: Migration from Pretty Links
 - Few minor bug fix and improvements
 
 = 1.0.1 - 15/01/2021 =
