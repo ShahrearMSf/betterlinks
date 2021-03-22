@@ -6,8 +6,8 @@ import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from './../../components/Graph';
 import TableLoader from './../../components/Loader/TableLoader';
-import { site_url, plugin_root_url, getBrowser, formatDate } from './../../utils/helper';
-import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
+import { site_url, plugin_root_url, getBrowser, formatDate, nonce } from './../../utils/helper';
+import { fetch_clicks_data, searchClicksData } from './../../redux/actions/clicks.actions';
 
 const columns = [
 	{
@@ -84,14 +84,17 @@ const columns = [
 	},
 ];
 
-const FilterComponent = ({ filterText, onFilter, onClear }) => (
+const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText }) => (
 	<div className="btl-click-filter">
 		<input id="search" type="text" placeholder={__('Filter By Name', 'betterlinks')} value={filterText} onChange={onFilter} />
-		<button className="btl-search-button">{__('Search Click', 'betterlinks')}</button>
+		<button className="btl-search-button" onClick={searchClickHandler}>
+			{serachBtnText}
+		</button>
 	</div>
 );
 
 const Analytics = (props) => {
+	const [serachBtnText, setSearchBtnText] = useState('Search Click');
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
@@ -123,8 +126,24 @@ const Analytics = (props) => {
 				setFilterText('');
 			}
 		};
-		return <FilterComponent onFilter={(e) => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
-	}, [filterText, resetPaginationToggle]);
+		const searchClickHandler = () => {
+			if (filterText) {
+				setSearchBtnText('Searching...');
+				props.searchClicksData(nonce, filterText).then(() => {
+					setSearchBtnText('Search Click');
+				});
+			}
+		};
+		return (
+			<FilterComponent
+				onFilter={(e) => setFilterText(e.target.value)}
+				onClear={handleClear}
+				filterText={filterText}
+				searchClickHandler={searchClickHandler}
+				serachBtnText={serachBtnText}
+			/>
+		);
+	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
 	return (
 		<React.Fragment>
@@ -161,6 +180,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
+		searchClicksData: bindActionCreators(searchClicksData, dispatch),
 	};
 };
 
