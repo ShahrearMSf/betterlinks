@@ -120,7 +120,7 @@ class Terms extends Controller
 				$request['params']['lists'] = [];
 				return new \WP_REST_Response(
 					[
-						'success' => is_bool($id),
+						'success' => true,
 						'data' => $request['params'],
 					],
 					200
