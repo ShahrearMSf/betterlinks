@@ -9,20 +9,35 @@ class Utils
 			return \BetterLinks\Helper::get_link_from_json_file($slug);
 		}
 		$query = \BetterLinks\Helper::DB();
-		$query = $query->table('betterlinks')->where('short_url', '=', $slug);
-		return $query->first();
+		$results = $query->table('betterlinks')->where('short_url', '=', $slug)->first();
+		if(!empty($results)){
+			return json_decode(json_encode($results),true);
+		}
+		// wildcards
+		$links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+		if(isset($links_option['wildcards']) && $links_option['wildcards']){
+			$results = $query->table('betterlinks')->where('wildcards', '=', 1)->get();
+			foreach($results as $key => $item){
+				$postion = strpos($item->short_url, '/*');
+				if($postion !== false){
+					if(substr($item->short_url, 0, $postion) == substr($slug, 0, $postion)){
+						return json_decode(json_encode($item),true);
+					}
+				}
+			}
+		}
 	}
 	public function dispatch_redirect($data, $param)
 	{
-		if (intval($data->track_me)) {
+		if (intval($data['track_me'])) {
 			$this->start_trakcing($data);
 		}
 
 		$robots_tags = [];
-		if ($data->sponsored) {
+		if ($data['sponsored']) {
 			$robots_tags[] = 'sponsored';
 		}
-		if ($data->nofollow) {
+		if ($data['nofollow']) {
 			$robots_tags[] = 'noindex';
 			$robots_tags[] = 'nofollow';
 		}
@@ -37,12 +52,12 @@ class Utils
 		header('Pragma: no-cache');
 		header('X-Redirect-Powered-By:  https://www.betterlinks.io/');
 
-		$target_url = $this->addScheme($data->target_url);
-		if ($data->param_forwarding && !empty($param)) {
+		$target_url = $this->addScheme($data['target_url']);
+		if ($data['param_forwarding'] && !empty($param)) {
 			$target_url = $target_url . '?' . $param;
 		}
 
-		switch ($data->redirect_type) {
+		switch ($data['redirect_type']) {
 			case '301':
 				wp_redirect($target_url, 301);
 				exit();
@@ -69,13 +84,13 @@ class Utils
 			setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
 		}
 		$data = [
-			'link_id' => $data->ID,
+			'link_id' => $data['ID'],
 			'ip' => $IP,
 			'browser' => $_SERVER['HTTP_USER_AGENT'],
 			'os' => '',
 			'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
 			'host' => $IP,
-			'uri' => $data->link_slug,
+			'uri' => $data['link_slug'],
 			'click_count' => 0,
 			'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
 			'click_order' => 0,
@@ -116,6 +131,9 @@ class Utils
 	}
 	public function addScheme($url, $scheme = 'http://')
 	{
+		if(parse_url($url, PHP_URL_HOST) === null){
+			return $url = site_url('/') . $url;
+		}
 		return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
 	}
 

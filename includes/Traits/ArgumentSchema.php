@@ -78,6 +78,10 @@ trait ArgumentSchema
 				'type' => 'string',
 				'format' => 'date-time',
 			],
+			'wildcards' => [
+				'type' => 'integer',
+				'sanitize_callback' => 'absint',
+			]
 		];
 	}
 	public function terms_schema()
@@ -204,7 +208,7 @@ trait ArgumentSchema
 			'redirect_type' => [
 				'type' => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			],
+			]
 		];
 	}
 }

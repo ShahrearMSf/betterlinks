@@ -55,6 +55,8 @@ class Clicks extends Controller
 				'args' => $this->get_clicks_schema(),
 			],
 		]);
+
+		do_action('betterlinks_register_clicks_routes', $this);
 	}
 
 	/**

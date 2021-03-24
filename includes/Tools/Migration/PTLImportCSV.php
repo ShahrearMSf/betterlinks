@@ -1,7 +1,7 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PTLImportCSV extends PTLBase
+class PTLImportCSV extends Base
 {
 	public $DB;
 	public function __construct($DB)

@@ -18,6 +18,8 @@ const Settings = (props) => {
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
 	const { settings } = props.settings;
+	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [__('General', 'betterlinks'), __('Tools', 'betterlinks')]);
+	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [<TabsGeneral settings={settings} />, <TabsTools query={query} />]);
 	useEffect(() => {
 		if (!settings) {
 			props.fetch_settings_data();
@@ -27,17 +29,15 @@ const Settings = (props) => {
 		<React.Fragment>
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
 				<TabList>
-					<Tab>{__('General', 'betterlinks')}</Tab>
-					<Tab>{__('Tools', 'betterlinks')}</Tab>
+					{tabList.map((item, index) => (
+						<Tab key={index}>{item}</Tab>
+					))}
 				</TabList>
-				<TabPanel>
-					<TabsGeneral settings={settings} />
-				</TabPanel>
-				<TabPanel>
-					<TabsTools query={query} />
-				</TabPanel>
+				{tabPanel.map((item, index) => (
+					<TabPanel key={index}>{item}</TabPanel>
+				))}
 			</Tabs>
-			{migration && <Migration />}
+			{migration && <Migration mode={migration} />}
 		</React.Fragment>
 	);
 };

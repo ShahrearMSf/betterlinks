@@ -69,6 +69,15 @@
 			background: #f2f2f2;
 			margin-top: 15px;
 		}
+		.link-options__body{
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			margin-bottom: -10px;
+			.btl-checkbox-field{
+				margin-bottom: 10px;
+			}
+		}
 	}
 	
 }

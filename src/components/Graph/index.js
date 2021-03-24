@@ -68,7 +68,7 @@ const Graph = (props) => {
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
 	const [customDateFilter, setCustomDateFilter] = useState([
 		{
-			startDate: subDays(new Date(), 30),
+			startDate: betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30)),
 			endDate: new Date(),
 			key: 'selection',
 		},
@@ -88,16 +88,19 @@ const Graph = (props) => {
 	};
 
 	const filterHandler = async () => {
+		let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
 		setFilterButtonText('Filtering...');
 		try {
-			const res = await API.get(namespace + 'clicks', {
+			const res = await API.get(endPoint, {
 				params: { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') },
 			});
-			props.fetchCustomClicksData(res.data);
-			setFilterButtonText('Done!');
-			window.setTimeout(function () {
-				setFilterButtonText('Filter');
-			}, 3000);
+			setTimeout(function () {
+				props.fetchCustomClicksData(res.data);
+				setFilterButtonText('Done!');
+				setTimeout(function () {
+					setFilterButtonText('Filter');
+				}, 3000);
+			}, 1000);
 		} catch (e) {
 			console.log(e);
 		}

@@ -8,7 +8,7 @@ import Select from './../../components/Select';
 import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
-import { exists_clicks_json, nonce, exists_links_json } from './../../utils/helper';
+import { exists_clicks_json, nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Refresh Stats');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
@@ -17,12 +17,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [fastClicksButtonText, setFastClicksButtonText] = useState('Active Now');
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 	const writeLinkJSONHandler = () => {
-		setFastRedirectButtonText('Request Sending...');
+		setFastRedirectButtonText('Activating...');
 		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
-					setFastRedirectButtonText('Done!');
-					setFastRedirectStatus(true);
+					delayStatusChanged(null, 'Activated!', 'Active Now', setFastRedirectButtonText);
+					setTimeout(() => {
+						setFastRedirectStatus(true);
+					}, 1500);
 				}
 			},
 			(error) => {
@@ -31,12 +33,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 		);
 	};
 	const writeClicksJSONHandler = () => {
-		setFastClicksButtonText('Request Sending...');
+		setFastClicksButtonText('Activating...');
 		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_clicks&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
-					setFastClicksButtonText('Done!');
-					setFastClicksStatus(true);
+					delayStatusChanged(null, 'Activated!', 'Refresh Stats', setFastClicksButtonText);
+					setTimeout(() => {
+						setFastClicksStatus(true);
+					}, 1500);
 				}
 			},
 			(error) => {
@@ -45,14 +49,11 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 		);
 	};
 	const analyticClicksHandler = () => {
-		setCacheButtonText('Request Sending...');
+		setCacheButtonText('Refreshing...');
 		axios.post(`${ajaxurl}?action=betterlinks/admin/analytics&security=${nonce}`).then(
 			(response) => {
 				if (response.data) {
-					setCacheButtonText('Done!');
-					window.setTimeout(function () {
-						setCacheButtonText('Refresh Stats');
-					}, 3000);
+					delayStatusChanged(null, 'Done!', 'Refresh Stats', setCacheButtonText);
 					// update analytic data
 					fetch_clicks_data();
 				}
@@ -69,7 +70,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
 					update_option(values);
-					setFormSubmitText('Saved!');
+					delayStatusChanged('Saving...', 'Saved!', 'Save Settings', setFormSubmitText);
 				}}
 			>
 				{(props) => (
@@ -185,6 +186,21 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
 												<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="wildcards" type="checkbox" onChange={() => props.setFieldValue('wildcards', !props.values.wildcards)} />
+										<span className="text">
+											{__('Use Wildcards?', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('To use wildcards, put an asterisk (*) after the folder name that you want to redirect.', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>

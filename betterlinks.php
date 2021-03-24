@@ -34,6 +34,7 @@ if (!class_exists('BetterLinks')) {
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
 			add_action('betterlinks_loaded', [$this, 'init_plugin']);
+			add_action('wp_loaded', [$this, 'run_migrator']);
 			$this->dispatch_hook();
 		}
 
@@ -53,7 +54,7 @@ if (!class_exists('BetterLinks')) {
 			 * Defines CONSTANTS for Whole plugins.
 			 */
 			define('BETTERLINKS_VERSION', '1.0.2');
-			define('BETTERLINKS_DB_VERSION', '1.0');
+			define('BETTERLINKS_DB_VERSION', '1.1');
 			define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
 			define('BETTERLINKS_PLUGIN_FILE', __FILE__);
 			define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -108,6 +109,11 @@ if (!class_exists('BetterLinks')) {
 		public function set_global_settings()
 		{
 			$GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
+		}
+
+		public function run_migrator()
+		{
+			new BetterLinks\Migration();
 		}
 
 		public function activate()

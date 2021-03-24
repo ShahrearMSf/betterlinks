@@ -1,6 +1,7 @@
 <?php
 namespace BetterLinks\Tools;
 
+
 class Import
 {
 	private $DB;
@@ -38,8 +39,17 @@ class Import
 						}
 						$_SESSION['betterlinks_import_info'] = json_encode($results);
 					}
+				} elseif ($_POST['mode'] == 'simple301redirects') {
+					$fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
+					$migrator = new \BetterLinks\Tools\Migration\S301ROneClick($this->DB);
+					$resutls = $migrator->process_links_data($fileContent);
+					if (!empty($resutls)) {
+						$_SESSION['betterlinks_import_info'] = json_encode($resutls);
+					}
 				}
 			}
+			\BetterLinks\Helper::create_cron_jobs_for_json_links();
+			\BetterLinks\Helper::create_cron_jobs_for_analytics();
 		}
 	}
 	public function process_data($type)

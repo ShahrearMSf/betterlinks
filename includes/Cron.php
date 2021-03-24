@@ -29,15 +29,22 @@ class Cron
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = Helper::DB();
-		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,target_url,nofollow,sponsored,param_forwarding,track_me FROM {$prefix}betterlinks")->get();
-		if (is_array($items) && count($items) > 0) {
-			$formattedArray = [];
-			foreach ($items as $item) {
-				$formattedArray[$item->short_url] = $item;
-			}
-			return file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json', json_encode($formattedArray));
+		$formattedArray = [];
+		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards FROM {$prefix}betterlinks")->get();
+		$options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
+		if(!empty($options)){
+			$formattedArray['wildcards_is_active'] = $options->wildcards;
 		}
-		return;
+		if (is_array($items) && count($items) > 0) {
+			foreach ($items as $item) {
+				if($item->wildcards == true){
+					$formattedArray['wildcards'][$item->short_url] = $item;
+				} else {
+					$formattedArray['links'][$item->short_url] = $item;
+				}
+			}
+		}
+		return file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json', json_encode($formattedArray));
 	}
 
 	public function analytics()
