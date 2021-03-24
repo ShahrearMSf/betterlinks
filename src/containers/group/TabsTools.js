@@ -69,8 +69,14 @@ const TabsTools = ({ query }) => {
 							</div>
 							<div>
 								<label className="btl-radio">
-									<input type="radio" id="female" name="mode" value="prettylinks" checked={importerMode === 'prettylinks'} onChange={importerModeHandler}></input>
+									<input type="radio" name="mode" value="prettylinks" checked={importerMode === 'prettylinks'} onChange={importerModeHandler}></input>
 									<span>{__('Pretty Links', 'betterlinks')}</span>
+								</label>
+							</div>
+							<div>
+								<label className="btl-radio">
+									<input type="radio" name="mode" value="simple301redirects" checked={importerMode === 'simple301redirects'} onChange={importerModeHandler}></input>
+									<span>{__('Simple 301 Redirects', 'betterlinks')}</span>
 								</label>
 							</div>
 							<p className="btl-file-chooser">

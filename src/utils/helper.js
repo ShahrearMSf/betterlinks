@@ -169,3 +169,19 @@ export const removeOverlayElement = () => {
 	var elem = document.querySelector('.btl-overlay');
 	elem.parentNode.removeChild(elem);
 };
+
+export const delayStatusChanged = (firstStatus, secondStatus, thirdStatus, setState) => {
+	if (firstStatus) {
+		setState(firstStatus);
+	}
+	setTimeout(() => {
+		if (secondStatus) {
+			setState(secondStatus);
+		}
+		if (thirdStatus) {
+			setTimeout(() => {
+				setState(thirdStatus);
+			}, 3000);
+		}
+	}, 1000);
+};

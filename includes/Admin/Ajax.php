@@ -21,6 +21,7 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/run_simple301redirects_migration', [$this, 'run_simple301redirects_migration']);
 		add_action('wp_ajax_betterlinks/admin/migration_simple301redirects_notice_hide', [$this, 'migration_simple301redirects_notice_hide']);
 		add_action('wp_ajax_betterlinks/admin/deactive_simple301redirects', [$this, 'deactive_simple301redirects']);
+		add_action('wp_ajax_betterlinks/admin/search_clicks_data', [$this, 'search_clicks_data']);
 	}
 
 	public function get_prettylinks_data()
@@ -202,6 +203,25 @@ class Ajax
 		check_ajax_referer('wp_rest', 'security');
 		$deactivate = deactivate_plugins('simple-301-redirects/wp-simple-301-redirects.php');
 		wp_send_json_success($deactivate);
+		wp_die();
+	}
+	public function search_clicks_data()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$title = isset($_GET['title']) ? $_GET['title'] : '';
+		global $wpdb;
+		$prefix = $wpdb->prefix;
+		$query = \BetterLinks\Helper::DB();
+		$results = $query
+			->query(
+				"SELECT CLICKS.ID as 
+        click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
+        (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
+		from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE '%$title%'  group by CLICKS.id ORDER BY CLICKS.created_at DESC"
+			)
+			->get();
+		
+		wp_send_json_success($results);
 		wp_die();
 	}
 }
