@@ -171,7 +171,7 @@ const Link = (props) => {
 											{__('Shortened URL', 'betterlinks')}
 										</label>
 										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
-											<span className="btl-static-link">{site_url}</span>
+											<span className="btl-static-link">{site_url + '/'}</span>
 											<Field
 												className="btl-dynamic-link"
 												id="short_url"
