@@ -116,7 +116,7 @@ Yes, it will work with any standard WordPress theme.
 
 - Added: Migration for Simple 301 Redirects plugin
 - Tweaked: UI/UX update
-= Added: Wildcard option
+- Added: Wildcard option
 - Removed: Blank link showing in the Grid view
 - Few minor bug fix and improvements
 
