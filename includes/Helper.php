@@ -35,6 +35,12 @@ class Helper
 					$postion = strpos($key, '/*');
 					if($postion !== false){
 						if(substr($key, 0, $postion) == substr($short_url, 0, $postion)){
+							$target_postion = strpos($item['target_url'], '/*'); 
+							if($target_postion !== false){
+								$target_url = str_replace('/*',substr($short_url, $postion),$item['target_url']);
+								$item['target_url'] = $target_url;
+								return $item;
+							}
 							return $item;
 						}
 					}
