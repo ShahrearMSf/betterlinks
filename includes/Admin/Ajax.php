@@ -57,7 +57,7 @@ class Ajax
 			\BetterLinks\Helper::create_cron_jobs_for_json_links();
 			\BetterLinks\Helper::clear_query_cache();
 			\BetterLinks\Helper::create_cron_jobs_for_analytics();
-			update_option('betterlink_notice_ptl_migrate', true);
+			update_option('betterlinks_notice_ptl_migrate', true);
 			wp_send_json_success($resutls);
 			wp_die();
 		} catch (\Throwable $th) {
@@ -71,9 +71,9 @@ class Ajax
 		check_ajax_referer('wp_rest', 'security');
 		$type = isset($_POST['type']) ? $_POST['type'] : '';
 		if ($type == 'deactive') {
-			update_option('betterlink_hide_notice_ptl_deactive', true);
+			update_option('betterlinks_hide_notice_ptl_deactive', true);
 		} elseif ($type == 'migrate') {
-			update_option('betterlink_hide_notice_ptl_migrate', true);
+			update_option('betterlinks_hide_notice_ptl_migrate', true);
 		}
 		wp_die();
 	}
@@ -179,7 +179,7 @@ class Ajax
 			$resutls = $migrator->process_links_data($simple_301_redirects);
 			\BetterLinks\Helper::create_cron_jobs_for_json_links();
 			\BetterLinks\Helper::clear_query_cache();
-			update_option('betterlink_notice_s301r_migrate', true);
+			update_option('betterlinks_notice_s301r_migrate', true);
 			wp_send_json_success($resutls);
 			wp_die();
 		} catch (\Throwable $th) {
@@ -192,9 +192,9 @@ class Ajax
 		check_ajax_referer('wp_rest', 'security');
 		$type = isset($_POST['type']) ? $_POST['type'] : '';
 		if ($type == 'deactive') {
-			update_option('betterlink_hide_notice_s301r_deactive', true);
+			update_option('betterlinks_hide_notice_s301r_deactive', true);
 		} elseif ($type == 'migrate') {
-			update_option('betterlink_notice_s301r_migrate', true);
+			update_option('betterlinks_notice_s301r_migrate', true);
 		}
 		wp_die();
 	}
