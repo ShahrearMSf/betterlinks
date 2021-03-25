@@ -112,6 +112,14 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 1.0.3 - 25/03/2021 =
+
+- Added: migration for Simple 301 Redirects plugin
+- Tweaked: UI/UX update
+= Added: Wildcard option
+- Removed: Blank link showing in the Grid view
+- Few minor bug fix and improvements
+
 = 1.0.2 - 24/02/2021 =
 
 - Fixed: Analytics not showing instantly after regenerating stats
