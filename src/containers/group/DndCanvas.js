@@ -49,16 +49,19 @@ class InnerList extends React.Component {
 		return true;
 	}
 	render() {
-		return this.props.lists.map((list, index) => (
-			<List
-				edit_link={this.props.edit_link}
-				delete_link={this.props.delete_link}
-				catId={this.props.catId}
-				key={`cat-${this.props.catId}-item-${index}`}
-				item={list}
-				index={index}
-			/>
-		));
+		return this.props.lists.map(
+			(list, index) =>
+				!!list.link_title && (
+					<List
+						edit_link={this.props.edit_link}
+						delete_link={this.props.delete_link}
+						catId={this.props.catId}
+						key={`cat-${this.props.catId}-item-${index}`}
+						item={list}
+						index={index}
+					/>
+				)
+		);
 	}
 }
 

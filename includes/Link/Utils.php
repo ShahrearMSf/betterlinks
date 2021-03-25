@@ -21,6 +21,12 @@ class Utils
 				$postion = strpos($item->short_url, '/*');
 				if($postion !== false){
 					if(substr($item->short_url, 0, $postion) == substr($slug, 0, $postion)){
+						$target_postion = strpos($item->target_url, '/*'); 
+						if($target_postion !== false){
+							$target_url = str_replace('/*',substr($slug, $postion),$item->target_url);
+							$item->target_url = $target_url;
+							return json_decode(json_encode($item),true);
+						}
 						return json_decode(json_encode($item),true);
 					}
 				}
