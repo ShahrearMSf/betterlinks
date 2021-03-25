@@ -26,7 +26,7 @@ const getLinksListViewColumnData = (props) => {
 			selector: 'link_title',
 			sortable: false,
 			cell: (row) => {
-				return row.link_title.length && <div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>;
+				return !!row.link_title && <div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>;
 			},
 		},
 		{

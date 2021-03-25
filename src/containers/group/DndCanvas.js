@@ -51,7 +51,7 @@ class InnerList extends React.Component {
 	render() {
 		return this.props.lists.map(
 			(list, index) =>
-				list.link_title.length && (
+				!!list.link_title && (
 					<List
 						edit_link={this.props.edit_link}
 						delete_link={this.props.delete_link}
