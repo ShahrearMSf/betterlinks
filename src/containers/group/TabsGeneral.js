@@ -4,7 +4,7 @@ import { Formik, Field, Form } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Select from './../../components/Select';
+import RedirectType from './../../components/RedirectType';
 import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
@@ -133,19 +133,22 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</div>
 								</div>
 							</span>
+							{settings && (
+								<span className="btl-form-group">
+									<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
+									<RedirectType
+										className="btl-modal-select--full"
+										classNamePrefix="btl-react-select"
+										id="redirect_type"
+										name="redirect_type"
+										value={redirectType}
+										defaultValue={settings.redirect_type}
+										setFieldValue={props.setFieldValue}
+										isMulti={false}
+									/>
+								</span>
+							)}
 
-							<span className="btl-form-group">
-								<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
-								<Select
-									className="btl-modal-select--full"
-									classNamePrefix="btl-react-select"
-									id="redirect_type"
-									name="redirect_type"
-									value={redirectType}
-									setFieldValue={props.setFieldValue}
-									isMulti={false}
-								/>
-							</span>
 							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
 								<div className="link-options__body">
