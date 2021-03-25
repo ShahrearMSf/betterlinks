@@ -12,20 +12,20 @@ class Notice
 	}
 	public function prettylinks_notice()
 	{
-		if (defined('PRLI_VERSION') && !get_option('betterlink_notice_ptl_migrate')) {
+		if (defined('PRLI_VERSION') && !get_option('betterlinks_notice_ptl_migrate')) {
 			global $pagenow;
 			$this->pagenow = $pagenow;
-			if (!get_option('betterlink_hide_notice_ptl_migrate')) {
+			if (!get_option('betterlinks_hide_notice_ptl_migrate')) {
 				add_action('admin_notices', [$this, 'prettylinks_migration_notice']);
 				add_action('admin_print_footer_scripts', [$this, 'admin_notice_scripts']);
 			} elseif ($pagenow === 'admin.php') {
 				add_action('admin_notices', [$this, 'prettylinks_migration_notice']);
 				add_action('admin_print_footer_scripts', [$this, 'admin_notice_scripts']);
 			}
-		} elseif (defined('PRLI_VERSION') && get_option('betterlink_notice_ptl_migrate')) {
+		} elseif (defined('PRLI_VERSION') && get_option('betterlinks_notice_ptl_migrate')) {
 			global $pagenow;
 			$this->pagenow = $pagenow;
-			if (!get_option('betterlink_hide_notice_ptl_deactive')) {
+			if (!get_option('betterlinks_hide_notice_ptl_deactive')) {
 				if(!isset($_GET['post_type']) || (isset($_GET['post_type']) && $_GET['post_type'] !== 'pretty-link')){ 
 					add_action('admin_notices', [$this, 'prettylinks_deactive_notice']);
 				}
@@ -38,13 +38,13 @@ class Notice
 	{
 		global $pagenow;
 		$this->pagenow = $pagenow;
-		if (defined('SIMPLE301REDIRECTS_VERSION') && !get_option('betterlink_notice_s301r_migrate')) {
-			if (!get_option('betterlink_hide_notice_s301r_migrate')) {
+		if (defined('SIMPLE301REDIRECTS_VERSION') && !get_option('betterlinks_notice_s301r_migrate')) {
+			if (!get_option('betterlinks_hide_notice_s301r_migrate')) {
 				add_action('admin_notices', [$this, 'simple301redirects_migration_notice']);
 				add_action('admin_print_footer_scripts', [$this, 'admin_notice_scripts']);
 			}
-		} elseif (defined('SIMPLE301REDIRECTS_VERSION') && get_option('betterlink_notice_s301r_migrate')) {
-			if (!get_option('betterlink_hide_notice_s301r_deactive')) {
+		} elseif (defined('SIMPLE301REDIRECTS_VERSION') && get_option('betterlinks_notice_s301r_migrate')) {
+			if (!get_option('betterlinks_hide_notice_s301r_deactive')) {
 				if(!isset($_GET['page']) || (isset($_GET['page']) && $_GET['page'] !== '301options')){
 					add_action('admin_notices', [$this, 'simple301redirects_deactive_notice']);
 				}
