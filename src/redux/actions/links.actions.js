@@ -50,10 +50,12 @@ export const add_new_cat = (data) => async (dispatch) => {
 		const res = await API.post(namespace + 'terms', {
 			params: data,
 		});
-		dispatch({
-			type: ADD_NEW_CAT,
-			payload: res.data,
-		});
+		if (res.data.success) {
+			dispatch({
+				type: ADD_NEW_CAT,
+				payload: res.data,
+			});
+		}
 	} catch (e) {
 		console.log(e);
 		dispatch({
@@ -104,10 +106,12 @@ export const add_new_link = (formData) => async (dispatch) => {
 		const res = await API.post(namespace + 'links', {
 			params: formData,
 		});
-		dispatch({
-			type: ADD_NEW_LINK,
-			payload: res.data,
-		});
+		if (res.data.success) {
+			dispatch({
+				type: ADD_NEW_LINK,
+				payload: res.data,
+			});
+		}
 	} catch (e) {
 		console.log(e);
 		dispatch({

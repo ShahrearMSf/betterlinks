@@ -61,7 +61,10 @@ export default function CatForm({ catId, catName, catSlug, submitHandler, hideHa
 					term_slug: catSlug,
 					term_type: 'category',
 				}}
-				onSubmit={(values) => onSubmit(values)}
+				onSubmit={(values, { setSubmitting }) => {
+					setSubmitting(false);
+					onSubmit(values);
+				}}
 			>
 				{(props) => (
 					<Form className={slugIsExists ? 'w-100 is-invalid' : 'w-100'}>

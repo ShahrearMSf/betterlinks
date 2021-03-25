@@ -128,7 +128,13 @@ const Link = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<Formik initialValues={data ? initialUpdateValues : initialValues} onSubmit={(values) => onSubmit(values)}>
+				<Formik
+					initialValues={data ? initialUpdateValues : initialValues}
+					onSubmit={(values, { setSubmitting }) => {
+						setSubmitting(false);
+						onSubmit(values);
+					}}
+				>
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">

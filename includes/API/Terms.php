@@ -108,14 +108,28 @@ class Terms extends Controller
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
-		$id = \BetterLinks\Helper::DB()
-			->table('betterlinks_terms')
-			->insert($request['params']);
-		$request['params']['ID'] = $id;
-		$request['params']['lists'] = [];
+		if(isset($request['params']['term_slug'])){
+			$resutls = \BetterLinks\Helper::DB()
+				->table('betterlinks_terms')
+				->where('term_slug', '=', $request['params']['term_slug'])->get();
+			if(count($resutls) === 0){
+				$id = \BetterLinks\Helper::DB()
+					->table('betterlinks_terms')
+					->insert($request['params']);
+				$request['params']['ID'] = $id;
+				$request['params']['lists'] = [];
+				return new \WP_REST_Response(
+					[
+						'success' => true,
+						'data' => $request['params'],
+					],
+					200
+				);
+			}
+		}
 		return new \WP_REST_Response(
 			[
-				'success' => is_bool($id),
+				'success' => false,
 				'data' => $request['params'],
 			],
 			200
