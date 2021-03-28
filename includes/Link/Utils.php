@@ -137,7 +137,7 @@ class Utils
 	}
 	public function addScheme($url, $scheme = 'http://')
 	{
-		if(parse_url($url, PHP_URL_HOST) === null){
+		if(strpos($url,"/") === 0){
 			return $url = site_url('/') . $url;
 		}
 		return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
