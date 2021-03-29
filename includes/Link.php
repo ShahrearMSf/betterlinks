@@ -14,12 +14,11 @@ class Link extends Utils
 	public function run_redirect()
 	{
 		$request_uri = stripslashes(rawurldecode($_SERVER['REQUEST_URI']));
-		$request_uri = trim($request_uri, '/');
-		$param = explode('?', $request_uri, 2);
+		$request_uri = trim($request_uri, parse_url(site_url('/'), PHP_URL_PATH));
 		// check slug is available or not
-		$data = $this->get_slug_raw(current($param));
+		$data = $this->get_slug_raw($request_uri);
 		if ($data) {
-			$this->dispatch_redirect($data, next($param));
+			$this->dispatch_redirect($data, $request_uri);
 		}
 	}
 }
