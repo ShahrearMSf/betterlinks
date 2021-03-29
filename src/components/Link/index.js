@@ -35,9 +35,6 @@ const Link = (props) => {
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 
-	let fieldExtend = [];
-	betterLinksHooks.doAction('addNewField', fieldExtend);
-
 	const initialValues = {
 		link_title: '',
 		link_slug: '',
@@ -132,7 +129,7 @@ const Link = (props) => {
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={data ? initialUpdateValues : initialValues}
+					initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)}
 					onSubmit={(values, { setSubmitting }) => {
 						setSubmitting(false);
 						onSubmit(values);
@@ -198,9 +195,7 @@ const Link = (props) => {
 										</label>
 										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
 									</div>
-									{fieldExtend.map((item, index) => (
-										<React.Fragment key={index}>{item}</React.Fragment>
-									))}
+									{betterLinksHooks.applyFilters('addNewField', props)}
 								</div>
 								<div className="btl-entry-content-right">
 									<div className="link-options">

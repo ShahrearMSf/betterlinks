@@ -164,7 +164,7 @@ trait ArgumentSchema
 	}
 	public function get_links_schema()
 	{
-		return array_merge(
+		return apply_filters('betterlinks/links_schema', array_merge(
 			$this->links_schema(),
 			[
 				'limit' => [
@@ -178,7 +178,7 @@ trait ArgumentSchema
 				],
 			],
 			$this->terms_schema()
-		);
+		));
 	}
 
 	public function get_terms_schema()
