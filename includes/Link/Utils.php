@@ -65,16 +65,16 @@ class Utils
 
 		switch ($data['redirect_type']) {
 			case '301':
-				wp_redirect($target_url, 301);
+				wp_redirect(esc_url($target_url), 301);
 				exit();
 			case '302':
-				wp_redirect($target_url, 302);
+				wp_redirect(esc_url($target_url), 302);
 				exit();
 			case '307':
-				wp_redirect($target_url, 307);
+				wp_redirect(esc_url($target_url), 307);
 				exit();
 			default:
-				wp_redirect($target_url);
+				wp_redirect(esc_url($target_url));
 				exit();
 		}
 	}
