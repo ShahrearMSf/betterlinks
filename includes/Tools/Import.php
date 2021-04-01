@@ -42,7 +42,7 @@ class Import
 				} elseif ($_POST['mode'] == 'simple301redirects') {
 					$fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
 					$migrator = new \BetterLinks\Tools\Migration\S301ROneClick($this->DB);
-					$resutls = $migrator->process_links_data($fileContent);
+					$resutls = $migrator->process_links_data(array_reverse($fileContent));
 					if (!empty($resutls)) {
 						$_SESSION['betterlinks_import_info'] = json_encode($resutls);
 					}

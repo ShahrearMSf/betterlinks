@@ -65,7 +65,7 @@ const CatHeader = (props) => {
 							)}
 							{isDeleteConfirm && (
 								<div className="btl-confirm-message">
-									<p className="action-text">{__('Are Your Sure?', 'betterlinks')}</p>
+									<p className="action-text">{__('Are You Sure?', 'betterlinks')}</p>
 									<div className="action-set">
 										<button className="action yes" onClick={confirmDelete}>
 											{__('Yes', 'betterlinks')}

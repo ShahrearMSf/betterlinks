@@ -93,7 +93,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 				</>
 			) : (
 				<div className="btl-confirm-message">
-					<span className="action-text">{__('Are Your Sure?', 'betterlinks')}</span>
+					<span className="action-text">{__('Are You Sure?', 'betterlinks')}</span>
 					<div className="action-set">
 						<button className="action yes" onClick={() => confirmDelete()}>
 							{__('Yes', 'betterlinks')}

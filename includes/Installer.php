@@ -150,6 +150,7 @@ class Installer
 				'sponsored' => '',
 				'track_me' => true,
 				'param_forwarding' => '',
+				'wildcards' => false
 			];
 			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
 		}

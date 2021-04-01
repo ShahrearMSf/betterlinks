@@ -36,7 +36,7 @@ class S301ROneClick extends Base
 						'param_forwarding' => $betterlinks_links->param_forwarding,
 						'param_struct' => '',
 						'redirect_type' => '301',
-						'target_url' => $destination,
+						'target_url' => $this->url_schema_parse($destination),
 						'short_url' => ltrim($request, '/'),
 						'link_order' => 0,
 						'link_modified' => $now,
@@ -73,5 +73,13 @@ class S301ROneClick extends Base
 			return update_option('betterlinks_links', json_encode($links));
 		}
 		return;
+	}
+
+	public function url_schema_parse($url)
+	{
+		if(strpos($url,"/") === 0){
+			return $url;
+		}
+		return parse_url($url, PHP_URL_SCHEME) === null ? '/' . $url : $url;
 	}
 }
