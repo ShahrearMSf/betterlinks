@@ -47,14 +47,14 @@ class Links extends Controller
 			],
 		]);
 
-		register_rest_route($this->namespace, $endpoint, [
-			[
-				'methods' => \WP_REST_Server::DELETABLE,
-				'callback' => [$this, 'delete_item'],
-				'permission_callback' => [$this, 'permissions_check'],
-				'args' => $this->get_links_schema(),
-			],
-		]);
+		// register_rest_route($this->namespace, $endpoint, [
+		// 	[
+		// 		'methods' => \WP_REST_Server::DELETABLE,
+		// 		'callback' => [$this, 'delete_item'],
+		// 		'permission_callback' => [$this, 'permissions_check'],
+		// 		'args' => $this->get_links_schema(),
+		// 	],
+		// ]);
 
 		register_rest_route(
 			$this->namespace,
@@ -158,7 +158,8 @@ class Links extends Controller
 				{$prefix}betterlinks.redirect_type,
 				{$prefix}betterlinks.target_url,
 				{$prefix}betterlinks.short_url,
-				{$prefix}betterlinks.link_date
+				{$prefix}betterlinks.link_date,
+				{$prefix}betterlinks.expire
 			FROM {$prefix}betterlinks_terms
 			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
 			LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
@@ -214,10 +215,11 @@ class Links extends Controller
 			->where('short_url', '=', $request['params']['short_url'])->get();
 			if(count($resutls) === 0){ 
 				\BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
+
 					$lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
 					$params = array_intersect_key($request['params'], $lookFor);
 					$params['link_author'] = get_current_user_id();
-					$id = $qb->table('betterlinks')->insert($params);
+					$id = $qb->table('betterlinks')->insert(apply_filters('betterlinks/api/params', $params));
 					if (BETTERLINKS_EXISTS_LINKS_JSON) {
 						$params['ID'] = $id;
 						$this->insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
@@ -266,7 +268,7 @@ class Links extends Controller
 			}
 			$qb->table('betterlinks')
 				->where('ID', $params['ID'])
-				->update($params);
+				->update(apply_filters('betterlinks/api/params', $params));
 			$this->terms_insert($qb, $params['ID'], $request['params'], true);
 		});
 		return new \WP_REST_Response(
@@ -286,20 +288,22 @@ class Links extends Controller
 	 */
 	public function delete_item($request)
 	{
+		$request = $request->get_params();
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+
 		\BetterLinks\Helper::DB()
 			->table('betterlinks')
-			->where('id', '=', $request['ID'])
+			->where('id', '=', $request['id'])
 			->delete();
 
 		\BetterLinks\Helper::DB()
 			->table('betterlinks_clicks')
-			->where('link_id', '=', $request['ID'])
+			->where('link_id', '=', $request['id'])
 			->delete();
 
 		\BetterLinks\Helper::DB()
 			->table('betterlinks_terms_relationships')
-			->where('link_id', '=', $request['ID'])
+			->where('link_id', '=', $request['id'])
 			->delete();
 		if(BETTERLINKS_EXISTS_LINKS_JSON){
 			$this->delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $request['short_url']);
@@ -309,7 +313,7 @@ class Links extends Controller
 				'success' => true,
 				'data' => [
 					'term_id' => $request['term_id'],
-					'ID' => $request['ID'],
+					'ID' => $request['id'],
 				],
 			],
 			200
