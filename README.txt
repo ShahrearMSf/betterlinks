@@ -4,7 +4,7 @@ Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
 Requires at least: 4.0
 Tested up to: 5.7
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -111,6 +111,14 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 1.0.4 - 01/04/2021 =
+
+- Fixed: Link categories not updating correctly after deletion
+- Fixed: Parameter forwarding not working
+- Fixed: Link order not showing correctly after migrating from Simple 301 Redirects
+- Improved: URL parsing before redirecting
+- Few minor bug fix and improvements
 
 = 1.0.3 - 25/03/2021 =
 
