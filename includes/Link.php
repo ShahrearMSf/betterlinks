@@ -19,6 +19,7 @@ class Link extends Utils
 		// check slug is available or not
 		$data = $this->get_slug_raw(current($param));
 		if ($data) {
+			do_action('betterlinks/before_redirect', $data);
 			$this->dispatch_redirect($data, next($param));
 		}
 	}

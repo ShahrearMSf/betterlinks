@@ -21,7 +21,8 @@ abstract class Controller
 			'sponsored' => $data['sponsored'],
 			'param_forwarding' => $data['param_forwarding'],
 			'track_me' => $data['track_me'],
-			'wildcards' => $data['wildcards']
+			'wildcards' => $data['wildcards'],
+			'expire' => $data['expire']
 		];
 	}
 	protected function insert_json_into_file($file, $data)

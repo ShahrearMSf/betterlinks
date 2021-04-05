@@ -30,7 +30,7 @@ class Cron
 		$prefix = $wpdb->prefix;
 		$query = Helper::DB();
 		$formattedArray = [];
-		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards FROM {$prefix}betterlinks")->get();
+		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire FROM {$prefix}betterlinks")->get();
 		$options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
 		if(!empty($options)){
 			$formattedArray['wildcards_is_active'] = $options->wildcards;
