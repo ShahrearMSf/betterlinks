@@ -14,6 +14,7 @@ import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 import Copy from './../../components/Copy';
+import DateAndTimePicker from './../../components/DateAndTimePicker';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -195,7 +196,6 @@ const Link = (props) => {
 										</label>
 										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
 									</div>
-									{betterLinksHooks.applyFilters('addNewField', props)}
 								</div>
 								<div className="btl-entry-content-right">
 									<div className="link-options">
@@ -248,6 +248,7 @@ const Link = (props) => {
 													</div>
 												</span>
 											</label>
+											{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 										</div>
 									</div>
 								</div>
