@@ -14,6 +14,7 @@ import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 import Copy from './../../components/Copy';
+import DateAndTimePicker from './../../components/DateAndTimePicker';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -129,7 +130,7 @@ const Link = (props) => {
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={data ? initialUpdateValues : initialValues}
+					initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)}
 					onSubmit={(values, { setSubmitting }) => {
 						setSubmitting(false);
 						onSubmit(values);
@@ -195,6 +196,12 @@ const Link = (props) => {
 										</label>
 										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
 									</div>
+									<div className="btl-modal-form-group">
+										<label className="btl-modal-form-label"></label>
+										<button type="submit" className="btl-modal-submit-button">
+											{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+										</button>
+									</div>
 								</div>
 								<div className="btl-entry-content-right">
 									<div className="link-options">
@@ -249,13 +256,8 @@ const Link = (props) => {
 											</label>
 										</div>
 									</div>
+									{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 								</div>
-							</div>
-							<div className="btl-modal-form-group">
-								<label className="btl-modal-form-label"></label>
-								<button type="submit" className="btl-modal-submit-button">
-									{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
-								</button>
 							</div>
 						</Form>
 					)}

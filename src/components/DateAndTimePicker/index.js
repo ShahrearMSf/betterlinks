@@ -1,0 +1,23 @@
+import React, { useState } from 'react';
+import DateFnsUtils from '@date-io/date-fns';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { useField } from 'formik';
+import PropTypes from 'prop-types';
+
+const propTypes = {};
+
+const defaultProps = {};
+
+export default function DateAndTimePicker(props) {
+	const [field] = useField('expire.date');
+	return (
+		<React.Fragment>
+			<MuiPickersUtilsProvider utils={DateFnsUtils}>
+				<DateTimePicker label="DateTimePicker" inputVariant="outlined" value={field.value ? field.value : new Date()} onChange={(e) => props.setFieldValue('expire.date', e)} />
+			</MuiPickersUtilsProvider>
+		</React.Fragment>
+	);
+}
+
+DateAndTimePicker.propTypes = propTypes;
+DateAndTimePicker.defaultProps = defaultProps;

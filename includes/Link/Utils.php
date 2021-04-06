@@ -35,6 +35,11 @@ class Utils
 	}
 	public function dispatch_redirect($data, $param)
 	{
+		$data = apply_filters('betterlinks/link/before_dispatch_redirect', $data);
+		if(!$data){
+			return;
+		}
+
 		if (intval($data['track_me'])) {
 			$this->start_trakcing($data);
 		}

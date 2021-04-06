@@ -17,7 +17,8 @@ class Link extends Utils
 		$request_uri = ltrim($request_uri, parse_url(site_url('/'), PHP_URL_PATH));
 		$param = explode('?', $request_uri, 2);
 		$data = $this->get_slug_raw(current($param));
-		if ($data) {
+		if ($data && $data['link_status'] !== 'draft') {
+			do_action('betterlinks/before_redirect', $data);
 			$this->dispatch_redirect($data, next($param));
 		}
 	}

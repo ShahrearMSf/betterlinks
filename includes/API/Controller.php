@@ -4,10 +4,10 @@ namespace BetterLinks\API;
 abstract class Controller
 {
 	protected $namespace = BETTERLINKS_PLUGIN_SLUG . '/v1';
-	abstract protected function get_value($request);
-	abstract protected function create_value($request);
-	abstract protected function update_value($request);
-	abstract protected function delete_value($request);
+	abstract protected function get_items($request);
+	abstract protected function create_item($request);
+	abstract protected function update_item($request);
+	abstract protected function delete_item($request);
 	abstract protected function permissions_check($request);
 
 	protected function json_link_formatter($data)
@@ -15,13 +15,15 @@ abstract class Controller
 		return [
 			'ID' => $data['ID'],
 			'link_slug' => $data['link_slug'],
+			'link_status' => $data['link_status'],
 			'redirect_type' => $data['redirect_type'],
 			'target_url' => $data['target_url'],
 			'nofollow' => $data['nofollow'],
 			'sponsored' => $data['sponsored'],
 			'param_forwarding' => $data['param_forwarding'],
 			'track_me' => $data['track_me'],
-			'wildcards' => $data['wildcards']
+			'wildcards' => $data['wildcards'],
+			'expire' => $data['expire']
 		];
 	}
 	protected function insert_json_into_file($file, $data)

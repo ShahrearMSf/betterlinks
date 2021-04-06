@@ -138,16 +138,18 @@ export const edit_link = (item) => async (dispatch) => {
 	}
 };
 
-export const delete_link = (items) => async (dispatch) => {
+export const delete_link = ({ id, short_url, term_id }) => async (dispatch) => {
 	try {
-		items.map(async (item) => {
-			const res = await API.delete(namespace + 'links', {
-				params: { ...item },
-			});
-			dispatch({
-				type: DELETE_LINK,
-				payload: res.data,
-			});
+		const res = await API.delete(namespace + 'links/' + id, {
+			data: {
+				id,
+				short_url,
+				term_id,
+			},
+		});
+		dispatch({
+			type: DELETE_LINK,
+			payload: res.data,
 		});
 	} catch (e) {
 		console.log(e);

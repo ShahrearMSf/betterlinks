@@ -23,7 +23,7 @@ class Settings extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::READABLE,
-				'callback' => [$this, 'get_value'],
+				'callback' => [$this, 'get_items'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_settings_schema(),
 			],
@@ -32,7 +32,7 @@ class Settings extends Controller
 		register_rest_route($this->namespace, $endpoint, [
 			[
 				'methods' => \WP_REST_Server::EDITABLE,
-				'callback' => [$this, 'update_value'],
+				'callback' => [$this, 'update_item'],
 				'permission_callback' => [$this, 'permissions_check'],
 				'args' => $this->get_settings_schema(),
 			],
@@ -45,7 +45,7 @@ class Settings extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function get_value($request)
+	public function get_items($request)
 	{
 		$response = get_option(BETTERLINKS_LINKS_OPTION_NAME);
 		return new \WP_REST_Response(
@@ -63,7 +63,7 @@ class Settings extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function create_value($request)
+	public function create_item($request)
 	{
 		return new \WP_REST_Response(
 			[
@@ -80,7 +80,7 @@ class Settings extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function update_value($request)
+	public function update_item($request)
 	{
 		$response = json_encode($request->get_params());
 		if ($response) {
@@ -103,7 +103,7 @@ class Settings extends Controller
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Request
 	 */
-	public function delete_value($request)
+	public function delete_item($request)
 	{
 		return new \WP_REST_Response(
 			[

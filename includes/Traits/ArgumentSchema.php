@@ -5,7 +5,7 @@ trait ArgumentSchema
 {
 	public function links_schema()
 	{
-		return [
+		return apply_filters('betterlinks/links_schema', [
 			'ID' => [
 				'type' => 'integer',
 				'sanitize_callback' => 'absint',
@@ -82,7 +82,7 @@ trait ArgumentSchema
 				'type' => 'integer',
 				'sanitize_callback' => 'absint',
 			]
-		];
+		]);
 	}
 	public function terms_schema()
 	{
@@ -164,7 +164,7 @@ trait ArgumentSchema
 	}
 	public function get_links_schema()
 	{
-		return array_merge(
+		return  array_merge(
 			$this->links_schema(),
 			[
 				'limit' => [
