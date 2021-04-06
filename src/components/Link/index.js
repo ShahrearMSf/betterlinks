@@ -248,9 +248,9 @@ const Link = (props) => {
 													</div>
 												</span>
 											</label>
-											{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 										</div>
 									</div>
+									{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 								</div>
 							</div>
 							<div className="btl-modal-form-group">
