@@ -18,7 +18,7 @@ class Link extends Utils
 		$param = explode('?', $request_uri, 2);
 		// check slug is available or not
 		$data = $this->get_slug_raw(current($param));
-		if ($data) {
+		if ($data && $data['link_status'] !== 'draft') {
 			do_action('betterlinks/before_redirect', $data);
 			$this->dispatch_redirect($data, next($param));
 		}

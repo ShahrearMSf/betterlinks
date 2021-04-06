@@ -15,6 +15,7 @@ abstract class Controller
 		return [
 			'ID' => $data['ID'],
 			'link_slug' => $data['link_slug'],
+			'link_status' => $data['link_status'],
 			'redirect_type' => $data['redirect_type'],
 			'target_url' => $data['target_url'],
 			'nofollow' => $data['nofollow'],
