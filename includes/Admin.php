@@ -40,7 +40,7 @@ class Admin
             'item_id'      => '720bbe6537bffcb73f37',
         ]);
         $tracker->set_notice_options(array(
-            'notice'       => __('Want to help make <strong>BetterLinks</strong> even more awesome? You can get a <strong>10% discount coupon</strong> for Premium extensions if you allow us to track the usage.', 'betterlinks'),
+            'notice'       => __('Want to help make <strong>BetterLinks</strong> even more awesome? Be the first to get access to <strong>BetterLinks PRO</strong> with a huge <strong>30% Discount</strong> when we release if you allow us to track the non-sensitive usage data.', 'betterlinks'),
             'extra_notice' => __('We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise.', 'betterlinks'),
         ));
         $tracker->init();
