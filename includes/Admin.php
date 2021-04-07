@@ -9,6 +9,7 @@ class Admin
 		$this->add_scripts();
 		add_filter('BetterLinks/Admin/skip_no_conflict', [$this, 'skip_no_conflict']);
 		$this->dispath_notice();
+		$this->usage_tracker();
 	}
 	public function add_menu()
 	{
@@ -31,4 +32,17 @@ class Admin
 		}
 		return false;
 	}
+	public function usage_tracker()
+    {
+		$tracker = Admin\WPDev\PluginUsageTracker::get_instance(BETTERLINKS_PLUGIN_FILE, [
+            'opt_in'       => true,
+            'goodbye_form' => true,
+            'item_id'      => '720bbe6537bffcb73f37',
+        ]);
+        $tracker->set_notice_options(array(
+            'notice'       => __('Want to help make <strong>BetterLinks</strong> even more awesome? You can get a <strong>10% discount coupon</strong> for Premium extensions if you allow us to track the usage.', 'betterlinks'),
+            'extra_notice' => __('We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise.', 'betterlinks'),
+        ));
+        $tracker->init();
+    }
 }
