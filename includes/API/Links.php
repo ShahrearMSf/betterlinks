@@ -38,24 +38,6 @@ class Links extends Controller
 			],
 		]);
 
-		register_rest_route($this->namespace, $endpoint, [
-			[
-				'methods' => \WP_REST_Server::EDITABLE,
-				'callback' => [$this, 'update_item'],
-				'permission_callback' => [$this, 'permissions_check'],
-				'args' => $this->get_links_schema(),
-			],
-		]);
-
-		// register_rest_route($this->namespace, $endpoint, [
-		// 	[
-		// 		'methods' => \WP_REST_Server::DELETABLE,
-		// 		'callback' => [$this, 'delete_item'],
-		// 		'permission_callback' => [$this, 'permissions_check'],
-		// 		'args' => $this->get_links_schema(),
-		// 	],
-		// ]);
-
 		register_rest_route(
 			$this->namespace,
 			$endpoint . '(?P<id>[\d]+)',
@@ -70,13 +52,13 @@ class Links extends Controller
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => [$this, 'permissions_check'],
-					'args'                => [],
+					'args'                => $this->get_links_schema(),
 				),
 				array(
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_item' ),
 					'permission_callback' => [$this, 'permissions_check'],
-					'args'                => [],
+					'args'                => $this->get_links_schema(),
 				),
 				array(
 					'methods'             => \WP_REST_Server::DELETABLE,

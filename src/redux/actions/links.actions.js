@@ -122,7 +122,7 @@ export const add_new_link = (formData) => async (dispatch) => {
 };
 export const edit_link = (item) => async (dispatch) => {
 	try {
-		const res = await API.put(namespace + 'links', {
+		const res = await API.put(namespace + 'links/' + item.ID, {
 			params: item,
 		});
 		dispatch({
