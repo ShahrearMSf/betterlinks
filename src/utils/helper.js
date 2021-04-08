@@ -13,6 +13,28 @@ export const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
 	const [removed] = result.splice(startIndex, 1);
 	result.splice(endIndex, 0, removed);
+
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/links_reorder');
+	form_data.append('security', nonce);
+	form_data.append(
+		'links',
+		result.reduce(function (pV, cV, cI) {
+			if (cV.ID) {
+				pV.push(cV.ID);
+			}
+			return pV;
+		}, [])
+	);
+	axios.post(ajaxurl, form_data).then(
+		(response) => {
+			console.log(response);
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+
 	return result;
 };
 export const move = (source, destination, droppableSource, droppableDestination) => {
@@ -25,6 +47,36 @@ export const move = (source, destination, droppableSource, droppableDestination)
 	const result = {};
 	result[droppableSource.droppableId] = sourceClone;
 	result[droppableDestination.droppableId] = destClone;
+
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/links_move_reorder');
+	form_data.append('security', nonce);
+	form_data.append(
+		'source',
+		sourceClone.reduce(function (pV, cV, cI) {
+			if (cV.ID) {
+				pV.push(cV.ID);
+			}
+			return pV;
+		}, [])
+	);
+	form_data.append(
+		'destination',
+		destClone.reduce(function (pV, cV, cI) {
+			if (cV.ID) {
+				pV.push(cV.ID);
+			}
+			return pV;
+		}, [])
+	);
+	axios.post(ajaxurl, form_data).then(
+		(response) => {
+			console.log(response);
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
 
 	return result;
 };

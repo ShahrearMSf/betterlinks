@@ -22,6 +22,8 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/migration_simple301redirects_notice_hide', [$this, 'migration_simple301redirects_notice_hide']);
 		add_action('wp_ajax_betterlinks/admin/deactive_simple301redirects', [$this, 'deactive_simple301redirects']);
 		add_action('wp_ajax_betterlinks/admin/search_clicks_data', [$this, 'search_clicks_data']);
+		add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
+		add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
 	}
 
 	public function get_prettylinks_data()
@@ -222,6 +224,38 @@ class Ajax
 			->get();
 		
 		wp_send_json_success($results);
+		wp_die();
+	}
+	public function links_reorder()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$links = (isset($_POST['links']) ? explode(',', $_POST['links']) : []);
+		$DB = \BetterLinks\Helper::DB();
+		if(count($links) > 0){
+			foreach($links as $key => $value) {
+				$DB->table('betterlinks')->where('ID', $value)->update(['link_order' => $key]);
+			}
+		}
+		wp_send_json_success([]);
+		wp_die();
+	}
+	public function links_move_reorder()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$source = (isset($_POST['source']) ? explode(',', $_POST['source']) : []);
+		$destination = (isset($_POST['destination']) ? explode(',', $_POST['destination']) : []);
+		$DB = \BetterLinks\Helper::DB();
+		if(count($source) > 0){
+			foreach($source as $key => $value) {
+				$DB->table('betterlinks')->where('ID', $value)->update(['link_order' => $key]);
+			}
+		}
+		if(count($destination) > 0){
+			foreach($destination as $key => $value) {
+				$DB->table('betterlinks')->where('ID', $value)->update(['link_order' => $key]);
+			}
+		}
+		wp_send_json_success([]);
 		wp_die();
 	}
 }

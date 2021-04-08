@@ -190,7 +190,7 @@
 		background: #252f47;
 		color: $white;
 	}
-	.sc-idOhPF {
+	> header {
 		background: #252f47;
 		.btl-click-filter {
 			input {
@@ -373,7 +373,7 @@
 
 // list view
 .btl-list-view {
-	.sc-idOhPF {
+	> header {
 		.btl-links-filter {
 			margin-right: 12px;
 			.btl-click-filter {
