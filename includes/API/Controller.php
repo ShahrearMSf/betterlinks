@@ -15,7 +15,7 @@ abstract class Controller
 		return [
 			'ID' => $data['ID'],
 			'link_slug' => $data['link_slug'],
-			'link_status' => $data['link_status'],
+			'link_status' => (isset($data['link_status']) ? $data['link_status'] : 'publish'),
 			'redirect_type' => $data['redirect_type'],
 			'target_url' => $data['target_url'],
 			'nofollow' => $data['nofollow'],
@@ -23,7 +23,7 @@ abstract class Controller
 			'param_forwarding' => $data['param_forwarding'],
 			'track_me' => $data['track_me'],
 			'wildcards' => $data['wildcards'],
-			'expire' => $data['expire']
+			'expire' => (isset($data['expire']) ? $data['expire'] : NULL)
 		];
 	}
 	protected function insert_json_into_file($file, $data)

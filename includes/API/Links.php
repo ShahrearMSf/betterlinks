@@ -141,6 +141,7 @@ class Links extends Controller
 				{$prefix}betterlinks.target_url,
 				{$prefix}betterlinks.short_url,
 				{$prefix}betterlinks.link_date,
+				{$prefix}betterlinks.wildcards,
 				{$prefix}betterlinks.expire
 			FROM {$prefix}betterlinks_terms
 			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
