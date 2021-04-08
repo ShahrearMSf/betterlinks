@@ -19,7 +19,6 @@ const Migration = (props) => {
 			setDataIsFetch(true);
 			axios.post(`${ajaxurl}?action=betterlinks/admin/get_simple301redirects_data&security=${nonce}`).then(
 				(response) => {
-					console.log(response);
 					if (response) {
 						setSimple301RedirectRes(response.data.data);
 						setDataIsFetch(false);
@@ -157,7 +156,6 @@ const Migration = (props) => {
 							<h3>
 								{__('Migration is Complete', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
 							</h3>
-							{console.log(migrateRes)}
 							{Object.entries(migrateRes).map(
 								([index, item]) =>
 									Object.entries(item).length > 0 &&

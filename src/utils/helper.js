@@ -27,9 +27,7 @@ export const reorder = (list, startIndex, endIndex) => {
 		}, [])
 	);
 	axios.post(ajaxurl, form_data).then(
-		(response) => {
-			console.log(response);
-		},
+		(response) => {},
 		(error) => {
 			console.log(error);
 		}
@@ -70,9 +68,7 @@ export const move = (source, destination, droppableSource, droppableDestination)
 		}, [])
 	);
 	axios.post(ajaxurl, form_data).then(
-		(response) => {
-			console.log(response);
-		},
+		(response) => {},
 		(error) => {
 			console.log(error);
 		}
