@@ -16,7 +16,7 @@ export const onDragEnd = (result) => async (dispatch) => {
 			payload: result,
 		});
 		try {
-			await API.put(namespace + 'links', {
+			await API.put(namespace + 'links/' + ID, {
 				params: {
 					ID: ID,
 					cat_id: result.destination.droppableId,
