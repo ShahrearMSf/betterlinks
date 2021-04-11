@@ -1,0 +1,108 @@
+import React, { useState } from 'react';
+import queryString from 'query-string';
+import PropTypes from 'prop-types';
+
+const propTypes = {};
+
+const defaultProps = {};
+
+export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler }) {
+	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
+	const [UTMBuilderState, setUTMBuilderState] = useState({
+		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : '',
+		utm_medium: parseUrl.query.utm_medium ? parseUrl.query.utm_medium : '',
+		utm_campaign: parseUrl.query.utm_campaign ? parseUrl.query.utm_campaign : '',
+		utm_term: parseUrl.query.utm_term ? parseUrl.query.utm_term : '',
+		utm_content: parseUrl.query.utm_content ? parseUrl.query.utm_content : '',
+	});
+
+	const UTMSaveValueHandler = () => {
+		saveValueHandler(
+			'target_url',
+			queryString.stringifyUrl({ url: targetUrl, query: Object.entries(UTMBuilderState).reduce((a, [k, v]) => (v === '' ? a : ((a[k] = v), a)), {}) })
+		);
+		closeModalHandler();
+	};
+	return (
+		<React.Fragment>
+			<div className="btl-modal-utm-builder">
+				<h3 className="btl-modal-utm-builder__title">URL parameters builder</h3>
+				<div className="btl-modal-utm-builder__body">
+					<div className="btl-modal-utm-builder__form-group">
+						<label htmlFor="utmSource">Source</label>
+						<div>
+							<input
+								id="utmSource"
+								value={UTMBuilderState.utm_source}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_source: e.target.value })}
+								type="text"
+								name="utm_source"
+								placeholder="e.g: Twitter, Facebook"
+							/>
+						</div>
+					</div>
+					<div className="btl-modal-utm-builder__form-group">
+						<label htmlFor="utmMedium">Medium</label>
+						<div>
+							<input
+								id="utmMedium"
+								value={UTMBuilderState.utm_medium}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_medium: e.target.value })}
+								type="text"
+								name="utm_medium"
+								placeholder="e.g: cpc, banner, email"
+							/>
+						</div>
+					</div>
+					<div className="btl-modal-utm-builder__form-group">
+						<label htmlFor="utmCampaign">Campaign</label>
+						<div>
+							<input
+								id="utmCampaign"
+								value={UTMBuilderState.utm_campaign}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_campaign: e.target.value })}
+								type="text"
+								name="utm_campaign"
+								placeholder="e.g: ACME-campaign"
+							/>
+						</div>
+					</div>
+					<div className="btl-modal-utm-builder__form-group">
+						<label htmlFor="utmTerm">Term</label>
+						<div>
+							<input
+								id="utmTerm"
+								value={UTMBuilderState.utm_term}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_term: e.target.value })}
+								type="text"
+								name="utm_term"
+								placeholder="e.g: paid keywords"
+							/>
+						</div>
+					</div>
+					<div className="btl-modal-utm-builder__form-group">
+						<label htmlFor="utmContent">Content</label>
+						<div>
+							<input
+								id="utmContent"
+								value={UTMBuilderState.utm_content}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_content: e.target.value })}
+								type="text"
+								name="utm_content"
+								placeholder="e.g: text AD name"
+							/>
+						</div>
+					</div>
+					<div className="btl-modal-utm-builder__form-group">
+						<button type="button" onClick={() => UTMSaveValueHandler()}>
+							Done
+						</button>
+					</div>
+				</div>
+			</div>
+		</React.Fragment>
+	);
+}
+
+UTMBuilder.propTypes = propTypes;
+UTMBuilder.defaultProps = defaultProps;

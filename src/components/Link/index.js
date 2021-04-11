@@ -9,12 +9,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate } from './../../utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 import Copy from './../../components/Copy';
 import DateAndTimePicker from './../../components/DateAndTimePicker';
+import UTMBuilder from '../UTMBuilder';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -33,6 +34,7 @@ const Link = (props) => {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
+	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 
@@ -73,6 +75,16 @@ const Link = (props) => {
 	function closeModal() {
 		setModalIsOpen(false);
 	}
+
+	const openUTMModal = () => {
+		setModalIsOpen(true);
+		setModalUTMIsOpen(true);
+	};
+
+	const closeUTMModal = () => {
+		setModalUTMIsOpen(false);
+	};
+
 	const shortURLUniqueCheck = (slug, ID) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
@@ -139,6 +151,12 @@ const Link = (props) => {
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
+								<Modal isOpen={modalUTMIsOpen} onRequestClose={closeUTMModal} style={modalCustomSmallStyles} ariaHideApp={false}>
+									<span className="btl-close-modal" onClick={closeUTMModal}>
+										<i className="btl btl-cancel"></i>
+									</span>
+									<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />
+								</Modal>
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
@@ -163,6 +181,9 @@ const Link = (props) => {
 											{__('Target URL', 'betterlinks')}
 										</label>
 										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
+										<button type="button" onClick={openUTMModal}>
+											UTM
+										</button>
 									</div>
 									<div className="btl-modal-form-group shorturl">
 										<label className="btl-modal-form-label" htmlFor="short_url">
