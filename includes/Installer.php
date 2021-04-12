@@ -23,9 +23,13 @@ class Installer
 		$this->createBetterTermsTable();
 		$this->createBetterTermsRelationshipsTable();
 		$this->createBetterClicksTable();
-
+		// update plugin version
 		if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
 			update_option('betterlinks_version', BETTERLINKS_VERSION);
+		}
+		// update db version
+        if (!get_option('betterlinks_db_version')) {
+			update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
 		}
 	}
 
