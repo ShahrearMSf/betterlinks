@@ -155,7 +155,13 @@ const Link = (props) => {
 									<span className="btl-close-modal" onClick={closeUTMModal}>
 										<i className="btl btl-cancel"></i>
 									</span>
-									<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />
+									{betterLinksHooks.applyFilters(
+										'linksUTMBuilderField',
+										<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
+										props.values.target_url,
+										props.setFieldValue,
+										closeUTMModal
+									)}
 								</Modal>
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
