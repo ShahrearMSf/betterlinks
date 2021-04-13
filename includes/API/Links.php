@@ -205,7 +205,7 @@ class Links extends Controller
 					$id = $qb->table('betterlinks')->insert(apply_filters('betterlinks/api/params', $params));
 					if (BETTERLINKS_EXISTS_LINKS_JSON) {
 						$params['ID'] = $id;
-						$this->insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
+						\BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
 					}
 					$this->terms_insert($qb, $id, $request['params']);
 					$_SESSION['link_ID'] = $id;
@@ -247,7 +247,7 @@ class Links extends Controller
 			$params = array_intersect_key($request['params'], $lookFor);
 			$old_short_url = isset($request['params']['old_short_url']) ? $request['params']['old_short_url'] : '';
 			if(BETTERLINKS_EXISTS_LINKS_JSON){
-				$this->update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
+				\BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
 			}
 			$qb->table('betterlinks')
 				->where('ID', $params['ID'])
@@ -289,7 +289,7 @@ class Links extends Controller
 			->where('link_id', '=', $request['id'])
 			->delete();
 		if(BETTERLINKS_EXISTS_LINKS_JSON){
-			$this->delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $request['short_url']);
+			\BetterLinks\Helper::delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $request['short_url']);
 		}
 		return new \WP_REST_Response(
 			[
