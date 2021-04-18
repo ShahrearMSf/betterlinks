@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate } from './../../utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate, plugin_root_url } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -35,6 +35,7 @@ const Link = (props) => {
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
+	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 
@@ -81,7 +82,16 @@ const Link = (props) => {
 		setModalUTMIsOpen(true);
 	};
 
+	const customUTMModalOpenHandler = () => {
+		openUTMModal();
+	};
+	const builtInUTMModalOpenHandler = () => {
+		setIsShowCustomUTMModalContent(false);
+		openUTMModal();
+	};
+
 	const closeUTMModal = () => {
+		setIsShowCustomUTMModalContent(true);
 		setModalUTMIsOpen(false);
 	};
 
@@ -155,12 +165,18 @@ const Link = (props) => {
 									<span className="btl-close-modal" onClick={closeUTMModal}>
 										<i className="btl btl-cancel"></i>
 									</span>
-									{betterLinksHooks.applyFilters(
-										'linksUTMBuilderField',
-										<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
-										props.values.target_url,
-										props.setFieldValue,
-										closeUTMModal
+									{isShowCustomUTMModalContent ? (
+										<React.Fragment>
+											{betterLinksHooks.applyFilters(
+												'linksUTMBuilderField',
+												<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
+												props.values.target_url,
+												props.setFieldValue,
+												closeUTMModal
+											)}
+										</React.Fragment>
+									) : (
+										<React.Fragment>{betterLinksHooks.applyFilters('linksBuiltInUTMBuilderField', '', props.values.target_url, props.setFieldValue, closeUTMModal)}</React.Fragment>
 									)}
 								</Modal>
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
@@ -187,8 +203,11 @@ const Link = (props) => {
 											{__('Target URL', 'betterlinks')}
 										</label>
 										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
-										<button type="button" onClick={openUTMModal}>
+										<button type="button" onClick={customUTMModalOpenHandler}>
 											UTM
+										</button>
+										<button type="button" onClick={builtInUTMModalOpenHandler}>
+											<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
 										</button>
 									</div>
 									<div className="btl-modal-form-group shorturl">
