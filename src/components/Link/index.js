@@ -198,12 +198,12 @@ const Link = (props) => {
 										</label>
 										<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} isMulti={false} />
 									</div>
-									<div className="btl-modal-form-group">
+									<div className="btl-modal-form-group btl-has-utm-button">
 										<label className="btl-modal-form-label btl-required" htmlFor="target_url">
 											{__('Target URL', 'betterlinks')}
 										</label>
 										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
-										<button type="button" onClick={customUTMModalOpenHandler}>
+										<button type="button" className="btl-utm-button" onClick={openUTMModal}>
 											UTM
 										</button>
 										<button type="button" onClick={builtInUTMModalOpenHandler}>

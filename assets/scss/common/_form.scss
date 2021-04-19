@@ -49,7 +49,7 @@
 		width: 300px;
 		.btl-react-select__control {
 			background-color: $light;
-			height: 55px;
+			height: 50px;
 			border: 1px solid $light;
 			border-radius: 5px;
 			.btl-react-select__value-container {
@@ -76,22 +76,22 @@
 	}
 	.active-status {
 		margin: 0 10px;
-		&:before{
-			content: "";
+		&:before {
+			content: '';
 			display: inline-block;
 			height: 10px;
 			width: 10px;
 			border-radius: 10px;
 			margin-right: 5px;
 		}
-		&.Active{
-			&:before{
-				background: #26C17C;
+		&.Active {
+			&:before {
+				background: #26c17c;
 			}
 		}
-		&.Disable{
-			&:before{
-				background: #FF4343;
+		&.Disable {
+			&:before {
+				background: #ff4343;
 			}
 		}
 	}
@@ -99,7 +99,7 @@
 		width: 300px;
 		.btl-react-select__control {
 			background-color: #fafafa;
-			height: 55px;
+			height: 50px;
 			border: 1px solid #ebebeb;
 			border-radius: 5px;
 			.btl-react-select__value-container {
@@ -269,7 +269,7 @@
 	}
 }
 
-.btl-tooltip{
+.btl-tooltip {
 	span.dashicons.dashicons-info-outline {
 		color: #a6a8ad;
 	}

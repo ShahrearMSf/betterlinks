@@ -32,10 +32,10 @@
 	padding: 25px;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 7%);
 	.btl-modal-select--full {
-		width: 300px!important;
+		width: 300px !important;
 		.btl-react-select__control {
 			background-color: #fafafa;
-			height: 55px;
+			height: 50px;
 			border: 1px solid #ebebeb;
 			border-radius: 5px;
 			.btl-react-select__value-container {
@@ -69,17 +69,16 @@
 			background: #f2f2f2;
 			margin-top: 15px;
 		}
-		.link-options__body{
+		.link-options__body {
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: flex-start;
 			margin-bottom: -10px;
-			.btl-checkbox-field{
+			.btl-checkbox-field {
 				margin-bottom: 10px;
 			}
 		}
 	}
-	
 }
 .btl-tab-panel-inner .btl-tab-panel-header:first-child {
 	margin-top: 0;
@@ -119,7 +118,7 @@
 	width: 100%;
 	.btl-react-select__control {
 		background-color: #fafafa;
-		height: 55px;
+		height: 50px;
 		border: 1px solid #ebebeb;
 		border-radius: 5px;
 		.btl-react-select__value-container {
@@ -168,75 +167,76 @@ button.btn-save-settings {
 
 // toggler button
 
-.btl-toggle-button, .knobs, .layer
-{
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+.btl-toggle-button,
+.knobs,
+.layer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 .btl-toggle-button {
-    position: relative;
-    top: 50%;
-    width: 100px;
-    height: 36px;
-    overflow: hidden;
+	position: relative;
+	top: 50%;
+	width: 100px;
+	height: 36px;
+	overflow: hidden;
+	border-radius: 100px;
+	.checkbox {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		margin: 0;
+		opacity: 0;
+		cursor: pointer;
+		z-index: 3;
+		&:active + .knobs:before {
+			width: 46px;
+			border-radius: 100px;
+		}
+		&:checked:active + .knobs:before {
+			margin-left: -26px;
+		}
+		&:checked + .knobs:before {
+			content: 'Disable';
+			left: 42px;
+			background-color: $danger;
+		}
+		&:checked ~ .layer {
+			background-color: #fcebeb;
+		}
+		&:disabled {
+			cursor: default;
+		}
+	}
+	.layer {
 		border-radius: 100px;
-		.checkbox {
-				position: relative;
-				width: 100%;
-				height: 100%;
-				padding: 0;
-				margin: 0;
-				opacity: 0;
-				cursor: pointer;
-				z-index: 3;
-				&:active + .knobs:before {
-						width: 46px;
-						border-radius: 100px;
-				}
-				&:checked:active + .knobs:before {
-						margin-left: -26px;
-				}
-				&:checked + .knobs:before {
-						content: 'Disable';
-						left: 42px;
-						background-color: $danger;
-				}
-				&:checked ~ .layer {
-						background-color: #fcebeb;
-				}
-				&:disabled{
-					cursor: default;
-				}
+		width: 100%;
+		background-color: #ebf7fc;
+		transition: 0.3s ease all;
+		z-index: 1;
+	}
+	.knobs {
+		z-index: 2;
+		&:before {
+			content: 'Active';
+			position: absolute;
+			top: 4px;
+			left: 4px;
+			height: 10px;
+			width: 46px;
+			color: #fff;
+			font-size: 10px;
+			font-weight: bold;
+			text-align: center;
+			line-height: 1;
+			padding: 9px 4px;
+			background-color: $success;
+			border-radius: 50px;
+			transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
 		}
-		.layer {
-				border-radius: 100px;
-				width: 100%;
-				background-color: #ebf7fc;
-				transition: 0.3s ease all;
-				z-index: 1;
-		}
-		.knobs {
-				z-index: 2;
-				&:before {
-						content: 'Active';
-						position: absolute;
-						top: 4px;
-						left: 4px;
-						height: 10px;
-						width: 46px;
-						color: #fff;
-						font-size: 10px;
-						font-weight: bold;
-						text-align: center;
-						line-height: 1;
-						padding: 9px 4px;
-						background-color: $success;
-						border-radius: 50px;
-						transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
-				}
-		}
+	}
 }
