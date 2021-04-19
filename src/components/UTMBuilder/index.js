@@ -26,7 +26,13 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 	return (
 		<React.Fragment>
 			<div className="btl-modal-utm-builder">
-				<h3 className="btl-modal-utm-builder__title">URL parameters builder</h3>
+				<h3 className="btl-modal-utm-builder__title">
+					UTM Builder
+					<div className="btl-tooltip">
+						<span className="dashicons dashicons-info-outline"></span>
+						<span className="btl-tooltiptext">UTM Builder</span>
+					</div>
+				</h3>
 				<div className="btl-modal-utm-builder__body">
 					<div className="btl-modal-utm-builder__form-group">
 						<label htmlFor="utmSource">Source</label>
@@ -95,7 +101,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
 						<button type="button" onClick={() => UTMSaveValueHandler()}>
-							Done
+							Save Link
 						</button>
 					</div>
 				</div>

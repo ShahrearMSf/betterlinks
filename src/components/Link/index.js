@@ -82,12 +82,11 @@ const Link = (props) => {
 		setModalUTMIsOpen(true);
 	};
 
-	const customUTMModalOpenHandler = () => {
-		openUTMModal();
-	};
 	const builtInUTMModalOpenHandler = () => {
-		setIsShowCustomUTMModalContent(false);
-		openUTMModal();
+		if (betterLinksHooks.applyFilters('isActivePro', false)) {
+			setIsShowCustomUTMModalContent(false);
+			openUTMModal();
+		}
 	};
 
 	const closeUTMModal = () => {
