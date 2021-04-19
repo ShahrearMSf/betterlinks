@@ -206,7 +206,7 @@ const Link = (props) => {
 										<button type="button" className="btl-utm-button" onClick={openUTMModal}>
 											UTM
 										</button>
-										<button type="button" onClick={builtInUTMModalOpenHandler}>
+										<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler}>
 											<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
 										</button>
 									</div>
