@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 
@@ -27,15 +28,15 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		<React.Fragment>
 			<div className="btl-modal-utm-builder">
 				<h3 className="btl-modal-utm-builder__title">
-					UTM Builder
+					{__('UTM Builder', 'betterlinks')}
 					<div className="btl-tooltip">
 						<span className="dashicons dashicons-info-outline"></span>
-						<span className="btl-tooltiptext">UTM Builder</span>
+						<span className="btl-tooltiptext">{__('UTM Builder', 'betterlinks')}r</span>
 					</div>
 				</h3>
 				<div className="btl-modal-utm-builder__body">
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmSource">Source</label>
+						<label htmlFor="utmSource">{__('Source', 'betterlinks')}</label>
 						<div>
 							<input
 								id="utmSource"
@@ -43,12 +44,12 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_source: e.target.value })}
 								type="text"
 								name="utm_source"
-								placeholder="e.g: Twitter, Facebook"
+								placeholder={__('e.g: Twitter, Facebook', 'betterlinks')}
 							/>
 						</div>
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmMedium">Medium</label>
+						<label htmlFor="utmMedium">{__('Medium', 'betterlinks')}</label>
 						<div>
 							<input
 								id="utmMedium"
@@ -56,12 +57,12 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_medium: e.target.value })}
 								type="text"
 								name="utm_medium"
-								placeholder="e.g: cpc, banner, email"
+								placeholder={__('e.g: cpc, banner, email', 'betterlinks')}
 							/>
 						</div>
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmCampaign">Campaign</label>
+						<label htmlFor="utmCampaign">{__('Campaign', 'betterlinks')}</label>
 						<div>
 							<input
 								id="utmCampaign"
@@ -69,12 +70,12 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_campaign: e.target.value })}
 								type="text"
 								name="utm_campaign"
-								placeholder="e.g: ACME-campaign"
+								placeholder={__('e.g: ACME-campaign', 'betterlinks')}
 							/>
 						</div>
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmTerm">Term</label>
+						<label htmlFor="utmTerm">{__('Term', 'betterlinks')}</label>
 						<div>
 							<input
 								id="utmTerm"
@@ -82,12 +83,12 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_term: e.target.value })}
 								type="text"
 								name="utm_term"
-								placeholder="e.g: paid keywords"
+								placeholder={__('e.g: paid keywords', 'betterlinks')}
 							/>
 						</div>
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmContent">Content</label>
+						<label htmlFor="utmContent">{__('Content', 'betterlinks')}</label>
 						<div>
 							<input
 								id="utmContent"
@@ -95,13 +96,13 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_content: e.target.value })}
 								type="text"
 								name="utm_content"
-								placeholder="e.g: text AD name"
+								placeholder={__('e.g: text AD name', 'betterlinks')}
 							/>
 						</div>
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
 						<button type="button" onClick={() => UTMSaveValueHandler()}>
-							Save Link
+							{__('Save Link', 'betterlinks')}
 						</button>
 					</div>
 				</div>
