@@ -86,6 +86,8 @@ const Link = (props) => {
 		if (betterLinksHooks.applyFilters('isActivePro', false)) {
 			setIsShowCustomUTMModalContent(false);
 			openUTMModal();
+		} else {
+			alert('Upgrade To Pro');
 		}
 	};
 
@@ -206,7 +208,11 @@ const Link = (props) => {
 											UTM
 										</button>
 										<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler}>
-											<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
+											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+												<img src={plugin_root_url + 'assets/images/locked-share.svg'} alt="icon" />
+											) : (
+												<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
+											)}
 										</button>
 									</div>
 									<div className="btl-modal-form-group shorturl">
