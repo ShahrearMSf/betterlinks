@@ -125,13 +125,13 @@
 		&.btl-has-utm-button {
 			position: relative;
             .btl-modal-form-control{
-                padding-right: 92px;
+                padding-right: 70px;
             }
 			.btl-utm-button {
 				position: absolute;
-				top: 50%;
+				top: 48%;
                 transform: translateY(-50%);
-				right: 40px;
+				right: 15px;
                 min-height:  25px;
                 border: 1px solid $success;
                 background: rgba($success, 0.1);
