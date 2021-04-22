@@ -47,15 +47,15 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 						</div>
 					)} */}
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmSource">{__('Source', 'betterlinks')}</label>
+						<label htmlFor="utmCampaign">{__('Campaign', 'betterlinks')}</label>
 						<div>
 							<input
-								id="utmSource"
-								value={UTMBuilderState.utm_source}
-								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_source: e.target.value })}
+								id="utmCampaign"
+								value={UTMBuilderState.utm_campaign}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_campaign: e.target.value })}
 								type="text"
-								name="utm_source"
-								placeholder={__('e.g: Twitter, Facebook', 'betterlinks')}
+								name="utm_campaign"
+								placeholder={__('e.g: ACME-campaign', 'betterlinks')}
 							/>
 						</div>
 					</div>
@@ -73,15 +73,15 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 						</div>
 					</div>
 					<div className="btl-modal-utm-builder__form-group">
-						<label htmlFor="utmCampaign">{__('Campaign', 'betterlinks')}</label>
+						<label htmlFor="utmSource">{__('Source', 'betterlinks')}</label>
 						<div>
 							<input
-								id="utmCampaign"
-								value={UTMBuilderState.utm_campaign}
-								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_campaign: e.target.value })}
+								id="utmSource"
+								value={UTMBuilderState.utm_source}
+								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_source: e.target.value })}
 								type="text"
-								name="utm_campaign"
-								placeholder={__('e.g: ACME-campaign', 'betterlinks')}
+								name="utm_source"
+								placeholder={__('e.g: Twitter, Facebook', 'betterlinks')}
 							/>
 						</div>
 					</div>
