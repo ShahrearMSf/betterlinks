@@ -19,9 +19,10 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 	});
 
 	const UTMSaveValueHandler = () => {
+		const rawURL = queryString.exclude(targetUrl, ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']);
 		saveValueHandler(
 			'target_url',
-			queryString.stringifyUrl({ url: targetUrl, query: Object.entries(UTMBuilderState).reduce((a, [k, v]) => (v === '' ? a : ((a[k] = v), a)), {}) })
+			queryString.stringifyUrl({ url: rawURL, query: Object.entries(UTMBuilderState).reduce((a, [k, v]) => (!v || v == '' ? a : ((a[k] = v), a)), {}) })
 		);
 		closeModalHandler();
 	};
