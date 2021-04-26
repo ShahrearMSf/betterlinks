@@ -91,6 +91,8 @@ const Link = (props) => {
 		);
 	};
 	const onSubmit = (values) => {
+		const { short_url } = values;
+		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID).then((isUnique) => {
 			if (!isUnique) {
 				if (!values.cat_id) {
