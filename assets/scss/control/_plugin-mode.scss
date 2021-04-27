@@ -491,6 +491,9 @@
 				.rdt_TableCell{
 					div{
 						color: $light;
+                        a{
+                            color: $success-lighten;
+                        }
 					}
 					.btl-link-title{
 						color: $white;
@@ -499,7 +502,7 @@
 						.btl-short-url{
 							background: rgba($success, 0.3);
 							color: $white;
-              font-weight: 500;
+                            font-weight: 500;
 						}
 					}
 					.dnd-link-button {
@@ -508,6 +511,12 @@
 							color: $white;
 						}
 					}
+                    .btl-confirm-message{
+                        background: transparent;
+                        .action-text{
+                            color: $white;
+                        }
+                    }
 				}
 			}
 		}
