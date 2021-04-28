@@ -4,8 +4,19 @@
 	"description": "Better Links",
 	"main": "index.js",
 	"scripts": {
-		"dev": "webpack --watch --mode development",
-		"prod": "webpack --mode production"
+		"build": "wp-scripts build --mode=production",
+		"check-engines": "wp-scripts check-engines",
+		"check-licenses": "wp-scripts check-licenses",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"lint:md:docs": "wp-scripts lint-md-docs",
+		"lint:md:js": "wp-scripts lint-md-js",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"start": "wp-scripts start --mode=development",
+		"test:e2e": "wp-scripts test-e2e",
+		"test:unit": "wp-scripts test-unit-js"
 	},
 	"author": "wpdevteam",
 	"dependencies": {
@@ -42,6 +53,7 @@
 		"@babel/preset-env": "^7.12.13",
 		"@babel/preset-react": "^7.12.13",
 		"@hot-loader/react-dom": "^17.0.1+4.13.0",
+		"@wordpress/scripts": "^14.1.1",
 		"babel-loader": "^8.2.2",
 		"clean-webpack-plugin": "^3.0.0",
 		"css-loader": "^5.0.1",
