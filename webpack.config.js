@@ -1,8 +1,9 @@
+const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const webpack = require('webpack');
 const path = require('path');
 
 const config = {
+	...defaultConfig,
 	entry: {
 		'betterlinks.core.min': './src/index.js',
 	},
@@ -56,9 +57,6 @@ const config = {
 				use: 'file-loader',
 			},
 		],
-	},
-	resolve: {
-		extensions: ['.js', '.jsx'],
 	},
 	plugins: [new CleanWebpackPlugin()],
 };
