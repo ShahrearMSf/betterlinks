@@ -12,53 +12,17 @@ const config = {
 		filename: '[name].js',
 		chunkFilename: 'betterlinks.[id].chunk.js',
 	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				defaultVendors: {
-					test: /[\\/]node_modules[\\/](react-chartjs-2|moment|chartjs)[\\/]/,
-					chunks: 'all',
-				},
-			},
-		},
-	},
-	module: {
-		rules: [
-			{
-				test: /\.(js|jsx)$/,
-				use: 'babel-loader',
-				exclude: /node_modules/,
-			},
-			{
-				test: /\.css$/,
-				use: ['style-loader', 'css-loader'],
-				exclude: /\.module\.css$/,
-			},
-			{
-				test: /\.scss$/,
-				use: ['style-loader', 'css-loader', 'sass-loader'],
-			},
-			{
-				test: /\.css$/,
-				use: [
-					'style-loader',
-					{
-						loader: 'css-loader',
-						options: {
-							importLoaders: 1,
-							modules: true,
-						},
-					},
-				],
-				include: /\.module\.css$/,
-			},
-			{
-				test: /\.svg$/,
-				use: 'file-loader',
-			},
-		],
-	},
-	plugins: [new CleanWebpackPlugin()],
+	// optimization: {
+	// 	splitChunks: {
+	// 		cacheGroups: {
+	// 			defaultVendors: {
+	// 				test: /[\\/]node_modules[\\/](react-chartjs-2|moment|chartjs)[\\/]/,
+	// 				chunks: 'all',
+	// 			},
+	// 		},
+	// 	},
+	// },
+	// plugins: [new CleanWebpackPlugin()],
 };
 
 module.exports = config;

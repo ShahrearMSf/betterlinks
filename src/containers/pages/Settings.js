@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { applyFilters } from '@wordpress/hooks';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import 'react-tabs/style/react-tabs.css';
@@ -18,13 +19,18 @@ const Settings = (props) => {
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
 	const { settings } = props.settings;
-	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [__('General', 'betterlinks'), __('Tools', 'betterlinks')]);
-	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [<TabsGeneral settings={settings} />, <TabsTools query={query} />]);
+	let tabList = applyFilters('betterLinksSettingsFilterTabList', [__('General', 'betterlinks'), __('Tools', 'betterlinks')]);
+	let tabPanel = applyFilters('betterLinksSettingsFilterTabPanel', [<TabsGeneral settings={settings} />, <TabsTools query={query} />]);
+
 	useEffect(() => {
 		if (!settings) {
 			props.fetch_settings_data();
 		}
 	}, []);
+
+	console.log(tabPanel.length, tabPanel);
+	console.log(tabList.length, tabList);
+
 	return (
 		<React.Fragment>
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
@@ -33,9 +39,11 @@ const Settings = (props) => {
 						<Tab key={index}>{item}</Tab>
 					))}
 				</TabList>
-				{tabPanel.map((item, index) => (
-					<TabPanel key={index}>{item}</TabPanel>
-				))}
+				{tabPanel.map((item, index) => {
+					console.log(item, typeof item);
+					return <TabPanel key={index}>{item}</TabPanel>;
+					// return <div key={index}>{item}</div>;
+				})}
 			</Tabs>
 			{migration && <Migration mode={migration} />}
 		</React.Fragment>

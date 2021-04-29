@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import Dashboard from './Dashboard';
@@ -17,6 +17,7 @@ function useQuery() {
 
 const BetterLinks = (props) => {
 	window.betterLinksQuery = useQuery();
+
 	return (
 		<React.Fragment>
 			<MenuPortal>

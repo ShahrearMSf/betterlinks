@@ -43,11 +43,13 @@ class Assets
 			);
 			wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks.css'), 'all');
 
+			$dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.core.min.asset.php';
+
 			wp_enqueue_script(
 				'betterlinks-admin-core',
 				BETTERLINKS_ASSETS_URI . 'js/betterlinks.core.min.js',
-				['jquery'],
-				filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.core.min.js'),
+				$dependencies['dependencies'],
+				$dependencies['version'],
 				true
 			);
 			wp_localize_script('betterlinks-admin-core', 'betterLinksGlobal', [
