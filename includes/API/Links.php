@@ -24,7 +24,7 @@ class Links extends Controller
 			[
 				'methods' => \WP_REST_Server::READABLE,
 				'callback' => [$this, 'get_items'],
-				'permission_callback' => [$this, 'permissions_check'],
+				'permission_callback' => [$this, 'get_items_permissions_check'],
 				'args' => $this->get_links_schema(),
 			],
 		]);
@@ -33,7 +33,7 @@ class Links extends Controller
 			[
 				'methods' => \WP_REST_Server::CREATABLE,
 				'callback' => [$this, 'create_item'],
-				'permission_callback' => [$this, 'permissions_check'],
+				'permission_callback' => [$this, 'create_item_permissions_check'],
 				'args' => $this->get_links_schema(),
 			],
 		]);
@@ -301,6 +301,28 @@ class Links extends Controller
 			],
 			200
 		);
+	}
+
+	/**
+	 * Check if a given request has access to update a setting
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|bool
+	 */
+	public function get_items_permissions_check($request)
+	{
+		return apply_filters( 'betterlinks/api/links_get_items_permissions_check', current_user_can('manage_options'));
+	}
+
+	/**
+	 * Check if a given request has access to update a setting
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|bool
+	 */
+	public function create_item_permissions_check($request)
+	{
+		return apply_filters( 'betterlinks/api/links_create_item_permissions_check', current_user_can('manage_options'));
 	}
 
 	/**
