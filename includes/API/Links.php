@@ -57,7 +57,7 @@ class Links extends Controller
 				array(
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => [$this, 'permissions_check'],
+					'permission_callback' => [$this, 'update_item_permissions_check'],
 					'args'                => $this->get_links_schema(),
 				),
 				array(
@@ -323,6 +323,17 @@ class Links extends Controller
 	public function create_item_permissions_check($request)
 	{
 		return apply_filters( 'betterlinks/api/links_create_item_permissions_check', current_user_can('manage_options'));
+	}
+
+	/**
+	 * Check if a given request has access to update a setting
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|bool
+	 */
+	public function update_item_permissions_check($request)
+	{
+		return apply_filters( 'betterlinks/api/links_update_item_permissions_check', current_user_can('manage_options'));
 	}
 
 	/**
