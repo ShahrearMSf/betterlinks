@@ -23,14 +23,14 @@ class Menu
 		add_menu_page(
 			__('BetterLinks', 'betterlinks'),
 			__('BetterLinks', 'betterlinks'),
-			'manage_options',
+			apply_filters('betterlinks/admin/menu_capability', 'manage_options'),
 			BETTERLINKS_PLUGIN_SLUG,
 			[$this, 'load_main_template'],
 			BETTERLINKS_ASSETS_URI . 'images/logo.svg',
 			30
 		);
 		foreach (Helper::get_menu_items() as $key => $item) {
-			add_submenu_page(BETTERLINKS_PLUGIN_SLUG, $item['title'], $item['title'], $item['capability'], $key, [$this, 'load_main_template']);
+			add_submenu_page(BETTERLINKS_PLUGIN_SLUG, $item['title'], $item['title'],  apply_filters("betterlinks/admin/".$key."_menu_capability", $item['capability']), $key, [$this, 'load_main_template']);
 		}
 	}
 	public function load_main_template()
