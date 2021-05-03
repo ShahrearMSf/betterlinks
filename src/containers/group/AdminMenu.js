@@ -23,15 +23,21 @@ const AdminMenu = () => {
 				<li className="wp-submenu-head" aria-hidden="true">
 					{__('BetterLinks', 'betterlinks')}
 				</li>
-				<li className={`wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`}>
-					<Link to={route_path + 'admin.php?page=betterlinks'}>{__('Manage Links', 'betterlinks')}</Link>
-				</li>
-				<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
-					<Link to={route_path + 'admin.php?page=betterlinks-analytics'}>{__('Analytics', 'betterlinks')}</Link>
-				</li>
-				<li className={`wp-first-item ${currentPage == 'betterlinks-settings' ? 'current' : ''}`}>
-					<Link to={route_path + 'admin.php?page=betterlinks-settings'}>{__('Settings', 'betterlinks')}</Link>
-				</li>
+				{betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && (
+					<li className={`wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`}>
+						<Link to={route_path + 'admin.php?page=betterlinks'}>{__('Manage Links', 'betterlinks')}</Link>
+					</li>
+				)}
+				{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (
+					<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
+						<Link to={route_path + 'admin.php?page=betterlinks-analytics'}>{__('Analytics', 'betterlinks')}</Link>
+					</li>
+				)}
+				{betterLinksHooks.applyFilters('isShowSettingsMenu', true) && (
+					<li className={`wp-first-item ${currentPage == 'betterlinks-settings' ? 'current' : ''}`}>
+						<Link to={route_path + 'admin.php?page=betterlinks-settings'}>{__('Settings', 'betterlinks')}</Link>
+					</li>
+				)}
 			</ul>
 		</React.Fragment>
 	);

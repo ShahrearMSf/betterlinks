@@ -24,7 +24,7 @@ class Settings extends Controller
 			[
 				'methods' => \WP_REST_Server::READABLE,
 				'callback' => [$this, 'get_items'],
-				'permission_callback' => [$this, 'permissions_check'],
+				'permission_callback' => [$this, 'get_items_permissions_check'],
 				'args' => $this->get_settings_schema(),
 			],
 		]);
@@ -112,6 +112,17 @@ class Settings extends Controller
 			],
 			200
 		);
+	}
+
+	/**
+	 * Check if a given request has access to update a setting
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|bool
+	 */
+	public function get_items_permissions_check($request)
+	{
+		return apply_filters( 'betterlinks/api/settings_get_items_permissions_check', current_user_can('manage_options'));
 	}
 
 	/**
