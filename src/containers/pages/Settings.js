@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { applyFilters } from '@wordpress/hooks';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
-import 'react-tabs/style/react-tabs.css';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
