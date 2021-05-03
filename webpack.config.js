@@ -12,17 +12,17 @@ const config = {
 		filename: '[name].js',
 		chunkFilename: 'betterlinks.[id].chunk.js',
 	},
-	// optimization: {
-	// 	splitChunks: {
-	// 		cacheGroups: {
-	// 			defaultVendors: {
-	// 				test: /[\\/]node_modules[\\/](react-chartjs-2|moment|chartjs)[\\/]/,
-	// 				chunks: 'all',
-	// 			},
-	// 		},
-	// 	},
-	// },
-	// plugins: [new CleanWebpackPlugin()],
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				defaultVendors: {
+					test: /[\\/]node_modules[\\/](react-chartjs-2|moment|chartjs)[\\/]/,
+					chunks: 'all',
+				},
+			},
+		},
+	},
+	plugins: [...defaultConfig.plugins, new CleanWebpackPlugin()],
 };
 
 module.exports = config;
