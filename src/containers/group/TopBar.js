@@ -34,7 +34,7 @@ const TopBar = (props) => {
 				<span className="topbar__logo__text">{props.currentPage.replace('betterlinks', 'BetterLinks').replace('-', ' ')}</span>
 			</div>
 
-			{props.currentPage === 'betterlinks' && (
+			{props.currentPage === 'betterlinks' && betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && (
 				<div className="btl-create-links">
 					<Link isShowIcon={false} submitHandler={props.add_new_link} />
 				</div>

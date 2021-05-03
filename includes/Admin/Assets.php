@@ -62,7 +62,7 @@ class Assets
 				'route_path' => parse_url(admin_url(), PHP_URL_PATH),
 				'exists_links_json' => BETTERLINKS_EXISTS_LINKS_JSON,
 				'exists_clicks_json' => BETTERLINKS_EXISTS_CLICKS_JSON,
-				'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '',
+				'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : ''
 			]);
 		}
 	}

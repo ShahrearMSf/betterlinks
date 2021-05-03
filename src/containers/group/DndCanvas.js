@@ -31,6 +31,8 @@ export class List extends React.Component {
 									submitLinkHandler={this.props.edit_link}
 									deleteLinkHandler={this.props.delete_link}
 									data={this.props.item}
+									isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowEditLink', true)}
+									isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}
 								/>
 							</div>
 						</div>
@@ -77,7 +79,7 @@ class CatWrap extends React.PureComponent {
 						{provided.placeholder}
 					</div>
 					<div className="category-footer">
-						<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
+						{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && <Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />}
 					</div>
 				</div>
 			</div>
@@ -111,7 +113,7 @@ function DndCanvas(props) {
 									{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
 								</Droppable>
 							))}
-					<CreateCategory createCatHandler={props.add_new_cat} />
+					{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && <CreateCategory createCatHandler={props.add_new_cat} />}
 				</DragDropContext>
 			) : (
 				<Loader />

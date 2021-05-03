@@ -43,7 +43,7 @@ const CatHeader = (props) => {
 		<React.Fragment>
 			<div className="category-head">
 				<h4 className="title">{catName}</h4>
-				{cat_slug != 'uncategorized' && (
+				{cat_slug != 'uncategorized' && betterLinksHooks.applyFilters('isShowCatControl', true) && (
 					<div className="dropdown">
 						<button className="icon" onClick={() => catActionHandler()}>
 							<i className="btl btl-more"></i>
