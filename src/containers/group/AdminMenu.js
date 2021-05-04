@@ -7,7 +7,9 @@ const AdminMenu = () => {
 	return (
 		<React.Fragment>
 			<Link
-				to={route_path + 'admin.php?page=betterlinks'}
+				to={`${route_path}admin.php?page=${
+					!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) ? 'betterlinks-analytics' : 'betterlinks'
+				}`}
 				className="wp-has-submenu wp-has-current-submenu wp-menu-open menu-top menu-icon-generic toplevel_page_betterlinks menu-top-last"
 				aria-haspopup="false"
 			>
