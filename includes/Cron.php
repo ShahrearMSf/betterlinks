@@ -44,6 +44,7 @@ class Cron
 				}
 			}
 		}
+		$formattedArray = apply_filters('betterlinks/before_write_json_links', $formattedArray);
 		return file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json', json_encode($formattedArray));
 	}
 
