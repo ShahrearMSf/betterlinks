@@ -247,12 +247,14 @@ const Link = (props) => {
 										</label>
 										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
 									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label"></label>
-										<button type="submit" className="btl-modal-submit-button">
-											{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
-										</button>
-									</div>
+									{betterLinksHooks.applyFilters('betterLinksIsShowEditLink', true) && (
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label"></label>
+											<button type="submit" className="btl-modal-submit-button">
+												{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+											</button>
+										</div>
+									)}
 								</div>
 								<div className="btl-entry-content-right">
 									<div className="link-options">

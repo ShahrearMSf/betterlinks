@@ -31,7 +31,7 @@ export class List extends React.Component {
 									submitLinkHandler={this.props.edit_link}
 									deleteLinkHandler={this.props.delete_link}
 									data={this.props.item}
-									isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowEditLink', true)}
+									isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowViewLink', true)}
 									isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}
 								/>
 							</div>
