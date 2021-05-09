@@ -118,7 +118,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 						</button>
 						{!betterLinksHooks.applyFilters('isActivePro', false) && (
 							<button type="button" onClick={(e) => alert('Upgrade To Pro')}>
-								{__('Save New Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
+								{__('Save New Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked-white.svg'} alt="locked" />
 							</button>
 						)}
 					</div>

@@ -208,13 +208,16 @@ const Link = (props) => {
 											<button type="button" className="btl-utm-button" onClick={openUTMModal}>
 												UTM
 											</button>
-											<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler}>
-												{!betterLinksHooks.applyFilters('isActivePro', false) ? (
-													<img src={plugin_root_url + 'assets/images/locked-share.svg'} alt="icon" />
-												) : (
+											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler}>
 													<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
-												)}
-											</button>
+													<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
+												</button>
+											) : (
+												<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler}>
+													<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
+												</button>
+											)}
 										</div>
 									</div>
 									<div className="btl-modal-form-group shorturl">

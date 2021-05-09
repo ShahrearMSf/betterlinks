@@ -16,10 +16,10 @@
     }
     .btl-modal-utm-templates{
         margin-bottom: 20px;
+        #savedtemplate,
         select{
             min-height:  34px;
             border: 1px solid $success;
-            // background: rgba($success, 0.1);
             border-radius: 2px;
             color: $dark;
             font-size: 15px;
