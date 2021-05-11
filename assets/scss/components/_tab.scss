@@ -27,6 +27,39 @@
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 20px;
 }
+.btl-tab-inner-divider-2 {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 20px;
+    > * {
+        &:first-child{
+            grid-column: span 2;
+        }
+    }
+}
+.btl-role-container{
+    .btl-form-group{
+        &:first-child{
+            margin-top: 10px;
+        }
+        &:not(:last-of-type){
+            border-bottom: 1px solid #ebebeb;
+            padding-bottom: 20px;
+        }
+        .btl-form-label {
+            font-size: 14px !important;
+            padding-right: 5px !important;
+        }
+        .btl-checkbox-field.block {
+            margin-right: 15px;
+        }
+        .btl-checkbox-field .text {
+            padding-left: 35px;
+            font-size: 14px !important;
+        }
+    }
+}
+
 .btl-tab-panel-inner {
 	background: $white;
 	padding: 25px;
