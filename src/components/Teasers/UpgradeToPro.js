@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
+import { plugin_root_url } from './../../utils/helper';
 
 const customStyles = {
 	content: {
@@ -23,6 +24,7 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 		<React.Fragment>
 			<Modal isOpen={isOpenModal} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
 				<div className="betterlinks-upgradetopro">
+					<img src={plugin_root_url + 'assets/images/exclamation.svg'} alt="icon" />
 					<h3>Opps...</h3>
 					<p>
 						You need to <strong>upgrade</strong> to the{' '}
