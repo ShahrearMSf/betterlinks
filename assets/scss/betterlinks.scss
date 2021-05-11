@@ -16,16 +16,6 @@
 .betterlinks-body {
 	padding-top: 20px;
 	padding-right: 20px;
-	span.pro-badge {
-		background: linear-gradient( 
-	202deg
-	 ,#2961ff 0%,#003be2 100%);
-		color: #fff;
-		border-radius: 2px;
-		padding: 3px 8px;
-		font-size: 12px;
-		margin-left: 10px;
-	}
 	@import './common/reboot';
 	@import './common/form';
 	@import './components/topbar';

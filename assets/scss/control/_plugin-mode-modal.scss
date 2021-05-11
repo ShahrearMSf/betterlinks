@@ -153,6 +153,11 @@
 			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 		}
 	}
+    .btl-utm-button,
+    .btl-share-button{
+        color: $white!important;
+        border-color: $white!important;
+    }
 }
 .btl-modal-utm-builder{
     .btl-modal-utm-builder__title{

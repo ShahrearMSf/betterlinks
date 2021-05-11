@@ -129,6 +129,7 @@
 .btl-checkbox-field {
 	display: flex;
 	cursor: pointer;
+	min-height: 24px;
 	&.block {
 		display: inline-block;
 		margin-right: 20px;
@@ -145,6 +146,7 @@
 		color: $dark;
 		font-weight: 500;
 		font-size: 16px;
+		padding-top: 2px;
 		&:before {
 			position: absolute;
 			font-family: 'better-links';
@@ -152,11 +154,20 @@
 			left: 0;
 			font-size: 24px;
 			color: $secondary-lighten;
+			padding-top: 2px;
+			height: 20px;
+			border-radius: 2.5px;
 		}
 	}
 	.btl-check:checked + .text:before {
 		content: '\e90e';
 		color: $success;
+	}
+	.btl-check:disabled + .text:before {
+		background: #e4e4e4;
+		color: #f7f8fa;
+		box-shadow: inset 0 2px 4px rgb(0 0 0 / 4%);
+		cursor: initial;
 	}
 }
 .btl-create-category-submit {
@@ -273,4 +284,28 @@
 	span.dashicons.dashicons-info-outline {
 		color: #a6a8ad;
 	}
+}
+
+.btl-googleanalytics-container {
+	input.btl-form-control {
+		&:disabled {
+			background: #e4e4e4;
+			cursor: initial;
+		}
+	}
+}
+
+span.pro-badge {
+	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+	color: #fff;
+    border-radius: 2px;
+    padding: 3px 6px;
+    font-size: 10px;
+    margin-left: 3px;
+    line-height: 1;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 2px;
+    transform: translateY(-10px);
 }
