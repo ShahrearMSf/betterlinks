@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
+import UpgradeToPro from './../Teasers/UpgradeToPro';
 import PropTypes from 'prop-types';
 import { plugin_root_url } from './../../utils/helper';
 
@@ -9,6 +10,7 @@ const propTypes = {};
 const defaultProps = {};
 
 export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler }) {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
 	const [UTMBuilderState, setUTMBuilderState] = useState({
 		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : '',
@@ -26,8 +28,15 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		);
 		closeModalHandler();
 	};
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
 	return (
 		<React.Fragment>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-modal-utm-builder">
 				<h3 className="btl-modal-utm-builder__title">
 					{__('UTM Builder', 'betterlinks')}
@@ -41,7 +50,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 						<div className="btl-modal-utm-builder__form-group btl-modal-utm-templates">
 							<label htmlFor="savedtemplate">{__('Template', 'betterlinks-pro')}</label>
 							<div>
-								<div name="savedtemplate" id="savedtemplate" onClick={() => alert('Upgrade To Pro')}>
+								<div name="savedtemplate" id="savedtemplate" onClick={() => openUpgradeToProModal()}>
 									{__('No Template Chosen', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
 								</div>
 							</div>
@@ -117,7 +126,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 							{__('Save Link', 'betterlinks')}
 						</button>
 						{!betterLinksHooks.applyFilters('isActivePro', false) && (
-							<button type="button" onClick={(e) => alert('Upgrade To Pro')}>
+							<button type="button" onClick={(e) => openUpgradeToProModal()}>
 								{__('Save New Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked-white.svg'} alt="locked" />
 							</button>
 						)}

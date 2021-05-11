@@ -16,6 +16,7 @@ import Tags from './../Terms/Tags';
 import Copy from './../../components/Copy';
 import DateAndTimePicker from './../../components/DateAndTimePicker';
 import UTMBuilder from '../UTMBuilder';
+import UpgradeToPro from './../Teasers/UpgradeToPro';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -35,6 +36,7 @@ const Link = (props) => {
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -88,7 +90,7 @@ const Link = (props) => {
 			setIsShowCustomUTMModalContent(false);
 			openUTMModal();
 		} else {
-			alert('Upgrade To Pro');
+			openUpgradeToProModal();
 		}
 	};
 
@@ -115,6 +117,14 @@ const Link = (props) => {
 			}
 		);
 	};
+
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
+
 	const onSubmit = (values) => {
 		shortURLUniqueCheck(values.short_url, values.ID).then((isUnique) => {
 			if (!isUnique) {
@@ -163,6 +173,7 @@ const Link = (props) => {
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
+								<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 								<Modal isOpen={modalUTMIsOpen} onRequestClose={closeUTMModal} style={modalCustomSmallStyles} ariaHideApp={false}>
 									<span className="btl-close-modal" onClick={closeUTMModal}>
 										<i className="btl btl-cancel"></i>
