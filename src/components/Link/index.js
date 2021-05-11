@@ -254,7 +254,7 @@ const Link = (props) => {
 										</label>
 										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 									</div>
-									{(betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) || betterLinksHooks.applyFilters('betterLinksIsShowEditLink', true)) && (
+									{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
 										<div className="btl-modal-form-group">
 											<label className="btl-modal-form-label"></label>
 											<button type="submit" className="btl-modal-submit-button">
