@@ -79,6 +79,11 @@
 			}
 		}
 	}
+	.teaser {
+		.btl-checkbox-field .text:before {
+			opacity: 0.5;
+		}
+	}
 }
 .btl-tab-panel-inner .btl-tab-panel-header:first-child {
 	margin-top: 0;

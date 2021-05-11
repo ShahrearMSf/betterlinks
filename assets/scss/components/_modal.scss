@@ -170,6 +170,19 @@
 					img{
 						width: 13px;
 					}
+					&--locked {
+						position: relative;
+						padding: 0;
+						img {
+							width: 13px;
+						}
+						.locked {
+							position: absolute;
+							top: -12px;
+							right: -12px;
+							width: 20px;
+						}
+					}
 				}
 			}
 		}
@@ -435,6 +448,29 @@
 		cursor: pointer;
 		&:hover {
 			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+		}
+	}
+	.betterlinks-upgradetopro {
+		text-align: center;
+		h3 {
+			color: rgba(0,0,0,.65);
+			font-weight: 600;
+			font-size: 27px;
+		}
+		p {
+			a {
+				color: #e64942;
+				font-weight: 600;
+			}
+		}
+		.btn-close {
+			background: #e64942;
+			color: #fff;
+			padding: 10px 20px;
+			border: 0;
+			border-radius: 4px;
+			cursor: pointer;
+			float: right;
 		}
 	}
 }

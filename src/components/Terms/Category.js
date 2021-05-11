@@ -12,7 +12,7 @@ const propTypes = {
 
 const defaultProps = {};
 
-const Category = ({ catId, data, fieldName, setFieldValue }) => {
+const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 	const [field] = useField(fieldName);
 
 	const onChange = (option) => {
@@ -47,10 +47,11 @@ const Category = ({ catId, data, fieldName, setFieldValue }) => {
 							value: item.ID,
 							label: item.term_name,
 						}))}
+					isDisabled={disabled}
 				/>
 			) : (
 				<div>
-					<Select2 className="btl-modal-select" id={field.id} classNamePrefix="btl-react-select" />
+					<Select2 className="btl-modal-select" id={field.id} classNamePrefix="btl-react-select" isDisabled={disabled} />
 				</div>
 			)}
 		</React.Fragment>

@@ -83,7 +83,7 @@ const getLinksListViewColumnData = (props) => {
 						submitLinkHandler={props.edit_link}
 						deleteLinkHandler={props.delete_link}
 						data={row}
-						isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowEditLink', true)}
+						isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowViewLink', true)}
 						isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}
 					/>
 				</div>

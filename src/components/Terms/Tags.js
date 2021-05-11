@@ -13,7 +13,7 @@ const propTypes = {
 
 const defaultProps = {};
 
-const Tags = ({ fieldName, linkId, setFieldValue, data }) => {
+const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 	const [saveTags, setSaveTags] = useState(null);
 	useEffect(async () => {
 		if (linkId) {
@@ -66,6 +66,7 @@ const Tags = ({ fieldName, linkId, setFieldValue, data }) => {
 								label: item.term_name,
 							}))
 					}
+					isDisabled={disabled}
 					isMulti={true}
 				/>
 			)}

@@ -9,6 +9,8 @@ import 'react-tabs/style/react-tabs.css';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
+import GoogleAnalytics from './../../components/Teasers/GoogleAnalytics';
+import RoleManagement from './../../components/Teasers/RoleManagement';
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
 }
@@ -18,8 +20,18 @@ const Settings = (props) => {
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
 	const { settings } = props.settings;
-	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [__('General', 'betterlinks'), __('Tools', 'betterlinks')]);
-	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [<TabsGeneral settings={settings} />, <TabsTools query={query} />]);
+	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
+		__('General', 'betterlinks'),
+		__('Tools', 'betterlinks'),
+		__('Role Management', 'betterlinks'),
+		__('Google Analytics', 'betterlinks'),
+	]);
+	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
+		<TabsGeneral settings={settings} />,
+		<TabsTools query={query} />,
+		<RoleManagement />,
+		<GoogleAnalytics />,
+	]);
 	useEffect(() => {
 		if (!settings) {
 			props.fetch_settings_data();
