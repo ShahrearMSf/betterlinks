@@ -9,7 +9,7 @@ const customStyles = {
 		left: '50%',
 		right: 'auto',
 		bottom: 'auto',
-		maxWidth: '350px',
+		maxWidth: '400px',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -50%)',
 	},
@@ -24,7 +24,7 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 		<React.Fragment>
 			<Modal isOpen={isOpenModal} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
 				<div className="betterlinks-upgradetopro">
-					<img src={plugin_root_url + 'assets/images/exclamation.svg'} alt="icon" />
+					<img src={plugin_root_url + 'assets/images/exclamation.svg'} alt="icon" style={{ opacity: 0.5 }} />
 					<h3>Opps...</h3>
 					<p>
 						You need to <strong>upgrade</strong> to the{' '}
@@ -34,7 +34,7 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 						Version to use this feature
 					</p>
 					<button className="btn-close" onClick={closeModal}>
-						close
+						Close
 					</button>
 				</div>
 			</Modal>
