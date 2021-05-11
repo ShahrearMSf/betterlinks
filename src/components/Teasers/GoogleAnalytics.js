@@ -36,7 +36,7 @@ export default class GoogleAnalytics extends React.Component {
 										Enable Google Analytics <span className="pro-badge">Pro</span>
 									</label>
 									<div className="link-options__body">
-                                        <label htmlFor="is_enable_ga" className="btl-checkbox-field">
+                                        <label className="btl-checkbox-field">
 										    <input type="checkbox" className="btl-check" name="is_enable_ga" disabled />
                                             <span className="text"></span>
                                         </label>
