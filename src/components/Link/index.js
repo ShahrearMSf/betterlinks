@@ -348,6 +348,31 @@ const Link = (props) => {
 											</label>
 										</div>
 									</div>
+									{!betterLinksHooks.applyFilters('isActivePro', false) && (
+										<div className="link-options link-options--advanced link-options--teasers">
+											<div className="link-options__head">
+												<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+											</div>
+											<div className="link-options__body">
+												<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+													<label className="btl-modal-form-label" htmlFor="status">
+														Status <span className="pro-badge">Pro</span>
+													</label>
+													<select id="status" disabled>
+														<option value="publish">Active</option>
+														<option value="expired">Expired</option>
+														<option value="draft">Draft</option>
+													</select>
+												</div>
+												<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+													<label className="btl-modal-form-label" htmlFor="expire">
+														Expire <span className="pro-badge">Pro</span>
+													</label>
+													<input id="expire" type="checkbox" disabled />
+												</div>
+											</div>
+										</div>
+									)}
 									{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 								</div>
 							</div>

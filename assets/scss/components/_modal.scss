@@ -15,6 +15,22 @@
 	@media screen and (max-width: 650px) {
 		padding: 20px !important;
 	}
+	span.pro-badge {
+		background: linear-gradient(
+	202deg
+	,#2961ff 0%,#003be2 100%);
+		color: #fff;
+		border-radius: 2px;
+		padding: 3px 6px;
+		font-size: 10px;
+		margin-left: 3px;
+		line-height: 1;
+		text-transform: uppercase;
+		display: inline-flex;
+		align-items: center;
+		border-radius: 2px;
+		transform: translateY(-10px);
+	}
 	.btl-close-modal {
 		position: absolute;
 		right: 15px;
@@ -87,6 +103,73 @@
 								color: #a6a8ad;
 							}
 						}
+					}
+				}
+				&--advanced{
+					.link-options__body{
+						padding: 20px!important;
+					}
+					.btl-modal-form-group {
+						align-items: center!important;
+						.btl-modal-form-label {
+							min-width: 65px!important;
+							line-height: 20px;
+							font-weight: 400!important;
+							padding-right: 10px!important;
+							padding-top: 0!important;
+							padding-bottom: 0!important;
+						}
+						input[type="checkbox"]{
+							margin-top: 5px;
+							margin-left: 3px;
+						}
+						input[type="text"]{
+							background: #fff;
+							border-color: #ebebeb;
+							width: 100%;
+							&:focus{
+								border-color: #ebebeb;
+								box-shadow: none;
+								outline: none;
+							}
+						}
+						select{
+							width: 100%;
+							border-color: #ebebeb;
+							font-size: 14px;
+							&:focus{
+								border-color: #ebebeb;
+								box-shadow: none;
+								outline: none;
+							}
+						}
+						.MuiFormControl-root{
+							fieldset,
+							label{
+								display: none;
+							}
+							.MuiInputBase-root{
+								input{
+									background: #fff;
+									border-color: #ebebeb;
+									font-size: 14px;
+									&:focus{
+										border-color: #ebebeb;
+										box-shadow: none;
+										outline: none;
+									}
+								}
+							}
+						}
+					}
+				}
+				&--teasers {
+					.btl-modal-form-group .btl-modal-form-label {
+						min-width: 100px!important;
+					}
+					input[type=checkbox] {
+						background: #e4e4e4;
+						cursor: inherit;
 					}
 				}
 			}
