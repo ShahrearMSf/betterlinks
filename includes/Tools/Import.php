@@ -5,6 +5,7 @@ class Import
 {
 	private $DB;
 	private $term_IDs = [];
+	private $link_IDs = [];
 	public function __construct()
 	{
 		add_action('admin_init', [$this, 'import_data']);
@@ -71,20 +72,19 @@ class Import
 
 	public function links_data_insert($data)
 	{
-		$links = [];
 		$linkImportMessage = [];
 		foreach ($data as $item) {
 			if (!empty($item['link_title']) && !empty($item['short_url'])) {
 				if (!\BetterLinks\Helper::link_exists($item['link_title'], $item['short_url'])) {
-					$links[] = $item;
+					$oldID = $item['ID'];
+					unset($item['ID']);
+					$results = $this->DB->table('betterlinks')->insert([$item]);
+					$this->link_IDs[$oldID] = current($results);
 					$linkImportMessage[] = 'Imported Successfully "' . $item['link_title'] . '"';
 				} else {
 					$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
 				}
 			}
-		}
-		if (count($links) > 0) {
-			$this->DB->table('betterlinks')->insert($links);
 		}
 		return $linkImportMessage;
 	}
@@ -112,6 +112,9 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
+			if(isset($this->link_IDs[$item['link_id']])){
+				$item['link_id'] = $this->link_IDs[$item['link_id']];
+			}
 			if (! in_array($item['term_id'], $this->term_IDs) ) {
 				$terms[] = [
 					'term_id' => current($this->term_IDs),
