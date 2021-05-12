@@ -64,14 +64,17 @@ function links(state = {}, action) {
 			};
 		case DELETE_CAT:
 			let newState = state.links;
-			const deletedCatLinks = newState[payload.data.cat_id]
-				? newState[payload.data.cat_id].lists.reduce((prev, current, index, arr) => {
-						current.cat_id = Object.keys(newState)[0];
-						arr[index] = current;
-						return arr;
-				  }, 0)
-				: [];
-			delete newState[payload.data.cat_id];
+			const { cat_id } = payload.data;
+			const deletedCatLinks =
+				newState[cat_id] && newState[cat_id].lists.length > 0
+					? newState[cat_id].lists.reduce((prev, current, index, arr) => {
+							current.cat_id = Object.keys(newState)[0];
+							arr[index] = current;
+							return arr;
+					  }, 0)
+					: [];
+
+			delete newState[cat_id];
 			return {
 				...state,
 				links: {
