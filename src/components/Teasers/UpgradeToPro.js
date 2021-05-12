@@ -4,6 +4,9 @@ import Modal from 'react-modal';
 import { plugin_root_url } from './../../utils/helper';
 
 const customStyles = {
+	overlay: {
+		background: 'rgba(35, 40, 45, 0.62)',
+	},
 	content: {
 		top: '50%',
 		left: '50%',
