@@ -10,6 +10,7 @@ class Admin
 		add_filter('BetterLinks/Admin/skip_no_conflict', [$this, 'skip_no_conflict']);
 		$this->dispath_notice();
 		$this->usage_tracker();
+		add_filter('plugin_action_links_' . BETTERLINKS_PLUGIN_BASENAME, array($this, 'insert_plugin_links'));
 	}
 	public function add_menu()
 	{
@@ -45,4 +46,11 @@ class Admin
         ));
         $tracker->init();
     }
+	public function insert_plugin_links($links)
+	{
+        if (!apply_filters('betterlinks/pro_enabled', false)) {
+            $links[] = sprintf('<a href="https://betterlinks.io/" target="_blank" style="color: #39b54a; font-weight: bold;">' . __('Go Pro', 'betterlinks') . '</a>');
+        }
+        return $links;
+	}
 }
