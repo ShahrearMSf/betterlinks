@@ -176,15 +176,15 @@
 .btl-file-chooser input {
 	color: $secondary;
 }
-button.button-primary,
+.button-primary,
 .submit input {
 	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 	border: none;
 	outline: none;
 	box-shadow: none;
 }
-button.button-primary:hover,
-button.button-primary:focus,
+.button-primary:hover,
+.button-primary:focus,
 .submit input:hover,
 .submit input:focus {
 	box-shadow: 0 5px 10px rgb(0 59 226 / 15%);
@@ -192,10 +192,12 @@ button.button-primary:focus,
 	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 	outline: none;
 }
-button.btn-save-settings {
+.btn-save-settings {
 	padding-left: 35px;
 	padding-right: 35px;
 	height: 50px;
+	display: inline-flex;
+    align-items: center;
 }
 
 // toggler button
