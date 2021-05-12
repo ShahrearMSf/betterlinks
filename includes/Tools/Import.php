@@ -55,15 +55,12 @@ class Import
 	{
 		$message = [];
 		if (isset($type['links']) && is_array($type['links']) && count($type['links']) > 0) {
-			error_log(print_r('run links', true));
 			$message['links'] = $this->links_data_insert($type['links']);
 		}
 		if (isset($type['terms']) && is_array($type['terms']) && count($type['terms']) > 0) {
-			error_log(print_r('run terms', true));
 			$message['terms'] = $this->terms_data_insert($type['terms']);
 		}
 		if (isset($type['terms_relationships']) && is_array($type['terms_relationships']) && count($type['terms_relationships']) > 0) {
-			error_log(print_r('run relation', true));
 			$message['terms_relationships'] = $this->terms_relationships_data_insert($type['terms_relationships']);
 		}
 		if (isset($type['clicks']) && is_array($type['clicks']) && count($type['clicks']) > 0) {
@@ -99,14 +96,13 @@ class Import
 		foreach ($data as $item) {
 			if (!empty($item['term_slug']) && !\BetterLinks\Helper::term_exists($item['term_slug'])) {
 				$terms[] = $item;
+				$insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
+				$this->term_IDs[] = current($insertedTerms);
 				$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
 			} else {
 				$this->term_IDs[] = $item['ID'];
 				$message[] = 'import failed "' . $item['term_name'] . '" already exists';
 			}
-		}
-		if (count($terms) > 0) {
-			$this->DB->table('betterlinks_terms')->insert($terms);
 		}
 		return $message;
 	}
@@ -116,8 +112,12 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
-			if ( ! in_array($item['term_id'], $this->term_IDs) ) {
-				continue;
+			if (! in_array($item['term_id'], $this->term_IDs) ) {
+				$terms[] = [
+					'term_id' => current($this->term_IDs),
+					'link_id' => $item['link_id']
+				];
+				array_shift($this->term_IDs);
 			} else {
 				$terms[] = $item;
 			}
