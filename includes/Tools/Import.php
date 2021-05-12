@@ -1,7 +1,6 @@
 <?php
 namespace BetterLinks\Tools;
 
-
 class Import
 {
 	private $DB;
@@ -56,12 +55,15 @@ class Import
 	{
 		$message = [];
 		if (isset($type['links']) && is_array($type['links']) && count($type['links']) > 0) {
+			error_log(print_r('run links', true));
 			$message['links'] = $this->links_data_insert($type['links']);
 		}
 		if (isset($type['terms']) && is_array($type['terms']) && count($type['terms']) > 0) {
+			error_log(print_r('run terms', true));
 			$message['terms'] = $this->terms_data_insert($type['terms']);
 		}
 		if (isset($type['terms_relationships']) && is_array($type['terms_relationships']) && count($type['terms_relationships']) > 0) {
+			error_log(print_r('run relation', true));
 			$message['terms_relationships'] = $this->terms_relationships_data_insert($type['terms_relationships']);
 		}
 		if (isset($type['clicks']) && is_array($type['clicks']) && count($type['clicks']) > 0) {
@@ -114,7 +116,7 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
-			if (in_array($item['term_id'], $this->term_IDs)) {
+			if ( ! in_array($item['term_id'], $this->term_IDs) ) {
 				continue;
 			} else {
 				$terms[] = $item;
