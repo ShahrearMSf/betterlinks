@@ -30,13 +30,16 @@ export default class GoogleAnalytics extends React.Component {
 									this.openModal();
 								}}
 								action="#"
-							>
+							> 
 								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
 									<label className="btl-form-label">
 										Enable Google Analytics <span className="pro-badge">Pro</span>
 									</label>
 									<div className="link-options__body">
-										<input type="checkbox" name="is_enable_ga" disabled />
+                                        <label className="btl-checkbox-field">
+										    <input type="checkbox" className="btl-check" name="is_enable_ga" disabled />
+                                            <span className="text"></span>
+                                        </label>
 									</div>
 								</div>
 								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
@@ -44,7 +47,7 @@ export default class GoogleAnalytics extends React.Component {
 										Google Analytics Tracking ID <span className="pro-badge">Pro</span>
 									</label>
 									<div className="link-options__body">
-										<input type="text" name="ga_tracking_code" disabled />
+										<input type="text" className="btl-form-control" name="ga_tracking_code" disabled />
 									</div>
 								</div>
 								<button className="button-primary btn-save-settings" type="submit">

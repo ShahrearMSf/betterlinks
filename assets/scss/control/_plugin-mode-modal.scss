@@ -153,74 +153,20 @@
 			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 		}
 	}
+    .btl-utm-button,
+    .btl-share-button{
+        color: $white!important;
+        border-color: $white!important;
+    }
 }
-.link-options--advanced{
-	.btl-modal-form-group {
-        align-items: center!important;
-		.btl-modal-form-label {
-			color: #b2b3bd;
-		}
-        input[type="text"]{
-            background: #36405a;
-            color: $white;
-            border-color: #36405a;
-            &:focus {
-                background: #36405a;
-                box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
-            }
-            &::placeholder {
-                color: $secondary-lighten;
-            }
-        }
-        select{
-			background-color: #36405a !important;
-			border-color: #36405a !important;
-            color: $white;
-            &:focus{
-                border-color: #ebebeb;
-                box-shadow: none;
-                outline: none;
-            }
-        }
-        .MuiFormControl-root{
-            .MuiInputBase-root{
-                input{
-                    background: #36405a;
-                    color: $white;
-                    border-color: #36405a;
-                    &:focus {
-                        background: #36405a;
-                        box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
-                    }
-                    &::placeholder {
-                        color: $secondary-lighten;
-                    }
-                }
-            }
-        }
-	}
-}
-
 .btl-modal-utm-builder{
     .btl-modal-utm-builder__title{
         color: $white;
-    }
-    .btl-modal-utm-templates{
-        select{
-			background-color: #36405a !important;
-			border-color: #36405a !important;
-            color: $white;
-        }
     }
     .btl-modal-utm-builder__body{
         .btl-modal-utm-builder__form-group{
             > label{
                 color: #fff;
-            }
-            > div{
-                > label {
-                    color: $white;
-                }
             }
             textarea,
             input[type='text'] {
@@ -234,15 +180,6 @@
                 &::placeholder {
                     color: $secondary-lighten;
                 }
-            }
-        }
-        .btl-modal-utm-builder__form-group-pinterest,
-        .btl-modal-utm-builder__form-group-reddit,
-        .btl-modal-utm-builder__form-group-linkedin,
-        .btl-modal-utm-builder__form-group-twitter,
-        .btl-modal-utm-builder__form-group-facebook{
-            > * {
-                color: #b2b3bd;
             }
         }
     }
