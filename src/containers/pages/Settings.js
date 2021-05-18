@@ -42,9 +42,6 @@ const Settings = (props) => {
 		}
 	}, []);
 
-	console.log(tabPanel.length, tabPanel);
-	console.log(tabList.length, tabList);
-
 	return (
 		<React.Fragment>
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
@@ -54,7 +51,6 @@ const Settings = (props) => {
 					))}
 				</TabList>
 				{tabPanel.map((item, index) => {
-					console.log(item, typeof item);
 					return <TabPanel key={index}>{item}</TabPanel>;
 					// return <div key={index}>{item}</div>;
 				})}
