@@ -31,7 +31,7 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 					<h3>Opps...</h3>
 					<p>
 						You need to <strong>upgrade</strong> to the{' '}
-						<a href="https://betterlinks.io/" target="_blank">
+						<a href="https://wpdeveloper.net/in/upgrade-betterlinks" target="_blank">
 							Premium
 						</a>{' '}
 						Version to use this feature
