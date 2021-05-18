@@ -51,7 +51,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 							<label htmlFor="savedtemplate">{__('Template', 'betterlinks-pro')}</label>
 							<div>
 								<div name="savedtemplate" id="savedtemplate" onClick={() => openUpgradeToProModal()}>
-									{__('Pick a Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
+									{__('Pick a Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" style={{marginLeft: 5 }} />
 								</div>
 							</div>
 						</div>

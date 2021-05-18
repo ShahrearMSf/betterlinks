@@ -224,12 +224,12 @@ const Link = (props) => {
 											</button>
 											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
 												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
-													<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
+                                                    <i className="btl btl-add"></i>
 													<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
 												</button>
 											) : (
 												<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
-													<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
+                                                    <i className="btl btl-share"></i>
 												</button>
 											)}
 										</div>
