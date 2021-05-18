@@ -18,7 +18,8 @@ class Migration {
 		}
         // update plugin version
 		if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
-			update_option('betterlinks_version', BETTERLINKS_VERSION);
+            Helper::create_cron_jobs_for_json_links();
+            update_option('betterlinks_version', BETTERLINKS_VERSION);
 		}
     }
     public function db_migration_1_1()
