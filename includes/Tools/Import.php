@@ -1,11 +1,11 @@
 <?php
 namespace BetterLinks\Tools;
 
-
 class Import
 {
 	private $DB;
 	private $term_IDs = [];
+	private $link_IDs = [];
 	public function __construct()
 	{
 		add_action('admin_init', [$this, 'import_data']);
@@ -72,20 +72,19 @@ class Import
 
 	public function links_data_insert($data)
 	{
-		$links = [];
 		$linkImportMessage = [];
 		foreach ($data as $item) {
 			if (!empty($item['link_title']) && !empty($item['short_url'])) {
 				if (!\BetterLinks\Helper::link_exists($item['link_title'], $item['short_url'])) {
-					$links[] = $item;
+					$oldID = $item['ID'];
+					unset($item['ID']);
+					$results = $this->DB->table('betterlinks')->insert([$item]);
+					$this->link_IDs[$oldID] = current($results);
 					$linkImportMessage[] = 'Imported Successfully "' . $item['link_title'] . '"';
 				} else {
 					$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
 				}
 			}
-		}
-		if (count($links) > 0) {
-			$this->DB->table('betterlinks')->insert($links);
 		}
 		return $linkImportMessage;
 	}
@@ -97,14 +96,13 @@ class Import
 		foreach ($data as $item) {
 			if (!empty($item['term_slug']) && !\BetterLinks\Helper::term_exists($item['term_slug'])) {
 				$terms[] = $item;
+				$insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
+				$this->term_IDs[] = current($insertedTerms);
 				$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
 			} else {
 				$this->term_IDs[] = $item['ID'];
 				$message[] = 'import failed "' . $item['term_name'] . '" already exists';
 			}
-		}
-		if (count($terms) > 0) {
-			$this->DB->table('betterlinks_terms')->insert($terms);
 		}
 		return $message;
 	}
@@ -114,8 +112,15 @@ class Import
 		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
-			if (in_array($item['term_id'], $this->term_IDs)) {
-				continue;
+			if(isset($this->link_IDs[$item['link_id']])){
+				$item['link_id'] = $this->link_IDs[$item['link_id']];
+			}
+			if (! in_array($item['term_id'], $this->term_IDs) ) {
+				$terms[] = [
+					'term_id' => current($this->term_IDs),
+					'link_id' => $item['link_id']
+				];
+				array_shift($this->term_IDs);
 			} else {
 				$terms[] = $item;
 			}

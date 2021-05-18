@@ -14,6 +14,7 @@ class API
 		new API\Terms();
 		new API\Clicks();
 		add_filter('jwt_auth_whitelist', [$this, 'whitelist_API']);
+		add_filter( 'rest_url', array($this, 'rest_url_ssl') );
 	}
 	public function whitelist_API($endpoints)
 	{
@@ -21,4 +22,11 @@ class API
 		$endpoints[] = '/index.php?rest_route=/' . BETTERLINKS_PLUGIN_SLUG . '/v1/*';
 		return $endpoints;
 	}
+	public function rest_url_ssl($url){
+        if ( is_ssl() || ( is_admin() && force_ssl_admin() ) ) {
+			$url = set_url_scheme( $url, 'https' );
+			return $url;
+        }
+        return $url;
+    }
 }

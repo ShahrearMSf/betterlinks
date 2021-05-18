@@ -32,6 +32,12 @@ body {
 			@import './control/plugin-mode';
 		}
 		@import './control/plugin-mode-modal';
+        #wpfooter{
+            color: $white;
+            a{
+                color: $success-lighten;
+            }
+        }
 	}
 	> .btl-overlay {
 		position: fixed;

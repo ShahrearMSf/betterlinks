@@ -9,6 +9,10 @@ import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
+import GoogleAnalytics from './../../components/Teasers/GoogleAnalytics';
+import RoleManagement from './../../components/Teasers/RoleManagement';
+import GoPremium from './../../components/Teasers/GoPremium';
+
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
 }
@@ -18,9 +22,20 @@ const Settings = (props) => {
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
 	const { settings } = props.settings;
-	let tabList = applyFilters('betterLinksSettingsFilterTabList', [__('General', 'betterlinks'), __('Tools', 'betterlinks')]);
-	let tabPanel = applyFilters('betterLinksSettingsFilterTabPanel', [<TabsGeneral settings={settings} />, <TabsTools query={query} />]);
-
+	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
+		__('General', 'betterlinks'),
+		__('Tools', 'betterlinks'),
+		__('Role Management', 'betterlinks'),
+		__('Google Analytics', 'betterlinks'),
+		__('Go Premium', 'betterlinks'),
+	]);
+	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
+		<TabsGeneral settings={settings} />,
+		<TabsTools query={query} />,
+		<RoleManagement />,
+		<GoogleAnalytics />,
+		<GoPremium />,
+	]);
 	useEffect(() => {
 		if (!settings) {
 			props.fetch_settings_data();

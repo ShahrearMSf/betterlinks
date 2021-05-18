@@ -24,6 +24,7 @@ const Select = (props) => {
 				onChange={onChange}
 				options={props.value && props.value.map((item) => item)}
 				isMulti={props.isMulti}
+				isDisabled={props.disabled}
 			/>
 		</React.Fragment>
 	);

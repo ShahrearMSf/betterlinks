@@ -120,6 +120,10 @@
 	&::placeholder {
 		color: $secondary-lighten;
 	}
+    &:disabled{
+        background: #647397;
+        box-shadow: inset 0 2px 4px rgb(255 255 255 / 4%);
+    }
 }
 .dropdown {
 	.dropdown-menu {
@@ -352,6 +356,12 @@
 	.btl-check:checked + .text:before {
 		color: lighten($success, 10%);
 	}
+	.btl-check:disabled + .text:before {
+        background: #647397;
+        color: #647397;
+        box-shadow: inset 0 2px 4px rgb(255 255 255 / 4%);
+        cursor: initial;
+	}
 }
 .btl-radio-group .btl-radio input + span {
 	color: $secondary-lighten;
@@ -491,6 +501,9 @@
 				.rdt_TableCell{
 					div{
 						color: $light;
+                        a{
+                            color: $success-lighten;
+                        }
 					}
 					.btl-link-title{
 						color: $white;
@@ -499,7 +512,7 @@
 						.btl-short-url{
 							background: rgba($success, 0.3);
 							color: $white;
-              font-weight: 500;
+                            font-weight: 500;
 						}
 					}
 					.dnd-link-button {
@@ -508,6 +521,12 @@
 							color: $white;
 						}
 					}
+                    .btl-confirm-message{
+                        background: transparent;
+                        .action-text{
+                            color: $white;
+                        }
+                    }
 				}
 			}
 		}
@@ -532,4 +551,11 @@
 		border-radius: 5px;
 		color: $white;
 	}
+}
+
+.btl-gopremium-container{
+    color: $light;
+    .btl-gopremium-title{
+        color: $white;
+    }
 }

@@ -204,13 +204,13 @@ class Helper
 			'link_slug' => $data['link_slug'],
 			'link_status' => (isset($data['link_status']) ? $data['link_status'] : 'publish'),
 			'short_url' => $data['short_url'],
-			'redirect_type' => $data['redirect_type'],
+			'redirect_type' => (isset($data['redirect_type']) ? $data['redirect_type'] : '307'),
 			'target_url' => $data['target_url'],
-			'nofollow' => $data['nofollow'],
-			'sponsored' => $data['sponsored'],
-			'param_forwarding' => $data['param_forwarding'],
-			'track_me' => $data['track_me'],
-			'wildcards' => $data['wildcards'],
+			'nofollow' => (isset($data['nofollow']) ? $data['nofollow'] : false),
+			'sponsored' => (isset($data['sponsored']) ? $data['sponsored'] : false),
+			'param_forwarding' => (isset($data['param_forwarding']) ? $data['param_forwarding'] : false),
+			'track_me' => (isset($data['track_me']) ? $data['track_me'] : false),
+			'wildcards' => (isset($data['wildcards']) ? $data['wildcards'] : false),
 			'expire' => (isset($data['expire']) ? $data['expire'] : NULL)
 		];
 	}

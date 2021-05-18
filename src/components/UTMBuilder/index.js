@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
+import UpgradeToPro from './../Teasers/UpgradeToPro';
 import PropTypes from 'prop-types';
 import { plugin_root_url } from './../../utils/helper';
 
@@ -9,6 +10,7 @@ const propTypes = {};
 const defaultProps = {};
 
 export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler }) {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
 	const [UTMBuilderState, setUTMBuilderState] = useState({
 		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : '',
@@ -26,27 +28,34 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		);
 		closeModalHandler();
 	};
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
 	return (
 		<React.Fragment>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-modal-utm-builder">
 				<h3 className="btl-modal-utm-builder__title">
 					{__('UTM Builder', 'betterlinks')}
 					<div className="btl-tooltip">
 						<span className="dashicons dashicons-info-outline"></span>
-						<span className="btl-tooltiptext">{__('UTM Builder', 'betterlinks')}r</span>
+						<span className="btl-tooltiptext">{__('Add Campaign Parameters to Track Custom Campaigns', 'betterlinks')}</span>
 					</div>
 				</h3>
 				<div className="btl-modal-utm-builder__body">
-					{/* {!betterLinksHooks.applyFilters('isActivePro', false) && (
+					{!betterLinksHooks.applyFilters('isActivePro', false) && (
 						<div className="btl-modal-utm-builder__form-group btl-modal-utm-templates">
 							<label htmlFor="savedtemplate">{__('Template', 'betterlinks-pro')}</label>
 							<div>
-								<div name="savedtemplate" id="savedtemplate" onClick={() => alert('Upgrade To Pro')}>
-									{__('No Template Chosen', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
+								<div name="savedtemplate" id="savedtemplate" onClick={() => openUpgradeToProModal()}>
+									{__('Pick a Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" style={{marginLeft: 5 }} />
 								</div>
 							</div>
 						</div>
-					)} */}
+					)}
 					<div className="btl-modal-utm-builder__form-group">
 						<label htmlFor="utmCampaign">{__('Campaign', 'betterlinks')}</label>
 						<div>
@@ -56,7 +65,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_campaign: e.target.value })}
 								type="text"
 								name="utm_campaign"
-								placeholder={__('e.g: ACME-campaign', 'betterlinks')}
+								placeholder={__('e.g: Example-campaign', 'betterlinks')}
 							/>
 						</div>
 					</div>
@@ -116,11 +125,11 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 						<button type="button" onClick={() => UTMSaveValueHandler()}>
 							{__('Save Link', 'betterlinks')}
 						</button>
-						{/* {!betterLinksHooks.applyFilters('isActivePro', false) && (
-							<button type="button" onClick={(e) => alert('Upgrade To Pro')}>
-								{__('Save New Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
+						{!betterLinksHooks.applyFilters('isActivePro', false) && (
+							<button type="button" onClick={(e) => openUpgradeToProModal()}>
+								{__('Save New Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked-white.svg'} alt="locked" />
 							</button>
-						)} */}
+						)}
 					</div>
 				</div>
 			</div>

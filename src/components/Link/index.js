@@ -16,6 +16,7 @@ import Tags from './../Terms/Tags';
 import Copy from './../../components/Copy';
 import DateAndTimePicker from './../../components/DateAndTimePicker';
 import UTMBuilder from '../UTMBuilder';
+import UpgradeToPro from './../Teasers/UpgradeToPro';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -35,9 +36,11 @@ const Link = (props) => {
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, data);
 
 	const initialValues = {
 		link_title: '',
@@ -87,7 +90,7 @@ const Link = (props) => {
 			setIsShowCustomUTMModalContent(false);
 			openUTMModal();
 		} else {
-			alert('Upgrade To Pro');
+			openUpgradeToProModal();
 		}
 	};
 
@@ -114,7 +117,17 @@ const Link = (props) => {
 			}
 		);
 	};
+
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
+
 	const onSubmit = (values) => {
+		const { short_url } = values;
+		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID).then((isUnique) => {
 			if (!isUnique) {
 				if (!values.cat_id) {
@@ -162,6 +175,7 @@ const Link = (props) => {
 					{(props) => (
 						<Form className="w-100">
 							<div className="btl-entry-content">
+								<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 								<Modal isOpen={modalUTMIsOpen} onRequestClose={closeUTMModal} style={modalCustomSmallStyles} ariaHideApp={false}>
 									<span className="btl-close-modal" onClick={closeUTMModal}>
 										<i className="btl btl-cancel"></i>
@@ -185,32 +199,37 @@ const Link = (props) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Title', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" id="link_title" name="link_title" required />
+										<Field className="btl-modal-form-control" id="link_title" name="link_title" disabled={isDisableLinkFormEditView} required />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">
 											{__('Description', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" component="textarea" id="link_note" name="link_note" />
+										<Field className="btl-modal-form-control" component="textarea" id="link_note" name="link_note" disabled={isDisableLinkFormEditView} />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
 											{__('Redirect Type', 'betterlinks')}
 										</label>
-										<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} isMulti={false} />
+										<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} isMulti={false} />
 									</div>
 									<div className="btl-modal-form-group btl-has-utm-button">
 										<label className="btl-modal-form-label btl-required" htmlFor="target_url">
 											{__('Target URL', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" required />
+										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" disabled={isDisableLinkFormEditView} required />
 										<div className="btl-utm-button-group">
-											<button type="button" className="btl-utm-button" onClick={openUTMModal}>
+											<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
 												UTM
 											</button>
-											{betterLinksHooks.applyFilters('isActivePro', false) && (
-												<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler}>
-													<img src={plugin_root_url + 'assets/images/share.svg'} alt="icon" />
+											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
+													<i className="btl btl-share"></i>
+													<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
+												</button>
+											) : (
+												<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
+													<i className="btl btl-share"></i>
 												</button>
 											)}
 										</div>
@@ -229,6 +248,7 @@ const Link = (props) => {
 													props.setFieldValue('short_url', e.target.value);
 													setSlugIsExists(false);
 												}}
+												disabled={isDisableLinkFormEditView}
 												required
 											/>
 											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
@@ -239,20 +259,22 @@ const Link = (props) => {
 										<label className="btl-modal-form-label" htmlFor="catId">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} />
+										<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="tags">
 											{__('Tags', 'betterlinks')}
 										</label>
-										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} />
+										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label"></label>
-										<button type="submit" className="btl-modal-submit-button">
-											{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
-										</button>
-									</div>
+									{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label"></label>
+											<button type="submit" className="btl-modal-submit-button">
+												{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+											</button>
+										</div>
+									)}
 								</div>
 								<div className="btl-entry-content-right">
 									<div className="link-options">
@@ -261,7 +283,13 @@ const Link = (props) => {
 										</div>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
+												<Field
+													className="btl-check"
+													name="nofollow"
+													type="checkbox"
+													onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)}
+													disabled={isDisableLinkFormEditView}
+												/>
 												<span className="text">
 													{__('No Follow', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -271,7 +299,13 @@ const Link = (props) => {
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
+												<Field
+													className="btl-check"
+													name="sponsored"
+													type="checkbox"
+													onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)}
+													disabled={isDisableLinkFormEditView}
+												/>
 												<span className="text">
 													{__('Sponsored', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -286,6 +320,7 @@ const Link = (props) => {
 													name="param_forwarding"
 													type="checkbox"
 													onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
+													disabled={isDisableLinkFormEditView}
 												/>
 												<span className="text">
 													{__('Parameter Forwarding', 'betterlinks')}
@@ -296,7 +331,13 @@ const Link = (props) => {
 												</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
+												<Field
+													className="btl-check"
+													name="track_me"
+													type="checkbox"
+													onChange={() => props.setFieldValue('track_me', !props.values.track_me)}
+													disabled={isDisableLinkFormEditView}
+												/>
 												<span className="text">
 													{__('Tracking', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -307,6 +348,31 @@ const Link = (props) => {
 											</label>
 										</div>
 									</div>
+									{!betterLinksHooks.applyFilters('isActivePro', false) && (
+										<div className="link-options link-options--advanced link-options--teasers">
+											<div className="link-options__head">
+												<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+											</div>
+											<div className="link-options__body">
+												<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+													<label className="btl-modal-form-label" htmlFor="status">
+														Status <span className="pro-badge">Pro</span>
+													</label>
+													<select id="status" disabled>
+														<option value="publish">Active</option>
+														<option value="expired">Expired</option>
+														<option value="draft">Draft</option>
+													</select>
+												</div>
+												<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+													<label className="btl-modal-form-label" htmlFor="expire">
+														Expire <span className="pro-badge">Pro</span>
+													</label>
+													<input id="expire" type="checkbox" disabled />
+												</div>
+											</div>
+										</div>
+									)}
 									{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 								</div>
 							</div>
