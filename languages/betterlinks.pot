@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the BetterLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 1.0.2\n"
+"Project-Id-Version: BetterLinks 1.0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-02-25T03:47:46+00:00\n"
+"POT-Creation-Date: 2021-05-18T07:43:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: betterlinks\n"
@@ -17,8 +17,8 @@ msgstr ""
 #. Plugin Name of the plugin
 #: includes/Admin/Menu.php:24
 #: includes/Admin/Menu.php:25
-#: src/containers/group/AdminMenu.js:20
-#: src/containers/group/AdminMenu.js:24
+#: src/containers/group/AdminMenu.js:27
+#: src/containers/group/AdminMenu.js:32
 #: src/containers/group/TabsTools.js:67
 msgid "BetterLinks"
 msgstr ""
@@ -39,35 +39,60 @@ msgstr ""
 msgid "https://wpdeveloper.net"
 msgstr ""
 
-#: includes/Admin/Notice.php:42
+#: includes/Admin.php:44
+msgid "Want to help make <strong>BetterLinks</strong> even more awesome? Be the first to get access to <strong>BetterLinks PRO</strong> with a huge <strong>30% Discount</strong> when we release if you allow us to track the non-sensitive usage data."
+msgstr ""
+
+#: includes/Admin.php:45
+msgid "We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise."
+msgstr ""
+
+#: includes/Admin.php:52
+msgid "Go Pro"
+msgstr ""
+
+#: includes/Admin/Notice.php:61
 msgid "Whoops! You are already using Pretty Links on your website. To migrate your Pretty Links data to BetterLinks, click here."
 msgstr ""
 
-#: includes/Admin/Notice.php:43
+#: includes/Admin/Notice.php:62
+#: includes/Admin/Notice.php:85
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Admin/Notice.php:56
-msgid "All Pretty Links has been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website."
+#: includes/Admin/Notice.php:72
+msgid "All Pretty Links have been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website."
 msgstr ""
 
-#: includes/Admin/Notice.php:57
+#: includes/Admin/Notice.php:73
 msgid "Deactivate Pretty Links"
 msgstr ""
 
-#: includes/Helper.php:40
-#: src/containers/group/AdminMenu.js:27
+#: includes/Admin/Notice.php:84
+msgid "Whoops! You are already using Simple 301 Redirects on your website. To migrate your Simple 301 Redirects data to BetterLinks, click here."
+msgstr ""
+
+#: includes/Admin/Notice.php:98
+msgid "All Simple 301 Redirects have been successfully migrated to BetterLinks. You can now safely deactivate Simple 301 Redirects on your website."
+msgstr ""
+
+#: includes/Admin/Notice.php:99
+msgid "Deactivate Simple 301 Redirects"
+msgstr ""
+
+#: includes/Helper.php:57
+#: src/containers/group/AdminMenu.js:36
 msgid "Manage Links"
 msgstr ""
 
-#: includes/Helper.php:44
-#: src/containers/group/AdminMenu.js:30
+#: includes/Helper.php:61
+#: src/containers/group/AdminMenu.js:41
 #: src/containers/group/TabsTools.js:51
 msgid "Analytics"
 msgstr ""
 
-#: includes/Helper.php:48
-#: src/containers/group/AdminMenu.js:33
+#: includes/Helper.php:65
+#: src/containers/group/AdminMenu.js:46
 msgid "Settings"
 msgstr ""
 
@@ -76,22 +101,22 @@ msgid "Edit"
 msgstr ""
 
 #: src/components/CatHeader/index.js:61
-#: src/components/LinkQuickAction/index.js:83
+#: src/components/LinkQuickAction/index.js:94
 msgid "Delete"
 msgstr ""
 
 #: src/components/CatHeader/index.js:68
-#: src/components/LinkQuickAction/index.js:89
-msgid "Are Your Sure?"
+#: src/components/LinkQuickAction/index.js:100
+msgid "Are You Sure?"
 msgstr ""
 
 #: src/components/CatHeader/index.js:71
-#: src/components/LinkQuickAction/index.js:92
+#: src/components/LinkQuickAction/index.js:103
 msgid "Yes"
 msgstr ""
 
 #: src/components/CatHeader/index.js:74
-#: src/components/LinkQuickAction/index.js:95
+#: src/components/LinkQuickAction/index.js:106
 msgid "No"
 msgstr ""
 
@@ -99,194 +124,346 @@ msgstr ""
 msgid "Add New Category"
 msgstr ""
 
-#: src/components/Graph/index.js:114
+#: src/components/Graph/index.js:117
 msgid "Click Analytics"
 msgstr ""
 
-#: src/components/Link/index.js:136
-#: src/containers/group/ListCanvas.js:17
+#: src/components/Link/index.js:200
+#: src/containers/group/ListCanvas.js:25
 msgid "Title"
 msgstr ""
 
-#: src/components/Link/index.js:142
+#: src/components/Link/index.js:206
 msgid "Description"
 msgstr ""
 
-#: src/components/Link/index.js:148
-#: src/containers/group/ListCanvas.js:33
-#: src/containers/group/TabsGeneral.js:137
+#: src/components/Link/index.js:212
+#: src/containers/group/ListCanvas.js:41
+#: src/containers/group/TabsGeneral.js:138
 msgid "Redirect Type"
 msgstr ""
 
-#: src/components/Link/index.js:154
-#: src/containers/pages/Analytics.js:71
+#: src/components/Link/index.js:218
+#: src/containers/pages/Analytics.js:72
 msgid "Target URL"
 msgstr ""
 
-#: src/components/Link/index.js:160
-#: src/containers/group/ListCanvas.js:25
-#: src/containers/pages/Analytics.js:43
+#: src/components/Link/index.js:239
+#: src/containers/group/ListCanvas.js:33
+#: src/containers/pages/Analytics.js:44
 msgid "Shortened URL"
 msgstr ""
 
-#: src/components/Link/index.js:180
+#: src/components/Link/index.js:260
 msgid "Category"
 msgstr ""
 
-#: src/components/Link/index.js:186
+#: src/components/Link/index.js:266
 msgid "Tags"
 msgstr ""
 
-#: src/components/Link/index.js:194
-#: src/containers/group/TabsGeneral.js:149
-msgid "Link Options"
-msgstr ""
-
-#: src/components/Link/index.js:200
-#: src/containers/group/TabsGeneral.js:154
-msgid "No Follow"
-msgstr ""
-
-#: src/components/Link/index.js:203
-#: src/containers/group/TabsGeneral.js:157
-msgid "This will add nofollow attribute to your link. (Recommended)"
-msgstr ""
-
-#: src/components/Link/index.js:210
-#: src/containers/group/TabsGeneral.js:164
-msgid "Sponsored"
-msgstr ""
-
-#: src/components/Link/index.js:213
-#: src/containers/group/TabsGeneral.js:167
-msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
-msgstr ""
-
-#: src/components/Link/index.js:225
-#: src/containers/group/TabsGeneral.js:174
-msgid "Parameter Forwarding"
-msgstr ""
-
-#: src/components/Link/index.js:228
-#: src/containers/group/TabsGeneral.js:177
-msgid "This will pass the parameters you have set in the target URL"
-msgstr ""
-
-#: src/components/Link/index.js:235
-#: src/containers/group/TabsGeneral.js:184
-msgid "Tracking"
-msgstr ""
-
-#: src/components/Link/index.js:238
-#: src/containers/group/TabsGeneral.js:187
-msgid "This will let you check Analytics report of your links"
-msgstr ""
-
-#: src/components/Link/index.js:249
-#: src/components/Terms/CatForm.js:93
+#: src/components/Link/index.js:274
+#: src/components/Terms/CatForm.js:96
 msgid "Update"
 msgstr ""
 
-#: src/components/Link/index.js:249
+#: src/components/Link/index.js:274
 msgid "Publish"
 msgstr ""
 
+#: src/components/Link/index.js:282
+#: src/containers/group/TabsGeneral.js:153
+msgid "Link Options"
+msgstr ""
+
+#: src/components/Link/index.js:294
+#: src/containers/group/TabsGeneral.js:158
+msgid "No Follow"
+msgstr ""
+
+#: src/components/Link/index.js:297
+#: src/containers/group/TabsGeneral.js:161
+msgid "This will add nofollow attribute to your link. (Recommended)"
+msgstr ""
+
+#: src/components/Link/index.js:310
+#: src/containers/group/TabsGeneral.js:168
+msgid "Sponsored"
+msgstr ""
+
+#: src/components/Link/index.js:313
+#: src/containers/group/TabsGeneral.js:171
+msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
+msgstr ""
+
+#: src/components/Link/index.js:326
+#: src/containers/group/TabsGeneral.js:178
+msgid "Parameter Forwarding"
+msgstr ""
+
+#: src/components/Link/index.js:329
+#: src/containers/group/TabsGeneral.js:181
+msgid "This will pass the parameters you have set in the target URL"
+msgstr ""
+
+#: src/components/Link/index.js:342
+#: src/containers/group/TabsGeneral.js:188
+msgid "Tracking"
+msgstr ""
+
+#: src/components/Link/index.js:345
+#: src/containers/group/TabsGeneral.js:191
+msgid "This will let you check Analytics report of your links"
+msgstr ""
+
+#: src/components/Link/index.js:354
+msgid "Advanced"
+msgstr ""
+
 #: src/components/LinkCopyUrl/index.js:21
-#: src/components/LinkQuickAction/index.js:61
+#: src/components/LinkQuickAction/index.js:72
 msgid "Copy Link"
 msgstr ""
 
-#: src/components/LinkQuickAction/index.js:69
+#: src/components/LinkQuickAction/index.js:80
 msgid "Visit Link"
 msgstr ""
 
-#: src/components/LinkQuickAction/index.js:75
+#: src/components/LinkQuickAction/index.js:86
 msgid "Edit Link"
 msgstr ""
 
-#: src/components/Terms/CatForm.js:71
+#: src/components/Teasers/GoogleAnalytics.js:37
+msgid "Enable Google Analytics"
+msgstr ""
+
+#: src/components/Teasers/GoogleAnalytics.js:37
+#: src/components/Teasers/GoogleAnalytics.js:48
+#: src/components/Teasers/RoleManagement.js:37
+#: src/components/Teasers/RoleManagement.js:49
+#: src/components/Teasers/RoleManagement.js:62
+#: src/components/Teasers/RoleManagement.js:74
+#: src/components/Teasers/RoleManagement.js:87
+msgid "Pro"
+msgstr ""
+
+#: src/components/Teasers/GoogleAnalytics.js:48
+msgid "Google Analytics Tracking ID"
+msgstr ""
+
+#: src/components/Teasers/GoPremium.js:15
+msgid "Why upgrade to Premium Version?"
+msgstr ""
+
+#: src/components/Teasers/GoPremium.js:17
+msgid "The premium version helps us to continue development of the product incorporating even more features and enhancements."
+msgstr ""
+
+#: src/components/Teasers/GoPremium.js:18
+msgid "You will also get world class support from our dedicated team, 24/7."
+msgstr ""
+
+#: src/components/Teasers/GoPremium.js:20
+msgid "Get Premium Version"
+msgstr ""
+
+#: src/components/Teasers/RoleManagement.js:37
+msgid "Who Can View Links?"
+msgstr ""
+
+#: src/components/Teasers/RoleManagement.js:49
+msgid "Who Can Write Links?"
+msgstr ""
+
+#: src/components/Teasers/RoleManagement.js:62
+msgid "Who Can Edit Links?"
+msgstr ""
+
+#: src/components/Teasers/RoleManagement.js:74
+msgid "Who Can Check Analytics?"
+msgstr ""
+
+#: src/components/Teasers/RoleManagement.js:87
+msgid "Who Can Edit Settings?"
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:32
+msgid "Opps..."
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:34
+msgid "You need to"
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:34
+msgid "upgrade"
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:34
+msgid "to the"
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:36
+msgid "Premium"
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:38
+msgid "Version to use this feature"
+msgstr ""
+
+#: src/components/Teasers/UpgradeToPro.js:41
+msgid "Close"
+msgstr ""
+
+#: src/components/Terms/CatForm.js:74
 msgid "Category Name"
 msgstr ""
 
-#: src/components/Terms/CatForm.js:77
+#: src/components/Terms/CatForm.js:80
 msgid "* Name"
 msgstr ""
 
-#: src/components/Terms/CatForm.js:98
+#: src/components/Terms/CatForm.js:101
 msgid "Submit"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:42
+msgid "UTM Builder"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:45
+msgid "Add Campaign Parameters to Track Custom Campaigns"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:60
+msgid "Campaign"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:68
+msgid "e.g: Example-campaign"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:73
+msgid "Medium"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:81
+msgid "e.g: cpc, banner, email"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:86
+msgid "Source"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:94
+msgid "e.g: Twitter, Facebook"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:99
+msgid "Term"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:107
+msgid "e.g: paid keywords"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:112
+msgid "Content"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:120
+msgid "e.g: text AD name"
+msgstr ""
+
+#: src/components/UTMBuilder/index.js:126
+msgid "Save Link"
 msgstr ""
 
 #: src/containers/group/LinksListViewFilter.js:53
 msgid "Search by Title"
 msgstr ""
 
-#: src/containers/group/ListCanvas.js:39
+#: src/containers/group/ListCanvas.js:47
 msgid "Clicks"
 msgstr ""
 
-#: src/containers/group/ListCanvas.js:59
+#: src/containers/group/ListCanvas.js:67
 msgid "Date"
 msgstr ""
 
-#: src/containers/group/ListCanvas.js:65
+#: src/containers/group/ListCanvas.js:73
 msgid "Action"
 msgstr ""
 
-#: src/containers/group/Migration.js:46
+#: src/containers/group/Migration.js:48
 msgid "Migration is in Progress..."
 msgstr ""
 
-#: src/containers/group/Migration.js:70
-msgid "Pick Data that You want to Import"
-msgstr ""
-
-#: src/containers/group/Migration.js:77
-msgid "Links "
-msgstr ""
-
-#: src/containers/group/Migration.js:88
-msgid "Clicks "
-msgstr ""
-
-#: src/containers/group/Migration.js:96
+#: src/containers/group/Migration.js:91
 msgid "Please Wait..."
 msgstr ""
 
-#: src/containers/group/Migration.js:99
+#: src/containers/group/Migration.js:96
+#: src/containers/group/Migration.js:126
+msgid "Pick Data that You want to Import"
+msgstr ""
+
+#: src/containers/group/Migration.js:103
+#: src/containers/group/Migration.js:133
+msgid "Links "
+msgstr ""
+
+#: src/containers/group/Migration.js:114
+msgid "Clicks "
+msgstr ""
+
+#: src/containers/group/Migration.js:143
 msgid "Nothing Found To Import"
 msgstr ""
 
-#: src/containers/group/Migration.js:113
+#: src/containers/group/Migration.js:157
 msgid "Migration is Complete"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:80
+#: src/containers/group/TabsGeneral.js:81
 msgid "Link Redirection Status"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:81
-#: src/containers/group/TabsGeneral.js:105
+#: src/containers/group/TabsGeneral.js:82
+#: src/containers/group/TabsGeneral.js:106
 msgid "(Fast Mode)"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:94
+#: src/containers/group/TabsGeneral.js:95
 msgid "If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:105
+#: src/containers/group/TabsGeneral.js:106
 msgid "Click Data Status "
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:108
+#: src/containers/group/TabsGeneral.js:109
 msgid "Fetch Analytics Data"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:127
+#: src/containers/group/TabsGeneral.js:128
 msgid "If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:131
+#: src/containers/group/TabsGeneral.js:132
 msgid "Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:198
+msgid "Wildcards"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:203
+msgid "Use Wildcards?"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:206
+msgid "To use wildcards, put an asterisk (*) after the folder name that you want to redirect."
 msgstr ""
 
 #: src/containers/group/TabsTools.js:33
@@ -313,52 +490,64 @@ msgstr ""
 msgid "Pretty Links"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:77
+#: src/containers/group/TabsTools.js:79
+msgid "Simple 301 Redirects"
+msgstr ""
+
+#: src/containers/group/TabsTools.js:83
 msgid "Choose the File You Want to Import"
 msgstr ""
 
-#: src/containers/group/TabsTools.js:81
+#: src/containers/group/TabsTools.js:87
 msgid "Import File"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:13
+#: src/containers/pages/Analytics.js:14
 msgid "Browser"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:26
+#: src/containers/pages/Analytics.js:27
 msgid "Link Name"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:32
+#: src/containers/pages/Analytics.js:33
 msgid "IP"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:38
+#: src/containers/pages/Analytics.js:39
 msgid "Timestamp"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:57
+#: src/containers/pages/Analytics.js:58
 msgid "Referrer"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:88
+#: src/containers/pages/Analytics.js:89
 msgid "Filter By Name"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:89
-msgid "Search Click"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:138
+#: src/containers/pages/Analytics.js:157
 msgid "All Clicks"
 msgstr ""
 
-#: src/containers/pages/Settings.js:30
+#: src/containers/pages/Settings.js:26
 msgid "General"
 msgstr ""
 
-#: src/containers/pages/Settings.js:31
+#: src/containers/pages/Settings.js:27
 msgid "Tools"
+msgstr ""
+
+#: src/containers/pages/Settings.js:28
+msgid "Role Management"
+msgstr ""
+
+#: src/containers/pages/Settings.js:29
+msgid "Google Analytics"
+msgstr ""
+
+#: src/containers/pages/Settings.js:30
+msgid "Go Premium"
 msgstr ""
 
 #: src/utils/data.js:5

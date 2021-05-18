@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import UpgradeToPro from './UpgradeToPro';
 export default class GoogleAnalytics extends React.Component {
 	constructor(props) {
@@ -30,29 +31,26 @@ export default class GoogleAnalytics extends React.Component {
 									this.openModal();
 								}}
 								action="#"
-							> 
+							>
 								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
 									<label className="btl-form-label">
-										Enable Google Analytics <span className="pro-badge">Pro</span>
+										{__('Enable Google Analytics', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="link-options__body">
-                                        <label className="btl-checkbox-field">
-										    <input type="checkbox" className="btl-check" name="is_enable_ga" disabled />
-                                            <span className="text"></span>
-                                        </label>
+										<label className="btl-checkbox-field">
+											<input type="checkbox" className="btl-check" name="is_enable_ga" disabled />
+											<span className="text"></span>
+										</label>
 									</div>
 								</div>
 								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
 									<label className="btl-form-label">
-										Google Analytics Tracking ID <span className="pro-badge">Pro</span>
+										{__('Google Analytics Tracking ID', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="link-options__body">
 										<input type="text" className="btl-form-control" name="ga_tracking_code" disabled />
 									</div>
 								</div>
-								<button className="button-primary btn-save-settings" type="submit">
-									Save Settings
-								</button>
 							</form>
 						</div>
 					</div>

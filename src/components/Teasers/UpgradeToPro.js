@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import { plugin_root_url } from './../../utils/helper';
@@ -28,16 +29,16 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 			<Modal isOpen={isOpenModal} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
 				<div className="betterlinks-upgradetopro">
 					<img src={plugin_root_url + 'assets/images/exclamation.svg'} alt="icon" style={{ opacity: 0.5 }} />
-					<h3>Opps...</h3>
+					<h3>{__('Opps...', 'betterlinks')}</h3>
 					<p>
-						You need to <strong>upgrade</strong> to the{' '}
+						{__('You need to', 'betterlinks')} <strong>{__('upgrade', 'betterlinks')}</strong> {__('to the', 'betterlinks')}{' '}
 						<a href="https://wpdeveloper.net/in/upgrade-betterlinks" target="_blank">
-							Premium
+							{__('Premium', 'betterlinks')}
 						</a>{' '}
-						Version to use this feature
+						{__('Version to use this feature', 'betterlinks')}
 					</p>
 					<button className="btn-close" onClick={closeModal}>
-						Close
+						{__('Close', 'betterlinks')}
 					</button>
 				</div>
 			</Modal>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import UpgradeToPro from './UpgradeToPro';
 export default class RoleManagement extends React.Component {
 	constructor(props) {
@@ -33,7 +34,7 @@ export default class RoleManagement extends React.Component {
 							>
 								<div className="btl-role-item btl-form-group">
 									<label className="btl-form-label">
-										Who Can View Links? <span className="pro-badge">Pro</span>
+										{__('Who Can View Links?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="writelinks link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
@@ -45,7 +46,7 @@ export default class RoleManagement extends React.Component {
 								</div>
 								<div className="btl-role-item btl-form-group">
 									<label className="btl-form-label">
-										Who Can Write Links? <span className="pro-badge">Pro</span>
+										{__('Who Can Write Links?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="writelinks link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
@@ -58,7 +59,7 @@ export default class RoleManagement extends React.Component {
 								</div>
 								<div className="btl-role-item btl-form-group">
 									<label className="btl-form-label">
-										Who Can Edit Links? <span className="pro-badge">Pro</span>
+										{__('Who Can Edit Links?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="editlinks link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
@@ -70,7 +71,7 @@ export default class RoleManagement extends React.Component {
 								</div>
 								<div className="btl-role-item btl-form-group">
 									<label className="btl-form-label">
-										Who Can Check Analytics? <span className="pro-badge">Pro</span>
+										{__('Who Can Check Analytics?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="checkanalytics link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
@@ -83,7 +84,7 @@ export default class RoleManagement extends React.Component {
 								</div>
 								<div className="btl-role-item btl-form-group">
 									<label className="btl-form-label">
-										Who Can Edit Settings? <span className="pro-badge">Pro</span>
+										{__('Who Can Edit Settings?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="checkanalytics link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
@@ -94,9 +95,6 @@ export default class RoleManagement extends React.Component {
 										))}
 									</div>
 								</div>
-								<button className="button-primary btn-save-settings" type="submit">
-									Save Settings
-								</button>
 							</form>
 						</div>
 					</div>
