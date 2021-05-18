@@ -42,7 +42,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 					{__('UTM Builder', 'betterlinks')}
 					<div className="btl-tooltip">
 						<span className="dashicons dashicons-info-outline"></span>
-						<span className="btl-tooltiptext">{__('UTM Builder', 'betterlinks')}r</span>
+						<span className="btl-tooltiptext">{__('Add Campaign Parameters to Track Custom Campaigns', 'betterlinks')}r</span>
 					</div>
 				</h3>
 				<div className="btl-modal-utm-builder__body">
@@ -51,7 +51,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 							<label htmlFor="savedtemplate">{__('Template', 'betterlinks-pro')}</label>
 							<div>
 								<div name="savedtemplate" id="savedtemplate" onClick={() => openUpgradeToProModal()}>
-									{__('No Template Chosen', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
+									{__('Pick a Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" />
 								</div>
 							</div>
 						</div>
@@ -65,7 +65,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 								onChange={(e) => setUTMBuilderState({ ...UTMBuilderState, utm_campaign: e.target.value })}
 								type="text"
 								name="utm_campaign"
-								placeholder={__('e.g: ACME-campaign', 'betterlinks')}
+								placeholder={__('e.g: Example-campaign', 'betterlinks')}
 							/>
 						</div>
 					</div>

@@ -33,6 +33,53 @@
 					}
 				}
 			}
+			.link-options--advanced{
+				.btl-modal-form-group {
+					align-items: center!important;
+					.btl-modal-form-label {
+						color: #b2b3bd;
+					}
+					input[type="text"]{
+						background: #36405a;
+						color: #fff;
+						border-color: #36405a;
+						&:focus {
+							background: #36405a;
+							box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
+						}
+						&::placeholder {
+							color: #b0b2ba;
+						}
+					}
+					select{
+						background-color: #36405a !important;
+						border-color: #36405a !important;
+						color: #fff;
+						&:focus{
+							border-color: #ebebeb;
+							box-shadow: none;
+							outline: none;
+						}
+					}
+					.MuiFormControl-root{
+						.MuiInputBase-root{
+							input{
+								background: #36405a;
+								color: #fff;
+								border-color: #36405a;
+								&:focus {
+									background: #36405a;
+									box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
+								}
+								&::placeholder {
+									color: #b0b2ba;
+								}
+							}
+						}
+					}
+				}
+			}
+			
 		}
 	}
 	.btl-modal-form-group {

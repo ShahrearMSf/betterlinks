@@ -49,7 +49,7 @@ class Admin
 	public function insert_plugin_links($links)
 	{
         if (!apply_filters('betterlinks/pro_enabled', false)) {
-            $links[] = sprintf('<a href="https://betterlinks.io/" target="_blank" style="color: #39b54a; font-weight: bold;">' . __('Go Pro', 'betterlinks') . '</a>');
+            $links[] = sprintf('<a href="https://wpdeveloper.net/in/upgrade-betterlinks" target="_blank" style="color: #39b54a; font-weight: bold;">' . __('Premium', 'betterlinks') . '</a>');
         }
         return $links;
 	}
