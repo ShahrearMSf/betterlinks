@@ -46,7 +46,7 @@ export default class RoleManagement extends React.Component {
 								</div>
 								<div className="btl-role-item btl-form-group">
 									<label className="btl-form-label">
-										{__('Who Can Write Links?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{__('Who Can Create Links?', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="writelinks link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
