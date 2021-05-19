@@ -10,17 +10,6 @@ const config = {
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),
 		filename: '[name].js',
-		chunkFilename: 'betterlinks.[id].chunk.js',
-	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				defaultVendors: {
-					test: /[\\/]node_modules[\\/](react-chartjs-2|moment|chartjs)[\\/]/,
-					chunks: 'all',
-				},
-			},
-		},
 	},
 	plugins: [...defaultConfig.plugins, new CleanWebpackPlugin()],
 };
