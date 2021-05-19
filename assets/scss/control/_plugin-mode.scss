@@ -243,16 +243,16 @@
 	.rdt_Pagination {
 		background-color: #252f47;
 		color: $white;
-		.sc-giIncl {
-			.sc-iJuUWI {
+		> div:last-child {
+			button {
 				svg {
 					fill: $white;
 				}
-        &:disabled{
-          svg{
-            fill: $secondary-lighten;
-          }
-        }
+                &:disabled{
+                    svg{
+                        fill: $secondary-lighten;
+                    }
+                }
 			}
 		}
 	}
@@ -533,8 +533,8 @@
 	}
 	.rdt_Pagination{
 		color: $white;
-		.sc-giIncl{
-			.sc-iJuUWI{
+		> div:last-child {
+			button{
 				svg{
 					fill: $white;
 				}
