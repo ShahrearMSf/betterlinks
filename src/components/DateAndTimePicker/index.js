@@ -20,7 +20,6 @@ export default function DateAndTimePicker(props) {
 			<MuiPickersUtilsProvider utils={DateFnsUtils}>
 				<DateTimePicker
 					disablePast={true}
-					format="MMM d, y h:i:s a"
 					label="DateTimePicker"
 					inputVariant="outlined"
 					value={field.value ? field.value : new Date()}
