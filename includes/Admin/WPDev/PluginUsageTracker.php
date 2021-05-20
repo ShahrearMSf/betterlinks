@@ -591,7 +591,7 @@ class PluginUsageTracker {
          * Check is allowed or blocked for notice.
          */
         $block_notice = get_option( 'wpins_block_notice' );
-        if( isset( $block_notice[$this->plugin_name] ) ) {
+        if( isset( $block_notice[$this->plugin_name] )  || apply_filters('betterlinks/pro_enabled', false)) {
             return;
         }
         if ( ! current_user_can( 'manage_options' ) ) {
