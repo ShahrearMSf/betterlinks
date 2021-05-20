@@ -15,22 +15,23 @@ const defaultProps = {};
 
 const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 	const [saveTags, setSaveTags] = useState(null);
-	useEffect(async () => {
+	useEffect(() => {
 		if (linkId) {
-			const res = await API.get(namespace + 'terms', {
+			const res = API.get(namespace + 'terms', {
 				params: {
 					ID: linkId,
 					term_type: 'tags',
 				},
+			}).then((res) => {
+				if (res.data.data) {
+					setSaveTags(
+						res.data.data.map((item) => ({
+							value: item.term_id,
+							label: item.term_name,
+						}))
+					);
+				}
 			});
-			if (res.data.data) {
-				setSaveTags(
-					res.data.data.map((item) => ({
-						value: item.term_id,
-						label: item.term_name,
-					}))
-				);
-			}
 		} else {
 			setSaveTags([]);
 		}
