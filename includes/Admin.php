@@ -11,6 +11,9 @@ class Admin
 		$this->dispath_notice();
 		$this->usage_tracker();
 		add_filter('plugin_action_links_' . BETTERLINKS_PLUGIN_BASENAME, array($this, 'insert_plugin_links'));
+		add_action('admin_head-toplevel_page_betterlinks', array($this, 'append_no_cache_meta'));
+		add_action('admin_head-toplevel_page_betterlinks-analytics', array($this, 'append_no_cache_meta'));
+		add_action('admin_head-toplevel_page_betterlinks-settings', array($this, 'append_no_cache_meta'));
 	}
 	public function add_menu()
 	{
@@ -52,5 +55,11 @@ class Admin
             $links[] = sprintf('<a href="https://wpdeveloper.net/in/upgrade-betterlinks" target="_blank" style="color: #39b54a; font-weight: bold;">' . __('Go Pro', 'betterlinks') . '</a>');
         }
         return $links;
+	}
+	public function append_no_cache_meta()
+	{
+		echo '<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">';
 	}
 }

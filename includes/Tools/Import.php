@@ -91,17 +91,19 @@ class Import
 
 	public function terms_data_insert($data)
 	{
-		$terms = [];
 		$message = [];
 		foreach ($data as $item) {
 			if (!empty($item['term_slug']) && !\BetterLinks\Helper::term_exists($item['term_slug'])) {
-				$terms[] = $item;
 				$insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
-				$this->term_IDs[] = current($insertedTerms);
-				$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
+				if(current($insertedTerms) != 0){
+					$this->term_IDs[] = current($insertedTerms);
+					$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
+				}
 			} else {
-				$this->term_IDs[] = $item['ID'];
-				$message[] = 'import failed "' . $item['term_name'] . '" already exists';
+				if($item['ID'] != 0){
+					$this->term_IDs[] = $item['ID'];
+					$message[] = 'import failed "' . $item['term_name'] . '" already exists';
+				}
 			}
 		}
 		return $message;

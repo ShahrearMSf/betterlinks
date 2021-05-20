@@ -62,7 +62,7 @@ class Export
 	}
 	public function get_terms()
 	{
-		return $this->DB->query("SELECT * from {$this->wpdb_prefix}betterlinks_terms")->get();
+		return $this->DB->query("SELECT term_name, term_slug, term_type, term_order from {$this->wpdb_prefix}betterlinks_terms")->get();
 	}
 	public function get_terms_relationships()
 	{

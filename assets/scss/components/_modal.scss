@@ -438,6 +438,8 @@
 			align-items: center;
 			color: $white;
 			font-style: italic;
+            max-width: 200px;
+            word-break: break-word;
 			@media screen and (max-width: 1599px) {
 				font-size: 16px;
 			}

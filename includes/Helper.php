@@ -19,7 +19,13 @@ class Helper
 	public static function get_links()
 	{
 		if (BETTERLINKS_EXISTS_LINKS_JSON) {
-			return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'), true);
+			$data = json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'), true);
+			if(empty($data)){
+				$cron = new Cron();
+				$cron->write_json_links();
+				return json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'), true);
+			}
+			return $data;
 		}
 	}
 
