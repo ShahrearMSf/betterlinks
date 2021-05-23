@@ -11,7 +11,8 @@ class Migration {
         if ($db_version != BETTERLINKS_DB_VERSION) {
             if(version_compare($db_version, '1.1', '<')){
                 $this->db_migration_1_1();
-            } else if(version_compare($db_version, '1.2', '<')) {
+            }
+            if(version_compare($db_version, '1.2', '<')) {
                 $this->db_migration_1_2();
             }
 			update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
