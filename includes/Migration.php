@@ -23,6 +23,7 @@ class Migration {
         // update plugin version
 		if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
             Helper::create_cron_jobs_for_json_links();
+            Helper::clear_query_cache();
             update_option('betterlinks_version', BETTERLINKS_VERSION);
 		}
     }
