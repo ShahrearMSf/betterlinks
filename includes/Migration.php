@@ -9,10 +9,13 @@ class Migration {
 		$this->wpdb = $wpdb;
         $db_version = get_option('betterlinks_db_version');
         if ($db_version != BETTERLINKS_DB_VERSION) {
-            if(version_compare($db_version, '1.1', '<')){
+            if(BETTERLINKS_DB_VERSION == '1.1'){
                 $this->db_migration_1_1();
+            }else if(BETTERLINKS_DB_VERSION == '1.2'){
+                $this->db_migration_1_2();
             }
-            if(version_compare($db_version, '1.2', '<')) {
+            if(version_compare($db_version, '1.3', '<')){
+                $this->db_migration_1_1();
                 $this->db_migration_1_2();
             }
 			update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
