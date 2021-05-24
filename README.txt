@@ -119,6 +119,12 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 1.1.1 - 24/05/2021 =
+
+- Fixed: Database migration issue with version update
+- Fixed: BetterLinks Import/Export feature not working properly
+- Few minor bug fix and improvements
+
 = 1.1.0 - 20/05/2021 =
 
 - Added: UTM Builder
