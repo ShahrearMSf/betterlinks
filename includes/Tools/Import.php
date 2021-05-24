@@ -75,14 +75,16 @@ class Import
 		$linkImportMessage = [];
 		foreach ($data as $item) {
 			if (!empty($item['link_title']) && !empty($item['short_url'])) {
-				if (!\BetterLinks\Helper::link_exists($item['link_title'], $item['short_url'])) {
-					$oldID = $item['ID'];
-					unset($item['ID']);
+				$oldID = $item['ID'];
+				unset($item['ID']);
+				$betterlinks = $this->DB->table('betterlinks')->where('short_url', '=', $item['short_url'])->get();
+				if(is_array($betterlinks) && count($betterlinks) > 0){
+					$this->link_IDs[$oldID] = $oldID;
+					$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
+				} else {
 					$results = $this->DB->table('betterlinks')->insert([$item]);
 					$this->link_IDs[$oldID] = current($results);
 					$linkImportMessage[] = 'Imported Successfully "' . $item['link_title'] . '"';
-				} else {
-					$linkImportMessage[] = 'import failed "' . $item['link_title'] . '" already exists';
 				}
 			}
 		}
@@ -93,16 +95,14 @@ class Import
 	{
 		$message = [];
 		foreach ($data as $item) {
-			if (!empty($item['term_slug']) && !\BetterLinks\Helper::term_exists($item['term_slug'])) {
-				$insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
-				if(current($insertedTerms) != 0){
-					$this->term_IDs[] = current($insertedTerms);
-					$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
-				}
-			} else {
-				$terms = $this->DB->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
+			$terms = $this->DB->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
+			if (is_array($terms) && count($terms) > 0) {
 				$this->term_IDs[] = current($terms)->ID;
 				$message[] = 'import failed "' . $item['term_name'] . '" already exists';
+			} else {
+				$insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
+				$this->term_IDs[] = current($insertedTerms);
+				$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
 			}
 		}
 		return $message;
@@ -133,6 +133,11 @@ class Import
 		$message = [];
 		foreach ($data as $item) {
 			if (!\BetterLinks\Helper::click_exists($item['ID'])) {
+				unset($item['ID']);
+				if(isset($this->link_IDs[$item['link_id']])){
+					$item['link_id'] = $this->link_IDs[$item['link_id']];
+				}
+				
 				$clicks[] = $item;
 				$message[] = 'Imported Successfully "' . $item['uri'] . '"';
 			} else {
