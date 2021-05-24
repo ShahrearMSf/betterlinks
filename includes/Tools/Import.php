@@ -100,10 +100,9 @@ class Import
 					$message[] = 'Imported Successfully "' . $item['term_name'] . '"';
 				}
 			} else {
-				if($item['ID'] != 0){
-					$this->term_IDs[] = $item['ID'];
-					$message[] = 'import failed "' . $item['term_name'] . '" already exists';
-				}
+				$terms = $this->DB->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
+				$this->term_IDs[] = current($terms)->ID;
+				$message[] = 'import failed "' . $item['term_name'] . '" already exists';
 			}
 		}
 		return $message;
@@ -117,15 +116,10 @@ class Import
 			if(isset($this->link_IDs[$item['link_id']])){
 				$item['link_id'] = $this->link_IDs[$item['link_id']];
 			}
-			if (! in_array($item['term_id'], $this->term_IDs) ) {
-				$terms[] = [
-					'term_id' => current($this->term_IDs),
-					'link_id' => $item['link_id']
-				];
-				array_shift($this->term_IDs);
-			} else {
-				$terms[] = $item;
+			if(isset($this->term_IDs[$item['term_id']])){
+				$item['term_id'] = $this->term_IDs[$item['term_id']];
 			}
+			$terms[] = $item;
 		}
 		if (count($terms) > 0) {
 			$this->DB->table('betterlinks_terms_relationships')->insert($terms);
