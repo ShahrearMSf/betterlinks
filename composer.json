@@ -6,7 +6,9 @@
 			"name": "wpdevteam"
 		}
 	],
-	"require": {},
+	"require": {
+		"deliciousbrains/wp-background-processing": "^1.0"
+	},
 	"autoload": {
 		"psr-4": {
 			"BetterLinks\\": "./includes"
