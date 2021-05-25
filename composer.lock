@@ -4,10 +4,10 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67fadd38ffaeb11b9b94d74e3f7260a1",
+    "content-hash": "33c3da320e100b0e6480d102574135f0",
     "packages": [
         {
-            "name": "deliciousbrains/wp-background-processing",
+            "name": "a5hleyrich/wp-background-processing",
             "version": "1.0.2",
             "source": {
                 "type": "git",
@@ -45,7 +45,7 @@
             "description": "WP Background Processing can be used to fire off non-blocking asynchronous requests or as a background processing tool, allowing you to queue tasks.",
             "support": {
                 "issues": "https://github.com/deliciousbrains/wp-background-processing/issues",
-                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/master"
+                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/1.0.2"
             },
             "time": "2020-07-31T07:00:11+00:00"
         }

@@ -6,12 +6,12 @@
     'aliases' => 
     array (
     ),
-    'reference' => '853693d55d49db1b5df1c890779200fa8a933ff7',
+    'reference' => '52059acf32464500b4600f32971c6c4058a8af28',
     'name' => 'wpdevteam/betterlinks',
   ),
   'versions' => 
   array (
-    'deliciousbrains/wp-background-processing' => 
+    'a5hleyrich/wp-background-processing' => 
     array (
       'pretty_version' => '1.0.2',
       'version' => '1.0.2.0',
@@ -27,7 +27,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '853693d55d49db1b5df1c890779200fa8a933ff7',
+      'reference' => '52059acf32464500b4600f32971c6c4058a8af28',
     ),
   ),
 );
