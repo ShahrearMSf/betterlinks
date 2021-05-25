@@ -25,6 +25,7 @@ if (!class_exists('BetterLinks')) {
 	final class BetterLinks
 	{
 		private $installer;
+		private $updater;
 		private $upload_dir;
 		private function __construct()
 		{
@@ -32,11 +33,11 @@ if (!class_exists('BetterLinks')) {
 			$this->define_constants();
 			$this->set_global_settings();
 			$this->installer = new BetterLinks\Installer();
+			$this->updater = new BetterLinks\Migration();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
 			add_action('betterlinks_loaded', [$this, 'init_plugin']);
-			add_action('wp_loaded', [$this, 'run_migrator']);
 			add_action('init', [$this, 'init_dispatch']);
 			$this->dispatch_hook();
 		}
@@ -114,12 +115,7 @@ if (!class_exists('BetterLinks')) {
 			$GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
 		}
 
-		public function run_migrator()
-		{
-			new BetterLinks\Migration();
-		}
-
-		public function init_dispatch()
+		public function run_installer()
 		{
 			if($this->installer->is_doing_dispatch()){
 				foreach ( $this->installer->task_lists as $task ) {
@@ -127,6 +123,22 @@ if (!class_exists('BetterLinks')) {
 				}
 				$this->installer->save()->dispatch();
 			}
+		}
+
+		public function run_migrator()
+		{
+			if($this->updater->is_doing_dispatch()){
+				foreach ( $this->updater->task_lists as $task ) {
+					$this->updater->push_to_queue( $task );
+				}
+				$this->updater->save()->dispatch();
+			}
+		}
+
+		public function init_dispatch()
+		{
+			$this->run_installer();
+			$this->run_migrator();
 		}
 
 		public function activate()
