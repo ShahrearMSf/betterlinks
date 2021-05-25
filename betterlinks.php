@@ -24,17 +24,20 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 if (!class_exists('BetterLinks')) {
 	final class BetterLinks
 	{
+		private $installer;
 		private $upload_dir;
 		private function __construct()
 		{
 			$this->upload_dir_path();
 			$this->define_constants();
 			$this->set_global_settings();
+			$this->installer = new BetterLinks\Installer();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
 			add_action('betterlinks_loaded', [$this, 'init_plugin']);
 			add_action('wp_loaded', [$this, 'run_migrator']);
+			add_action('init', [$this, 'init_dispatch']);
 			$this->dispatch_hook();
 		}
 
@@ -116,9 +119,19 @@ if (!class_exists('BetterLinks')) {
 			new BetterLinks\Migration();
 		}
 
+		public function init_dispatch()
+		{
+			if($this->installer->is_doing_dispatch()){
+				foreach ( $this->installer->task_lists as $task ) {
+					$this->installer->push_to_queue( $task );
+				}
+				$this->installer->save()->dispatch();
+			}
+		}
+
 		public function activate()
 		{
-			new BetterLinks\Installer();
+			$this->installer->start_dispatch();
 		}
 
 		public function deactivate()

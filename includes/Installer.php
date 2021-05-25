@@ -1,22 +1,66 @@
 <?php
 namespace BetterLinks;
-class Installer
+class Installer extends \WP_Background_Process
 {
-	public $wpdb;
-	public $charset_collate;
+	protected $wpdb;
+	protected $charset_collate;
+	protected $action;
+
 	public function __construct()
 	{
+		parent::__construct();
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->charset_collate = $wpdb->get_charset_collate();
-		$this->run_create_tables();
-		$this->insert_terms();
-		$this->create_files();
-		$this->set_default_option();
-		$this->create_cron_jobs();
+		$this->action = 'betterlinks_run_installer';
+		$this->task_lists = ['create_db_tables','insert_terms_data','create_json_files','save_settings','update_json_links'];
 	}
 
-	public function run_create_tables()
+	/**
+	 * Task
+	 *
+	 * Override this method to perform any actions required on each
+	 * queue item. Return the modified item for further processing
+	 * in the next pass through. Or, return false to remove the
+	 * item from the queue.
+	 *
+	 * @param mixed $item Queue item to iterate over
+	 *
+	 * @return mixed
+	 */
+	protected function task( $item ) {
+		if(method_exists($this, $item)){
+			$this->$item();
+		}
+		return false;
+	}
+
+	/**
+	 * Complete
+	 *
+	 * Override if applicable, but ensure that the below actions are
+	 * performed, or, call parent::complete().
+	 */
+	protected function complete() {
+		parent::complete();
+		// Show notice to user or perform some other arbitrary task...
+	}
+
+	public function is_doing_dispatch()
+	{
+		$action = get_option($this->action);
+		if($action){
+			delete_option($this->action);
+			return $action;
+		}
+		return false;
+	}
+	public function start_dispatch()
+	{
+		add_option($this->action, true);
+	}
+
+	public function create_db_tables()
 	{
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		$this->createBetterLinksTable();
@@ -122,7 +166,7 @@ class Installer
         ) $this->charset_collate;";
 		dbDelta($sql);
 	}
-	public function insert_terms()
+	public function insert_terms_data()
 	{
 		$query = \BetterLinks\Helper::DB();
 		$result = $query
@@ -146,7 +190,7 @@ class Installer
 		}
 	}
 
-	private function set_default_option()
+	private function save_settings()
 	{
 		if (!get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
 			$value = [
@@ -164,7 +208,7 @@ class Installer
 	/**
 	 * Create files/directories.
 	 */
-	private function create_files()
+	private function create_json_files()
 	{
 		$emptyContent = '{}';
 		$files = [
@@ -196,11 +240,9 @@ class Installer
 		}
 	}
 
-	/**
-	 * Create Cron Jobs
-	 */
-	private function create_cron_jobs()
+	private function update_json_links()
 	{
-		Helper::create_cron_jobs_for_json_links();
+		$Cron = new Cron();
+		$Cron->write_json_links();
 	}
 }
