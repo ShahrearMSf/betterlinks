@@ -114,7 +114,7 @@ class Links extends Controller
 	public function get_items($request)
 	{
 		$cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
-		if (!$cache_data) {
+		if (empty($cache_data) || !json_decode($cache_data, true)) {
 			global $wpdb;
 			$prefix = $wpdb->prefix;
 			$query = \BetterLinks\Helper::DB();

@@ -9,9 +9,13 @@ class Migration {
 		$this->wpdb = $wpdb;
         $db_version = get_option('betterlinks_db_version');
         if ($db_version != BETTERLINKS_DB_VERSION) {
-            if(version_compare($db_version, '1.1', '<')){
+            if(BETTERLINKS_DB_VERSION == '1.1'){
                 $this->db_migration_1_1();
-            } else if(version_compare($db_version, '1.2', '<')) {
+            }else if(BETTERLINKS_DB_VERSION == '1.2'){
+                $this->db_migration_1_2();
+            }
+            if(version_compare($db_version, '1.3', '<')){
+                $this->db_migration_1_1();
                 $this->db_migration_1_2();
             }
 			update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
@@ -19,6 +23,7 @@ class Migration {
         // update plugin version
 		if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
             Helper::create_cron_jobs_for_json_links();
+            Helper::clear_query_cache();
             update_option('betterlinks_version', BETTERLINKS_VERSION);
 		}
     }
