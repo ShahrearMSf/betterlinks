@@ -74,7 +74,7 @@ class Installer extends \WP_Background_Process
 		$this->createBetterTermsRelationshipsTable();
 		$this->createBetterClicksTable();
 		// update plugin version
-		if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
+		if (!get_option('betterlinks_version')) {
 			update_option('betterlinks_version', BETTERLINKS_VERSION);
 		}
 		// update db version
