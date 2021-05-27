@@ -62,7 +62,6 @@ class BackgroundTask extends \WP_Background_Process
 					trigger_error( 'BetterLinks background task triggered fatal error for callback ' . esc_html( $item ), E_USER_WARNING ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 				}
             }
-            error_log(print_r($item, true));
         }
 		return false;
 	}
