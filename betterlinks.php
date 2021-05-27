@@ -24,16 +24,14 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 if (!class_exists('BetterLinks')) {
 	final class BetterLinks
 	{
-		private $installer;
-		private $updater;
+		private $background_task;
 		private $upload_dir;
 		private function __construct()
 		{
 			$this->upload_dir_path();
 			$this->define_constants();
 			$this->set_global_settings();
-			$this->installer = new BetterLinks\Installer();
-			$this->updater = new BetterLinks\Migration();
+			$this->background_task = new BetterLinks\BackgroundTask();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
@@ -98,6 +96,7 @@ if (!class_exists('BetterLinks')) {
 			}
 			new BetterLinks\Link();
 			new BetterLinks\Tools();
+			$this->run_migrator();
 		}
 
 		public function dispatch_hook()
@@ -115,35 +114,36 @@ if (!class_exists('BetterLinks')) {
 			$GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
 		}
 
-		public function run_installer()
-		{
-			if($this->installer->is_doing_dispatch()){
-				foreach ( $this->installer->task_lists as $task ) {
-					$this->installer->push_to_queue( $task );
-				}
-				$this->installer->save()->dispatch();
-			}
-		}
-
 		public function run_migrator()
 		{
-			if($this->updater->is_doing_dispatch()){
-				foreach ( $this->updater->task_lists as $task ) {
-					$this->updater->push_to_queue( $task );
+			if (get_option('betterlinks_version') != BETTERLINKS_VERSION) { 
+				if(!$this->background_task->doing_dispatch()){
+					update_option( 'betterlinks_version', BETTERLINKS_VERSION);
+					$this->background_task->init();
+					foreach ( $this->background_task->migration as $task ) {
+						$this->background_task->push_to_queue( $task );
+					}
+					$this->background_task->save();
 				}
-				$this->updater->save()->dispatch();
 			}
 		}
 
 		public function init_dispatch()
 		{
-			$this->run_installer();
-			$this->run_migrator();
+			if($this->background_task->start_dispatch()){
+				$this->background_task->dispatch();
+			}
 		}
 
 		public function activate()
 		{
-			$this->installer->start_dispatch();
+			if(!$this->background_task->doing_dispatch()){ 
+				$this->background_task->init();
+				foreach ( $this->background_task->installer as $task ) {
+					$this->background_task->push_to_queue( $task );
+				}
+				$this->background_task->save();
+			}
 		}
 
 		public function deactivate()
