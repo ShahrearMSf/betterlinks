@@ -209,6 +209,15 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Bot Clicks', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="disablebotclicks" type="checkbox" onChange={() => props.setFieldValue('disablebotclicks', !props.values.disablebotclicks)} />
+										<span className="text">{__('Disable Bot Clicks', 'betterlinks')}</span>
+									</label>
+								</div>
+							</span>
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>

@@ -6,7 +6,9 @@
 			"name": "wpdevteam"
 		}
 	],
-	"require": {},
+	"require": {
+		"jaybizzle/crawler-detect": "^1.2"
+	},
 	"autoload": {
 		"psr-4": {
 			"BetterLinks\\": "./includes"
