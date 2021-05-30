@@ -1,14 +1,14 @@
 <?php
 namespace BetterLinks;
 
-class BackgroundTask extends \WP_Background_Process
+class Installer extends \WP_Background_Process
 { 
     use Traits\DBTables;
     use Traits\DBMigrate;
     protected $wpdb;
 	protected $charset_collate;
     protected $action;
-    public $installer;
+    public $activation;
     public $migration;
     public $db_version;
 
@@ -19,7 +19,7 @@ class BackgroundTask extends \WP_Background_Process
 		$this->wpdb = $wpdb;
 		$this->charset_collate = $wpdb->get_charset_collate();
 		$this->action = 'betterlinks_background_task';
-		$this->installer = ['create_db_tables','insert_terms_data','create_json_files','save_settings','update_json_links'];
+		$this->activation = ['create_db_tables','insert_terms_data','create_json_files','save_settings','update_json_links'];
         $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
         $this->db_version = get_option('betterlinks_db_version');
 	}

@@ -24,14 +24,14 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 if (!class_exists('BetterLinks')) {
 	final class BetterLinks
 	{
-		private $background_task;
+		private $Installer;
 		private $upload_dir;
 		private function __construct()
 		{
 			$this->upload_dir_path();
 			$this->define_constants();
 			$this->set_global_settings();
-			$this->background_task = new BetterLinks\BackgroundTask();
+			$this->Installer = new BetterLinks\Installer();
 			register_activation_hook(__FILE__, [$this, 'activate']);
 			register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 			add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
@@ -117,32 +117,32 @@ if (!class_exists('BetterLinks')) {
 		public function run_migrator()
 		{
 			if (get_option('betterlinks_version') != BETTERLINKS_VERSION) { 
-				if(!$this->background_task->doing_dispatch()){
+				if(!$this->Installer->doing_dispatch()){
 					update_option( 'betterlinks_version', BETTERLINKS_VERSION);
-					$this->background_task->init();
-					foreach ( $this->background_task->migration as $task ) {
-						$this->background_task->push_to_queue( $task );
+					$this->Installer->init();
+					foreach ( $this->Installer->migration as $task ) {
+						$this->Installer->push_to_queue( $task );
 					}
-					$this->background_task->save();
+					$this->Installer->save();
 				}
 			}
 		}
 
 		public function init_dispatch()
 		{
-			if($this->background_task->start_dispatch()){
-				$this->background_task->dispatch();
+			if($this->Installer->start_dispatch()){
+				$this->Installer->dispatch();
 			}
 		}
 
 		public function activate()
 		{
-			if(!$this->background_task->doing_dispatch()){ 
-				$this->background_task->init();
-				foreach ( $this->background_task->installer as $task ) {
-					$this->background_task->push_to_queue( $task );
+			if(!$this->Installer->doing_dispatch()){ 
+				$this->Installer->init();
+				foreach ( $this->Installer->activation as $task ) {
+					$this->Installer->push_to_queue( $task );
 				}
-				$this->background_task->save();
+				$this->Installer->save();
 			}
 		}
 
