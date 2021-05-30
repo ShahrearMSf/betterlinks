@@ -5,6 +5,7 @@ const path = require('path');
 const config = {
 	entry: {
 		'betterlinks.core.min': './src/index.js',
+		'betterlinks-gutenberg.core.min': './src/gutenberg.js',
 	},
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),

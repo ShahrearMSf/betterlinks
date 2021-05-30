@@ -7,6 +7,7 @@ class Assets
 	public function __construct()
 	{
 		add_action('admin_enqueue_scripts', [$this, 'plugin_scripts']);
+		add_action( 'enqueue_block_editor_assets', [$this, 'block_editor_assets'] );
 	}
 
 	/**
@@ -63,5 +64,18 @@ class Assets
 				'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : ''
 			]);
 		}
+	}
+
+	/**
+	 * Enqueue Guten Scripts
+	 */
+	public function block_editor_assets()
+	{
+		wp_enqueue_script(
+			'betterlinks-gutenberg',
+			BETTERLINKS_ASSETS_URI . 'js/betterlinks-gutenberg.core.min.js',
+			['wp-plugins', 'wp-edit-post'],
+			filemtime( BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js' )
+		);
 	}
 }

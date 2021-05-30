@@ -36,6 +36,15 @@ if (!class_exists('BetterLinks')) {
 			add_action('betterlinks_loaded', [$this, 'init_plugin']);
 			add_action('wp_loaded', [$this, 'run_migrator']);
 			$this->dispatch_hook();
+			add_action('init', array($this, 'register_meta'));
+		}
+
+		public function register_meta(){
+			register_meta('post', 'betterlinks_is_enable_quicklinks', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'boolean'
+			]);
 		}
 
 		public static function init()
