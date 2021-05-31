@@ -45,6 +45,55 @@ if (!class_exists('BetterLinks')) {
 				'single' => true,
 				'type' => 'boolean'
 			]);
+
+			register_meta(
+				'post',
+				'betterlinks_quicklinks',
+				array(
+					'type'         => 'array',
+					'single'       => true,
+					'show_in_rest' => [
+						'schema' => array(
+							'items' => array(
+								'type' => 'string',
+								'properties' => [
+									'cat_id'    => array(
+										'type' => 'string',
+									),
+									'link_title'    => array(
+										'type' => 'string',
+									),
+									'link_slug'    => array(
+										'type' => 'string',
+									),
+									'nofollow'    => array(
+										'type' => 'string',
+									),
+									'param_forwarding'    => array(
+										'type' => 'string',
+									),
+									'redirect_type'    => array(
+										'type' => 'string',
+									),
+									'short_url'    => array(
+										'type' => 'string',
+									),
+									'sponsored'    => array(
+										'type' => 'string',
+									),
+									'target_url'    => array(
+										'type' => 'string',
+									),
+									'track_me'    => array(
+										'type' => 'string',
+									),
+								]
+							)
+						)
+					],
+				)
+			);
+
 		}
 
 		public static function init()

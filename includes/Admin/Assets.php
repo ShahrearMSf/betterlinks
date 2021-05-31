@@ -77,5 +77,14 @@ class Assets
 			['wp-plugins', 'wp-edit-post'],
 			filemtime( BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js' )
 		);
+		wp_localize_script('betterlinks-gutenberg', 'betterLinksGlobal', [
+			'nonce' => wp_create_nonce('wp_rest'),
+			'rest_url' => rest_url(),
+			'namespace' => BETTERLINKS_PLUGIN_SLUG . '/v1/',
+			'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
+			'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
+			'site_url' => site_url(),
+			'route_path' => parse_url(admin_url(), PHP_URL_PATH),
+		]);
 	}
 }
