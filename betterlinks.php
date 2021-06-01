@@ -40,60 +40,46 @@ if (!class_exists('BetterLinks')) {
 		}
 
 		public function register_meta(){
-			register_meta('post', 'betterlinks_is_enable_quicklinks', [
+			register_meta('post', 'betterlinks_ir_status', [
 				'show_in_rest' => true,
 				'single' => true,
 				'type' => 'boolean'
 			]);
-
-			register_meta(
-				'post',
-				'betterlinks_quicklinks',
-				array(
-					'type'         => 'array',
-					'single'       => true,
-					'show_in_rest' => [
-						'schema' => array(
-							'items' => array(
-								'type' => 'string',
-								'properties' => [
-									'cat_id'    => array(
-										'type' => 'string',
-									),
-									'link_title'    => array(
-										'type' => 'string',
-									),
-									'link_slug'    => array(
-										'type' => 'string',
-									),
-									'nofollow'    => array(
-										'type' => 'string',
-									),
-									'param_forwarding'    => array(
-										'type' => 'string',
-									),
-									'redirect_type'    => array(
-										'type' => 'string',
-									),
-									'short_url'    => array(
-										'type' => 'string',
-									),
-									'sponsored'    => array(
-										'type' => 'string',
-									),
-									'target_url'    => array(
-										'type' => 'string',
-									),
-									'track_me'    => array(
-										'type' => 'string',
-									),
-								]
-							)
-						)
-					],
-				)
-			);
-
+			register_meta('post', 'betterlinks_ir_target_url', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'string'
+			]);
+			register_meta('post', 'betterlinks_ir_redirect_type', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'string'
+			]);
+			register_meta('post', 'betterlinks_ir_cat_id', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'integer'
+			]);
+			register_meta('post', 'betterlinks_ir_no_follow', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'boolean'
+			]);
+			register_meta('post', 'betterlinks_ir_sponsored', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'boolean'
+			]);
+			register_meta('post', 'betterlinks_ir_parameterforwarding', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'boolean'
+			]);
+			register_meta('post', 'betterlinks_ir_tracking', [
+				'show_in_rest' => true,
+				'single' => true,
+				'type' => 'boolean'
+			]);
 		}
 
 		public static function init()
