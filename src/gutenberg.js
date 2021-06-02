@@ -4,8 +4,8 @@ import { API, namespace, nonce, site_url } from './utils/helper';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
-const { PluginDocumentSettingPanel, PluginSidebarMoreMenuItem, PluginSidebar } = wp.editPost;
-const { PanelBody, PanelRow, ToggleControl, TextControl, SelectControl } = wp.components;
+const { PluginDocumentSettingPanel } = wp.editPost;
+const { ToggleControl, TextControl, SelectControl } = wp.components;
 const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
 
@@ -32,10 +32,10 @@ const CustomSidebarMetaComponent = (props) => {
 						props.setTargetUrl(response.data.data.target_url);
 						props.setRedirectType(response.data.data.redirect_type);
 						props.setCatId(response.data.data.term_id);
-						props.setNoFollow(response.data.data.nofollow);
-						props.setSponsored(response.data.data.sponsored);
-						props.setParameterForwarding(response.data.data.param_forwarding);
-						props.setTracking(response.data.data.track_me);
+						props.setNoFollow(!!response.data.data.nofollow);
+						props.setSponsored(!!response.data.data.sponsored);
+						props.setParameterForwarding(!!response.data.data.param_forwarding);
+						props.setTracking(!!response.data.data.track_me);
 					}
 				},
 				(error) => {
@@ -124,16 +124,16 @@ const CustomSidebarMeta = compose([
 				dispatch('core/editor').editPost({ meta: { betterlinks_ir_cat_id: value } });
 			},
 			setNoFollow: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_no_follow: value } });
+				dispatch('core/editor').editPost({ meta: { betterlinks_ir_no_follow: !!value } });
 			},
 			setSponsored: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_sponsored: value } });
+				dispatch('core/editor').editPost({ meta: { betterlinks_ir_sponsored: !!value } });
 			},
 			setParameterForwarding: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_parameterforwarding: value } });
+				dispatch('core/editor').editPost({ meta: { betterlinks_ir_parameterforwarding: !!value } });
 			},
 			setTracking: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_tracking: value } });
+				dispatch('core/editor').editPost({ meta: { betterlinks_ir_tracking: !!value } });
 			},
 		};
 	}),
@@ -194,8 +194,9 @@ const insertBetterLinks = (target_url) => {
 const updateBetterLinks = (target_url) => {
 	var permalink = wp.data.select('core/editor').getPermalink();
 	var currentPost = wp.data.select('core/editor').getCurrentPost();
-	API.post(namespace + 'links/' + parseInt(BetterLinksID), {
+	API.put(namespace + 'links/' + BetterLinksID, {
 		params: {
+			ID: BetterLinksID,
 			cat_id: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
 			link_title: currentPost.title,
 			link_slug: currentPost.slug,
