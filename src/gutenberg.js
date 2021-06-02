@@ -1,13 +1,17 @@
 import axios from 'axios';
 import { redirectType } from './utils/data';
 import { API, namespace, nonce, site_url } from './utils/helper';
+import UpgradeToPro from './components/Teasers/UpgradeToPro';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
+import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl } = wp.components;
 const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
+
+window.betterLinksHooks = createHooks();
 
 var BetterLinksID;
 var target_url;
@@ -19,6 +23,7 @@ var param_forwarding;
 var track_me;
 
 const CustomSidebarMetaComponent = (props) => {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
 	const [redirectMode, setRedirectMode] = useState(redirect_type);
@@ -112,8 +117,17 @@ const CustomSidebarMetaComponent = (props) => {
 		return '307';
 	};
 
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
+
 	return (
 		<>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<ToggleControl label={__('Enable Instant Redirect', 'betterlinks')} checked={props.instantRedirectStatus} onChange={props.setInstantRedirectStatus} />
 			{props.instantRedirectStatus && (
 				<>
@@ -184,6 +198,31 @@ const CustomSidebarMetaComponent = (props) => {
 							props.showSaveButton();
 						}}
 					/>
+					{!betterLinksHooks.applyFilters('isActivePro', false) && (
+						<div className="link-options link-options--advanced link-options--teasers">
+							<div className="link-options__head">
+								<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+							</div>
+							<div className="link-options__body">
+								<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+									<label className="btl-modal-form-label" htmlFor="status">
+										Status <span className="pro-badge">Pro</span>
+									</label>
+									<select id="status" disabled>
+										<option value="publish">Active</option>
+										<option value="expired">Expired</option>
+										<option value="draft">Draft</option>
+									</select>
+								</div>
+								<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+									<label className="btl-modal-form-label" htmlFor="expire">
+										Expire <span className="pro-badge">Pro</span>
+									</label>
+									<input id="expire" type="checkbox" disabled />
+								</div>
+							</div>
+						</div>
+					)}
 				</>
 			)}
 		</>
