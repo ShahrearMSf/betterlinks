@@ -9,6 +9,8 @@ const { PanelBody, PanelRow, ToggleControl, TextControl, SelectControl } = wp.co
 const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
 
+var BetterLinksID;
+
 const CustomSidebarMetaComponent = (props) => {
 	const [terms, setTerms] = useState(false);
 	useEffect(() => {
@@ -25,14 +27,15 @@ const CustomSidebarMetaComponent = (props) => {
 			form_data.append('short_url', short_url);
 			return axios.post(ajaxurl, form_data).then(
 				(response) => {
-					console.log(response);
 					if (response.data.data) {
-						props.targetUrl = response.data.data.target_url;
-						props.redirectType = response.data.data.redirect_type;
-						props.noFollow = response.data.data.nofollow;
-						props.sponsored = response.data.data.sponsored;
-						props.parameterForwarding = response.data.data.param_forwarding;
-						props.tracking = response.data.data.track_me;
+						BetterLinksID = response.data.data.ID;
+						props.setTargetUrl(response.data.data.target_url);
+						props.setRedirectType(response.data.data.redirect_type);
+						props.setCatId(response.data.data.term_id);
+						props.setNoFollow(response.data.data.nofollow);
+						props.setSponsored(response.data.data.sponsored);
+						props.setParameterForwarding(response.data.data.param_forwarding);
+						props.setTracking(response.data.data.track_me);
 					}
 				},
 				(error) => {
@@ -42,17 +45,36 @@ const CustomSidebarMetaComponent = (props) => {
 		}
 	}, [props.instantRedirectStatus]);
 
+	const getDefaultCatID = (savedCatID, terms) => {
+		if (savedCatID && savedCatID != '') {
+			return savedCatID;
+		}
+		if (terms.length > 0) {
+			props.setCatId(terms[0].ID);
+			return terms[0].ID;
+		}
+		return null;
+	};
+
+	const getDefaultRedirectType = (savedRedirectType) => {
+		if (savedRedirectType && savedRedirectType != '') {
+			return savedRedirectType;
+		}
+		props.setRedirectType('307');
+		return '307';
+	};
+
 	return (
 		<>
 			<ToggleControl label={__('Enable Instant Redirect', 'betterlinks')} checked={props.instantRedirectStatus} onChange={props.setInstantRedirectStatus} />
 			{props.instantRedirectStatus && (
 				<>
 					<TextControl label="Target URL" value={props.targetUrl} onChange={(value) => props.setTargetUrl(value)} />
-					<SelectControl label="Redirect Type" options={redirectType} value={props.redirectType} onChange={(mode) => props.setRedirectType(mode)} />
+					<SelectControl label="Redirect Type" options={redirectType} value={getDefaultRedirectType(props.redirectType)} onChange={(mode) => props.setRedirectType(mode)} />
 					{terms && (
 						<SelectControl
 							label="Choose Category"
-							value={props.catId}
+							value={getDefaultCatID(props.catId, terms)}
 							options={terms
 								.filter((item) => item.term_type == 'category')
 								.map((item) => ({
@@ -133,35 +155,64 @@ subscribe(() => {
 		checked = false;
 	} else {
 		if (!checked && wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status']) {
-			var permalink = wp.data.select('core/editor').getPermalink();
-			var currentPost = wp.data.select('core/editor').getCurrentPost();
 			const target_url = wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_target_url'];
 			if (target_url.trim() != '') {
-				API.post(namespace + 'links', {
-					params: {
-						cat_id: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
-						link_title: currentPost.title,
-						link_slug: currentPost.slug,
-						nofollow: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_no_follow'],
-						param_forwarding: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_parameterforwarding'],
-						redirect_type: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_redirect_type'],
-						short_url: permalinkToShortUrl(permalink),
-						sponsored: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_sponsored'],
-						target_url: target_url,
-						track_me: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_tracking'],
-					},
-				}).then((res) => {
-					if (res.data.success) {
-						console.log(res.data);
-						deleteTempMetaData();
-					}
-				});
+				if (BetterLinksID) {
+					updateBetterLinks(target_url);
+				} else {
+					insertBetterLinks(target_url);
+				}
 			}
-
 			checked = true;
 		}
 	}
 });
+
+const insertBetterLinks = (target_url) => {
+	var permalink = wp.data.select('core/editor').getPermalink();
+	var currentPost = wp.data.select('core/editor').getCurrentPost();
+	API.post(namespace + 'links', {
+		params: {
+			cat_id: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
+			link_title: currentPost.title,
+			link_slug: currentPost.slug,
+			nofollow: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_no_follow'],
+			param_forwarding: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_parameterforwarding'],
+			redirect_type: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_redirect_type'],
+			short_url: permalinkToShortUrl(permalink),
+			sponsored: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_sponsored'],
+			target_url: target_url,
+			track_me: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_tracking'],
+		},
+	}).then((res) => {
+		if (res.data.success) {
+			deleteTempMetaData();
+		}
+	});
+};
+
+const updateBetterLinks = (target_url) => {
+	var permalink = wp.data.select('core/editor').getPermalink();
+	var currentPost = wp.data.select('core/editor').getCurrentPost();
+	API.post(namespace + 'links/' + parseInt(BetterLinksID), {
+		params: {
+			cat_id: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
+			link_title: currentPost.title,
+			link_slug: currentPost.slug,
+			nofollow: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_no_follow'],
+			param_forwarding: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_parameterforwarding'],
+			redirect_type: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_redirect_type'],
+			short_url: permalinkToShortUrl(permalink),
+			sponsored: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_sponsored'],
+			target_url: target_url,
+			track_me: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_tracking'],
+		},
+	}).then((res) => {
+		if (res.data.success) {
+			deleteTempMetaData();
+		}
+	});
+};
 
 const deleteTempMetaData = () => {
 	let form_data = new FormData();
@@ -178,9 +229,7 @@ const deleteTempMetaData = () => {
 		'betterlinks_ir_tracking',
 	]);
 	return axios.post(ajaxurl, form_data).then(
-		(response) => {
-			console.log(response);
-		},
+		(response) => {},
 		(error) => {
 			console.log(error);
 		}
