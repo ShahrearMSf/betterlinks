@@ -10,9 +10,23 @@ const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
 
 var BetterLinksID;
+var target_url;
+var redirect_type;
+var cat_id;
+var nofollow;
+var sponsored;
+var param_forwarding;
+var track_me;
 
 const CustomSidebarMetaComponent = (props) => {
 	const [terms, setTerms] = useState(false);
+	const [targetUrl, setTargetUrl] = useState(target_url);
+	const [redirectMode, setRedirectMode] = useState(redirect_type);
+	const [catId, setCatId] = useState(cat_id);
+	const [isNofollow, setIsNoFollow] = useState(nofollow);
+	const [isSponsored, setSponsored] = useState(sponsored);
+	const [isParamForwarding, setIsParamForwarding] = useState(param_forwarding);
+	const [isTrackMe, setIsTrackMe] = useState(track_me);
 	useEffect(() => {
 		if (props.instantRedirectStatus) {
 			API.get(namespace + 'terms').then((res) => {
@@ -29,13 +43,13 @@ const CustomSidebarMetaComponent = (props) => {
 				(response) => {
 					if (response.data.data) {
 						BetterLinksID = response.data.data.ID;
-						props.setTargetUrl(response.data.data.target_url);
-						props.setRedirectType(response.data.data.redirect_type);
-						props.setCatId(response.data.data.term_id);
-						props.setNoFollow(!!response.data.data.nofollow);
-						props.setSponsored(!!response.data.data.sponsored);
-						props.setParameterForwarding(!!response.data.data.param_forwarding);
-						props.setTracking(!!response.data.data.track_me);
+						onSetTargetUrl(response.data.data.target_url);
+						onSetRedirectType(response.data.data.redirect_type);
+						onSetCatId(response.data.data.term_id);
+						onSetNoFollow(!!response.data.data.nofollow);
+						onSetSponsored(!!response.data.data.sponsored);
+						onSetParamForwarding(!!response.data.data.param_forwarding);
+						onSetTrackMe(!!response.data.data.track_me);
 					}
 				},
 				(error) => {
@@ -45,12 +59,46 @@ const CustomSidebarMetaComponent = (props) => {
 		}
 	}, [props.instantRedirectStatus]);
 
+	const onSetTargetUrl = (url) => {
+		setTargetUrl(url);
+		target_url = url;
+	};
+	const onSetRedirectType = (type) => {
+		setRedirectMode(type);
+		redirect_type = type;
+	};
+
+	const onSetCatId = (catid) => {
+		setCatId(catid);
+		cat_id = catid;
+	};
+
+	const onSetNoFollow = (isnofollow) => {
+		setIsNoFollow(isnofollow);
+		nofollow = isnofollow;
+	};
+
+	const onSetSponsored = (issponsored) => {
+		setSponsored(issponsored);
+		sponsored = issponsored;
+	};
+
+	const onSetParamForwarding = (isparamforwarding) => {
+		setIsParamForwarding(isparamforwarding);
+		param_forwarding = isparamforwarding;
+	};
+
+	const onSetTrackMe = (istrackme) => {
+		setIsTrackMe(istrackme);
+		track_me = istrackme;
+	};
+
 	const getDefaultCatID = (savedCatID, terms) => {
 		if (savedCatID && savedCatID != '') {
 			return savedCatID;
 		}
 		if (terms.length > 0) {
-			props.setCatId(terms[0].ID);
+			onSetCatId(terms[0].ID);
 			return terms[0].ID;
 		}
 		return null;
@@ -60,7 +108,7 @@ const CustomSidebarMetaComponent = (props) => {
 		if (savedRedirectType && savedRedirectType != '') {
 			return savedRedirectType;
 		}
-		props.setRedirectType('307');
+		onSetRedirectType('307');
 		return '307';
 	};
 
@@ -69,27 +117,73 @@ const CustomSidebarMetaComponent = (props) => {
 			<ToggleControl label={__('Enable Instant Redirect', 'betterlinks')} checked={props.instantRedirectStatus} onChange={props.setInstantRedirectStatus} />
 			{props.instantRedirectStatus && (
 				<>
-					<TextControl label="Target URL" value={props.targetUrl} onChange={(value) => props.setTargetUrl(value)} />
-					<SelectControl label="Redirect Type" options={redirectType} value={getDefaultRedirectType(props.redirectType)} onChange={(mode) => props.setRedirectType(mode)} />
+					<TextControl
+						label="Target URL"
+						value={target_url}
+						onChange={(value) => {
+							onSetTargetUrl(value);
+							props.showSaveButton();
+						}}
+					/>
+					<SelectControl
+						label="Redirect Type"
+						options={redirectType}
+						value={getDefaultRedirectType(redirect_type)}
+						onChange={(mode) => {
+							onSetRedirectType(mode);
+							props.showSaveButton();
+						}}
+					/>
 					{terms && (
 						<SelectControl
 							label="Choose Category"
-							value={getDefaultCatID(props.catId, terms)}
+							value={getDefaultCatID(cat_id, terms)}
 							options={terms
 								.filter((item) => item.term_type == 'category')
 								.map((item) => ({
 									value: item.ID,
 									label: item.term_name,
 								}))}
-							onChange={(catID) => props.setCatId(catID)}
+							onChange={(catID) => {
+								onSetCatId(catID);
+								props.showSaveButton();
+							}}
 						/>
 					)}
 
 					<h3>Link Options</h3>
-					<ToggleControl label={__('No Follow', 'betterlinks')} checked={props.noFollow} onChange={props.setNoFollow} />
-					<ToggleControl label={__('Sponsored', 'betterlinks')} checked={props.sponsored} onChange={props.setSponsored} />
-					<ToggleControl label={__('Parameter Forwarding', 'betterlinks')} checked={props.parameterForwarding} onChange={props.setParameterForwarding} />
-					<ToggleControl label={__('Tracking', 'betterlinks')} checked={props.tracking} onChange={props.setTracking} />
+					<ToggleControl
+						label={__('No Follow', 'betterlinks')}
+						checked={nofollow}
+						onChange={(value) => {
+							onSetNoFollow(value);
+							props.showSaveButton();
+						}}
+					/>
+					<ToggleControl
+						label={__('Sponsored', 'betterlinks')}
+						checked={sponsored}
+						onChange={(value) => {
+							onSetSponsored(value);
+							props.showSaveButton();
+						}}
+					/>
+					<ToggleControl
+						label={__('Parameter Forwarding', 'betterlinks')}
+						checked={param_forwarding}
+						onChange={(value) => {
+							onSetParamForwarding(value);
+							props.showSaveButton();
+						}}
+					/>
+					<ToggleControl
+						label={__('Tracking', 'betterlinks')}
+						checked={track_me}
+						onChange={(value) => {
+							onSetTrackMe(value);
+							props.showSaveButton();
+						}}
+					/>
 				</>
 			)}
 		</>
@@ -100,13 +194,6 @@ const CustomSidebarMeta = compose([
 	withSelect((select) => {
 		return {
 			instantRedirectStatus: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status'],
-			targetUrl: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_target_url'],
-			redirectType: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_redirect_type'],
-			catId: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
-			noFollow: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_no_follow'],
-			sponsored: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_sponsored'],
-			parameterForwarding: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_parameterforwarding'],
-			tracking: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_tracking'],
 		};
 	}),
 	withDispatch((dispatch) => {
@@ -114,26 +201,8 @@ const CustomSidebarMeta = compose([
 			setInstantRedirectStatus: function (value) {
 				dispatch('core/editor').editPost({ meta: { betterlinks_ir_status: value } });
 			},
-			setTargetUrl: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_target_url: value } });
-			},
-			setRedirectType: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_redirect_type: value } });
-			},
-			setCatId: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_cat_id: value } });
-			},
-			setNoFollow: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_no_follow: !!value } });
-			},
-			setSponsored: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_sponsored: !!value } });
-			},
-			setParameterForwarding: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_parameterforwarding: !!value } });
-			},
-			setTracking: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_tracking: !!value } });
+			showSaveButton: function (value) {
+				dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } });
 			},
 		};
 	}),
@@ -155,7 +224,7 @@ subscribe(() => {
 		checked = false;
 	} else {
 		if (!checked && wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status']) {
-			const target_url = wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_target_url'];
+			// const target_url = wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_target_url'];
 			if (target_url.trim() != '') {
 				if (BetterLinksID) {
 					updateBetterLinks(target_url);
@@ -173,21 +242,17 @@ const insertBetterLinks = (target_url) => {
 	var currentPost = wp.data.select('core/editor').getCurrentPost();
 	API.post(namespace + 'links', {
 		params: {
-			cat_id: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
+			cat_id: cat_id,
 			link_title: currentPost.title,
 			link_slug: currentPost.slug,
-			nofollow: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_no_follow'],
-			param_forwarding: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_parameterforwarding'],
-			redirect_type: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_redirect_type'],
+			nofollow: nofollow,
+			param_forwarding: param_forwarding,
+			redirect_type: redirect_type,
 			short_url: permalinkToShortUrl(permalink),
-			sponsored: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_sponsored'],
+			sponsored: sponsored,
 			target_url: target_url,
-			track_me: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_tracking'],
+			track_me: track_me,
 		},
-	}).then((res) => {
-		if (res.data.success) {
-			deleteTempMetaData();
-		}
 	});
 };
 
@@ -197,44 +262,18 @@ const updateBetterLinks = (target_url) => {
 	API.put(namespace + 'links/' + BetterLinksID, {
 		params: {
 			ID: BetterLinksID,
-			cat_id: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_cat_id'],
+			cat_id: cat_id,
 			link_title: currentPost.title,
 			link_slug: currentPost.slug,
-			nofollow: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_no_follow'],
-			param_forwarding: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_parameterforwarding'],
-			redirect_type: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_redirect_type'],
+			nofollow: nofollow,
+			param_forwarding: param_forwarding,
+			redirect_type: redirect_type,
 			short_url: permalinkToShortUrl(permalink),
-			sponsored: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_sponsored'],
+			sponsored: sponsored,
 			target_url: target_url,
-			track_me: wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_tracking'],
+			track_me: track_me,
 		},
-	}).then((res) => {
-		if (res.data.success) {
-			deleteTempMetaData();
-		}
 	});
-};
-
-const deleteTempMetaData = () => {
-	let form_data = new FormData();
-	form_data.append('action', 'betterlinks/admin/instant_redirect_temp_meta_delete');
-	form_data.append('security', nonce);
-	form_data.append('ID', wp.data.select('core/editor').getCurrentPostId());
-	form_data.append('meta_lists', [
-		'betterlinks_ir_target_url',
-		'betterlinks_ir_redirect_type',
-		'betterlinks_ir_cat_id',
-		'betterlinks_ir_no_follow',
-		'betterlinks_ir_sponsored',
-		'betterlinks_ir_parameterforwarding',
-		'betterlinks_ir_tracking',
-	]);
-	return axios.post(ajaxurl, form_data).then(
-		(response) => {},
-		(error) => {
-			console.log(error);
-		}
-	);
 };
 
 const permalinkToShortUrl = (permalink) => {

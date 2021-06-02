@@ -25,7 +25,6 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
 		add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
 		add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
-		add_action('wp_ajax_betterlinks/admin/instant_redirect_temp_meta_delete', [$this, 'instant_redirect_temp_meta_delete']);
 	}
 
 	public function get_prettylinks_data()
@@ -292,19 +291,6 @@ class Ajax
 			WHERE {$prefix}betterlinks.short_url = '{$short_url}'"
 			)->get();
 			wp_send_json_success(is_array($results) ? current($results) : false);
-		wp_die();
-	}
-	public function instant_redirect_temp_meta_delete()
-	{
-		check_ajax_referer('wp_rest', 'security');
-		$ID = (isset($_POST['ID']) ? $_POST['ID'] : "");
-		if($ID){
-			$meta_lists = (isset($_POST['meta_lists']) ? explode(',', $_POST['meta_lists']) : []);
-			foreach($meta_lists as $meta_name){
-				delete_post_meta($ID, $meta_name);
-			}
-		}
-		wp_send_json_success([]);
 		wp_die();
 	}
 }

@@ -45,41 +45,6 @@ if (!class_exists('BetterLinks')) {
 				'single' => true,
 				'type' => 'boolean'
 			]);
-			register_meta('post', 'betterlinks_ir_target_url', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'string'
-			]);
-			register_meta('post', 'betterlinks_ir_redirect_type', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'string'
-			]);
-			register_meta('post', 'betterlinks_ir_cat_id', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'integer'
-			]);
-			register_meta('post', 'betterlinks_ir_no_follow', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'boolean'
-			]);
-			register_meta('post', 'betterlinks_ir_sponsored', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'boolean'
-			]);
-			register_meta('post', 'betterlinks_ir_parameterforwarding', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'boolean'
-			]);
-			register_meta('post', 'betterlinks_ir_tracking', [
-				'show_in_rest' => true,
-				'single' => true,
-				'type' => 'boolean'
-			]);
 		}
 
 		public static function init()
