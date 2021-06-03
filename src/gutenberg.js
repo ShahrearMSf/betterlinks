@@ -410,7 +410,7 @@ const CustomSidebarMeta = compose([
 const CustomSidebarComponent = () => {
 	return (
 		<Fragment>
-			<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Quick Links" className="custom-panel">
+			<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Instant Redirect" className="custom-panel">
 				<CustomSidebarMeta />
 			</PluginDocumentSettingPanel>
 		</Fragment>
@@ -423,7 +423,6 @@ subscribe(() => {
 		checked = false;
 	} else {
 		if (!checked && wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status']) {
-			// const target_url = wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_target_url'];
 			if (target_url && target_url.trim() != '') {
 				if (BetterLinksID) {
 					updateBetterLinks(target_url);
