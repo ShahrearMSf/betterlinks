@@ -71,6 +71,13 @@ class Assets
 	 */
 	public function block_editor_assets()
 	{
+		wp_enqueue_style(
+			'betterlinks-gutenberg',
+			BETTERLINKS_ASSETS_URI . 'css/betterlinks-gutenberg.css',
+			[],
+			filemtime( BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks-gutenberg.css' )	
+		);
+
 		wp_enqueue_script(
 			'betterlinks-gutenberg',
 			BETTERLINKS_ASSETS_URI . 'js/betterlinks-gutenberg.core.min.js',
