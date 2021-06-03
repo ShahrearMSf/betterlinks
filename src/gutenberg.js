@@ -241,7 +241,7 @@ const CustomSidebarMetaComponent = (props) => {
 							}}
 						/>
 					)}
-					<h3>Link Options</h3>
+					<h3 className="btl-link-generator">Link Options</h3>
 					<ToggleControl
 						label={__('No Follow', 'betterlinks')}
 						checked={nofollow}
