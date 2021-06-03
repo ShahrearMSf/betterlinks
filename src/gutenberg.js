@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { redirectType } from './utils/data';
-import { API, namespace, nonce, site_url } from './utils/helper';
+import { API, namespace, nonce, site_url, getJsonString } from './utils/helper';
 import UpgradeToPro from './components/Teasers/UpgradeToPro';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
 import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
-const { ToggleControl, TextControl, SelectControl } = wp.components;
+const { ToggleControl, TextControl, SelectControl, DateTimePicker } = wp.components;
 const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
 
@@ -22,6 +22,14 @@ var sponsored;
 var param_forwarding;
 var track_me;
 
+var link_status;
+var expire;
+var expire_type;
+var expire_date = new Date();
+var expire_clicks;
+var expire_redirect;
+var expire_redirect_url;
+
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
@@ -32,6 +40,15 @@ const CustomSidebarMetaComponent = (props) => {
 	const [isSponsored, setSponsored] = useState(sponsored);
 	const [isParamForwarding, setIsParamForwarding] = useState(param_forwarding);
 	const [isTrackMe, setIsTrackMe] = useState(track_me);
+
+	const [linkStatus, setLinkStatus] = useState(link_status);
+	const [isExpire, setIsExpire] = useState(expire);
+	const [expireType, setExpireType] = useState(expire_type);
+	const [expireDate, setExpireDate] = useState(expire_date);
+	const [expireClicks, setExpireClicks] = useState(expire_clicks);
+	const [expireRedirect, setExpireRedirect] = useState(expire_redirect);
+	const [expireRedirectUrl, setExpireRedirectUrl] = useState(expire_redirect_url);
+
 	useEffect(() => {
 		if (props.instantRedirectStatus) {
 			API.get(namespace + 'terms').then((res) => {
@@ -55,6 +72,16 @@ const CustomSidebarMetaComponent = (props) => {
 						onSetSponsored(!!response.data.data.sponsored);
 						onSetParamForwarding(!!response.data.data.param_forwarding);
 						onSetTrackMe(!!response.data.data.track_me);
+						if (betterLinksHooks.applyFilters('isActivePro', false)) {
+							const expire = getJsonString(response.data.data.expire);
+							onSetLinkStatus(response.data.data.link_status);
+							onSetExpire(expire.status);
+							onSetExpireType(expire.type);
+							onSetExpireDate(expire.date);
+							onSetExpireClicks(expire.clicks);
+							onSetExpireRedirect(expire.redirect_status);
+							onSetExpireRedirectUrl(expire.redirect_url);
+						}
 					}
 				},
 				(error) => {
@@ -98,6 +125,41 @@ const CustomSidebarMetaComponent = (props) => {
 		track_me = istrackme;
 	};
 
+	const onSetLinkStatus = (status) => {
+		setLinkStatus(status);
+		link_status = status;
+	};
+
+	const onSetExpire = (value) => {
+		setIsExpire(value);
+		expire = value;
+	};
+
+	const onSetExpireType = (value) => {
+		setExpireType(value);
+		expire_type = value;
+	};
+
+	const onSetExpireDate = (value) => {
+		setExpireDate(value);
+		expire_date = value;
+	};
+
+	const onSetExpireClicks = (value) => {
+		setExpireClicks(value);
+		expire_clicks = value;
+	};
+
+	const onSetExpireRedirect = (value) => {
+		setExpireRedirect(value);
+		expire_redirect = value;
+	};
+
+	const onSetExpireRedirectUrl = (value) => {
+		setExpireRedirectUrl(value);
+		expire_redirect_url = value;
+	};
+
 	const getDefaultCatID = (savedCatID, terms) => {
 		if (savedCatID && savedCatID != '') {
 			return savedCatID;
@@ -117,6 +179,21 @@ const CustomSidebarMetaComponent = (props) => {
 		return '307';
 	};
 
+	const getDefaultLinkStatus = (status) => {
+		if (status && status != '') {
+			return status;
+		}
+		onSetLinkStatus('publish');
+		return 'publish';
+	};
+	const getDefaultExpireType = (type) => {
+		if (type && type != '') {
+			return type;
+		}
+		onSetExpireType('date');
+		return 'date';
+	};
+
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
 	};
@@ -126,7 +203,7 @@ const CustomSidebarMetaComponent = (props) => {
 	};
 
 	return (
-		<>
+		<div className="betterlinks-instant-redirect">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<ToggleControl label={__('Enable Instant Redirect', 'betterlinks')} checked={props.instantRedirectStatus} onChange={props.setInstantRedirectStatus} />
 			{props.instantRedirectStatus && (
@@ -164,7 +241,6 @@ const CustomSidebarMetaComponent = (props) => {
 							}}
 						/>
 					)}
-
 					<h3>Link Options</h3>
 					<ToggleControl
 						label={__('No Follow', 'betterlinks')}
@@ -198,14 +274,14 @@ const CustomSidebarMetaComponent = (props) => {
 							props.showSaveButton();
 						}}
 					/>
-					{!betterLinksHooks.applyFilters('isActivePro', false) && (
-						<div className="link-options link-options--advanced link-options--teasers">
-							<div className="link-options__head">
-								<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-							</div>
-							<div className="link-options__body">
-								<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-modal-form-label" htmlFor="status">
+					<div className="betterlinks-instant-redirect betterlinks-instant-redirect--teasers">
+						<div className="betterlinks-instant-redirect__head">
+							<h4 className="betterlinks-instant-redirect__head--title">{__('Advanced', 'betterlinks')}</h4>
+						</div>
+						{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+							<>
+								<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
+									<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
 										Status <span className="pro-badge">Pro</span>
 									</label>
 									<select id="status" disabled>
@@ -214,18 +290,102 @@ const CustomSidebarMetaComponent = (props) => {
 										<option value="draft">Draft</option>
 									</select>
 								</div>
-								<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-modal-form-label" htmlFor="expire">
+								<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
+									<label className="betterlinks-instant-redirect-form-label" htmlFor="expire">
 										Expire <span className="pro-badge">Pro</span>
 									</label>
 									<input id="expire" type="checkbox" disabled />
 								</div>
-							</div>
-						</div>
-					)}
+							</>
+						) : (
+							<>
+								<SelectControl
+									label="Link Status"
+									options={[
+										{
+											value: 'publish',
+											label: __('Active', 'betterlinks'),
+										},
+										{
+											value: 'expired',
+											label: __('Expired', 'betterlinks'),
+										},
+										{
+											value: 'draft',
+											label: __('Draft', 'betterlinks'),
+										},
+									]}
+									value={getDefaultLinkStatus(link_status)}
+									onChange={(status) => {
+										onSetLinkStatus(status);
+										props.showSaveButton();
+									}}
+								/>
+								<ToggleControl
+									label={__('Expire', 'betterlinks')}
+									checked={isExpire}
+									onChange={(value) => {
+										onSetExpire(value);
+										props.showSaveButton();
+									}}
+								/>
+								{isExpire && (
+									<>
+										<SelectControl
+											label="Expire After"
+											options={[
+												{
+													value: 'date',
+													label: __('Date', 'betterlinks'),
+												},
+												{
+													value: 'clicks',
+													label: __('Clicks', 'betterlinks'),
+												},
+											]}
+											value={getDefaultExpireType(expire_type)}
+											onChange={(value) => {
+												onSetExpireType(value);
+												props.showSaveButton();
+											}}
+										/>
+										{expireType == 'date' && <DateTimePicker currentDate={expire_date} onChange={(date) => onSetExpireDate(date)} is12Hour={true} />}
+										{expireType == 'clicks' && (
+											<TextControl
+												label="Clicks"
+												value={expire_clicks}
+												onChange={(value) => {
+													onSetExpireClicks(value);
+													props.showSaveButton();
+												}}
+											/>
+										)}
+										<ToggleControl
+											label={__('Redirect URL after Expiration', 'betterlinks')}
+											checked={expire_redirect}
+											onChange={(value) => {
+												onSetExpireRedirect(value);
+												props.showSaveButton();
+											}}
+										/>
+										{expireRedirect && (
+											<TextControl
+												label="Redirect URL"
+												value={expire_redirect_url}
+												onChange={(value) => {
+													onSetExpireRedirectUrl(value);
+													props.showSaveButton();
+												}}
+											/>
+										)}
+									</>
+								)}
+							</>
+						)}
+					</div>
 				</>
 			)}
-		</>
+		</div>
 	);
 };
 
@@ -279,39 +439,64 @@ subscribe(() => {
 const insertBetterLinks = (target_url) => {
 	var permalink = wp.data.select('core/editor').getPermalink();
 	var currentPost = wp.data.select('core/editor').getCurrentPost();
+	var params = {
+		cat_id: cat_id,
+		link_title: currentPost.title,
+		link_slug: currentPost.slug,
+		nofollow: nofollow,
+		param_forwarding: param_forwarding,
+		redirect_type: redirect_type,
+		short_url: permalinkToShortUrl(permalink),
+		sponsored: sponsored,
+		target_url: target_url,
+		track_me: track_me,
+	};
+	if (betterLinksHooks.applyFilters('isActivePro', false)) {
+		params.link_status = link_status;
+		params.expire = {
+			status: expire,
+			type: expire_type,
+			clicks: expire_clicks,
+			date: expire_date,
+			redirect_status: expire_redirect,
+			redirect_url: expire_redirect_url,
+		};
+	}
+
 	API.post(namespace + 'links', {
-		params: {
-			cat_id: cat_id,
-			link_title: currentPost.title,
-			link_slug: currentPost.slug,
-			nofollow: nofollow,
-			param_forwarding: param_forwarding,
-			redirect_type: redirect_type,
-			short_url: permalinkToShortUrl(permalink),
-			sponsored: sponsored,
-			target_url: target_url,
-			track_me: track_me,
-		},
+		params: params,
 	});
 };
 
 const updateBetterLinks = (target_url) => {
 	var permalink = wp.data.select('core/editor').getPermalink();
 	var currentPost = wp.data.select('core/editor').getCurrentPost();
+	var params = {
+		ID: BetterLinksID,
+		cat_id: cat_id,
+		link_title: currentPost.title,
+		link_slug: currentPost.slug,
+		nofollow: nofollow,
+		param_forwarding: param_forwarding,
+		redirect_type: redirect_type,
+		short_url: permalinkToShortUrl(permalink),
+		sponsored: sponsored,
+		target_url: target_url,
+		track_me: track_me,
+	};
+	if (betterLinksHooks.applyFilters('isActivePro', false)) {
+		params.link_status = link_status;
+		params.expire = {
+			status: expire,
+			type: expire_type,
+			clicks: expire_clicks,
+			date: expire_date,
+			redirect_status: expire_redirect,
+			redirect_url: expire_redirect_url,
+		};
+	}
 	API.put(namespace + 'links/' + BetterLinksID, {
-		params: {
-			ID: BetterLinksID,
-			cat_id: cat_id,
-			link_title: currentPost.title,
-			link_slug: currentPost.slug,
-			nofollow: nofollow,
-			param_forwarding: param_forwarding,
-			redirect_type: redirect_type,
-			short_url: permalinkToShortUrl(permalink),
-			sponsored: sponsored,
-			target_url: target_url,
-			track_me: track_me,
-		},
+		params: params,
 	});
 };
 

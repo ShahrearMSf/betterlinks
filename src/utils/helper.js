@@ -233,3 +233,11 @@ export const delayStatusChanged = (firstStatus, secondStatus, thirdStatus, setSt
 		}
 	}, 1000);
 };
+
+export const getJsonString = (str) => {
+	try {
+		return JSON.parse(str);
+	} catch (e) {
+		return {};
+	}
+};
