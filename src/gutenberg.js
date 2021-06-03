@@ -61,7 +61,7 @@ const CustomSidebarMetaComponent = (props) => {
 			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
 			form_data.append('security', nonce);
 			form_data.append('short_url', short_url);
-			return axios.post(ajaxurl, form_data).then(
+			axios.post(ajaxurl, form_data).then(
 				(response) => {
 					if (response.data.data) {
 						BetterLinksID = response.data.data.ID;
@@ -424,7 +424,7 @@ subscribe(() => {
 	} else {
 		if (!checked && wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status']) {
 			// const target_url = wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_target_url'];
-			if (target_url.trim() != '') {
+			if (target_url && target_url.trim() != '') {
 				if (BetterLinksID) {
 					updateBetterLinks(target_url);
 				} else {
