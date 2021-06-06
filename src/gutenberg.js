@@ -7,7 +7,7 @@ const { __ } = wp.i18n;
 import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
-const { ToggleControl, TextControl, SelectControl, DateTimePicker } = wp.components;
+const { ToggleControl, TextControl, SelectControl, DateTimePicker, Button } = wp.components;
 const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
 
@@ -33,6 +33,7 @@ var expire_redirect_url;
 
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const [isOpenInstantRedirect, setIsOpenInstantRedirect] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
 	const [redirectMode, setRedirectMode] = useState(redirect_type);
@@ -51,13 +52,13 @@ const CustomSidebarMetaComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState(expire_redirect_url);
 
 	useEffect(() => {
-		if (props.instantRedirectStatus) {
+		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
+		if (short_url) {
 			API.get(namespace + 'terms').then((res) => {
 				if (res.data) {
 					setTerms(res.data.data);
 				}
 			});
-			const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 			let form_data = new FormData();
 			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
 			form_data.append('security', nonce);
@@ -83,6 +84,7 @@ const CustomSidebarMetaComponent = (props) => {
 							onSetExpireRedirect(expire.redirect_status);
 							onSetExpireRedirectUrl(expire.redirect_url);
 						}
+						setIsOpenInstantRedirect(true);
 					}
 				},
 				(error) => {
@@ -90,7 +92,7 @@ const CustomSidebarMetaComponent = (props) => {
 				}
 			);
 		}
-	}, [props.instantRedirectStatus]);
+	}, [BetterLinksID]);
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
@@ -194,7 +196,28 @@ const CustomSidebarMetaComponent = (props) => {
 		onSetExpireType('date');
 		return 'date';
 	};
-
+	const deleteInstantRedirect = () => {
+		if (BetterLinksID && confirm('Are You Sure?')) {
+			API.delete(namespace + 'links/' + BetterLinksID).then((res) => {
+				BetterLinksID = '';
+				setIsOpenInstantRedirect(false);
+				onSetTargetUrl('');
+				setRedirectMode('');
+				setCatId('');
+				setIsNoFollow(false);
+				setSponsored(false);
+				setIsParamForwarding(false);
+				setIsTrackMe(false);
+				setLinkStatus('');
+				setIsExpire(false);
+				setExpireType('');
+				setExpireDate('');
+				setExpireClicks('');
+				setExpireRedirect(false);
+				setExpireRedirectUrl('');
+			});
+		}
+	};
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
 	};
@@ -206,12 +229,35 @@ const CustomSidebarMetaComponent = (props) => {
 	return (
 		<div className="betterlinks-instant-redirect">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<ToggleControl label={__('Enable Instant Redirect', 'betterlinks')} checked={props.instantRedirectStatus} onChange={props.setInstantRedirectStatus} />
-			{props.instantRedirectStatus && (
+			{!isOpenInstantRedirect && (
+				<Button
+					isPrimary={true}
+					onClick={() => {
+						setIsOpenInstantRedirect(true);
+						props.showSaveButton();
+					}}
+				>
+					Create Instant Redirect
+				</Button>
+			)}
+
+			{isOpenInstantRedirect && BetterLinksID && (
+				<Button
+					isDestructive={true}
+					onClick={() => {
+						deleteInstantRedirect();
+						props.showSaveButton();
+					}}
+				>
+					Delete Instant Redirect
+				</Button>
+			)}
+
+			{isOpenInstantRedirect && (
 				<>
 					<TextControl
 						label="Target URL"
-						value={target_url}
+						value={targetUrl}
 						onChange={(value) => {
 							onSetTargetUrl(value);
 							props.showSaveButton();
@@ -220,7 +266,7 @@ const CustomSidebarMetaComponent = (props) => {
 					<SelectControl
 						label="Redirect Type"
 						options={redirectType}
-						value={getDefaultRedirectType(redirect_type)}
+						value={getDefaultRedirectType(redirectMode)}
 						onChange={(mode) => {
 							onSetRedirectType(mode);
 							props.showSaveButton();
@@ -229,7 +275,7 @@ const CustomSidebarMetaComponent = (props) => {
 					{terms && (
 						<SelectControl
 							label="Choose Category"
-							value={getDefaultCatID(cat_id, terms)}
+							value={getDefaultCatID(catId, terms)}
 							options={terms
 								.filter((item) => item.term_type == 'category')
 								.map((item) => ({
@@ -245,7 +291,7 @@ const CustomSidebarMetaComponent = (props) => {
 					<h3 className="btl-link-generator">Link Options</h3>
 					<ToggleControl
 						label={__('No Follow', 'betterlinks')}
-						checked={nofollow}
+						checked={isNofollow}
 						onChange={(value) => {
 							onSetNoFollow(value);
 							props.showSaveButton();
@@ -253,7 +299,7 @@ const CustomSidebarMetaComponent = (props) => {
 					/>
 					<ToggleControl
 						label={__('Sponsored', 'betterlinks')}
-						checked={sponsored}
+						checked={isSponsored}
 						onChange={(value) => {
 							onSetSponsored(value);
 							props.showSaveButton();
@@ -261,7 +307,7 @@ const CustomSidebarMetaComponent = (props) => {
 					/>
 					<ToggleControl
 						label={__('Parameter Forwarding', 'betterlinks')}
-						checked={param_forwarding}
+						checked={isParamForwarding}
 						onChange={(value) => {
 							onSetParamForwarding(value);
 							props.showSaveButton();
@@ -269,7 +315,7 @@ const CustomSidebarMetaComponent = (props) => {
 					/>
 					<ToggleControl
 						label={__('Tracking', 'betterlinks')}
-						checked={track_me}
+						checked={isTrackMe}
 						onChange={(value) => {
 							onSetTrackMe(value);
 							props.showSaveButton();
@@ -316,7 +362,7 @@ const CustomSidebarMetaComponent = (props) => {
 											label: __('Draft', 'betterlinks'),
 										},
 									]}
-									value={getDefaultLinkStatus(link_status)}
+									value={getDefaultLinkStatus(linkStatus)}
 									onChange={(status) => {
 										onSetLinkStatus(status);
 										props.showSaveButton();
@@ -344,7 +390,7 @@ const CustomSidebarMetaComponent = (props) => {
 													label: __('Clicks', 'betterlinks'),
 												},
 											]}
-											value={getDefaultExpireType(expire_type)}
+											value={getDefaultExpireType(expireType)}
 											onChange={(value) => {
 												onSetExpireType(value);
 												props.showSaveButton();
@@ -353,7 +399,7 @@ const CustomSidebarMetaComponent = (props) => {
 										{expireType == 'date' && (
 											<>
 												<DateTimePicker
-													currentDate={expire_date}
+													currentDate={expireDate}
 													onChange={(date) => {
 														if (currentDate.getTime() < new Date(date).getTime()) {
 															onSetExpireDate(date);
@@ -366,7 +412,7 @@ const CustomSidebarMetaComponent = (props) => {
 										{expireType == 'clicks' && (
 											<TextControl
 												label="Clicks"
-												value={expire_clicks}
+												value={expireClicks}
 												onChange={(value) => {
 													onSetExpireClicks(value);
 													props.showSaveButton();
@@ -375,7 +421,7 @@ const CustomSidebarMetaComponent = (props) => {
 										)}
 										<ToggleControl
 											label={__('Redirect URL after Expiration', 'betterlinks')}
-											checked={expire_redirect}
+											checked={expireRedirect}
 											onChange={(value) => {
 												onSetExpireRedirect(value);
 												props.showSaveButton();
@@ -384,7 +430,7 @@ const CustomSidebarMetaComponent = (props) => {
 										{expireRedirect && (
 											<TextControl
 												label="Redirect URL"
-												value={expire_redirect_url}
+												value={expireRedirectUrl}
 												onChange={(value) => {
 													onSetExpireRedirectUrl(value);
 													props.showSaveButton();
@@ -403,16 +449,8 @@ const CustomSidebarMetaComponent = (props) => {
 };
 
 const CustomSidebarMeta = compose([
-	withSelect((select) => {
-		return {
-			instantRedirectStatus: select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status'],
-		};
-	}),
 	withDispatch((dispatch) => {
 		return {
-			setInstantRedirectStatus: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_ir_status: value } });
-			},
 			showSaveButton: function (value) {
 				dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } });
 			},
@@ -435,7 +473,7 @@ subscribe(() => {
 	if (wp.data.select('core/editor').isSavingPost()) {
 		checked = false;
 	} else {
-		if (!checked && wp.data.select('core/editor').getEditedPostAttribute('meta')['betterlinks_ir_status']) {
+		if (!checked && wp.data.select('core/editor').getPermalink()) {
 			if (target_url && target_url.trim() != '') {
 				if (BetterLinksID) {
 					updateBetterLinks(target_url);
@@ -474,9 +512,12 @@ const insertBetterLinks = (target_url) => {
 			redirect_url: expire_redirect_url,
 		};
 	}
-
 	API.post(namespace + 'links', {
 		params: params,
+	}).then((res) => {
+		if (res.data.data) {
+			BetterLinksID = res.data.data.ID;
+		}
 	});
 };
 
@@ -509,6 +550,10 @@ const updateBetterLinks = (target_url) => {
 	}
 	API.put(namespace + 'links/' + BetterLinksID, {
 		params: params,
+	}).then((res) => {
+		if (res.data.data) {
+			BetterLinksID = res.data.data.ID;
+		}
 	});
 };
 
