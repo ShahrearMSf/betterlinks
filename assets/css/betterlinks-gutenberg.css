@@ -33,8 +33,6 @@
 
 .betterlinks-upgradetopro {
   text-align: center;
-  padding: 40px;
-  padding-bottom: 80px;
 }
 .betterlinks-upgradetopro h3 {
   color: rgba(0, 0, 0, 0.65);
@@ -53,4 +51,24 @@
   border-radius: 4px;
   cursor: pointer;
   float: right;
+}
+
+.ReactModal__Content {
+  padding: 60px !important;
+  width: 60%;
+}
+@media screen and (max-width: 1599px) {
+  .ReactModal__Content {
+    width: 75%;
+  }
+}
+@media screen and (max-width: 1199px) {
+  .ReactModal__Content {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 650px) {
+  .ReactModal__Content {
+    padding: 20px !important;
+  }
 }
