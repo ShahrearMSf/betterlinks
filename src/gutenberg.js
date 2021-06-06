@@ -25,7 +25,8 @@ var track_me;
 var link_status;
 var expire;
 var expire_type;
-var expire_date = new Date();
+var currentDate = new Date();
+var expire_date = currentDate;
 var expire_clicks;
 var expire_redirect;
 var expire_redirect_url;
@@ -349,7 +350,19 @@ const CustomSidebarMetaComponent = (props) => {
 												props.showSaveButton();
 											}}
 										/>
-										{expireType == 'date' && <DateTimePicker currentDate={expire_date} onChange={(date) => onSetExpireDate(date)} is12Hour={true} />}
+										{expireType == 'date' && (
+											<>
+												<DateTimePicker
+													currentDate={expire_date}
+													onChange={(date) => {
+														if (currentDate.getTime() < new Date(date).getTime()) {
+															onSetExpireDate(date);
+														}
+													}}
+													is12Hour={true}
+												/>
+											</>
+										)}
 										{expireType == 'clicks' && (
 											<TextControl
 												label="Clicks"
