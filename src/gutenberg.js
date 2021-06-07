@@ -239,7 +239,6 @@ const CustomSidebarMetaComponent = (props) => {
 			isSavingPost = false;
 		} else {
 			if (!isSavingPost && wp.data.select('core/editor').getPermalink()) {
-				console.log(target_url);
 				if (target_url && target_url.trim() != '') {
 					var permalink = wp.data.select('core/editor').getPermalink();
 					var currentPost = wp.data.select('core/editor').getCurrentPost();
@@ -303,6 +302,7 @@ const CustomSidebarMetaComponent = (props) => {
 						deleteInstantRedirect();
 						props.showSaveButton();
 					}}
+					style={{ marginBottom: '10px' }}
 				>
 					Delete Instant Redirect
 				</Button>
