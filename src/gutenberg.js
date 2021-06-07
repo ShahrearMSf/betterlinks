@@ -35,6 +35,7 @@ var isSavingPost = true; // flag for multiple request break
 
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const [settings, setSettings] = useState(false);
 	const [isFetchData, setIsFetchData] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
@@ -88,8 +89,18 @@ const CustomSidebarMetaComponent = (props) => {
 							onSetExpireRedirect(expire.redirect_status);
 							onSetExpireRedirectUrl(expire.redirect_url);
 						}
-						setIsFetchData(true);
+					} else {
+						API.get(namespace + 'settings').then((res) => {
+							if (res.data.data) {
+								const settings = getJsonString(res.data.data);
+								onSetNoFollow(!!settings.nofollow);
+								onSetSponsored(!!settings.sponsored);
+								onSetParamForwarding(!!settings.param_forwarding);
+								onSetTrackMe(!!settings.track_me);
+							}
+						});
 					}
+					setIsFetchData(true);
 				},
 				(error) => {
 					console.log(error);
