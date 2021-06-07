@@ -205,20 +205,20 @@ const CustomSidebarMetaComponent = (props) => {
 			API.delete(namespace + 'links/' + ID).then((res) => {
 				BetterLinksID = '';
 				setID('');
-				setTargetUrl('');
-				setRedirectMode('');
-				setCatId('');
-				setIsNoFollow(false);
-				setSponsored(false);
-				setIsParamForwarding(false);
-				setIsTrackMe(false);
-				setLinkStatus('');
-				setIsExpire(false);
-				setExpireType('');
-				setExpireDate('');
-				setExpireClicks('');
-				setExpireRedirect(false);
-				setExpireRedirectUrl('');
+				onSetTargetUrl('');
+				onSetRedirectType('');
+				onSetCatId('');
+				onSetNoFollow(false);
+				onSetSponsored(false);
+				onSetParamForwarding(false);
+				onSetTrackMe(false);
+				onSetLinkStatus('');
+				onSetExpire(false);
+				onSetExpireType('');
+				onSetExpireDate('');
+				onSetExpireClicks('');
+				onSetExpireRedirect(false);
+				onSetExpireRedirectUrl('');
 			});
 		}
 	};
@@ -235,6 +235,7 @@ const CustomSidebarMetaComponent = (props) => {
 			isSavingPost = false;
 		} else {
 			if (!isSavingPost && wp.data.select('core/editor').getPermalink()) {
+				console.log(target_url);
 				if (target_url && target_url.trim() != '') {
 					var permalink = wp.data.select('core/editor').getPermalink();
 					var currentPost = wp.data.select('core/editor').getCurrentPost();
@@ -268,7 +269,7 @@ const CustomSidebarMetaComponent = (props) => {
 						}).then((res) => {
 							if (res.data.data) {
 								BetterLinksID = res.data.data.ID;
-								setID(es.data.data.ID);
+								setID(res.data.data.ID);
 							}
 						});
 					} else {
