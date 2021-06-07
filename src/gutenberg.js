@@ -202,7 +202,11 @@ const CustomSidebarMetaComponent = (props) => {
 	};
 	const deleteInstantRedirect = () => {
 		if (ID && confirm('Are You Sure?')) {
-			API.delete(namespace + 'links/' + ID).then((res) => {
+			API.delete(namespace + 'links/' + ID, {
+				data: {
+					short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
+				},
+			}).then((res) => {
 				BetterLinksID = '';
 				setID('');
 				onSetTargetUrl('');
