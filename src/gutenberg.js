@@ -33,7 +33,9 @@ var expire_redirect_url;
 
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const [isFetchData, setIsFetchData] = useState(false);
 	const [isOpenInstantRedirect, setIsOpenInstantRedirect] = useState(false);
+	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
 	const [redirectMode, setRedirectMode] = useState(redirect_type);
@@ -53,7 +55,7 @@ const CustomSidebarMetaComponent = (props) => {
 
 	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		if (short_url) {
+		if (short_url && !isFetchData) {
 			API.get(namespace + 'terms').then((res) => {
 				if (res.data) {
 					setTerms(res.data.data);
@@ -67,6 +69,7 @@ const CustomSidebarMetaComponent = (props) => {
 				(response) => {
 					if (response.data.data) {
 						BetterLinksID = response.data.data.ID;
+						setID(response.data.data.ID);
 						onSetTargetUrl(response.data.data.target_url);
 						onSetRedirectType(response.data.data.redirect_type);
 						onSetCatId(response.data.data.term_id);
@@ -85,6 +88,7 @@ const CustomSidebarMetaComponent = (props) => {
 							onSetExpireRedirectUrl(expire.redirect_url);
 						}
 						setIsOpenInstantRedirect(true);
+						setIsFetchData(true);
 					}
 				},
 				(error) => {
@@ -92,7 +96,7 @@ const CustomSidebarMetaComponent = (props) => {
 				}
 			);
 		}
-	}, [BetterLinksID]);
+	}, [ID]);
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
@@ -197,9 +201,10 @@ const CustomSidebarMetaComponent = (props) => {
 		return 'date';
 	};
 	const deleteInstantRedirect = () => {
-		if (BetterLinksID && confirm('Are You Sure?')) {
-			API.delete(namespace + 'links/' + BetterLinksID).then((res) => {
+		if (ID && confirm('Are You Sure?')) {
+			API.delete(namespace + 'links/' + ID).then((res) => {
 				BetterLinksID = '';
+				setID('');
 				setIsOpenInstantRedirect(false);
 				onSetTargetUrl('');
 				setRedirectMode('');
@@ -226,6 +231,64 @@ const CustomSidebarMetaComponent = (props) => {
 		setUpgradeToProModal(false);
 	};
 
+	var checked = true; // Start in a checked state.
+	subscribe(() => {
+		if (wp.data.select('core/editor').isSavingPost()) {
+			checked = false;
+		} else {
+			if (!checked && wp.data.select('core/editor').getPermalink()) {
+				if (target_url && target_url.trim() != '') {
+					var permalink = wp.data.select('core/editor').getPermalink();
+					var currentPost = wp.data.select('core/editor').getCurrentPost();
+					var params = {
+						ID: BetterLinksID,
+						cat_id: cat_id,
+						link_title: currentPost.title,
+						link_slug: currentPost.slug,
+						nofollow: nofollow,
+						param_forwarding: param_forwarding,
+						redirect_type: redirect_type,
+						short_url: permalinkToShortUrl(permalink),
+						sponsored: sponsored,
+						target_url: target_url,
+						track_me: track_me,
+					};
+					if (betterLinksHooks.applyFilters('isActivePro', false)) {
+						params.link_status = link_status;
+						params.expire = {
+							status: expire,
+							type: expire_type,
+							clicks: expire_clicks,
+							date: expire_date,
+							redirect_status: expire_redirect,
+							redirect_url: expire_redirect_url,
+						};
+					}
+					if (BetterLinksID) {
+						API.put(namespace + 'links/' + BetterLinksID, {
+							params: params,
+						}).then((res) => {
+							if (res.data.data) {
+								BetterLinksID = res.data.data.ID;
+								setID(es.data.data.ID);
+							}
+						});
+					} else {
+						API.post(namespace + 'links', {
+							params: params,
+						}).then((res) => {
+							if (res.data.data) {
+								BetterLinksID = res.data.data.ID;
+								setID(res.data.data.ID);
+							}
+						});
+					}
+				}
+				checked = true;
+			}
+		}
+	});
+
 	return (
 		<div className="betterlinks-instant-redirect">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -241,7 +304,7 @@ const CustomSidebarMetaComponent = (props) => {
 				</Button>
 			)}
 
-			{isOpenInstantRedirect && BetterLinksID && (
+			{ID && (
 				<Button
 					isDestructive={true}
 					onClick={() => {
@@ -252,7 +315,6 @@ const CustomSidebarMetaComponent = (props) => {
 					Delete Instant Redirect
 				</Button>
 			)}
-
 			{isOpenInstantRedirect && (
 				<>
 					<TextControl
@@ -466,95 +528,6 @@ const CustomSidebarComponent = () => {
 			</PluginDocumentSettingPanel>
 		</Fragment>
 	);
-};
-
-var checked = true; // Start in a checked state.
-subscribe(() => {
-	if (wp.data.select('core/editor').isSavingPost()) {
-		checked = false;
-	} else {
-		if (!checked && wp.data.select('core/editor').getPermalink()) {
-			if (target_url && target_url.trim() != '') {
-				if (BetterLinksID) {
-					updateBetterLinks(target_url);
-				} else {
-					insertBetterLinks(target_url);
-				}
-			}
-			checked = true;
-		}
-	}
-});
-
-const insertBetterLinks = (target_url) => {
-	var permalink = wp.data.select('core/editor').getPermalink();
-	var currentPost = wp.data.select('core/editor').getCurrentPost();
-	var params = {
-		cat_id: cat_id,
-		link_title: currentPost.title,
-		link_slug: currentPost.slug,
-		nofollow: nofollow,
-		param_forwarding: param_forwarding,
-		redirect_type: redirect_type,
-		short_url: permalinkToShortUrl(permalink),
-		sponsored: sponsored,
-		target_url: target_url,
-		track_me: track_me,
-	};
-	if (betterLinksHooks.applyFilters('isActivePro', false)) {
-		params.link_status = link_status;
-		params.expire = {
-			status: expire,
-			type: expire_type,
-			clicks: expire_clicks,
-			date: expire_date,
-			redirect_status: expire_redirect,
-			redirect_url: expire_redirect_url,
-		};
-	}
-	API.post(namespace + 'links', {
-		params: params,
-	}).then((res) => {
-		if (res.data.data) {
-			BetterLinksID = res.data.data.ID;
-		}
-	});
-};
-
-const updateBetterLinks = (target_url) => {
-	var permalink = wp.data.select('core/editor').getPermalink();
-	var currentPost = wp.data.select('core/editor').getCurrentPost();
-	var params = {
-		ID: BetterLinksID,
-		cat_id: cat_id,
-		link_title: currentPost.title,
-		link_slug: currentPost.slug,
-		nofollow: nofollow,
-		param_forwarding: param_forwarding,
-		redirect_type: redirect_type,
-		short_url: permalinkToShortUrl(permalink),
-		sponsored: sponsored,
-		target_url: target_url,
-		track_me: track_me,
-	};
-	if (betterLinksHooks.applyFilters('isActivePro', false)) {
-		params.link_status = link_status;
-		params.expire = {
-			status: expire,
-			type: expire_type,
-			clicks: expire_clicks,
-			date: expire_date,
-			redirect_status: expire_redirect,
-			redirect_url: expire_redirect_url,
-		};
-	}
-	API.put(namespace + 'links/' + BetterLinksID, {
-		params: params,
-	}).then((res) => {
-		if (res.data.data) {
-			BetterLinksID = res.data.data.ID;
-		}
-	});
 };
 
 const permalinkToShortUrl = (permalink) => {
