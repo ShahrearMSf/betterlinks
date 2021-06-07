@@ -31,10 +31,11 @@ var expire_clicks;
 var expire_redirect;
 var expire_redirect_url;
 
+var isSavingPost = true; // flag for multiple request break
+
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isFetchData, setIsFetchData] = useState(false);
-	const [isOpenInstantRedirect, setIsOpenInstantRedirect] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
@@ -87,7 +88,6 @@ const CustomSidebarMetaComponent = (props) => {
 							onSetExpireRedirect(expire.redirect_status);
 							onSetExpireRedirectUrl(expire.redirect_url);
 						}
-						setIsOpenInstantRedirect(true);
 						setIsFetchData(true);
 					}
 				},
@@ -205,8 +205,7 @@ const CustomSidebarMetaComponent = (props) => {
 			API.delete(namespace + 'links/' + ID).then((res) => {
 				BetterLinksID = '';
 				setID('');
-				setIsOpenInstantRedirect(false);
-				onSetTargetUrl('');
+				setTargetUrl('');
 				setRedirectMode('');
 				setCatId('');
 				setIsNoFollow(false);
@@ -231,12 +230,11 @@ const CustomSidebarMetaComponent = (props) => {
 		setUpgradeToProModal(false);
 	};
 
-	var checked = true; // Start in a checked state.
 	subscribe(() => {
 		if (wp.data.select('core/editor').isSavingPost()) {
-			checked = false;
+			isSavingPost = false;
 		} else {
-			if (!checked && wp.data.select('core/editor').getPermalink()) {
+			if (!isSavingPost && wp.data.select('core/editor').getPermalink()) {
 				if (target_url && target_url.trim() != '') {
 					var permalink = wp.data.select('core/editor').getPermalink();
 					var currentPost = wp.data.select('core/editor').getCurrentPost();
@@ -284,7 +282,7 @@ const CustomSidebarMetaComponent = (props) => {
 						});
 					}
 				}
-				checked = true;
+				isSavingPost = true;
 			}
 		}
 	});
@@ -292,17 +290,6 @@ const CustomSidebarMetaComponent = (props) => {
 	return (
 		<div className="betterlinks-instant-redirect">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			{!isOpenInstantRedirect && (
-				<Button
-					isPrimary={true}
-					onClick={() => {
-						setIsOpenInstantRedirect(true);
-						props.showSaveButton();
-					}}
-				>
-					Create Instant Redirect
-				</Button>
-			)}
 
 			{ID && (
 				<Button
@@ -315,197 +302,194 @@ const CustomSidebarMetaComponent = (props) => {
 					Delete Instant Redirect
 				</Button>
 			)}
-			{isOpenInstantRedirect && (
-				<>
-					<TextControl
-						label="Target URL"
-						value={targetUrl}
-						onChange={(value) => {
-							onSetTargetUrl(value);
-							props.showSaveButton();
-						}}
-					/>
-					<SelectControl
-						label="Redirect Type"
-						options={redirectType}
-						value={getDefaultRedirectType(redirectMode)}
-						onChange={(mode) => {
-							onSetRedirectType(mode);
-							props.showSaveButton();
-						}}
-					/>
-					{terms && (
+
+			<TextControl
+				label="Target URL"
+				value={targetUrl}
+				onChange={(value) => {
+					onSetTargetUrl(value);
+					props.showSaveButton();
+				}}
+			/>
+			<SelectControl
+				label="Redirect Type"
+				options={redirectType}
+				value={getDefaultRedirectType(redirectMode)}
+				onChange={(mode) => {
+					onSetRedirectType(mode);
+					props.showSaveButton();
+				}}
+			/>
+			{terms && (
+				<SelectControl
+					label="Choose Category"
+					value={getDefaultCatID(catId, terms)}
+					options={terms
+						.filter((item) => item.term_type == 'category')
+						.map((item) => ({
+							value: item.ID,
+							label: item.term_name,
+						}))}
+					onChange={(catID) => {
+						onSetCatId(catID);
+						props.showSaveButton();
+					}}
+				/>
+			)}
+			<h3 className="btl-link-generator">Link Options</h3>
+			<ToggleControl
+				label={__('No Follow', 'betterlinks')}
+				checked={isNofollow}
+				onChange={(value) => {
+					onSetNoFollow(value);
+					props.showSaveButton();
+				}}
+			/>
+			<ToggleControl
+				label={__('Sponsored', 'betterlinks')}
+				checked={isSponsored}
+				onChange={(value) => {
+					onSetSponsored(value);
+					props.showSaveButton();
+				}}
+			/>
+			<ToggleControl
+				label={__('Parameter Forwarding', 'betterlinks')}
+				checked={isParamForwarding}
+				onChange={(value) => {
+					onSetParamForwarding(value);
+					props.showSaveButton();
+				}}
+			/>
+			<ToggleControl
+				label={__('Tracking', 'betterlinks')}
+				checked={isTrackMe}
+				onChange={(value) => {
+					onSetTrackMe(value);
+					props.showSaveButton();
+				}}
+			/>
+			<div className="betterlinks-instant-redirect betterlinks-instant-redirect--teasers">
+				<div className="betterlinks-instant-redirect__head">
+					<h4 className="betterlinks-instant-redirect__head--title">{__('Advanced', 'betterlinks')}</h4>
+				</div>
+				{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+					<>
+						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
+							<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
+								Status <span className="pro-badge">Pro</span>
+							</label>
+							<select id="status" disabled>
+								<option value="publish">Active</option>
+								<option value="expired">Expired</option>
+								<option value="draft">Draft</option>
+							</select>
+						</div>
+						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
+							<label className="betterlinks-instant-redirect-form-label" htmlFor="expire">
+								Expire <span className="pro-badge">Pro</span>
+							</label>
+							<input id="expire" type="checkbox" disabled />
+						</div>
+					</>
+				) : (
+					<>
 						<SelectControl
-							label="Choose Category"
-							value={getDefaultCatID(catId, terms)}
-							options={terms
-								.filter((item) => item.term_type == 'category')
-								.map((item) => ({
-									value: item.ID,
-									label: item.term_name,
-								}))}
-							onChange={(catID) => {
-								onSetCatId(catID);
+							label="Link Status"
+							options={[
+								{
+									value: 'publish',
+									label: __('Active', 'betterlinks'),
+								},
+								{
+									value: 'expired',
+									label: __('Expired', 'betterlinks'),
+								},
+								{
+									value: 'draft',
+									label: __('Draft', 'betterlinks'),
+								},
+							]}
+							value={getDefaultLinkStatus(linkStatus)}
+							onChange={(status) => {
+								onSetLinkStatus(status);
 								props.showSaveButton();
 							}}
 						/>
-					)}
-					<h3 className="btl-link-generator">Link Options</h3>
-					<ToggleControl
-						label={__('No Follow', 'betterlinks')}
-						checked={isNofollow}
-						onChange={(value) => {
-							onSetNoFollow(value);
-							props.showSaveButton();
-						}}
-					/>
-					<ToggleControl
-						label={__('Sponsored', 'betterlinks')}
-						checked={isSponsored}
-						onChange={(value) => {
-							onSetSponsored(value);
-							props.showSaveButton();
-						}}
-					/>
-					<ToggleControl
-						label={__('Parameter Forwarding', 'betterlinks')}
-						checked={isParamForwarding}
-						onChange={(value) => {
-							onSetParamForwarding(value);
-							props.showSaveButton();
-						}}
-					/>
-					<ToggleControl
-						label={__('Tracking', 'betterlinks')}
-						checked={isTrackMe}
-						onChange={(value) => {
-							onSetTrackMe(value);
-							props.showSaveButton();
-						}}
-					/>
-					<div className="betterlinks-instant-redirect betterlinks-instant-redirect--teasers">
-						<div className="betterlinks-instant-redirect__head">
-							<h4 className="betterlinks-instant-redirect__head--title">{__('Advanced', 'betterlinks')}</h4>
-						</div>
-						{!betterLinksHooks.applyFilters('isActivePro', false) ? (
-							<>
-								<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
-										Status <span className="pro-badge">Pro</span>
-									</label>
-									<select id="status" disabled>
-										<option value="publish">Active</option>
-										<option value="expired">Expired</option>
-										<option value="draft">Draft</option>
-									</select>
-								</div>
-								<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="betterlinks-instant-redirect-form-label" htmlFor="expire">
-										Expire <span className="pro-badge">Pro</span>
-									</label>
-									<input id="expire" type="checkbox" disabled />
-								</div>
-							</>
-						) : (
+						<ToggleControl
+							label={__('Expire', 'betterlinks')}
+							checked={isExpire}
+							onChange={(value) => {
+								onSetExpire(value);
+								props.showSaveButton();
+							}}
+						/>
+						{isExpire && (
 							<>
 								<SelectControl
-									label="Link Status"
+									label="Expire After"
 									options={[
 										{
-											value: 'publish',
-											label: __('Active', 'betterlinks'),
+											value: 'date',
+											label: __('Date', 'betterlinks'),
 										},
 										{
-											value: 'expired',
-											label: __('Expired', 'betterlinks'),
-										},
-										{
-											value: 'draft',
-											label: __('Draft', 'betterlinks'),
+											value: 'clicks',
+											label: __('Clicks', 'betterlinks'),
 										},
 									]}
-									value={getDefaultLinkStatus(linkStatus)}
-									onChange={(status) => {
-										onSetLinkStatus(status);
-										props.showSaveButton();
-									}}
-								/>
-								<ToggleControl
-									label={__('Expire', 'betterlinks')}
-									checked={isExpire}
+									value={getDefaultExpireType(expireType)}
 									onChange={(value) => {
-										onSetExpire(value);
+										onSetExpireType(value);
 										props.showSaveButton();
 									}}
 								/>
-								{isExpire && (
+								{expireType == 'date' && (
 									<>
-										<SelectControl
-											label="Expire After"
-											options={[
-												{
-													value: 'date',
-													label: __('Date', 'betterlinks'),
-												},
-												{
-													value: 'clicks',
-													label: __('Clicks', 'betterlinks'),
-												},
-											]}
-											value={getDefaultExpireType(expireType)}
-											onChange={(value) => {
-												onSetExpireType(value);
-												props.showSaveButton();
+										<DateTimePicker
+											currentDate={expireDate}
+											onChange={(date) => {
+												if (currentDate.getTime() < new Date(date).getTime()) {
+													onSetExpireDate(date);
+												}
 											}}
+											is12Hour={true}
 										/>
-										{expireType == 'date' && (
-											<>
-												<DateTimePicker
-													currentDate={expireDate}
-													onChange={(date) => {
-														if (currentDate.getTime() < new Date(date).getTime()) {
-															onSetExpireDate(date);
-														}
-													}}
-													is12Hour={true}
-												/>
-											</>
-										)}
-										{expireType == 'clicks' && (
-											<TextControl
-												label="Clicks"
-												value={expireClicks}
-												onChange={(value) => {
-													onSetExpireClicks(value);
-													props.showSaveButton();
-												}}
-											/>
-										)}
-										<ToggleControl
-											label={__('Redirect URL after Expiration', 'betterlinks')}
-											checked={expireRedirect}
-											onChange={(value) => {
-												onSetExpireRedirect(value);
-												props.showSaveButton();
-											}}
-										/>
-										{expireRedirect && (
-											<TextControl
-												label="Redirect URL"
-												value={expireRedirectUrl}
-												onChange={(value) => {
-													onSetExpireRedirectUrl(value);
-													props.showSaveButton();
-												}}
-											/>
-										)}
 									</>
+								)}
+								{expireType == 'clicks' && (
+									<TextControl
+										label="Clicks"
+										value={expireClicks}
+										onChange={(value) => {
+											onSetExpireClicks(value);
+											props.showSaveButton();
+										}}
+									/>
+								)}
+								<ToggleControl
+									label={__('Redirect URL after Expiration', 'betterlinks')}
+									checked={expireRedirect}
+									onChange={(value) => {
+										onSetExpireRedirect(value);
+										props.showSaveButton();
+									}}
+								/>
+								{expireRedirect && (
+									<TextControl
+										label="Redirect URL"
+										value={expireRedirectUrl}
+										onChange={(value) => {
+											onSetExpireRedirectUrl(value);
+											props.showSaveButton();
+										}}
+									/>
 								)}
 							</>
 						)}
-					</div>
-				</>
-			)}
+					</>
+				)}
+			</div>
 		</div>
 	);
 };
@@ -523,7 +507,7 @@ const CustomSidebarMeta = compose([
 const CustomSidebarComponent = () => {
 	return (
 		<Fragment>
-			<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Instant Redirect" className="custom-panel">
+			<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Instant Redirect" className="custom-panel" isOpen={false}>
 				<CustomSidebarMeta />
 			</PluginDocumentSettingPanel>
 		</Fragment>
