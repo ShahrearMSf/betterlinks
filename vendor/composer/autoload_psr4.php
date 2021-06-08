@@ -5,6 +5,6 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return [
-	'BetterLinks\\' => [$baseDir . '/includes'],
-];
+return array(
+    'BetterLinks\\' => array($baseDir . '/includes'),
+);

@@ -3,9 +3,9 @@ import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { applyFilters } from '@wordpress/hooks';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
-import 'react-tabs/style/react-tabs.css';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
@@ -41,6 +41,7 @@ const Settings = (props) => {
 			props.fetch_settings_data();
 		}
 	}, []);
+
 	return (
 		<React.Fragment>
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
@@ -49,9 +50,10 @@ const Settings = (props) => {
 						<Tab key={index}>{item}</Tab>
 					))}
 				</TabList>
-				{tabPanel.map((item, index) => (
-					<TabPanel key={index}>{item}</TabPanel>
-				))}
+				{tabPanel.map((item, index) => {
+					return <TabPanel key={index}>{item}</TabPanel>;
+					// return <div key={index}>{item}</div>;
+				})}
 			</Tabs>
 			{migration && <Migration mode={migration} />}
 		</React.Fragment>
