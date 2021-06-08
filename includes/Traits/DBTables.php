@@ -28,6 +28,7 @@ trait DBTables
             link_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
 			wildcards boolean NOT NULL default 0,
 			expire text default NULL,
+			dynamic_redirect text default NULL,
             PRIMARY KEY  (ID),
             KEY link_slug (link_slug(191)),
             KEY type_status_date (link_status,link_date,ID),

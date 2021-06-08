@@ -21,4 +21,13 @@ trait DBMigrate
             $this->wpdb->query("ALTER TABLE $table_name ADD expire text default NULL");
         }
     }
+    public function db_migration_1_4()
+    {
+        $table_name = $this->wpdb->prefix . 'betterlinks';
+        $betterlinks = $this->wpdb->get_row("SELECT * FROM $table_name");
+        //Add column if not present.
+        if(!isset($betterlinks->dynamic_redirect)){
+            $this->wpdb->query("ALTER TABLE $table_name ADD dynamic_redirect text default NULL");
+        }
+    }
 }
