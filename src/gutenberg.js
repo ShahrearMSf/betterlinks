@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { redirectType } from './utils/data';
-import { API, namespace, nonce, site_url, getJsonString } from './utils/helper';
+import { API, namespace, nonce, site_url, getJsonString, formatDate } from './utils/helper';
 import UpgradeToPro from './components/Teasers/UpgradeToPro';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
@@ -35,7 +35,6 @@ var isSavingPost = true; // flag for multiple request break
 
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [settings, setSettings] = useState(false);
 	const [isFetchData, setIsFetchData] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
@@ -79,6 +78,7 @@ const CustomSidebarMetaComponent = (props) => {
 						onSetSponsored(!!response.data.data.sponsored);
 						onSetParamForwarding(!!response.data.data.param_forwarding);
 						onSetTrackMe(!!response.data.data.track_me);
+
 						if (betterLinksHooks.applyFilters('isActivePro', false)) {
 							const expire = getJsonString(response.data.data.expire);
 							onSetLinkStatus(response.data.data.link_status);
@@ -253,6 +253,7 @@ const CustomSidebarMetaComponent = (props) => {
 				if (target_url && target_url.trim() != '') {
 					var permalink = wp.data.select('core/editor').getPermalink();
 					var currentPost = wp.data.select('core/editor').getCurrentPost();
+					const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 					var params = {
 						ID: BetterLinksID,
 						cat_id: cat_id,
@@ -265,6 +266,8 @@ const CustomSidebarMetaComponent = (props) => {
 						sponsored: sponsored,
 						target_url: target_url,
 						track_me: track_me,
+						link_modified: currentDate,
+						link_modified_gmt: currentDate,
 					};
 					if (betterLinksHooks.applyFilters('isActivePro', false)) {
 						params.link_status = link_status;
@@ -287,6 +290,8 @@ const CustomSidebarMetaComponent = (props) => {
 							}
 						});
 					} else {
+						params.link_date = currentDate;
+						params.link_date_gmt = currentDate;
 						API.post(namespace + 'links', {
 							params: params,
 						}).then((res) => {
