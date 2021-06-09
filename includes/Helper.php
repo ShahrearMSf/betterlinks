@@ -217,7 +217,8 @@ class Helper
 			'param_forwarding' => (isset($data['param_forwarding']) ? $data['param_forwarding'] : false),
 			'track_me' => (isset($data['track_me']) ? $data['track_me'] : false),
 			'wildcards' => (isset($data['wildcards']) ? $data['wildcards'] : false),
-			'expire' => (isset($data['expire']) ? $data['expire'] : NULL)
+			'expire' => (isset($data['expire']) ? $data['expire'] : NULL),
+			'dynamic_redirect' => (isset($data['dynamic_redirect']) ? $data['dynamic_redirect'] : NULL)
 		];
 	}
 	public static function insert_json_into_file($file, $data)
