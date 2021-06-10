@@ -2,12 +2,14 @@ import axios from 'axios';
 import { redirectType } from './utils/data';
 import { API, namespace, nonce, site_url, getJsonString, formatDate } from './utils/helper';
 import UpgradeToPro from './components/Teasers/UpgradeToPro';
+import DateFnsUtils from '@date-io/date-fns';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
 import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
-const { ToggleControl, TextControl, SelectControl, DateTimePicker, Button } = wp.components;
+const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { compose } = wp.compose;
 const { withDispatch, withSelect, subscribe } = wp.data;
 
@@ -437,74 +439,78 @@ const CustomSidebarMetaComponent = (props) => {
 								props.showSaveButton();
 							}}
 						/>
-						<ToggleControl
-							label={__('Expire', 'betterlinks')}
-							checked={isExpire}
-							onChange={(value) => {
-								onSetExpire(value);
-								props.showSaveButton();
-							}}
-						/>
-						{isExpire && (
+						{linkStatus != 'expired' && (
 							<>
-								<SelectControl
-									label="Expire After"
-									options={[
-										{
-											value: 'date',
-											label: __('Date', 'betterlinks'),
-										},
-										{
-											value: 'clicks',
-											label: __('Clicks', 'betterlinks'),
-										},
-									]}
-									value={getDefaultExpireType(expireType)}
-									onChange={(value) => {
-										onSetExpireType(value);
-										props.showSaveButton();
-									}}
-								/>
-								{expireType == 'date' && (
-									<>
-										<DateTimePicker
-											currentDate={expireDate}
-											onChange={(date) => {
-												if (currentDate.getTime() < new Date(date).getTime()) {
-													onSetExpireDate(date);
-												}
-											}}
-											is12Hour={true}
-										/>
-									</>
-								)}
-								{expireType == 'clicks' && (
-									<TextControl
-										label="Clicks"
-										value={expireClicks}
-										onChange={(value) => {
-											onSetExpireClicks(value);
-											props.showSaveButton();
-										}}
-									/>
-								)}
 								<ToggleControl
-									label={__('Redirect URL after Expiration', 'betterlinks')}
-									checked={expireRedirect}
+									label={__('Expire', 'betterlinks')}
+									checked={isExpire}
 									onChange={(value) => {
-										onSetExpireRedirect(value);
+										onSetExpire(value);
 										props.showSaveButton();
 									}}
 								/>
-								{expireRedirect && (
-									<TextControl
-										label="Redirect URL"
-										value={expireRedirectUrl}
-										onChange={(value) => {
-											onSetExpireRedirectUrl(value);
-											props.showSaveButton();
-										}}
-									/>
+								{isExpire && (
+									<>
+										<SelectControl
+											label="Expire After"
+											options={[
+												{
+													value: 'date',
+													label: __('Date', 'betterlinks'),
+												},
+												{
+													value: 'clicks',
+													label: __('Clicks', 'betterlinks'),
+												},
+											]}
+											value={getDefaultExpireType(expireType)}
+											onChange={(value) => {
+												onSetExpireType(value);
+												props.showSaveButton();
+											}}
+										/>
+										{expireType == 'date' && (
+											<p>
+												<MuiPickersUtilsProvider utils={DateFnsUtils}>
+													<DateTimePicker
+														disablePast={true}
+														label=""
+														inputVariant="outlined"
+														value={expireDate ? expireDate : new Date()}
+														onChange={(date) => onSetExpireDate(date)}
+													/>
+												</MuiPickersUtilsProvider>
+											</p>
+										)}
+										{expireType == 'clicks' && (
+											<TextControl
+												label="Clicks"
+												value={expireClicks}
+												onChange={(value) => {
+													onSetExpireClicks(value);
+													props.showSaveButton();
+												}}
+											/>
+										)}
+										<ToggleControl
+											label={__('Redirect URL after Expiration', 'betterlinks')}
+											checked={expireRedirect}
+											onChange={(value) => {
+												onSetExpireRedirect(value);
+												props.showSaveButton();
+											}}
+										/>
+										{expireRedirect && (
+											<TextControl
+												label="Redirect URL"
+												value={expireRedirectUrl}
+												onChange={(value) => {
+													onSetExpireRedirectUrl(value);
+													props.showSaveButton();
+												}}
+											/>
+										)}
+									</>
 								)}
 							</>
 						)}
