@@ -58,58 +58,42 @@ const CustomSidebarMetaComponent = (props) => {
 
 	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		if (short_url && !isFetchData) {
+		if (short_url) {
 			API.get(namespace + 'terms').then((res) => {
 				if (res.data) {
 					setTerms(res.data.data);
 				}
 			});
-			let form_data = new FormData();
-			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
-			form_data.append('security', nonce);
-			form_data.append('short_url', short_url);
-			axios.post(ajaxurl, form_data).then(
-				(response) => {
-					if (response.data.data) {
-						BetterLinksID = response.data.data.ID;
-						setID(response.data.data.ID);
-						onSetTargetUrl(response.data.data.target_url);
-						onSetRedirectType(response.data.data.redirect_type);
-						onSetCatId(response.data.data.term_id);
-						onSetNoFollow(!!response.data.data.nofollow);
-						onSetSponsored(!!response.data.data.sponsored);
-						onSetParamForwarding(!!response.data.data.param_forwarding);
-						onSetTrackMe(!!response.data.data.track_me);
-
-						if (betterLinksHooks.applyFilters('isActivePro', false)) {
-							const expire = getJsonString(response.data.data.expire);
-							onSetLinkStatus(response.data.data.link_status);
-							onSetExpire(expire.status);
-							onSetExpireType(expire.type);
-							onSetExpireDate(expire.date);
-							onSetExpireClicks(expire.clicks);
-							onSetExpireRedirect(expire.redirect_status);
-							onSetExpireRedirectUrl(expire.redirect_url);
-						}
-					} else {
-						API.get(namespace + 'settings').then((res) => {
-							if (res.data.data) {
-								const settings = getJsonString(res.data.data);
-								onSetNoFollow(!!settings.nofollow);
-								onSetSponsored(!!settings.sponsored);
-								onSetParamForwarding(!!settings.param_forwarding);
-								onSetTrackMe(!!settings.track_me);
-							}
-						});
-					}
-					setIsFetchData(true);
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
 		}
-	}, [ID]);
+
+		if (props.data) {
+			BetterLinksID = props.data.ID;
+			setID(props.data.ID);
+			onSetTargetUrl(props.data.target_url);
+			onSetRedirectType(props.data.redirect_type);
+			onSetCatId(props.data.term_id);
+			onSetNoFollow(!!props.data.nofollow);
+			onSetSponsored(!!props.data.sponsored);
+			onSetParamForwarding(!!props.data.param_forwarding);
+			onSetTrackMe(!!props.data.track_me);
+
+			if (betterLinksHooks.applyFilters('isActivePro', false)) {
+				const expire = getJsonString(props.data.expire);
+				onSetLinkStatus(props.data.link_status);
+				onSetExpire(expire.status);
+				onSetExpireType(expire.type);
+				onSetExpireDate(expire.date);
+				onSetExpireClicks(expire.clicks);
+				onSetExpireRedirect(expire.redirect_status);
+				onSetExpireRedirectUrl(expire.redirect_url);
+			}
+		} else {
+			onSetNoFollow(!!props.settings.nofollow);
+			onSetSponsored(!!props.settings.sponsored);
+			onSetParamForwarding(!!props.settings.param_forwarding);
+			onSetTrackMe(!!props.settings.track_me);
+		}
+	}, [ID, props.data]);
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
@@ -532,11 +516,45 @@ const CustomSidebarMeta = compose([
 ])(CustomSidebarMetaComponent);
 
 const CustomSidebarComponent = () => {
+	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
+	const [data, setData] = useState(false);
+	const [settings, setSettings] = useState({});
+	useEffect(() => {
+		// Settings
+		API.get(namespace + 'settings').then((res) => {
+			if (res.data.data) {
+				const settings = getJsonString(res.data.data);
+				setSettings(settings);
+				setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+			}
+		});
+		// get links
+		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
+		if (short_url) {
+			let form_data = new FormData();
+			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
+			form_data.append('security', nonce);
+			form_data.append('short_url', short_url);
+			axios.post(ajaxurl, form_data).then(
+				(response) => {
+					if (response.data.data) {
+						setIsAllowInstantRedirect(true);
+						setData(response.data.data);
+					}
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		}
+	}, []);
 	return (
 		<Fragment>
-			<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Instant Redirect" className="custom-panel" isOpen={false}>
-				<CustomSidebarMeta />
-			</PluginDocumentSettingPanel>
+			{isAllowInstantRedirect && (
+				<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Instant Redirect" className="custom-panel" isOpen={false}>
+					<CustomSidebarMeta settings={settings} data={data} />
+				</PluginDocumentSettingPanel>
+			)}
 		</Fragment>
 	);
 };

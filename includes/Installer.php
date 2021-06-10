@@ -127,7 +127,8 @@ class Installer extends \WP_Background_Process
 				'sponsored' => '',
 				'track_me' => true,
 				'param_forwarding' => '',
-				'wildcards' => false
+				'wildcards' => false,
+				'is_allow_gutenberg' => true
 			];
 			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
 		}
