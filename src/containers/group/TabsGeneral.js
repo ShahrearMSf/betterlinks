@@ -219,7 +219,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 							<span className="btl-form-group">
-								<label className="btl-form-label">{__('Gutenberg Editor', 'betterlinks')}</label>
+								<label className="btl-form-label">{__('Instant Gutenberg Redirect', 'betterlinks')}</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
 										<Field

@@ -198,7 +198,7 @@ const CustomSidebarMetaComponent = (props) => {
 		return 'date';
 	};
 	const deleteInstantRedirect = () => {
-		if (ID && confirm('Are You Sure?')) {
+		if (ID && confirm('Are you sure you want to delete your Instant Redirect Rule?')) {
 			API.delete(namespace + 'links/' + ID, {
 				data: {
 					short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
@@ -343,7 +343,9 @@ const CustomSidebarMetaComponent = (props) => {
 					}}
 				/>
 			)}
-			<h3 className="btl-link-generator">Link Options</h3>
+			<h3 className="btl-link-generator">
+				<strong>{__('Link Options', 'betterlinks')}</strong>
+			</h3>
 			<ToggleControl
 				label={__('No Follow', 'betterlinks')}
 				checked={isNofollow}
@@ -378,7 +380,9 @@ const CustomSidebarMetaComponent = (props) => {
 			/>
 			<div className="betterlinks-instant-redirect betterlinks-instant-redirect--teasers">
 				<div className="betterlinks-instant-redirect__head">
-					<h4 className="betterlinks-instant-redirect__head--title">{__('Advanced', 'betterlinks')}</h4>
+					<h4 className="betterlinks-instant-redirect__head--title">
+						<strong>{__('Advanced', 'betterlinks')}</strong>
+					</h4>
 				</div>
 				{!betterLinksHooks.applyFilters('isActivePro', false) ? (
 					<>
