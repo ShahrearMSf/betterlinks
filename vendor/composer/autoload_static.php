@@ -4,9 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3193da833163e5a644878c0ec3cba184
+class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
 {
     public static $prefixLengthsPsr4 = array (
+        'J' => 
+        array (
+            'Jaybizzle\\CrawlerDetect\\' => 24,
+        ),
         'B' => 
         array (
             'BetterLinks\\' => 12,
@@ -14,6 +18,10 @@ class ComposerStaticInit3193da833163e5a644878c0ec3cba184
     );
 
     public static $prefixDirsPsr4 = array (
+        'Jaybizzle\\CrawlerDetect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
+        ),
         'BetterLinks\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
@@ -29,9 +37,9 @@ class ComposerStaticInit3193da833163e5a644878c0ec3cba184
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit3193da833163e5a644878c0ec3cba184::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit58c54c531c2090a6d8ff7f551404130c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit58c54c531c2090a6d8ff7f551404130c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit58c54c531c2090a6d8ff7f551404130c::$classMap;
 
         }, null, ClassLoader::class);
     }
