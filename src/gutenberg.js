@@ -79,13 +79,15 @@ const CustomSidebarMetaComponent = (props) => {
 
 			if (betterLinksHooks.applyFilters('isActivePro', false)) {
 				const expire = getJsonString(props.data.expire);
-				onSetLinkStatus(props.data.link_status);
-				onSetExpire(expire.status);
-				onSetExpireType(expire.type);
-				onSetExpireDate(expire.date);
-				onSetExpireClicks(expire.clicks);
-				onSetExpireRedirect(expire.redirect_status);
-				onSetExpireRedirectUrl(expire.redirect_url);
+				if (expire) {
+					onSetLinkStatus(props.data.link_status);
+					onSetExpire(expire.status);
+					onSetExpireType(expire.type);
+					onSetExpireDate(expire.date);
+					onSetExpireClicks(expire.clicks);
+					onSetExpireRedirect(expire.redirect_status);
+					onSetExpireRedirectUrl(expire.redirect_url);
+				}
 			}
 		} else {
 			onSetNoFollow(!!props.settings.nofollow);
