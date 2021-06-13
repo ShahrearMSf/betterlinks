@@ -128,7 +128,8 @@ class Installer extends \WP_Background_Process
 				'track_me' => true,
 				'param_forwarding' => '',
 				'wildcards' => false,
-				'disablebotclicks' => false 
+				'disablebotclicks' => false, 
+				'is_allow_gutenberg' => true
 			];
 			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
 		}

@@ -1,0 +1,69 @@
+.btl-link-generator{
+  margin-top: 12px!important;
+  margin-bottom: 10px!important;
+}
+.betterlinks-instant-redirect {
+	.betterlinks-instant-redirect-form-group {
+		display: flex;
+		.betterlinks-instant-redirect-form-label {
+			min-width: 100px;
+			span.pro-badge {
+				background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+				color: #fff;
+				border-radius: 2px;
+				padding: 3px 6px;
+				font-size: 10px;
+				margin-left: 3px;
+				line-height: 1;
+				text-transform: uppercase;
+				display: inline-flex;
+				align-items: center;
+				border-radius: 2px;
+				transform: translateY(-10px);
+			}
+		}
+    input[type="checkbox"]{
+      margin-top: 2px;
+      background: #ddd;
+    }
+		&:not(:last-child) {
+			margin-bottom: 10px;
+		}
+	}
+}
+.betterlinks-upgradetopro {
+  text-align: center;
+  h3 {
+    color: rgba(0,0,0,.65);
+    font-weight: 600;
+    font-size: 27px;
+  }
+  p {
+    a {
+      color: #e64942;
+      font-weight: 600;
+    }
+  }
+  .btn-close {
+    background: #e64942;
+    color: #fff;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+}
+.ReactModal__Content{
+  padding: 60px!important;
+	width: 60%;
+	@media screen and (max-width: 1599px) {
+		width: 75%;
+	}
+	@media screen and (max-width: 1199px) {
+		width: 80%;
+	}
+	@media screen and (max-width: 650px) {
+		padding: 20px !important;
+	}
+}

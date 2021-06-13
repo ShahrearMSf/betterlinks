@@ -283,4 +283,14 @@ class Helper
 		}
 		return;
 	}
+	public static function is_exists_short_url($short_url)
+	{
+		$resutls = \BetterLinks\Helper::DB()
+				->table('betterlinks')
+				->where('short_url', '=', $short_url)->get();
+		if (count($resutls) > 0) {
+			return true;
+		}
+		return false;
+	}
 }
