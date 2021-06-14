@@ -214,7 +214,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
 										<Field className="btl-check" name="disablebotclicks" type="checkbox" onChange={() => props.setFieldValue('disablebotclicks', !props.values.disablebotclicks)} />
-										<span className="text">{__('Disable Bot Clicks', 'betterlinks')}</span>
+										<span className="text">
+											{__('Disable Bot Clicks', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will prevent your site from bot traffic', 'betterlinks')}</span>
+											</div>
+										</span>
 									</label>
 								</div>
 							</span>
