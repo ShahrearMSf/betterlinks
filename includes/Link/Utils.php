@@ -45,9 +45,11 @@ class Utils
 		}
 		if (intval($data['track_me'])) {
 			if($betterlinks['disablebotclicks']) {
-				$CrawlerDetect = new CrawlerDetect;
-				if(! $CrawlerDetect->isCrawler()){
-					$this->start_trakcing($data);
+				if(class_exists('CrawlerDetect')){
+					$CrawlerDetect = new CrawlerDetect;
+					if(! $CrawlerDetect->isCrawler()){
+						$this->start_trakcing($data);
+					}
 				}
 			} else {
 				$this->start_trakcing($data);
