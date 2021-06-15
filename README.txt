@@ -121,7 +121,7 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
-= 1.1.3 - 14/06/2021 =
+= 1.1.3 - 15/06/2021 =
 
 - Added: Instant Gutenberg Redirect option
 - Added: Bot Blocker option
