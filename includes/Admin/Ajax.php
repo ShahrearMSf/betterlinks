@@ -24,6 +24,7 @@ class Ajax
 		add_action('wp_ajax_betterlinks/admin/search_clicks_data', [$this, 'search_clicks_data']);
 		add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
 		add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
+		add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
 	}
 
 	public function get_prettylinks_data()
@@ -256,6 +257,40 @@ class Ajax
 			}
 		}
 		wp_send_json_success([]);
+		wp_die();
+	}
+	public function get_links_by_short_url()
+	{
+		check_ajax_referer('wp_rest', 'security');
+		$short_url = (isset($_POST['short_url']) ? $_POST['short_url'] : '');
+		global $wpdb;
+		$prefix = $wpdb->prefix;
+		$query = \BetterLinks\Helper::DB();
+		$results = $query
+			->query(
+				"SELECT 
+				{$prefix}betterlinks.ID, 
+				{$prefix}betterlinks.link_title,
+				{$prefix}betterlinks.link_slug,
+				{$prefix}betterlinks.link_note,
+				{$prefix}betterlinks.link_status,
+				{$prefix}betterlinks.nofollow,
+				{$prefix}betterlinks.sponsored,
+				{$prefix}betterlinks.track_me,
+				{$prefix}betterlinks.param_forwarding,
+				{$prefix}betterlinks.param_struct,
+				{$prefix}betterlinks.redirect_type,
+				{$prefix}betterlinks.target_url,
+				{$prefix}betterlinks.short_url,
+				{$prefix}betterlinks.link_date,
+				{$prefix}betterlinks.wildcards,
+				{$prefix}betterlinks.expire,
+				{$prefix}betterlinks_terms_relationships.term_id
+			FROM {$prefix}betterlinks
+			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms_relationships.link_id = {$prefix}betterlinks.ID
+			WHERE {$prefix}betterlinks.short_url = '{$short_url}'"
+			)->get();
+			wp_send_json_success(is_array($results) ? current($results) : false);
 		wp_die();
 	}
 }

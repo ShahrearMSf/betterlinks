@@ -1,6 +1,8 @@
 <?php
 namespace BetterLinks\Link;
 
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+
 class Utils
 {
 	public function get_slug_raw($slug)
@@ -35,13 +37,23 @@ class Utils
 	}
 	public function dispatch_redirect($data, $param)
 	{
+		global $betterlinks;
+
 		$data = apply_filters('betterlinks/link/before_dispatch_redirect', $data);
 		if(!$data){
 			return;
 		}
-
 		if (intval($data['track_me'])) {
-			$this->start_trakcing($data);
+			if($betterlinks['disablebotclicks']) {
+				if(class_exists('CrawlerDetect')){
+					$CrawlerDetect = new CrawlerDetect;
+					if(! $CrawlerDetect->isCrawler()){
+						$this->start_trakcing($data);
+					}
+				}
+			} else {
+				$this->start_trakcing($data);
+			}
 		}
 
 		$robots_tags = [];

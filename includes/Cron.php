@@ -34,6 +34,7 @@ class Cron
 		$options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
 		if(!empty($options)){
 			$formattedArray['wildcards_is_active'] = $options->wildcards;
+			$formattedArray['disablebotclicks'] = $options->disablebotclicks;
 		}
 		if (is_array($items) && count($items) > 0) {
 			foreach ($items as $item) {

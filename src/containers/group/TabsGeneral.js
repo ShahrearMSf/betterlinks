@@ -209,6 +209,41 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Bot Clicks', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="disablebotclicks" type="checkbox" onChange={() => props.setFieldValue('disablebotclicks', !props.values.disablebotclicks)} />
+										<span className="text">
+											{__('Disable Bot Clicks', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will prevent your site from bot traffic', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Instant Gutenberg Redirect', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="is_allow_gutenberg"
+											type="checkbox"
+											onChange={() => props.setFieldValue('is_allow_gutenberg', !props.values.is_allow_gutenberg)}
+										/>
+										<span className="text">
+											{__('Allow Instant Redirect', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will allow you to redirect your links instantly from Gutenberg Editor.', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>

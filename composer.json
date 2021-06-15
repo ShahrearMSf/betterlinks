@@ -7,7 +7,8 @@
 		}
 	],
 	"require": {
-		"a5hleyrich/wp-background-processing": "^1.0"
+		"a5hleyrich/wp-background-processing": "^1.0",
+		"jaybizzle/crawler-detect": "^1.2"
 	},
 	"autoload": {
 		"psr-4": {

@@ -193,7 +193,7 @@ class Links extends Controller
 	{
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
-		if(isset($request['params']['short_url'])){
+		if(isset($request['params']['short_url']) && ! \BetterLinks\Helper::is_exists_short_url($request['params']['short_url'])){
 			$resutls = \BetterLinks\Helper::DB()
 			->table('betterlinks')
 			->where('short_url', '=', $request['params']['short_url'])->get();
