@@ -6,12 +6,12 @@ class Utils
 	public function get_slug_raw($slug)
 	{
 		if (BETTERLINKS_EXISTS_LINKS_JSON) {
-			return \BetterLinks\Helper::get_link_from_json_file($slug);
+			return apply_filters('betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file($slug));
 		}
 		$query = \BetterLinks\Helper::DB();
 		$results = $query->table('betterlinks')->where('short_url', '=', $slug)->first();
 		if(!empty($results)){
-			return json_decode(json_encode($results),true);
+			return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($results),true));
 		}
 		// wildcards
 		$links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
@@ -25,9 +25,9 @@ class Utils
 						if($target_postion !== false){
 							$target_url = str_replace('/*',substr($slug, $postion),$item->target_url);
 							$item->target_url = $target_url;
-							return json_decode(json_encode($item),true);
+							return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item),true));
 						}
-						return json_decode(json_encode($item),true);
+						return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item),true));
 					}
 				}
 			}
@@ -94,7 +94,7 @@ class Utils
 			$visitor_uid = uniqid('bl');
 			setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
 		}
-		$data = [
+		$arg = [
 			'link_id' => $data['ID'],
 			'ip' => $IP,
 			'browser' => $_SERVER['HTTP_USER_AGENT'],
@@ -106,18 +106,21 @@ class Utils
 			'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
 			'click_order' => 0,
 			'created_at' => $now,
-			'created_at_gmt' => $now_gmt,
+			'created_at_gmt' => $now_gmt
 		];
 
 		if (BETTERLINKS_EXISTS_CLICKS_JSON) {
-			$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $data);
+			$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
 		} else {
+			$click_id = 0;
 			try {
 				$query = \BetterLinks\Helper::DB();
-				$query->table('betterlinks_clicks')->insert($data);
+				$click_id = $query->table('betterlinks_clicks')->insert($arg);
+				
 			} catch (\Throwable $th) {
 				echo $th->getMessage();
 			}
+			do_action('betterlinks/link/after_insert_click', $data['ID'], $click_id);
 		}
 	}
 	public function get_current_client_IP()

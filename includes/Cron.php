@@ -30,7 +30,7 @@ class Cron
 		$prefix = $wpdb->prefix;
 		$query = Helper::DB();
 		$formattedArray = [];
-		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire FROM {$prefix}betterlinks")->get();
+		$items = $query->query("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks")->get();
 		$options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
 		if(!empty($options)){
 			$formattedArray['wildcards_is_active'] = $options->wildcards;
@@ -61,18 +61,14 @@ class Cron
 				// link id already exists or not in links table
 				if (is_array($Clicks)) {
 					foreach ($Clicks as $key => $item) {
-						if (!$query->table('betterlinks')->find($item['link_id'])) {
-							unset($Clicks[$key]);
+						if ($query->table('betterlinks')->find($item['link_id'])) {
+							$click_id = $query->table('betterlinks_clicks')->insert($item);
+							if(!empty($click_id)) {
+								do_action('betterlinks/link/after_insert_click',$item['link_id'], $click_id);
+							}
 						}
 					}
-				}
-				if ($Clicks) {
-					$query = \BetterLinks\Helper::DB();
-					$results = $query->table('betterlinks_clicks')->insert($Clicks);
-					// reset file
-					if ($results) {
-						file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
-					}
+					file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
 				}
 			}
 
