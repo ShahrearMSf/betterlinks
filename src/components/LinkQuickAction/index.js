@@ -58,6 +58,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 	};
 	return (
 		<React.Fragment>
+			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
 			{isShowAnalytics && data.analytic && (
 				<button className="dnd-link-button btl-tooltip">
 					<span className="btl-tooltiptext">{'Clicks: ' + data.analytic.link_count + ' / ' + 'Unique Clicks: ' + data.analytic.ip.length}</span>
