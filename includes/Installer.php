@@ -185,6 +185,8 @@ class Installer extends \WP_Background_Process
                 $this->db_migration_1_2();
             }else if(BETTERLINKS_DB_VERSION == '1.4'){
                 $this->db_migration_1_4();
+            }else if(BETTERLINKS_DB_VERSION == '1.5'){
+                $this->db_migration_1_5();
             }
             if(version_compare($this->db_version, '1.3', '<')){
                 $this->db_migration_1_1();

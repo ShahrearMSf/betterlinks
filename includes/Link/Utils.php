@@ -44,12 +44,10 @@ class Utils
 			return;
 		}
 		if (intval($data['track_me'])) {
-			if($betterlinks['disablebotclicks']) {
-				if(class_exists('CrawlerDetect')){
-					$CrawlerDetect = new CrawlerDetect;
-					if(! $CrawlerDetect->isCrawler()){
-						$this->start_trakcing($data);
-					}
+			if($betterlinks['disablebotclicks'] && class_exists('CrawlerDetect')) {
+				$CrawlerDetect = new CrawlerDetect;
+				if(! $CrawlerDetect->isCrawler()){
+					$this->start_trakcing($data);
 				}
 			} else {
 				$this->start_trakcing($data);
@@ -118,21 +116,22 @@ class Utils
 			'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
 			'click_order' => 0,
 			'created_at' => $now,
-			'created_at_gmt' => $now_gmt
+			'created_at_gmt' => $now_gmt,
+			'goal_reached'  => apply_filters('betterlinks/link/tracking_goal_reached', 0, $data['ID'])
 		];
 
 		if (BETTERLINKS_EXISTS_CLICKS_JSON) {
 			$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
 		} else {
-			$click_id = 0;
 			try {
 				$query = \BetterLinks\Helper::DB();
 				$click_id = $query->table('betterlinks_clicks')->insert($arg);
-				
+				if(!empty($click_id)){
+					do_action('betterlinks/link/after_insert_click', $data['ID'], $click_id);
+				}				
 			} catch (\Throwable $th) {
 				echo $th->getMessage();
 			}
-			do_action('betterlinks/link/after_insert_click', $data['ID'], $click_id);
 		}
 	}
 	public function get_current_client_IP()
