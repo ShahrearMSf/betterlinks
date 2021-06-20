@@ -117,7 +117,8 @@ class Utils
 			'click_order' => 0,
 			'created_at' => $now,
 			'created_at_gmt' => $now_gmt,
-			'goal_reached'  => apply_filters('betterlinks/link/tracking_goal_reached', 0, $data['ID'])
+			'goal_reached'  => apply_filters('betterlinks/link/tracking_goal_reached', 0, $data['ID']),
+			'target_url' => $data['target_url']
 		];
 
 		if (BETTERLINKS_EXISTS_CLICKS_JSON) {
@@ -125,9 +126,11 @@ class Utils
 		} else {
 			try {
 				$query = \BetterLinks\Helper::DB();
+				$old_arg = $arg;
+				unset($arg['target_url']);
 				$click_id = $query->table('betterlinks_clicks')->insert($arg);
 				if(!empty($click_id)){
-					do_action('betterlinks/link/after_insert_click', $data['ID'], $click_id);
+					do_action('betterlinks/link/after_insert_click', $old_arg, $click_id);
 				}				
 			} catch (\Throwable $th) {
 				echo $th->getMessage();
