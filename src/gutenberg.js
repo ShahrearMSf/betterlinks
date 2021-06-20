@@ -557,6 +557,7 @@ const CustomSidebarComponent = () => {
 };
 
 const permalinkToShortUrl = (permalink) => {
+	if (!permalink) return permalink;
 	var short_url = permalink.replace(site_url + '/', '');
 	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 };
