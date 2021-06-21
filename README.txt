@@ -121,6 +121,11 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 1.1.4 - 20/06/2021 =
+
+- Fixed: Conflict with Gutenberg Editor
+- Few minor bug fix and improvements
+
 = 1.1.3 - 15/06/2021 =
 
 - Added: Instant Gutenberg Redirect option
