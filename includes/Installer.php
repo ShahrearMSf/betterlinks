@@ -19,7 +19,7 @@ class Installer extends \WP_Background_Process
 		$this->wpdb = $wpdb;
 		$this->charset_collate = $wpdb->get_charset_collate();
 		$this->action = 'betterlinks_background_task';
-		$this->activation = ['create_db_tables','insert_terms_data','create_json_files','save_settings','update_json_links'];
+		$this->activation = ['create_db_tables', 'db_migration', 'insert_terms_data','create_json_files','save_settings','update_json_links'];
         $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
         $this->db_version = get_option('betterlinks_db_version');
 	}
@@ -185,9 +185,7 @@ class Installer extends \WP_Background_Process
                 $this->db_migration_1_2();
             }else if(BETTERLINKS_DB_VERSION == '1.4'){
                 $this->db_migration_1_4();
-            }else if(BETTERLINKS_DB_VERSION == '1.5'){
-                $this->db_migration_1_5();
-            }
+			}
             if(version_compare($this->db_version, '1.3', '<')){
                 $this->db_migration_1_1();
                 $this->db_migration_1_2();
