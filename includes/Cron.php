@@ -63,11 +63,11 @@ class Cron
 				if (is_array($Clicks)) {
 					foreach ($Clicks as $key => $item) {
 						if ($query->table('betterlinks')->find($item['link_id'])) {
-							$old_item = $item;
+							$target_url = $item['target_url'];
 							unset($item['target_url']);
 							$click_id = $query->table('betterlinks_clicks')->insert($item);
 							if(!empty($click_id)) {
-								do_action('betterlinks/link/after_insert_click',$old_item, $click_id);
+								do_action('betterlinks/link/after_insert_click',$item['link_id'], $click_id, $target_url);
 							}
 						}
 					}

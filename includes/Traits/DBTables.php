@@ -86,6 +86,7 @@ trait DBTables
             click_order tinyint(11) default 0,
             created_at datetime NOT NULL default '0000-00-00 00:00:00',
             created_at_gmt datetime NOT NULL default '0000-00-00 00:00:00',
+            goal_reached boolean default 0,
             PRIMARY KEY  (ID),
             KEY ip (ip),
             key link_id (link_id),

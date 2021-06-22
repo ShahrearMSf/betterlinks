@@ -95,6 +95,7 @@ class Utils
 	}
 	public function start_trakcing($data)
 	{
+		do_action('betterlinks/link/before_start_tracking', $data);
 		$now = current_time('mysql');
 		$now_gmt = current_time('mysql', 1);
 		$IP = $this->get_current_client_IP();
@@ -126,11 +127,11 @@ class Utils
 		} else {
 			try {
 				$query = \BetterLinks\Helper::DB();
-				$old_arg = $arg;
+				$target_url = $arg['target_url'];
 				unset($arg['target_url']);
 				$click_id = $query->table('betterlinks_clicks')->insert($arg);
 				if(!empty($click_id)){
-					do_action('betterlinks/link/after_insert_click', $old_arg, $click_id);
+					do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $target_url);
 				}				
 			} catch (\Throwable $th) {
 				echo $th->getMessage();
