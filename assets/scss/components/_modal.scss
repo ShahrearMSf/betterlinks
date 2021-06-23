@@ -4,7 +4,7 @@
 }
 .ReactModal__Content {
 	overflow: visible !important;
-	padding: 60px !important;
+	padding: 45px !important;
 	width: 60%;
 	@media screen and (max-width: 1599px) {
 		width: 75%;
@@ -33,8 +33,8 @@
 	}
 	.btl-close-modal {
 		position: absolute;
-		right: 15px;
-		top: 15px;
+		right: 10px;
+		top: 10px;
 		height: 20px;
 		width: 20px;
 		display: flex;
@@ -93,9 +93,9 @@
 					}
 				}
 				&__body {
-					padding: 35px 0 15px 25px;
+					padding: 20px;
 					.btl-checkbox-field {
-						margin-bottom: 30px;
+						margin-bottom: 15px;
 						.text {
 							font-weight: 400;
 							span.dashicons.dashicons-info-outline {
@@ -104,11 +104,12 @@
 							}
 						}
 					}
+					label:last-child {
+						margin-bottom: 0 !important;
+					}
 				}
 				&--advanced{
-					.link-options__body{
-						padding: 20px!important;
-					}
+					margin-bottom: 0;
 					.btl-modal-form-group {
 						align-items: center!important;
 						.btl-modal-form-label {
@@ -183,7 +184,7 @@
 		}
 		.btl-modal-form-label {
 			min-width: 120px;
-			font-size: 16px;
+			font-size: 15px;
 			font-weight: 500;
 			text-align: left;
 			padding-right: 40px;
@@ -204,7 +205,7 @@
 			}
 		}
 		&:not(:last-child) {
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 		}
 		&.btl-has-utm-button {
 			position: relative;
@@ -496,17 +497,17 @@
 			display: none;
 		}
 		.text {
-			padding-left: 40px;
+			padding-left: 35px;
 			position: relative;
 			color: $dark;
 			font-weight: 500;
-			font-size: 16px;
+			font-size: 15px;
 			&:before {
 				position: absolute;
 				font-family: 'better-links';
 				content: '\e90c';
 				left: 0;
-				font-size: 24px;
+				font-size: 20px;
 				color: $secondary-lighten;
 			}
 		}
