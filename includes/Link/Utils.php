@@ -127,11 +127,9 @@ class Utils
 		} else {
 			try {
 				$query = \BetterLinks\Helper::DB();
-				$target_url = $arg['target_url'];
-				unset($arg['target_url']);
 				$click_id = $query->table('betterlinks_clicks')->insert($arg);
 				if(!empty($click_id)){
-					do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $target_url);
+					do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $arg['target_url']);
 				}				
 			} catch (\Throwable $th) {
 				echo $th->getMessage();

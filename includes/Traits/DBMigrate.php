@@ -37,5 +37,8 @@ trait DBMigrate
         if(!isset($betterlinks_clicks->goal_reached)){
             $this->wpdb->query("ALTER TABLE  $betterlinks_clicks_table ADD goal_reached boolean default 0");
         }
+        if(!isset($betterlinks_clicks->target_url)){
+            $this->wpdb->query("ALTER TABLE  $betterlinks_clicks_table ADD target_url varchar(255) NULL");
+        }
     }
 }
