@@ -107,7 +107,7 @@ trait ArgumentSchema
 	}
 	public function clicks_schema()
 	{
-		return [
+		return apply_filters('betterlinks/clicks_schema', [
 			'ID' => [
 				'type' => 'integer',
 				'sanitize_callback' => 'absint',
@@ -148,15 +148,27 @@ trait ArgumentSchema
 				'type' => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'term_type' => [
-				'type' => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
-			],
 			'click_order' => [
 				'type' => 'integer',
 				'sanitize_callback' => 'absint',
 			],
-		];
+			'created_at' => [
+				'type' => 'string',
+				'format' => 'date-time',
+			],
+			'created_at_gmt' => [
+				'type' => 'string',
+				'format' => 'date-time',
+			],
+			'goal_reached' => [
+				'type' => 'integer',
+				'sanitize_callback' => 'absint',
+			],
+			'target_url' => [
+				'type' => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+		]);
 	}
 	public function get_clicks_schema()
 	{
