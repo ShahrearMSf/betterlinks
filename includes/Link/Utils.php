@@ -105,7 +105,7 @@ class Utils
 			$visitor_uid = uniqid('bl');
 			setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
 		}
-		$arg = [
+		$arg = apply_filters('betterlinks/link/insert_click_arg', [
 			'link_id' => $data['ID'],
 			'ip' => $IP,
 			'browser' => $_SERVER['HTTP_USER_AGENT'],
@@ -118,18 +118,20 @@ class Utils
 			'click_order' => 0,
 			'created_at' => $now,
 			'created_at_gmt' => $now_gmt,
-			'goal_reached'  => apply_filters('betterlinks/link/tracking_goal_reached', 0, $data['ID']),
+			'rotation_target_url' => '',
 			'target_url' => $data['target_url']
-		];
+		]);
 
 		if (BETTERLINKS_EXISTS_CLICKS_JSON) {
 			$this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
 		} else {
 			try {
+				$target_url = $arg['target_url'];
+				unset($arg['target_url']);
 				$query = \BetterLinks\Helper::DB();
 				$click_id = $query->table('betterlinks_clicks')->insert($arg);
 				if(!empty($click_id)){
-					do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $arg['target_url']);
+					do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $target_url);
 				}				
 			} catch (\Throwable $th) {
 				echo $th->getMessage();

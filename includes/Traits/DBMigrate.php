@@ -34,11 +34,8 @@ trait DBMigrate
         $betterlinks_clicks_table = $this->wpdb->prefix . 'betterlinks_clicks';
         $betterlinks_clicks = $this->wpdb->get_row("SELECT * FROM $betterlinks_clicks_table");
         //Add column if not present.
-        if(!isset($betterlinks_clicks->goal_reached)){
-            $this->wpdb->query("ALTER TABLE  $betterlinks_clicks_table ADD goal_reached boolean default 0");
-        }
-        if(!isset($betterlinks_clicks->target_url)){
-            $this->wpdb->query("ALTER TABLE  $betterlinks_clicks_table ADD target_url varchar(255) NULL");
+        if(!isset($betterlinks_clicks->rotation_target_url)){
+            $this->wpdb->query("ALTER TABLE  $betterlinks_clicks_table ADD rotation_target_url varchar(255) NULL");
         }
     }
 }
