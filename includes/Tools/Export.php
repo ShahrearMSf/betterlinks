@@ -49,7 +49,7 @@ class Export
 		} elseif ($type == 'clicks') {
 			$content['clicks'] = $this->get_clicks();
 		}
-		return $content;
+		return apply_filters('betterlinks/tools/export_content', $content);
 	}
 
 	public function get_links()
