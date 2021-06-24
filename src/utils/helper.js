@@ -235,6 +235,7 @@ export const delayStatusChanged = (firstStatus, secondStatus, thirdStatus, setSt
 };
 
 export const getJsonString = (str) => {
+	if (Array.isArray(str) || typeof str == 'object') return str;
 	try {
 		return JSON.parse(str);
 	} catch (e) {

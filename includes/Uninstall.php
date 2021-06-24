@@ -6,6 +6,7 @@ class Uninstall
 	public function __construct()
 	{
 		$this->clear_cron_events();
+		Helper::clear_query_cache();
 	}
 	public function clear_cron_events()
 	{
