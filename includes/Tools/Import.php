@@ -13,7 +13,6 @@ class Import
 	}
 	public function import_data()
 	{
-		session_start();
 		$page = isset($_GET['page']) ? $_GET['page'] : '';
 		$import = isset($_GET['import']) ? $_GET['import'] : false;
 		if ($page === 'betterlinks-settings' && $import == true) {
@@ -24,7 +23,7 @@ class Import
 					$fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
 					if (!empty($fileContent)) {
 						$results = $this->process_data($fileContent);
-						$_SESSION['betterlinks_import_info'] = json_encode($results);
+						set_transient( 'betterlinks_import_info', json_encode($results), 60 * 60 * 5 );
 					}
 				} elseif ($_POST['mode'] == 'prettylinks') {
 					$csv = array_map('str_getcsv', file($_FILES['upload_file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
@@ -37,14 +36,14 @@ class Import
 							// import link data
 							$results = $PrettyLinks->process_links_data($csv);
 						}
-						$_SESSION['betterlinks_import_info'] = json_encode($results);
+						set_transient( 'betterlinks_import_info', json_encode($results), 60 * 60 * 5 );
 					}
 				} elseif ($_POST['mode'] == 'simple301redirects') {
 					$fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
 					$migrator = new \BetterLinks\Tools\Migration\S301ROneClick($this->DB);
-					$resutls = $migrator->process_links_data(array_reverse($fileContent));
-					if (!empty($resutls)) {
-						$_SESSION['betterlinks_import_info'] = json_encode($resutls);
+					$results = $migrator->process_links_data(array_reverse($fileContent));
+					if (!empty($results)) {
+						set_transient( 'betterlinks_import_info', json_encode($results), 60 * 60 * 5 );
 					}
 				}
 			}
@@ -154,11 +153,11 @@ class Import
 	{
 		check_ajax_referer('wp_rest', 'security');
 		$results = json_encode([]);
-		if (isset($_SESSION['betterlinks_import_info'])) {
+		if (get_transient('betterlinks_import_info')) {
 			\BetterLinks\Helper::clear_query_cache();
 			\BetterLinks\Helper::create_cron_jobs_for_json_links();
-			$results = $_SESSION['betterlinks_import_info'];
-			unset($_SESSION['betterlinks_import_info']);
+			$results = get_transient('betterlinks_import_info');
+			delete_transient('betterlinks_import_info');
 		}
 		wp_send_json_success($results);
 		wp_die();
