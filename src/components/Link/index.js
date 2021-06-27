@@ -279,7 +279,7 @@ const Link = (props) => {
 								<div className="btl-entry-content-right">
 									<div className="link-options">
 										<div className="link-options__head">
-											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>
+											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <button onClick={() => togglePanel('options')}>Toggle</button>
 										</div>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
@@ -348,32 +348,45 @@ const Link = (props) => {
 											</label>
 										</div>
 									</div>
-									{!betterLinksHooks.applyFilters('isActivePro', false) && (
-										<div className="link-options link-options--advanced link-options--teasers">
-											<div className="link-options__head">
-												<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-											</div>
-											<div className="link-options__body">
-												<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-													<label className="btl-modal-form-label" htmlFor="status">
-														Status <span className="pro-badge">Pro</span>
-													</label>
-													<select id="status" disabled>
-														<option value="publish">Active</option>
-														<option value="expired">Expired</option>
-														<option value="draft">Draft</option>
-													</select>
-												</div>
-												<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-													<label className="btl-modal-form-label" htmlFor="expire">
-														Expire <span className="pro-badge">Pro</span>
-													</label>
-													<input id="expire" type="checkbox" disabled />
-												</div>
-											</div>
+									<div className="link-options link-options--advanced">
+										<div className="link-options__head">
+											<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+											<button onClick={() => togglePanel('advanced')}>Toggle</button>
 										</div>
-									)}
-									{betterLinksHooks.applyFilters('addNewField', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
+										<div className="link-options__body">
+											{!betterLinksHooks.applyFilters('isActivePro', false) && (
+												<div className="link-options--teasers">
+													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+														<label className="btl-modal-form-label" htmlFor="status">
+															Status <span className="pro-badge">Pro</span>
+														</label>
+														<select id="status" disabled>
+															<option value="publish">Active</option>
+															<option value="expired">Expired</option>
+															<option value="draft">Draft</option>
+														</select>
+													</div>
+													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+														<label className="btl-modal-form-label" htmlFor="expire">
+															Expire <span className="pro-badge">Pro</span>
+														</label>
+														<input id="expire" type="checkbox" disabled />
+													</div>
+												</div>
+											)}
+											{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
+										</div>
+									</div>
+									<div className="link-options link-options--dynamic-redirect">
+										<div className="link-options__head">
+											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4>
+											<button onClick={() => togglePanel('dynamicRedirect')}>Toggle</button>
+										</div>
+										<div className="link-options__body">
+											{!betterLinksHooks.applyFilters('isActivePro', false) && <div className="link-options--teasers">teasers will be here</div>}
+											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
+										</div>
+									</div>
 								</div>
 							</div>
 						</Form>
