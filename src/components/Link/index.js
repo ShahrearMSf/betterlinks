@@ -295,7 +295,7 @@ const Link = (props) => {
 										<div className="link-options__head">
 											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>{' '}
 											<button type="button" onClick={() => togglePanel('options')}>
-												Toggle
+                        <i className="btl btl-angle-arrow-down"></i>
 											</button>
 										</div>
 										<div className="link-options__body" style={{ display: isOpenLinkPanel.options ? 'block' : 'none' }}>
@@ -369,7 +369,7 @@ const Link = (props) => {
 										<div className="link-options__head">
 											<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
 											<button type="button" onClick={() => togglePanel('advanced')}>
-												Toggle
+                        <i className="btl btl-angle-arrow-down"></i>
 											</button>
 										</div>
 										<div className="link-options__body" style={{ display: isOpenLinkPanel.advanced ? 'block' : 'none' }}>
@@ -400,7 +400,7 @@ const Link = (props) => {
 										<div className="link-options__head">
 											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4>
 											<button type="button" onClick={() => togglePanel('dynamicRedirect')}>
-												Toggle
+                        <i className="btl btl-angle-arrow-down"></i>
 											</button>
 										</div>
 										<div className="link-options__body" style={{ display: isOpenLinkPanel.dynamicRedirect ? 'block' : 'none' }}>
