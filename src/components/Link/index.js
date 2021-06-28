@@ -41,6 +41,11 @@ const Link = (props) => {
 	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, data);
+	const [isOpenLinkPanel, setOpenLinkPanel] = useState({
+		options: true,
+		advanced: false,
+		dynamicRedirect: false,
+	});
 
 	const initialValues = {
 		link_title: '',
@@ -148,6 +153,15 @@ const Link = (props) => {
 					}
 				}
 			}
+		});
+	};
+
+	const togglePanel = (type) => {
+		setOpenLinkPanel({
+			options: false,
+			advanced: false,
+			dynamicRedirect: false,
+			[type]: !isOpenLinkPanel[type],
 		});
 	};
 	return (
@@ -279,9 +293,12 @@ const Link = (props) => {
 								<div className="btl-entry-content-right">
 									<div className="link-options">
 										<div className="link-options__head">
-											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <button onClick={() => togglePanel('options')}>Toggle</button>
+											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>{' '}
+											<button type="button" onClick={() => togglePanel('options')}>
+												Toggle
+											</button>
 										</div>
-										<div className="link-options__body">
+										<div className="link-options__body" style={{ display: isOpenLinkPanel.options ? 'block' : 'none' }}>
 											<label className="btl-checkbox-field">
 												<Field
 													className="btl-check"
@@ -351,9 +368,11 @@ const Link = (props) => {
 									<div className="link-options link-options--advanced">
 										<div className="link-options__head">
 											<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-											<button onClick={() => togglePanel('advanced')}>Toggle</button>
+											<button type="button" onClick={() => togglePanel('advanced')}>
+												Toggle
+											</button>
 										</div>
-										<div className="link-options__body">
+										<div className="link-options__body" style={{ display: isOpenLinkPanel.advanced ? 'block' : 'none' }}>
 											{!betterLinksHooks.applyFilters('isActivePro', false) && (
 												<div className="link-options--teasers">
 													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
@@ -380,9 +399,11 @@ const Link = (props) => {
 									<div className="link-options link-options--dynamic-redirect">
 										<div className="link-options__head">
 											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4>
-											<button onClick={() => togglePanel('dynamicRedirect')}>Toggle</button>
+											<button type="button" onClick={() => togglePanel('dynamicRedirect')}>
+												Toggle
+											</button>
 										</div>
-										<div className="link-options__body">
+										<div className="link-options__body" style={{ display: isOpenLinkPanel.dynamicRedirect ? 'block' : 'none' }}>
 											{!betterLinksHooks.applyFilters('isActivePro', false) && <div className="link-options--teasers">teasers will be here</div>}
 											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 										</div>
