@@ -291,14 +291,11 @@ const Link = (props) => {
 									)}
 								</div>
 								<div className="btl-entry-content-right">
-									<div className="link-options">
-										<div className="link-options__head">
-											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>{' '}
-											<button type="button" onClick={() => togglePanel('options')}>
-                        <i className="btl btl-angle-arrow-down"></i>
-											</button>
-										</div>
-										<div className="link-options__body" style={{ display: isOpenLinkPanel.options ? 'block' : 'none' }}>
+									<div className={`link-options ${isOpenLinkPanel.options ? 'link-options--open' : ''}`}>
+										<button className="link-options__head" type="button" onClick={() => togglePanel('options')}>
+											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+										</button>
+										<div className="link-options__body">
 											<label className="btl-checkbox-field">
 												<Field
 													className="btl-check"
@@ -365,14 +362,12 @@ const Link = (props) => {
 											</label>
 										</div>
 									</div>
-									<div className="link-options link-options--advanced">
-										<div className="link-options__head">
+									<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
+										<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
 											<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-											<button type="button" onClick={() => togglePanel('advanced')}>
-                        <i className="btl btl-angle-arrow-down"></i>
-											</button>
-										</div>
-										<div className="link-options__body" style={{ display: isOpenLinkPanel.advanced ? 'block' : 'none' }}>
+											<i className="btl btl-angle-arrow-down"></i>
+										</button>
+										<div className="link-options__body">
 											{!betterLinksHooks.applyFilters('isActivePro', false) && (
 												<div className="link-options--teasers">
 													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
@@ -396,14 +391,11 @@ const Link = (props) => {
 											{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
 										</div>
 									</div>
-									<div className="link-options link-options--dynamic-redirect">
-										<div className="link-options__head">
-											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4>
-											<button type="button" onClick={() => togglePanel('dynamicRedirect')}>
-                        <i className="btl btl-angle-arrow-down"></i>
-											</button>
-										</div>
-										<div className="link-options__body" style={{ display: isOpenLinkPanel.dynamicRedirect ? 'block' : 'none' }}>
+									<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
+										<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
+											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+										</button>
+										<div className="link-options__body">
 											{!betterLinksHooks.applyFilters('isActivePro', false) && <div className="link-options--teasers">teasers will be here</div>}
 											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 										</div>

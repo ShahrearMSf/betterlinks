@@ -80,12 +80,27 @@
 				background-color: #fafafa;
 				border-radius: 4px;
 				margin-bottom: 20px;
+				&--open {
+					.link-options__head i {
+						transform: rotate(0);
+					}
+					.link-options__body {
+						display: block;
+					}
+				}
 				&__head {
 					background: #fff;
 					padding: 15px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					width: 100%;
+					border: 0;
+					cursor: pointer;
+					i {
+						transition: all .3s ease;
+						transform: rotate(-90deg);
+					}
 					&--title {
 						font-size: 17px;
 						color: #373757;
@@ -93,16 +108,17 @@
 						margin: 0;
 						text-align: center;
 					}
-          button {
-            border: none;
-            box-shadow: none;
-            background: transparent;
-            color: $secondary-lighten;
-            cursor: pointer;
-            padding-right: 0;
-          }
+					button {
+						border: none;
+						box-shadow: none;
+						background: transparent;
+						color: $secondary-lighten;
+						cursor: pointer;
+						padding-right: 0;
+					}
 				}
 				&__body {
+					display: none;
 					padding: 35px 0 15px 25px;
 					border-top: 1px solid #ebebeb;
 					.btl-checkbox-field {
