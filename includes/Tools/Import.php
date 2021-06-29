@@ -66,7 +66,7 @@ class Import
 		if (isset($type['clicks']) && is_array($type['clicks']) && count($type['clicks']) > 0) {
 			$message['clicks'] = $this->clicks_data_insert($type['clicks']);
 		}
-		return $message;
+		return apply_filters('betterlinks/tools/import_process_data', $message, $type, $this->link_IDs);
 	}
 
 	public function links_data_insert($data)
