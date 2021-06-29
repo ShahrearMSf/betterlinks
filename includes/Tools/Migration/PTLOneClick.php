@@ -23,7 +23,7 @@ class PTLOneClick extends Base
 
 			$slug = \BetterLinks\Helper::make_slug($item->name);
 			if (!\BetterLinks\Helper::link_exists($item->name, $item->slug)) {
-				$links[] = [
+				$links[] = apply_filters('betterlinks/tools/migration/ptl_one_click_import_link_arg', [
 					'link_author' => $author_id,
 					'link_date' => $item->created_at,
 					'link_date_gmt' => $item->created_at,
@@ -42,7 +42,7 @@ class PTLOneClick extends Base
 					'link_order' => 0,
 					'link_modified' => isset($item->last_updated_at) ? $item->last_updated_at : '',
 					'link_modified_gmt' => isset($item->last_updated_at) ? $item->last_updated_at : '',
-				];
+				], $item);
 
 				if (isset($item->link_cpt_id) && !empty($item->link_cpt_id)) {
 					$term = get_the_terms($item->link_cpt_id, 'pretty-link-category');
