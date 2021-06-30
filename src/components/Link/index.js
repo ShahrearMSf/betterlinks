@@ -396,7 +396,44 @@ const Link = (props) => {
 											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
-											{!betterLinksHooks.applyFilters('isActivePro', false) && <div className="link-options--teasers">teasers will be here</div>}
+											{!betterLinksHooks.applyFilters('isActivePro', false) && (
+												<div className="link-options--teasers">
+													<div className="link-options-info">
+														<ul>
+															<li>
+																<strong className="btl-redirection-label btl-redirection-label-large">{__('Redirection Type:', 'betterlinks-pro')}</strong>
+																<span class="pro-badge">Pro</span>
+															</li>
+
+															<li>
+																<strong className="btl-redirection-label btl-redirection-label-large">{__('Redirection Mode:', 'betterlinks-pro')}</strong>
+																<span class="pro-badge">Pro</span>
+															</li>
+															<li>
+																<strong className="btl-redirection-label">
+																	{__('Target URL 1:', 'betterlinks-pro')}
+																	<span class="pro-badge">Pro</span>
+																</strong>
+																<input type="text" value="example-1.com" disabled />
+															</li>
+															<li>
+																<strong className="btl-redirection-label">
+																	{__('Target URL 2:', 'betterlinks-pro')}
+																	<span class="pro-badge">Pro</span>
+																</strong>
+																<input type="text" value="example-2.com" disabled />
+															</li>
+															<li>
+																<strong className="btl-redirection-label btl-redirection-label-large">
+																	{__('Split Test:', 'betterlinks-pro')}
+																	<span class="pro-badge">Pro</span>
+																</strong>
+																<input id="splittest" type="checkbox" disabled="" />
+															</li>
+														</ul>
+													</div>
+												</div>
+											)}
 											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 										</div>
 									</div>
