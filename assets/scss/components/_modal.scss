@@ -194,12 +194,13 @@
 					.link-options--teasers {
 						margin-top: -15px;
 						input[type="text"] {
-							width: 120px;
+							width: 110px;
+							margin-left: 10px;
 							opacity: 0.5;
 						}
 						input[type="checkbox"]{
 							opacity: 0.5;
-							margin-left: 25px;
+							margin-left: 35px;
 						}
 					}
 				}
@@ -210,6 +211,15 @@
 					input[type=checkbox] {
 						background: #e4e4e4;
 						cursor: inherit;
+					}
+					ul {
+						li {
+							margin-bottom: 10px;
+							font-size: 14px;
+							strong {
+								font-weight: 500;
+							}
+						}
 					}
 				}
 			}
