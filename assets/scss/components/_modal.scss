@@ -190,6 +190,19 @@
 						}
 					}
 				}
+				&--dynamic-redirect {
+					.link-options--teasers {
+						margin-top: -15px;
+						input[type="text"] {
+							width: 120px;
+							opacity: 0.5;
+						}
+						input[type="checkbox"]{
+							opacity: 0.5;
+							margin-left: 25px;
+						}
+					}
+				}
 				&--teasers {
 					.btl-modal-form-group .btl-modal-form-label {
 						min-width: 100px!important;
