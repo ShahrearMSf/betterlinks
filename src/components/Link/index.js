@@ -397,38 +397,35 @@ const Link = (props) => {
 										</button>
 										<div className="link-options__body">
 											{!betterLinksHooks.applyFilters('isActivePro', false) && (
-												<div className="link-options--teasers">
+												<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
 													<div className="link-options-info">
 														<ul>
 															<li>
-																<strong className="btl-redirection-label btl-redirection-label-large">{__('Redirection Type:', 'betterlinks-pro')}</strong>
-																<span class="pro-badge">Pro</span>
-															</li>
-
-															<li>
-																<strong className="btl-redirection-label btl-redirection-label-large">{__('Redirection Mode:', 'betterlinks-pro')}</strong>
-																<span class="pro-badge">Pro</span>
+																<label>
+																	{__('Redirection Type:', 'betterlinks-pro')}
+																	<span class="pro-badge">Pro</span>
+																</label>
 															</li>
 															<li>
-																<strong className="btl-redirection-label">
+																<label>
 																	{__('Target URL 1:', 'betterlinks-pro')}
 																	<span class="pro-badge">Pro</span>
-																</strong>
+																</label>
 																<input type="text" value="example-1.com" disabled />
 															</li>
 															<li>
-																<strong className="btl-redirection-label">
+																<label>
 																	{__('Target URL 2:', 'betterlinks-pro')}
 																	<span class="pro-badge">Pro</span>
-																</strong>
+																</label>
 																<input type="text" value="example-2.com" disabled />
 															</li>
 															<li>
-																<strong className="btl-redirection-label btl-redirection-label-large">
+																<label>
 																	{__('Split Test:', 'betterlinks-pro')}
 																	<span class="pro-badge">Pro</span>
-																</strong>
-																<input id="splittest" type="checkbox" disabled="" />
+																</label>
+																<input id="splittest" type="checkbox" disabled />
 															</li>
 														</ul>
 													</div>
