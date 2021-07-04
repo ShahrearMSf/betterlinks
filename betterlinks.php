@@ -90,7 +90,7 @@ if (!class_exists('BetterLinks')) {
 		public function init_plugin()
 		{
 			$this->load_textdomain();
-			new BetterLinks\API();
+			BetterLinks\API::init();
 			if (is_admin()) {
 				new BetterLinks\Admin();
 			}
@@ -101,8 +101,11 @@ if (!class_exists('BetterLinks')) {
 
 		public function dispatch_hook()
 		{
+			BetterLinks\API::dispatch_hook();
 			BetterLinks\Cron::init();
 		}
+
+		
 
 		public function load_textdomain()
 		{

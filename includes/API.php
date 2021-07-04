@@ -2,19 +2,18 @@
 namespace BetterLinks;
 class API
 {
-	public function __construct()
-	{
-		$this->dispatch_hook();
-	}
-
-	public function dispatch_hook()
+	public static function init()
 	{
 		new API\Settings();
 		new API\Links();
 		new API\Terms();
 		new API\Clicks();
-		add_filter('jwt_auth_whitelist', [$this, 'whitelist_API']);
-		add_filter( 'rest_url', array($this, 'rest_url_ssl') );
+	}
+	public static function dispatch_hook()
+	{
+		$self = new self();
+		add_filter('jwt_auth_whitelist', [$self, 'whitelist_API']);
+		add_filter( 'rest_url', array($self, 'rest_url_ssl') );
 	}
 	public function whitelist_API($endpoints)
 	{
@@ -23,10 +22,10 @@ class API
 		return $endpoints;
 	}
 	public function rest_url_ssl($url){
-        if ( is_ssl() || ( is_admin() && force_ssl_admin() ) ) {
+		if ( is_ssl() || ( is_admin() && force_ssl_admin() ) ) {
 			$url = set_url_scheme( $url, 'https' );
 			return $url;
-        }
-        return $url;
-    }
+		}
+		return $url;
+	}
 }
