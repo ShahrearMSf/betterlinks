@@ -205,6 +205,25 @@
         color: $white!important;
         border-color: $white!important;
     }
+	.link-options--dynamic-redirect .link-options-info .btl-block-code {
+		background: #36405a;
+		color: #fff;
+	}
+	.btl-entry-content .btl-entry-content-right .link-options__body {
+		border-top-color: #000;
+	}
+	.link-options--dynamic-redirect .link-options-info ul li {
+		color: #fff;
+		strong {
+			color: #fff;
+		}
+	}
+	.link-options--dynamic-redirect .link-options-info ul li .btl-add-link-button .text {
+		color: #fff;
+	}
+	.link-modal-options__dynamic-redirects .btl-modal-form-group .btl-add-link-button .text {
+		color: #fff;
+	}
 }
 .btl-modal-utm-builder{
     .btl-modal-utm-builder__title{
