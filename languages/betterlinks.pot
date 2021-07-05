@@ -1,17 +1,17 @@
 # Copyright (C) 2021 WPDeveloper
-# This file is distributed under the same license as the BetterLinks plugin.
+# This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 1.0.5\n"
+"Project-Id-Version: BetterLinks 1.1.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-05-18T07:46:47+00:00\n"
+"POT-Creation-Date: 2021-07-05T05:34:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.4.0\n"
+"X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
 
 #. Plugin Name of the plugin
@@ -39,15 +39,15 @@ msgstr ""
 msgid "https://wpdeveloper.net"
 msgstr ""
 
-#: includes/Admin.php:44
+#: includes/Admin.php:47
 msgid "Want to help make <strong>BetterLinks</strong> even more awesome? Be the first to get access to <strong>BetterLinks PRO</strong> with a huge <strong>30% Discount</strong> when we release if you allow us to track the non-sensitive usage data."
 msgstr ""
 
-#: includes/Admin.php:45
+#: includes/Admin.php:48
 msgid "We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise."
 msgstr ""
 
-#: includes/Admin.php:52
+#: includes/Admin.php:55
 msgid "Go Pro"
 msgstr ""
 
@@ -80,18 +80,18 @@ msgstr ""
 msgid "Deactivate Simple 301 Redirects"
 msgstr ""
 
-#: includes/Helper.php:57
+#: includes/Helper.php:63
 #: src/containers/group/AdminMenu.js:36
 msgid "Manage Links"
 msgstr ""
 
-#: includes/Helper.php:61
+#: includes/Helper.php:67
 #: src/containers/group/AdminMenu.js:41
 #: src/containers/group/TabsTools.js:51
 msgid "Analytics"
 msgstr ""
 
-#: includes/Helper.php:65
+#: includes/Helper.php:71
 #: src/containers/group/AdminMenu.js:46
 msgid "Settings"
 msgstr ""
@@ -101,22 +101,22 @@ msgid "Edit"
 msgstr ""
 
 #: src/components/CatHeader/index.js:61
-#: src/components/LinkQuickAction/index.js:94
+#: src/components/LinkQuickAction/index.js:95
 msgid "Delete"
 msgstr ""
 
 #: src/components/CatHeader/index.js:68
-#: src/components/LinkQuickAction/index.js:100
+#: src/components/LinkQuickAction/index.js:101
 msgid "Are You Sure?"
 msgstr ""
 
 #: src/components/CatHeader/index.js:71
-#: src/components/LinkQuickAction/index.js:103
+#: src/components/LinkQuickAction/index.js:104
 msgid "Yes"
 msgstr ""
 
 #: src/components/CatHeader/index.js:74
-#: src/components/LinkQuickAction/index.js:106
+#: src/components/LinkQuickAction/index.js:107
 msgid "No"
 msgstr ""
 
@@ -128,108 +128,118 @@ msgstr ""
 msgid "Click Analytics"
 msgstr ""
 
-#: src/components/Link/index.js:200
+#: src/components/Link/index.js:214
 #: src/containers/group/ListCanvas.js:25
 msgid "Title"
 msgstr ""
 
-#: src/components/Link/index.js:206
+#: src/components/Link/index.js:220
 msgid "Description"
 msgstr ""
 
-#: src/components/Link/index.js:212
+#: src/components/Link/index.js:226
 #: src/containers/group/ListCanvas.js:41
 #: src/containers/group/TabsGeneral.js:138
 msgid "Redirect Type"
 msgstr ""
 
-#: src/components/Link/index.js:218
-#: src/containers/pages/Analytics.js:72
+#: src/components/Link/index.js:232
+#: src/containers/group/Clicks.js:72
 msgid "Target URL"
 msgstr ""
 
-#: src/components/Link/index.js:239
+#: src/components/Link/index.js:253
+#: src/containers/group/Clicks.js:44
 #: src/containers/group/ListCanvas.js:33
-#: src/containers/pages/Analytics.js:44
 msgid "Shortened URL"
 msgstr ""
 
-#: src/components/Link/index.js:260
+#: src/components/Link/index.js:274
 msgid "Category"
 msgstr ""
 
-#: src/components/Link/index.js:266
+#: src/components/Link/index.js:280
 msgid "Tags"
 msgstr ""
 
-#: src/components/Link/index.js:274
+#: src/components/Link/index.js:288
 #: src/components/Terms/CatForm.js:96
 msgid "Update"
 msgstr ""
 
-#: src/components/Link/index.js:274
+#: src/components/Link/index.js:288
 msgid "Publish"
 msgstr ""
 
-#: src/components/Link/index.js:282
+#: src/components/Link/index.js:296
 #: src/containers/group/TabsGeneral.js:153
+#: src/gutenberg.js:349
 msgid "Link Options"
 msgstr ""
 
-#: src/components/Link/index.js:294
+#: src/components/Link/index.js:308
 #: src/containers/group/TabsGeneral.js:158
+#: src/gutenberg.js:352
 msgid "No Follow"
 msgstr ""
 
-#: src/components/Link/index.js:297
+#: src/components/Link/index.js:311
 #: src/containers/group/TabsGeneral.js:161
 msgid "This will add nofollow attribute to your link. (Recommended)"
 msgstr ""
 
-#: src/components/Link/index.js:310
+#: src/components/Link/index.js:324
 #: src/containers/group/TabsGeneral.js:168
+#: src/gutenberg.js:360
 msgid "Sponsored"
 msgstr ""
 
-#: src/components/Link/index.js:313
+#: src/components/Link/index.js:327
 #: src/containers/group/TabsGeneral.js:171
 msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
 msgstr ""
 
-#: src/components/Link/index.js:326
+#: src/components/Link/index.js:340
 #: src/containers/group/TabsGeneral.js:178
+#: src/gutenberg.js:368
 msgid "Parameter Forwarding"
 msgstr ""
 
-#: src/components/Link/index.js:329
+#: src/components/Link/index.js:343
 #: src/containers/group/TabsGeneral.js:181
 msgid "This will pass the parameters you have set in the target URL"
 msgstr ""
 
-#: src/components/Link/index.js:342
+#: src/components/Link/index.js:356
 #: src/containers/group/TabsGeneral.js:188
+#: src/gutenberg.js:376
 msgid "Tracking"
 msgstr ""
 
-#: src/components/Link/index.js:345
+#: src/components/Link/index.js:359
 #: src/containers/group/TabsGeneral.js:191
 msgid "This will let you check Analytics report of your links"
 msgstr ""
 
-#: src/components/Link/index.js:354
+#: src/components/Link/index.js:367
+#: src/gutenberg.js:386
 msgid "Advanced"
 msgstr ""
 
+#: src/components/Link/index.js:396
+msgid "Dynamic Redirects"
+msgstr ""
+
 #: src/components/LinkCopyUrl/index.js:21
-#: src/components/LinkQuickAction/index.js:72
+#: src/components/LinkQuickAction/index.js:73
 msgid "Copy Link"
 msgstr ""
 
-#: src/components/LinkQuickAction/index.js:80
+#: src/components/LinkQuickAction/index.js:81
 msgid "Visit Link"
 msgstr ""
 
-#: src/components/LinkQuickAction/index.js:86
+#: src/components/LinkQuickAction/index.js:87
 msgid "Edit Link"
 msgstr ""
 
@@ -255,15 +265,15 @@ msgstr ""
 msgid "Why upgrade to Premium Version?"
 msgstr ""
 
-#: src/components/Teasers/GoPremium.js:17
-msgid "The premium version helps us to continue development of the product incorporating even more features and enhancements."
+#: src/components/Teasers/GoPremium.js:18
+msgid "Get access to Individual Analytics, Social Share for UTM Builder, Role Management, Google Analytics Integration & many more to run successful marketing campaigns."
 msgstr ""
 
-#: src/components/Teasers/GoPremium.js:18
+#: src/components/Teasers/GoPremium.js:23
 msgid "You will also get world class support from our dedicated team, 24/7."
 msgstr ""
 
-#: src/components/Teasers/GoPremium.js:20
+#: src/components/Teasers/GoPremium.js:25
 msgid "Get Premium Version"
 msgstr ""
 
@@ -272,7 +282,7 @@ msgid "Who Can View Links?"
 msgstr ""
 
 #: src/components/Teasers/RoleManagement.js:49
-msgid "Who Can Write Links?"
+msgid "Who Can Create Links?"
 msgstr ""
 
 #: src/components/Teasers/RoleManagement.js:62
@@ -379,15 +389,45 @@ msgstr ""
 msgid "Save Link"
 msgstr ""
 
+#: src/containers/group/Clicks.js:14
+msgid "Browser"
+msgstr ""
+
+#: src/containers/group/Clicks.js:27
+msgid "Link Name"
+msgstr ""
+
+#: src/containers/group/Clicks.js:33
+msgid "IP"
+msgstr ""
+
+#: src/containers/group/Clicks.js:39
+msgid "Timestamp"
+msgstr ""
+
+#: src/containers/group/Clicks.js:58
+msgid "Referrer"
+msgstr ""
+
+#: src/containers/group/Clicks.js:89
+msgid "Filter By Name"
+msgstr ""
+
+#: src/containers/group/Clicks.js:157
+msgid "All Clicks"
+msgstr ""
+
 #: src/containers/group/LinksListViewFilter.js:53
 msgid "Search by Title"
 msgstr ""
 
 #: src/containers/group/ListCanvas.js:47
+#: src/gutenberg.js:452
 msgid "Clicks"
 msgstr ""
 
 #: src/containers/group/ListCanvas.js:67
+#: src/gutenberg.js:448
 msgid "Date"
 msgstr ""
 
@@ -466,6 +506,30 @@ msgstr ""
 msgid "To use wildcards, put an asterisk (*) after the folder name that you want to redirect."
 msgstr ""
 
+#: src/containers/group/TabsGeneral.js:213
+msgid "Bot Clicks"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:218
+msgid "Disable Bot Clicks"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:221
+msgid "This will prevent your site from bot traffic"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:228
+msgid "Instant Gutenberg Redirect"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:238
+msgid "Allow Instant Redirect"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:241
+msgid "This will allow you to redirect your links instantly from Gutenberg Editor."
+msgstr ""
+
 #: src/containers/group/TabsTools.js:33
 msgid "Choose an Option You want to Export"
 msgstr ""
@@ -502,34 +566,6 @@ msgstr ""
 msgid "Import File"
 msgstr ""
 
-#: src/containers/pages/Analytics.js:14
-msgid "Browser"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:27
-msgid "Link Name"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:33
-msgid "IP"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:39
-msgid "Timestamp"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:58
-msgid "Referrer"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:89
-msgid "Filter By Name"
-msgstr ""
-
-#: src/containers/pages/Analytics.js:157
-msgid "All Clicks"
-msgstr ""
-
 #: src/containers/pages/Settings.js:26
 msgid "General"
 msgstr ""
@@ -548,6 +584,26 @@ msgstr ""
 
 #: src/containers/pages/Settings.js:30
 msgid "Go Premium"
+msgstr ""
+
+#: src/gutenberg.js:415
+msgid "Active"
+msgstr ""
+
+#: src/gutenberg.js:419
+msgid "Expired"
+msgstr ""
+
+#: src/gutenberg.js:423
+msgid "Draft"
+msgstr ""
+
+#: src/gutenberg.js:434
+msgid "Expire"
+msgstr ""
+
+#: src/gutenberg.js:479
+msgid "Redirect URL after Expiration"
 msgstr ""
 
 #: src/utils/data.js:5
