@@ -264,3 +264,10 @@
         color: $white;
     }
 }
+.btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type=text],
+.btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type=checkbox] {
+	background: #36405a;
+    color: #fff;
+    border-color: #36405a;
+	opacity: 0.3;
+}
