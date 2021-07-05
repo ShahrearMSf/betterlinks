@@ -130,7 +130,7 @@
 				}
 				&__body {
 					display: none;
-					padding: 35px 0 15px 25px;
+					padding: 35px 0 15px 20px;
 					border-top: 1px solid #ebebeb;
 					.btl-checkbox-field {
 						margin-bottom: 30px;
@@ -205,13 +205,22 @@
 					.link-options--teasers {
 						margin-top: -15px;
 						input[type="text"] {
-							width: 110px;
+							width: 100px;
 							margin-left: 10px;
 							opacity: 0.5;
 						}
 						input[type="checkbox"]{
 							opacity: 0.5;
 							margin-left: 35px;
+						}
+						.link-options-info {
+							ul {
+								li {
+									label {
+										font-size: 16px;
+									}
+								}
+							}
 						}
 					}
 				}
