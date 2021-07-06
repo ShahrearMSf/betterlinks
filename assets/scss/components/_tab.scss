@@ -11,6 +11,7 @@
 		border: none;
 		border-top: 3px solid transparent;
 		box-shadow: none;
+		cursor: pointer;
 		&.react-tabs__tab--selected {
 			background-color: $white;
 			border-radius: 0;
