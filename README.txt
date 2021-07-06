@@ -4,7 +4,7 @@ Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
 Requires at least: 5.0
 Tested up to: 5.7.2
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -30,6 +30,7 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 - User Role Management [PRO]
 - Set Link Expiration date & control where users will be redirected [PRO]
 - Integration with Google Analytics [PRO]
+- Dynamic Redirects with Split Testing [PRO]
 
 
 ## Simple & Fast Link Shortener 🎉
@@ -120,6 +121,11 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 1.1.6 - 06/07/2021 =
+
+- Improved: Updated User Interface
+- Few minor bug fix & improvements
 
 = 1.1.5 - 23/06/2021 =
 
