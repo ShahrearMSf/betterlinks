@@ -393,7 +393,7 @@ const Link = (props) => {
 									</div>
 									<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 										<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
-											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')} {betterLinksHooks.applyFilters('isActivePro', false) && props.values.dynamic_redirect && props.values.dynamic_redirect.type !== 'none' ? <span className="status">{__('ON', 'betterlinks')}</span> : ''}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
 											{!betterLinksHooks.applyFilters('isActivePro', false) && (
