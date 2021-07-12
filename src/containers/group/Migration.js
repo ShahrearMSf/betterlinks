@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { nonce, route_path, plugin_root_url, modalCustomStyles } from './../../utils/helper';
+import { betterlinks_nonce, route_path, plugin_root_url, modalCustomStyles } from './../../utils/helper';
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
@@ -17,7 +17,7 @@ const Migration = (props) => {
 	useEffect(() => {
 		if (props.mode === 'simple301redirects') {
 			setDataIsFetch(true);
-			axios.post(`${ajaxurl}?action=betterlinks/admin/get_simple301redirects_data&security=${nonce}`).then(
+			axios.post(`${ajaxurl}?action=betterlinks/admin/get_simple301redirects_data&security=${betterlinks_nonce}`).then(
 				(response) => {
 					if (response) {
 						setSimple301RedirectRes(response.data.data);
@@ -30,7 +30,7 @@ const Migration = (props) => {
 			);
 		} else if (props.mode === 'prettylinks') {
 			setDataIsFetch(true);
-			axios.post(`${ajaxurl}?action=betterlinks/admin/get_prettylinks_data&security=${nonce}`).then(
+			axios.post(`${ajaxurl}?action=betterlinks/admin/get_prettylinks_data&security=${betterlinks_nonce}`).then(
 				(response) => {
 					if (response.data) {
 						setPrettyLinksRes(response.data.data);
@@ -52,7 +52,7 @@ const Migration = (props) => {
 		} else if (props.mode === 'simple301redirects') {
 			form_data.append('action', 'betterlinks/admin/run_simple301redirects_migration');
 		}
-		form_data.append('security', nonce);
+		form_data.append('security', betterlinks_nonce);
 		form_data.append('type', values.checked);
 		axios.post(ajaxurl, form_data).then(
 			(response) => {

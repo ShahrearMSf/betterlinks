@@ -54,6 +54,7 @@ class Assets
 				true
 			);
 			wp_localize_script('betterlinks-admin-core', 'betterLinksGlobal', [
+				'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
 				'nonce' => wp_create_nonce('wp_rest'),
 				'rest_url' => rest_url(),
 				'namespace' => BETTERLINKS_PLUGIN_SLUG . '/v1/',

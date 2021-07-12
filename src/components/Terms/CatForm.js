@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
-import { nonce, generateSlug } from './../../utils/helper';
+import { betterlinks_nonce, generateSlug } from './../../utils/helper';
 
 const propTypes = {
 	catId: PropTypes.number,
@@ -24,7 +24,7 @@ export default function CatForm({ catId, catName, catSlug, submitHandler, hideHa
 	const catSlugUniqueCheck = (slug, ID) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/cat_slug_unique_checker');
-		form_data.append('security', nonce);
+		form_data.append('security', betterlinks_nonce);
 		form_data.append('ID', ID);
 		form_data.append('slug', slug);
 		return axios.post(ajaxurl, form_data).then(

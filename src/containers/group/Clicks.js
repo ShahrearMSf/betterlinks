@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from './../../components/Graph';
 import TableLoader from './../../components/Loader/TableLoader';
-import { site_url, plugin_root_url, getBrowser, formatDate, nonce } from './../../utils/helper';
+import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from './../../utils/helper';
 import { fetch_clicks_data, searchClicksData } from './../../redux/actions/clicks.actions';
 
 const columns = [
@@ -129,7 +129,7 @@ const Clicks = (props) => {
 		const searchClickHandler = () => {
 			if (filterText) {
 				setSearchBtnText('Searching...');
-				props.searchClicksData(nonce, filterText).then(() => {
+				props.searchClicksData(betterlinks_nonce, filterText).then(() => {
 					setSearchBtnText('Search Click');
 				});
 			}

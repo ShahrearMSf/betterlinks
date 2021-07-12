@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, nonce, site_url, generateSlug, generateRandomSlug, formatDate, plugin_root_url } from './../../utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, nonce, betterlinks_nonce, site_url, generateSlug, generateRandomSlug, formatDate, plugin_root_url } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -107,7 +107,7 @@ const Link = (props) => {
 	const shortURLUniqueCheck = (slug, ID) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
-		form_data.append('security', nonce);
+		form_data.append('security', betterlinks_nonce);
 		form_data.append('ID', ID);
 		form_data.append('slug', slug);
 		return axios.post(ajaxurl, form_data).then(
@@ -393,7 +393,18 @@ const Link = (props) => {
 									</div>
 									<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 										<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
-											<h4 className="link-options__head--title">{__('Dynamic Redirects', 'betterlinks')} {betterLinksHooks.applyFilters('isActivePro', false) && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? <span className="status">{__('ON', 'betterlinks')}</span> : ''}</h4> <i className="btl btl-angle-arrow-down"></i>
+											<h4 className="link-options__head--title">
+												{__('Dynamic Redirects', 'betterlinks')}{' '}
+												{betterLinksHooks.applyFilters('isActivePro', false) &&
+												props.values.dynamic_redirect &&
+												props.values.dynamic_redirect.type &&
+												props.values.dynamic_redirect.type !== 'none' ? (
+													<span className="status">{__('ON', 'betterlinks')}</span>
+												) : (
+													''
+												)}
+											</h4>{' '}
+											<i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
 											{!betterLinksHooks.applyFilters('isActivePro', false) && (

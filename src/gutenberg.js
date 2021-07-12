@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { redirectType } from './utils/data';
-import { API, namespace, nonce, site_url, getJsonString, formatDate } from './utils/helper';
+import { API, namespace, nonce, betterlinks_nonce, site_url, getJsonString, formatDate } from './utils/helper';
 import UpgradeToPro from './components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -530,7 +530,7 @@ const CustomSidebarComponent = () => {
 		if (short_url) {
 			let form_data = new FormData();
 			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
-			form_data.append('security', nonce);
+			form_data.append('security', betterlinks_nonce);
 			form_data.append('short_url', short_url);
 			axios.post(ajaxurl, form_data).then(
 				(response) => {

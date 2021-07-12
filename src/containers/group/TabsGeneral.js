@@ -8,7 +8,7 @@ import RedirectType from './../../components/RedirectType';
 import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
-import { exists_clicks_json, nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
+import { exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Refresh Stats');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
@@ -18,7 +18,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 	const writeLinkJSONHandler = () => {
 		setFastRedirectButtonText('Activating...');
-		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${nonce}`).then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${betterlinks_nonce}`).then(
 			(response) => {
 				if (response.data) {
 					delayStatusChanged(null, 'Activated!', 'Active Now', setFastRedirectButtonText);
@@ -34,7 +34,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	};
 	const writeClicksJSONHandler = () => {
 		setFastClicksButtonText('Activating...');
-		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_clicks&security=${nonce}`).then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_clicks&security=${betterlinks_nonce}`).then(
 			(response) => {
 				if (response.data) {
 					delayStatusChanged(null, 'Activated!', 'Refresh Stats', setFastClicksButtonText);
@@ -50,7 +50,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	};
 	const analyticClicksHandler = () => {
 		setCacheButtonText('Refreshing...');
-		axios.post(`${ajaxurl}?action=betterlinks/admin/analytics&security=${nonce}`).then(
+		axios.post(`${ajaxurl}?action=betterlinks/admin/analytics&security=${betterlinks_nonce}`).then(
 			(response) => {
 				if (response.data) {
 					delayStatusChanged(null, 'Done!', 'Refresh Stats', setCacheButtonText);

@@ -104,7 +104,7 @@ class Notice
 
 	public function admin_notice_scripts()
 	{
-		$nonce = wp_create_nonce('wp_rest'); ?>
+		$nonce = wp_create_nonce('betterlinks_admin_nonce'); ?>
 		<script type='text/javascript'>
 		jQuery( document ).ready(function() {
 			jQuery('.betterlinks-notice-deactive-prettylinks a.deactive').on('click', function(e){

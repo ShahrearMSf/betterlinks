@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export const { nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, route_path, exists_links_json, exists_clicks_json, page } = window.betterLinksGlobal;
+export const { betterlinks_nonce, nonce, rest_url, namespace, plugin_root_url, plugin_root_path, site_url, route_path, exists_links_json, exists_clicks_json, page } =
+	window.betterLinksGlobal;
 
 export const API = axios.create({
 	baseURL: rest_url,
@@ -16,7 +17,7 @@ export const reorder = (list, startIndex, endIndex) => {
 
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/links_reorder');
-	form_data.append('security', nonce);
+	form_data.append('security', betterlinks_nonce);
 	form_data.append(
 		'links',
 		result.reduce(function (pV, cV, cI) {
@@ -48,7 +49,7 @@ export const move = (source, destination, droppableSource, droppableDestination)
 
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/links_move_reorder');
-	form_data.append('security', nonce);
+	form_data.append('security', betterlinks_nonce);
 	form_data.append(
 		'source',
 		sourceClone.reduce(function (pV, cV, cI) {

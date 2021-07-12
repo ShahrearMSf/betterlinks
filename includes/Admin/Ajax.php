@@ -29,7 +29,7 @@ class Ajax
 
 	public function get_prettylinks_data()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		$query = \BetterLinks\Helper::DB();
 		$links = $query->table('prli_links')->get();
 		$clicks = $query->table('prli_clicks')->get();
@@ -40,9 +40,9 @@ class Ajax
 
 	public function run_prettylinks_migration()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		try {
-			$type = isset($_POST['type']) ? $_POST['type'] : '';
+			$type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
 			$type = explode(',', $type);
 			$prettylinks = get_transient('betterlinks_migration_data_prettylinks');
 			$DB = \BetterLinks\Helper::DB();
@@ -71,8 +71,8 @@ class Ajax
 
 	public function migration_prettylinks_notice_hide()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$type = isset($_POST['type']) ? $_POST['type'] : '';
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
 		if ($type == 'deactive') {
 			update_option('betterlinks_hide_notice_ptl_deactive', true);
 		} elseif ($type == 'migrate') {
@@ -82,14 +82,14 @@ class Ajax
 	}
 	public function deactive_prettylinks()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		$deactivate = deactivate_plugins('pretty-link/pretty-link.php');
 		wp_send_json_success($deactivate);
 		wp_die();
 	}
 	public function write_json_links()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		$Cron = new Cron();
 		$resutls = $Cron->write_json_links();
 		wp_send_json_success($resutls);
@@ -97,7 +97,7 @@ class Ajax
 	}
 	public function write_json_clicks()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		if (!BETTERLINKS_EXISTS_CLICKS_JSON) {
 			$emptyContent = '{}';
 			$file_handle = @fopen(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'clicks.json', 'wb');
@@ -113,7 +113,7 @@ class Ajax
 	}
 	public function analytics()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		$Cron = new Cron();
 		$resutls = $Cron->analytics();
 		wp_send_json_success($resutls);
@@ -121,9 +121,9 @@ class Ajax
 	}
 	public function short_url_unique_checker()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$ID = isset($_POST['ID']) ? $_POST['ID'] : '';
-		$slug = isset($_POST['slug']) ? $_POST['slug'] : '';
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
+		$slug = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
 		$alreadyExists = false;
 		$resutls = [];
 		if (!empty($slug)) {
@@ -144,9 +144,9 @@ class Ajax
 	}
 	public function cat_slug_unique_checker()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$ID = isset($_POST['ID']) ? $_POST['ID'] : '';
-		$slug = isset($_POST['slug']) ? $_POST['slug'] : '';
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
+		$slug = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
 		$alreadyExists = false;
 		$resutls = [];
 		if (!empty($slug)) {
@@ -167,14 +167,14 @@ class Ajax
 	}
 	public function get_simple301redirects_data()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		$links = get_option('301_redirects');
 		wp_send_json_success($links);
 		wp_die();
 	}
 	public function run_simple301redirects_migration()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		try {
 			$simple_301_redirects = get_option('301_redirects');
 			$DB = \BetterLinks\Helper::DB();
@@ -192,8 +192,8 @@ class Ajax
 	}
 	public function migration_simple301redirects_notice_hide()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$type = isset($_POST['type']) ? $_POST['type'] : '';
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
 		if ($type == 'deactive') {
 			update_option('betterlinks_hide_notice_s301r_deactive', true);
 		} elseif ($type == 'migrate') {
@@ -203,15 +203,15 @@ class Ajax
 	}
 	public function deactive_simple301redirects()
 	{
-		check_ajax_referer('wp_rest', 'security');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
 		$deactivate = deactivate_plugins('simple-301-redirects/wp-simple-301-redirects.php');
 		wp_send_json_success($deactivate);
 		wp_die();
 	}
 	public function search_clicks_data()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$title = isset($_GET['title']) ? $_GET['title'] : '';
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$title = isset($_GET['title']) ? sanitize_text_field($_GET['title']) : '';
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = \BetterLinks\Helper::DB();
@@ -229,8 +229,8 @@ class Ajax
 	}
 	public function links_reorder()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$links = (isset($_POST['links']) ? explode(',', $_POST['links']) : []);
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$links = (isset($_POST['links']) ? explode(',', sanitize_text_field($_POST['links'])) : []);
 		$DB = \BetterLinks\Helper::DB();
 		if(count($links) > 0){
 			foreach($links as $key => $value) {
@@ -242,9 +242,9 @@ class Ajax
 	}
 	public function links_move_reorder()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$source = (isset($_POST['source']) ? explode(',', $_POST['source']) : []);
-		$destination = (isset($_POST['destination']) ? explode(',', $_POST['destination']) : []);
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$source = (isset($_POST['source']) ? explode(',', sanitize_text_field($_POST['source'])) : []);
+		$destination = (isset($_POST['destination']) ? explode(',', sanitize_text_field($_POST['destination'])) : []);
 		$DB = \BetterLinks\Helper::DB();
 		if(count($source) > 0){
 			foreach($source as $key => $value) {
@@ -261,8 +261,8 @@ class Ajax
 	}
 	public function get_links_by_short_url()
 	{
-		check_ajax_referer('wp_rest', 'security');
-		$short_url = (isset($_POST['short_url']) ? $_POST['short_url'] : '');
+		check_ajax_referer('betterlinks_admin_nonce', 'security');
+		$short_url = (isset($_POST['short_url']) ? sanitize_text_field($_POST['short_url']) : '');
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query = \BetterLinks\Helper::DB();
