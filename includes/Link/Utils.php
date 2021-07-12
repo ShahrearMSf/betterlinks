@@ -163,7 +163,7 @@ class Utils
 		if(strpos($url,"/") === 0){
 			return $url = site_url('/') . $url;
 		}
-		return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
+		return apply_filters('betterlinks/link/target_url', parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url);
 	}
 
 	protected function insert_json_into_file($file, $data)
