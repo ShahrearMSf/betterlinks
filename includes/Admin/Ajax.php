@@ -94,17 +94,18 @@ class Ajax
 	public function write_json_links()
 	{
 		check_ajax_referer('betterlinks_admin_nonce', 'security');
-		if( ! current_user_can( 'manage_options' ) ) wp_die();
-		$Cron = new Cron();
-		$resutls = $Cron->write_json_links();
-		wp_send_json_success($resutls);
+		if(apply_filters('betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ))){ 
+			$Cron = new Cron();
+			$resutls = $Cron->write_json_links();
+			wp_send_json_success($resutls);
+			wp_die();
+		}
 		wp_die();
 	}
 	public function write_json_clicks()
 	{
 		check_ajax_referer('betterlinks_admin_nonce', 'security');
-		if( ! current_user_can( 'manage_options' ) ) wp_die();
-		if (!BETTERLINKS_EXISTS_CLICKS_JSON) {
+		if(apply_filters('betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' )) && !BETTERLINKS_EXISTS_CLICKS_JSON){ 
 			$emptyContent = '{}';
 			$file_handle = @fopen(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'clicks.json', 'wb');
 			if ($file_handle) {
@@ -120,10 +121,12 @@ class Ajax
 	public function analytics()
 	{
 		check_ajax_referer('betterlinks_admin_nonce', 'security');
-		if( ! current_user_can( 'manage_options' ) ) wp_die();
-		$Cron = new Cron();
-		$resutls = $Cron->analytics();
-		wp_send_json_success($resutls);
+		if(apply_filters('betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ))){
+			$Cron = new Cron();
+			$resutls = $Cron->analytics();
+			wp_send_json_success($resutls);
+			wp_die();
+		}
 		wp_die();
 	}
 	public function short_url_unique_checker()

@@ -133,6 +133,6 @@ class Settings extends Controller
 	 */
 	public function permissions_check($request)
 	{
-		return current_user_can('manage_options');
+		return apply_filters( 'betterlinks/api/settings_update_items_permissions_check', current_user_can('manage_options'));
 	}
 }
