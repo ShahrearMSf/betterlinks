@@ -122,14 +122,15 @@ class Installer extends \WP_Background_Process
 	{
 		if (!get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
 			$value = [
-				'redirect_type' => '307',
-				'nofollow' => true,
-				'sponsored' => '',
-				'track_me' => true,
-				'param_forwarding' => '',
-				'wildcards' => false,
-				'disablebotclicks' => false, 
-				'is_allow_gutenberg' => true
+				'redirect_type' 	=> '307',
+				'nofollow' 			=> true,
+				'sponsored' 		=> '',
+				'track_me' 			=> true,
+				'param_forwarding' 	=> '',
+				'wildcards' 		=> false,
+				'disablebotclicks' 	=> false, 
+				'is_allow_gutenberg'=> true,
+				'force_https'		=> false
 			];
 			add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
 		}

@@ -244,6 +244,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>

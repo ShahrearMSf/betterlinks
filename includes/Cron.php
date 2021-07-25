@@ -35,6 +35,7 @@ class Cron
 		if(!empty($options)){
 			$formattedArray['wildcards_is_active'] = $options->wildcards;
 			$formattedArray['disablebotclicks'] = $options->disablebotclicks;
+			$formattedArray['force_https'] = $options->force_https;
 		}
 		if (is_array($items) && count($items) > 0) {
 			foreach ($items as $item) {
