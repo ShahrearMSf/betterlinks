@@ -1,8 +1,8 @@
 @font-face {
 	font-family: 'better-links';
-	src: url('./../fonts/better-links.eot?crohm2');
-	src: url('./../fonts/better-links.eot?crohm2#iefix') format('embedded-opentype'), url('./../fonts/better-links.ttf?crohm2') format('truetype'),
-		url('./../fonts/better-links.woff?crohm2') format('woff'), url('./../fonts/better-links.svg?crohm2#better-links') format('svg');
+	src: url('./../fonts/better-links.eot?xnruek');
+	src: url('./../fonts/better-links.eot?xnruek#iefix') format('embedded-opentype'), url('./../fonts/better-links.ttf?xnruek') format('truetype'),
+		url('./../fonts/better-links.woff?xnruek') format('woff'), url('./../fonts/better-links.svg?xnruek#better-links') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -25,6 +25,27 @@
 
 .btl-abtesting:before {
 	content: '\e915';
+}
+.btl-calendar:before {
+	content: '\e916';
+}
+.btl-time-date:before {
+	content: '\e917';
+}
+.btl-device:before {
+	content: '\e918';
+}
+.btl-geography:before {
+	content: '\e919';
+}
+.btl-setting:before {
+	content: '\e91a';
+}
+.btl-technology:before {
+	content: '\e91b';
+}
+.btl-browser:before {
+	content: '\e91c';
 }
 .btl-share:before {
 	content: '\e914';
