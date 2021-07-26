@@ -233,19 +233,6 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
-							{!betterLinksHooks.applyFilters('isActivePro', false) && (
-								<span className="btl-form-group btl-form-group--teaser">
-									<label className="btl-form-label">
-										{__('Force HTTPS', 'betterlinks')} <span class="pro-badge">{__('Pro', 'betterlinks')}</span>
-									</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-											<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
-											<span className="text">{__('Enable HTTPS Redirection', 'betterlinks')}</span>
-										</label>
-									</div>
-								</span>
-							)}
 							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Gutenberg Redirect', 'betterlinks')}</label>
 								<div className="link-options__body">
@@ -266,6 +253,25 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+							{!betterLinksHooks.applyFilters('isActivePro', false) && (
+								<span className="btl-form-group btl-form-group--teaser">
+									<label className="btl-form-label">
+										{__('Force HTTPS', 'betterlinks')} <span class="pro-badge">{__('Pro', 'betterlinks')}</span>
+									</label>
+									<div className="link-options__body">
+										<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+											<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
+											<span className="text">
+												{__('Enable HTTPS Redirection', 'betterlinks')}
+												<div className="btl-tooltip">
+													<span className="dashicons dashicons-info-outline"></span>
+													<span className="btl-tooltiptext">{__('This will allow you to redirect your Target URLs in HTTPS.', 'betterlinks')}</span>
+												</div>
+											</span>
+										</label>
+									</div>
+								</span>
+							)}
 							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
