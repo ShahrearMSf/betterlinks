@@ -1,6 +1,9 @@
 .btl-form-group {
 	display: flex;
 	align-items: center;
+	&--top {
+		align-items: flex-start;
+	}
 	@media screen and (max-width: 650px) {
 		flex-direction: column;
 	}
