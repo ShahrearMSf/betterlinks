@@ -11,6 +11,7 @@ import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
 import GoogleAnalytics from './../../components/Teasers/GoogleAnalytics';
 import RoleManagement from './../../components/Teasers/RoleManagement';
+import BrokenLinks from './../../components/Teasers/BrokenLinks';
 import GoPremium from './../../components/Teasers/GoPremium';
 
 function useQuery() {
@@ -27,6 +28,7 @@ const Settings = (props) => {
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
 		__('Google Analytics', 'betterlinks'),
+		__('Broken Links', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
@@ -34,6 +36,7 @@ const Settings = (props) => {
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<GoogleAnalytics />,
+		<BrokenLinks />,
 		<GoPremium />,
 	]);
 	useEffect(() => {
