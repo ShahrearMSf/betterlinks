@@ -1,4 +1,4 @@
-8<?php
+<?php
 /*
  * Plugin Name:		BetterLinks
  * Plugin URI:		https://betterlinks.io/
