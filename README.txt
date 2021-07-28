@@ -123,7 +123,7 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
-= 1.1.8 - 27/07/2021 =
+= 1.1.8 - 28/07/2021 =
 
 - Improved: Coding structure to enhance security
 - Few minor bug fix & improvements
