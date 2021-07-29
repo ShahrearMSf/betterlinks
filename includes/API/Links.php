@@ -158,40 +158,20 @@ class Links extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        if (isset($request['params']['short_url']) && ! \BetterLinks\Helper::is_exists_short_url($request['params']['short_url'])) {
-            $resutls = \BetterLinks\Helper::DB()
-            ->table('betterlinks')
-            ->where('short_url', '=', $request['params']['short_url'])->get();
-            if (count($resutls) === 0) {
-                \BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
-                    $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
-                    $params = array_intersect_key($request['params'], $lookFor);
-                    $params['link_author'] = get_current_user_id();
-                    $id = $qb->table('betterlinks')->insert(apply_filters('betterlinks/api/params', $params));
-                    if (BETTERLINKS_EXISTS_LINKS_JSON) {
-                        $params['ID'] = $id;
-                        \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
-                    }
-                    $this->terms_insert($qb, $id, $request['params']);
-                    $_SESSION['link_ID'] = $id;
-                });
-                $response = array_merge($request['params'], [
-                    'ID' => strval($_SESSION['link_ID']),
-                ]);
-                unset($_SESSION['link_ID']);
-                return new \WP_REST_Response(
-                    [
-                        'success' => true,
-                        'data' => $response,
-                    ],
-                    200
-                );
-            }
+        $results = $this->insert_link($request['params']);
+        if ($results) {
+            return new \WP_REST_Response(
+                [
+                    'success' => true,
+                    'data' => $results,
+                ],
+                200
+            );
         }
         return new \WP_REST_Response(
             [
                 'success' => false,
-                'data' => $request['params'],
+                'data' => $results,
             ],
             200
         );

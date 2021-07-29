@@ -70,4 +70,32 @@ trait Links
 
         return $this->parse_response($results, $analytic);
     }
+    public function insert_link($arg)
+    {
+        if (isset($arg['short_url']) && ! \BetterLinks\Helper::is_exists_short_url($arg['short_url'])) {
+            $resutls = \BetterLinks\Helper::DB()
+            ->table('betterlinks')
+            ->where('short_url', '=', $arg['short_url'])->get();
+            if (count($resutls) === 0) {
+                \BetterLinks\Helper::DB()->transaction(function ($qb) use ($arg) {
+                    $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
+                    $params = array_intersect_key($arg, $lookFor);
+                    $params['link_author'] = get_current_user_id();
+                    $id = $qb->table('betterlinks')->insert(apply_filters('betterlinks/api/params', $params));
+                    if (BETTERLINKS_EXISTS_LINKS_JSON) {
+                        $params['ID'] = $id;
+                        \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
+                    }
+                    $this->terms_insert($qb, $id, $arg);
+                    $_SESSION['link_ID'] = $id;
+                });
+                $response = array_merge($arg, [
+                    'ID' => strval($_SESSION['link_ID']),
+                ]);
+                unset($_SESSION['link_ID']);
+                return $response;
+            }
+        }
+        return false;
+    }
 }

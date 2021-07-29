@@ -28,6 +28,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
+        add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_link']);
     }
 
     public function get_prettylinks_data()
@@ -375,32 +376,24 @@ class Ajax
         );
         wp_die();
     }
-
-    public function parse_response($items, $analytic)
+    public function create_link()
     {
-        $results = [];
-        foreach ($items as $item) {
-            //insert analytic data
-            if (isset($analytic[$item->ID])) {
-                $item->analytic = $analytic[$item->ID];
-            }
-
-            // formatting response
-            if (!isset($results[$item->cat_id])) {
-                $results[$item->cat_id] = [
-                    'term_name' => $item->term_name,
-                    'term_slug' => $item->term_slug,
-                    'term_type' => $item->term_type,
-                ];
-                if ($item->ID !== null) {
-                    $results[$item->cat_id]['lists'][] = $item;
-                } else {
-                    $results[$item->cat_id]['lists'] = [];
-                }
-            } else {
-                $results[$item->cat_id]['lists'][] = $item;
-            }
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/links_create_item_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
         }
-        return $results;
+        // $params = (array) (isset($_REQUEST['params']) ? sanitize_text_field($_REQUEST['params']) : []);
+        error_log(print_r($_POST, true));
+        
+
+        wp_send_json_success(
+            [
+                'success' => true,
+                'cache' => true,
+                // 'data' => json_decode(),
+            ],
+            200
+        );
+        wp_die();
     }
 }
