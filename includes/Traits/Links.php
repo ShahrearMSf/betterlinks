@@ -3,7 +3,7 @@ namespace BetterLinks\Traits;
 
 trait Links
 {
-    public function parse_links_data_response($items, $analytic)
+    public function parse_response($items, $analytic)
     {
         $results = [];
         foreach ($items as $item) {

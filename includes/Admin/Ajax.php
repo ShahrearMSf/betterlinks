@@ -6,6 +6,7 @@ use BetterLinks\Cron;
 
 class Ajax
 {
+    use \BetterLinks\Traits\Links;
     public function __construct()
     {
         add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
@@ -350,49 +351,11 @@ class Ajax
         if (! apply_filters('betterlinks/api/links_get_items_permissions_check', current_user_can('manage_options'))) {
             wp_die();
         }
-
         $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
         if (empty($cache_data) || !json_decode($cache_data, true)) {
-            global $wpdb;
-            $prefix = $wpdb->prefix;
-            $query = \BetterLinks\Helper::DB();
-            $analytic = get_option('betterlinks_analytics_data');
-            $analytic = $analytic ? json_decode($analytic, true) : [];
-            $results = $query
-                ->query(
-                    "SELECT 
-				{$prefix}betterlinks_terms.ID as cat_id, 
-				{$prefix}betterlinks_terms.term_name, 
-				{$prefix}betterlinks_terms.term_slug,
-				{$prefix}betterlinks_terms.term_type, 
-				{$prefix}betterlinks.ID, 
-				{$prefix}betterlinks.link_title,
-				{$prefix}betterlinks.link_slug,
-				{$prefix}betterlinks.link_note,
-				{$prefix}betterlinks.link_status,
-				{$prefix}betterlinks.nofollow,
-				{$prefix}betterlinks.sponsored,
-				{$prefix}betterlinks.track_me,
-				{$prefix}betterlinks.param_forwarding,
-				{$prefix}betterlinks.param_struct,
-				{$prefix}betterlinks.redirect_type,
-				{$prefix}betterlinks.target_url,
-				{$prefix}betterlinks.short_url,
-				{$prefix}betterlinks.link_date,
-				{$prefix}betterlinks.wildcards,
-				{$prefix}betterlinks.expire,
-				{$prefix}betterlinks.dynamic_redirect
-			FROM {$prefix}betterlinks_terms
-			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
-			LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-			WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_order ASC"
-                )
-                ->get();
-
-            $results = $this->parse_response($results, $analytic);
+            $results = $this->get_all_links_data();
             set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
-            
-            return wp_send_json_success(
+            wp_send_json_success(
                 [
                     'success' => true,
                     'cache' => false,
@@ -402,7 +365,7 @@ class Ajax
             );
             wp_die();
         }
-        return wp_send_json_success(
+        wp_send_json_success(
             [
                 'success' => true,
                 'cache' => true,
