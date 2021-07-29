@@ -1,4 +1,5 @@
-import { API, namespace } from '../../utils/helper';
+import axios from 'axios';
+import { API, namespace, betterlinks_nonce } from '../../utils/helper';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const ADD_NEW_CAT = 'ADD_NEW_CAT';
@@ -37,11 +38,22 @@ export const fetch_links_data = () => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
-		console.log(e);
-		dispatch({
-			type: FETCH_INITIAL_DATA,
-			payload: {},
-		});
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/get_all_links');
+		form_data.append('security', betterlinks_nonce);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: FETCH_INITIAL_DATA,
+						payload: response.data.data,
+					});
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	}
 };
 
