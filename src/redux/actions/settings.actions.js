@@ -1,4 +1,5 @@
-import { API, namespace } from '../../utils/helper';
+import axios from 'axios';
+import { API, namespace, betterlinks_nonce } from '../../utils/helper';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
 export const UPDATE_OPTION = 'UPDATE_OPTION';
@@ -11,11 +12,22 @@ export const fetch_settings_data = () => async (dispatch) => {
 			payload: JSON.parse(res.data.data),
 		});
 	} catch (e) {
-		console.log(e);
-		dispatch({
-			type: FETCH_SETTINGS,
-			payload: {},
-		});
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/get_settings');
+		form_data.append('security', betterlinks_nonce);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: FETCH_SETTINGS,
+						payload: JSON.parse(response.data.data),
+					});
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	}
 };
 

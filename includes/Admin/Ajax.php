@@ -7,6 +7,8 @@ use BetterLinks\Cron;
 class Ajax
 {
     use \BetterLinks\Traits\Links;
+    use \BetterLinks\Traits\Terms;
+    use \BetterLinks\Traits\ArgumentSchema;
     public function __construct()
     {
         add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
@@ -29,6 +31,8 @@ class Ajax
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
         add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_link']);
+        add_action('wp_ajax_betterlinks/admin/get_settings', [$this, 'get_settings']);
+        add_action('wp_ajax_betterlinks/admin/get_terms', [$this, 'get_terms']);
     }
 
     public function get_prettylinks_data()
@@ -382,16 +386,78 @@ class Ajax
         if (! apply_filters('betterlinks/api/links_create_item_permissions_check', current_user_can('manage_options'))) {
             wp_die();
         }
-        // $params = (array) (isset($_REQUEST['params']) ? sanitize_text_field($_REQUEST['params']) : []);
-        error_log(print_r($_POST, true));
-        
-
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        $data = [];
+        foreach ($this->get_links_schema() as $key => $schema) {
+            if (isset($_POST[$key])) {
+                if (isset($schema['sanitize_callback'])) {
+                    $data[sanitize_key($key)] = $schema['sanitize_callback']($_POST[$key]);
+                } elseif (isset($schema['format']) && $schema['format'] == 'date-time') {
+                    $data[sanitize_key($key)] = sanitize_text_field($_POST[$key]);
+                }
+            }
+        }
+        $results = $this->insert_link($data);
+        if ($results) {
+            wp_send_json_success(
+                $results,
+                200
+            );
+            wp_die();
+        }
+        wp_send_json_error(
+            $results,
+            200
+        );
+        wp_die();
+    }
+    public function get_settings()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/settings_get_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        $results = get_option(BETTERLINKS_LINKS_OPTION_NAME);
+        if ($results) {
+            wp_send_json_success(
+                $results,
+                200
+            );
+            wp_die();
+        }
         wp_send_json_success(
             [
-                'success' => true,
-                'cache' => true,
-                // 'data' => json_decode(),
+                'success' => false,
+                'data' => '{}',
             ],
+            200
+        );
+        wp_die();
+    }
+    public function get_terms()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/settings_get_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        $args = [];
+        if (isset($_REQUEST['ID'])) {
+            $args['ID'] = sanitize_text_field($_REQUEST['ID']);
+        }
+        if (isset($_REQUEST['term_type'])) {
+            $args['term_type'] = sanitize_text_field($_REQUEST['term_type']);
+        }
+
+        $results = $this->get_all_terms_data($args);
+        if ($results) {
+            wp_send_json_success(
+                $results,
+                200
+            );
+            wp_die();
+        }
+        wp_send_json_error(
+            [],
             200
         );
         wp_die();

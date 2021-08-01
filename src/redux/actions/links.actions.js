@@ -135,8 +135,8 @@ export const add_new_link = (formData) => async (dispatch) => {
 			(response) => {
 				if (response.data) {
 					dispatch({
-						type: FETCH_INITIAL_DATA,
-						payload: response.data.data,
+						type: ADD_NEW_LINK,
+						payload: response.data,
 					});
 				}
 			},

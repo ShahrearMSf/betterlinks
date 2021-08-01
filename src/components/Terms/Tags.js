@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useField } from 'formik';
 import CreatableSelect2 from 'react-select/creatable';
-import { API, namespace } from './../../utils/helper';
+import { API, namespace, betterlinks_nonce } from './../../utils/helper';
 
 const propTypes = {
 	linkId: PropTypes.number,
@@ -17,21 +18,26 @@ const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 	const [saveTags, setSaveTags] = useState(null);
 	useEffect(() => {
 		if (linkId) {
-			const res = API.get(namespace + 'terms', {
-				params: {
-					ID: linkId,
-					term_type: 'tags',
+			let form_data = new FormData();
+			form_data.append('action', 'betterlinks/admin/get_terms');
+			form_data.append('security', betterlinks_nonce);
+			form_data.append('ID', linkId);
+			form_data.append('term_type', 'tags');
+			axios.post(ajaxurl, form_data).then(
+				(res) => {
+					if (res.data.data) {
+						setSaveTags(
+							res.data.data.map((item) => ({
+								value: item.term_id,
+								label: item.term_name,
+							}))
+						);
+					}
 				},
-			}).then((res) => {
-				if (res.data.data) {
-					setSaveTags(
-						res.data.data.map((item) => ({
-							value: item.term_id,
-							label: item.term_name,
-						}))
-					);
+				(error) => {
+					console.log(error);
 				}
-			});
+			);
 		} else {
 			setSaveTags([]);
 		}
