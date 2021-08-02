@@ -35,6 +35,9 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/delete_link', [$this, 'delete_existing_link']);
         add_action('wp_ajax_betterlinks/admin/get_settings', [$this, 'get_settings']);
         add_action('wp_ajax_betterlinks/admin/get_terms', [$this, 'get_terms']);
+        add_action('wp_ajax_betterlinks/admin/create_new_term', [$this, 'create_new_term']);
+        add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
+        add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
     }
 
     public function get_prettylinks_data()
@@ -509,6 +512,66 @@ class Ajax
         }
         wp_send_json_error(
             [],
+            200
+        );
+        wp_die();
+    }
+    public function create_new_term()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        $args = [
+            'ID'        => (isset($_REQUEST['ID']) ? absint(sanitize_text_field($_REQUEST['ID'])) : 0),
+            'term_name' => (isset($_REQUEST['term_name']) ? sanitize_text_field($_REQUEST['term_name']) : ""),
+            'term_slug' => (isset($_REQUEST['term_slug']) ? sanitize_text_field($_REQUEST['term_slug']) : ""),
+            'term_type' => (isset($_REQUEST['term_type']) ? sanitize_text_field($_REQUEST['term_type']) : ""),
+        ];
+        $results = $this->create_term($args);
+        wp_send_json_success(
+            $results,
+            200
+        );
+        wp_die();
+    }
+    public function update_existing_term()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        $args = [
+            'cat_id'        => (isset($_REQUEST['ID']) ? absint(sanitize_text_field($_REQUEST['ID'])) : 0),
+            'cat_name' => (isset($_REQUEST['term_name']) ? sanitize_text_field($_REQUEST['term_name']) : ""),
+            'cat_slug' => (isset($_REQUEST['term_slug']) ? sanitize_text_field($_REQUEST['term_slug']) : ""),
+        ];
+        $this->update_term($args);
+        wp_send_json_success(
+            [
+                'ID' => $args['cat_id'],
+                'term_name' => $args['cat_name'],
+                'term_slug' => $args['cat_slug'],
+            ],
+            200
+        );
+        wp_die();
+    }
+    public function delete_existing_term()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        $args = [
+            'cat_id'        => (isset($_REQUEST['cat_id']) ? absint(sanitize_text_field($_REQUEST['cat_id'])) : 0),
+        ];
+        $this->delete_term($args);
+        wp_send_json_success(
+            $args,
             200
         );
         wp_die();

@@ -86,11 +86,26 @@ export const add_new_cat = (data) => async (dispatch) => {
 			});
 		}
 	} catch (e) {
-		console.log(e);
-		dispatch({
-			type: ADD_NEW_CAT,
-			payload: {},
-		});
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/create_new_term');
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('ID', data.ID);
+		form_data.append('term_name', data.term_name);
+		form_data.append('term_slug', data.term_slug);
+		form_data.append('term_type', data.term_type);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: ADD_NEW_CAT,
+						payload: response.data,
+					});
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	}
 };
 
@@ -104,11 +119,26 @@ export const update_cat = (params) => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
-		console.log(e);
-		dispatch({
-			type: UPDATE_CAT,
-			payload: {},
-		});
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/update_term');
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('ID', params.ID);
+		form_data.append('term_name', params.term_name);
+		form_data.append('term_slug', params.term_slug);
+		form_data.append('term_type', params.term_type);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: UPDATE_CAT,
+						payload: response.data,
+					});
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	}
 };
 
@@ -122,11 +152,23 @@ export const delete_cat = (params) => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
-		console.log(e);
-		dispatch({
-			type: DELETE_CAT,
-			payload: {},
-		});
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/delete_term');
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('cat_id', params.cat_id);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: DELETE_CAT,
+						payload: response.data,
+					});
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	}
 };
 

@@ -88,29 +88,11 @@ class Terms extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        if (isset($request['params']['term_slug'])) {
-            $resutls = \BetterLinks\Helper::DB()
-                ->table('betterlinks_terms')
-                ->where('term_slug', '=', $request['params']['term_slug'])->get();
-            if (count($resutls) === 0) {
-                $id = \BetterLinks\Helper::DB()
-                    ->table('betterlinks_terms')
-                    ->insert($request['params']);
-                $request['params']['ID'] = $id;
-                $request['params']['lists'] = [];
-                return new \WP_REST_Response(
-                    [
-                        'success' => true,
-                        'data' => $request['params'],
-                    ],
-                    200
-                );
-            }
-        }
+        $results = $this->create_term($request['params']);
         return new \WP_REST_Response(
             [
                 'success' => false,
-                'data' => $request['params'],
+                'data' => $results,
             ],
             200
         );
@@ -126,16 +108,7 @@ class Terms extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        $data = [
-            'term_name' => $request['params']['cat_name'],
-            'term_slug' => $request['params']['cat_slug'],
-        ];
-
-        \BetterLinks\Helper::DB()
-            ->table('betterlinks_terms')
-            ->where('ID', $request['params']['cat_id'])
-            ->update($data);
-
+        $this->update_term($request['params']);
         return new \WP_REST_Response(
             [
                 'success' => is_bool($request['params']['cat_id']),
@@ -155,24 +128,7 @@ class Terms extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        \BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
-            if ($request['cat_id'] != 1) {
-                $qb->table('betterlinks_terms')
-                    ->where('id', '=', $request['cat_id'])
-                    ->delete();
-
-                $term = current(
-                    $qb
-                        ->table('betterlinks_terms')
-                        ->where('term_slug', '=', 'uncategorized')
-                        ->get()
-                );
-
-                $qb->table('betterlinks_terms_relationships')
-                    ->where('term_id', '=', $request['cat_id'])
-                    ->update(['term_id' => $term->ID]);
-            }
-        });
+        $this->delete_term($request);
         return new \WP_REST_Response(
             [
                 'success' => true,
