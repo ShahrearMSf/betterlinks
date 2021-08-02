@@ -187,18 +187,7 @@ class Links extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        \BetterLinks\Helper::DB()->transaction(function ($qb) use ($request) {
-            $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
-            $params = array_intersect_key($request['params'], $lookFor);
-            $old_short_url = isset($request['params']['old_short_url']) ? $request['params']['old_short_url'] : '';
-            if (BETTERLINKS_EXISTS_LINKS_JSON) {
-                \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
-            }
-            $qb->table('betterlinks')
-                ->where('ID', $params['ID'])
-                ->update(apply_filters('betterlinks/api/params', $params));
-            $this->terms_insert($qb, $params['ID'], $request['params'], true);
-        });
+        $this->update_link($request['params']);
         return new \WP_REST_Response(
             [
                 'success' => true,

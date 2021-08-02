@@ -162,4 +162,19 @@ trait Links
         }
         return false;
     }
+    public function update_link($arg)
+    {
+        \BetterLinks\Helper::DB()->transaction(function ($qb) use ($arg) {
+            $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
+            $params = array_intersect_key($arg, $lookFor);
+            $old_short_url = isset($arg['old_short_url']) ? $arg['old_short_url'] : '';
+            if (BETTERLINKS_EXISTS_LINKS_JSON) {
+                \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
+            }
+            $qb->table('betterlinks')
+                ->where('ID', $params['ID'])
+                ->update(apply_filters('betterlinks/api/params', $params));
+            $this->terms_insert($qb, $params['ID'], $arg, true);
+        });
+    }
 }

@@ -30,7 +30,8 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
-        add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_link']);
+        add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_new_link']);
+        add_action('wp_ajax_betterlinks/admin/update_link', [$this, 'update_existing_link']);
         add_action('wp_ajax_betterlinks/admin/get_settings', [$this, 'get_settings']);
         add_action('wp_ajax_betterlinks/admin/get_terms', [$this, 'get_terms']);
     }
@@ -380,7 +381,7 @@ class Ajax
         );
         wp_die();
     }
-    public function create_link()
+    public function create_new_link()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (! apply_filters('betterlinks/api/links_create_item_permissions_check', current_user_can('manage_options'))) {
@@ -407,6 +408,36 @@ class Ajax
         }
         wp_send_json_error(
             $results,
+            200
+        );
+        wp_die();
+    }
+    public function update_existing_link()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/links_update_item_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        foreach ($this->get_links_schema() as $key => $schema) {
+            if (isset($_POST[$key])) {
+                if (isset($schema['sanitize_callback'])) {
+                    $data[$key] = $schema['sanitize_callback']($_POST[$key]);
+                } elseif (isset($schema['format']) && $schema['format'] == 'date-time') {
+                    $data[$key] = sanitize_text_field($_POST[$key]);
+                }
+            }
+        }
+        $results = $this->update_link($data);
+        if ($results) {
+            wp_send_json_success(
+                $data,
+                200
+            );
+            wp_die();
+        }
+        wp_send_json_error(
+            $data,
             200
         );
         wp_die();
