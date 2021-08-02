@@ -207,24 +207,7 @@ class Links extends Controller
     {
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-
-        \BetterLinks\Helper::DB()
-            ->table('betterlinks')
-            ->where('id', '=', $request['id'])
-            ->delete();
-
-        \BetterLinks\Helper::DB()
-            ->table('betterlinks_clicks')
-            ->where('link_id', '=', $request['id'])
-            ->delete();
-
-        \BetterLinks\Helper::DB()
-            ->table('betterlinks_terms_relationships')
-            ->where('link_id', '=', $request['id'])
-            ->delete();
-        if (BETTERLINKS_EXISTS_LINKS_JSON) {
-            \BetterLinks\Helper::delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $request['short_url']);
-        }
+        $this->delete_link($request);
         return new \WP_REST_Response(
             [
                 'success' => true,

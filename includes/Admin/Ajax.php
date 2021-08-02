@@ -32,6 +32,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
         add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_new_link']);
         add_action('wp_ajax_betterlinks/admin/update_link', [$this, 'update_existing_link']);
+        add_action('wp_ajax_betterlinks/admin/delete_link', [$this, 'delete_existing_link']);
         add_action('wp_ajax_betterlinks/admin/get_settings', [$this, 'get_settings']);
         add_action('wp_ajax_betterlinks/admin/get_terms', [$this, 'get_terms']);
     }
@@ -438,6 +439,25 @@ class Ajax
         }
         wp_send_json_error(
             $data,
+            200
+        );
+        wp_die();
+    }
+    public function delete_existing_link()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        $args  = [
+            'ID' => ($_REQUEST['ID'] ? sanitize_text_field($_REQUEST['ID']) : ''),
+            'short_url' => ($_REQUEST['short_url'] ? sanitize_text_field($_REQUEST['short_url']) : ''),
+            'term_id' => ($_REQUEST['term_id'] ? sanitize_text_field($_REQUEST['term_id']) : ''),
+        ];
+        $this->delete_link($args);
+        wp_send_json_success(
+            $args,
             200
         );
         wp_die();

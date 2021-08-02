@@ -177,4 +177,25 @@ trait Links
             $this->terms_insert($qb, $params['ID'], $arg, true);
         });
     }
+    public function delete_link($args)
+    {
+        \BetterLinks\Helper::DB()
+        ->table('betterlinks')
+        ->where('id', '=', $args['ID'])
+        ->delete();
+
+        \BetterLinks\Helper::DB()
+        ->table('betterlinks_clicks')
+        ->where('link_id', '=', $args['ID'])
+        ->delete();
+
+        \BetterLinks\Helper::DB()
+        ->table('betterlinks_terms_relationships')
+        ->where('link_id', '=', $args['ID'])
+        ->delete();
+        if (BETTERLINKS_EXISTS_LINKS_JSON) {
+            \BetterLinks\Helper::delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $args['short_url']);
+        }
+        return true;
+    }
 }

@@ -24,7 +24,24 @@ export const onDragEnd = (result) => async (dispatch) => {
 				},
 			});
 		} catch (e) {
-			console.log(e);
+			let form_data = new FormData();
+			form_data.append('action', 'betterlinks/admin/update_link');
+			form_data.append('security', betterlinks_nonce);
+			form_data.append('ID', ID);
+			form_data.append('cat_id', result.destination.droppableId);
+			axios.post(ajaxurl, form_data).then(
+				(response) => {
+					if (response.data) {
+						dispatch({
+							type: DRAG_AND_DROP,
+							payload: result,
+						});
+					}
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		}
 	}
 };
@@ -187,17 +204,24 @@ export const delete_link = (params) => async (dispatch) => {
 	}
 	data.map((item) => {
 		const { ID, short_url, term_id } = item;
-		API.delete(namespace + 'links/' + ID, {
-			data: {
-				ID,
-				short_url,
-				term_id,
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/delete_link');
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('ID', ID);
+		form_data.append('short_url', short_url);
+		form_data.append('term_id', term_id);
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: DELETE_LINK,
+						payload: response.data,
+					});
+				}
 			},
-		}).then((res) => {
-			dispatch({
-				type: DELETE_LINK,
-				payload: res.data,
-			});
-		});
+			(error) => {
+				console.log(error);
+			}
+		);
 	});
 };
