@@ -71,12 +71,15 @@ const Link = (props) => {
 
 	function openModal() {
 		if (!props.settings.settings) {
-			fetch_settings_data();
+			fetch_settings_data().then((res) => {
+				setModalIsOpen(true);
+			});
 		}
-
 		setIsFetchTerms(true);
 		fetch_terms_data().then(() => {
-			setModalIsOpen(true);
+			if (props.settings.settings) {
+				setModalIsOpen(true);
+			}
 			setIsFetchTerms(false);
 		});
 	}

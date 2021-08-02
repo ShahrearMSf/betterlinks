@@ -15,7 +15,7 @@ export const fetch_settings_data = () => async (dispatch) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/get_settings');
 		form_data.append('security', betterlinks_nonce);
-		axios.post(ajaxurl, form_data).then(
+		await axios.post(ajaxurl, form_data).then(
 			(response) => {
 				if (response.data) {
 					dispatch({
