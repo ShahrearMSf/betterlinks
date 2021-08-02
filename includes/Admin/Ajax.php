@@ -8,6 +8,7 @@ class Ajax
 {
     use \BetterLinks\Traits\Links;
     use \BetterLinks\Traits\Terms;
+    use \BetterLinks\Traits\Clicks;
     use \BetterLinks\Traits\ArgumentSchema;
     public function __construct()
     {
@@ -38,6 +39,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/create_new_term', [$this, 'create_new_term']);
         add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
         add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
+        add_action('wp_ajax_betterlinks/admin/fetch_analytics', [$this, 'fetch_analytics']);
     }
 
     public function get_prettylinks_data()
@@ -572,6 +574,21 @@ class Ajax
         $this->delete_term($args);
         wp_send_json_success(
             $args,
+            200
+        );
+        wp_die();
+    }
+    public function fetch_analytics()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        $from = isset($_REQUEST['from']) ? $_REQUEST['from'] : date('Y-m-d', strtotime(' - 30 days'));
+        $to = isset($_REQUEST['to']) ? $_REQUEST['to'] : date('Y-m-d');
+        $results = $this->get_clicks_data($from, $to);
+        wp_send_json_success(
+            $results,
             200
         );
         wp_die();

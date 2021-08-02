@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { __ } from '@wordpress/i18n';
 import { Line } from 'react-chartjs-2';
 import { DateRangePicker } from 'react-date-range';
@@ -6,7 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import { API, namespace } from './../../utils/helper';
-import { formatDate, insertOverlayElement, removeOverlayElement } from '../../utils/helper';
+import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from '../../utils/helper';
 import { fetchCustomClicksData } from '../../redux/actions/clicks.actions';
 
 const Graph = (props) => {
@@ -102,7 +103,27 @@ const Graph = (props) => {
 				}, 3000);
 			}, 1000);
 		} catch (e) {
-			console.log(e);
+			let form_data = new FormData();
+			form_data.append('action', 'betterlinks/admin/fetch_analytics');
+			form_data.append('security', betterlinks_nonce);
+			form_data.append('from', formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'));
+			form_data.append('to', formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd'));
+			await axios.post(ajaxurl, form_data).then(
+				(response) => {
+					if (response.data) {
+						setTimeout(function () {
+							props.fetchCustomClicksData(response.data);
+							setFilterButtonText('Done!');
+							setTimeout(function () {
+								setFilterButtonText('Filter');
+							}, 3000);
+						}, 1000);
+					}
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		}
 	};
 

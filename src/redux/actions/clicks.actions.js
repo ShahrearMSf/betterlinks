@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API, namespace } from './../../utils/helper';
+import { API, namespace, betterlinks_nonce } from './../../utils/helper';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const fetch_clicks_data = (params) => async (dispatch) => {
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
@@ -12,11 +12,24 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
-		console.log(e);
-		dispatch({
-			type: FETCH_CLICKS_DATA,
-			payload: {},
-		});
+		let form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/fetch_analytics');
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('from', params.from);
+		form_data.append('to', params.to);
+		await axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data) {
+					dispatch({
+						type: FETCH_CLICKS_DATA,
+						payload: response.data,
+					});
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
 	}
 };
 export const searchClicksData = (nonce, filterText) => async (dispatch) => {
