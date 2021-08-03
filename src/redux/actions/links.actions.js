@@ -184,11 +184,16 @@ export const add_new_link = (formData) => async (dispatch) => {
 			});
 		}
 	} catch (e) {
+		console.log({ formData });
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/create_link');
 		form_data.append('security', betterlinks_nonce);
 		for (const [key, value] of Object.entries(formData)) {
-			form_data.append(key, value);
+			if (typeof value === 'object' && value !== null) {
+				form_data.append(key, JSON.stringify(value));
+			} else {
+				form_data.append(key, value);
+			}
 		}
 		axios.post(ajaxurl, form_data).then(
 			(response) => {
@@ -219,7 +224,11 @@ export const edit_link = (item) => async (dispatch) => {
 		form_data.append('action', 'betterlinks/admin/update_link');
 		form_data.append('security', betterlinks_nonce);
 		for (const [key, value] of Object.entries(item)) {
-			form_data.append(key, value);
+			if (typeof value === 'object' && value !== null) {
+				form_data.append(key, JSON.stringify(value));
+			} else {
+				form_data.append(key, value);
+			}
 		}
 		axios.post(ajaxurl, form_data).then(
 			(response) => {
