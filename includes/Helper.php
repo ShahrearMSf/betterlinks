@@ -240,7 +240,7 @@ class Helper
     {
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
-        if ($data['wildcards']) {
+        if (isset($data['wildcards']) && !empty($data['wildcards'])) {
             $tempArray = $existingData['wildcards'];
             if (is_array($tempArray) && isset($data['short_url'])) {
                 if (!empty($old_short_url) && isset($tempArray[$old_short_url])) {
