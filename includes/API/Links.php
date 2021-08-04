@@ -158,7 +158,8 @@ class Links extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        $results = $this->insert_link($request['params']);
+        $args = $this->sanitize_links_data($request['params']);
+        $results = $this->insert_link($args);
         if ($results) {
             return new \WP_REST_Response(
                 [
@@ -187,7 +188,8 @@ class Links extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        $this->update_link($request['params']);
+        $args = $this->sanitize_links_data($request['params']);
+        $this->update_link($args);
         return new \WP_REST_Response(
             [
                 'success' => true,

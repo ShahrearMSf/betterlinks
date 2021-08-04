@@ -387,57 +387,6 @@ class Ajax
         );
         wp_die();
     }
-    public function sanitize_links_data($POST)
-    {
-        $data = [];
-        foreach ($this->get_links_schema() as $key => $schema) {
-            if (isset($POST[$key])) {
-                if (isset($schema['sanitize_callback'])) {
-                    $data[$key] = $schema['sanitize_callback']($POST[$key]);
-                } elseif (isset($schema['format']) && $schema['format'] == 'date-time') {
-                    $data[$key] = sanitize_text_field($POST[$key]);
-                } elseif (isset($schema['type']) && $schema['type'] === 'object') {
-                    $tempData = json_decode(html_entity_decode(stripslashes($POST[$key])), true);
-                    $tempSanitizeData = [];
-                    if (isset($schema['properties']) && is_array($tempData)) {
-                        foreach ($schema['properties'] as $innerKey => $innerSchema) {
-                            if ($innerSchema['type'] === 'integer' || $innerSchema['type'] === 'string') {
-                                if (isset($innerSchema['sanitize_callback'])) {
-                                    $tempSanitizeData[$innerKey] = $innerSchema['sanitize_callback']($tempData[$innerKey]);
-                                } elseif (isset($innerSchema['format']) && $innerSchema['format'] == 'date-time') {
-                                    $tempSanitizeData[$innerKey] = sanitize_text_field($tempData[$innerKey]);
-                                }
-                            } elseif ($innerSchema['type'] === 'array') {
-                                $tempTwoSanitizeData = [];
-                                if (isset($tempData['value']) && is_array($tempData['value'])) {
-                                    foreach ($tempData['value'] as $valueItem) {
-                                        $value = [];
-                                        if (is_array($valueItem)) {
-                                            foreach ($valueItem as $childValueKey => $childValueItem) {
-                                                $value[$childValueKey] = \BetterLinks\Helper::sanitize_text_or_array_field($childValueItem);
-                                            }
-                                        }
-                                        $tempTwoSanitizeData[] = $value;
-                                    }
-                                }
-                                $tempSanitizeData[$innerKey] = $tempTwoSanitizeData;
-                            } elseif ($innerSchema['type'] === 'object') {
-                                $tempThreeSanitizeData = [];
-                                if (isset($tempData['extra']) && is_array($tempData['extra'])) {
-                                    foreach ($tempData['extra'] as $extraKey => $extraItem) {
-                                        $tempThreeSanitizeData[$extraKey] = sanitize_text_field($extraItem);
-                                    }
-                                }
-                                $tempSanitizeData[$innerKey] = $tempThreeSanitizeData;
-                            }
-                        }
-                    }
-                    $data[$key] = $tempSanitizeData;
-                }
-            }
-        }
-        return $data;
-    }
     public function create_new_link()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
