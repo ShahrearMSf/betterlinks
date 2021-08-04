@@ -91,7 +91,7 @@ class Terms extends Controller
         $results = $this->create_term($request['params']);
         return new \WP_REST_Response(
             [
-                'success' => false,
+                'success' => true,
                 'data' => $results,
             ],
             200
