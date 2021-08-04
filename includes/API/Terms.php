@@ -122,7 +122,7 @@ class Terms extends Controller
         $this->update_term($args);
         return new \WP_REST_Response(
             [
-                'success' => is_bool($request['params']['cat_id']),
+                'success' => is_bool($request['params']['ID']),
                 'data' => $request['params'],
             ],
             200
