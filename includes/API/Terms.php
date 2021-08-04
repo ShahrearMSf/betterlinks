@@ -88,7 +88,13 @@ class Terms extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        $results = $this->create_term($request['params']);
+        $args = [
+            'ID'        => (isset($request['params']['ID']) ? absint(sanitize_text_field($request['params']['ID'])) : 0),
+            'term_name' => (isset($request['params']['term_name']) ? sanitize_text_field($request['params']['term_name']) : ""),
+            'term_slug' => (isset($request['params']['term_slug']) ? sanitize_text_field($request['params']['term_slug']) : ""),
+            'term_type' => (isset($request['params']['term_type']) ? sanitize_text_field($request['params']['term_type']) : ""),
+        ];
+        $results = $this->create_term($args);
         return new \WP_REST_Response(
             [
                 'success' => true,
@@ -108,7 +114,12 @@ class Terms extends Controller
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
-        $this->update_term($request['params']);
+        $args = [
+            'cat_id'        => (isset($request['params']['ID']) ? absint(sanitize_text_field($request['params']['ID'])) : 0),
+            'cat_name' => (isset($request['params']['term_name']) ? sanitize_text_field($request['params']['term_name']) : ""),
+            'cat_slug' => (isset($request['params']['term_slug']) ? sanitize_text_field($request['params']['term_slug']) : ""),
+        ];
+        $this->update_term($args);
         return new \WP_REST_Response(
             [
                 'success' => is_bool($request['params']['cat_id']),
