@@ -35,6 +35,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/update_link', [$this, 'update_existing_link']);
         add_action('wp_ajax_betterlinks/admin/delete_link', [$this, 'delete_existing_link']);
         add_action('wp_ajax_betterlinks/admin/get_settings', [$this, 'get_settings']);
+        add_action('wp_ajax_betterlinks/admin/update_settings', [$this, 'update_settings']);
         add_action('wp_ajax_betterlinks/admin/get_terms', [$this, 'get_terms']);
         add_action('wp_ajax_betterlinks/admin/create_new_term', [$this, 'create_new_term']);
         add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
@@ -469,6 +470,26 @@ class Ajax
                 'success' => false,
                 'data' => '{}',
             ],
+            200
+        );
+        wp_die();
+    }
+    public function update_settings()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/settings_update_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        $response = \BetterLinks\Helper::fresh_ajax_request_data($_POST);
+        $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
+        $response = json_encode($response);
+        if ($response) {
+            update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
+        }
+        // regenerate links for wildcards option update
+        \BetterLinks\Helper::create_cron_jobs_for_json_links();
+        wp_send_json_success(
+            $response,
             200
         );
         wp_die();

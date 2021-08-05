@@ -243,3 +243,23 @@ export const getJsonString = (str) => {
 		return {};
 	}
 };
+
+export const makeRequest = async (payload = {}) => {
+	let form_data = new FormData();
+	form_data.append('security', betterlinks_nonce);
+	Object.entries(payload).forEach(([key, value]) => {
+		if (typeof value === 'object' && value !== null) {
+			form_data.append(key, JSON.stringify(value));
+		} else {
+			form_data.append(key, value);
+		}
+	});
+	return await axios.post(ajaxurl, form_data).then(
+		(response) => {
+			return response;
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+};
