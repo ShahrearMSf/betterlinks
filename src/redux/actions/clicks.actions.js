@@ -15,8 +15,10 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/fetch_analytics');
 		form_data.append('security', betterlinks_nonce);
-		form_data.append('from', params.from);
-		form_data.append('to', params.to);
+		if (params) {
+			form_data.append('from', params.from);
+			form_data.append('to', params.to);
+		}
 		await axios.post(ajaxurl, form_data).then(
 			(response) => {
 				if (response.data) {
