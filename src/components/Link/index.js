@@ -231,7 +231,15 @@ const Link = (props) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="target_url">
 											{__('Target URL', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" id="target_url" name="target_url" placeholder="" disabled={isDisableLinkFormEditView} required />
+										<Field
+											className="btl-modal-form-control"
+											id="target_url"
+											name="target_url"
+											onChange={(e) => props.setFieldValue('target_url', e.target.value.replace(/\s+/g, ''))}
+											placeholder=""
+											disabled={isDisableLinkFormEditView}
+											required
+										/>
 										<div className="btl-utm-button-group">
 											<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
 												UTM

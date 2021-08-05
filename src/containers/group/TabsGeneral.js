@@ -8,6 +8,7 @@ import RedirectType from './../../components/RedirectType';
 import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
+import UpgradeToPro from './../../components/Teasers/UpgradeToPro';
 import { exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Refresh Stats');
@@ -16,6 +17,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [fastRedirectStatus, setFastRedirectStatus] = useState(exists_links_json);
 	const [fastClicksButtonText, setFastClicksButtonText] = useState('Active Now');
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const writeLinkJSONHandler = () => {
 		setFastRedirectButtonText('Activating...');
 		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${betterlinks_nonce}`).then(
@@ -63,8 +65,15 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 			}
 		);
 	};
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
 	return (
 		<React.Fragment>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<Formik
 				enableReinitialize
 				initialValues={{ ...settings }}
@@ -244,6 +253,25 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+							{!betterLinksHooks.applyFilters('isActivePro', false) && (
+								<span className="btl-form-group btl-form-group--teaser">
+									<label className="btl-form-label">
+										{__('Force HTTPS', 'betterlinks')} <span class="pro-badge">{__('Pro', 'betterlinks')}</span>
+									</label>
+									<div className="link-options__body">
+										<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+											<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
+											<span className="text">
+												{__('Enable HTTPS Redirection', 'betterlinks')}
+												<div className="btl-tooltip">
+													<span className="dashicons dashicons-info-outline"></span>
+													<span className="btl-tooltiptext">{__('This will allow you to redirect your Target URLs in HTTPS.', 'betterlinks')}</span>
+												</div>
+											</span>
+										</label>
+									</div>
+								</span>
+							)}
 							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
