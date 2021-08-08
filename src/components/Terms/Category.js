@@ -24,8 +24,11 @@ const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 
 	const defaultValue = () => {
 		if (catId) {
-			const { ID, term_name } = data.terms.filter((item) => item.ID == catId)[0];
-			return { value: ID, label: term_name };
+			const termData = data.terms.filter((item) => item.ID == catId);
+			if (termData.length > 0) {
+				const { ID, term_name } = termData[0];
+				return { value: ID, label: term_name };
+			}
 		} else {
 			const { ID, term_name } = data.terms.filter((item) => item.term_slug == 'uncategorized')[0];
 			return { value: ID, label: term_name };
