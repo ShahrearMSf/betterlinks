@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { redirectType } from './utils/data';
-import { API, namespace, nonce, betterlinks_nonce, site_url, getJsonString, formatDate } from './utils/helper';
+import { API, namespace, makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate } from './utils/helper';
 import UpgradeToPro from './components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -59,9 +59,11 @@ const CustomSidebarMetaComponent = (props) => {
 	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
-			API.get(namespace + 'terms').then((res) => {
-				if (res.data) {
-					setTerms(res.data.data);
+			makeRequest({
+				action: 'betterlinks/admin/get_terms',
+			}).then((response) => {
+				if (response.data.data) {
+					setTerms(response.data.data);
 				}
 			});
 		}
@@ -201,11 +203,11 @@ const CustomSidebarMetaComponent = (props) => {
 	};
 	const deleteInstantRedirect = () => {
 		if (ID && confirm('Are you sure you want to delete your Instant Redirect Rule?')) {
-			API.delete(namespace + 'links/' + ID, {
-				data: {
-					short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
-				},
-			}).then((res) => {
+			makeRequest({
+				action: 'betterlinks/admin/delete_link',
+				ID,
+				short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
+			}).then((response) => {
 				BetterLinksID = '';
 				setID('');
 				onSetTargetUrl('');
@@ -269,23 +271,26 @@ const CustomSidebarMetaComponent = (props) => {
 						};
 					}
 					if (BetterLinksID) {
-						API.put(namespace + 'links/' + BetterLinksID, {
-							params: params,
-						}).then((res) => {
-							if (res.data.data) {
-								BetterLinksID = res.data.data.ID;
-								setID(res.data.data.ID);
+						makeRequest({
+							action: 'betterlinks/admin/update_link',
+							ID: BetterLinksID,
+							...params,
+						}).then((response) => {
+							if (response.data.data) {
+								BetterLinksID = response.data.data.ID;
+								setID(response.data.data.ID);
 							}
 						});
 					} else {
 						params.link_date = currentDate;
 						params.link_date_gmt = currentDate;
-						API.post(namespace + 'links', {
-							params: params,
-						}).then((res) => {
-							if (res.data.data) {
-								BetterLinksID = res.data.data.ID;
-								setID(res.data.data.ID);
+						makeRequest({
+							action: 'betterlinks/admin/create_link',
+							...params,
+						}).then((response) => {
+							if (response.data.data) {
+								BetterLinksID = response.data.data.ID;
+								setID(response.data.data.ID);
 							}
 						});
 					}
@@ -518,9 +523,11 @@ const CustomSidebarComponent = () => {
 	const [settings, setSettings] = useState({});
 	useEffect(() => {
 		// Settings
-		API.get(namespace + 'settings').then((res) => {
-			if (res.data.data) {
-				const settings = getJsonString(res.data.data);
+		makeRequest({
+			action: 'betterlinks/admin/get_settings',
+		}).then((response) => {
+			if (response.data.data) {
+				const settings = getJsonString(response.data.data);
 				setSettings(settings);
 				setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
 			}
