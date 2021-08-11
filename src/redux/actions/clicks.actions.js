@@ -1,4 +1,5 @@
 import axios from 'axios';
+import queryString from 'query-string';
 import { API, namespace, betterlinks_nonce } from './../../utils/helper';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const fetch_clicks_data = (params) => async (dispatch) => {
@@ -12,9 +13,13 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
+		const parsed = queryString.parse(location.search);
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/fetch_analytics');
 		form_data.append('security', betterlinks_nonce);
+		if (parsed.id) {
+			form_data.append('ID', parsed.id);
+		}
 		if (params) {
 			form_data.append('from', params.from);
 			form_data.append('to', params.to);

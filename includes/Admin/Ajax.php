@@ -588,9 +588,14 @@ class Ajax
         if (! apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
             wp_die();
         }
-        $from = isset($_REQUEST['from']) ? $_REQUEST['from'] : date('Y-m-d', strtotime(' - 30 days'));
-        $to = isset($_REQUEST['to']) ? $_REQUEST['to'] : date('Y-m-d');
-        $results = $this->get_clicks_data($from, $to);
+        $from = isset($_REQUEST['from']) ? sanitize_text_field($_REQUEST['from']) : date('Y-m-d', strtotime(' - 30 days'));
+        $to = isset($_REQUEST['to']) ? sanitize_text_field($_REQUEST['to']) : date('Y-m-d');
+        $ID = (isset($_REQUEST['ID']) ? sanitize_text_field($_REQUEST['ID']) : '');
+        if (!empty($ID) && class_exists('BetterLinksPro')) {
+            $results = \BetterLinksPro\Helper::get_individual_link_analytics(['id' => $ID, 'from' => $from, 'to' => $to]);
+        } else {
+            $results = $this->get_clicks_data($from, $to);
+        }
         wp_send_json_success(
             $results,
             200
