@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loader from './../../components/Loader';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
+import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CreateCategory from './../../components/CreateCategory';
 import Link from './../../components/Link';
@@ -88,11 +89,14 @@ class CatWrap extends React.PureComponent {
 }
 
 function DndCanvas(props) {
-	const { links } = props.links;
+	const { links, settings } = props.links;
 
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
+		}
+		if (!settings) {
+			props.fetch_settings_data();
 		}
 	}, []);
 
@@ -124,11 +128,13 @@ function DndCanvas(props) {
 
 const mapStateToProps = (state) => ({
 	links: state.links,
+	settings: state.settings,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
+		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		onDragEnd: bindActionCreators(onDragEnd, dispatch),
 		add_new_cat: bindActionCreators(add_new_cat, dispatch),
 		add_new_link: bindActionCreators(add_new_link, dispatch),

@@ -7,7 +7,6 @@ import Select from './../Select';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
 import { modalCustomStyles, modalCustomSmallStyles, nonce, betterlinks_nonce, site_url, generateSlug, generateRandomSlug, formatDate, plugin_root_url } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
@@ -31,7 +30,7 @@ const defaultProps = {
 };
 
 const Link = (props) => {
-	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings, fetch_settings_data } = props;
+	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
@@ -70,16 +69,9 @@ const Link = (props) => {
 	};
 
 	function openModal() {
-		if (!props.settings.settings) {
-			fetch_settings_data().then((res) => {
-				setModalIsOpen(true);
-			});
-		}
 		setIsFetchTerms(true);
 		fetch_terms_data().then(() => {
-			if (props.settings.settings) {
-				setModalIsOpen(true);
-			}
+			setModalIsOpen(true);
 			setIsFetchTerms(false);
 		});
 	}
@@ -472,7 +464,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };

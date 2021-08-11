@@ -8,6 +8,7 @@ import LinkCopyUrl from './../../components/LinkCopyUrl';
 import LinksListViewFilter from './LinksListViewFilter';
 import { linksFilterData, formatDate, route_path, insertOverlayElement } from './../../utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
+import { fetch_settings_data } from './../../redux/actions/settings.actions';
 import LinkQuickAction from './../../components/LinkQuickAction';
 import TableLoader from './../../components/Loader/TableLoader';
 
@@ -93,7 +94,7 @@ const getLinksListViewColumnData = (props) => {
 };
 
 const ListCanvas = (props) => {
-	const { links } = props.links;
+	const { links, settings } = props.links;
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -112,6 +113,9 @@ const ListCanvas = (props) => {
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
+		}
+		if (!settings) {
+			props.fetch_settings_data();
 		}
 	}, []);
 
@@ -219,11 +223,13 @@ const ListCanvas = (props) => {
 
 const mapStateToProps = (state) => ({
 	links: state.links,
+	settings: state.settings,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
+		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		add_new_cat: bindActionCreators(add_new_cat, dispatch),
 		add_new_link: bindActionCreators(add_new_link, dispatch),
 		edit_link: bindActionCreators(edit_link, dispatch),
