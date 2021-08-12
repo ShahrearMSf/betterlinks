@@ -40,7 +40,7 @@ trait Links
                 } elseif (isset($schema['format']) && $schema['format'] == 'date-time') {
                     $data[$key] = sanitize_text_field($POST[$key]);
                 } elseif (isset($schema['type']) && $schema['type'] === 'object') {
-                    $tempData = json_decode(html_entity_decode(stripslashes($POST[$key])), true);
+                    $tempData = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
                     $tempSanitizeData = [];
                     if (isset($schema['properties']) && is_array($tempData)) {
                         foreach ($schema['properties'] as $innerKey => $innerSchema) {
