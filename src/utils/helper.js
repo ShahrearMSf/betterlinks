@@ -86,6 +86,13 @@ export const generateSlug = (value) => {
 		.replace(/[^a-z0-9-]/g, '');
 };
 
+export const generateShortUrl = (value) => {
+	return value
+		.toLowerCase()
+		.replace(/\s+/g, '-')
+		.replace(/[^a-z0-9-/-]/g, '');
+};
+
 export const generateRandomSlug = (length = 3) => {
 	return Math.random().toString(20).substr(2, length) + new Date().getMilliseconds();
 };

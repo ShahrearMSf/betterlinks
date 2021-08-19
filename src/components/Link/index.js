@@ -8,7 +8,17 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, nonce, betterlinks_nonce, site_url, generateSlug, generateRandomSlug, formatDate, plugin_root_url } from './../../utils/helper';
+import {
+	modalCustomStyles,
+	modalCustomSmallStyles,
+	betterlinks_nonce,
+	site_url,
+	generateSlug,
+	generateShortUrl,
+	generateRandomSlug,
+	formatDate,
+	plugin_root_url,
+} from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -37,7 +47,6 @@ const Link = (props) => {
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
-	const randomSlug = generateRandomSlug();
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, data);
 	const [isOpenLinkPanel, setOpenLinkPanel] = useState({
@@ -50,7 +59,7 @@ const Link = (props) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: randomSlug,
+		short_url: '',
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,
@@ -208,7 +217,20 @@ const Link = (props) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Title', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" id="link_title" name="link_title" disabled={isDisableLinkFormEditView} required />
+										<Field
+											className="btl-modal-form-control"
+											id="link_title"
+											name="link_title"
+											disabled={isDisableLinkFormEditView}
+											onChange={(e) => {
+												props.setFieldValue('link_title', e.target.value);
+												if (!data) {
+													props.setFieldValue('short_url', generateShortUrl(e.target.value));
+													setSlugIsExists(false);
+												}
+											}}
+											required
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">
@@ -262,7 +284,7 @@ const Link = (props) => {
 												id="short_url"
 												name="short_url"
 												onChange={(e) => {
-													props.setFieldValue('short_url', e.target.value);
+													props.setFieldValue('short_url', e.target.value.replace(/\s+/g, '-'));
 													setSlugIsExists(false);
 												}}
 												disabled={isDisableLinkFormEditView}
