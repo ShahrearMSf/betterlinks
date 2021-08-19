@@ -76,6 +76,8 @@ trait Links
                         }
                     }
                     $data[$key] = $tempSanitizeData;
+                } elseif (isset($schema['type']) && $schema['type'] === 'array') {
+                    $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($POST[$key]);
                 }
             }
         }
