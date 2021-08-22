@@ -1,25 +1,24 @@
 .btl-docs {
     display: grid;
-    grid-gap: 30px;
+    grid-gap: 25px;
     grid-template-columns: repeat(4, 1fr);
     @media screen and (max-width: 1299px) {
         grid-template-columns: repeat(2, 1fr);
     }
     .btl-doc {
         background: $white;
-        padding: 30px;
-        padding-bottom: 60px;
+        padding: 25px;
         .btl-doc__icon {
             display: flex;
             img {
-                height: 50px;
+                height: 35px;
             }
             &:not(:last-child) {
-                margin-bottom: 25px;
+                margin-bottom: 15px;
             }
         }
         .btl-doc__title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
             line-height: 1.2;
             margin-top: 0;
@@ -29,12 +28,13 @@
             }
         }
         .btl-doc__content {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 400;
-            line-height: 2;
+            line-height: 1.5;
+            margin-top: 0;
             color: $secondary;
             &:not(:last-child) {
-                margin-bottom: 30px;
+                margin-bottom: 15px;
             }
         }
         .btl-doc__url {
