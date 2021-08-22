@@ -185,7 +185,9 @@ trait Links
                 ->where('link_id', '=', $request['ID'])
                 ->delete();
         }
-        $qb->table('betterlinks_terms_relationships')->insert($term_data);
+        if (count($term_data) > 0) {
+            $qb->table('betterlinks_terms_relationships')->insert($term_data);
+        }
     }
     public function insert_link($arg)
     {
