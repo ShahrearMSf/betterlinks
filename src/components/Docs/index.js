@@ -18,28 +18,12 @@ export default function Docs(props) {
 					<h3 className="btl-doc__title">{__('Documentation', 'betterlinks')}</h3>
 					<p className="btl-doc__content">
 						{__(
-							'Get started by spending some time with the documentation to get familiar with Essential Addons. Build awesome websites for you or your clients with ease. Documentation',
+							'Get started by spending some time with the documentation to get familiar with BetterLinks. Create Shortened URLs and start cross-promoting your brands & products.',
 							'betterlinks'
 						)}
 					</p>
-					<a href="#" className="btl-doc__url">
+					<a href="https://betterlinks.io/docs/" className="btl-doc__url" target="_blank">
 						{__('Documentation', 'betterlinks')}
-						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
-					</a>
-				</div>
-				<div className="btl-doc">
-					<div className="btl-doc__icon">
-						<img src={plugin_root_url + 'assets/images/bug.svg'} alt="" />
-					</div>
-					<h3 className="btl-doc__title">{__('Contribute to Betterlinks', 'betterlinks')}</h3>
-					<p className="btl-doc__content">
-						{__(
-							'Get started by spending some time with the documentation to get familiar with Essential Addons. Build awesome websites for you or your clients with ease. Documentation',
-							'betterlinks'
-						)}
-					</p>
-					<a href="#" className="btl-doc__url">
-						{__('Report A Bug', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>
 				</div>
@@ -48,14 +32,22 @@ export default function Docs(props) {
 						<img src={plugin_root_url + 'assets/images/user.svg'} alt="" />
 					</div>
 					<h3 className="btl-doc__title">{__('Need Help?', 'betterlinks')}</h3>
+					<p className="btl-doc__content">{__('Stuck with something? Feel free to reach out to our Live Chat agent or create a support ticket.', 'betterlinks')}</p>
+					<a href="https://wpdeveloper.net/support/" className="btl-doc__url" target="_blank">
+						{__('Get Help', 'betterlinks')}
+						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
+					</a>
+				</div>
+				<div className="btl-doc">
+					<div className="btl-doc__icon">
+						<img src={plugin_root_url + 'assets/images/community.svg'} alt="" />
+					</div>
+					<h3 className="btl-doc__title">{__('Join the Community', 'betterlinks')}</h3>
 					<p className="btl-doc__content">
-						{__(
-							'Get started by spending some time with the documentation to get familiar with Essential Addons. Build awesome websites for you or your clients with ease. Documentation',
-							'betterlinks'
-						)}
+						{__('Join the Facebook community and discuss with fellow developers and users. Best way to connect with people and get feedback on your projects.', 'betterlinks')}
 					</p>
-					<a href="#" className="btl-doc__url">
-						{__('Initiate Chat', 'betterlinks')}
+					<a href="https://www.facebook.com/groups/wpdeveloper.net/" className="btl-doc__url" target="_blank">
+						{__('Join the Community', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>
 				</div>
@@ -66,12 +58,12 @@ export default function Docs(props) {
 					<h3 className="btl-doc__title">{__('Show Your Love', 'betterlinks')}</h3>
 					<p className="btl-doc__content">
 						{__(
-							'Get started by spending some time with the documentation to get familiar with Essential Addons. Build awesome websites for you or your clients with ease. Documentation',
+							'We love to have you in BetterLinks family. We are making it more awesome everyday. Take your 2 minutes to review the plugin and spread the love to encourage us to keep it going.',
 							'betterlinks'
 						)}
 					</p>
-					<a href="#" className="btl-doc__url">
-						{__('Initiate Chat', 'betterlinks')}
+					<a href="https://wpdeveloper.net/review-betterlinks" className="btl-doc__url" target="_blank">
+						{__('Leave a Review', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>
 				</div>

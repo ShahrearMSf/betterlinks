@@ -19,7 +19,7 @@ class Notice
          * Current Notice End Time.
          * Notice will dismiss in 3 days if user does nothing.
          */
-        $notice->cne_time = '3 Day';
+        $notice->cne_time = '7 Day';
         /**
          * Current Notice Maybe Later Time.
          * Notice will show again in 7 days
