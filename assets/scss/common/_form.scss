@@ -156,6 +156,7 @@
 		font-weight: 500;
 		font-size: 16px;
 		padding-top: 2px;
+		min-height: 24px;
 		&:before {
 			position: absolute;
 			font-family: 'better-links';
@@ -163,7 +164,6 @@
 			left: 0;
 			font-size: 24px;
 			color: $secondary-lighten;
-			padding-top: 2px;
 			height: 20px;
 			border-radius: 2.5px;
 		}
