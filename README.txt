@@ -125,20 +125,20 @@ Yes, it will work with any standard WordPress theme.
 
 = 1.2.1 - 24/08/2021 =
 
-- Few minor bug & improvements
+- Few minor bug fix & improvements
 
 = 1.2.0 - 23/08/2021 =
 
 - Fixed: Tags not updating & creating
 - Fixed: Category not updating properly
 - Added: Link title automatically being converted to Shortened URL
-- Few minor bug & improvements
+- Few minor bug fix & improvements
 
 = 1.1.9 - 12/08/2021 =
 
 - Added: AJAX Fallback when REST API is disabled
 - Fixed: Sanitized REST API data
-- Few minor bug & improvements
+- Few minor bug fix & improvements
 
 = 1.1.8 - 28/07/2021 =
 
