@@ -559,3 +559,23 @@
         color: $white;
     }
 }
+
+.btl-docs {
+    .btl-doc {
+        background: #2c3650;
+        .btl-doc__icon {
+        }
+        .btl-doc__title {
+			color: $white;
+        }
+        .btl-doc__content {
+            color: $light-darken;
+        }
+        .btl-doc__url {
+            color: $white;
+        }
+    }
+    &:not(:first-child) {
+        margin-top: 30px;
+    }
+}

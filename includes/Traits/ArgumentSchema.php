@@ -192,6 +192,9 @@ trait ArgumentSchema
                     'type' => 'integer',
                     'sanitize_callback' => 'absint',
                 ],
+                'tags_id' => [
+                    'type' => 'array'
+                ],
             ],
             $this->terms_schema()
         );

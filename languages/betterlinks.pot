@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 1.1.6\n"
+"Project-Id-Version: BetterLinks 1.1.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-07-05T05:34:41+00:00\n"
+"POT-Creation-Date: 2021-08-23T09:16:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
@@ -51,32 +51,64 @@ msgstr ""
 msgid "Go Pro"
 msgstr ""
 
-#: includes/Admin/Notice.php:61
+#: includes/Admin/Notice.php:38
+msgid "Ok, you deserve it!"
+msgstr ""
+
+#: includes/Admin/Notice.php:43
+msgid "I already did"
+msgstr ""
+
+#: includes/Admin/Notice.php:51
+msgid "Maybe Later"
+msgstr ""
+
+#: includes/Admin/Notice.php:59
+msgid "I need help"
+msgstr ""
+
+#: includes/Admin/Notice.php:64
+msgid "Never show again"
+msgstr ""
+
+#: includes/Admin/Notice.php:79
+msgid "Howdy, "
+msgstr ""
+
+#: includes/Admin/Notice.php:79
+msgid "! 👋 You have created "
+msgstr ""
+
+#: includes/Admin/Notice.php:79
+msgid "Shortened URLs so far 🎉 If you are enjoying using BetterLinks, feel free to leave a 5* Review on the WordPress Forum."
+msgstr ""
+
+#: includes/Admin/Notice.php:140
 msgid "Whoops! You are already using Pretty Links on your website. To migrate your Pretty Links data to BetterLinks, click here."
 msgstr ""
 
-#: includes/Admin/Notice.php:62
-#: includes/Admin/Notice.php:85
+#: includes/Admin/Notice.php:141
+#: includes/Admin/Notice.php:164
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Admin/Notice.php:72
+#: includes/Admin/Notice.php:151
 msgid "All Pretty Links have been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website."
 msgstr ""
 
-#: includes/Admin/Notice.php:73
+#: includes/Admin/Notice.php:152
 msgid "Deactivate Pretty Links"
 msgstr ""
 
-#: includes/Admin/Notice.php:84
+#: includes/Admin/Notice.php:163
 msgid "Whoops! You are already using Simple 301 Redirects on your website. To migrate your Simple 301 Redirects data to BetterLinks, click here."
 msgstr ""
 
-#: includes/Admin/Notice.php:98
+#: includes/Admin/Notice.php:177
 msgid "All Simple 301 Redirects have been successfully migrated to BetterLinks. You can now safely deactivate Simple 301 Redirects on your website."
 msgstr ""
 
-#: includes/Admin/Notice.php:99
+#: includes/Admin/Notice.php:178
 msgid "Deactivate Simple 301 Redirects"
 msgstr ""
 
@@ -124,110 +156,156 @@ msgstr ""
 msgid "Add New Category"
 msgstr ""
 
-#: src/components/Graph/index.js:117
+#: src/components/Docs/index.js:18
+#: src/components/Docs/index.js:26
+msgid "Documentation"
+msgstr ""
+
+#: src/components/Docs/index.js:20
+msgid "Get started by spending some time with the documentation to get familiar with BetterLinks. Create Shortened URLs and start cross-promoting your brands & products."
+msgstr ""
+
+#: src/components/Docs/index.js:34
+msgid "Need Help?"
+msgstr ""
+
+#: src/components/Docs/index.js:35
+msgid "Stuck with something? Feel free to reach out to our Live Chat agent or create a support ticket."
+msgstr ""
+
+#: src/components/Docs/index.js:37
+msgid "Get Help"
+msgstr ""
+
+#: src/components/Docs/index.js:45
+#: src/components/Docs/index.js:50
+msgid "Join the Community"
+msgstr ""
+
+#: src/components/Docs/index.js:47
+msgid "Join the Facebook community and discuss with fellow developers and users. Best way to connect with people and get feedback on your projects."
+msgstr ""
+
+#: src/components/Docs/index.js:58
+msgid "Show Your Love"
+msgstr ""
+
+#: src/components/Docs/index.js:60
+msgid "We love to have you in BetterLinks family. We are making it more awesome everyday. Take your 2 minutes to review the plugin and spread the love to encourage us to keep it going."
+msgstr ""
+
+#: src/components/Docs/index.js:66
+msgid "Leave a Review"
+msgstr ""
+
+#: src/components/Graph/index.js:138
 msgid "Click Analytics"
 msgstr ""
 
-#: src/components/Link/index.js:214
-#: src/containers/group/ListCanvas.js:25
+#: src/components/Link/index.js:218
+#: src/containers/group/ListCanvas.js:26
 msgid "Title"
 msgstr ""
 
-#: src/components/Link/index.js:220
+#: src/components/Link/index.js:237
 msgid "Description"
 msgstr ""
 
-#: src/components/Link/index.js:226
-#: src/containers/group/ListCanvas.js:41
-#: src/containers/group/TabsGeneral.js:138
+#: src/components/Link/index.js:243
+#: src/containers/group/ListCanvas.js:42
+#: src/containers/group/TabsGeneral.js:147
 msgid "Redirect Type"
 msgstr ""
 
-#: src/components/Link/index.js:232
+#: src/components/Link/index.js:249
 #: src/containers/group/Clicks.js:72
 msgid "Target URL"
 msgstr ""
 
-#: src/components/Link/index.js:253
+#: src/components/Link/index.js:278
 #: src/containers/group/Clicks.js:44
-#: src/containers/group/ListCanvas.js:33
+#: src/containers/group/ListCanvas.js:34
 msgid "Shortened URL"
 msgstr ""
 
-#: src/components/Link/index.js:274
+#: src/components/Link/index.js:299
 msgid "Category"
 msgstr ""
 
-#: src/components/Link/index.js:280
+#: src/components/Link/index.js:305
 msgid "Tags"
 msgstr ""
 
-#: src/components/Link/index.js:288
+#: src/components/Link/index.js:313
 #: src/components/Terms/CatForm.js:96
 msgid "Update"
 msgstr ""
 
-#: src/components/Link/index.js:288
+#: src/components/Link/index.js:313
 msgid "Publish"
 msgstr ""
 
-#: src/components/Link/index.js:296
-#: src/containers/group/TabsGeneral.js:153
-#: src/gutenberg.js:349
+#: src/components/Link/index.js:321
+#: src/containers/group/TabsGeneral.js:162
+#: src/gutenberg.js:354
 msgid "Link Options"
 msgstr ""
 
-#: src/components/Link/index.js:308
-#: src/containers/group/TabsGeneral.js:158
-#: src/gutenberg.js:352
+#: src/components/Link/index.js:333
+#: src/containers/group/TabsGeneral.js:167
+#: src/gutenberg.js:357
 msgid "No Follow"
 msgstr ""
 
-#: src/components/Link/index.js:311
-#: src/containers/group/TabsGeneral.js:161
+#: src/components/Link/index.js:336
+#: src/containers/group/TabsGeneral.js:170
 msgid "This will add nofollow attribute to your link. (Recommended)"
 msgstr ""
 
-#: src/components/Link/index.js:324
-#: src/containers/group/TabsGeneral.js:168
-#: src/gutenberg.js:360
+#: src/components/Link/index.js:349
+#: src/containers/group/TabsGeneral.js:177
+#: src/gutenberg.js:365
 msgid "Sponsored"
 msgstr ""
 
-#: src/components/Link/index.js:327
-#: src/containers/group/TabsGeneral.js:171
+#: src/components/Link/index.js:352
+#: src/containers/group/TabsGeneral.js:180
 msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
 msgstr ""
 
-#: src/components/Link/index.js:340
-#: src/containers/group/TabsGeneral.js:178
-#: src/gutenberg.js:368
+#: src/components/Link/index.js:365
+#: src/containers/group/TabsGeneral.js:187
+#: src/gutenberg.js:373
 msgid "Parameter Forwarding"
 msgstr ""
 
-#: src/components/Link/index.js:343
-#: src/containers/group/TabsGeneral.js:181
+#: src/components/Link/index.js:368
+#: src/containers/group/TabsGeneral.js:190
 msgid "This will pass the parameters you have set in the target URL"
 msgstr ""
 
-#: src/components/Link/index.js:356
-#: src/containers/group/TabsGeneral.js:188
-#: src/gutenberg.js:376
+#: src/components/Link/index.js:381
+#: src/containers/group/TabsGeneral.js:197
+#: src/gutenberg.js:381
 msgid "Tracking"
 msgstr ""
 
-#: src/components/Link/index.js:359
-#: src/containers/group/TabsGeneral.js:191
+#: src/components/Link/index.js:384
+#: src/containers/group/TabsGeneral.js:200
 msgid "This will let you check Analytics report of your links"
 msgstr ""
 
-#: src/components/Link/index.js:367
-#: src/gutenberg.js:386
+#: src/components/Link/index.js:392
+#: src/gutenberg.js:391
 msgid "Advanced"
 msgstr ""
 
-#: src/components/Link/index.js:396
+#: src/components/Link/index.js:422
 msgid "Dynamic Redirects"
+msgstr ""
+
+#: src/components/Link/index.js:427
+msgid "ON"
 msgstr ""
 
 #: src/components/LinkCopyUrl/index.js:21
@@ -254,6 +332,7 @@ msgstr ""
 #: src/components/Teasers/RoleManagement.js:62
 #: src/components/Teasers/RoleManagement.js:74
 #: src/components/Teasers/RoleManagement.js:87
+#: src/containers/group/TabsGeneral.js:259
 msgid "Pro"
 msgstr ""
 
@@ -421,17 +500,17 @@ msgstr ""
 msgid "Search by Title"
 msgstr ""
 
-#: src/containers/group/ListCanvas.js:47
-#: src/gutenberg.js:452
+#: src/containers/group/ListCanvas.js:48
+#: src/gutenberg.js:457
 msgid "Clicks"
 msgstr ""
 
-#: src/containers/group/ListCanvas.js:67
-#: src/gutenberg.js:448
+#: src/containers/group/ListCanvas.js:68
+#: src/gutenberg.js:453
 msgid "Date"
 msgstr ""
 
-#: src/containers/group/ListCanvas.js:73
+#: src/containers/group/ListCanvas.js:74
 msgid "Action"
 msgstr ""
 
@@ -465,69 +544,81 @@ msgstr ""
 msgid "Migration is Complete"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:81
+#: src/containers/group/TabsGeneral.js:90
 msgid "Link Redirection Status"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:82
-#: src/containers/group/TabsGeneral.js:106
+#: src/containers/group/TabsGeneral.js:91
+#: src/containers/group/TabsGeneral.js:115
 msgid "(Fast Mode)"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:95
+#: src/containers/group/TabsGeneral.js:104
 msgid "If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:106
+#: src/containers/group/TabsGeneral.js:115
 msgid "Click Data Status "
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:109
+#: src/containers/group/TabsGeneral.js:118
 msgid "Fetch Analytics Data"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:128
+#: src/containers/group/TabsGeneral.js:137
 msgid "If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:132
+#: src/containers/group/TabsGeneral.js:141
 msgid "Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:198
+#: src/containers/group/TabsGeneral.js:207
 msgid "Wildcards"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:203
+#: src/containers/group/TabsGeneral.js:212
 msgid "Use Wildcards?"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:206
+#: src/containers/group/TabsGeneral.js:215
 msgid "To use wildcards, put an asterisk (*) after the folder name that you want to redirect."
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:213
+#: src/containers/group/TabsGeneral.js:222
 msgid "Bot Clicks"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:218
+#: src/containers/group/TabsGeneral.js:227
 msgid "Disable Bot Clicks"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:221
+#: src/containers/group/TabsGeneral.js:230
 msgid "This will prevent your site from bot traffic"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:228
-msgid "Instant Gutenberg Redirect"
+#: src/containers/group/TabsGeneral.js:237
+msgid "Gutenberg Redirect"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:238
+#: src/containers/group/TabsGeneral.js:247
 msgid "Allow Instant Redirect"
 msgstr ""
 
-#: src/containers/group/TabsGeneral.js:241
+#: src/containers/group/TabsGeneral.js:250
 msgid "This will allow you to redirect your links instantly from Gutenberg Editor."
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:259
+msgid "Force HTTPS"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:265
+msgid "Enable HTTPS Redirection"
+msgstr ""
+
+#: src/containers/group/TabsGeneral.js:268
+msgid "This will allow you to redirect your Target URLs in HTTPS."
 msgstr ""
 
 #: src/containers/group/TabsTools.js:33
@@ -566,43 +657,47 @@ msgstr ""
 msgid "Import File"
 msgstr ""
 
-#: src/containers/pages/Settings.js:26
+#: src/containers/pages/Settings.js:28
 msgid "General"
 msgstr ""
 
-#: src/containers/pages/Settings.js:27
+#: src/containers/pages/Settings.js:29
 msgid "Tools"
 msgstr ""
 
-#: src/containers/pages/Settings.js:28
+#: src/containers/pages/Settings.js:30
 msgid "Role Management"
 msgstr ""
 
-#: src/containers/pages/Settings.js:29
+#: src/containers/pages/Settings.js:31
 msgid "Google Analytics"
 msgstr ""
 
-#: src/containers/pages/Settings.js:30
+#: src/containers/pages/Settings.js:32
+msgid "Broken Links"
+msgstr ""
+
+#: src/containers/pages/Settings.js:33
 msgid "Go Premium"
 msgstr ""
 
-#: src/gutenberg.js:415
+#: src/gutenberg.js:420
 msgid "Active"
 msgstr ""
 
-#: src/gutenberg.js:419
+#: src/gutenberg.js:424
 msgid "Expired"
 msgstr ""
 
-#: src/gutenberg.js:423
+#: src/gutenberg.js:428
 msgid "Draft"
 msgstr ""
 
-#: src/gutenberg.js:434
+#: src/gutenberg.js:439
 msgid "Expire"
 msgstr ""
 
-#: src/gutenberg.js:479
+#: src/gutenberg.js:484
 msgid "Redirect URL after Expiration"
 msgstr ""
 

@@ -13,6 +13,7 @@ import GoogleAnalytics from './../../components/Teasers/GoogleAnalytics';
 import RoleManagement from './../../components/Teasers/RoleManagement';
 import BrokenLinks from './../../components/Teasers/BrokenLinks';
 import GoPremium from './../../components/Teasers/GoPremium';
+import Docs from './../../components/Docs';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -28,7 +29,7 @@ const Settings = (props) => {
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
 		__('Google Analytics', 'betterlinks'),
-		__('Broken Links', 'betterlinks'),
+		//__('Broken Links', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
@@ -36,7 +37,7 @@ const Settings = (props) => {
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<GoogleAnalytics />,
-		<BrokenLinks />,
+		//<BrokenLinks />,
 		<GoPremium />,
 	]);
 	useEffect(() => {
@@ -59,6 +60,7 @@ const Settings = (props) => {
 				})}
 			</Tabs>
 			{migration && <Migration mode={migration} />}
+			<Docs />
 		</React.Fragment>
 	);
 };

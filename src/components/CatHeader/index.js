@@ -35,9 +35,9 @@ const CatHeader = (props) => {
 		setModalIsOpen(true);
 	}
 
-	function closeModal(isHide = false) {
-		setCatAction(isHide);
-		setModalIsOpen(isHide);
+	function closeModal() {
+		setCatAction(false);
+		setModalIsOpen(false);
 	}
 	return (
 		<React.Fragment>
