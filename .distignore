@@ -15,5 +15,6 @@ prepros.config
 *.map
 .prettierignore
 .prettierrc.json
-src
+dev_betterlinks
 assets/scss
+.eslintrc.json

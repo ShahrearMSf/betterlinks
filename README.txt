@@ -4,7 +4,8 @@ Donate link: https://wpdeveloper.net
 Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 1.2.0
+Requires PHP: 5.6
+Stable tag: 1.2.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,31 +14,28 @@ Ultimate plugin to create, shorten, track and manage any URL. Gather analytics r
 
 == Description ==
 
-Want to make your brand standout? BetterLinks brings you the chance to easily create, shorten and manage any URL to help you cross-promote your brands & products. With its aesthetic User Interface, you can shorten anything without breaking any sweat and track & collect analytics reports to run successful campaigns easily.
+Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings you the chance to easily create, shorten and manage any URL to help you cross-promote your brands & products. With its aesthetic User Interface, you can shorten anything without breaking any sweat and track analytics to measure successful campaigns easily.
 
-## Perks of Using BetterLinks 🔥
+## WHY YOU NEED BETTERLINKS 🔥
 
-- Easy-to-use & Simple Link Shortener
+- Easy-to-use WordPress link shortener
 - Create attractive looking links instantly
-- Safe Redirection URLs 
-- Analyze and Track your marketing campaigns from one place
-- Optimized queries to reduce load time & make faster
-- Power up your affiliate marketing level
-- UTM Builder to evaluate marketing campaigns
-- Instant Gutenberg Redirect to manage links from Gutenberg Editor
-- Bot Blocker to prevent bot traffic
-- Indiviual Analytics for better insights [PRO]
-- User Role Management [PRO]
-- Set Link Expiration date & control where users will be redirected [PRO]
-- Integration with Google Analytics [PRO]
-- Dynamic Redirects with Split Testing [PRO]
-- HTTPS Redirection [PRO]
+- Add multiple link redirect types (301, 302, 307)
+- Analyze & track your marketing campaigns 
+- Enhance your affiliate marketing strategies
+- Manage your links directly in Gutenberg Editor
+- Reduce link load time with optimized queries
+- Monitor marketing campaigns with UTM Builder
+- Prevent bot traffic and clicks with Bot Blocker
 
+https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
-## Simple & Fast Link Shortener 🎉
+## SIMPLE & FAST LINK MANAGEMENT PLUGIN 🎉
 
 
 **✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place
+
+**🧲 Quick Link Shortening:** Make your long URL links into short ones and create pretty links within minutes 
 
 **💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly
 
@@ -47,36 +45,40 @@ Want to make your brand standout? BetterLinks brings you the chance to easily cr
 
 **🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks with one-click
 
-## Easily Analyze and Track Your Cloaked Links 📈
+## POWERFUL LINK TRACKING & ANALYTICS FEATURES 🚀
 
 **📈 Real Time Analytics:** Generate real-time analytics data and easily evaluate the performance of your cloaked links with just a glance
 
-**🔎 Examine Click-Through Rate:** Examine the performance of your click-through rates of your shortend URLs right from one place
+**🔎 Examine Click-Through Rate:** Examine the performance of your click-through rates of your shortened URLs right from one place
 
-**📊 Generate Reports:** Gather analytics reports to evaulate and run successful marketing campaigns
+**📊 Generate Reports:** Gather analytics reports to evaluate and run successful marketing campaigns
 
-**📅 Interactive Calendar to Filter Clicks:** Easily Filter your clokaed links based on certain dates from the interactive Calendar
+**📅 Interactive Calendar to Filter Clicks:** Easily filter your cloaked links based on certain dates from the interactive calendar
 
-**🔗  UTM Builder to Track Campaigns:** Add Campaign Parameters to track your marketing campaigns
+**🔗 UTM Builder to Track Campaigns:** Add parameters to URLs to monitor your marketing campaigns
+
+## More Advanced Features with BetterLinks PRO:
+
+- Get better insights with Individual Analytics [PRO]
+- Control and manage user roles & permissions [PRO]
+- Set link expiration dates & number of click limits [PRO]
+- Integrate seamlessly with Google Analytics [PRO]
+- Carry out split tests with Dynamic Redirects [PRO]
+- Force enable secure HTTPS Redirection [PRO]
+
+[ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
+
 
 ## 🔥 WHAT’S NEXT
-If you like BetterLinks, then consider checking out our other WordPress Plugins:
+If you like BetterLinks, then consider checking out our other WordPress Plugins for FREE:
 
 🔝 [Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 1 million active users in the WordPress repository.
 
 🔔 [NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
 
-🗒️ [BetterDocs](https://betterdocs.co/) – Best Documentation & Knowledge Base Plugin for WordPress, whcih also reduce your manual support request.
+📄 [EmbedPress](https://embedpress.com/): Easiest WordPress embedding plugin to add content from 100+ sources with one-click. Works in Gutenberg, Elementor, and more.
 
-📄 [EmbedPress](https://embedpress.com/): EmbedPress lets you embed videos, images, posts, audio, maps and upload PDF, DOC, PPT & all other types of content into your WordPress site with one-click and showcase it beautifully for the visitors.
-
-⏰ [WP Scheduled Posts](https://wordpress.org/plugins/wp-scheduled-posts/) – Complete solution for WordPress Post Scheduling to manage schedules through an editorial calendar & Social Share.
-
-☁ [Templately](https://wordpress.org/plugins/templately/): Free templates library for Elementor & Gutenberg along with the cloud collaboration for WordPress
-
-⭐ [ReviewX](https://wordpress.org/plugins/reviewx/): WooCommerce Product review plugin that allows users to submit product reviews with multiple criteria, photos, video and more
-
-⚡ [Flexia](http://wordpress.org/plugins/flexia): Most lightweight, customizable & multi purpose theme for WordPress
+⏰ [SchedulePress](https://wordpress.org/plugins/wp-scheduled-posts/) – Complete solution for scheduling WordPress posts through an editorial calendar & social share.
 
 Visit [WPDeveloper](https://wpdeveloper.net/) to learn more about how to do better in WordPress with [Help Tutorial, Tips & Tricks](https://wpdeveloper.net/blog).
 
@@ -86,15 +88,15 @@ Visit [WPDeveloper](https://wpdeveloper.net/) to learn more about how to do bett
 ## 👨‍💻 DOCUMENTATION AND SUPPORT ##
 
 - For documentation and tutorials go to our [Documentation](https://betterlinks.io/docs/)
-- For video tutorials go to our [YouTube Playlist](https://www.youtube.iom/playlist?list=PLWHp1xKHCfxDOGyziODrJ1qYNOC8pbVYA)
-- If you have any more questions, visit our support on the Plugin’s Forum
+- For video tutorials go to our [YouTube Playlist](https://www.youtube.com/watch?v=ZJqBrFhQC1A&list=PLWHp1xKHCfxBtIjolI693SDWtdfKZCc37)
+- If you have any more questions, visit our support on the [Plugin’s Forum] (https://wordpress.org/support/plugin/betterlinks/)
 - For more information about features, FAQs and documentation, check out our website at [BetterLinks](https://betterlinks.io/)
 
 ## 💙 Loved BetterLinks? ##
 
-- Join our [Facebook Group](https://www.facebook.iom/groups/wpdeveloper.net/)
-- Learn from our tutorials on [Youtube Channel](https://wpdeveloper.net/go/youtube-channel)
-- Or rate us on WordPress
+- Join our [Facebook Group](https://www.facebook.com/groups/wpdeveloper.net/)
+- Learn from our tutorials on [Youtube Channel](https://www.youtube.com/channel/UCOjzLEdsnpnFVkm1JKFurPA)
+- Or rate us on [WordPress](https://wordpress.org/support/plugin/betterlinks/reviews/?rate=5#new-post)
 
 
 == Installation ==
@@ -117,24 +119,41 @@ Visit [WPDeveloper](https://wpdeveloper.net/) to learn more about how to do bett
 
 Yes, it will work with any standard WordPress theme.
 
+= Can I migrate to BetterLinks from any plugin? =
+
+If you were previously using any link shortener and redirection plugin, you can migrate to BetterLinks instantly.
+
+= Who can benefit more from BetterLinks? =
+
+BetterLinks is very useful for website owners, affiliate marketers, SEO experts or anyone who requires link shortening, redirection, tracking or overall link management on WordPress. 
+
+
 
 == Screenshots ==
 
 
 == Changelog ==
 
+= 1.2.2 - 31/08/2021 =
+
+- Few minor bug fix & improvements
+
+= 1.2.1 - 24/08/2021 =
+
+- Few minor bug fix & improvements
+
 = 1.2.0 - 23/08/2021 =
 
 - Fixed: Tags not updating & creating
 - Fixed: Category not updating properly
 - Added: Link title automatically being converted to Shortened URL
-- Few minor bug & improvements
+- Few minor bug fix & improvements
 
 = 1.1.9 - 12/08/2021 =
 
 - Added: AJAX Fallback when REST API is disabled
 - Fixed: Sanitized REST API data
-- Few minor bug & improvements
+- Few minor bug fix & improvements
 
 = 1.1.8 - 28/07/2021 =
 
