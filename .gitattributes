@@ -1,6 +1,5 @@
 .wordpress-org                             export-ignore
 .github                                    export-ignore
-src                                        export-ignore
 .babelrc                                   export-ignore
 .deployignore                              export-ignore
 .distignore                                export-ignore
@@ -58,3 +57,4 @@ vendor/jaybizzle/crawler-detect/.github                     export-ignore
 vendor/jaybizzle/crawler-detect/.php_cs.dist                export-ignore
 vendor/jaybizzle/crawler-detect/composer.json               export-ignore
 vendor/jaybizzle/crawler-detect/README.md                   export-ignore
+dev_betterlinks                   export-ignore
