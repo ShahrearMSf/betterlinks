@@ -134,7 +134,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 1.2.2 - 29/08/2021 =
+= 1.2.2 - 31/08/2021 =
 
 - Few minor bug fix & improvements
 
