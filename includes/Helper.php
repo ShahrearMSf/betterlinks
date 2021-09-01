@@ -316,4 +316,39 @@ class Helper
         $remove = ['action', 'security'];
         return array_diff_key($data, array_flip($remove));
     }
+
+    public static function insert_links($item)
+    {
+        global $wpdb;
+        $betterlinks = $wpdb->get_results(
+            $wpdb->prepare("SELECT short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $item['short_url']),
+            ARRAY_A
+        );
+        if (count($betterlinks) === 0) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}betterlinks ( 
+                        link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect 
+                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
+                    array(
+                        $item['link_author'],$item['link_date'],$item['link_date_gmt'],$item['link_title'],$item['link_slug'],$item['link_note'],$item['link_status'],$item['nofollow'],$item['sponsored'],$item['track_me'],$item['param_forwarding'],$item['param_struct'],$item['redirect_type'],$item['target_url'],$item['short_url'],$item['link_order'],$item['link_modified'],$item['link_modified_gmt'],$item['wildcards'],$item['expire'],$item['dynamic_redirect']
+                    )
+                )
+            );
+            return $wpdb->insert_id;
+        }
+        return;
+    }
+    public static function insert_terms()
+    {
+        // $terms = $this->DB->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
+        //     if (is_array($terms) && count($terms) > 0) {
+        //         $this->term_IDs[] = current($terms)->ID;
+        //         $message[] = 'import failed "' . $item['term_name'] . '" already exists';
+        //     } else {
+        //         $insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
+        //         $this->term_IDs[] = current($insertedTerms);
+        //         $message[] = 'Imported Successfully "' . $item['term_name'] . '"';
+        //     }
+    }
 }
