@@ -3,8 +3,6 @@ namespace BetterLinks\Tools;
 
 class Export
 {
-    private $wpdb_prefix;
-    private $DB;
     public function __construct()
     {
         add_action('admin_init', [$this, 'export_data']);
@@ -14,17 +12,31 @@ class Export
         $page = isset($_GET['page']) ? $_GET['page'] : '';
         $export = isset($_GET['export']) ? $_GET['export'] : false;
         if ($page === 'betterlinks-settings' && $export == true) {
-            $links = $this->get_links();
-            $results = [array_keys($links[0])];
-            $results = array_merge($results, $links);
-            $filename = 'betterlinks.' . date('Y-m-d') . '.csv';
-            $this->array_to_csv_download(
-                $results, // this array is going to be the second row
-                $filename
-            );
+            $type = isset($_POST['content']) ? $_POST['content'] : '';
+            $this->download_files($type);
             exit();
         }
     }
+
+    public function download_files($type)
+    {
+        $data = [];
+        $filename = 'betterlinks';
+        if ($type === 'links') {
+            $links = $this->get_links();
+            $data = $this->prepare_csv_file_data($links);
+        } else {
+            $clicks = $this->get_clicks();
+            $data = $this->prepare_csv_file_data($clicks);
+            $filename .= '-clicks';
+        }
+        $filename .= '.' . date('Y-m-d') . '.csv';
+        $this->array_to_csv_download(
+            $data,
+            $filename
+        );
+    }
+
     public function array_to_csv_download($array, $filename = "export.csv", $delimiter=";")
     {
         header('Content-Type: application/csv');
@@ -35,26 +47,12 @@ class Export
         }
     }
 
-    public function process_data($type)
+    public function prepare_csv_file_data($data)
     {
-        global $wpdb;
-        $this->wpdb_prefix = $wpdb->prefix;
-        $this->DB = \BetterLinks\Helper::DB();
-        $content = [];
-        // if ($type == 'all') {
-        //     $content['links'] = $this->get_links();
-        //     $content['terms'] = $this->get_terms();
-        //     $content['terms_relationships'] = $this->get_terms_relationships();
-        //     $content['clicks'] = $this->get_clicks();
-        // } elseif ($type == 'links') {
-        //     $content['links'] = $this->get_links();
-        //     $content['terms'] = $this->get_terms();
-        //     $content['terms_relationships'] = $this->get_terms_relationships();
-        // } elseif ($type == 'clicks') {
-        //     $content['clicks'] = $this->get_clicks();
-        // }
-        // $content = $this->get_links();
-        return apply_filters('betterlinks/tools/export_content', $content);
+        if (is_array($data) && count($data) > 0) {
+            return array_merge([array_keys($data[0])], $data);
+        }
+        return [];
     }
 
     public function get_links()
@@ -95,14 +93,21 @@ class Export
 
     public function get_clicks()
     {
-        return $this->DB->query("SELECT * from {$this->wpdb_prefix}betterlinks_clicks")->get();
-    }
-    public function get_terms()
-    {
-        return $this->DB->query("SELECT * from {$this->wpdb_prefix}betterlinks_terms")->get();
-    }
-    public function get_terms_relationships()
-    {
-        return $this->DB->query("SELECT term_id, link_id from {$this->wpdb_prefix}betterlinks_terms_relationships")->get();
+        global $wpdb;
+        $clicks = $wpdb->get_results("SELECT 
+            {$wpdb->prefix}betterlinks.short_url,
+            {$wpdb->prefix}betterlinks_clicks.ip, 
+            {$wpdb->prefix}betterlinks_clicks.browser, 
+            {$wpdb->prefix}betterlinks_clicks.os, 
+            {$wpdb->prefix}betterlinks_clicks.referer, 
+            {$wpdb->prefix}betterlinks_clicks.host, 
+            {$wpdb->prefix}betterlinks_clicks.uri, 
+            {$wpdb->prefix}betterlinks_clicks.click_count, 
+            {$wpdb->prefix}betterlinks_clicks.visitor_id, 
+            {$wpdb->prefix}betterlinks_clicks.click_order, 
+            {$wpdb->prefix}betterlinks_clicks.created_at, 
+            {$wpdb->prefix}betterlinks_clicks.created_at_gmt
+        FROM {$wpdb->prefix}betterlinks_clicks LEFT JOIN {$wpdb->prefix}betterlinks ON {$wpdb->prefix}betterlinks_clicks.link_id = {$wpdb->prefix}betterlinks.ID", ARRAY_A);
+        return $clicks;
     }
 }

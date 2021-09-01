@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { nonce } from './../../utils/helper';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
-	const [exportMode, setExportMode] = useState('all');
+	const [exportMode, setExportMode] = useState('links');
 	const [importResponse, setImportResponse] = useState({});
 	const importerModeHandler = (changeEvent) => {
 		setImporterMode(changeEvent.target.value);
@@ -33,12 +33,6 @@ const TabsTools = ({ query }) => {
 					<h3 className="btl-tab-panel-header">{__('Choose an Option You want to Export', 'betterlinks')}</h3>
 					<form action={'admin.php?page=' + query.get('page') + '&export=true'} method="POST">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
-							<div>
-								<label className="btl-radio">
-									<input type="radio" name="content" value="all" checked={exportMode === 'all'} onChange={exportModeHandler} />
-									<span>{__('All Content (This will contain all of your links and analytic.)', 'betterlinks')}</span>
-								</label>
-							</div>
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="links" checked={exportMode === 'links'} onChange={exportModeHandler} />
