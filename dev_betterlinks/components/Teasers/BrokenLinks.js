@@ -1,18 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import TextField from '@material-ui/core/TextField';
 import {plugin_root_url} from '../../utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+import UpgradeToPro from './UpgradeToPro';
 
 const propTypes = {};
 
 const defaultProps = {};
 
 export default function BrokenLinks(props) {
+
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const openUpgradeToProModal = () => {
+		setUpgradeToProModal(true);
+	};
+
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
 	return (
 		<React.Fragment>
+		<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
 				<div className="btl-broken-link-checker-wrapper">
 					<div className="btl-broken-link-checker">
@@ -20,7 +31,7 @@ export default function BrokenLinks(props) {
 						<p>{__('You can schedule scan so that your website automatically scan for dead links.', 'betterlinks')}</p>
 						<Formik>
 							<Form>
-								<div className="btl-role-item btl-form-group">
+								<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">{__('Enable Schedule Scan', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
@@ -29,7 +40,7 @@ export default function BrokenLinks(props) {
 										</label>
 									</div>
 								</div>
-								<div class="btl-form-group">
+								<div class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">{__('Frequently', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div class="link-options__body">
 										<Select
@@ -39,7 +50,7 @@ export default function BrokenLinks(props) {
 										/>
 									</div>
 								</div>
-								<div class="btl-form-group">
+								<div class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">{__('Day', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div class="link-options__body">
 										<div className="scheduleweekdayselect">
@@ -52,7 +63,7 @@ export default function BrokenLinks(props) {
 										</div>
 									</div>
 								</div>
-								<div class="btl-form-group">
+								<div class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">{__('Time', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div class="link-options__body">
 										<TextField disabled/>
@@ -60,7 +71,7 @@ export default function BrokenLinks(props) {
 								</div>
 							</Form>
 						</Formik>
-						<div className="btl-scan-outputs">
+						<div className="btl-scan-outputs" onClick={() => openUpgradeToProModal()}>
 								<div className="btl-scan-output">
 									<span className="icon">
 										<img src={plugin_root_url + 'assets/images/padlock.svg'} alt="" />
@@ -87,7 +98,7 @@ export default function BrokenLinks(props) {
 					<div className="btl-broken-link-checker">
 						<Formik>
 							<Form>
-								<span class="btl-form-group">
+								<span class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">{__('Enable Reporting', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div class="link-options__body">
 										<label className="btl-checkbox-field">
@@ -96,7 +107,7 @@ export default function BrokenLinks(props) {
 										</label>
 									</div>
 								</span>
-								<span class="btl-form-group">
+								<span class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">{__('Reporting Email', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div class="link-options__body">
 										<label class="btl-checkbox-field block">
@@ -104,7 +115,7 @@ export default function BrokenLinks(props) {
 										</label>
 									</div>
 								</span>
-								<span class="btl-form-group">
+								<span class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">{__('Reporting Email Subject', 'betterlinks')}<span className="pro-badge">{__('Pro', 'betterlinks')}</span></label>
 									<div class="link-options__body">
 										<label class="btl-checkbox-field block">
