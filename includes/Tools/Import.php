@@ -57,6 +57,7 @@ class Import
     public function process_data($csv)
     {
         $link_message = [];
+        $click_message = [];
         $count = 0;
         while (($item = fgetcsv($csv)) !== false) {
             if ($count === 0) {
@@ -65,8 +66,16 @@ class Import
                 continue;
             }
             $item = array_combine($this->link_header, $item);
-            if (is_array($item)) {
-                $is_insert = $this->insert_data($item);
+            // clicks data import
+            if (is_array($item) && count($item) === 12) {
+                $is_insert = $this->insert_click_data($item);
+                if ($is_insert) {
+                    $click_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
+                } else {
+                    $click_message[] = 'import failed "' . $item['short_url'] . '" already exists';
+                }
+            } elseif (is_array($item) && count($item) === 24) {
+                $is_insert = $this->insert_link_data($item);
                 if ($is_insert) {
                     $link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
                 } else {
@@ -74,14 +83,14 @@ class Import
                 }
             }
         }
-        return ['links' => $link_message];
+        return ['links' => $link_message, 'clicks' => $click_message];
     }
 
     public function prepare_data_before_insert()
     {
     }
 
-    public function insert_data($item)
+    public function insert_link_data($item)
     {
         if (!empty($item['link_title']) && !empty($item['short_url'])) {
             $link_id = \BetterLinks\Helper::insert_links($item);
@@ -95,6 +104,15 @@ class Import
                     }
                 }
             }
+            return $link_id;
+        }
+        return;
+    }
+
+    public function insert_click_data($item)
+    {
+        if (!empty($item['short_url'])) {
+            $link_id = \BetterLinks\Helper::insert_clicks($item);
             return $link_id;
         }
         return;
@@ -153,29 +171,6 @@ class Import
         }
         if (count($terms) > 0) {
             $this->DB->table('betterlinks_terms_relationships')->insert($terms);
-        }
-        return $message;
-    }
-
-    public function clicks_data_insert($data)
-    {
-        $clicks = [];
-        $message = [];
-        foreach ($data as $item) {
-            if (!\BetterLinks\Helper::click_exists($item['ID'])) {
-                unset($item['ID']);
-                if (isset($this->link_IDs[$item['link_id']])) {
-                    $item['link_id'] = $this->link_IDs[$item['link_id']];
-                }
-                
-                $clicks[] = $item;
-                $message[] = 'Imported Successfully "' . $item['uri'] . '"';
-            } else {
-                $message[] = 'import failed "' . $item['uri'] . '" already exists';
-            }
-        }
-        if (count($clicks) > 0) {
-            $this->DB->table('betterlinks_clicks')->insert($clicks);
         }
         return $message;
     }

@@ -371,4 +371,27 @@ class Helper
         );
         return $wpdb->insert_id;
     }
+
+    public static function insert_clicks($item)
+    {
+        global $wpdb;
+        $betterlinks = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $item['short_url']),
+            ARRAY_A
+        );
+        if (isset(current($betterlinks)['ID'])) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( 
+                        link_id, ip, browser, os, referer, host, uri, click_count, visitor_id, click_order, created_at, created_at_gmt
+                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
+                    array(
+                        current($betterlinks)['ID'],$item['ip'],$item['browser'],$item['os'],$item['referer'], $item['host'],$item['uri'],$item['click_count'],$item['visitor_id'],$item['click_order'],$item['created_at'],$item['created_at_gmt']
+                    )
+                )
+            );
+            return $wpdb->insert_id;
+        }
+        return;
+    }
 }
