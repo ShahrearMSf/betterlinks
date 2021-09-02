@@ -331,7 +331,7 @@ class Helper
                         link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect 
                     ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
                     array(
-                        $item['link_author'],$item['link_date'],$item['link_date_gmt'],$item['link_title'],$item['link_slug'],$item['link_note'],$item['link_status'],$item['nofollow'],$item['sponsored'],$item['track_me'],$item['param_forwarding'],$item['param_struct'],$item['redirect_type'],$item['target_url'],$item['short_url'],$item['link_order'],$item['link_modified'],$item['link_modified_gmt'],$item['wildcards'],$item['expire'],$item['dynamic_redirect']
+                        $item['link_author'],$item['link_date'],$item['link_date_gmt'],$item['link_title'],$item['link_slug'],$item['link_note'],$item['link_status'],$item['nofollow'],$item['sponsored'],$item['track_me'],$item['param_forwarding'],$item['param_struct'],$item['redirect_type'],$item['target_url'],$item['short_url'],$item['link_order'],$item['link_modified'],$item['link_modified_gmt'],$item['wildcards'], wp_json_encode($item['expire']),wp_json_encode($item['dynamic_redirect'])
                     )
                 )
             );
@@ -339,16 +339,36 @@ class Helper
         }
         return;
     }
-    public static function insert_terms()
+    public static function insert_terms($item)
     {
-        // $terms = $this->DB->table('betterlinks_terms')->where('term_slug', '=', $item['term_slug'])->get();
-        //     if (is_array($terms) && count($terms) > 0) {
-        //         $this->term_IDs[] = current($terms)->ID;
-        //         $message[] = 'import failed "' . $item['term_name'] . '" already exists';
-        //     } else {
-        //         $insertedTerms = $this->DB->table('betterlinks_terms')->insert([$item]);
-        //         $this->term_IDs[] = current($insertedTerms);
-        //         $message[] = 'Imported Successfully "' . $item['term_name'] . '"';
-        //     }
+        global $wpdb;
+        $terms = $wpdb->get_results(
+            $wpdb->prepare("SELECT term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
+            ARRAY_A
+        );
+        if (count($terms) === 0) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}betterlinks_terms ( term_name, term_slug, term_type ) VALUES ( %s, %s, %s )",
+                    array($item['term_name'],$item['term_slug'], $item['term_type'])
+                )
+            );
+            return $wpdb->insert_id;
+        } elseif (isset(current($terms)['ID'])) {
+            return current($terms)['ID'];
+        }
+        return;
+    }
+
+    public static function insert_terms_relationships($term_id, $link_id)
+    {
+        global $wpdb;
+        $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$wpdb->prefix}betterlinks_terms_relationships ( term_id, link_id ) VALUES ( %d, %d )",
+                array($term_id,$link_id)
+            )
+        );
+        return $wpdb->insert_id;
     }
 }
