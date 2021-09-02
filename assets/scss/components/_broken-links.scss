@@ -51,8 +51,18 @@
 					box-shadow: 0 10px 15px rgba($success, 0.25);
 				}
 			}
+			.btl-select {
+				width: 180px;
+				.btl__input input {
+					&:focus {
+						box-shadow: none;
+					}
+				}
+			}
 			&:not(:last-child) {
-				border-right: 1px solid #e7e7e7;
+				@media screen and (min-width: 1200px) {
+					border-right: 1px solid #e7e7e7;
+				}
 			}
 		}
 		&:not(:last-child) {
@@ -220,6 +230,9 @@
 					text-align: center;
 					padding-left: 15px;
 					padding-right: 15px;
+					&:nth-child(2) {
+						width: 250px;
+					}
 					&:nth-child(3) {
 						min-width: 320px;
 					}
@@ -250,6 +263,9 @@
 					div {
 						font-size: 14px;
 						color: $secondary;
+					}
+					&:nth-child(2) {
+						width: 250px;
 					}
 					&:nth-child(3) {
 						min-width: 320px;
@@ -473,8 +489,9 @@
 }
 
 .btl-scan-outputs {
-	margin-top: 30px;
+	margin-top: 15px;
 	display: flex;
+	justify-content: center;
 	flex-wrap: wrap;
 	margin-right: -10px;
 	margin-bottom: -10px;
