@@ -23,7 +23,7 @@ class Import
             $this->DB = \BetterLinks\Helper::DB();
             if (!empty($_FILES['upload_file']['tmp_name'])) {
                 if ($_POST['mode'] == 'default') {
-                    $fileContent = file($_FILES['upload_file']['tmp_name'], FILE_SKIP_EMPTY_LINES);
+                    $fileContent = fopen($_FILES['upload_file']['tmp_name'], "r");
                     if (!empty($fileContent)) {
                         $results = $this->process_data($fileContent);
                         set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
@@ -54,22 +54,24 @@ class Import
             \BetterLinks\Helper::create_cron_jobs_for_analytics();
         }
     }
-    public function process_data($data)
+    public function process_data($csv)
     {
         $link_message = [];
         $count = 0;
-        foreach ($data as $item) {
+        while (($item = fgetcsv($csv)) !== false) {
             if ($count === 0) {
-                $this->link_header = array_map('trim', explode(';', $item));
+                $this->link_header = $item;
                 $count++;
                 continue;
             }
-            $item = array_combine($this->link_header, explode(';', $item));
-            $is_insert = $this->insert_data($item);
-            if ($is_insert) {
-                $link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
-            } else {
-                $link_message[] = 'import failed "' . $item['short_url'] . '" already exists';
+            $item = array_combine($this->link_header, $item);
+            if (is_array($item)) {
+                $is_insert = $this->insert_data($item);
+                if ($is_insert) {
+                    $link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
+                } else {
+                    $link_message[] = 'import failed "' . $item['short_url'] . '" already exists';
+                }
             }
         }
         return ['links' => $link_message];
