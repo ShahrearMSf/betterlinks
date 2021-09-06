@@ -216,6 +216,7 @@
 	}
 	.rdt_Table {
 		background-color: transparent;
+		margin-top: 25px;
 		.rdt_TableHead {
 			margin-bottom: 12px;
 			.rdt_TableHeadRow {
@@ -235,12 +236,27 @@
 					}
 					&:nth-child(3) {
 						min-width: 320px;
+						>div {
+							display: flex;
+							justify-content: center;
+							width: 270px;
+						}
 					}
 					&:nth-child(4) {
 						min-width: 250px;
+						> div {
+							width: 200px;
+							display: flex;
+							justify-content: center;
+						}
 					}
 					&:last-child {
 						max-width: 130px;
+					}
+					div {
+						color: #252525;
+						font-size: 14px;
+						font-weight: 700;
 					}
 				}
 			}
@@ -266,6 +282,15 @@
 					}
 					&:nth-child(2) {
 						width: 250px;
+						font-size: 14px;
+						font-weight: 500;
+						color: #252525;
+						line-height: 1.1;
+						div {
+							font-size: 14px;
+							font-weight: 500;
+							color: #252525;
+						}
 					}
 					&:nth-child(3) {
 						min-width: 320px;
@@ -355,6 +380,8 @@
 		}
 	}
 	.rdt_Pagination {
+		background: transparent;
+		border-color: transparent;
 		> div:last-child {
 			button {
 				padding: 0px;
