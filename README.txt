@@ -1,7 +1,7 @@
 === BetterLinks - Shorten, Track and Manage any URL ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, tusharimran, sapanmozammel
 Donate link: https://wpdeveloper.net
-Tags:  links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, rewrite, shorturl, shorten, shortening, clicks, track, tracking, tiny, tinyurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slugs, stats, statistics, seo, automation, dashboard, analytics, betterlinks, link shortener, url shortener
+Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, shortlinks, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
 Requires at least: 5.0
 Tested up to: 5.8
 Requires PHP: 5.6
@@ -89,7 +89,7 @@ Visit [WPDeveloper](https://wpdeveloper.net/) to learn more about how to do bett
 
 - For documentation and tutorials go to our [Documentation](https://betterlinks.io/docs/)
 - For video tutorials go to our [YouTube Playlist](https://www.youtube.com/watch?v=ZJqBrFhQC1A&list=PLWHp1xKHCfxBtIjolI693SDWtdfKZCc37)
-- If you have any more questions, visit our support on the [Plugin’s Forum] (https://wordpress.org/support/plugin/betterlinks/)
+- If you have any more questions, visit our support on the [Plugin’s Forum](https://wordpress.org/support/plugin/betterlinks/)
 - For more information about features, FAQs and documentation, check out our website at [BetterLinks](https://betterlinks.io/)
 
 ## 💙 Loved BetterLinks? ##
