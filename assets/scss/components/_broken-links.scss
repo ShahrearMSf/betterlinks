@@ -500,12 +500,13 @@
 
 .MuiInputBase-formControl {
 	input {
-		border: 1px solid #cccccc;
+		border: 1px solid #e7e7e7;
 		border-radius: 4px;
 		box-shadow: none;
 		padding-left: 7px;
 		padding-right: 7px;
 		min-height: 38px;
+		background: white;
 		box-sizing: border-box;
 	}
 	&:before,
