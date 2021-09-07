@@ -343,7 +343,7 @@ class Helper
     {
         global $wpdb;
         $terms = $wpdb->get_results(
-            $wpdb->prepare("SELECT term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
+            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
             ARRAY_A
         );
         if (count($terms) === 0) {
