@@ -73,7 +73,7 @@
 		.btl__control--is-disabled {
 			background-color: #e4e4e4;
 			border-color: #e4e4e4;
-			>* {
+			> * {
 				visibility: hidden;
 			}
 		}
@@ -91,7 +91,6 @@
 				border-color: #e4e4e4;
 				background-color: #e4e4e4;
 				width: 150px;
-
 			}
 			&:before,
 			&:after {
@@ -236,7 +235,7 @@
 					}
 					&:nth-child(3) {
 						min-width: 320px;
-						>div {
+						> div {
 							display: flex;
 							justify-content: center;
 							width: 270px;
@@ -518,7 +517,6 @@
 .btl-scan-outputs {
 	margin-top: 15px;
 	display: flex;
-	justify-content: center;
 	flex-wrap: wrap;
 	padding-right: 15px;
 	margin-bottom: -10px;
