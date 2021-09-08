@@ -124,18 +124,27 @@ trait Links
 
         return $this->parse_response($results, $analytic);
     }
-    public function terms_insert($qb, $link_id, $request, $is_update = false)
+    public function terms_insert($link_id, $request, $is_update = false)
     {
+        global $wpdb;
         $term_data = [];
+        $newTermList = [];
         // store tags relation data
         if (isset($request['cat_id']) && !empty($request['cat_id'])) {
-            $term_data[] = [
-                'term_id' => $request['cat_id'],
-                'link_id' => $link_id,
-            ];
+            if (is_numeric($request['cat_id'])) {
+                $term_data[] = [
+                    'term_id' => $request['cat_id'],
+                    'link_id' => $link_id,
+                ];
+            } else {
+                $newTermList[] = [
+                    'term_name' => $request['cat_id'],
+                    'term_slug' => $request['cat_id'],
+                    'term_type' => 'category',
+                ];
+            }
         }
         if (isset($request['tags_id']) && is_array($request['tags_id'])) {
-            $newTagsList = [];
             foreach ($request['tags_id'] as $key => $value) {
                 if (is_numeric($value)) {
                     $term_data[] = [
@@ -143,78 +152,57 @@ trait Links
                         'link_id' => $link_id,
                     ];
                 } else {
-                    $newTagsList[] = [
+                    $newTermList[] = [
                         'term_name' => $value,
                         'term_slug' => $value,
                         'term_type' => 'tags',
                     ];
                 }
             }
-            // insert new tags
-            if (count($newTagsList) > 0) {
-                // stop duplicate tags insert
-                foreach ($newTagsList as $item) {
-                    $terms = $qb
-                        ->table('betterlinks_terms')
-                        ->where('term_slug', '=', $item['term_slug'])
-                        ->get();
-                    if (count($terms) > 0) {
-                        $terms = current($terms);
-                        $term_data[] = [
-                            'term_id' => $terms->ID,
-                            'link_id' => $link_id,
-                        ];
-                    } else {
-                        $terms = $qb->table('betterlinks_terms')->insert([
-                            [
-                                'term_name' => $item['term_name'],
-                                'term_slug' => $item['term_slug'],
-                                'term_type' => 'tags',
-                            ],
-                        ]);
-                        $term_id = current($terms);
-                        $term_data[] = [
-                            'term_id' => $term_id,
-                            'link_id' => $link_id,
-                        ];
-                    }
-                }
+        }
+
+        // insert new tags or category
+        if (count($newTermList) > 0) {
+            foreach ($newTermList as $item) {
+                $term_id = \BetterLinks\Helper::insert_terms($item);
+                $term_data[] = [
+                    'term_id' => $term_id,
+                    'link_id' => $link_id,
+                ];
             }
         }
-        if (is_array($term_data) && count($term_data) > 0) {
-            if ($is_update) {
-                $qb->table('betterlinks_terms_relationships')
-                    ->where('link_id', '=', $request['ID'])
-                    ->delete();
-            }
-            $qb->table('betterlinks_terms_relationships')->insert($term_data);
+        // make term and link relation
+        // delete term relation
+        if ($is_update) {
+            $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'ID' => $link_id ), array( '%d' ));
+        }
+        foreach ($term_data as $term) {
+            \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
         }
     }
     public function insert_link($arg)
     {
         if (isset($arg['short_url']) && ! \BetterLinks\Helper::is_exists_short_url($arg['short_url'])) {
-            $resutls = \BetterLinks\Helper::DB()
-            ->table('betterlinks')
-            ->where('short_url', '=', $arg['short_url'])->get();
-            if (count($resutls) === 0) {
-                \BetterLinks\Helper::DB()->transaction(function ($qb) use ($arg) {
-                    $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
-                    $params = array_intersect_key($arg, $lookFor);
-                    $params['link_author'] = get_current_user_id();
-                    $id = $qb->table('betterlinks')->insert(apply_filters('betterlinks/api/params', $params));
-                    if (BETTERLINKS_EXISTS_LINKS_JSON) {
-                        $params['ID'] = $id;
-                        \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
-                    }
-                    $this->terms_insert($qb, $id, $arg);
-                    $_SESSION['link_ID'] = $id;
-                });
-                $response = array_merge($arg, [
-                    'ID' => strval($_SESSION['link_ID']),
-                ]);
-                unset($_SESSION['link_ID']);
-                return $response;
+            // Start Transaction
+            global $wpdb;
+            $wpdb->query("START TRANSACTION");
+            $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
+            $params = array_intersect_key($arg, $lookFor);
+            $params['link_author'] = get_current_user_id();
+            $params['link_status'] = 'publish';
+            $params['param_struct'] = '';
+            // insert link
+            $id = \BetterLinks\Helper::insert_links(apply_filters('betterlinks/api/params', $params));
+            if (BETTERLINKS_EXISTS_LINKS_JSON) {
+                $params['ID'] = $id;
+                \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
+            $this->terms_insert($id, $arg);
+            $wpdb->query("COMMIT");
+            $response = array_merge($arg, [
+                    'ID' => strval($id),
+                ]);
+            return $response;
         }
         return false;
     }

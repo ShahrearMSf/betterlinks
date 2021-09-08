@@ -286,9 +286,7 @@ class Helper
     }
     public static function is_exists_short_url($short_url)
     {
-        $resutls = \BetterLinks\Helper::DB()
-                ->table('betterlinks')
-                ->where('short_url', '=', $short_url)->get();
+        $resutls = self::get_link_by_short_url($short_url);
         if (count($resutls) > 0) {
             return true;
         }
@@ -317,13 +315,30 @@ class Helper
         return array_diff_key($data, array_flip($remove));
     }
 
+    public static function get_term_by_term_slug($term_slug)
+    {
+        global $wpdb;
+        $term = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $term_slug),
+            ARRAY_A
+        );
+        return $term;
+    }
+
+    public static function get_link_by_short_url($short_url)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
+            ARRAY_A
+        );
+        return $link;
+    }
+
     public static function insert_links($item)
     {
         global $wpdb;
-        $betterlinks = $wpdb->get_results(
-            $wpdb->prepare("SELECT short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $item['short_url']),
-            ARRAY_A
-        );
+        $betterlinks = self::get_link_by_short_url($item['short_url']);
         if (count($betterlinks) === 0) {
             $wpdb->query(
                 $wpdb->prepare(
@@ -342,10 +357,7 @@ class Helper
     public static function insert_terms($item)
     {
         global $wpdb;
-        $terms = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
-            ARRAY_A
-        );
+        $terms = self::get_term_by_term_slug($item['term_slug']);
         if (count($terms) === 0) {
             $wpdb->query(
                 $wpdb->prepare(
