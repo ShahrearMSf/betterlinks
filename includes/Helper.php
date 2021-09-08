@@ -316,4 +316,82 @@ class Helper
         $remove = ['action', 'security'];
         return array_diff_key($data, array_flip($remove));
     }
+
+    public static function insert_links($item)
+    {
+        global $wpdb;
+        $betterlinks = $wpdb->get_results(
+            $wpdb->prepare("SELECT short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $item['short_url']),
+            ARRAY_A
+        );
+        if (count($betterlinks) === 0) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}betterlinks ( 
+                        link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect 
+                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
+                    array(
+                        $item['link_author'],$item['link_date'],$item['link_date_gmt'],$item['link_title'],$item['link_slug'],$item['link_note'],$item['link_status'],$item['nofollow'],$item['sponsored'],$item['track_me'],$item['param_forwarding'],$item['param_struct'],$item['redirect_type'],$item['target_url'],$item['short_url'],$item['link_order'],$item['link_modified'],$item['link_modified_gmt'],$item['wildcards'],$item['expire'],$item['dynamic_redirect']
+                    )
+                )
+            );
+            return $wpdb->insert_id;
+        }
+        return;
+    }
+    public static function insert_terms($item)
+    {
+        global $wpdb;
+        $terms = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
+            ARRAY_A
+        );
+        if (count($terms) === 0) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}betterlinks_terms ( term_name, term_slug, term_type ) VALUES ( %s, %s, %s )",
+                    array($item['term_name'],$item['term_slug'], $item['term_type'])
+                )
+            );
+            return $wpdb->insert_id;
+        } elseif (isset(current($terms)['ID'])) {
+            return current($terms)['ID'];
+        }
+        return;
+    }
+
+    public static function insert_terms_relationships($term_id, $link_id)
+    {
+        global $wpdb;
+        $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$wpdb->prefix}betterlinks_terms_relationships ( term_id, link_id ) VALUES ( %d, %d )",
+                array($term_id,$link_id)
+            )
+        );
+        return $wpdb->insert_id;
+    }
+
+    public static function insert_clicks($item)
+    {
+        global $wpdb;
+        $betterlinks = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $item['short_url']),
+            ARRAY_A
+        );
+        if (isset(current($betterlinks)['ID'])) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( 
+                        link_id, ip, browser, os, referer, host, uri, click_count, visitor_id, click_order, created_at, created_at_gmt
+                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
+                    array(
+                        current($betterlinks)['ID'],$item['ip'],$item['browser'],$item['os'],$item['referer'], $item['host'],$item['uri'],$item['click_count'],$item['visitor_id'],$item['click_order'],$item['created_at'],$item['created_at_gmt']
+                    )
+                )
+            );
+            return $wpdb->insert_id;
+        }
+        return;
+    }
 }
