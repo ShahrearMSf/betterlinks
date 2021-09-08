@@ -706,6 +706,11 @@
 			}
 		}
 	}
+	input[type='text'] {
+		border: 1px solid #485474;
+		background-color: #485474;
+		color: #fff;
+	}
 }
 
 .scheduleweekdayselect {
@@ -845,6 +850,30 @@
 				img,
 				svg {
 					height: 25px;
+				}
+			}
+		}
+	}
+}
+
+.btl-select {
+	.btl__control {
+		border: 1px solid #485474;
+		background-color: #485474;
+		color: #fff;
+		.btl__value-container {
+			.btl__single-value {
+				color: #fff;
+			}
+		}
+	}
+	.btl__menu {
+		background-color: #485474;
+		&-list {
+			.btl__option {
+				color: #fff;
+				&:hover {
+					color: #485474;
 				}
 			}
 		}
