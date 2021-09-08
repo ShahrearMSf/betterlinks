@@ -71,7 +71,7 @@ export default function BrokenLinks(props) {
 								</div>
 							</Form>
 						</Formik>
-						<div className="btl-scan-outputs" onClick={() => openUpgradeToProModal()}>
+						<div className="btl-scan-outputs" style={{marginTop: 30}} onClick={() => openUpgradeToProModal()}>
 								<div className="btl-scan-output">
 									<span className="icon">
 										<img src={plugin_root_url + 'assets/images/padlock.svg'} alt="" />

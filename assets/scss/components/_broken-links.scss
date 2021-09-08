@@ -36,18 +36,53 @@
 					color: $black;
 				}
 			}
+			.btl__control{
+				.btl__value-container {
+					height: 38px;
+				}
+			}
 			button {
 				cursor: pointer;
 				height: 40px;
 				padding: 3px 15px;
 				font-size: 14px;
 				line-height: 1.2;
-				background: $success;
-				color: $white;
 				border: 1px solid $success;
+				transition: 0.3s ease-in-out;
+				transition-property: background, color, box-shadow, border-color;
+				&:not(.btl-filled-button) {
+					background: transparent;
+					color: $success;
+				}
+				&.btl-filled-button {
+					background: $success;
+					color: $white;
+				}
+				&.btl-success {
+					background: #08ac5f;
+					color: #fff;
+					border-color: #08ac5f;
+					&:hover {
+						background: #08ac5f;
+						color: $white;
+						box-shadow: 0 10px 15px rgba(#08ac5f, 0.25);
+					}
+				}
+				&.btl-danger {
+					background: $danger;
+					color: #fff;
+					border-color: $danger;
+					&:hover {
+						background: $danger;
+						color: $white;
+						box-shadow: 0 10px 15px rgba($danger, 0.25);
+					}
+				}
 				border-radius: 5px;
 				cursor: pointer;
 				&:hover {
+					background: $success;
+					color: $white;
 					box-shadow: 0 10px 15px rgba($success, 0.25);
 				}
 			}
@@ -505,9 +540,11 @@
 		box-shadow: none;
 		padding-left: 7px;
 		padding-right: 7px;
-		min-height: 38px;
+		min-height: 40px;
 		background: white;
 		box-sizing: border-box;
+		width: 120px;
+		text-align: center;
 	}
 	&:before,
 	&:after {
@@ -519,6 +556,7 @@
 	margin-top: 15px;
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 	padding-right: 15px;
 	margin-bottom: -10px;
 	.btl-scan-output {
