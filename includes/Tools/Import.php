@@ -93,7 +93,7 @@ class Import
     public function insert_link_data($item)
     {
         if (!empty($item['link_title']) && !empty($item['short_url'])) {
-            $link_id = \BetterLinks\Helper::insert_links($item);
+            $link_id = \BetterLinks\Helper::insert_link($item);
             if ($link_id) {
                 $tags = $this->insert_tags_terms((!empty($item['tags']) ? explode(',', $item['tags']) : []));
                 $category = $this->insert_category_terms((!empty($item['category']) ? explode(',', $item['category']) : ['uncategorized']));

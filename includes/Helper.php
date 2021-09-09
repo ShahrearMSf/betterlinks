@@ -335,7 +335,7 @@ class Helper
         return $link;
     }
 
-    public static function insert_links($item, $is_update = false)
+    public static function insert_link($item, $is_update = false)
     {
         global $wpdb;
         $defaults = apply_filters('betterlinks/insert_link_default_args', array(
