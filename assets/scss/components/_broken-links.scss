@@ -36,7 +36,7 @@
 					color: $black;
 				}
 			}
-			.btl__control{
+			.btl__control {
 				.btl__value-container {
 					height: 38px;
 				}
@@ -171,6 +171,7 @@
 
 // analytic table
 .btl-broken-links-table-wrapper {
+	margin-top: 25px;
 	header,
 	.rdt_TableHeader {
 		display: none;
@@ -250,7 +251,6 @@
 	}
 	.rdt_Table {
 		background-color: transparent;
-		margin-top: 25px;
 		.rdt_TableHead {
 			margin-bottom: 12px;
 			.rdt_TableHeadRow {
