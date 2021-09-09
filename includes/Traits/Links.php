@@ -188,9 +188,6 @@ trait Links
             $wpdb->query("START TRANSACTION");
             $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
             $params = array_intersect_key($arg, $lookFor);
-            $params['link_author'] = get_current_user_id();
-            $params['link_status'] = 'publish';
-            $params['param_struct'] = '';
             // insert link
             $id = \BetterLinks\Helper::insert_links(apply_filters('betterlinks/api/params', $params));
             if (BETTERLINKS_EXISTS_LINKS_JSON) {
@@ -208,18 +205,19 @@ trait Links
     }
     public function update_link($arg)
     {
-        \BetterLinks\Helper::DB()->transaction(function ($qb) use ($arg) {
-            $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
-            $params = array_intersect_key($arg, $lookFor);
-            $old_short_url = isset($arg['old_short_url']) ? $arg['old_short_url'] : '';
-            if (BETTERLINKS_EXISTS_LINKS_JSON) {
-                \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
-            }
-            $qb->table('betterlinks')
-                ->where('ID', $params['ID'])
-                ->update(apply_filters('betterlinks/api/params', $params));
-            $this->terms_insert($qb, $params['ID'], $arg, true);
-        });
+        // Start Transaction
+        global $wpdb;
+        $wpdb->query("START TRANSACTION");
+        $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
+        $params = array_intersect_key($arg, $lookFor);
+        $old_short_url = isset($arg['old_short_url']) ? $arg['old_short_url'] : '';
+        if (BETTERLINKS_EXISTS_LINKS_JSON) {
+            \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
+        }
+        // update link
+        $id = \BetterLinks\Helper::insert_links(apply_filters('betterlinks/api/params', $params), true);
+        $this->terms_insert($id, $arg, true);
+        $wpdb->query("COMMIT");
     }
     public function delete_link($args)
     {
