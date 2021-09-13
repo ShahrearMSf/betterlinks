@@ -34,7 +34,7 @@ export default function BrokenLinks(props) {
 							<Form>
 								<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
-										{__('Enable Schedule Scan', 'betterlinks')}
+										{__('Enable Scheduled Scan', 'betterlinks')}
 										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="link-options__body">
@@ -46,7 +46,7 @@ export default function BrokenLinks(props) {
 								</div>
 								<div class="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label class="btl-form-label">
-										{__('Frequently', 'betterlinks')}
+										{__('Frequency', 'betterlinks')}
 										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div class="link-options__body">
