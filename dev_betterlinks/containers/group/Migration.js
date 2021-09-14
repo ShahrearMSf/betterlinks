@@ -41,6 +41,20 @@ const Migration = (props) => {
 					console.log(error);
 				}
 			);
+		} else if (props.mode === 'thirstyaffiliates') {
+			setDataIsFetch(true);
+			axios.post(`${ajaxurl}?action=betterlinks/admin/get_thirstyaffiliates_data&security=${betterlinks_nonce}`).then(
+				(response) => {
+					console.log(response);
+					// if (response.data) {
+					// 	setPrettyLinksRes(response.data.data);
+					// 	setDataIsFetch(false);
+					// }
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		}
 	}, []);
 

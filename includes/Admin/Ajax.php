@@ -29,6 +29,8 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
         add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
         add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
+        add_action('wp_ajax_betterlinks/admin/get_thirstyaffiliates_data', [$this, 'get_thirstyaffiliates_data']);
+
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
         add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_new_link']);
@@ -56,7 +58,7 @@ class Ajax
         wp_send_json_success(['links' => $links, 'clicks' => $clicks]);
         wp_die();
     }
-
+    
     public function run_prettylinks_migration()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
@@ -320,6 +322,33 @@ class Ajax
         wp_send_json_success([]);
         wp_die();
     }
+
+    public function get_thirstyaffiliates_data()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        $thirstylinks = get_posts(array(
+            'posts_per_page' => -1,
+            'post_type'      => 'thirstylink',
+            'post_status'    => 'publish',
+        ));
+        $response = [];
+        foreach ($thirstylinks as $thirstylink) {
+            $thirstylink->term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
+            $thirstylink->meta = [
+                'destination_url' => get_post_meta($thirstylink->ID, '_ta_destination_url', true),
+                'no_follow' => get_post_meta($thirstylink->ID, '_ta_no_follow', true),
+                'redirect_type' => get_post_meta($thirstylink->ID, '_ta_redirect_type', true),
+                'pass_query_str' => get_post_meta($thirstylink->ID, '_ta_pass_query_str', true),
+            ];
+            $response[] = $thirstylink;
+        }
+        wp_send_json_success($response);
+        wp_die();
+    }
+
     public function get_links_by_short_url()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
