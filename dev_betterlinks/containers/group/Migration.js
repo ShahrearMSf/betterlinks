@@ -12,6 +12,7 @@ const Migration = (props) => {
 	const [dataIsFetch, setDataIsFetch] = useState(false);
 	const [prettyLinksRes, setPrettyLinksRes] = useState({});
 	const [simple301RedirectRes, setSimple301RedirectRes] = useState({});
+	const [thirstyAffiliatesRes, setThirstyAffiliatesRes] = useState({});
 	const [migrateRes, setMigrateRes] = useState({});
 	let history = useHistory();
 	useEffect(() => {
@@ -45,11 +46,10 @@ const Migration = (props) => {
 			setDataIsFetch(true);
 			axios.post(`${ajaxurl}?action=betterlinks/admin/get_thirstyaffiliates_data&security=${betterlinks_nonce}`).then(
 				(response) => {
-					console.log(response);
-					// if (response.data) {
-					// 	setPrettyLinksRes(response.data.data);
-					// 	setDataIsFetch(false);
-					// }
+					if (response.data) {
+						setThirstyAffiliatesRes(response.data.data);
+						setDataIsFetch(false);
+					}
 				},
 				(error) => {
 					console.log(error);
@@ -65,6 +65,8 @@ const Migration = (props) => {
 			form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
 		} else if (props.mode === 'simple301redirects') {
 			form_data.append('action', 'betterlinks/admin/run_simple301redirects_migration');
+		} else if (props.mode === 'thirstyaffiliates') {
+			form_data.append('action', 'betterlinks/admin/run_thirstyaffiliates_migration');
 		}
 		form_data.append('security', betterlinks_nonce);
 		form_data.append('type', values.checked);
@@ -146,6 +148,25 @@ const Migration = (props) => {
 														<label htmlFor="links">
 															{__('Links ', 'betterlinks')}
 															{`(${Object.keys(simple301RedirectRes).length})`}
+														</label>
+													</>
+												)}
+											</div>
+										</>
+									)}
+
+									{Object.keys(thirstyAffiliatesRes).length > 0 && (
+										<>
+											<h3 className="btl-modal-migration__title">
+												{__('Pick Data that You want to Import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
+											</h3>
+											<div className="btl-modal-migration__item">
+												{thirstyAffiliatesRes && Object.keys(thirstyAffiliatesRes).length > 0 && (
+													<>
+														<Field id="links" type="checkbox" name="checked" value="links" />
+														<label htmlFor="links">
+															{__('Links ', 'betterlinks')}
+															{`(${Object.keys(thirstyAffiliatesRes).length})`}
 														</label>
 													</>
 												)}

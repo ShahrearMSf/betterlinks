@@ -316,4 +316,32 @@ class Helper
         $remove = ['action', 'security'];
         return array_diff_key($data, array_flip($remove));
     }
+
+    public static function get_thirstyaffiliates_links()
+    {
+        $thirstylinks = get_posts(array(
+            'posts_per_page' => -1,
+            'post_type'      => 'thirstylink',
+            'post_status'    => 'publish',
+        ));
+        $response = [];
+        foreach ($thirstylinks as $thirstylink) {
+            $thirstylink->term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
+            $response[] = [
+                'link_title' => $thirstylink->post_title,
+                'link_slug' => $thirstylink->post_name,
+                'short_url' => get_the_permalink($thirstylink->ID),
+                'link_author' => $thirstylink->post_author,
+                'link_date' => $thirstylink->post_date,
+                'link_date_gmt' => $thirstylink->post_date_gmt,
+                'nofollow'  => get_post_meta($thirstylink->ID, '_ta_no_follow', true),
+                'redirect_type'  => get_post_meta($thirstylink->ID, '_ta_redirect_type', true),
+                'param_forwarding' => get_post_meta($thirstylink->ID, '_ta_pass_query_str', true),
+                'target_url' => get_post_meta($thirstylink->ID, '_ta_destination_url', true),
+                'link_modified' => $thirstylink->post_modified,
+                'link_modified_gmt' => $thirstylink->post_modified_gmt,
+            ];
+        }
+        return $response;
+    }
 }

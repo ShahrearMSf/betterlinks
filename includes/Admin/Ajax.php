@@ -30,6 +30,8 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
         add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
         add_action('wp_ajax_betterlinks/admin/get_thirstyaffiliates_data', [$this, 'get_thirstyaffiliates_data']);
+        add_action('wp_ajax_betterlinks/admin/run_thirstyaffiliates_migration', [$this, 'run_thirstyaffiliates_migration']);
+
 
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
@@ -329,24 +331,30 @@ class Ajax
         if (! current_user_can('manage_options')) {
             wp_die();
         }
-        $thirstylinks = get_posts(array(
-            'posts_per_page' => -1,
-            'post_type'      => 'thirstylink',
-            'post_status'    => 'publish',
-        ));
-        $response = [];
-        foreach ($thirstylinks as $thirstylink) {
-            $thirstylink->term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
-            $thirstylink->meta = [
-                'destination_url' => get_post_meta($thirstylink->ID, '_ta_destination_url', true),
-                'no_follow' => get_post_meta($thirstylink->ID, '_ta_no_follow', true),
-                'redirect_type' => get_post_meta($thirstylink->ID, '_ta_redirect_type', true),
-                'pass_query_str' => get_post_meta($thirstylink->ID, '_ta_pass_query_str', true),
-            ];
-            $response[] = $thirstylink;
-        }
+        $response = \BetterLinks\Helper::get_thirstyaffiliates_links();
         wp_send_json_success($response);
         wp_die();
+    }
+
+    public function run_thirstyaffiliates_migration()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        try {
+            $links = \BetterLinks\Helper::get_thirstyaffiliates_links();
+            $migrator = new \BetterLinks\Tools\Migration\ThirstyAffiliatesOneClick();
+            $resutls = $migrator->run_import($links);
+            \BetterLinks\Helper::create_cron_jobs_for_json_links();
+            \BetterLinks\Helper::clear_query_cache();
+            update_option('betterlinks_notice_ta_migrate', true);
+            wp_send_json_success($resutls);
+            wp_die();
+        } catch (\Throwable $th) {
+            wp_send_json_error($th->getMessage());
+            wp_die();
+        }
     }
 
     public function get_links_by_short_url()
