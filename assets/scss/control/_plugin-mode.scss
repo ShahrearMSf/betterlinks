@@ -609,9 +609,12 @@
 }
 
 .btl-broken-links-table-wrapper {
-	.sc-iemWCZ {
+	> header {
 		.btl-bulk-actions {
 			.btl-select {
+				&-button {
+					color: #fff;
+				}
 				.btl-react-select__control {
 					background-color: #2c3650;
 					border-color: #2c3650;

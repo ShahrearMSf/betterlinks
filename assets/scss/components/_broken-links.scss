@@ -172,11 +172,10 @@
 // analytic table
 .btl-broken-links-table-wrapper {
 	margin-top: 25px;
-	header,
 	.rdt_TableHeader {
 		display: none;
 	}
-	.sc-iemWCZ {
+	> header {
 		background: transparent;
 		min-height: unset;
 		display: flex;
