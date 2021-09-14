@@ -602,6 +602,9 @@
 		&:not(:last-child) {
 			margin-bottom: 15px;
 		}
+		button {
+			color: #fff !important;
+		}
 	}
 }
 
@@ -728,7 +731,6 @@
 			display: none;
 		}
 		span {
-			padding: 3px 6px;
 			display: inline-block;
 			border: 1px solid #485474;
 			border-right: none;
@@ -793,8 +795,8 @@
 
 .btl-broken-links-panel-disabled {
 	.btl__control--is-disabled {
-		background-color: #536082!important;
-		border-color: #536082!important;
+		background-color: #536082 !important;
+		border-color: #536082 !important;
 	}
 	.scheduleweekdayselect {
 		pointer-events: none;
