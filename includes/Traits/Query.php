@@ -105,25 +105,50 @@ trait Query
         }
         return;
     }
-    public static function insert_terms($item)
+    public static function insert_terms($item, $is_update = false)
     {
         global $wpdb;
-        $terms = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
-            ARRAY_A
-        );
-        if (count($terms) === 0) {
-            $wpdb->query(
-                $wpdb->prepare(
-                    "INSERT INTO {$wpdb->prefix}betterlinks_terms ( term_name, term_slug, term_type ) VALUES ( %s, %s, %s )",
-                    array($item['term_name'],$item['term_slug'], $item['term_type'])
-                )
+        if ($is_update) {
+            $wpdb->update(
+                "{$wpdb->prefix}betterlinks_terms",
+                array(
+                    'term_name' => $item['term_name'],'term_slug' => $item['term_slug'],'term_type' => $item['term_type']
+                ),
+                array( 'ID' => $item['ID'] ),
+                array(
+                    '%s', '%s', '%s'
+                ),
+                array( '%d' )
             );
-            return $wpdb->insert_id;
-        } elseif (isset(current($terms)['ID'])) {
-            return current($terms)['ID'];
+            return  $item['ID'];
+        } else {
+            $terms = $wpdb->get_results(
+                $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
+                ARRAY_A
+            );
+            if (count($terms) === 0) {
+                $wpdb->query(
+                    $wpdb->prepare(
+                        "INSERT INTO {$wpdb->prefix}betterlinks_terms ( term_name, term_slug, term_type ) VALUES ( %s, %s, %s )",
+                        array($item['term_name'],$item['term_slug'], $item['term_type'])
+                    )
+                );
+                return $wpdb->insert_id;
+            } elseif (isset(current($terms)['ID'])) {
+                return current($terms)['ID'];
+            }
         }
         return;
+    }
+
+    public function delete_term_and_term_relationships()
+    {
+        // Start Transaction
+        global $wpdb;
+        $wpdb->query("START TRANSACTION");
+        // $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'link_id' => $link_id ), array( '%d' ));
+
+        $wpdb->query("COMMIT");
     }
 
     public static function insert_terms_relationships($term_id, $link_id)

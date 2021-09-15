@@ -31,30 +31,22 @@ trait Terms
     }
     public function create_term($args)
     {
-        if (isset($args['term_slug'])) {
-            $resutls = \BetterLinks\Helper::DB()
-                ->table('betterlinks_terms')
-                ->where('term_slug', '=', $args['term_slug'])->get();
-            if (count($resutls) === 0) {
-                $id = \BetterLinks\Helper::DB()
-                    ->table('betterlinks_terms')
-                    ->insert($args);
-                $args['ID'] = $id;
-                $args['lists'] = [];
-                return $args;
-            }
+        $term_id = \BetterLinks\Helper::insert_terms($args);
+        if ($term_id) {
+            $args['ID'] = $term_id;
+            $args['lists'] = [];
+            return $args;
         }
         return [];
     }
     public function update_term($args)
     {
-        \BetterLinks\Helper::DB()
-            ->table('betterlinks_terms')
-            ->where('ID', $args['cat_id'])
-            ->update([
-                'term_name' => $args['cat_name'],
-                'term_slug' => $args['cat_slug'],
-            ]);
+        \BetterLinks\Helper::insert_terms([
+            'ID' => $args['cat_id'],
+            'term_name' => $args['cat_name'],
+            'term_slug' => $args['cat_slug'],
+            'term_type' => 'category'
+        ], true);
         return $args;
     }
     public function delete_term($args)
