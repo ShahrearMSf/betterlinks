@@ -1,3 +1,5 @@
+.wordpress-org
+.github
 .babelrc
 .gitignore
 .distignore
@@ -16,3 +18,12 @@ prepros.config
 dev_betterlinks
 assets/scss
 .eslintrc.json
+vendor/a5hleyrich/wp-background-processing/.gitignore
+vendor/a5hleyrich/wp-background-processing/composer.json
+vendor/a5hleyrich/wp-background-processing/license.txt
+vendor/a5hleyrich/wp-background-processing/license.md
+vendor/jaybizzle/crawler-detect/.github
+vendor/jaybizzle/crawler-detect/.php_cs.dist
+vendor/jaybizzle/crawler-detect/composer.json
+vendor/jaybizzle/crawler-detect/README.md
+.gitattributes

@@ -22,6 +22,10 @@
 			.icon{
 				margin-right: 8px;
 				display: inline-flex;
+				svg,
+				img {
+					width: 8px;
+				}
 			}
 		}
 		.btl-dnd-link-button-group {

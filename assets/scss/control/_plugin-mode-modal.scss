@@ -1,6 +1,9 @@
 .ReactModal__Content {
 	background-color: #252f47 !important;
 	border-color: #36405a !important;
+	h2 {
+		color: #fff;
+	}
 	.btl-close-modal {
 		color: $white;
 	}
@@ -36,13 +39,13 @@
 					}
 				}
 			}
-			.link-options--advanced{
+			.link-options--advanced {
 				.btl-modal-form-group {
-					align-items: center!important;
+					align-items: center !important;
 					.btl-modal-form-label {
 						color: #b2b3bd;
 					}
-					input[type="text"]{
+					input[type='text'] {
 						background: #36405a;
 						color: #fff;
 						border-color: #36405a;
@@ -54,19 +57,19 @@
 							color: #b0b2ba;
 						}
 					}
-					select{
+					select {
 						background-color: #36405a !important;
 						border-color: #36405a !important;
 						color: #fff;
-						&:focus{
+						&:focus {
 							border-color: #ebebeb;
 							box-shadow: none;
 							outline: none;
 						}
 					}
-					.MuiFormControl-root{
-						.MuiInputBase-root{
-							input{
+					.MuiFormControl-root {
+						.MuiInputBase-root {
+							input {
 								background: #36405a;
 								color: #fff;
 								border-color: #36405a;
@@ -82,7 +85,6 @@
 					}
 				}
 			}
-			
 		}
 	}
 	.btl-modal-form-group {
@@ -203,11 +205,11 @@
 			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 		}
 	}
-    .btl-utm-button,
-    .btl-share-button{
-        color: $white!important;
-        border-color: $white!important;
-    }
+	.btl-utm-button,
+	.btl-share-button {
+		color: $white !important;
+		border-color: $white !important;
+	}
 	.link-options--dynamic-redirect .link-options-info .btl-block-code {
 		background: #36405a;
 		color: #fff;
@@ -228,46 +230,46 @@
 		color: #fff;
 	}
 }
-.btl-modal-utm-builder{
-    .btl-modal-utm-builder__title{
-        color: $white;
-    }
-    .btl-modal-utm-builder__body{
-        .btl-modal-utm-builder__form-group{
-            > label{
-                color: #fff;
-            }
-            textarea,
-            input[type='text'] {
-                background: #36405a;
-                color: $white;
-                border-color: #36405a;
-                &:focus {
-                    background: #36405a;
-                    box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
-                }
-                &::placeholder {
-                    color: $secondary-lighten;
-                }
-            }
-        }
-    }
+.btl-modal-utm-builder {
+	.btl-modal-utm-builder__title {
+		color: $white;
+	}
+	.btl-modal-utm-builder__body {
+		.btl-modal-utm-builder__form-group {
+			> label {
+				color: #fff;
+			}
+			textarea,
+			input[type='text'] {
+				background: #36405a;
+				color: $white;
+				border-color: #36405a;
+				&:focus {
+					background: #36405a;
+					box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
+				}
+				&::placeholder {
+					color: $secondary-lighten;
+				}
+			}
+		}
+	}
 }
 
-#savedtemplate{
-    border-color: $success!important;
-    color: $white!important;
+#savedtemplate {
+	border-color: $success !important;
+	color: $white !important;
 }
-.betterlinks-upgradetopro{
-    color: $light;
-    h3{
-        color: $white;
-    }
+.betterlinks-upgradetopro {
+	color: $light;
+	h3 {
+		color: $white;
+	}
 }
-.btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type=text],
-.btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type=checkbox] {
+.btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type='text'],
+.btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type='checkbox'] {
 	background: #36405a;
-    color: #fff;
-    border-color: #36405a;
+	color: #fff;
+	border-color: #36405a;
 	opacity: 0.3;
 }

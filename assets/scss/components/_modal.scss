@@ -9,13 +9,13 @@
 	/* Chrome, Safari, Edge, Opera */
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
+		-webkit-appearance: none;
+		margin: 0;
 	}
 
 	/* Firefox */
-	input[type=number] {
-	-moz-appearance: textfield;
+	input[type='number'] {
+		-moz-appearance: textfield;
 	}
 	@media screen and (max-width: 1599px) {
 		width: 75%;
@@ -27,9 +27,7 @@
 		padding: 20px !important;
 	}
 	span.pro-badge {
-		background: linear-gradient(
-	202deg
-	,#2961ff 0%,#003be2 100%);
+		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 		color: #fff;
 		border-radius: 2px;
 		padding: 3px 6px;
@@ -109,7 +107,7 @@
 					border: 0;
 					cursor: pointer;
 					i {
-						transition: all .3s ease;
+						transition: all 0.3s ease;
 						transform: rotate(-90deg);
 					}
 					&--title {
@@ -143,55 +141,55 @@
 						}
 					}
 				}
-				&--advanced{
-					.link-options__body{
-						padding: 20px!important;
+				&--advanced {
+					.link-options__body {
+						padding: 20px !important;
 					}
 					.btl-modal-form-group {
-						align-items: center!important;
+						align-items: center !important;
 						.btl-modal-form-label {
-							min-width: 65px!important;
+							min-width: 65px !important;
 							line-height: 20px;
-							font-weight: 400!important;
-							padding-right: 10px!important;
-							padding-top: 0!important;
-							padding-bottom: 0!important;
+							font-weight: 400 !important;
+							padding-right: 10px !important;
+							padding-top: 0 !important;
+							padding-bottom: 0 !important;
 						}
-						input[type="checkbox"]{
+						input[type='checkbox'] {
 							margin-top: 5px;
 							margin-left: 3px;
 						}
-						input[type="text"]{
+						input[type='text'] {
 							background: #fff;
 							border-color: #ebebeb;
 							width: 100%;
-							&:focus{
+							&:focus {
 								border-color: #ebebeb;
 								box-shadow: none;
 								outline: none;
 							}
 						}
-						select{
+						select {
 							width: 100%;
 							border-color: #ebebeb;
 							font-size: 14px;
-							&:focus{
+							&:focus {
 								border-color: #ebebeb;
 								box-shadow: none;
 								outline: none;
 							}
 						}
-						.MuiFormControl-root{
+						.MuiFormControl-root {
 							fieldset,
-							label{
+							label {
 								display: none;
 							}
-							.MuiInputBase-root{
-								input{
+							.MuiInputBase-root {
+								input {
 									background: #fff;
 									border-color: #ebebeb;
 									font-size: 14px;
-									&:focus{
+									&:focus {
 										border-color: #ebebeb;
 										box-shadow: none;
 										outline: none;
@@ -204,12 +202,12 @@
 				&--dynamic-redirect {
 					.link-options--teasers {
 						margin-top: -15px;
-						input[type="text"] {
+						input[type='text'] {
 							width: 100px;
 							margin-left: 10px;
 							opacity: 0.5;
 						}
-						input[type="checkbox"]{
+						input[type='checkbox'] {
 							opacity: 0.5;
 							margin-left: 35px;
 						}
@@ -226,9 +224,9 @@
 				}
 				&--teasers {
 					.btl-modal-form-group .btl-modal-form-label {
-						min-width: 100px!important;
+						min-width: 100px !important;
 					}
-					input[type=checkbox] {
+					input[type='checkbox'] {
 						background: #e4e4e4;
 						cursor: inherit;
 					}
@@ -245,6 +243,16 @@
 			}
 		}
 	}
+	.btl-modal-shorturl-wrap {
+		position: relative;
+		margin-bottom: 20px;
+		.errorlog {
+			position: absolute;
+			right: 0;
+			top: 100%;
+			color: red;
+		}
+	}
 	.btl-modal-form-group {
 		display: flex;
 		align-items: flex-start;
@@ -259,7 +267,7 @@
 			padding-right: 40px;
 			padding-top: 18px;
 			padding-bottom: 18px;
-            cursor: initial;
+			cursor: initial;
 			@media screen and (max-width: 650px) {
 				margin-bottom: 15px;
 				text-align: center;
@@ -278,16 +286,16 @@
 		}
 		&.btl-has-utm-button {
 			position: relative;
-            .btl-modal-form-control{
-                padding-right: 83px;
-            }
+			.btl-modal-form-control {
+				padding-right: 83px;
+			}
 			.btl-utm-button-group {
 				position: absolute;
 				top: 48%;
 				transform: translateY(-50%);
 				right: 15px;
 				display: flex;
-    			justify-content: center;
+				justify-content: center;
 				.btl-utm-button {
 					width: 35px;
 					height: 25px;
@@ -320,7 +328,7 @@
 					box-sizing: border-box;
 					cursor: pointer;
 					outline: none;
-					img{
+					img {
 						width: 13px;
 					}
 					&--locked {
@@ -508,8 +516,8 @@
 			align-items: center;
 			color: $white;
 			font-style: italic;
-            max-width: 200px;
-            word-break: break-word;
+			max-width: 200px;
+			word-break: break-word;
 			@media screen and (max-width: 1599px) {
 				font-size: 16px;
 			}
@@ -608,7 +616,7 @@
 	.betterlinks-upgradetopro {
 		text-align: center;
 		h3 {
-			color: rgba(0,0,0,.65);
+			color: rgba(0, 0, 0, 0.65);
 			font-weight: 600;
 			font-size: 27px;
 		}
@@ -631,4 +639,47 @@
 }
 .MuiDialog-root {
 	z-index: 999999 !important;
+}
+
+.btl-regenerate-modal {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	.btl-icon {
+		height: 80px;
+		width: 80px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		svg {
+			width: 100%;
+		}
+	}
+	h2 {
+		font-size: 24px;
+		margin-top: 0;
+		margin-bottom: 0;
+		color: #373757;
+		&:not(:first-child) {
+			margin-top: 30px;
+		}
+		&:not(:last-child) {
+			margin-bottom: 30px;
+		}
+	}
+	.btl-modal-submit-button {
+		padding: 0 15px;
+		min-width: 150px;
+		height: 44px !important;
+		font-size: 16px;
+		background: rgba($success, 0.05);
+		color: $success;
+		border: 1px solid $success;
+		transition: 0.3s;
+		&:hover {
+			background: $success;
+			color: $white;
+		}
+	}
 }

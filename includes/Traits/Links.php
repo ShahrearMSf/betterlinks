@@ -181,12 +181,12 @@ trait Links
                 }
             }
         }
-        if ($is_update) {
-            $qb->table('betterlinks_terms_relationships')
-                ->where('link_id', '=', $request['ID'])
-                ->delete();
-        }
-        if (count($term_data) > 0) {
+        if (is_array($term_data) && count($term_data) > 0) {
+            if ($is_update) {
+                $qb->table('betterlinks_terms_relationships')
+                    ->where('link_id', '=', $request['ID'])
+                    ->delete();
+            }
             $qb->table('betterlinks_terms_relationships')->insert($term_data);
         }
     }

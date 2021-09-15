@@ -273,26 +273,28 @@ const Link = (props) => {
 											)}
 										</div>
 									</div>
-									<div className="btl-modal-form-group shorturl">
-										<label className="btl-modal-form-label" htmlFor="short_url">
-											{__('Shortened URL', 'betterlinks')}
-										</label>
-										<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
-											<span className="btl-static-link">{site_url + '/'}</span>
-											<Field
-												className="btl-dynamic-link"
-												id="short_url"
-												name="short_url"
-												onChange={(e) => {
-													props.setFieldValue('short_url', e.target.value.replace(/\s+/g, '-'));
-													setSlugIsExists(false);
-												}}
-												disabled={isDisableLinkFormEditView}
-												required
-											/>
-											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
-											<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
+									<div className="btl-modal-shorturl-wrap">
+										<div className="btl-modal-form-group shorturl">
+											<label className="btl-modal-form-label" htmlFor="short_url">
+												{__('Shortened URL', 'betterlinks')}
+											</label>
+											<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
+												<span className="btl-static-link">{site_url + '/'}</span>
+												<Field
+													className="btl-dynamic-link"
+													id="short_url"
+													name="short_url"
+													onChange={(e) => {
+														props.setFieldValue('short_url', e.target.value.replace(/\s+/g, '-'));
+														setSlugIsExists(false);
+													}}
+													disabled={isDisableLinkFormEditView}
+													required
+												/>
+												<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
+											</div>
 										</div>
+										{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="catId">

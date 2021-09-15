@@ -29,7 +29,7 @@ const Settings = (props) => {
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
 		__('Google Analytics', 'betterlinks'),
-		//__('Broken Links', 'betterlinks'),
+		__('Broken Link Checker', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
@@ -37,7 +37,7 @@ const Settings = (props) => {
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<GoogleAnalytics />,
-		//<BrokenLinks />,
+		<BrokenLinks />,
 		<GoPremium />,
 	]);
 	useEffect(() => {
