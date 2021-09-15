@@ -95,8 +95,8 @@ class Import
         if (!empty($item['link_title']) && !empty($item['short_url'])) {
             $link_id = \BetterLinks\Helper::insert_links($item);
             if ($link_id) {
-                $tags = $this->insert_tags_terms((!empty($item['tags']) ? explode(',', $item['tags']) : []));
-                $category = $this->insert_category_terms((!empty($item['category']) ? explode(',', $item['category']) : ['uncategorized']));
+                $tags = \BetterLinks\Helper::insert_tags_terms((!empty($item['tags']) ? explode(',', $item['tags']) : []));
+                $category = \BetterLinks\Helper::insert_category_terms((!empty($item['category']) ? explode(',', $item['category']) : ['uncategorized']));
                 $all_terms = array_merge($tags, $category);
                 if (count($all_terms) > 0) {
                     foreach ($all_terms as $term) {
@@ -116,43 +116,6 @@ class Import
             return $link_id;
         }
         return;
-    }
-
-
-    public function insert_tags_terms($tags)
-    {
-        $terms_ids = [];
-        if (is_array($tags) && count($tags) > 0) {
-            foreach ($tags as $tag) {
-                $insert_id = \BetterLinks\Helper::insert_terms([
-                    'term_name' => $tag,
-                    'term_slug' => \BetterLinks\Helper::make_slug($tag),
-                    'term_type' => 'tags'
-                ]);
-                if ($insert_id) {
-                    $terms_ids[] = $insert_id;
-                }
-            }
-        }
-        return $terms_ids;
-    }
-
-    public function insert_category_terms($categories)
-    {
-        $terms_ids = [];
-        if (is_array($categories) && count($categories) > 0) {
-            foreach ($categories as $category) {
-                $insert_id = \BetterLinks\Helper::insert_terms([
-                    'term_name' => $category,
-                    'term_slug' => \BetterLinks\Helper::make_slug($category),
-                    'term_type' => 'category'
-                ]);
-                if ($insert_id) {
-                    $terms_ids[] = $insert_id;
-                }
-            }
-        }
-        return $terms_ids;
     }
 
 

@@ -192,29 +192,20 @@ trait Links
     }
     public function insert_link($arg)
     {
-        if (isset($arg['short_url']) && ! \BetterLinks\Helper::is_exists_short_url($arg['short_url'])) {
-            $resutls = \BetterLinks\Helper::DB()
-            ->table('betterlinks')
-            ->where('short_url', '=', $arg['short_url'])->get();
-            if (count($resutls) === 0) {
-                \BetterLinks\Helper::DB()->transaction(function ($qb) use ($arg) {
-                    $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
-                    $params = array_intersect_key($arg, $lookFor);
-                    $params['link_author'] = get_current_user_id();
-                    $id = $qb->table('betterlinks')->insert(apply_filters('betterlinks/api/params', $params));
-                    if (BETTERLINKS_EXISTS_LINKS_JSON) {
-                        $params['ID'] = $id;
-                        \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
-                    }
-                    $this->terms_insert($qb, $id, $arg);
-                    $_SESSION['link_ID'] = $id;
-                });
-                $response = array_merge($arg, [
-                    'ID' => strval($_SESSION['link_ID']),
-                ]);
-                unset($_SESSION['link_ID']);
-                return $response;
+        $link_id = \BetterLinks\Helper::insert_links($arg);
+        if ($link_id) {
+            $tags = \BetterLinks\Helper::insert_tags_terms((isset($arg['tags_id']) && is_array($arg['tags_id']) ? $arg['tags_id'] : []));
+            $category = \BetterLinks\Helper::insert_category_terms((isset($arg['cat_id']) ? [$arg['cat_id']] : ['uncategorized']));
+            $all_terms = array_merge($tags, $category);
+            if (count($all_terms) > 0) {
+                foreach ($all_terms as $term) {
+                    \BetterLinks\Helper::insert_terms_relationships($term, $link_id);
+                }
             }
+            $response = array_merge($arg, [
+                'ID' => $link_id,
+            ]);
+            return $response;
         }
         return false;
     }
