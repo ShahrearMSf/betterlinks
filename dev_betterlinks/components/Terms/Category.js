@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useField } from 'formik';
-import Select2 from 'react-select';
+import CreatableSelect2 from 'react-select/creatable';
 
 const propTypes = {
 	catId: PropTypes.number,
@@ -37,7 +37,7 @@ const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 	return (
 		<React.Fragment>
 			{data.terms ? (
-				<Select2
+				<CreatableSelect2
 					className="btl-modal-select"
 					id={field.id}
 					name={field.name}
@@ -54,7 +54,7 @@ const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 				/>
 			) : (
 				<div>
-					<Select2 className="btl-modal-select" id={field.id} classNamePrefix="btl-react-select" isDisabled={disabled} />
+					<CreatableSelect2 className="btl-modal-select" id={field.id} classNamePrefix="btl-react-select" isDisabled={disabled} />
 				</div>
 			)}
 		</React.Fragment>

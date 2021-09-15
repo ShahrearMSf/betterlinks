@@ -287,9 +287,7 @@ class Helper
     }
     public static function is_exists_short_url($short_url)
     {
-        $resutls = \BetterLinks\Helper::DB()
-                ->table('betterlinks')
-                ->where('short_url', '=', $short_url)->get();
+        $resutls = self::get_link_by_short_url($short_url);
         if (count($resutls) > 0) {
             return true;
         }
@@ -321,5 +319,14 @@ class Helper
     public static function force_relative_url($url)
     {
         return preg_replace('/^(http)?s?:?\/\/[^\/]*(\/?.*)$/i', '$2', '' . $url);
+    }
+    public static function get_term_by_term_slug($term_slug)
+    {
+        global $wpdb;
+        $term = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $term_slug),
+            ARRAY_A
+        );
+        return $term;
     }
 }

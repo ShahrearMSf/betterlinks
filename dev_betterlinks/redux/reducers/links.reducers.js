@@ -86,24 +86,52 @@ function links(state = {}, action) {
 				},
 			};
 		case ADD_NEW_LINK:
+			if (state.links[payload.data.cat_id] && state.links[payload.data.cat_id].lists) {
+				return {
+					...state,
+					links: {
+						...state.links,
+						[payload.data.cat_id]: {
+							...state.links[payload.data.cat_id],
+							lists: [payload.data, ...state.links[payload.data.cat_id].lists],
+						},
+					},
+				};
+			}
 			return {
 				...state,
 				links: {
 					...state.links,
 					[payload.data.cat_id]: {
-						...state.links[payload.data.cat_id],
-						lists: [payload.data, ...state.links[payload.data.cat_id].lists],
+						term_name: payload.data.cat_id,
+						term_slug: payload.data.cat_id,
+						term_type: 'category',
+						lists: [payload.data],
 					},
 				},
 			};
 		case EDIT_LINK:
+			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
+				return {
+					...state,
+					links: {
+						...state.links,
+						[payload.cat_id]: {
+							...state.links[payload.cat_id],
+							lists: [...state.links[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
+						},
+					},
+				};
+			}
 			return {
 				...state,
 				links: {
 					...state.links,
 					[payload.cat_id]: {
-						...state.links[payload.cat_id],
-						lists: [...state.links[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
+						term_name: payload.cat_id,
+						term_slug: payload.cat_id,
+						term_type: 'category',
+						lists: [payload],
 					},
 				},
 			};

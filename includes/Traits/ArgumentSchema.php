@@ -189,8 +189,8 @@ trait ArgumentSchema
                     'sanitize_callback' => 'sanitize_text_field',
                 ],
                 'cat_id' => [
-                    'type' => 'integer',
-                    'sanitize_callback' => 'absint',
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
                 ],
                 'tags_id' => [
                     'type' => 'array'
