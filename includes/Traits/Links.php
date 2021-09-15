@@ -124,76 +124,8 @@ trait Links
 
         return $this->parse_response($results, $analytic);
     }
-    public function terms_insert($link_id, $request, $is_update = false)
-    {
-        global $wpdb;
-        $term_data = [];
-        $newTermList = [];
-        // store tags relation data
-        if (isset($request['cat_id']) && !empty($request['cat_id'])) {
-            if (is_numeric($request['cat_id'])) {
-                $term_data[] = [
-                    'term_id' => $request['cat_id'],
-                    'link_id' => $link_id,
-                ];
-            } else {
-                $newTermList[] = [
-                    'term_name' => $request['cat_id'],
-                    'term_slug' => $request['cat_id'],
-                    'term_type' => 'category',
-                ];
-            }
-        }
-        if (isset($request['tags_id']) && is_array($request['tags_id'])) {
-            foreach ($request['tags_id'] as $key => $value) {
-                if (is_numeric($value)) {
-                    $term_data[] = [
-                        'term_id' => $value,
-                        'link_id' => $link_id,
-                    ];
-                } else {
-                    $newTermList[] = [
-                        'term_name' => $value,
-                        'term_slug' => $value,
-                        'term_type' => 'tags',
-                    ];
-                }
-            }
-        }
-
-        // insert new tags or category
-        if (count($newTermList) > 0) {
-            foreach ($newTermList as $item) {
-                $term_id = \BetterLinks\Helper::insert_terms($item);
-                $term_data[] = [
-                    'term_id' => $term_id,
-                    'link_id' => $link_id,
-                ];
-            }
-        }
-        // make term and link relation
-        // delete term relation
-        if ($is_update) {
-            $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'link_id' => $link_id ), array( '%d' ));
-            if ($is_delete) {
-                foreach ($term_data as $term) {
-                    \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
-                }
-            }
-        } else {
-            foreach ($term_data as $term) {
-                \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
-            }
-        }
-    }
     public function insert_link($arg)
     {
-        $link_id = \BetterLinks\Helper::insert_link($arg);
-        if ($link_id) {
-            $response = array_merge($arg, [
-                'ID' => $link_id,
-            ]);
-        }
         if (isset($arg['short_url']) && ! \BetterLinks\Helper::is_exists_short_url($arg['short_url'])) {
             // Start Transaction
             global $wpdb;
@@ -206,7 +138,7 @@ trait Links
                 $params['ID'] = $id;
                 \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
-            $this->terms_insert($id, $arg);
+            \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
             $wpdb->query("COMMIT");
             $response = array_merge($arg, [
                     'ID' => strval($id),
@@ -228,7 +160,7 @@ trait Links
         }
         // update link
         $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params), true);
-        $this->terms_insert($id, $arg, true);
+        \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg, true);
         $wpdb->query("COMMIT");
     }
     public function delete_link($args)
