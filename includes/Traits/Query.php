@@ -203,6 +203,14 @@ trait Query
         }
     }
 
+    public static function delete_link($ID)
+    {
+        global $wpdb;
+        $wpdb->delete("{$wpdb->prefix}betterlinks", array( 'ID' => $ID ), array( '%d' ));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array( 'link_id' => $ID ), array( '%d' ));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
+    }
+
     public static function insert_clicks($item)
     {
         global $wpdb;
