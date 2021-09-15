@@ -78,34 +78,6 @@ class Links extends Controller
         );
     }
 
-    public function parse_response($items, $analytic)
-    {
-        $results = [];
-        foreach ($items as $item) {
-            //insert analytic data
-            if (isset($analytic[$item->ID])) {
-                $item->analytic = $analytic[$item->ID];
-            }
-
-            // formatting response
-            if (!isset($results[$item->cat_id])) {
-                $results[$item->cat_id] = [
-                    'term_name' => $item->term_name,
-                    'term_slug' => $item->term_slug,
-                    'term_type' => $item->term_type,
-                ];
-                if ($item->ID !== null) {
-                    $results[$item->cat_id]['lists'][] = $item;
-                } else {
-                    $results[$item->cat_id]['lists'] = [];
-                }
-            } else {
-                $results[$item->cat_id]['lists'][] = $item;
-            }
-        }
-        return $results;
-    }
-
     /**
      * Get betterlinks
      *
@@ -116,7 +88,7 @@ class Links extends Controller
     {
         $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
         if (empty($cache_data) || !json_decode($cache_data, true)) {
-            $results = $this->get_all_links_data();
+            $results = \BetterLinks\Helper::get_prepare_all_links();
             set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
             return new \WP_REST_Response(
                 [

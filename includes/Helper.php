@@ -204,6 +204,34 @@ class Helper
     {
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
     }
+
+    public static function parse_link_response($items, $analytic)
+    {
+        $results = [];
+        foreach ($items as $item) {
+            //insert analytic data
+            if (isset($analytic[$item->ID])) {
+                $item->analytic = $analytic[$item->ID];
+            }
+
+            // formatting response
+            if (!isset($results[$item->cat_id])) {
+                $results[$item->cat_id] = [
+                    'term_name' => $item->term_name,
+                    'term_slug' => $item->term_slug,
+                    'term_type' => $item->term_type,
+                ];
+                if ($item->ID !== null) {
+                    $results[$item->cat_id]['lists'][] = $item;
+                } else {
+                    $results[$item->cat_id]['lists'] = [];
+                }
+            } else {
+                $results[$item->cat_id]['lists'][] = $item;
+            }
+        }
+        return $results;
+    }
     public static function json_link_formatter($data)
     {
         return [

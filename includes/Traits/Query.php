@@ -3,6 +3,41 @@ namespace BetterLinks\Traits;
 
 trait Query
 {
+    public static function get_prepare_all_links()
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $analytic = get_option('betterlinks_analytics_data');
+        $analytic = $analytic ? json_decode($analytic, true) : [];
+        $results = $wpdb->get_results("SELECT 
+            {$prefix}betterlinks_terms.ID as cat_id, 
+            {$prefix}betterlinks_terms.term_name, 
+            {$prefix}betterlinks_terms.term_slug,
+            {$prefix}betterlinks_terms.term_type, 
+            {$prefix}betterlinks.ID, 
+            {$prefix}betterlinks.link_title,
+            {$prefix}betterlinks.link_slug,
+            {$prefix}betterlinks.link_note,
+            {$prefix}betterlinks.link_status,
+            {$prefix}betterlinks.nofollow,
+            {$prefix}betterlinks.sponsored,
+            {$prefix}betterlinks.track_me,
+            {$prefix}betterlinks.param_forwarding,
+            {$prefix}betterlinks.param_struct,
+            {$prefix}betterlinks.redirect_type,
+            {$prefix}betterlinks.target_url,
+            {$prefix}betterlinks.short_url,
+            {$prefix}betterlinks.link_date,
+            {$prefix}betterlinks.wildcards,
+            {$prefix}betterlinks.expire,
+            {$prefix}betterlinks.dynamic_redirect
+            FROM {$prefix}betterlinks_terms
+            LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
+            LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
+            WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_order ASC", OBJECT);
+        $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
+        return $results;
+    }
     public static function get_link_by_short_url($short_url)
     {
         global $wpdb;
@@ -12,7 +47,6 @@ trait Query
         );
         return $link;
     }
-
     public static function insert_link($item, $is_update = false)
     {
         global $wpdb;

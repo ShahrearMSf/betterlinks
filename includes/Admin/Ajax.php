@@ -417,7 +417,7 @@ class Ajax
         }
         $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
         if (empty($cache_data) || !json_decode($cache_data, true)) {
-            $results = $this->get_all_links_data();
+            $results = \BetterLinks\Helper::get_prepare_all_links();
             set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
             wp_send_json_success(
                 [
