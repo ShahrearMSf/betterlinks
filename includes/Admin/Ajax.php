@@ -12,27 +12,30 @@ class Ajax
     use \BetterLinks\Traits\ArgumentSchema;
     public function __construct()
     {
-        add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
-        add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
-        add_action('wp_ajax_betterlinks/admin/migration_prettylinks_notice_hide', [$this, 'migration_prettylinks_notice_hide']);
-        add_action('wp_ajax_betterlinks/admin/deactive_prettylinks', [$this, 'deactive_prettylinks']);
+        // link & clicks
+        add_action('wp_ajax_betterlinks/admin/search_clicks_data', [$this, 'search_clicks_data']);
+        add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
+        add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
+        add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
         add_action('wp_ajax_betterlinks/admin/write_json_links', [$this, 'write_json_links']);
         add_action('wp_ajax_betterlinks/admin/write_json_clicks', [$this, 'write_json_clicks']);
         add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
         add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
         add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
+        // prettylinks
+        add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
+        add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
+        add_action('wp_ajax_betterlinks/admin/migration_prettylinks_notice_hide', [$this, 'migration_prettylinks_notice_hide']);
+        add_action('wp_ajax_betterlinks/admin/deactive_prettylinks', [$this, 'deactive_prettylinks']);
+        // simple 301
         add_action('wp_ajax_betterlinks/admin/get_simple301redirects_data', [$this, 'get_simple301redirects_data']);
         add_action('wp_ajax_betterlinks/admin/run_simple301redirects_migration', [$this, 'run_simple301redirects_migration']);
         add_action('wp_ajax_betterlinks/admin/migration_simple301redirects_notice_hide', [$this, 'migration_simple301redirects_notice_hide']);
         add_action('wp_ajax_betterlinks/admin/deactive_simple301redirects', [$this, 'deactive_simple301redirects']);
-        add_action('wp_ajax_betterlinks/admin/search_clicks_data', [$this, 'search_clicks_data']);
-        add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
-        add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
-        add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
+        // Thirsty affiliates
         add_action('wp_ajax_betterlinks/admin/get_thirstyaffiliates_data', [$this, 'get_thirstyaffiliates_data']);
         add_action('wp_ajax_betterlinks/admin/run_thirstyaffiliates_migration', [$this, 'run_thirstyaffiliates_migration']);
         add_action('wp_ajax_betterlinks/admin/deactive_thirstyaffiliates', [$this, 'deactive_thirstyaffiliates']);
-
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
         add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_new_link']);
