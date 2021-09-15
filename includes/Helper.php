@@ -317,6 +317,11 @@ class Helper
         return array_diff_key($data, array_flip($remove));
     }
 
+    public static function force_relative_url($url)
+    {
+        return preg_replace('/^(http)?s?:?\/\/[^\/]*(\/?.*)$/i', '$2', '' . $url);
+    }
+
     public static function get_thirstyaffiliates_links()
     {
         $thirstylinks = get_posts(array(
@@ -326,20 +331,27 @@ class Helper
         ));
         $response = [];
         foreach ($thirstylinks as $thirstylink) {
-            $thirstylink->term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
+            $term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
+            $nofollow = get_post_meta($thirstylink->ID, '_ta_no_follow', true);
+            $nofollow = ($nofollow == 'global' ? get_option('ta_no_follow', true) : $nofollow);
+            $redirect_type = get_post_meta($thirstylink->ID, '_ta_redirect_type', true);
+            $redirect_type = ($redirect_type == 'global' ? get_option('ta_link_redirect_type', true) : $redirect_type);
+            $param_forwarding = get_post_meta($thirstylink->ID, '_ta_pass_query_str', true);
+            $param_forwarding = ($param_forwarding == 'global' ? get_option('ta_pass_query_str', true) : $param_forwarding);
             $response[] = [
                 'link_title' => $thirstylink->post_title,
                 'link_slug' => $thirstylink->post_name,
-                'short_url' => get_the_permalink($thirstylink->ID),
+                'short_url' => self::force_relative_url(get_the_permalink($thirstylink->ID)),
                 'link_author' => $thirstylink->post_author,
                 'link_date' => $thirstylink->post_date,
                 'link_date_gmt' => $thirstylink->post_date_gmt,
-                'nofollow'  => get_post_meta($thirstylink->ID, '_ta_no_follow', true),
-                'redirect_type'  => get_post_meta($thirstylink->ID, '_ta_redirect_type', true),
-                'param_forwarding' => get_post_meta($thirstylink->ID, '_ta_pass_query_str', true),
+                'nofollow'  => ($nofollow == 'yes' ? 1 : 0),
+                'redirect_type'  => $redirect_type,
+                'param_forwarding' => ($param_forwarding == 'yes' ? 1 : 0),
                 'target_url' => get_post_meta($thirstylink->ID, '_ta_destination_url', true),
                 'link_modified' => $thirstylink->post_modified,
                 'link_modified_gmt' => $thirstylink->post_modified_gmt,
+                'terms'  => $term
             ];
         }
         return $response;
@@ -352,6 +364,30 @@ class Helper
             ARRAY_A
         );
         if (count($betterlinks) === 0) {
+            $defaults = array(
+                'link_author' => get_current_user_id(),
+                'link_date' => current_time('mysql'),
+                'link_date_gmt' => current_time('mysql', 1),
+                'link_title' => '',
+                'link_slug' => '',
+                'link_note' => '',
+                'link_status' => 'publish',
+                'nofollow' => '',
+                'sponsored' => '',
+                'track_me' => '',
+                'param_forwarding' => '',
+                'param_struct' => '',
+                'redirect_type' => '',
+                'target_url' => '',
+                'short_url' => '',
+                'link_order' => '',
+                'link_modified' => current_time('mysql'),
+                'link_modified_gmt' => current_time('mysql', 1),
+                'wildcards' => '',
+                'expire' => '',
+                'dynamic_redirect' => '',
+            );
+            $item = wp_parse_args($item, $defaults);
             $wpdb->query(
                 $wpdb->prepare(
                     "INSERT INTO {$wpdb->prefix}betterlinks ( 

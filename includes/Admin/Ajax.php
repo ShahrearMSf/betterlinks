@@ -31,7 +31,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
         add_action('wp_ajax_betterlinks/admin/get_thirstyaffiliates_data', [$this, 'get_thirstyaffiliates_data']);
         add_action('wp_ajax_betterlinks/admin/run_thirstyaffiliates_migration', [$this, 'run_thirstyaffiliates_migration']);
-
+        add_action('wp_ajax_betterlinks/admin/deactive_thirstyaffiliates', [$this, 'deactive_thirstyaffiliates']);
 
         // API Fallbck Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
@@ -355,6 +355,17 @@ class Ajax
             wp_send_json_error($th->getMessage());
             wp_die();
         }
+    }
+
+    public function deactive_thirstyaffiliates()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        $deactivate = deactivate_plugins('thirstyaffiliates/thirstyaffiliates.php');
+        wp_send_json_success($deactivate);
+        wp_die();
     }
 
     public function get_links_by_short_url()

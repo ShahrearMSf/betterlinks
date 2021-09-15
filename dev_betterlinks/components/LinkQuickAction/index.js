@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from './../Link';
-import { site_url, route_path, copyToClipboard } from './../../utils/helper';
+import { site_url, route_path, copyShortUrl } from './../../utils/helper';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
@@ -42,8 +42,8 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 	const noDelete = () => {
 		setDeleteConfrim(false);
 	};
-	const copyShortUrl = (url) => {
-		copyToClipboard(url);
+	const copyShortUrlHandler = (url) => {
+		copyShortUrl(url);
 		setCopyUrl(true);
 		window.setTimeout(function () {
 			setCopyUrl(false);
@@ -68,7 +68,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 			{!isDeleteConfirm ? (
 				<>
 					{isShowCopyLink && (
-						<button className="dnd-link-button btl-tooltip" onClick={() => copyShortUrl(site_url + '/' + data.short_url)}>
+						<button className="dnd-link-button btl-tooltip" onClick={() => copyShortUrlHandler(data.short_url)}>
 							<span className="icon">{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}</span>
 							<span className="btl-tooltiptext">{__('Copy Link', 'betterlinks')}</span>
 						</button>

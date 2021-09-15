@@ -137,6 +137,12 @@ export const copyToClipboard = (copyText) => {
 	return;
 };
 
+export const copyShortUrl = (shortUrl) => {
+	const URL = shortUrl[0] === '/' ? site_url + shortUrl : site_url + '/' + shortUrl;
+	copyToClipboard(URL);
+	return URL;
+};
+
 export const getBrowser = (agent) => {
 	var browser = '';
 	if (/Opera[\/\s](\d+\.\d+)/.test(agent) || 'Opera' == agent) {
