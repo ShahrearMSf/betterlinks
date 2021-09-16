@@ -112,7 +112,7 @@ class Import
     public function insert_click_data($item)
     {
         if (!empty($item['short_url'])) {
-            $link_id = \BetterLinks\Helper::insert_clicks($item);
+            $link_id = \BetterLinks\Helper::insert_click($item);
             return $link_id;
         }
         return;
