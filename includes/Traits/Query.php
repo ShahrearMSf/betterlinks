@@ -329,7 +329,7 @@ trait Query
         return $link;
     }
 
-    public static function insert_clicks($item)
+    public static function insert_click($item)
     {
         global $wpdb;
         $betterlinks = $wpdb->get_results(
