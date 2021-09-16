@@ -31,7 +31,7 @@ trait Terms
     }
     public function create_term($args)
     {
-        $term_id = \BetterLinks\Helper::insert_terms($args);
+        $term_id = \BetterLinks\Helper::insert_term($args);
         if ($term_id) {
             $args['ID'] = $term_id;
             $args['lists'] = [];
@@ -41,7 +41,7 @@ trait Terms
     }
     public function update_term($args)
     {
-        \BetterLinks\Helper::insert_terms([
+        \BetterLinks\Helper::insert_term([
             'ID' => $args['cat_id'],
             'term_name' => $args['cat_name'],
             'term_slug' => $args['cat_slug'],

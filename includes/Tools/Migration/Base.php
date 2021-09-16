@@ -8,7 +8,7 @@ class Base
         $terms_ids = [];
         if (is_array($categories) && count($categories) > 0) {
             foreach ($categories as $category) {
-                $insert_id = \BetterLinks\Helper::insert_terms([
+                $insert_id = \BetterLinks\Helper::insert_term([
                     'term_name' => $category,
                     'term_slug' => \BetterLinks\Helper::make_slug($category),
                     'term_type' => 'category'

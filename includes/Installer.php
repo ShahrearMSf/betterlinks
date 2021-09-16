@@ -99,7 +99,7 @@ class Installer extends \WP_Background_Process
     public function insert_terms_data()
     {
         try {
-            Helper::insert_terms([
+            Helper::insert_term([
                 'term_name' => 'Uncategorized',
                 'term_slug' => 'uncategorized',
                 'term_type' => 'category',

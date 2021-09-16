@@ -151,7 +151,7 @@ trait Query
         return $formattedArray;
     }
 
-    public static function insert_terms($item, $is_update = false)
+    public static function insert_term($item, $is_update = false)
     {
         global $wpdb;
         if ($is_update) {
@@ -188,7 +188,7 @@ trait Query
         $terms_ids = [];
         if (is_array($tags) && count($tags) > 0) {
             foreach ($tags as $tag) {
-                $insert_id = self::insert_terms([
+                $insert_id = self::insert_term([
                     'term_name' => $tag,
                     'term_slug' => \BetterLinks\Helper::make_slug($tag),
                     'term_type' => 'tags'
@@ -206,7 +206,7 @@ trait Query
         $terms_ids = [];
         if (is_array($categories) && count($categories) > 0) {
             foreach ($categories as $category) {
-                $insert_id = self::insert_terms([
+                $insert_id = self::insert_term([
                     'term_name' => $category,
                     'term_slug' => \BetterLinks\Helper::make_slug($category),
                     'term_type' => 'category'
@@ -301,7 +301,7 @@ trait Query
         // insert new tags or category
         if (count($newTermList) > 0) {
             foreach ($newTermList as $item) {
-                $term_id = \BetterLinks\Helper::insert_terms($item);
+                $term_id = \BetterLinks\Helper::insert_term($item);
                 $term_data[] = [
                     'term_id' => $term_id,
                     'link_id' => $link_id,
