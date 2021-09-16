@@ -168,10 +168,7 @@ trait Query
             );
             return  $item['ID'];
         } else {
-            $terms = $wpdb->get_results(
-                $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $item['term_slug']),
-                ARRAY_A
-            );
+            $terms = self::get_term_by_slug($item['term_slug']);
             if (count($terms) === 0) {
                 $wpdb->query(
                     $wpdb->prepare(

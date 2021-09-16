@@ -98,25 +98,14 @@ class Installer extends \WP_Background_Process
 
     public function insert_terms_data()
     {
-        $query = \BetterLinks\Helper::DB();
-        $result = $query
-            ->table('betterlinks_terms')
-            ->where('term_slug', '=', 'uncategorized')
-            ->get();
-        if (count($result) === 0) {
-            try {
-                $data = [
-                    'term_name' => 'Uncategorized',
-                    'term_slug' => 'uncategorized',
-                    'term_type' => 'category',
-                ];
-                $query
-                    ->table('betterlinks_terms')
-                    ->where('term_slug', '!', 'uncategorized')
-                    ->insert($data);
-            } catch (\Throwable $th) {
-                echo $th->getMessage();
-            }
+        try {
+            Helper::insert_terms([
+                'term_name' => 'Uncategorized',
+                'term_slug' => 'uncategorized',
+                'term_type' => 'category',
+            ]);
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
         }
     }
 
