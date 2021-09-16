@@ -357,4 +357,33 @@ trait Query
         }
         return $response;
     }
+
+    /**
+     * Get All BetterLinks Uploads Links JSON File
+     *
+     * @return array
+     */
+    public static function get_links_for_json()
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $formattedArray = [];
+        $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
+        if (!empty($options)) {
+            $formattedArray['wildcards_is_active'] = $options->wildcards;
+            $formattedArray['disablebotclicks'] = $options->disablebotclicks;
+            $formattedArray['force_https'] = $options->force_https;
+        }
+        if (is_array($items) && count($items) > 0) {
+            foreach ($items as $item) {
+                if ($item->wildcards == true) {
+                    $formattedArray['wildcards'][$item->short_url] = $item;
+                } else {
+                    $formattedArray['links'][$item->short_url] = $item;
+                }
+            }
+        }
+        return $formattedArray;
+    }
 }
