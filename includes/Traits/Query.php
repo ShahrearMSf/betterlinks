@@ -3,50 +3,6 @@ namespace BetterLinks\Traits;
 
 trait Query
 {
-    public static function get_prepare_all_links()
-    {
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $analytic = get_option('betterlinks_analytics_data');
-        $analytic = $analytic ? json_decode($analytic, true) : [];
-        $results = $wpdb->get_results("SELECT 
-            {$prefix}betterlinks_terms.ID as cat_id, 
-            {$prefix}betterlinks_terms.term_name, 
-            {$prefix}betterlinks_terms.term_slug,
-            {$prefix}betterlinks_terms.term_type, 
-            {$prefix}betterlinks.ID, 
-            {$prefix}betterlinks.link_title,
-            {$prefix}betterlinks.link_slug,
-            {$prefix}betterlinks.link_note,
-            {$prefix}betterlinks.link_status,
-            {$prefix}betterlinks.nofollow,
-            {$prefix}betterlinks.sponsored,
-            {$prefix}betterlinks.track_me,
-            {$prefix}betterlinks.param_forwarding,
-            {$prefix}betterlinks.param_struct,
-            {$prefix}betterlinks.redirect_type,
-            {$prefix}betterlinks.target_url,
-            {$prefix}betterlinks.short_url,
-            {$prefix}betterlinks.link_date,
-            {$prefix}betterlinks.wildcards,
-            {$prefix}betterlinks.expire,
-            {$prefix}betterlinks.dynamic_redirect
-            FROM {$prefix}betterlinks_terms
-            LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
-            LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-            WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_order ASC", OBJECT);
-        $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
-        return $results;
-    }
-    public static function get_link_by_short_url($short_url)
-    {
-        global $wpdb;
-        $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
-            ARRAY_A
-        );
-        return $link;
-    }
     public static function insert_link($item, $is_update = false)
     {
         global $wpdb;
@@ -105,6 +61,87 @@ trait Query
         }
         return;
     }
+    public static function delete_link($ID)
+    {
+        global $wpdb;
+        $wpdb->delete("{$wpdb->prefix}betterlinks", array( 'ID' => $ID ), array( '%d' ));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array( 'link_id' => $ID ), array( '%d' ));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
+    }
+    public static function get_prepare_all_links()
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $analytic = get_option('betterlinks_analytics_data');
+        $analytic = $analytic ? json_decode($analytic, true) : [];
+        $results = $wpdb->get_results("SELECT 
+            {$prefix}betterlinks_terms.ID as cat_id, 
+            {$prefix}betterlinks_terms.term_name, 
+            {$prefix}betterlinks_terms.term_slug,
+            {$prefix}betterlinks_terms.term_type, 
+            {$prefix}betterlinks.ID, 
+            {$prefix}betterlinks.link_title,
+            {$prefix}betterlinks.link_slug,
+            {$prefix}betterlinks.link_note,
+            {$prefix}betterlinks.link_status,
+            {$prefix}betterlinks.nofollow,
+            {$prefix}betterlinks.sponsored,
+            {$prefix}betterlinks.track_me,
+            {$prefix}betterlinks.param_forwarding,
+            {$prefix}betterlinks.param_struct,
+            {$prefix}betterlinks.redirect_type,
+            {$prefix}betterlinks.target_url,
+            {$prefix}betterlinks.short_url,
+            {$prefix}betterlinks.link_date,
+            {$prefix}betterlinks.wildcards,
+            {$prefix}betterlinks.expire,
+            {$prefix}betterlinks.dynamic_redirect
+            FROM {$prefix}betterlinks_terms
+            LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
+            LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
+            WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_order ASC", OBJECT);
+        $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
+        return $results;
+    }
+    public static function get_link_by_short_url($short_url)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
+            ARRAY_A
+        );
+        return $link;
+    }
+
+    /**
+     * Get All BetterLinks Uploads Links JSON File
+     *
+     * @return array
+     */
+    public static function get_links_for_json()
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $formattedArray = [];
+        $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
+        if (!empty($options)) {
+            $formattedArray['wildcards_is_active'] = $options->wildcards;
+            $formattedArray['disablebotclicks'] = $options->disablebotclicks;
+            $formattedArray['force_https'] = $options->force_https;
+        }
+        if (is_array($items) && count($items) > 0) {
+            foreach ($items as $item) {
+                if ($item->wildcards == true) {
+                    $formattedArray['wildcards'][$item->short_url] = $item;
+                } else {
+                    $formattedArray['links'][$item->short_url] = $item;
+                }
+            }
+        }
+        return $formattedArray;
+    }
+
     public static function insert_terms($item, $is_update = false)
     {
         global $wpdb;
@@ -140,22 +177,59 @@ trait Query
         }
         return;
     }
+    public static function insert_tags_terms($tags)
+    {
+        $terms_ids = [];
+        if (is_array($tags) && count($tags) > 0) {
+            foreach ($tags as $tag) {
+                $insert_id = self::insert_terms([
+                    'term_name' => $tag,
+                    'term_slug' => \BetterLinks\Helper::make_slug($tag),
+                    'term_type' => 'tags'
+                ]);
+                if ($insert_id) {
+                    $terms_ids[] = $insert_id;
+                }
+            }
+        }
+        return $terms_ids;
+    }
 
-    public static function get_term_by_slug($slug)
+    public static function insert_category_terms($categories)
+    {
+        $terms_ids = [];
+        if (is_array($categories) && count($categories) > 0) {
+            foreach ($categories as $category) {
+                $insert_id = self::insert_terms([
+                    'term_name' => $category,
+                    'term_slug' => \BetterLinks\Helper::make_slug($category),
+                    'term_type' => 'category'
+                ]);
+                if ($insert_id) {
+                    $terms_ids[] = $insert_id;
+                }
+            }
+        }
+        return $terms_ids;
+    }
+    public static function insert_terms_relationships($term_id, $link_id)
     {
         global $wpdb;
-        $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $slug),
-            ARRAY_A
+        $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$wpdb->prefix}betterlinks_terms_relationships ( term_id, link_id ) VALUES ( %d, %d )",
+                array($term_id,$link_id)
+            )
         );
-        return $link;
+        return $wpdb->insert_id;
     }
+
     /**
-     * Delete term and update Term relationship to uncategorized
-     *
-     * @param term_id
-     * @return boolean
-     */
+    * Delete term and update Term relationship to uncategorized
+    *
+    * @param term_id
+    * @return boolean
+    */
     public static function delete_term_and_update_term_relationships($term_id)
     {
         global $wpdb;
@@ -179,54 +253,6 @@ trait Query
         }
         $wpdb->query("COMMIT");
         return $is_delete;
-    }
-
-    public static function insert_terms_relationships($term_id, $link_id)
-    {
-        global $wpdb;
-        $wpdb->query(
-            $wpdb->prepare(
-                "INSERT INTO {$wpdb->prefix}betterlinks_terms_relationships ( term_id, link_id ) VALUES ( %d, %d )",
-                array($term_id,$link_id)
-            )
-        );
-        return $wpdb->insert_id;
-    }
-
-    public static function insert_tags_terms($tags)
-    {
-        $terms_ids = [];
-        if (is_array($tags) && count($tags) > 0) {
-            foreach ($tags as $tag) {
-                $insert_id = \BetterLinks\Helper::insert_terms([
-                    'term_name' => $tag,
-                    'term_slug' => \BetterLinks\Helper::make_slug($tag),
-                    'term_type' => 'tags'
-                ]);
-                if ($insert_id) {
-                    $terms_ids[] = $insert_id;
-                }
-            }
-        }
-        return $terms_ids;
-    }
-
-    public static function insert_category_terms($categories)
-    {
-        $terms_ids = [];
-        if (is_array($categories) && count($categories) > 0) {
-            foreach ($categories as $category) {
-                $insert_id = \BetterLinks\Helper::insert_terms([
-                    'term_name' => $category,
-                    'term_slug' => \BetterLinks\Helper::make_slug($category),
-                    'term_type' => 'category'
-                ]);
-                if ($insert_id) {
-                    $terms_ids[] = $insert_id;
-                }
-            }
-        }
-        return $terms_ids;
     }
 
     public static function insert_terms_and_terms_relationship($link_id, $request, $is_update = false)
@@ -292,12 +318,15 @@ trait Query
         }
     }
 
-    public static function delete_link($ID)
+
+    public static function get_term_by_slug($slug)
     {
         global $wpdb;
-        $wpdb->delete("{$wpdb->prefix}betterlinks", array( 'ID' => $ID ), array( '%d' ));
-        $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array( 'link_id' => $ID ), array( '%d' ));
-        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $slug),
+            ARRAY_A
+        );
+        return $link;
     }
 
     public static function insert_clicks($item)
@@ -356,34 +385,5 @@ trait Query
             ];
         }
         return $response;
-    }
-
-    /**
-     * Get All BetterLinks Uploads Links JSON File
-     *
-     * @return array
-     */
-    public static function get_links_for_json()
-    {
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $formattedArray = [];
-        $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
-        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
-        if (!empty($options)) {
-            $formattedArray['wildcards_is_active'] = $options->wildcards;
-            $formattedArray['disablebotclicks'] = $options->disablebotclicks;
-            $formattedArray['force_https'] = $options->force_https;
-        }
-        if (is_array($items) && count($items) > 0) {
-            foreach ($items as $item) {
-                if ($item->wildcards == true) {
-                    $formattedArray['wildcards'][$item->short_url] = $item;
-                } else {
-                    $formattedArray['links'][$item->short_url] = $item;
-                }
-            }
-        }
-        return $formattedArray;
     }
 }
