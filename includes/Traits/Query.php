@@ -112,6 +112,15 @@ trait Query
         );
         return $link;
     }
+    public static function get_link_by_ID($ID)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE ID=%d", $ID),
+            ARRAY_A
+        );
+        return $link;
+    }
 
     /**
      * Get All BetterLinks Uploads Links JSON File
@@ -317,8 +326,7 @@ trait Query
             }
         }
     }
-
-
+    
     public static function get_term_by_slug($slug)
     {
         global $wpdb;
@@ -332,10 +340,12 @@ trait Query
     public static function insert_click($item)
     {
         global $wpdb;
-        $betterlinks = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $item['short_url']),
-            ARRAY_A
-        );
+        $betterlinks = [];
+        if (isset($item['short_url'])) {
+            $betterlinks = self::get_link_by_short_url($item['short_url']);
+        } elseif (isset($item['link_id'])) {
+            $betterlinks = self::get_link_by_ID($item['link_id']);
+        }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
                 $wpdb->prepare(
@@ -350,6 +360,20 @@ trait Query
             return $wpdb->insert_id;
         }
         return;
+    }
+
+    public static function get_links_analytics()
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $results = $wpdb->get_results(
+            "SELECT DISTINCT link_id, ip,
+			(select count(ip) from {$prefix}betterlinks_clicks WHERE CLICKS.ip = {$prefix}betterlinks_clicks.ip  group by ip) as IPCOUNT,
+			(select count(link_id) from {$prefix}betterlinks_clicks WHERE CLICKS.link_id = {$prefix}betterlinks_clicks.link_id group by link_id) as LINKCOUNT
+			from {$prefix}betterlinks_clicks as CLICKS group by CLICKS.id",
+            ARRAY_A
+        );
+        return $results;
     }
 
     public static function get_thirstyaffiliates_links()

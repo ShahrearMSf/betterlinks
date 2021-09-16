@@ -348,13 +348,18 @@ class Helper
     {
         return preg_replace('/^(http)?s?:?\/\/[^\/]*(\/?.*)$/i', '$2', '' . $url);
     }
-    public static function get_term_by_term_slug($term_slug)
+    public static function update_links_analytics()
     {
-        global $wpdb;
-        $term = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, term_slug FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $term_slug),
-            ARRAY_A
-        );
-        return $term;
+        $analytics = Helper::get_links_analytics();
+        $results = [];
+        if (!empty($analytics)) {
+            foreach ($analytics as $item) {
+                $results[$item['link_id']]['link_count'] = $item['LINKCOUNT'];
+                $results[$item['link_id']]['ip'][] = [
+                    $item['ip'] => $item['IPCOUNT'],
+                ];
+            }
+        }
+        return update_option('betterlinks_analytics_data', json_encode($results));
     }
 }

@@ -35,47 +35,23 @@ class Cron
     {
         Helper::clear_query_cache();
         try {
-            global $wpdb;
-            $prefix = $wpdb->prefix;
-            $query = Helper::DB();
             // insert clicks json data into db
             if (BETTERLINKS_EXISTS_CLICKS_JSON) {
                 $Clicks = json_decode(file_get_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'), true);
                 // link id already exists or not in links table
                 if (is_array($Clicks)) {
                     foreach ($Clicks as $key => $item) {
-                        if ($query->table('betterlinks')->find($item['link_id'])) {
-                            $target_url = $item['target_url'];
-                            unset($item['target_url']);
-                            $click_id = $query->table('betterlinks_clicks')->insert($item);
-                            if (!empty($click_id)) {
-                                do_action('betterlinks/link/after_insert_click', $item['link_id'], $click_id, $target_url);
-                            }
+                        $click_id = Helper::insert_click($item);
+                        if (!empty($click_id)) {
+                            do_action('betterlinks/link/after_insert_click', $item['link_id'], $click_id, $item['target_url']);
                         }
                     }
                     file_put_contents(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', '{}');
                 }
             }
 
-            // update links analytic
-            $items = (array) $query
-                ->query(
-                    "SELECT DISTINCT link_id, ip,
-			(select count(ip) from {$prefix}betterlinks_clicks WHERE CLICKS.ip = {$prefix}betterlinks_clicks.ip  group by ip) as IPCOUNT,
-			(select count(link_id) from {$prefix}betterlinks_clicks WHERE CLICKS.link_id = {$prefix}betterlinks_clicks.link_id group by link_id) as LINKCOUNT
-			from {$prefix}betterlinks_clicks as CLICKS group by CLICKS.id"
-                )
-                ->get();
-            $results = [];
-            if (!empty($items)) {
-                foreach ($items as $item) {
-                    $results[$item->link_id]['link_count'] = $item->LINKCOUNT;
-                    $results[$item->link_id]['ip'][] = [
-                        $item->ip => $item->IPCOUNT,
-                    ];
-                }
-            }
-            return update_option('betterlinks_analytics_data', json_encode($results));
+            $is_update = Helper::update_links_analytics();
+            return $is_update;
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
