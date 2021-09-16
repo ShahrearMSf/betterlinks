@@ -10,23 +10,22 @@ class Utils
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
             return apply_filters('betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file($slug));
         }
-        $query = \BetterLinks\Helper::DB();
-        $results = $query->table('betterlinks')->where('short_url', '=', $slug)->first();
+        $results = \BetterLinks\Helper::get_link_by_short_url($slug);
         if (!empty($results)) {
             return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($results), true));
         }
         // wildcards
         $links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
         if (isset($links_option['wildcards']) && $links_option['wildcards']) {
-            $results = $query->table('betterlinks')->where('wildcards', '=', 1)->get();
+            $results = \BetterLinks\Helper::get_link_by_wildcards(1);
             foreach ($results as $key => $item) {
-                $postion = strpos($item->short_url, '/*');
+                $postion = strpos($item['short_url'], '/*');
                 if ($postion !== false) {
-                    if (substr($item->short_url, 0, $postion) == substr($slug, 0, $postion)) {
-                        $target_postion = strpos($item->target_url, '/*');
+                    if (substr($item['short_url'], 0, $postion) == substr($slug, 0, $postion)) {
+                        $target_postion = strpos($item['target_url'], '/*');
                         if ($target_postion !== false) {
-                            $target_url = str_replace('/*', substr($slug, $postion), $item->target_url);
-                            $item->target_url = $target_url;
+                            $target_url = str_replace('/*', substr($slug, $postion), $item['target_url']);
+                            $item['target_url'] = $target_url;
                             return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item), true));
                         }
                         return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item), true));
@@ -126,12 +125,9 @@ class Utils
             $this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
         } else {
             try {
-                $target_url = $arg['target_url'];
-                unset($arg['target_url']);
-                $query = \BetterLinks\Helper::DB();
-                $click_id = $query->table('betterlinks_clicks')->insert($arg);
+                $click_id = \BetterLinks\Helper::insert_click($arg);
                 if (!empty($click_id)) {
-                    do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $target_url);
+                    do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $arg['target_url']);
                 }
             } catch (\Throwable $th) {
                 echo $th->getMessage();

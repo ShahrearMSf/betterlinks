@@ -171,14 +171,11 @@ class Ajax
         $alreadyExists = false;
         $resutls = [];
         if (!empty($slug)) {
-            $query = \BetterLinks\Helper::DB()
-                ->table('betterlinks')
-                ->where('short_url', '=', $slug);
-            $resutls = $query->get();
+            $resutls = \BetterLinks\Helper::get_link_by_short_url($slug);
             if (count($resutls) > 0) {
                 $alreadyExists = true;
                 $resutls = current($resutls);
-                if ($resutls->ID == $ID) {
+                if ($resutls['ID'] == $ID) {
                     $alreadyExists = false;
                 }
             }
@@ -197,14 +194,11 @@ class Ajax
         $alreadyExists = false;
         $resutls = [];
         if (!empty($slug)) {
-            $query = \BetterLinks\Helper::DB()
-                ->table('betterlinks_terms')
-                ->where('term_slug', '=', $slug);
-            $resutls = $query->get();
+            $resutls = \BetterLinks\Helper::get_term_by_slug($slug);
             if (count($resutls) > 0) {
                 $alreadyExists = true;
                 $resutls = current($resutls);
-                if ($resutls->ID == $ID) {
+                if ($resutls['ID'] == $ID) {
                     $alreadyExists = false;
                 }
             }

@@ -112,6 +112,15 @@ trait Query
         );
         return $link;
     }
+    public static function get_link_by_wildcards($wildcards)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT ID, short_url, target_url FROM {$wpdb->prefix}betterlinks WHERE wildcards=%d", $wildcards),
+            ARRAY_A
+        );
+        return $link;
+    }
     public static function get_link_by_ID($ID)
     {
         global $wpdb;
