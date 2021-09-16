@@ -2,6 +2,7 @@
 
 namespace BetterLinks\Admin;
 
+use BetterLinks;
 use BetterLinks\Cron;
 
 class Ajax
@@ -56,9 +57,8 @@ class Ajax
         if (! current_user_can('manage_options')) {
             wp_die();
         }
-        $query = \BetterLinks\Helper::DB();
-        $links = $query->table('prli_links')->get();
-        $clicks = $query->table('prli_clicks')->get();
+        $links = \BetterLinks\Helper::get_prettylinks_links();
+        $clicks = \BetterLinks\Helper::get_prettylinks_clicks();
         set_transient('betterlinks_migration_data_prettylinks', ['links' => $links, 'clicks' => $clicks], 60 * 5);
         wp_send_json_success(['links' => $links, 'clicks' => $clicks]);
         wp_die();
@@ -74,8 +74,7 @@ class Ajax
             $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
             $type = explode(',', $type);
             $prettylinks = get_transient('betterlinks_migration_data_prettylinks');
-            $DB = \BetterLinks\Helper::DB();
-            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick($DB);
+            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
             $resutls = [];
             foreach ($type as $item) {
                 if (isset($prettylinks[$item]) && count($prettylinks[$item]) > 0) {

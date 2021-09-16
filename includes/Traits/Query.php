@@ -416,4 +416,23 @@ trait Query
         }
         return $response;
     }
+
+    public static function get_prettylinks_links()
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            "SELECT * FROM {$wpdb->prefix}prli_links",
+            ARRAY_A
+        );
+        return $link;
+    }
+    public static function get_prettylinks_clicks()
+    {
+        global $wpdb;
+        $clicks = $wpdb->get_results(
+            "SELECT * FROM {$wpdb->prefix}prli_clicks",
+            ARRAY_A
+        );
+        return $clicks;
+    }
 }

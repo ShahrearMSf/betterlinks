@@ -10,7 +10,7 @@ class ThirstyAffiliatesOneClick extends Base
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $item) {
                 if (!empty($item['link_title']) && !empty($item['short_url'])) {
-                    $link_id = \BetterLinks\Helper::insert_links($item);
+                    $link_id = \BetterLinks\Helper::insert_link($item);
                     if ($link_id) {
                         $category = $this->insert_category_terms($item['terms']);
                         if (count($category) > 0) {
