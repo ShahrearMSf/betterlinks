@@ -51,23 +51,8 @@ trait Terms
     }
     public function delete_term($args)
     {
-        \BetterLinks\Helper::DB()->transaction(function ($qb) use ($args) {
-            if ($args['cat_id'] != 1) {
-                $qb->table('betterlinks_terms')
-                    ->where('id', '=', $args['cat_id'])
-                    ->delete();
-
-                $term = current(
-                    $qb
-                        ->table('betterlinks_terms')
-                        ->where('term_slug', '=', 'uncategorized')
-                        ->get()
-                );
-
-                $qb->table('betterlinks_terms_relationships')
-                    ->where('term_id', '=', $args['cat_id'])
-                    ->update(['term_id' => $term->ID]);
-            }
-        });
+        if ($args['cat_id'] != 1) {
+            \BetterLinks\Helper::delete_term_and_update_term_relationships($args['cat_id']);
+        }
     }
 }

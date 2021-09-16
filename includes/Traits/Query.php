@@ -141,14 +141,44 @@ trait Query
         return;
     }
 
-    public function delete_term_and_term_relationships()
+    public static function get_term_by_slug($slug)
     {
-        // Start Transaction
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $slug),
+            ARRAY_A
+        );
+        return $link;
+    }
+    /**
+     * Delete term and update Term relationship to uncategorized
+     *
+     * @param term_id
+     * @return boolean
+     */
+    public static function delete_term_and_update_term_relationships($term_id)
+    {
         global $wpdb;
         $wpdb->query("START TRANSACTION");
-        // $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'link_id' => $link_id ), array( '%d' ));
-
+        $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms', array( 'ID' => $term_id ), array( '%d' ));
+        if ($is_delete) {
+            $term = self::get_term_by_slug('uncategorized');
+            if (count($term) > 0) {
+                $wpdb->update(
+                    "{$wpdb->prefix}betterlinks_terms_relationships",
+                    array(
+                        'term_id' => current($term)['ID']
+                    ),
+                    array( 'term_id' => $term_id ),
+                    array(
+                        '%d',
+                    ),
+                    array( '%d' )
+                );
+            }
+        }
         $wpdb->query("COMMIT");
+        return $is_delete;
     }
 
     public static function insert_terms_relationships($term_id, $link_id)
