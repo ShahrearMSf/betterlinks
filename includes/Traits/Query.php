@@ -382,6 +382,20 @@ trait Query
         return $results;
     }
 
+    public static function search_clicks_data($keyword)
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $results = $wpdb->get_results(
+            $wpdb->prepare("SELECT CLICKS.ID as 
+            click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
+            (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
+            from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s  group by CLICKS.id ORDER BY CLICKS.created_at DESC", '%' . $keyword . '%'),
+            ARRAY_A
+        );
+        return $results;
+    }
+
     public static function get_thirstyaffiliates_links()
     {
         $thirstylinks = get_posts(array(

@@ -266,18 +266,7 @@ class Ajax
             wp_die();
         }
         $title = isset($_GET['title']) ? sanitize_text_field($_GET['title']) : '';
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $query = \BetterLinks\Helper::DB();
-        $results = $query
-            ->query(
-                "SELECT CLICKS.ID as 
-        click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
-        (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
-		from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE '%$title%'  group by CLICKS.id ORDER BY CLICKS.created_at DESC"
-            )
-            ->get();
-        
+        $results = \BetterLinks\Helper::search_clicks_data($title);
         wp_send_json_success($results);
         wp_die();
     }
