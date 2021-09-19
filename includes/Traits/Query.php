@@ -6,31 +6,9 @@ trait Query
     public static function insert_link($item, $is_update = false)
     {
         global $wpdb;
-        $defaults = apply_filters('betterlinks/insert_link_default_args', array(
-            'link_author' => get_current_user_id(),
-            'link_date' => current_time('mysql'),
-            'link_date_gmt' => current_time('mysql', 1),
-            'link_title' => '',
-            'link_slug' => '',
-            'link_note' => '',
-            'link_status' => 'publish',
-            'nofollow' => '',
-            'sponsored' => '',
-            'track_me' => '',
-            'param_forwarding' => '',
-            'param_struct' => '',
-            'redirect_type' => '',
-            'target_url' => '',
-            'short_url' => '',
-            'link_order' => '',
-            'link_modified' => current_time('mysql'),
-            'link_modified_gmt' => current_time('mysql', 1),
-            'wildcards' => '',
-            'expire' => '',
-            'dynamic_redirect' => '',
-        ));
-        $item = wp_parse_args($item, $defaults);
         if ($is_update) {
+            $defaults = self::get_link_all_data_by_ID($item['ID']);
+            $item = wp_parse_args($item, current($defaults));
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks",
                 array(
@@ -46,6 +24,30 @@ trait Query
         } else {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
             if (count($betterlinks) === 0) {
+                $defaults = apply_filters('betterlinks/insert_link_default_args', array(
+                    'link_author' => get_current_user_id(),
+                    'link_date' => current_time('mysql'),
+                    'link_date_gmt' => current_time('mysql', 1),
+                    'link_title' => '',
+                    'link_slug' => '',
+                    'link_note' => '',
+                    'link_status' => 'publish',
+                    'nofollow' => '',
+                    'sponsored' => '',
+                    'track_me' => '',
+                    'param_forwarding' => '',
+                    'param_struct' => '',
+                    'redirect_type' => '',
+                    'target_url' => '',
+                    'short_url' => '',
+                    'link_order' => '',
+                    'link_modified' => current_time('mysql'),
+                    'link_modified_gmt' => current_time('mysql', 1),
+                    'wildcards' => '',
+                    'expire' => '',
+                    'dynamic_redirect' => '',
+                ));
+                $item = wp_parse_args($item, $defaults);
                 $wpdb->query(
                     $wpdb->prepare(
                         "INSERT INTO {$wpdb->prefix}betterlinks ( 
@@ -126,6 +128,15 @@ trait Query
         global $wpdb;
         $link = $wpdb->get_results(
             $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE ID=%d", $ID),
+            ARRAY_A
+        );
+        return $link;
+    }
+    public static function get_link_all_data_by_ID($ID)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks WHERE ID=%d", $ID),
             ARRAY_A
         );
         return $link;

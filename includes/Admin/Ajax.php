@@ -277,10 +277,9 @@ class Ajax
             wp_die();
         }
         $links = (isset($_POST['links']) ? explode(',', sanitize_text_field($_POST['links'])) : []);
-        $DB = \BetterLinks\Helper::DB();
         if (count($links) > 0) {
             foreach ($links as $key => $value) {
-                $DB->table('betterlinks')->where('ID', $value)->update(['link_order' => $key]);
+                \BetterLinks\Helper::insert_link(['ID' => $value, 'link_order' =>  $key], true);
             }
         }
         wp_send_json_success([]);
