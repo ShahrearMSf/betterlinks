@@ -325,6 +325,7 @@ class Helper
             ARRAY_A
         );
         if (count($betterlinks) === 0) {
+            $item['short_url'] = rtrim($item['short_url'], "/");
             $wpdb->query(
                 $wpdb->prepare(
                     "INSERT INTO {$wpdb->prefix}betterlinks ( 
