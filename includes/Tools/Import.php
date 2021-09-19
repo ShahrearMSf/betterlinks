@@ -5,9 +5,6 @@ use Error;
 
 class Import
 {
-    private $DB;
-    private $term_IDs = [];
-    private $link_IDs = [];
     private $link_header = [];
     public function __construct()
     {
@@ -20,7 +17,6 @@ class Import
         $import = isset($_GET['import']) ? $_GET['import'] : false;
         if ($page === 'betterlinks-settings' && $import == true) {
             \BetterLinks\Helper::clear_query_cache();
-            $this->DB = \BetterLinks\Helper::DB();
             if (!empty($_FILES['upload_file']['tmp_name'])) {
                 if ($_POST['mode'] == 'default') {
                     $fileContent = fopen($_FILES['upload_file']['tmp_name'], "r");
@@ -31,7 +27,7 @@ class Import
                 } elseif ($_POST['mode'] == 'prettylinks') {
                     $csv = array_map('str_getcsv', file($_FILES['upload_file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
                     if (is_array($csv) && count($csv) > 0) {
-                        $PrettyLinks = new Migration\PTLImportCSV($this->DB);
+                        $PrettyLinks = new Migration\PTLImportCSV();
                         if (isset($csv[0][0]) && $csv[0][0] === 'Browser') {
                             // import clicks data
                             $results = $PrettyLinks->process_clicks_data($csv);
@@ -43,7 +39,7 @@ class Import
                     }
                 } elseif ($_POST['mode'] == 'simple301redirects') {
                     $fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
-                    $migrator = new \BetterLinks\Tools\Migration\S301ROneClick($this->DB);
+                    $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
                     $results = $migrator->process_links_data(array_reverse($fileContent));
                     if (!empty($results)) {
                         set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
@@ -86,10 +82,6 @@ class Import
         return ['links' => $link_message, 'clicks' => $click_message];
     }
 
-    public function prepare_data_before_insert()
-    {
-    }
-
     public function insert_link_data($item)
     {
         if (!empty($item['link_title']) && !empty($item['short_url'])) {
@@ -116,26 +108,6 @@ class Import
             return $link_id;
         }
         return;
-    }
-
-
-    public function terms_relationships_data_insert($data)
-    {
-        $terms = [];
-        $message = [];
-        foreach ($data as $item) {
-            if (isset($this->link_IDs[$item['link_id']])) {
-                $item['link_id'] = $this->link_IDs[$item['link_id']];
-            }
-            if (isset($this->term_IDs[$item['term_id']])) {
-                $item['term_id'] = $this->term_IDs[$item['term_id']];
-            }
-            $terms[] = $item;
-        }
-        if (count($terms) > 0) {
-            $this->DB->table('betterlinks_terms_relationships')->insert($terms);
-        }
-        return $message;
     }
 
     public function get_import_info()
