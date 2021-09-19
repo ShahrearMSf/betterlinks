@@ -4,18 +4,6 @@ namespace BetterLinks;
 class Helper
 {
     use Traits\Query;
-    public static function DB()
-    {
-        static $BLDATA;
-        if (!$BLDATA) {
-            global $wpdb;
-            $connection = new Query\Connection($wpdb, [
-                'prefix' => $wpdb->prefix,
-            ]);
-            $BLDATA = new Query\QueryBuilder\QueryBuilderHandler($connection);
-        }
-        return $BLDATA;
-    }
 
     public static function get_links()
     {
