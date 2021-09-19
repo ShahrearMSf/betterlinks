@@ -354,6 +354,36 @@ trait Query
         return $link;
     }
 
+    public static function get_terms_by_link_ID_and_term_type($link_ID, $term_type = 'categroy')
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT 
+            {$prefix}betterlinks_terms.ID as term_id, 
+            {$prefix}betterlinks_terms.term_name, 
+            {$prefix}betterlinks_terms.term_slug,
+            {$prefix}betterlinks_terms.term_type
+            FROM {$prefix}betterlinks_terms
+            LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
+            LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
+            WHERE {$prefix}betterlinks_terms_relationships.link_id = %d 
+            AND {$prefix}betterlinks_terms.term_type = %s", $link_ID, $term_type),
+            ARRAY_A
+        );
+        return $link;
+    }
+
+    public static function get_terms_all_data()
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            "SELECT * FROM {$wpdb->prefix}betterlinks_terms",
+            ARRAY_A
+        );
+        return $link;
+    }
+
     public static function insert_click($item)
     {
         global $wpdb;
@@ -402,6 +432,20 @@ trait Query
             click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
             (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
             from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s  group by CLICKS.id ORDER BY CLICKS.created_at DESC", '%' . $keyword . '%'),
+            ARRAY_A
+        );
+        return $results;
+    }
+
+    public static function get_clicks_by_date($from, $to)
+    {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $results = $wpdb->get_results(
+            $wpdb->prepare("SELECT CLICKS.ID as 
+            click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
+            (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
+            from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE created_at BETWEEN  %s AND %s group by CLICKS.id ORDER BY CLICKS.created_at DESC", $from . ' 00:00:00', $to . ' 23:59:00'),
             ARRAY_A
         );
         return $results;

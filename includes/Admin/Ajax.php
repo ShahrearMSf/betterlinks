@@ -293,15 +293,14 @@ class Ajax
         }
         $source = (isset($_POST['source']) ? explode(',', sanitize_text_field($_POST['source'])) : []);
         $destination = (isset($_POST['destination']) ? explode(',', sanitize_text_field($_POST['destination'])) : []);
-        $DB = \BetterLinks\Helper::DB();
         if (count($source) > 0) {
             foreach ($source as $key => $value) {
-                $DB->table('betterlinks')->where('ID', $value)->update(['link_order' => $key]);
+                \BetterLinks\Helper::insert_link(['ID' => $value, 'link_order' =>  $key], true);
             }
         }
         if (count($destination) > 0) {
             foreach ($destination as $key => $value) {
-                $DB->table('betterlinks')->where('ID', $value)->update(['link_order' => $key]);
+                \BetterLinks\Helper::insert_link(['ID' => $value, 'link_order' =>  $key], true);
             }
         }
         wp_send_json_success([]);
@@ -358,33 +357,7 @@ class Ajax
             wp_die();
         }
         $short_url = (isset($_POST['short_url']) ? sanitize_text_field($_POST['short_url']) : '');
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $query = \BetterLinks\Helper::DB();
-        $results = $query
-            ->query(
-                "SELECT 
-				{$prefix}betterlinks.ID, 
-				{$prefix}betterlinks.link_title,
-				{$prefix}betterlinks.link_slug,
-				{$prefix}betterlinks.link_note,
-				{$prefix}betterlinks.link_status,
-				{$prefix}betterlinks.nofollow,
-				{$prefix}betterlinks.sponsored,
-				{$prefix}betterlinks.track_me,
-				{$prefix}betterlinks.param_forwarding,
-				{$prefix}betterlinks.param_struct,
-				{$prefix}betterlinks.redirect_type,
-				{$prefix}betterlinks.target_url,
-				{$prefix}betterlinks.short_url,
-				{$prefix}betterlinks.link_date,
-				{$prefix}betterlinks.wildcards,
-				{$prefix}betterlinks.expire,
-				{$prefix}betterlinks_terms_relationships.term_id
-			FROM {$prefix}betterlinks
-			LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms_relationships.link_id = {$prefix}betterlinks.ID
-			WHERE {$prefix}betterlinks.short_url = '{$short_url}'"
-            )->get();
+        $results = \BetterLinks\Helper::get_link_by_short_url($short_url);
         wp_send_json_success(is_array($results) ? current($results) : false);
         wp_die();
     }
