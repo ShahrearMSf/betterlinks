@@ -223,8 +223,7 @@ class Ajax
         }
         try {
             $simple_301_redirects = get_option('301_redirects');
-            $DB = \BetterLinks\Helper::DB();
-            $migrator = new \BetterLinks\Tools\Migration\S301ROneClick($DB);
+            $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
             $resutls = $migrator->process_links_data(array_reverse($simple_301_redirects));
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();
