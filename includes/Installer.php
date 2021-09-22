@@ -121,7 +121,8 @@ class Installer extends \WP_Background_Process
                 'wildcards' 		=> false,
                 'disablebotclicks' 	=> false,
                 'is_allow_gutenberg'=> true,
-                'force_https'		=> false
+                'force_https'		=> false,
+                'prefix'            => 'go/'
             ];
             add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }

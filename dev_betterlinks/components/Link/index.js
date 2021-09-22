@@ -225,7 +225,7 @@ const Link = (props) => {
 											onChange={(e) => {
 												props.setFieldValue('link_title', e.target.value);
 												if (!data) {
-													props.setFieldValue('short_url', generateShortUrl(e.target.value));
+													props.setFieldValue('short_url', settings.settings.prefix + generateShortUrl(e.target.value));
 													setSlugIsExists(false);
 												}
 											}}

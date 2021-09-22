@@ -203,6 +203,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<Field name="prefix" />
+								</div>
+							</span>
+
 							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
 								<div className="link-options__body">
@@ -218,6 +226,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
+
 							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Bot Clicks', 'betterlinks')}</label>
 								<div className="link-options__body">
