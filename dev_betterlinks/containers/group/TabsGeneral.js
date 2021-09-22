@@ -207,7 +207,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body">
-									<Field name="prefix" />
+									<Field class="btl-text-field" name="prefix" />
 								</div>
 							</span>
 
