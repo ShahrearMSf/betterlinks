@@ -71,8 +71,13 @@ trait Links
                 $params['ID'] = $id;
                 \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
-            \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
+            $term = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
             $wpdb->query("COMMIT");
+            // for instant create create system
+            if (!is_numeric($arg['cat_id']) && isset(current($term)['term_id'])) {
+                $arg['cat_slug'] = $arg['cat_id'];
+                $arg['cat_id'] = current($term)['term_id'];
+            }
             $response = array_merge($arg, [
                     'ID' => strval($id),
                 ]);

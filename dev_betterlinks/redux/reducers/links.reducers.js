@@ -103,8 +103,8 @@ function links(state = {}, action) {
 				links: {
 					...state.links,
 					[payload.data.cat_id]: {
-						term_name: payload.data.cat_id,
-						term_slug: payload.data.cat_id,
+						term_name: payload.data.cat_slug,
+						term_slug: payload.data.cat_slug,
 						term_type: 'category',
 						lists: [payload.data],
 					},

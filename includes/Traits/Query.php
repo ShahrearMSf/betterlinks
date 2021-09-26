@@ -342,6 +342,7 @@ trait Query
                 \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
             }
         }
+        return $term_data;
     }
     
     public static function get_term_by_slug($slug)
