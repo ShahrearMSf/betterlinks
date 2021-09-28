@@ -10,14 +10,14 @@ class Utils
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
             return apply_filters('betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file($slug));
         }
-        $results = \BetterLinks\Helper::get_link_by_short_url($slug);
+        $results = current(\BetterLinks\Helper::get_link_by_short_url($slug));
         if (!empty($results)) {
             return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($results), true));
         }
         // wildcards
         $links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
         if (isset($links_option['wildcards']) && $links_option['wildcards']) {
-            $results = \BetterLinks\Helper::get_link_by_wildcards(1);
+            $results = current(\BetterLinks\Helper::get_link_by_wildcards(1));
             foreach ($results as $key => $item) {
                 $postion = strpos($item['short_url'], '/*');
                 if ($postion !== false) {

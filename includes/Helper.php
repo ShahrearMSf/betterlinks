@@ -16,6 +16,8 @@ class Helper
             }
             return $data;
         }
+        $data = self::get_links_for_json();
+        return $data;
     }
 
     public static function get_link_from_json_file($short_url)

@@ -7,7 +7,7 @@ trait Query
     {
         global $wpdb;
         if ($is_update) {
-            $defaults = self::get_link_all_data_by_ID($item['ID']);
+            $defaults = self::get_link_by_ID($item['ID']);
             $item = wp_parse_args($item, current($defaults));
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks",
@@ -109,7 +109,7 @@ trait Query
     {
         global $wpdb;
         $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
             ARRAY_A
         );
         return $link;
@@ -124,15 +124,6 @@ trait Query
         return $link;
     }
     public static function get_link_by_ID($ID)
-    {
-        global $wpdb;
-        $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, short_url FROM {$wpdb->prefix}betterlinks WHERE ID=%d", $ID),
-            ARRAY_A
-        );
-        return $link;
-    }
-    public static function get_link_all_data_by_ID($ID)
     {
         global $wpdb;
         $link = $wpdb->get_results(
