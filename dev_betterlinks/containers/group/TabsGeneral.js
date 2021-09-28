@@ -213,7 +213,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									<div class="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
 										{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
-										{site_url + (props.values.prefix ? '/' + props.values.prefix : '') + '/' + __('your-affiliate-link-name.', 'betterlinks')}
+										{site_url}
+										{props.values.prefix && (
+											<>
+												/<strong>{props.values.prefix}</strong>
+											</>
+										)}
+										{__('/your-affiliate-link-name.', 'betterlinks')}
 									</div>
 								</div>
 							</span>
