@@ -204,10 +204,16 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 
-							<span className="btl-form-group">
+							<span className="btl-form-group btl-form-group--top">
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
-								<div className="link-options__body">
-									<Field class="btl-text-field" name="prefix" />
+								<div className="link-options__body" style={{ flexDirection: 'column' }}>
+									<div style={{ maxWidth: '200px' }}>
+										<Field class="btl-text-field" name="prefix" />
+									</div>
+									<div class="short-description">
+										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+										{__("The prefix will be added before your Shortened URL's slug eg. go", 'betterlinks')}
+									</div>
 								</div>
 							</span>
 
