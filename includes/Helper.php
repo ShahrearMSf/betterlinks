@@ -244,7 +244,7 @@ class Helper
     {
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
-        if ($data['wildcards']) {
+        if (isset($data['wildcards']) && $data['wildcards']) {
             $tempArray = $existingData['wildcards'];
             $tempArray[$data['short_url']] = self::json_link_formatter($data);
             $existingData['wildcards'] = $tempArray;

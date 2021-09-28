@@ -15,13 +15,15 @@ trait Links
                 } elseif (isset($schema['type']) && $schema['type'] === 'object') {
                     $tempData = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
                     $tempSanitizeData = [];
-                    if (isset($schema['properties']) && is_array($tempData)) {
+                    if (isset($schema['properties']) && is_array($tempData) && count($tempData) > 0) {
                         foreach ($schema['properties'] as $innerKey => $innerSchema) {
                             if ($innerSchema['type'] === 'integer' || $innerSchema['type'] === 'string') {
-                                if (isset($innerSchema['sanitize_callback'])) {
-                                    $tempSanitizeData[$innerKey] = $innerSchema['sanitize_callback']($tempData[$innerKey]);
-                                } elseif (isset($innerSchema['format']) && $innerSchema['format'] == 'date-time') {
-                                    $tempSanitizeData[$innerKey] = sanitize_text_field($tempData[$innerKey]);
+                                if (isset($tempData[$innerKey])) {
+                                    if (isset($innerSchema['sanitize_callback'])) {
+                                        $tempSanitizeData[$innerKey] = $innerSchema['sanitize_callback']($tempData[$innerKey]);
+                                    } elseif (isset($innerSchema['format']) && $innerSchema['format'] == 'date-time') {
+                                        $tempSanitizeData[$innerKey] = sanitize_text_field($tempData[$innerKey]);
+                                    }
                                 }
                             } elseif ($innerSchema['type'] === 'array') {
                                 $tempTwoSanitizeData = [];
