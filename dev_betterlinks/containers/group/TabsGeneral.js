@@ -9,7 +9,7 @@ import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
 import { update_option } from './../../redux/actions/settings.actions';
 import { redirectType } from './../../utils/data';
 import UpgradeToPro from './../../components/Teasers/UpgradeToPro';
-import { exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState('Refresh Stats');
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
@@ -212,7 +212,8 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</div>
 									<div class="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-										{__("The prefix will be added before your Shortened URL's slug eg. go", 'betterlinks')}
+										{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
+										{site_url + (props.values.prefix ? '/' + props.values.prefix : '') + '/' + __('your-affiliate-link-name.', 'betterlinks')}
 									</div>
 								</div>
 							</span>
