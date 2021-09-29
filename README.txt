@@ -139,7 +139,6 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 - Improved: Query optimization for better performance & security enhancement
 - Added: Default Link Prefix option
-- Added: One Click Migration with ThirstyAffiliates
 - Few minor bug fix & improvements
 
 = 1.2.3 - 21/09/2021 =
