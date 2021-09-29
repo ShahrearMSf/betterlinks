@@ -459,6 +459,23 @@ trait Query
             $redirect_type = ($redirect_type == 'global' ? get_option('ta_link_redirect_type', true) : $redirect_type);
             $param_forwarding = get_post_meta($thirstylink->ID, '_ta_pass_query_str', true);
             $param_forwarding = ($param_forwarding == 'global' ? get_option('ta_pass_query_str', true) : $param_forwarding);
+            $dynamic_redirect = [];
+            $geolocation_links = get_post_meta($thirstylink->ID, '_ta_geolocation_links', true);
+            if ($geolocation_links && is_array($geolocation_links)) {
+                $dynamic_redirect_value = [];
+                foreach ($geolocation_links as $key => $geolocation_link) {
+                    $dynamic_redirect_value[] = [
+                        'link'      => $geolocation_link,
+                        'country'   => explode(',', $key)
+                    ];
+                }
+                $dynamic_redirect = [
+                    'type'	    =>	'geographic',
+                    'value'     => $dynamic_redirect_value,
+                    'extra' => []
+                ];
+            }
+            
             $response[] = [
                 'link_title' => $thirstylink->post_title,
                 'link_slug' => $thirstylink->post_name,
@@ -472,7 +489,8 @@ trait Query
                 'target_url' => get_post_meta($thirstylink->ID, '_ta_destination_url', true),
                 'link_modified' => $thirstylink->post_modified,
                 'link_modified_gmt' => $thirstylink->post_modified_gmt,
-                'terms'  => $term
+                'terms'  => $term,
+                'dynamic_redirect'  => json_encode($dynamic_redirect)
             ];
         }
         return $response;
