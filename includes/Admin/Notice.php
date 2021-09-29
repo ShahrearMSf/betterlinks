@@ -9,7 +9,7 @@ class Notice
         $this->review_notice();
         Notice\PrettyLinks::init();
         Notice\Simple301::init();
-        Notice\ThirstyAffiliates::init();
+        // Notice\ThirstyAffiliates::init();
     }
     public function review_notice()
     {
