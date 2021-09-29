@@ -128,8 +128,8 @@ class Links extends Controller
      */
     public function create_item($request)
     {
-        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($request['params']);
         $results = $this->insert_link($args);
         if ($results) {
@@ -158,8 +158,8 @@ class Links extends Controller
      */
     public function update_item($request)
     {
-        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $request = $request->get_params();
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($request['params']);
         $this->update_link($args);
         return new \WP_REST_Response(

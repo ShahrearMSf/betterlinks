@@ -12,14 +12,15 @@ trait Query
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks",
                 array(
-                    'link_author' => $item['link_author'],'link_title' => $item['link_title'],'link_slug' => $item['link_slug'],'link_note' => $item['link_note'],'link_status' => $item['link_status'],'nofollow' => $item['nofollow'],'sponsored' => $item['sponsored'],'track_me' => $item['track_me'],'param_forwarding' => $item['param_forwarding'],'param_struct' => $item['param_struct'],'redirect_type' => $item['redirect_type'],'target_url' => $item['target_url'],'short_url' => $item['short_url'],'link_order' => $item['link_order'],'link_modified' => $item['link_modified'],'link_modified_gmt' => $item['link_modified_gmt'],'wildcards' => $item['wildcards'],'expire' => $item['expire'],'dynamic_redirect' => $item['dynamic_redirect']
+                    'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'],'link_slug' => $item['link_slug'],'link_note' => $item['link_note'],'link_status' => $item['link_status'],'nofollow' => $item['nofollow'],'sponsored' => $item['sponsored'],'track_me' => $item['track_me'],'param_forwarding' => $item['param_forwarding'],'param_struct' => $item['param_struct'],'redirect_type' => $item['redirect_type'],'target_url' => $item['target_url'],'short_url' => $item['short_url'],'link_order' => $item['link_order'],'link_modified' => $item['link_modified'],'link_modified_gmt' => $item['link_modified_gmt'],'wildcards' => $item['wildcards'],'expire' => $item['expire'],'dynamic_redirect' => $item['dynamic_redirect']
                 ),
                 array( 'ID' => $item['ID'] ),
                 array(
-                    '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
+                    '%d','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
                 ),
                 array( '%d' )
             );
+            do_action('betterlinks/after_update_link', $item['ID'], $item);
             return $item['ID'];
         } else {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
@@ -58,6 +59,7 @@ trait Query
                     )
                     )
                 );
+                do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
                 return $wpdb->insert_id;
             }
         }

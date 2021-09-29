@@ -8,22 +8,11 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import {
-	modalCustomStyles,
-	modalCustomSmallStyles,
-	betterlinks_nonce,
-	site_url,
-	generateSlug,
-	generateShortUrl,
-	generateRandomSlug,
-	formatDate,
-	plugin_root_url,
-} from './../../utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortUrl, formatDate, plugin_root_url } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
 import Copy from './../../components/Copy';
-import DateAndTimePicker from './../../components/DateAndTimePicker';
 import UTMBuilder from '../UTMBuilder';
 import UpgradeToPro from './../Teasers/UpgradeToPro';
 
@@ -402,23 +391,23 @@ const Link = (props) => {
 												<div className="link-options--teasers">
 													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
 														<label className="btl-modal-form-label" htmlFor="status">
-															Status <span className="pro-badge">Pro</span>
+															{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 														</label>
 														<select id="status" disabled>
-															<option value="publish">Active</option>
-															<option value="expired">Expired</option>
-															<option value="draft">Draft</option>
+															<option value="publish">{__('Active', 'betterlinks')}</option>
+															<option value="expired">{__('Expired', 'betterlinks')}</option>
+															<option value="draft">{__('Draft', 'betterlinks')}</option>
 														</select>
 													</div>
 													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
 														<label className="btl-modal-form-label" htmlFor="expire">
-															Expire <span className="pro-badge">Pro</span>
+															{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 														</label>
 														<input id="expire" type="checkbox" disabled />
 													</div>
 												</div>
 											)}
-											{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props, <DateAndTimePicker setFieldValue={props.setFieldValue} />)}
+											{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
 										</div>
 									</div>
 									<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
