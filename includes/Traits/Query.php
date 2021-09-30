@@ -493,11 +493,22 @@ trait Query
                 $expire['redirect_status'] = 1;
                 $expire['redirect_url'] = $expire_redirect_url;
             }
+            // link status
+            $link_status = 'publish';
+            $now = time();
+            if ($now < strtotime($link_date)) {
+                $link_status = 'scheduled';
+            }
+            if ($now > strtotime($expire_date)) {
+                $link_status = 'draft';
+            }
+
             $response[] = [
                 'link_title' => $thirstylink->post_title,
                 'link_slug' => $thirstylink->post_name,
                 'link_date' => $link_date ? $link_date : "",
                 'link_date_gmt' => $link_date ? $link_date : "",
+                'link_status'   => $link_status,
                 'short_url' => \BetterLinks\Helper::force_relative_url(get_the_permalink($thirstylink->ID)),
                 'link_author' => $thirstylink->post_author,
                 'link_date' => $thirstylink->post_date,
