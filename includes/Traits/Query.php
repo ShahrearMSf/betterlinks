@@ -477,10 +477,27 @@ trait Query
                     'extra' => []
                 ];
             }
-            
+            $link_date = get_post_meta($thirstylink->ID, '_ta_link_start_date', true);
+            // expire
+            $expire = [];
+            $expire_date = get_post_meta($thirstylink->ID, '_ta_link_expire_date', true);
+            $expire_redirect_url = get_post_meta($thirstylink->ID, '_ta_after_expire_redirect', true);
+            if (!empty($expire_date)) {
+                $expire = [
+                    'status' => 1,
+                    'type'   => 'date',
+                    'date'  => $expire_date,
+                ];
+            }
+            if (!empty($expire_redirect_url)) {
+                $expire['redirect_status'] = 1;
+                $expire['redirect_url'] = $expire_redirect_url;
+            }
             $response[] = [
                 'link_title' => $thirstylink->post_title,
                 'link_slug' => $thirstylink->post_name,
+                'link_date' => $link_date ? $link_date : "",
+                'link_date_gmt' => $link_date ? $link_date : "",
                 'short_url' => \BetterLinks\Helper::force_relative_url(get_the_permalink($thirstylink->ID)),
                 'link_author' => $thirstylink->post_author,
                 'link_date' => $thirstylink->post_date,
@@ -492,6 +509,7 @@ trait Query
                 'link_modified' => $thirstylink->post_modified,
                 'link_modified_gmt' => $thirstylink->post_modified_gmt,
                 'terms'  => $term,
+                'expire'  => json_encode($expire),
                 'dynamic_redirect'  => json_encode($dynamic_redirect)
             ];
         }
