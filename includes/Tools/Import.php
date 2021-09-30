@@ -1,7 +1,7 @@
 <?php
 namespace BetterLinks\Tools;
 
-use Error;
+use BetterLinks\Tools\Migration\ThirstyAffiliates;
 
 class Import
 {
@@ -42,6 +42,14 @@ class Import
                     $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
                     $results = $migrator->process_links_data(array_reverse($fileContent));
                     if (!empty($results)) {
+                        set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
+                    }
+                } elseif ($_POST['mode'] == 'thirstyaffiliates') {
+                    $fileContent = fopen($_FILES['upload_file']['tmp_name'], "r");
+                    if (!empty($fileContent)) {
+                        $ThirstyAffiliates = new ThirstyAffiliates();
+                        $data = $ThirstyAffiliates->prepare_csv_data_to_import($fileContent);
+                        $results = $ThirstyAffiliates->run_import($data);
                         set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
                     }
                 }

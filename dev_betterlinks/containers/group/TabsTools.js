@@ -73,6 +73,12 @@ const TabsTools = ({ query }) => {
 									<span>{__('Simple 301 Redirects', 'betterlinks')}</span>
 								</label>
 							</div>
+							<div>
+								<label className="btl-radio">
+									<input type="radio" name="mode" value="thirstyaffiliates" checked={importerMode === 'thirstyaffiliates'} onChange={importerModeHandler}></input>
+									<span>{__('ThirstyAffiliates', 'betterlinks')}</span>
+								</label>
+							</div>
 							<p className="btl-file-chooser">
 								<label htmlFor="upload">{__('Choose the File You Want to Import', 'betterlinks')}</label>
 								<input type="file" id="upload_file" name="upload_file" size="25" />
