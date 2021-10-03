@@ -42,13 +42,16 @@ class ThirstyAffiliates
             }
             // link status
             $link_status = 'publish';
-            $now = time();
-            if ($now < strtotime($item[14])) {
-                $link_status = 'scheduled';
+            if (isset($item[14]) && !empty($item[14])) {
+                $now = time();
+                if ($now < strtotime($item[14])) {
+                    $link_status = 'scheduled';
+                }
+                if ($now > strtotime($item[14])) {
+                    $link_status = 'draft';
+                }
             }
-            if ($now > strtotime($item[14])) {
-                $link_status = 'draft';
-            }
+            
             // expire
             $expire = [];
             if (!empty($item[14])) {
@@ -61,6 +64,28 @@ class ThirstyAffiliates
             if (!empty($item[13])) {
                 $expire['redirect_status'] = 1;
                 $expire['redirect_url'] = $item[13];
+            }
+
+            // geolocation
+            $dynamic_redirect = [];
+            if (isset($item[5]) && !empty($item[5])) {
+                $geo_locations = explode(';', $item[5]);
+                error_log(print_r($geo_locations, true));
+                $dynamic_redirect_value = [];
+                foreach ($geo_locations as $geo_location) {
+                    $geo_location = explode(':', $geo_location, 2);
+                    $country_list = [];
+                    foreach ($geo_location as $geo_nano_location) {
+                        if (filter_var($geo_nano_location, FILTER_VALIDATE_URL)) {
+                        }
+                    }
+                    error_log(print_r($geo_location, true));
+                }
+                $dynamic_redirect = [
+                    'type'	    =>	'geographic',
+                    'value'     => $dynamic_redirect_value,
+                    'extra' => []
+                ];
             }
 
 
