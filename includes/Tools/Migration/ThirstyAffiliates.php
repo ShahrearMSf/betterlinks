@@ -54,16 +54,16 @@ class ThirstyAffiliates
             
             // expire
             $expire = [];
-            if (!empty($item[14])) {
+            if (!empty($item[13])) {
                 $expire = [
                     'status' => 1,
                     'type'   => 'date',
-                    'date'  => $item[14],
+                    'date'  => $item[13],
                 ];
             }
             if (!empty($item[13])) {
                 $expire['redirect_status'] = 1;
-                $expire['redirect_url'] = $item[13];
+                $expire['redirect_url'] = $item[7];
             }
 
             // geolocation
