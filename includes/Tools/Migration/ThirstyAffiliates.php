@@ -69,26 +69,8 @@ class ThirstyAffiliates
             // geolocation
             $dynamic_redirect = [];
             if (isset($item[5]) && !empty($item[5])) {
-                $geo_locations = explode(';', $item[5]);
-                error_log(print_r($geo_locations, true));
-                $dynamic_redirect_value = [];
-                foreach ($geo_locations as $geo_location) {
-                    $geo_location = explode(':', $geo_location, 2);
-                    $country_list = [];
-                    foreach ($geo_location as $geo_nano_location) {
-                        if (filter_var($geo_nano_location, FILTER_VALIDATE_URL)) {
-                        }
-                    }
-                    error_log(print_r($geo_location, true));
-                }
-                $dynamic_redirect = [
-                    'type'	    =>	'geographic',
-                    'value'     => $dynamic_redirect_value,
-                    'extra' => []
-                ];
+                $dynamic_redirect = $this->prepare_dynamic_redirect_by_string($item[5]);
             }
-
-
             $results[] = [
                 'link_title'    =>  $item[0],
                 'link_slug'     =>  $item[2],
@@ -101,9 +83,47 @@ class ThirstyAffiliates
                 'target_url'  => $item[1],
                 'short_url'  => (isset($betterlinks_link['prefix']) && !empty($betterlinks_link['prefix']) ? $betterlinks_link['prefix'] . '/' . $item[2] : $item[2]),
                 'expire'  => json_encode($expire),
+                'dynamic_redirect'  => json_encode($dynamic_redirect),
                 'terms'  => explode(',', $item[3]),
             ];
         }
         return $results;
+    }
+
+    public function prepare_dynamic_redirect_by_string($data)
+    {
+        $dynamic_redirect = [];
+        $geo_locations = explode(';', $data);
+        $country = [];
+        foreach ($geo_locations as $geo_location) {
+            if (strlen($geo_location) === 5) {
+                $geo_location = explode(':', $geo_location);
+                $geo_location = implode(':', array_reverse($geo_location));
+            }
+            $geo_location = explode(':', $geo_location, 2);
+            if (strlen($geo_location[1]) === 2) {
+                $country[$geo_location[1]] = $country[$geo_location[0]];
+            } else {
+                $country[$geo_location[0]] = $geo_location[1];
+            }
+        }
+        $results = array();
+        foreach ($country as $key => $element) {
+            $results[$element][] = $key;
+        }
+        $dynamic_redirect_value = [];
+        foreach ($results as $key => $country) {
+            $dynamic_redirect_value[] = [
+                        'link'      => $key,
+                        'country'   => $country,
+                    ];
+        }
+        $dynamic_redirect = [
+                    'type'	    =>	'geographic',
+                    'value'     => $dynamic_redirect_value,
+                    'extra' => []
+                ];
+        
+        return $dynamic_redirect;
     }
 }
