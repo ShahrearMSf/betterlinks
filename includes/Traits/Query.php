@@ -453,6 +453,7 @@ trait Query
             'post_status'    => 'publish',
         ));
         $response = [];
+        $betterlinks_links = json_decode(get_option('betterlinks_links', '{}'), true);
         foreach ($thirstylinks as $thirstylink) {
             $term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
             $nofollow = get_post_meta($thirstylink->ID, '_ta_no_follow', true);
@@ -509,11 +510,13 @@ trait Query
                 'link_date' => $link_date ? $link_date : "",
                 'link_date_gmt' => $link_date ? $link_date : "",
                 'link_status'   => $link_status,
-                'short_url' => \BetterLinks\Helper::force_relative_url(get_the_permalink($thirstylink->ID)),
+                'short_url' => ltrim(\BetterLinks\Helper::force_relative_url(get_the_permalink($thirstylink->ID)), '/'),
                 'link_author' => $thirstylink->post_author,
                 'link_date' => $thirstylink->post_date,
                 'link_date_gmt' => $thirstylink->post_date_gmt,
                 'nofollow'  => ($nofollow == 'yes' ? 1 : 0),
+                'sponsored'  => $betterlinks_links['sponsored'],
+                'track_me'  => $betterlinks_links['track_me'],
                 'redirect_type'  => $redirect_type,
                 'param_forwarding' => ($param_forwarding == 'yes' ? 1 : 0),
                 'target_url' => get_post_meta($thirstylink->ID, '_ta_destination_url', true),
