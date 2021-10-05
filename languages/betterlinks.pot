@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-05T05:28:49+00:00\n"
+"POT-Creation-Date: 2021-10-05T10:22:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
@@ -231,6 +231,10 @@ msgid "Save Link"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Add New Link"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Title"
 msgstr ""
 
@@ -244,6 +248,10 @@ msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
 msgid "Target URL"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "UTM"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -375,6 +383,14 @@ msgid "No"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Clicks: "
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Unique Clicks: "
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Copy Link"
 msgstr ""
 
@@ -387,11 +403,59 @@ msgid "Edit Link"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Bulk Actions"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Apply"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Search by Title"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Most Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Least Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Most Unique Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Least Unique Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Most Recent"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Least Recent"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Custom"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Clicks: 0 / "
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Unique Clicks: 0"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "0/0"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -400,6 +464,18 @@ msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
 msgid "Action"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Filter"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Filtering..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Done!"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -431,7 +507,47 @@ msgid "Filter By Name"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Search Click"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Searching..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "All Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Refresh Stats"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Active Now"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Save Settings"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Activating..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Activated!"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Refreshing..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Saving..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Saved!"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
