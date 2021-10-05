@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-05T04:39:50+00:00\n"
+"POT-Creation-Date: 2021-10-05T05:28:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
@@ -17,6 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #: includes/Admin/Menu.php:24
 #: includes/Admin/Menu.php:25
+#: assets/js/betterlinks.core.min.js:1
 msgid "BetterLinks"
 msgstr ""
 
@@ -123,13 +124,636 @@ msgid "Deactivate Thirsty Affiliates"
 msgstr ""
 
 #: includes/Helper.php:54
+#: assets/js/betterlinks.core.min.js:1
 msgid "Manage Links"
 msgstr ""
 
 #: includes/Helper.php:58
+#: assets/js/betterlinks.core.min.js:1
 msgid "Analytics"
 msgstr ""
 
 #: includes/Helper.php:62
+#: assets/js/betterlinks.core.min.js:1
 msgid "Settings"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "307 (Temporary)"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "302 (Temporary)"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "301 (Permanent)"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Opps..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "You need to"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "upgrade"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "to the"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Premium"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Version to use this feature"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Close"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "UTM Builder"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Add Campaign Parameters to Track Custom Campaigns"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Campaign"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "e.g: Example-campaign"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Medium"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "e.g: cpc, banner, email"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Source"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "e.g: Twitter, Facebook"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Term"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "e.g: paid keywords"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Content"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "e.g: text AD name"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Save Link"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Title"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Description"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Redirect Type"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Target URL"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Shortened URL"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Category"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Tags"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Update"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Publish"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Link Options"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "No Follow"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will add nofollow attribute to your link. (Recommended)"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Sponsored"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Parameter Forwarding"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will pass the parameters you have set in the target URL"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Tracking"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will let you check Analytics report of your links"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Advanced"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Status"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Pro"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Active"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Expired"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Draft"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Expire"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Dynamic Redirects"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "ON"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Category Name"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "* Name"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Submit"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Add New Category"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Edit"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Delete"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Are You Sure?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Yes"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "No"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Copy Link"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Visit Link"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Edit Link"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Search by Title"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Date"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Action"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Click Analytics"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Browser"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Link Name"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "IP"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Timestamp"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Referrer"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Filter By Name"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "All Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Link Redirection Status"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "(Fast Mode)"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Fetch Analytics Data"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Click Data Status "
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Link Prefix"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Note:"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "The prefix will be added before your Shortened URL’s slug eg."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "/your-affiliate-link-name."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Wildcards"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Use Wildcards?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "To use wildcards, put an asterisk (*) after the folder name that you want to redirect."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Bot Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Disable Bot Clicks"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will prevent your site from bot traffic"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Gutenberg Redirect"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Allow Instant Redirect"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will allow you to redirect your links instantly from Gutenberg Editor."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Force HTTPS"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Enable HTTPS Redirection"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will allow you to redirect your Target URLs in HTTPS."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Choose an Option You want to Export"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Links"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Export File"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Choose the Plugin You Want to Import from"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Pretty Links"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Simple 301 Redirects"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "ThirstyAffiliates"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Choose the File You Want to Import"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Import File"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Migration is in Progress..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Please Wait..."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Pick Data that You want to Import"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Links "
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Clicks "
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Nothing Found To Import"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Migration is Complete"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Ok"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Enable Google Analytics"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Google Analytics Tracking ID"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Who Can View Links?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Who Can Create Links?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Who Can Edit Links?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Who Can Check Analytics?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Who Can Edit Settings?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Scheduled Scan"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Enable"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "“Scheduled Scan”"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "to automatically scan broken links on your website."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Enable Scheduled Scan"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Frequency"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Day"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Time"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Total Links"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Links Scanned"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid " Broken Links Found"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Enable Reporting"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Reporting Email"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Reporting Email Subject"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Why upgrade to Premium Version?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Get access to Individual Analytics, Social Share for UTM Builder, Role Management, Google Analytics Integration & many more to run successful marketing campaigns."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "You will also get world class support from our dedicated team, 24/7."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Get Premium Version"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Documentation"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Get started by spending some time with the documentation to get familiar with BetterLinks. Create Shortened URLs and start cross-promoting your brands & products."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Need Help?"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Stuck with something? Feel free to reach out to our Live Chat agent or create a support ticket."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Get Help"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Join the Community"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Join the Facebook community and discuss with fellow developers and users. Best way to connect with people and get feedback on your projects."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Show Your Love"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "We love to have you in BetterLinks family. We are making it more awesome everyday. Take your 2 minutes to review the plugin and spread the love to encourage us to keep it going."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Leave a Review"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "General"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Tools"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Role Management"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Google Analytics"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Broken Link Checker"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Go Premium"
 msgstr ""
