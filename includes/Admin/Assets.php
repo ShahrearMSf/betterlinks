@@ -67,6 +67,7 @@ class Assets
                 'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : ''
             ]);
         }
+        wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
         wp_enqueue_style('betterlinks-admin-notice', BETTERLINKS_ASSETS_URI . 'css/betterlinks-admin-notice.css', [], null, 'all');
     }
 

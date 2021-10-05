@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 1.2.2\n"
+"Project-Id-Version: BetterLinks 1.2.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-09-12T05:28:15+00:00\n"
+"POT-Creation-Date: 2021-10-05T04:39:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
@@ -17,9 +17,6 @@ msgstr ""
 #. Plugin Name of the plugin
 #: includes/Admin/Menu.php:24
 #: includes/Admin/Menu.php:25
-#: dev_betterlinks/containers/group/AdminMenu.js:27
-#: dev_betterlinks/containers/group/AdminMenu.js:32
-#: dev_betterlinks/containers/group/TabsTools.js:61
 msgid "BetterLinks"
 msgstr ""
 
@@ -40,7 +37,7 @@ msgid "https://wpdeveloper.net"
 msgstr ""
 
 #: includes/Admin.php:47
-msgid "Want to help make <strong>BetterLinks</strong> even more awesome? Be the first to get access to <strong>BetterLinks PRO</strong> with a huge <strong>30% Discount</strong> when we release if you allow us to track the non-sensitive usage data."
+msgid "Want to help make <strong>BetterLinks</strong> even more awesome? Be the first to get access to <strong>BetterLinks PRO</strong> with a huge <strong>50% Early Bird Discount</strong> if you allow us to track the non-sensitive usage data."
 msgstr ""
 
 #: includes/Admin.php:48
@@ -83,691 +80,56 @@ msgstr ""
 msgid "Shortened URLs so far 🎉 If you are enjoying using BetterLinks, feel free to leave a 5* Review on the WordPress Forum."
 msgstr ""
 
-#: includes/Admin/Notice.php:140
+#: includes/Admin/Notice/PrettyLinks.php:40
 msgid "Whoops! You are already using Pretty Links on your website. To migrate your Pretty Links data to BetterLinks, click here."
 msgstr ""
 
-#: includes/Admin/Notice.php:141
-#: includes/Admin/Notice.php:164
+#: includes/Admin/Notice/PrettyLinks.php:41
+#: includes/Admin/Notice/Simple301.php:36
+#: includes/Admin/Notice/ThirstyAffiliates.php:39
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Admin/Notice.php:151
+#: includes/Admin/Notice/PrettyLinks.php:51
 msgid "All Pretty Links have been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website."
 msgstr ""
 
-#: includes/Admin/Notice.php:152
+#: includes/Admin/Notice/PrettyLinks.php:52
 msgid "Deactivate Pretty Links"
 msgstr ""
 
-#: includes/Admin/Notice.php:163
+#: includes/Admin/Notice/Simple301.php:35
 msgid "Whoops! You are already using Simple 301 Redirects on your website. To migrate your Simple 301 Redirects data to BetterLinks, click here."
 msgstr ""
 
-#: includes/Admin/Notice.php:177
+#: includes/Admin/Notice/Simple301.php:49
 msgid "All Simple 301 Redirects have been successfully migrated to BetterLinks. You can now safely deactivate Simple 301 Redirects on your website."
 msgstr ""
 
-#: includes/Admin/Notice.php:178
+#: includes/Admin/Notice/Simple301.php:50
 msgid "Deactivate Simple 301 Redirects"
 msgstr ""
 
-#: includes/Helper.php:63
-#: dev_betterlinks/containers/group/AdminMenu.js:36
+#: includes/Admin/Notice/ThirstyAffiliates.php:38
+msgid "Whoops! You are already using Thirsty Affiliates on your website. To migrate your Thirsty Affiliates data to BetterLinks, click here."
+msgstr ""
+
+#: includes/Admin/Notice/ThirstyAffiliates.php:52
+msgid "All Thirsty Affiliates have been successfully migrated to BetterLinks. You can now safely deactivate Thirsty Affiliates on your website."
+msgstr ""
+
+#: includes/Admin/Notice/ThirstyAffiliates.php:53
+msgid "Deactivate Thirsty Affiliates"
+msgstr ""
+
+#: includes/Helper.php:54
 msgid "Manage Links"
 msgstr ""
 
-#: includes/Helper.php:67
-#: dev_betterlinks/containers/group/AdminMenu.js:41
-#: dev_betterlinks/containers/group/TabsTools.js:45
+#: includes/Helper.php:58
 msgid "Analytics"
 msgstr ""
 
-#: includes/Helper.php:71
-#: dev_betterlinks/containers/group/AdminMenu.js:46
+#: includes/Helper.php:62
 msgid "Settings"
-msgstr ""
-
-#: dev_betterlinks/components/CatHeader/index.js:56
-msgid "Edit"
-msgstr ""
-
-#: dev_betterlinks/components/CatHeader/index.js:61
-#: dev_betterlinks/components/LinkQuickAction/index.js:95
-msgid "Delete"
-msgstr ""
-
-#: dev_betterlinks/components/CatHeader/index.js:68
-#: dev_betterlinks/components/LinkQuickAction/index.js:101
-msgid "Are You Sure?"
-msgstr ""
-
-#: dev_betterlinks/components/CatHeader/index.js:71
-#: dev_betterlinks/components/LinkQuickAction/index.js:104
-msgid "Yes"
-msgstr ""
-
-#: dev_betterlinks/components/CatHeader/index.js:74
-#: dev_betterlinks/components/LinkQuickAction/index.js:107
-msgid "No"
-msgstr ""
-
-#: dev_betterlinks/components/CreateCategory.js:12
-msgid "Add New Category"
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:18
-#: dev_betterlinks/components/Docs/index.js:26
-msgid "Documentation"
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:20
-msgid "Get started by spending some time with the documentation to get familiar with BetterLinks. Create Shortened URLs and start cross-promoting your brands & products."
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:34
-msgid "Need Help?"
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:35
-msgid "Stuck with something? Feel free to reach out to our Live Chat agent or create a support ticket."
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:37
-msgid "Get Help"
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:45
-#: dev_betterlinks/components/Docs/index.js:50
-msgid "Join the Community"
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:47
-msgid "Join the Facebook community and discuss with fellow developers and users. Best way to connect with people and get feedback on your projects."
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:58
-msgid "Show Your Love"
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:60
-msgid "We love to have you in BetterLinks family. We are making it more awesome everyday. Take your 2 minutes to review the plugin and spread the love to encourage us to keep it going."
-msgstr ""
-
-#: dev_betterlinks/components/Docs/index.js:66
-msgid "Leave a Review"
-msgstr ""
-
-#: dev_betterlinks/components/Graph/index.js:138
-msgid "Click Analytics"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:218
-#: dev_betterlinks/containers/group/ListCanvas.js:26
-msgid "Title"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:237
-msgid "Description"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:243
-#: dev_betterlinks/containers/group/ListCanvas.js:42
-#: dev_betterlinks/containers/group/TabsGeneral.js:147
-msgid "Redirect Type"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:249
-#: dev_betterlinks/containers/group/Clicks.js:72
-msgid "Target URL"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:279
-#: dev_betterlinks/containers/group/Clicks.js:44
-#: dev_betterlinks/containers/group/ListCanvas.js:34
-msgid "Shortened URL"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:301
-msgid "Category"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:307
-msgid "Tags"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:315
-#: dev_betterlinks/components/Terms/CatForm.js:96
-msgid "Update"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:315
-msgid "Publish"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:323
-#: dev_betterlinks/containers/group/TabsGeneral.js:162
-#: dev_betterlinks/gutenberg.js:354
-msgid "Link Options"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:335
-#: dev_betterlinks/containers/group/TabsGeneral.js:167
-#: dev_betterlinks/gutenberg.js:357
-msgid "No Follow"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:338
-#: dev_betterlinks/containers/group/TabsGeneral.js:170
-msgid "This will add nofollow attribute to your link. (Recommended)"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:351
-#: dev_betterlinks/containers/group/TabsGeneral.js:177
-#: dev_betterlinks/gutenberg.js:365
-msgid "Sponsored"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:354
-#: dev_betterlinks/containers/group/TabsGeneral.js:180
-msgid "This will add sponsored attribute to your link. (Recommended for Affiliate links)"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:367
-#: dev_betterlinks/containers/group/TabsGeneral.js:187
-#: dev_betterlinks/gutenberg.js:373
-msgid "Parameter Forwarding"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:370
-#: dev_betterlinks/containers/group/TabsGeneral.js:190
-msgid "This will pass the parameters you have set in the target URL"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:383
-#: dev_betterlinks/containers/group/TabsGeneral.js:197
-#: dev_betterlinks/gutenberg.js:381
-msgid "Tracking"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:386
-#: dev_betterlinks/containers/group/TabsGeneral.js:200
-msgid "This will let you check Analytics report of your links"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:394
-#: dev_betterlinks/gutenberg.js:391
-msgid "Advanced"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:424
-msgid "Dynamic Redirects"
-msgstr ""
-
-#: dev_betterlinks/components/Link/index.js:429
-msgid "ON"
-msgstr ""
-
-#: dev_betterlinks/components/LinkCopyUrl/index.js:21
-#: dev_betterlinks/components/LinkQuickAction/index.js:73
-msgid "Copy Link"
-msgstr ""
-
-#: dev_betterlinks/components/LinkQuickAction/index.js:81
-msgid "Visit Link"
-msgstr ""
-
-#: dev_betterlinks/components/LinkQuickAction/index.js:87
-msgid "Edit Link"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:29
-msgid "Scheduled Scan"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:31
-msgid "Enable"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:31
-msgid "“Scheduled Scan”"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:31
-msgid "to automatically scan broken links on your website."
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:37
-msgid "Enable Schedule Scan"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:38
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:50
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:59
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:75
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:113
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:125
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:136
-#: dev_betterlinks/components/Teasers/GoogleAnalytics.js:37
-#: dev_betterlinks/components/Teasers/GoogleAnalytics.js:48
-#: dev_betterlinks/components/Teasers/RoleManagement.js:37
-#: dev_betterlinks/components/Teasers/RoleManagement.js:49
-#: dev_betterlinks/components/Teasers/RoleManagement.js:62
-#: dev_betterlinks/components/Teasers/RoleManagement.js:74
-#: dev_betterlinks/components/Teasers/RoleManagement.js:87
-#: dev_betterlinks/containers/group/TabsGeneral.js:259
-msgid "Pro"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:49
-msgid "Frequently"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:58
-msgid "Day"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:74
-msgid "Time"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:89
-msgid "Total Links"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:96
-msgid "Links Scanned"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:103
-msgid " Broken Links Found"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:112
-msgid "Enable Reporting"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:124
-msgid "Reporting Email"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/BrokenLinks.js:135
-msgid "Reporting Email Subject"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/GoogleAnalytics.js:37
-msgid "Enable Google Analytics"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/GoogleAnalytics.js:48
-msgid "Google Analytics Tracking ID"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/GoPremium.js:15
-msgid "Why upgrade to Premium Version?"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/GoPremium.js:18
-msgid "Get access to Individual Analytics, Social Share for UTM Builder, Role Management, Google Analytics Integration & many more to run successful marketing campaigns."
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/GoPremium.js:23
-msgid "You will also get world class support from our dedicated team, 24/7."
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/GoPremium.js:25
-msgid "Get Premium Version"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/RoleManagement.js:37
-msgid "Who Can View Links?"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/RoleManagement.js:49
-msgid "Who Can Create Links?"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/RoleManagement.js:62
-msgid "Who Can Edit Links?"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/RoleManagement.js:74
-msgid "Who Can Check Analytics?"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/RoleManagement.js:87
-msgid "Who Can Edit Settings?"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:32
-msgid "Opps..."
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:34
-msgid "You need to"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:34
-msgid "upgrade"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:34
-msgid "to the"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:36
-msgid "Premium"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:38
-msgid "Version to use this feature"
-msgstr ""
-
-#: dev_betterlinks/components/Teasers/UpgradeToPro.js:41
-msgid "Close"
-msgstr ""
-
-#: dev_betterlinks/components/Terms/CatForm.js:74
-msgid "Category Name"
-msgstr ""
-
-#: dev_betterlinks/components/Terms/CatForm.js:80
-msgid "* Name"
-msgstr ""
-
-#: dev_betterlinks/components/Terms/CatForm.js:101
-msgid "Submit"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:42
-msgid "UTM Builder"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:45
-msgid "Add Campaign Parameters to Track Custom Campaigns"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:60
-msgid "Campaign"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:68
-msgid "e.g: Example-campaign"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:73
-msgid "Medium"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:81
-msgid "e.g: cpc, banner, email"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:86
-msgid "Source"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:94
-msgid "e.g: Twitter, Facebook"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:99
-msgid "Term"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:107
-msgid "e.g: paid keywords"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:112
-msgid "Content"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:120
-msgid "e.g: text AD name"
-msgstr ""
-
-#: dev_betterlinks/components/UTMBuilder/index.js:126
-msgid "Save Link"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:14
-msgid "Browser"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:27
-msgid "Link Name"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:33
-msgid "IP"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:39
-msgid "Timestamp"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:58
-msgid "Referrer"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:89
-msgid "Filter By Name"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Clicks.js:157
-msgid "All Clicks"
-msgstr ""
-
-#: dev_betterlinks/containers/group/LinksListViewFilter.js:53
-msgid "Search by Title"
-msgstr ""
-
-#: dev_betterlinks/containers/group/ListCanvas.js:48
-#: dev_betterlinks/gutenberg.js:457
-msgid "Clicks"
-msgstr ""
-
-#: dev_betterlinks/containers/group/ListCanvas.js:68
-#: dev_betterlinks/gutenberg.js:453
-msgid "Date"
-msgstr ""
-
-#: dev_betterlinks/containers/group/ListCanvas.js:74
-msgid "Action"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:48
-msgid "Migration is in Progress..."
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:91
-msgid "Please Wait..."
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:96
-#: dev_betterlinks/containers/group/Migration.js:126
-msgid "Pick Data that You want to Import"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:103
-#: dev_betterlinks/containers/group/Migration.js:133
-msgid "Links "
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:114
-msgid "Clicks "
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:143
-msgid "Nothing Found To Import"
-msgstr ""
-
-#: dev_betterlinks/containers/group/Migration.js:157
-msgid "Migration is Complete"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:90
-msgid "Link Redirection Status"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:91
-#: dev_betterlinks/containers/group/TabsGeneral.js:115
-msgid "(Fast Mode)"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:104
-msgid "If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:115
-msgid "Click Data Status "
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:118
-msgid "Fetch Analytics Data"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:137
-msgid "If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:141
-msgid "Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:207
-msgid "Wildcards"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:212
-msgid "Use Wildcards?"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:215
-msgid "To use wildcards, put an asterisk (*) after the folder name that you want to redirect."
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:222
-msgid "Bot Clicks"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:227
-msgid "Disable Bot Clicks"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:230
-msgid "This will prevent your site from bot traffic"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:237
-msgid "Gutenberg Redirect"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:247
-msgid "Allow Instant Redirect"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:250
-msgid "This will allow you to redirect your links instantly from Gutenberg Editor."
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:259
-msgid "Force HTTPS"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:265
-msgid "Enable HTTPS Redirection"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsGeneral.js:268
-msgid "This will allow you to redirect your Target URLs in HTTPS."
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:33
-msgid "Choose an Option You want to Export"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:39
-msgid "Links"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:50
-msgid "Export File"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:55
-msgid "Choose the Plugin You Want to Import from"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:67
-msgid "Pretty Links"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:73
-msgid "Simple 301 Redirects"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:77
-msgid "Choose the File You Want to Import"
-msgstr ""
-
-#: dev_betterlinks/containers/group/TabsTools.js:81
-msgid "Import File"
-msgstr ""
-
-#: dev_betterlinks/containers/pages/Settings.js:28
-msgid "General"
-msgstr ""
-
-#: dev_betterlinks/containers/pages/Settings.js:29
-msgid "Tools"
-msgstr ""
-
-#: dev_betterlinks/containers/pages/Settings.js:30
-msgid "Role Management"
-msgstr ""
-
-#: dev_betterlinks/containers/pages/Settings.js:31
-msgid "Google Analytics"
-msgstr ""
-
-#: dev_betterlinks/containers/pages/Settings.js:32
-msgid "Broken Link Checker"
-msgstr ""
-
-#: dev_betterlinks/containers/pages/Settings.js:33
-msgid "Go Premium"
-msgstr ""
-
-#: dev_betterlinks/gutenberg.js:420
-msgid "Active"
-msgstr ""
-
-#: dev_betterlinks/gutenberg.js:424
-msgid "Expired"
-msgstr ""
-
-#: dev_betterlinks/gutenberg.js:428
-msgid "Draft"
-msgstr ""
-
-#: dev_betterlinks/gutenberg.js:439
-msgid "Expire"
-msgstr ""
-
-#: dev_betterlinks/gutenberg.js:484
-msgid "Redirect URL after Expiration"
-msgstr ""
-
-#: dev_betterlinks/utils/data.js:5
-msgid "307 (Temporary)"
-msgstr ""
-
-#: dev_betterlinks/utils/data.js:9
-msgid "302 (Temporary)"
-msgstr ""
-
-#: dev_betterlinks/utils/data.js:13
-msgid "301 (Permanent)"
 msgstr ""

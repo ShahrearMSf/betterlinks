@@ -109,7 +109,7 @@ if (!class_exists('BetterLinks')) {
 
         public function load_textdomain()
         {
-            load_plugin_textdomain('betterlinks', false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/');
+            load_plugin_textdomain('betterlinks', false, dirname(plugin_basename(__FILE__)) . '/languages/');
         }
 
         public function set_global_settings()
