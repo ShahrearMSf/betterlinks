@@ -35,7 +35,7 @@ class ThirstyAffiliates extends MigrationNotice
         ?>
         <div class="notice notice-info betterlinks-notice-thirstyaffiliates-migrate <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('Whoops! You are already using Thirsty Affiliates on your website. To migrate your Thirsty Affiliates data to BetterLinks, click here.', 'betterlinks'); ?>
+                <?php _e('Whoops! You are already using ThirstyAffiliates on your website. To migrate your ThirstyAffiliates data to BetterLinks, click here.', 'betterlinks'); ?>
                 <a href="<?php echo esc_url(admin_url('admin.php?page=betterlinks-settings&migration=thirstyaffiliates')); ?>" class="button button-primary"><?php _e(
             'Start Migration',
             'betterlinks'
@@ -49,8 +49,8 @@ class ThirstyAffiliates extends MigrationNotice
         ?>
         <div class="notice notice-error betterlinks-notice-deactive-thirstyaffiliates <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('All Thirsty Affiliates have been successfully migrated to BetterLinks. You can now safely deactivate Thirsty Affiliates on your website.', 'betterlinks'); ?>
-                <a href="#" class="button button-primary deactive"><?php _e('Deactivate Thirsty Affiliates', 'betterlinks'); ?></a>
+                <?php _e('All ThirstyAffiliates have been successfully migrated to BetterLinks. You can now safely deactivate ThirstyAffiliates on your website.', 'betterlinks'); ?>
+                <a href="#" class="button button-primary deactive"><?php _e('Deactivate ThirstyAffiliates', 'betterlinks'); ?></a>
             </p>
         </div>
         <?php

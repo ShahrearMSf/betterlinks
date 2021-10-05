@@ -112,15 +112,15 @@ msgid "Deactivate Simple 301 Redirects"
 msgstr ""
 
 #: includes/Admin/Notice/ThirstyAffiliates.php:38
-msgid "Whoops! You are already using Thirsty Affiliates on your website. To migrate your Thirsty Affiliates data to BetterLinks, click here."
+msgid "Whoops! You are already using ThirstyAffiliates on your website. To migrate your ThirstyAffiliates data to BetterLinks, click here."
 msgstr ""
 
 #: includes/Admin/Notice/ThirstyAffiliates.php:52
-msgid "All Thirsty Affiliates have been successfully migrated to BetterLinks. You can now safely deactivate Thirsty Affiliates on your website."
+msgid "All ThirstyAffiliates have been successfully migrated to BetterLinks. You can now safely deactivate ThirstyAffiliates on your website."
 msgstr ""
 
 #: includes/Admin/Notice/ThirstyAffiliates.php:53
-msgid "Deactivate Thirsty Affiliates"
+msgid "Deactivate ThirstyAffiliates"
 msgstr ""
 
 #: includes/Helper.php:54

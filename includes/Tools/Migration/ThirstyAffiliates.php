@@ -47,7 +47,7 @@ class ThirstyAffiliates
                 if ($now < strtotime($item[14])) {
                     $link_status = 'scheduled';
                 }
-                if ($now > strtotime($item[14])) {
+                if ($now > strtotime($item[13])) {
                     $link_status = 'draft';
                 }
             }
