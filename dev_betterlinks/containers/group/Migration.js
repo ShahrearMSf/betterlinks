@@ -73,7 +73,7 @@ const Migration = (props) => {
 		axios.post(ajaxurl, form_data).then(
 			(response) => {
 				if (response.data) {
-					setMigrationSubmitText('Done!');
+					setMigrationSubmitText(__('Done!', 'betterlinks'));
 					setMigrateRes(response.data.data);
 				}
 			},

@@ -15,7 +15,7 @@ const Graph = (props) => {
 		labels: Object.keys(props.data),
 		datasets: [
 			{
-				label: 'Clicks',
+				label: __('Clicks', 'betterlinks'),
 				fill: true,
 				backgroundColor: 'rgba(129, 162, 255,0.4)',
 				defaultFontColor: '#000',
@@ -65,7 +65,7 @@ const Graph = (props) => {
 			},
 		},
 	};
-	const [filterButtonText, setFilterButtonText] = useState('Filter');
+	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
 	const [customDateFilter, setCustomDateFilter] = useState([
 		{
@@ -90,16 +90,16 @@ const Graph = (props) => {
 
 	const filterHandler = async () => {
 		let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
-		setFilterButtonText('Filtering...');
+		setFilterButtonText(__('Filtering...', 'betterlinks'));
 		try {
 			const res = await API.get(endPoint, {
 				params: { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') },
 			});
 			setTimeout(function () {
 				props.fetchCustomClicksData(res.data);
-				setFilterButtonText('Done!');
+				setFilterButtonText(__('Done!', 'betterlinks'));
 				setTimeout(function () {
-					setFilterButtonText('Filter');
+					setFilterButtonText(__('Filter', 'betterlinks'));
 				}, 3000);
 			}, 1000);
 		} catch (e) {
@@ -113,9 +113,9 @@ const Graph = (props) => {
 					if (response.data) {
 						setTimeout(function () {
 							props.fetchCustomClicksData(response.data);
-							setFilterButtonText('Done!');
+							setFilterButtonText(__('Done!', 'betterlinks'));
 							setTimeout(function () {
-								setFilterButtonText('Filter');
+								setFilterButtonText(__('Filter', 'betterlinks'));
 							}, 3000);
 						}, 1000);
 					}

@@ -61,7 +61,9 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
 			{isShowAnalytics && data.analytic && (
 				<button className="dnd-link-button btl-tooltip">
-					<span className="btl-tooltiptext">{'Clicks: ' + data.analytic.link_count + ' / ' + 'Unique Clicks: ' + data.analytic.ip.length}</span>
+					<span className="btl-tooltiptext">
+						{__('Clicks: ', 'betterlinks') + data.analytic.link_count + ' / ' + __('Unique Clicks: ', 'betterlinks') + data.analytic.ip.length}
+					</span>
 					<span className="icon">{analytic(data.analytic)}</span>
 				</button>
 			)}

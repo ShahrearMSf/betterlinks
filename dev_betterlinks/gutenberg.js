@@ -202,7 +202,7 @@ const CustomSidebarMetaComponent = (props) => {
 		return 'date';
 	};
 	const deleteInstantRedirect = () => {
-		if (ID && confirm('Are you sure you want to delete your Instant Redirect Rule?')) {
+		if (ID && confirm(__('Are you sure you want to delete your Instant Redirect Rule?', 'betterlinks'))) {
 			makeRequest({
 				action: 'betterlinks/admin/delete_link',
 				ID,
@@ -318,7 +318,7 @@ const CustomSidebarMetaComponent = (props) => {
 			)}
 
 			<TextControl
-				label="Target URL"
+				label={__('Target URL', 'betterlinks')}
 				value={targetUrl}
 				onChange={(value) => {
 					onSetTargetUrl(value);
@@ -326,7 +326,7 @@ const CustomSidebarMetaComponent = (props) => {
 				}}
 			/>
 			<SelectControl
-				label="Redirect Type"
+				label={__('Redirect Type', 'betterlinks')}
 				options={redirectType}
 				value={getDefaultRedirectType(redirectMode)}
 				onChange={(mode) => {
@@ -336,7 +336,7 @@ const CustomSidebarMetaComponent = (props) => {
 			/>
 			{terms && (
 				<SelectControl
-					label="Choose Category"
+					label={__('Choose Category', 'betterlinks')}
 					value={getDefaultCatID(catId, terms)}
 					options={terms
 						.filter((item) => item.term_type == 'category')
@@ -395,17 +395,17 @@ const CustomSidebarMetaComponent = (props) => {
 					<>
 						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
 							<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
-								Status <span className="pro-badge">Pro</span>
+								{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 							</label>
 							<select id="status" disabled>
-								<option value="publish">Active</option>
-								<option value="expired">Expired</option>
-								<option value="draft">Draft</option>
+								<option value="publish">{__('Active', 'betterlinks')}</option>
+								<option value="expired">{__('Expired', 'betterlinks')}</option>
+								<option value="draft">{__('Draft', 'betterlinks')}</option>
 							</select>
 						</div>
 						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
 							<label className="betterlinks-instant-redirect-form-label" htmlFor="expire">
-								Expire <span className="pro-badge">Pro</span>
+								{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 							</label>
 							<input id="expire" type="checkbox" disabled />
 						</div>
@@ -446,7 +446,7 @@ const CustomSidebarMetaComponent = (props) => {
 						{isExpire && (
 							<>
 								<SelectControl
-									label="Expire After"
+									label={__('Expire After', 'betterlinks')}
 									options={[
 										{
 											value: 'date',
@@ -472,7 +472,7 @@ const CustomSidebarMetaComponent = (props) => {
 								)}
 								{expireType == 'clicks' && (
 									<TextControl
-										label="Clicks"
+										label={__('Clicks', 'betterlinks')}
 										value={expireClicks}
 										onChange={(value) => {
 											onSetExpireClicks(value);
@@ -490,7 +490,7 @@ const CustomSidebarMetaComponent = (props) => {
 								/>
 								{expireRedirect && (
 									<TextControl
-										label="Redirect URL"
+										label={__('Redirect URL', 'betterlinks')}
 										value={expireRedirectUrl}
 										onChange={(value) => {
 											onSetExpireRedirectUrl(value);
@@ -555,7 +555,7 @@ const CustomSidebarComponent = () => {
 	return (
 		<Fragment>
 			{isAllowInstantRedirect && (
-				<PluginDocumentSettingPanel name="betterlinks-redirect" title="BetterLinks Instant Redirect" className="custom-panel" isOpen={false}>
+				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
 					<CustomSidebarMeta settings={settings} data={data} />
 				</PluginDocumentSettingPanel>
 			)}

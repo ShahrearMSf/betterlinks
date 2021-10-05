@@ -40,12 +40,12 @@ const LinksListViewFilter = (props) => {
 						<Select
 							className="btl-list-view-select"
 							classNamePrefix="btl-react-select"
-							defaultValue={{ value: '', label: 'Bulk Actions' }}
-							options={[{ value: 'delete', label: 'Delete' }]}
+							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
+							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
 						<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler)}>
-							Apply
+							{__('Apply', 'betterlinks')}
 						</button>
 					</div>
 				)}
@@ -66,10 +66,10 @@ const LinksListViewFilter = (props) => {
 					classNamePrefix="btl-react-select"
 					placeholder="Sort by Clicks"
 					options={[
-						{ value: 'mostClicks', label: 'Most Clicks' },
-						{ value: 'leastClicks', label: 'Least Clicks' },
-						{ value: 'mostUniqueClicks', label: 'Most Unique Clicks' },
-						{ value: 'leastUniqueClicks', label: 'Least Unique Clicks' },
+						{ value: 'mostClicks', label: __('Most Clicks', 'betterlinks') },
+						{ value: 'leastClicks', label: __('Least Clicks', 'betterlinks') },
+						{ value: 'mostUniqueClicks', label: __('Most Unique Clicks', 'betterlinks') },
+						{ value: 'leastUniqueClicks', label: __('Least Unique Clicks', 'betterlinks') },
 					]}
 					value={props.selectedClicksType}
 					onChange={(e) => props.setClicksType(e)}
@@ -80,9 +80,9 @@ const LinksListViewFilter = (props) => {
 					classNamePrefix="btl-react-select"
 					placeholder="All Dates"
 					options={[
-						{ value: 'mostRecent', label: 'Most Recent' },
-						{ value: 'leastRecent', label: 'Least Recent' },
-						{ value: 'custom', label: 'Custom' },
+						{ value: 'mostRecent', label: __('Most Recent', 'betterlinks') },
+						{ value: 'leastRecent', label: __('Least Recent', 'betterlinks') },
+						{ value: 'custom', label: __('Custom', 'betterlinks') },
 					]}
 					value={props.selectedDateType}
 					onChange={(e) => props.dateHandler(e)}
@@ -90,7 +90,7 @@ const LinksListViewFilter = (props) => {
 				/>
 				{props.selectedDateType && props.selectedDateType.value === 'custom' && (
 					<React.Fragment>
-						<button className="btl-list-view-calendar" onClick={() => props.dateHandler({ value: 'custom', label: 'Custom' })}>
+						<button className="btl-list-view-calendar" onClick={() => props.dateHandler({ value: 'custom', label: __('Custom', 'betterlinks') })}>
 							<span className="dashicons dashicons-calendar"></span>
 							{String(props.customDateFilter[0].startDate).slice(4, 15)} - {String(props.customDateFilter[0].endDate).slice(4, 15)}
 						</button>

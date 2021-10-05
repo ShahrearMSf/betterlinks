@@ -11,19 +11,19 @@ import { redirectType } from './../../utils/data';
 import UpgradeToPro from './../../components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
-	const [cacheButtonText, setCacheButtonText] = useState('Refresh Stats');
-	const [fastRedirectButtonText, setFastRedirectButtonText] = useState('Active Now');
-	const [formSubmitText, setFormSubmitText] = useState('Save Settings');
+	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
+	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
+	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [fastRedirectStatus, setFastRedirectStatus] = useState(exists_links_json);
-	const [fastClicksButtonText, setFastClicksButtonText] = useState('Active Now');
+	const [fastClicksButtonText, setFastClicksButtonText] = useState(__('Active Now', 'betterlinks'));
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const writeLinkJSONHandler = () => {
-		setFastRedirectButtonText('Activating...');
+		setFastRedirectButtonText(__('Activating...', 'betterlinks'));
 		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${betterlinks_nonce}`).then(
 			(response) => {
 				if (response.data) {
-					delayStatusChanged(null, 'Activated!', 'Active Now', setFastRedirectButtonText);
+					delayStatusChanged(null, __('Activated!', 'betterlinks'), __('Active Now', 'betterlinks'), setFastRedirectButtonText);
 					setTimeout(() => {
 						setFastRedirectStatus(true);
 					}, 1500);
@@ -35,11 +35,11 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 		);
 	};
 	const writeClicksJSONHandler = () => {
-		setFastClicksButtonText('Activating...');
+		setFastClicksButtonText(__('Activating...', 'betterlinks'));
 		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_clicks&security=${betterlinks_nonce}`).then(
 			(response) => {
 				if (response.data) {
-					delayStatusChanged(null, 'Activated!', 'Refresh Stats', setFastClicksButtonText);
+					delayStatusChanged(null, __('Activated!', 'betterlinks'), __('Refresh Stats', 'betterlinks'), setFastClicksButtonText);
 					setTimeout(() => {
 						setFastClicksStatus(true);
 					}, 1500);
@@ -51,11 +51,11 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 		);
 	};
 	const analyticClicksHandler = () => {
-		setCacheButtonText('Refreshing...');
+		setCacheButtonText(__('Refreshing...', 'betterlinks'));
 		axios.post(`${ajaxurl}?action=betterlinks/admin/analytics&security=${betterlinks_nonce}`).then(
 			(response) => {
 				if (response.data) {
-					delayStatusChanged(null, 'Done!', 'Refresh Stats', setCacheButtonText);
+					delayStatusChanged(null, __('Done!', 'betterlinks'), __('Refresh Stats', 'betterlinks'), setCacheButtonText);
 					// update analytic data
 					fetch_clicks_data();
 				}
@@ -79,7 +79,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
 					update_option(values);
-					delayStatusChanged('Saving...', 'Saved!', 'Save Settings', setFormSubmitText);
+					delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 				}}
 			>
 				{(props) => (

@@ -94,7 +94,7 @@ const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnTe
 );
 
 const Clicks = (props) => {
-	const [serachBtnText, setSearchBtnText] = useState('Search Click');
+	const [serachBtnText, setSearchBtnText] = useState(__('Search Click', 'betterlinks'));
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
@@ -128,9 +128,9 @@ const Clicks = (props) => {
 		};
 		const searchClickHandler = () => {
 			if (filterText) {
-				setSearchBtnText('Searching...');
+				setSearchBtnText(__('Searching...', 'betterlinks'));
 				props.searchClicksData(betterlinks_nonce, filterText).then(() => {
-					setSearchBtnText('Search Click');
+					setSearchBtnText(__('Search Click', 'betterlinks'));
 				});
 			}
 		};

@@ -165,7 +165,7 @@ const Link = (props) => {
 				</button>
 			) : (
 				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
-					{isShowIcon ? <i className="btl btl-add"></i> : 'Add New Link'} {!isShowIcon && isFetchTerms ? ' ...' : ''}
+					{isShowIcon ? <i className="btl btl-add"></i> : __('Add New Link', 'betterlinks')} {!isShowIcon && isFetchTerms ? ' ...' : ''}
 				</button>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -251,7 +251,7 @@ const Link = (props) => {
 										/>
 										<div className="btl-utm-button-group">
 											<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
-												UTM
+												{__('UTM', 'betterlinks')}
 											</button>
 											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
 												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>

@@ -52,13 +52,15 @@ const getLinksListViewColumnData = (props) => {
 				<div>
 					{row.analytic ? (
 						<button className="dnd-link-button btl-tooltip">
-							<span className="btl-tooltiptext">{'Clicks: ' + row.analytic.link_count + ' / ' + 'Unique Clicks: ' + row.analytic.ip.length}</span>
+							<span className="btl-tooltiptext">
+								{__('Clicks: ', 'betterlinks') + row.analytic.link_count + ' / ' + __('Unique Clicks: ', 'betterlinks') + row.analytic.ip.length}
+							</span>
 							<span className="icon">{analytic(row.analytic, row.ID)}</span>
 						</button>
 					) : (
 						<button className="dnd-link-button btl-tooltip">
-							<span className="btl-tooltiptext">{'Clicks: 0 / ' + 'Unique Clicks: 0'}</span>
-							<span className="icon">0/0</span>
+							<span className="btl-tooltiptext">{__('Clicks: 0 / ', 'betterlinks') + __('Unique Clicks: 0', 'betterlinks')}</span>
+							<span className="icon">{__('0/0', 'betterlinks')}</span>
 						</button>
 					)}
 				</div>
