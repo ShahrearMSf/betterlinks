@@ -48,10 +48,10 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 				<div className="btl-modal-utm-builder__body">
 					{!betterLinksHooks.applyFilters('isActivePro', false) && (
 						<div className="btl-modal-utm-builder__form-group btl-modal-utm-templates">
-							<label htmlFor="savedtemplate">{__('Template', 'betterlinks-pro')}</label>
+							<label htmlFor="savedtemplate">{__('Template', 'betterlinks')}</label>
 							<div>
 								<div name="savedtemplate" id="savedtemplate" onClick={() => openUpgradeToProModal()}>
-									{__('Pick a Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" style={{marginLeft: 5 }} />
+									{__('Pick a Template', 'betterlinks')} <img src={plugin_root_url + 'assets/images/locked.svg'} alt="locked" style={{ marginLeft: 5 }} />
 								</div>
 							</div>
 						</div>
@@ -127,7 +127,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 						</button>
 						{!betterLinksHooks.applyFilters('isActivePro', false) && (
 							<button type="button" onClick={(e) => openUpgradeToProModal()}>
-								{__('Save New Template', 'betterlinks-pro')} <img src={plugin_root_url + 'assets/images/locked-white.svg'} alt="locked" />
+								{__('Save New Template', 'betterlinks')} <img src={plugin_root_url + 'assets/images/locked-white.svg'} alt="locked" />
 							</button>
 						)}
 					</div>
