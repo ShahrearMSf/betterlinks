@@ -510,7 +510,7 @@ trait Query
                 'link_date' => $link_date ? $link_date : "",
                 'link_date_gmt' => $link_date ? $link_date : "",
                 'link_status'   => $link_status,
-                'short_url' => ltrim(\BetterLinks\Helper::force_relative_url(get_the_permalink($thirstylink->ID)), '/'),
+                'short_url' => trim(\BetterLinks\Helper::force_relative_url(get_the_permalink($thirstylink->ID)), '/'),
                 'link_author' => $thirstylink->post_author,
                 'link_date' => $thirstylink->post_date,
                 'link_date_gmt' => $thirstylink->post_date_gmt,
