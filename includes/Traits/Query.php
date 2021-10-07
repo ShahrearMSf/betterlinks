@@ -497,10 +497,10 @@ trait Query
             // link status
             $link_status = 'publish';
             $now = time();
-            if ($now < strtotime($link_date)) {
+            if (!empty($link_date) && $now < strtotime($link_date)) {
                 $link_status = 'scheduled';
             }
-            if ($now > strtotime($expire_date)) {
+            if (!empty($expire_date) && $now > strtotime($expire_date)) {
                 $link_status = 'draft';
             }
 
