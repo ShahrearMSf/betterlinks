@@ -61,7 +61,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
 - Get better insights with Individual Analytics [PRO]
 - Control and manage user roles & permissions [PRO]
-- Set link expiration dates & number of click limits [PRO]
+- Set link scheduler, expiration dates & number of click limits [PRO]
 - Integrate seamlessly with Google Analytics [PRO]
 - Carry out split tests with Dynamic Redirects [PRO]
 - Force enable secure HTTPS Redirection [PRO]
