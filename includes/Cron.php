@@ -11,7 +11,8 @@ class Cron
         add_filter('cron_schedules', [$self, 'add_cron_schedule']);
         add_action('betterlinks/write_json_links', [$self, 'write_json_links']);
         if (!wp_next_scheduled('betterlinks/analytics')) {
-            wp_schedule_event(time(), 'hourly', 'betterlinks/analytics');
+            $timestamp = time() + (60 * 60);
+            wp_schedule_event($timestamp, 'hourly', 'betterlinks/analytics');
         }
         add_action('betterlinks/analytics', [$self, 'analytics']);
     }

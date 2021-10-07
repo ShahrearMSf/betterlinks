@@ -16,8 +16,7 @@ class Helper
             }
             return $data;
         }
-        $data = self::get_links_for_json();
-        return $data;
+        return [];
     }
 
     public static function get_link_from_json_file($short_url)
@@ -249,7 +248,7 @@ class Helper
             $tempArray[$data['short_url']] = self::json_link_formatter($data);
             $existingData['wildcards'] = $tempArray;
         } else {
-            $tempArray = $existingData['links'];
+            $tempArray = (isset($existingData['links']) ? $existingData['links'] : []);
             $tempArray[$data['short_url']] = self::json_link_formatter($data);
             $existingData['links'] = $tempArray;
         }
