@@ -2,6 +2,7 @@
 namespace BetterLinks\Tools;
 
 use BetterLinks\Tools\Migration\ThirstyAffiliates;
+use Error;
 
 class Import
 {
@@ -69,9 +70,12 @@ class Import
                 $count++;
                 continue;
             }
+            error_log(print_r($this->link_header, true));
+            error_log(print_r($item, true));
             $item = array_combine($this->link_header, $item);
             // clicks data import
             if (is_array($item) && count($item) === 12) {
+                $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
                 $is_insert = $this->insert_click_data($item);
                 if ($is_insert) {
                     $click_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
@@ -79,6 +83,7 @@ class Import
                     $click_message[] = 'import failed "' . $item['short_url'] . '" already exists';
                 }
             } elseif (is_array($item) && count($item) === 24) {
+                $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
                 $is_insert = $this->insert_link_data($item);
                 if ($is_insert) {
                     $link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';

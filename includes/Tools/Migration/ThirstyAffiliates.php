@@ -40,6 +40,7 @@ class ThirstyAffiliates
                 $count++;
                 continue;
             }
+            $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
             // link status
             $link_status = 'publish';
             if (isset($item[14]) && !empty($item[14])) {

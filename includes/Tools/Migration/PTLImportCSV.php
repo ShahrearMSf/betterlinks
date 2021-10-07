@@ -88,6 +88,7 @@ class PTLImportCSV
                 continue;
             }
 
+            $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
 
             $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item[7], '/'));
             if (count($link) > 0) {
