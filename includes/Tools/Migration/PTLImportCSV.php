@@ -1,119 +1,99 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PTLImportCSV
+use BetterLinks\Interfaces\ImportCsvInterface;
+
+class PTLImportCSV implements ImportCsvInterface
 {
-    public function process_links_data($data)
+    private $link_header = [];
+    public function start_importing($csv)
+    {
+        $count = 0;
+        $link_message = [];
+        $click_message = [];
+        while (($item = fgetcsv($csv)) !== false) {
+            if ($count === 0) {
+                $this->link_header = $item;
+                $count++;
+                continue;
+            }
+            $item = array_combine($this->link_header, $item);
+            $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
+            if (isset($item['Browser'])) {
+                $click_message[] =  $this->process_clicks_data($item);
+            } else {
+                $link_message[] = $this->process_links_data($item);
+            }
+        }
+        return ['links' => $link_message, 'clicks' => $click_message];
+    }
+
+    public function process_links_data($item)
     {
         $categories = [];
         $author_id = get_current_user_id();
-        $message = [];
-        foreach ($data as $key => $item) {
-            /*
-            Link Header
-            (
-                [0] => id [1] => url [2] => slug [3] => name [4] => redirect_type [5] => track_me
-                [6] => nofollow [7] => sponsored [8] => param_forwarding [9] => google_tracking
-                [10] => delay [11] => created_at [12] => last_updated_at [13] => link_categories
-                [14] => link_tags [15] => keywords
-            )
-            */
-            // skip csv header row
-            if ($key === 0 || empty($item[3]) || $item[3] == 1) {
-                continue;
-            }
-
-            $slug = \BetterLinks\Helper::make_slug($item[3]);
-            $link = apply_filters('betterlinks/tools/migration/ptl_csv_import_link_arg', [
+        $slug = \BetterLinks\Helper::make_slug($item['slug']);
+        $link = apply_filters('betterlinks/tools/migration/ptl_csv_import_link_arg', [
                 'link_author' => $author_id,
-                'link_date' => $item[11],
-                'link_date_gmt' => $item[11],
-                'link_title' => $item[3],
+                'link_date' => $item['created_at'],
+                'link_date_gmt' => $item['created_at'],
+                'link_title' => $item['name'],
                 'link_slug' => $slug,
                 'link_note' => '',
                 'link_status' => 'publish',
-                'nofollow' => isset($item[6]) && $item[6] == 1 ? $item[6] : '',
-                'sponsored' => isset($item[7]) && $item[7] == 1 ? $item[7] : '',
-                'track_me' => isset($item[5]) && $item[5] == 1 ? $item[5] : '',
-                'param_forwarding' => isset($item[8]) && $item[8] == 1 ? $item[8] : '',
+                'nofollow' => isset($item['nofollow']) && $item['nofollow'] == 1 ? $item['nofollow'] : '',
+                'sponsored' => isset($item['sponsored']) && $item['sponsored'] == 1 ? $item['sponsored'] : '',
+                'track_me' => isset($item['track_me']) && $item['track_me'] == 1 ? $item['track_me'] : '',
+                'param_forwarding' => isset($item['param_forwarding']) && $item['param_forwarding'] == 1 ? $item['param_forwarding'] : '',
                 'param_struct' => '',
-                'redirect_type' => isset($item[4]) ? $item[4] : '',
-                'target_url' => isset($item[1]) ? $item[1] : '',
-                'short_url' => isset($item[2]) ? $item[2] : '',
+                'redirect_type' => isset($item['redirect_type']) ? $item['redirect_type'] : '',
+                'target_url' => isset($item['url']) ? $item['url'] : '',
+                'short_url' => isset($item['slug']) ? $item['slug'] : '',
                 'link_order' => 0,
-                'link_modified' => isset($item[12]) ? $item[12] : '',
-                'link_modified_gmt' => isset($item[12]) ? $item[12] : '',
+                'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
+                'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
             ]);
-            $link_id = \BetterLinks\Helper::insert_link($link);
-
-            if ($link_id) {
-                $categories = [];
-                if (isset($item[13]) && !empty($item[13])) {
-                    $categories[$item[2]] = $item[13];
-                } else {
-                    $categories[$item[2]] = 'uncategorized';
-                }
-                $terms_ids = \BetterLinks\Helper::insert_category_terms($categories);
-                if (count($terms_ids) > 0) {
-                    foreach ($terms_ids as $term_id) {
-                        \BetterLinks\Helper::insert_terms_relationships($term_id, $link_id);
-                    }
-                }
-                
-                $message[] = 'Imported Successfully "' . $item[3] . '"';
+        $link_id = \BetterLinks\Helper::insert_link($link);
+        if ($link_id) {
+            $categories = [];
+            if (isset($item['link_categories']) && !empty($item['link_categories'])) {
+                $categories[$item['slug']] = $item['link_categories'];
             } else {
-                $message[] = 'import failed "' . $item[3] . '" already exists';
+                $categories[$item['slug']] = 'uncategorized';
             }
+            $terms_ids = \BetterLinks\Helper::insert_category_terms($categories);
+            if (count($terms_ids) > 0) {
+                foreach ($terms_ids as $term_id) {
+                    \BetterLinks\Helper::insert_terms_relationships($term_id, $link_id);
+                }
+            }
+            return 'Imported Successfully "' . $item['name'] . '"';
         }
-
-        return [
-            'links' => $message
-        ];
+        return 'import failed "' . $item['name'] . '" already exists';
     }
 
-    public function process_clicks_data($data)
+    public function process_clicks_data($item)
     {
-        $message = [];
-        foreach ($data as $key => $item) {
-            /*
-            Clicks Header
-            (
-                [0] => Browser [1] => Browser Version [2] => Platform
-                [3] => IP [4] => Visitor ID [5] => Timestamp
-                [6] => Host [7] => URI [8] => Referrer [9] => Link
-            )
-            */
-            // skip csv header row
-            if ($key === 0 && !isset($item[7])) {
-                continue;
-            }
-
-            $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
-
-            $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item[7], '/'));
-            if (count($link) > 0) {
-                $click = [
+        $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item['URI'], '/'));
+        if (count($link) > 0) {
+            $click = [
                     'link_id' => $link[0]->ID,
-                    'ip' => $item[3],
-                    'browser' => $item[0],
-                    'os' => $item[2],
-                    'referer' => $item[8],
-                    'host' => $item[6],
-                    'uri' => $item[7],
+                    'ip' => $item['IP'],
+                    'browser' => $item['Browser'],
+                    'os' => $item['Platform'],
+                    'referer' => $item['Referrer'],
+                    'host' => $item['Host'],
+                    'uri' => $item['URI'],
                     'click_count' => '',
-                    'visitor_id' => $item[4],
+                    'visitor_id' => $item['Visitor ID'],
                     'click_order' => '',
-                    'created_at' => $item[5],
-                    'created_at_gmt' => $item[5],
+                    'created_at' => $item['Timestamp'],
+                    'created_at_gmt' => $item['Timestamp'],
                 ];
-                $is_insert = \BetterLinks\Helper::insert_click($click);
-                if ($is_insert) {
-                    $message[] = 'Imported Successfully "' . $item[7] . '"';
-                }
+            $is_insert = \BetterLinks\Helper::insert_click($click);
+            if ($is_insert) {
+                return 'Imported Successfully "' . $item['URI'] . '"';
             }
         }
-        return [
-            'clicks' => $message,
-        ];
     }
 }

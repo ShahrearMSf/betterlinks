@@ -1,12 +1,10 @@
 <?php
 namespace BetterLinks\Tools;
 
-use BetterLinks\Tools\Migration\ThirstyAffiliates;
-use Error;
+use BetterLinks\Tools\Migration\TAImportCSV;
 
 class Import
 {
-    private $link_header = [];
     public function __construct()
     {
         add_action('admin_init', [$this, 'import_data']);
@@ -19,39 +17,17 @@ class Import
         if ($page === 'betterlinks-settings' && $import == true) {
             \BetterLinks\Helper::clear_query_cache();
             if (!empty($_FILES['upload_file']['tmp_name'])) {
-                if ($_POST['mode'] == 'default') {
-                    $fileContent = fopen($_FILES['upload_file']['tmp_name'], "r");
+                $file = $_FILES['upload_file'];
+                $mode = $_POST['mode'];
+                if ($file['type'] === 'text/csv') {
+                    $fileContent = fopen($file['tmp_name'], "r");
                     if (!empty($fileContent)) {
-                        $results = $this->process_data($fileContent);
-                        set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
+                        $this->run_csv_importer($fileContent, $mode);
                     }
-                } elseif ($_POST['mode'] == 'prettylinks') {
-                    $csv = array_map('str_getcsv', file($_FILES['upload_file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
-                    if (is_array($csv) && count($csv) > 0) {
-                        $PrettyLinks = new Migration\PTLImportCSV();
-                        if (isset($csv[0][0]) && $csv[0][0] === 'Browser') {
-                            // import clicks data
-                            $results = $PrettyLinks->process_clicks_data($csv);
-                        } else {
-                            // import link data
-                            $results = $PrettyLinks->process_links_data($csv);
-                        }
-                        set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
-                    }
-                } elseif ($_POST['mode'] == 'simple301redirects') {
+                } elseif ($file['type'] === 'application/json') {
                     $fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
-                    $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
-                    $results = $migrator->process_links_data(array_reverse($fileContent));
-                    if (!empty($results)) {
-                        set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
-                    }
-                } elseif ($_POST['mode'] == 'thirstyaffiliates') {
-                    $fileContent = fopen($_FILES['upload_file']['tmp_name'], "r");
                     if (!empty($fileContent)) {
-                        $ThirstyAffiliates = new ThirstyAffiliates();
-                        $data = $ThirstyAffiliates->prepare_csv_data_to_import($fileContent);
-                        $results = $ThirstyAffiliates->run_import($data);
-                        set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
+                        $this->run_json_importer($fileContent, $mode);
                     }
                 }
             }
@@ -59,68 +35,32 @@ class Import
             \BetterLinks\Helper::create_cron_jobs_for_analytics();
         }
     }
-    public function process_data($csv)
+    public function run_csv_importer($fileContent, $type = 'default')
     {
-        $link_message = [];
-        $click_message = [];
-        $count = 0;
-        while (($item = fgetcsv($csv)) !== false) {
-            if ($count === 0) {
-                $this->link_header = $item;
-                $count++;
-                continue;
-            }
-            error_log(print_r($this->link_header, true));
-            error_log(print_r($item, true));
-            $item = array_combine($this->link_header, $item);
-            // clicks data import
-            if (is_array($item) && count($item) === 12) {
-                $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
-                $is_insert = $this->insert_click_data($item);
-                if ($is_insert) {
-                    $click_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
-                } else {
-                    $click_message[] = 'import failed "' . $item['short_url'] . '" already exists';
-                }
-            } elseif (is_array($item) && count($item) === 24) {
-                $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
-                $is_insert = $this->insert_link_data($item);
-                if ($is_insert) {
-                    $link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
-                } else {
-                    $link_message[] = 'import failed "' . $item['short_url'] . '" already exists';
-                }
-            }
+        if ($type == 'default') {
+            $BetterLinks = new  Migration\BLImportCSV();
+            $results = $BetterLinks->start_importing($fileContent);
+            set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
+        } elseif ($_POST['mode'] == 'prettylinks') {
+            $PrettyLinks = new Migration\PTLImportCSV();
+            $results = $PrettyLinks->start_importing($fileContent);
+            set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
+        } elseif ($type == 'thirstyaffiliates') {
+            $ThirstyAffiliates = new TAImportCSV();
+            $results = $ThirstyAffiliates->start_importing($fileContent);
+            set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
         }
-        return ['links' => $link_message, 'clicks' => $click_message];
     }
 
-    public function insert_link_data($item)
+    public function run_json_importer($fileContent, $type = 'default')
     {
-        if (!empty($item['link_title']) && !empty($item['short_url'])) {
-            $link_id = \BetterLinks\Helper::insert_link($item);
-            if ($link_id) {
-                $tags = \BetterLinks\Helper::insert_tags_terms((!empty($item['tags']) ? explode(',', $item['tags']) : []));
-                $category = \BetterLinks\Helper::insert_category_terms((!empty($item['category']) ? explode(',', $item['category']) : ['uncategorized']));
-                $all_terms = array_merge($tags, $category);
-                if (count($all_terms) > 0) {
-                    foreach ($all_terms as $term) {
-                        \BetterLinks\Helper::insert_terms_relationships($term, $link_id);
-                    }
-                }
+        if ($type === 'simple301redirects') {
+            $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
+            $results = $migrator->process_links_data(array_reverse($fileContent));
+            if (!empty($results)) {
+                set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
             }
-            return $link_id;
         }
-        return;
-    }
-
-    public function insert_click_data($item)
-    {
-        if (!empty($item['short_url'])) {
-            $link_id = \BetterLinks\Helper::insert_click($item);
-            return $link_id;
-        }
-        return;
     }
 
     public function get_import_info()

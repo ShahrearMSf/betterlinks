@@ -1,12 +1,14 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class ThirstyAffiliates
+use BetterLinks\Interfaces\ImportCsvInterface;
+
+class TAImportCSV implements ImportCsvInterface
 {
-    private $link_header = [];
-    public function run_import($data)
+    public function start_importing($data)
     {
         $message = [];
+        $data = $this->prepare_csv_data_to_import($data);
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $item) {
                 if (!empty($item['link_title']) && !empty($item['short_url'])) {
