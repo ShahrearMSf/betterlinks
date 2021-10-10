@@ -228,6 +228,9 @@ class Ajax
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();
             update_option('betterlinks_notice_s301r_migrate', true);
+            \BetterLinks\Helper::create_cron_jobs_for_json_links();
+            \BetterLinks\Helper::clear_query_cache();
+            \BetterLinks\Helper::create_cron_jobs_for_analytics();
             wp_send_json_success($resutls);
             wp_die();
         } catch (\Throwable $th) {
@@ -331,6 +334,9 @@ class Ajax
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();
             update_option('betterlinks_notice_ta_migrate', true);
+            \BetterLinks\Helper::create_cron_jobs_for_json_links();
+            \BetterLinks\Helper::clear_query_cache();
+            \BetterLinks\Helper::create_cron_jobs_for_analytics();
             wp_send_json_success($resutls);
             wp_die();
         } catch (\Throwable $th) {

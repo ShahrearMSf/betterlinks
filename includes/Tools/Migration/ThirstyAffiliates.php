@@ -82,7 +82,7 @@ class ThirstyAffiliates
                 'param_forwarding'  => ($item[17] == 'global' ? $betterlinks_links['param_forwarding'] : $item[17]),
                 'redirect_type'  => ($item[18] == 'global' ? $betterlinks_links['redirect_type'] : $item[18]),
                 'target_url'  => $item[1],
-                'short_url'  => (isset($betterlinks_link['prefix']) && !empty($betterlinks_link['prefix']) ? $betterlinks_link['prefix'] . '/' . $item[2] : $item[2]),
+                'short_url'  => trim((isset($betterlinks_link['prefix']) && !empty($betterlinks_link['prefix']) ? $betterlinks_link['prefix'] . '/' . $item[2] : $item[2]), '/'),
                 'expire'  => json_encode($expire),
                 'dynamic_redirect'  => json_encode($dynamic_redirect),
                 'terms'  => explode(',', $item[3]),

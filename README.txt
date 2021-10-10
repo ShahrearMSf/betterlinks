@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,7 +61,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
 - Get better insights with Individual Analytics [PRO]
 - Control and manage user roles & permissions [PRO]
-- Set link expiration dates & number of click limits [PRO]
+- Set link scheduler, expiration dates & number of click limits [PRO]
 - Integrate seamlessly with Google Analytics [PRO]
 - Carry out split tests with Dynamic Redirects [PRO]
 - Force enable secure HTTPS Redirection [PRO]
@@ -134,6 +134,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.2.5 - 07/10/2021 =
+
+- Added: ThirstyAffiliates Migration
+- Added: Translations compatibility 
+- Few minor bug fix & improvements
 
 = 1.2.4 - 29/09/2021 =
 
