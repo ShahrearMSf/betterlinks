@@ -55,8 +55,8 @@ class Import
     public function run_json_importer($fileContent, $type = 'default')
     {
         if ($type === 'simple301redirects') {
-            $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
-            $results = $migrator->process_links_data(array_reverse($fileContent));
+            $migrator = new \BetterLinks\Tools\Migration\S30RImportCSV();
+            $results = $migrator->start_importing(array_reverse($fileContent));
             if (!empty($results)) {
                 set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
             }

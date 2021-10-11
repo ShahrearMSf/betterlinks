@@ -1,8 +1,25 @@
 <?php
 namespace BetterLinks\Tools\Migration;
 
-class PTLOneClick
+use BetterLinks\Interfaces\ImportOneClickInterface;
+
+class PTLOneClick implements ImportOneClickInterface
 {
+    public function run_importer($type)
+    {
+        $resutls = [];
+        $prettylinks = get_transient('betterlinks_migration_data_prettylinks');
+        foreach ($type as $item) {
+            if (isset($prettylinks[$item]) && count($prettylinks[$item]) > 0) {
+                if ($item === 'links') {
+                    $resutls[] = $this->process_links_data($prettylinks[$item]);
+                } elseif ($item === 'clicks') {
+                    $resutls[] = $this->process_clicks_data($prettylinks[$item]);
+                }
+            }
+        }
+        return  $resutls;
+    }
     public function process_links_data($data)
     {
         $author_id = get_current_user_id();

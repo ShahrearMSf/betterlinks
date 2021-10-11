@@ -73,18 +73,8 @@ class Ajax
         try {
             $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
             $type = explode(',', $type);
-            $prettylinks = get_transient('betterlinks_migration_data_prettylinks');
             $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
-            $resutls = [];
-            foreach ($type as $item) {
-                if (isset($prettylinks[$item]) && count($prettylinks[$item]) > 0) {
-                    if ($item === 'links') {
-                        $resutls[] = $migrator->process_links_data($prettylinks[$item]);
-                    } elseif ($item === 'clicks') {
-                        $resutls[] = $migrator->process_clicks_data($prettylinks[$item]);
-                    }
-                }
-            }
+            $resutls = $migrator->run_importer($type);
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();
             \BetterLinks\Helper::create_cron_jobs_for_analytics();
@@ -224,7 +214,7 @@ class Ajax
         try {
             $simple_301_redirects = get_option('301_redirects');
             $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
-            $resutls = $migrator->process_links_data(array_reverse($simple_301_redirects));
+            $resutls = $migrator->run_importer(array_reverse($simple_301_redirects));
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();
             update_option('betterlinks_notice_s301r_migrate', true);
@@ -329,8 +319,8 @@ class Ajax
         }
         try {
             $links = \BetterLinks\Helper::get_thirstyaffiliates_links();
-            $migrator = new \BetterLinks\Tools\Migration\ThirstyAffiliates();
-            $resutls = $migrator->run_import($links);
+            $migrator = new \BetterLinks\Tools\Migration\TAIOneClickImport();
+            $resutls = $migrator->run_importer($links);
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();
             update_option('betterlinks_notice_ta_migrate', true);
