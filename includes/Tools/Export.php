@@ -25,10 +25,13 @@ class Export
         if ($type === 'links') {
             $links = $this->get_links();
             $data = $this->prepare_csv_file_data($links);
-        } else {
+        } elseif ($type === 'clicks') {
             $clicks = $this->get_clicks();
             $data = $this->prepare_csv_file_data($clicks);
             $filename .= '-clicks';
+        } else {
+            $filename = 'simple-file';
+            $data = $this->simple_file_download();
         }
         $filename .= '.' . date('Y-m-d') . '.csv';
         $this->array_to_csv_download(
@@ -67,6 +70,18 @@ class Export
             }
         }
         return $results;
+    }
+
+    public function simple_file_download()
+    {
+        global $wpdb;
+        $links = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}betterlinks", ARRAY_A);
+        if (is_array($links) && count($links) > 0) {
+            $links['tags'] = '';
+            $links['category'] = '';
+            return [array_keys($links)];
+        }
+        return [];
     }
 
     public function get_terms_from_link_id($link_id = 0)

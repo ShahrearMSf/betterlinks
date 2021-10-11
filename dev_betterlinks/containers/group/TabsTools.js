@@ -45,6 +45,12 @@ const TabsTools = ({ query }) => {
 									<span>{__('Analytics', 'betterlinks')}</span>
 								</label>
 							</div>
+							<div>
+								<label className="btl-radio">
+									<input type="radio" name="content" value="simplecsvfile" checked={exportMode === 'simplecsvfile'} onChange={exportModeHandler} />
+									<span>{__('Simple CSV File', 'betterlinks')}</span>
+								</label>
+							</div>
 						</div>
 						<button type="submit" className="btl-export-download-button">
 							{__('Export File', 'betterlinks')}
