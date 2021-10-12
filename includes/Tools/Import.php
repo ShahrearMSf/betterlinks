@@ -1,8 +1,6 @@
 <?php
 namespace BetterLinks\Tools;
 
-use BetterLinks\Tools\Migration\TAImportCSV;
-
 class Import
 {
     public function __construct()
@@ -24,11 +22,6 @@ class Import
                     if (!empty($fileContent)) {
                         $this->run_csv_importer($fileContent, $mode);
                     }
-                } elseif ($file['type'] === 'application/json') {
-                    $fileContent = json_decode(file_get_contents($_FILES['upload_file']['tmp_name']), true);
-                    if (!empty($fileContent)) {
-                        $this->run_json_importer($fileContent, $mode);
-                    }
                 }
             }
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
@@ -37,30 +30,21 @@ class Import
     }
     public function run_csv_importer($fileContent, $type = 'default')
     {
+        $results = '';
         if ($type == 'default') {
             $BetterLinks = new  Migration\BLImportCSV();
             $results = $BetterLinks->start_importing($fileContent);
-            set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
         } elseif ($_POST['mode'] == 'prettylinks') {
             $PrettyLinks = new Migration\PTLImportCSV();
             $results = $PrettyLinks->start_importing($fileContent);
-            set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
         } elseif ($type == 'thirstyaffiliates') {
-            $ThirstyAffiliates = new TAImportCSV();
+            $ThirstyAffiliates = new Migration\TAImportCSV();
             $results = $ThirstyAffiliates->start_importing($fileContent);
-            set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
+        } elseif ($type == 'simple301redirects') {
+            $migrator = new Migration\S30RImportCSV();
+            $results = $migrator->start_importing($fileContent);
         }
-    }
-
-    public function run_json_importer($fileContent, $type = 'default')
-    {
-        if ($type === 'simple301redirects') {
-            $migrator = new \BetterLinks\Tools\Migration\S30RImportCSV();
-            $results = $migrator->start_importing(array_reverse($fileContent));
-            if (!empty($results)) {
-                set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
-            }
-        }
+        set_transient('betterlinks_import_info', json_encode($results), 60 * 60 * 5);
     }
 
     public function get_import_info()
