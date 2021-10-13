@@ -26,6 +26,7 @@ export class List extends React.Component {
 							</h3>
 							<div className="btl-dnd-link-button-group">
 								<LinkQuickAction
+									isAlowQr={this.props.is_allow_qr}
 									isShowAnalytics={true}
 									catId={parseInt(this.props.catId)}
 									catName={this.props.term_name}
@@ -56,6 +57,7 @@ class InnerList extends React.Component {
 			(list, index) =>
 				!!list.link_title && (
 					<List
+						is_allow_qr={this.props.settings && this.props.settings.is_allow_qr}
 						edit_link={this.props.edit_link}
 						delete_link={this.props.delete_link}
 						catId={this.props.catId}
@@ -70,13 +72,13 @@ class InnerList extends React.Component {
 
 class CatWrap extends React.PureComponent {
 	render() {
-		const { ind, el, snapshot, provided, props } = this.props;
+		const { ind, el, provided, props } = this.props;
 		return (
 			<div className="dnd-category">
 				<CatHeader catId={ind} catName={el.term_name} cat_slug={el.term_slug} />
 				<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
 					<div className="category-body">
-						<InnerList edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={el.lists} />
+						<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={el.lists} />
 						{provided.placeholder}
 					</div>
 					<div className="category-footer">
@@ -89,14 +91,16 @@ class CatWrap extends React.PureComponent {
 }
 
 function DndCanvas(props) {
-	const { links, settings } = props.links;
+	const { links } = props.links;
+	const { settings } = props.settings;
 
 	useEffect(() => {
-		if (!links) {
-			props.fetch_links_data();
-		}
 		if (!settings) {
-			props.fetch_settings_data();
+			props.fetch_settings_data().then(() => {
+				if (!links) {
+					props.fetch_links_data();
+				}
+			});
 		}
 	}, []);
 

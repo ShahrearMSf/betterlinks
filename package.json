@@ -30,6 +30,7 @@
 		"date-fns": "^2.22.1",
 		"formik": "^2.2.9",
 		"prop-types": "^15.7.2",
+		"qrcode.react": "^1.0.1",
 		"query-string": "^7.0.1",
 		"react-beautiful-dnd": "^13.1.0",
 		"react-chartjs-2": "^3.0.3",
