@@ -17,7 +17,7 @@ class Import
             if (!empty($_FILES['upload_file']['tmp_name'])) {
                 $file = $_FILES['upload_file'];
                 $mode = $_POST['mode'];
-                if ($file['type'] === 'text/csv') {
+                if ('csv' === pathinfo($file['name'])[ 'extension' ]) {
                     $fileContent = fopen($file['tmp_name'], "r");
                     if (!empty($fileContent)) {
                         $this->run_csv_importer($fileContent, $mode);
