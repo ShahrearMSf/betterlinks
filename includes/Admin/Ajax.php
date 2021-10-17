@@ -319,7 +319,7 @@ class Ajax
         }
         try {
             $links = \BetterLinks\Helper::get_thirstyaffiliates_links();
-            $migrator = new \BetterLinks\Tools\Migration\TAIOneClickImport();
+            $migrator = new \BetterLinks\Tools\Migration\TAOneClick();
             $resutls = $migrator->run_importer($links);
             \BetterLinks\Helper::create_cron_jobs_for_json_links();
             \BetterLinks\Helper::clear_query_cache();

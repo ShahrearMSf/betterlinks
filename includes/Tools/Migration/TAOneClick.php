@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 use BetterLinks\Interfaces\ImportOneClickInterface;
 
-class TAIOneClickImport implements ImportOneClickInterface
+class TAOneClick implements ImportOneClickInterface
 {
     public function run_importer($data)
     {
