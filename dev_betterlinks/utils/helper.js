@@ -138,9 +138,13 @@ export const copyToClipboard = (copyText) => {
 };
 
 export const copyShortUrl = (shortUrl) => {
-	const URL = shortUrl[0] === '/' ? site_url + shortUrl : site_url + '/' + shortUrl;
+	const URL = makeShortUrl(shortUrl);
 	copyToClipboard(URL);
 	return URL;
+};
+
+export const makeShortUrl = (shortUrl) => {
+	return shortUrl[0] === '/' ? site_url + shortUrl : site_url + '/' + shortUrl;
 };
 
 export const getBrowser = (agent) => {

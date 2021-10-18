@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from './../Link';
+import QRScanner from './../QRScanner';
 import { site_url, route_path, copyShortUrl } from './../../utils/helper';
 
 const propTypes = {
@@ -25,7 +26,19 @@ const defaultProps = {
 	isShowDeleteLink: true,
 };
 
-const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isShowEditLink, isShowDeleteLink, data, catId, catName, submitLinkHandler, deleteLinkHandler }) => {
+const LinkQuickAction = ({
+	isAlowQr,
+	isShowCopyLink,
+	isShowAnalytics,
+	isShowVisitLink,
+	isShowEditLink,
+	isShowDeleteLink,
+	data,
+	catId,
+	catName,
+	submitLinkHandler,
+	deleteLinkHandler,
+}) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
@@ -69,6 +82,7 @@ const LinkQuickAction = ({ isShowCopyLink, isShowAnalytics, isShowVisitLink, isS
 			)}
 			{!isDeleteConfirm ? (
 				<>
+					{isAlowQr && <QRScanner shortUrl={data.short_url} />}
 					{isShowCopyLink && (
 						<button className="dnd-link-button btl-tooltip" onClick={() => copyShortUrlHandler(data.short_url)}>
 							<span className="icon">{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}</span>

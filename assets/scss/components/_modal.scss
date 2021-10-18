@@ -636,6 +636,28 @@
 			float: right;
 		}
 	}
+	.btl-qrcode-modal {
+		.betterlinksqrcode {
+			margin-bottom: 30px;
+		}
+		.btn-qrcode-download {
+			position: absolute;
+			left: 50%;
+			bottom: -50px;
+			width: 100px;
+			height: 100px;
+			margin-left: -50px;
+			font-size: 30px;
+			line-height: 100px;
+			border-radius: 50%;
+			text-decoration: none;
+			text-align: center;
+			color: #2a62ff;
+			background: #fff;
+			box-shadow: (0px 5px 45px rgba(0, 9, 78, 0.13));
+			z-index: 9999;
+		}
+	}
 }
 .MuiDialog-root {
 	z-index: 999999 !important;
