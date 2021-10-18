@@ -101,6 +101,10 @@ function DndCanvas(props) {
 					props.fetch_links_data();
 				}
 			});
+		} else {
+			if (!links) {
+				props.fetch_links_data();
+			}
 		}
 	}, []);
 

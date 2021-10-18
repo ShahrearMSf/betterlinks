@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import QRCode from 'qrcode.react';
 import { makeShortUrl } from './../../utils/helper';
 import PropTypes from 'prop-types';
+import { __ } from '@wordpress/i18n';
 
 const propTypes = {};
 
@@ -30,6 +31,7 @@ class QRCodeGenerator extends React.Component {
 				<div className="btl-qrcode-modal">
 					<div className="betterlinksqrcode">
 						<QRCode value={makeShortUrl(this.props.value)} size={300} level={'H'} />
+						<p className="btl-qrcode-modal__note">{__('Hit the "Download" button below to save the QR Code on your device', 'betterlinks')}</p>
 					</div>
 					<a className="btn-qrcode-download" ref={(ref) => (this.downloadRef = ref)}>
 						<i className="btl btl-download-arrow"></i>

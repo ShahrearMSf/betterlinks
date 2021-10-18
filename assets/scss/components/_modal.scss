@@ -640,6 +640,10 @@
 		.betterlinksqrcode {
 			margin-bottom: 30px;
 		}
+		.btl-qrcode-modal__note {
+			width: 300px;
+			text-align: center;
+		}
 		.btn-qrcode-download {
 			position: absolute;
 			left: 50%;
@@ -652,8 +656,8 @@
 			border-radius: 50%;
 			text-decoration: none;
 			text-align: center;
-			color: #2a62ff;
-			background: #fff;
+			color: #fff;
+			background: #2a62ff;
 			box-shadow: (0px 5px 45px rgba(0, 9, 78, 0.13));
 			z-index: 9999;
 		}
