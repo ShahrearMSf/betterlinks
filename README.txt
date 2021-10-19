@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -134,6 +134,14 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.2.6 - 19/10/2021 =
+
+- Added: QR Code Generator for shortened links
+- Added: Sample CSV export option
+- Improved: Security enhancement for CSV
+- Few minor bug fix & improvements
+
 
 = 1.2.5 - 07/10/2021 =
 
