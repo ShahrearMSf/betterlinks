@@ -31,7 +31,11 @@ class QRCodeGenerator extends React.Component {
 				<div className="btl-qrcode-modal">
 					<div className="betterlinksqrcode">
 						<QRCode value={makeShortUrl(this.props.value)} size={300} level={'H'} />
-						<p className="btl-qrcode-modal__note">{__('Hit the "Download" button below to save the QR Code on your device', 'betterlinks')}</p>
+						<p className="btl-qrcode-modal__note">
+							{__('Hit the')}{' '}
+							<strong>{__('"Download"', 'betterlinks')}</strong>{' '}
+							{__('button below to save the QR Code on your device', 'betterlinks')}
+						</p>
 					</div>
 					<a className="btn-qrcode-download" ref={(ref) => (this.downloadRef = ref)}>
 						<i className="btl btl-download-arrow"></i>

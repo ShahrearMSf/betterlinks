@@ -48,7 +48,7 @@ const TabsTools = ({ query }) => {
 							<div>
 								<label className="btl-radio">
 									<input type="radio" name="content" value="simplecsvfile" checked={exportMode === 'simplecsvfile'} onChange={exportModeHandler} />
-									<span>{__('Simple CSV File', 'betterlinks')}</span>
+									<span>{__('Sample CSV File', 'betterlinks')}</span>
 								</label>
 							</div>
 						</div>
