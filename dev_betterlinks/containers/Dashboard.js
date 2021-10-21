@@ -3,11 +3,14 @@ import Topbar from './group/TopBar';
 import ManageLinks from './pages/ManageLinks';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import KeywordsLinking from './pages/KeywordsLinking';
 
 const renderSwitch = (param) => {
 	switch (param) {
 		case 'betterlinks':
 			return <ManageLinks />;
+		case 'betterlinks-keywords-linking':
+			return <KeywordsLinking />;
 		case 'betterlinks-analytics':
 			return <Analytics />;
 		case 'betterlinks-settings':

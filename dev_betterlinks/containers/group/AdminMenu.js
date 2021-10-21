@@ -36,6 +36,11 @@ const AdminMenu = () => {
 							<Link to={route_path + 'admin.php?page=betterlinks'}>{__('Manage Links', 'betterlinks')}</Link>
 						</li>
 					)}
+					{betterLinksHooks.applyFilters('isShowKeywordsLinkingMenu', true) && (
+						<li className={`wp-first-item ${currentPage == 'betterlinks-keywords-linking' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-keywords-linking'}>{__('Keywords Linking', 'betterlinks')}</Link>
+						</li>
+					)}
 					{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks-analytics'}>{__('Analytics', 'betterlinks')}</Link>
