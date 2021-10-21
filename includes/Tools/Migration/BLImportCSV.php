@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 use BetterLinks\Interfaces\ImportCsvInterface;
 
-class BLImportCSV implements ImportCsvInterface
+class BLImportCSV extends BaseCSV implements ImportCsvInterface
 {
     private $link_header = [];
 
@@ -43,17 +43,7 @@ class BLImportCSV implements ImportCsvInterface
     public function insert_link_data($item)
     {
         if (!empty($item['link_title']) && !empty($item['short_url'])) {
-            $link_id = \BetterLinks\Helper::insert_link($item);
-            if ($link_id) {
-                $tags = \BetterLinks\Helper::insert_tags_terms((!empty($item['tags']) ? explode(',', $item['tags']) : []));
-                $category = \BetterLinks\Helper::insert_category_terms((!empty($item['category']) ? explode(',', $item['category']) : ['uncategorized']));
-                $all_terms = array_merge($tags, $category);
-                if (count($all_terms) > 0) {
-                    foreach ($all_terms as $term) {
-                        \BetterLinks\Helper::insert_terms_relationships($term, $link_id);
-                    }
-                }
-            }
+            $link_id = $this->insert_link($item);
             return $link_id;
         }
         return;
