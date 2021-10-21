@@ -30,7 +30,7 @@ class Export
             $data = $this->prepare_csv_file_data($clicks);
             $filename .= '-clicks';
         } else {
-            $filename = 'simple-file';
+            $filename = 'Sample-file';
             $data = $this->simple_file_download();
         }
         $filename .= '.' . date('Y-m-d') . '.csv';
