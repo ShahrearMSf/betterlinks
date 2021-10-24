@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 use BetterLinks\Interfaces\ImportCsvInterface;
 
-class PTLImportCSV implements ImportCsvInterface
+class PTLImportCSV extends BaseCSV implements ImportCsvInterface
 {
     private $link_header = [];
     public function start_importing($csv)
@@ -30,7 +30,6 @@ class PTLImportCSV implements ImportCsvInterface
 
     public function process_links_data($item)
     {
-        $categories = [];
         $author_id = get_current_user_id();
         $slug = \BetterLinks\Helper::make_slug($item['slug']);
         $link = apply_filters('betterlinks/tools/migration/ptl_csv_import_link_arg', [
@@ -52,21 +51,10 @@ class PTLImportCSV implements ImportCsvInterface
                 'link_order' => 0,
                 'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
                 'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
+                'category'  => $item['link_categories'],
             ]);
-        $link_id = \BetterLinks\Helper::insert_link($link);
+        $link_id = $this->insert_link($link);
         if ($link_id) {
-            $categories = [];
-            if (isset($item['link_categories']) && !empty($item['link_categories'])) {
-                $categories[$item['slug']] = $item['link_categories'];
-            } else {
-                $categories[$item['slug']] = 'uncategorized';
-            }
-            $terms_ids = \BetterLinks\Helper::insert_category_terms($categories);
-            if (count($terms_ids) > 0) {
-                foreach ($terms_ids as $term_id) {
-                    \BetterLinks\Helper::insert_terms_relationships($term_id, $link_id);
-                }
-            }
             return 'Imported Successfully "' . $item['name'] . '"';
         }
         return 'import failed "' . $item['name'] . '" already exists';
