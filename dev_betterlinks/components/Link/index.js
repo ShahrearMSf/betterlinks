@@ -223,6 +223,7 @@ const Link = (props) => {
 											}}
 											required
 										/>
+										{console.log(settings.settings)}
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">

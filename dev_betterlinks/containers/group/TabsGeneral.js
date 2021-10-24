@@ -205,6 +205,15 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 							</span>
 
 							<span className="btl-form-group btl-form-group--top">
+								<label className="btl-form-label">{__('Random Link String', 'betterlinks')}</label>
+								<div className="link-options__body" style={{ flexDirection: 'column' }}>
+									<div style={{ maxWidth: '200px' }}>
+										<Field type="checkbox" className="btl-check" name="is_random_string" />
+									</div>
+								</div>
+							</span>
+
+							<span className="btl-form-group btl-form-group--top">
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<div style={{ maxWidth: '200px' }}>
