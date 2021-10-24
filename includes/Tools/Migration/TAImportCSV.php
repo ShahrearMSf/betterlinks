@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 use BetterLinks\Interfaces\ImportCsvInterface;
 
-class TAImportCSV implements ImportCsvInterface
+class TAImportCSV extends BaseCSV implements ImportCsvInterface
 {
     public function start_importing($data)
     {
@@ -12,14 +12,8 @@ class TAImportCSV implements ImportCsvInterface
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $item) {
                 if (!empty($item['link_title']) && !empty($item['short_url'])) {
-                    $link_id = \BetterLinks\Helper::insert_link($item);
+                    $link_id = $this->insert_link($item);
                     if ($link_id) {
-                        $terms_ids = \BetterLinks\Helper::insert_category_terms($item['terms']);
-                        if (count($terms_ids) > 0) {
-                            foreach ($terms_ids as $term_id) {
-                                \BetterLinks\Helper::insert_terms_relationships($term_id, $link_id);
-                            }
-                        }
                         $message[] = 'Imported Successfully "' . $item['short_url'] . '"';
                     } else {
                         $message[] = 'Imported Failed "' . $item['short_url'] . '" already exists.';
@@ -87,7 +81,7 @@ class TAImportCSV implements ImportCsvInterface
                 'short_url'  => trim((isset($betterlinks_link['prefix']) && !empty($betterlinks_link['prefix']) ? $betterlinks_link['prefix'] . '/' . $item[2] : $item[2]), '/'),
                 'expire'  => json_encode($expire),
                 'dynamic_redirect'  => json_encode($dynamic_redirect),
-                'terms'  => explode(',', $item[3]),
+                'category'  => $item[3],
             ];
         }
         return $results;
