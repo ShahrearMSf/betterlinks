@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-24T07:37:49+00:00\n"
+"POT-Creation-Date: 2021-10-24T08:34:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
@@ -138,44 +138,158 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "307 (Temporary)"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "302 (Temporary)"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "301 (Permanent)"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "Opps..."
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "You need to"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "upgrade"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "to the"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "Premium"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "Version to use this feature"
 msgstr ""
 
+#: assets/js/betterlinks-gutenberg.core.min.js:1
 #: assets/js/betterlinks.core.min.js:1
 msgid "Close"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+msgid "Are you sure you want to delete your Instant Redirect Rule?"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Target URL"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Redirect Type"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+msgid "Choose Category"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Link Options"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "No Follow"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Sponsored"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Parameter Forwarding"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Tracking"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Advanced"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Active"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Expired"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Draft"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Expire"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+msgid "Expire After"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Date"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Clicks"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+msgid "Redirect URL after Expiration"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+msgid "Redirect URL"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Status"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+#: assets/js/betterlinks.core.min.js:1
+msgid "Pro"
+msgstr ""
+
+#: assets/js/betterlinks-gutenberg.core.min.js:1
+msgid "BetterLinks Instant Redirect"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -255,14 +369,6 @@ msgid "Description"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
-msgid "Redirect Type"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Target URL"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
 msgid "UTM"
 msgstr ""
 
@@ -287,19 +393,7 @@ msgid "Publish"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
-msgid "Link Options"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "No Follow"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
 msgid "This will add nofollow attribute to your link. (Recommended)"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Sponsored"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -307,47 +401,11 @@ msgid "This will add sponsored attribute to your link. (Recommended for Affiliat
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
-msgid "Parameter Forwarding"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
 msgid "This will pass the parameters you have set in the target URL"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
-msgid "Tracking"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
 msgid "This will let you check Analytics report of your links"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Advanced"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Status"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Pro"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Active"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Expired"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Draft"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Expire"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -487,10 +545,6 @@ msgid "Custom"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
-msgid "Clicks"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
 msgid "Clicks: 0 / "
 msgstr ""
 
@@ -500,10 +554,6 @@ msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
 msgid "0/0"
-msgstr ""
-
-#: assets/js/betterlinks.core.min.js:1
-msgid "Date"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
