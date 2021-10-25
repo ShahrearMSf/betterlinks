@@ -27,6 +27,7 @@ class Admin
         add_action('admin_head-toplevel_page_betterlinks', array($this, 'append_no_cache_meta'));
         add_action('admin_head-toplevel_page_betterlinks-analytics', array($this, 'append_no_cache_meta'));
         add_action('admin_head-toplevel_page_betterlinks-settings', array($this, 'append_no_cache_meta'));
+        add_action('betterlinks/admin/after_import_data', array($this, 'after_import_data'));
     }
     public function skip_no_conflict()
     {
@@ -61,5 +62,12 @@ class Admin
         echo '<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Expires" content="0">';
+    }
+    public function after_import_data()
+    {
+        $Cron = new Cron();
+        $Cron->write_json_links();
+        $Cron->analytics();
+        \BetterLinks\Helper::clear_query_cache();
     }
 }
