@@ -217,9 +217,9 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<div style={{ maxWidth: '200px' }}>
-										<Field class="btl-text-field" name="prefix" />
+										<Field className="btl-text-field" name="prefix" />
 									</div>
-									<div class="short-description">
+									<div className="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
 										{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
 										{site_url}
@@ -303,7 +303,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 							{!betterLinksHooks.applyFilters('isActivePro', false) && (
 								<span className="btl-form-group btl-form-group--teaser">
 									<label className="btl-form-label">
-										{__('Force HTTPS', 'betterlinks')} <span class="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>

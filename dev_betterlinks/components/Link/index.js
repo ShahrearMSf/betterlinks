@@ -434,27 +434,27 @@ const Link = (props) => {
 															<li>
 																<label>
 																	{__('Redirection Type:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 															</li>
 															<li>
 																<label>
 																	{__('Target URL 1:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 																<input type="text" value="example-1.com" disabled />
 															</li>
 															<li>
 																<label>
 																	{__('Target URL 2:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 																<input type="text" value="example-2.com" disabled />
 															</li>
 															<li>
 																<label>
 																	{__('Split Test:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 																<input id="splittest" type="checkbox" disabled />
 															</li>
