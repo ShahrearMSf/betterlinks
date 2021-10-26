@@ -86,11 +86,25 @@ export const generateSlug = (value) => {
 		.replace(/[^a-z0-9-]/g, '');
 };
 
-export const generateShortUrl = (value) => {
+export const generateTitleToSlug = (value) => {
 	return value
 		.toLowerCase()
 		.replace(/\s+/g, '-')
 		.replace(/[^a-z0-9-/-]/g, '');
+};
+
+export const generateShortURL = (settings, title) => {
+	if (settings) {
+		let shortURL = settings.prefix.length > 0 ? settings.prefix + '/' : '';
+		if (settings.is_random_string && title === null) {
+			return shortURL + generateRandomSlug();
+		}
+		if (!settings.is_random_string && title) {
+			return shortURL + generateTitleToSlug(title);
+		}
+		return '';
+	}
+	return '';
 };
 
 export const generateRandomSlug = (length = 3) => {

@@ -8,7 +8,7 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortUrl, formatDate, plugin_root_url } from './../../utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -48,7 +48,7 @@ const Link = (props) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: '',
+		short_url: generateShortURL(settings.settings, null),
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,
@@ -214,16 +214,15 @@ const Link = (props) => {
 											onChange={(e) => {
 												props.setFieldValue('link_title', e.target.value);
 												if (!data) {
-													props.setFieldValue(
-														'short_url',
-														settings.settings.prefix ? settings.settings.prefix + '/' + generateShortUrl(e.target.value) : generateShortUrl(e.target.value)
-													);
-													setSlugIsExists(false);
+													const shortURL = generateShortURL(settings.settings, e.target.value);
+													if (shortURL.length > 0) {
+														props.setFieldValue('short_url', shortURL);
+														setSlugIsExists(false);
+													}
 												}
 											}}
 											required
 										/>
-										{console.log(settings.settings)}
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_note">
