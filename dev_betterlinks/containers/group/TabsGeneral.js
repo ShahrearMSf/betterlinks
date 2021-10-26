@@ -205,10 +205,18 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 							</span>
 
 							<span className="btl-form-group btl-form-group--top">
-								<label className="btl-form-label">{__('Random Link String', 'betterlinks')}</label>
+								<label className="btl-form-label">{__('Random URL Slug', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
-									<div style={{ maxWidth: '200px' }}>
+									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
 										<Field type="checkbox" className="btl-check" name="is_random_string" />
+										<span className="text"></span>
+									</label>
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+										{__('This will randomly generate strings for your shortened URL eg.', 'betterlinks')}
+										{site_url}
+										{props.values.prefix && <>/{props.values.prefix}</>}
+										<strong>{__('/x12yaz', 'betterlinks')}</strong>
 									</div>
 								</div>
 							</span>
