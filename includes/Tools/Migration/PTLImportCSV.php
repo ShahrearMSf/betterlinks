@@ -18,6 +18,9 @@ class PTLImportCSV extends BaseCSV implements ImportCsvInterface
                 continue;
             }
             $item = array_combine($this->link_header, $item);
+            if (isset($item['short_url'])) {
+                $item['short_url'] = rtrim($item['short_url'], '/');
+            }
             $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
             if (isset($item['Browser'])) {
                 $click_message[] =  $this->process_clicks_data($item);

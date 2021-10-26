@@ -27,7 +27,7 @@ class S30RBase
                     'param_struct' => '',
                     'redirect_type' => '301',
                     'target_url' => $this->url_schema_parse($destination),
-                    'short_url' => ltrim($request, '/'),
+                    'short_url' => trim($request, '/'),
                     'link_order' => 0,
                     'link_modified' => $now,
                     'link_modified_gmt' => $now_gmt,

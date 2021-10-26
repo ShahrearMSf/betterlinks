@@ -16,6 +16,9 @@ class S30RImportCSV extends BaseCSV implements ImportCsvInterface
                 continue;
             }
             $item = array_combine($this->link_header, $item);
+            if (isset($item['short_url'])) {
+                $item['short_url'] = rtrim($item['short_url'], '/');
+            }
             $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
             $item = $this->prepare_csv_data_to_import($item);
             $link_id = $this->insert_link($item);
