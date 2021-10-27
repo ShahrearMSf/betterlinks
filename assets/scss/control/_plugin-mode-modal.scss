@@ -39,12 +39,14 @@
 					}
 				}
 			}
+			.link-options--advance-keyword,
 			.link-options--advanced {
 				.btl-modal-form-group {
 					align-items: center !important;
 					.btl-modal-form-label {
 						color: #b2b3bd;
 					}
+					input[type='number'],
 					input[type='text'] {
 						background: #36405a;
 						color: #fff;

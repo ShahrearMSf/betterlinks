@@ -141,6 +141,7 @@
 						}
 					}
 				}
+				&--advance-keyword,
 				&--advanced {
 					.link-options__body {
 						padding: 20px !important;
@@ -159,6 +160,7 @@
 							margin-top: 5px;
 							margin-left: 3px;
 						}
+						input[type='number'],
 						input[type='text'] {
 							background: #fff;
 							border-color: #ebebeb;
@@ -196,6 +198,14 @@
 									}
 								}
 							}
+						}
+					}
+				}
+				&--advance-keyword {
+					.btl-modal-form-group {
+						.btl-modal-form-label {
+							min-width: 95px !important;
+							font-size: 14px;
 						}
 					}
 				}
