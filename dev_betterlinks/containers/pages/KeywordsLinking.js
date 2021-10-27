@@ -2,6 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import Topbar from './../group/TopBar';
 import ListKeywords from './../group/ListKeywords';
+import AddNewKeywords from '../../components/AddNewKeywords';
 import PropTypes from 'prop-types';
 
 const propTypes = {};
@@ -15,11 +16,7 @@ export default function KeywordsLinking(props) {
 				label={__('Keywords Linking', 'betterlinks')}
 				render={() => (
 					<>
-						{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && (
-							<div className="btl-create-keywords">
-								<Link isShowIcon={false} submitHandler={add_new_link} />
-							</div>
-						)}
+						<AddNewKeywords />
 					</>
 				)}
 			/>
