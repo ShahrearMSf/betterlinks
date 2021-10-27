@@ -1,13 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
 import Topbar from './../group/TopBar';
 import DndCanvas from './../group/DndCanvas';
 import ListCanvas from './../group/ListCanvas';
-const ManageLinks = ({ activity }) => {
+import { add_new_link } from './../../redux/actions/links.actions';
+import Link from './../../components/Link';
+const ManageLinks = ({ add_new_link, activity }) => {
 	return (
 		<React.Fragment>
-			<Topbar label={__('BetterLinks', 'betterlinks')} />
+			<Topbar
+				label={__('BetterLinks', 'betterlinks')}
+				render={() => (
+					<>
+						{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && (
+							<div className="btl-create-links">
+								<Link isShowIcon={false} submitHandler={add_new_link} />
+							</div>
+						)}
+					</>
+				)}
+			/>
 			{activity.linksView == 'list' ? <ListCanvas /> : <DndCanvas />}
 		</React.Fragment>
 	);
@@ -15,4 +29,9 @@ const ManageLinks = ({ activity }) => {
 const mapStateToProps = (state) => ({
 	activity: state.activity,
 });
-export default connect(mapStateToProps)(ManageLinks);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		add_new_link: bindActionCreators(add_new_link, dispatch),
+	};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ManageLinks);
