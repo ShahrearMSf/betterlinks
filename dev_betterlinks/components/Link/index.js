@@ -8,7 +8,7 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortUrl, formatDate, plugin_root_url } from './../../utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url } from './../../utils/helper';
 import { redirectType } from './../../utils/data';
 import Category from './../Terms/Category';
 import Tags from './../Terms/Tags';
@@ -48,7 +48,7 @@ const Link = (props) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: '',
+		short_url: generateShortURL(settings.settings, null),
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,
@@ -214,11 +214,11 @@ const Link = (props) => {
 											onChange={(e) => {
 												props.setFieldValue('link_title', e.target.value);
 												if (!data) {
-													props.setFieldValue(
-														'short_url',
-														settings.settings.prefix ? settings.settings.prefix + '/' + generateShortUrl(e.target.value) : generateShortUrl(e.target.value)
-													);
-													setSlugIsExists(false);
+													const shortURL = generateShortURL(settings.settings, e.target.value);
+													if (shortURL.length > 0) {
+														props.setFieldValue('short_url', shortURL);
+														setSlugIsExists(false);
+													}
 												}
 											}}
 											required
@@ -433,27 +433,27 @@ const Link = (props) => {
 															<li>
 																<label>
 																	{__('Redirection Type:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 															</li>
 															<li>
 																<label>
 																	{__('Target URL 1:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 																<input type="text" value="example-1.com" disabled />
 															</li>
 															<li>
 																<label>
 																	{__('Target URL 2:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 																<input type="text" value="example-2.com" disabled />
 															</li>
 															<li>
 																<label>
 																	{__('Split Test:', 'betterlinks')}
-																	<span class="pro-badge">Pro</span>
+																	<span className="pro-badge">Pro</span>
 																</label>
 																<input id="splittest" type="checkbox" disabled />
 															</li>

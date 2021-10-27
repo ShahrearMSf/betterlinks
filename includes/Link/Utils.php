@@ -165,7 +165,7 @@ class Utils
     protected function insert_json_into_file($file, $data)
     {
         $existingData = file_get_contents($file);
-        $tempArray = json_decode($existingData, true);
+        $tempArray = (array) json_decode($existingData, true);
         array_push($tempArray, $data);
         return file_put_contents($file, json_encode($tempArray));
     }

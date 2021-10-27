@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import Topbar from './group/TopBar';
 import ManageLinks from './pages/ManageLinks';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
@@ -23,7 +22,6 @@ const renderSwitch = (param) => {
 const Dashboard = () => {
 	return (
 		<React.Fragment>
-			<Topbar currentPage={betterLinksQuery.get('page')} />
 			<Suspense fallback="">{renderSwitch(betterLinksQuery.get('page'))}</Suspense>
 		</React.Fragment>
 	);

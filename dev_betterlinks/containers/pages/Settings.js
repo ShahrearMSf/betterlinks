@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { applyFilters } from '@wordpress/hooks';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from './../../redux/actions/settings.actions';
+import Topbar from './../group/TopBar';
 import TabsGeneral from './../group/TabsGeneral';
 import TabsTools from './../group/TabsTools';
 import Migration from './../group/Migration';
@@ -48,6 +49,7 @@ const Settings = (props) => {
 
 	return (
 		<React.Fragment>
+			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
 			<Tabs defaultIndex={currentTab == 'true' ? 1 : 0}>
 				<TabList>
 					{tabList.map((item, index) => (

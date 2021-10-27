@@ -200,7 +200,7 @@ const Migration = (props) => {
 							)}
 						</div>
 						<p style={{ textAlign: 'left' }}>
-							<button class="button button-primary" type="button" onClick={closeModal}>
+							<button className="button button-primary" type="button" onClick={closeModal}>
 								{__('Ok', 'betterlinks')}
 							</button>
 						</p>

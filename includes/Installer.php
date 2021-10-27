@@ -123,7 +123,8 @@ class Installer extends \WP_Background_Process
                 'is_allow_gutenberg'=> true,
                 'force_https'		=> false,
                 'prefix'            => 'go',
-                'is_allow_qr'       => false
+                'is_allow_qr'       => false,
+                'is_random_string'  => false,
             ];
             add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }

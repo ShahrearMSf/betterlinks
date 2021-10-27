@@ -46,7 +46,7 @@ class PTLOneClick implements ImportOneClickInterface
                     'param_struct' => '',
                     'redirect_type' => isset($item['redirect_type']) ? $item['redirect_type'] : '',
                     'target_url' => isset($item['url']) ? $item['url'] : '',
-                    'short_url' => isset($item['slug']) ? $item['slug'] : '',
+                    'short_url' => isset($item['slug']) ? rtrim($item['slug'], '/') : '',
                     'link_order' => 0,
                     'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
                     'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',

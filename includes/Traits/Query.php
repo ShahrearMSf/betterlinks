@@ -72,6 +72,11 @@ trait Query
         $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array( 'link_id' => $ID ), array( '%d' ));
         $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
     }
+    public static function remove_terms_relationships_by_link_ID($ID)
+    {
+        global $wpdb;
+        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
+    }
     public static function get_prepare_all_links()
     {
         global $wpdb;

@@ -2,7 +2,6 @@
 
 namespace BetterLinks\Admin;
 
-use BetterLinks;
 use BetterLinks\Cron;
 
 class Ajax
@@ -75,9 +74,7 @@ class Ajax
             $type = explode(',', $type);
             $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
             $resutls = $migrator->run_importer($type);
-            \BetterLinks\Helper::create_cron_jobs_for_json_links();
-            \BetterLinks\Helper::clear_query_cache();
-            \BetterLinks\Helper::create_cron_jobs_for_analytics();
+            do_action('betterlinks/admin/after_import_data');
             update_option('betterlinks_notice_ptl_migrate', true);
             wp_send_json_success($resutls);
             wp_die();
@@ -215,12 +212,8 @@ class Ajax
             $simple_301_redirects = get_option('301_redirects');
             $migrator = new \BetterLinks\Tools\Migration\S301ROneClick();
             $resutls = $migrator->run_importer(array_reverse($simple_301_redirects));
-            \BetterLinks\Helper::create_cron_jobs_for_json_links();
-            \BetterLinks\Helper::clear_query_cache();
+            do_action('betterlinks/admin/after_import_data');
             update_option('betterlinks_notice_s301r_migrate', true);
-            \BetterLinks\Helper::create_cron_jobs_for_json_links();
-            \BetterLinks\Helper::clear_query_cache();
-            \BetterLinks\Helper::create_cron_jobs_for_analytics();
             wp_send_json_success($resutls);
             wp_die();
         } catch (\Throwable $th) {
@@ -321,12 +314,8 @@ class Ajax
             $links = \BetterLinks\Helper::get_thirstyaffiliates_links();
             $migrator = new \BetterLinks\Tools\Migration\TAOneClick();
             $resutls = $migrator->run_importer($links);
-            \BetterLinks\Helper::create_cron_jobs_for_json_links();
-            \BetterLinks\Helper::clear_query_cache();
+            do_action('betterlinks/admin/after_import_data');
             update_option('betterlinks_notice_ta_migrate', true);
-            \BetterLinks\Helper::create_cron_jobs_for_json_links();
-            \BetterLinks\Helper::clear_query_cache();
-            \BetterLinks\Helper::create_cron_jobs_for_analytics();
             wp_send_json_success($resutls);
             wp_die();
         } catch (\Throwable $th) {

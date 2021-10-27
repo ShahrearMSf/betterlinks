@@ -27,20 +27,21 @@ const TopBar = (props) => {
 		}
 		setIsDarkMode(mode);
 	};
+	const currentPage = betterLinksQuery.get('page');
 	return (
 		<div className="topbar">
 			<div className="topbar__logo">
 				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
-				<span className="topbar__logo__text">{props.currentPage.replace('betterlinks', 'BetterLinks').replace('-', ' ')}</span>
+				<span className="topbar__logo__text">{props.label}</span>
 			</div>
 
-			{props.currentPage === 'betterlinks' && betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && (
+			{currentPage === 'betterlinks' && betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && (
 				<div className="btl-create-links">
 					<Link isShowIcon={false} submitHandler={props.add_new_link} />
 				</div>
 			)}
 			<div className="topbar-inner">
-				{props.currentPage === 'betterlinks' && (
+				{currentPage === 'betterlinks' && (
 					<React.Fragment>
 						<div className="btl-view-control">
 							<button className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`} onClick={() => props.linksView('list')}>

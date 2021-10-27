@@ -24,8 +24,7 @@ class Import
                     }
                 }
             }
-            \BetterLinks\Helper::create_cron_jobs_for_json_links();
-            \BetterLinks\Helper::create_cron_jobs_for_analytics();
+            do_action('betterlinks/admin/after_import_data');
         }
     }
     public function run_csv_importer($fileContent, $type = 'default')

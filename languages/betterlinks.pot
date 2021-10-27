@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterLinks 1.2.4\n"
+"Project-Id-Version: BetterLinks 1.2.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterlinks\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-06T11:04:11+00:00\n"
+"POT-Creation-Date: 2021-10-25T05:27:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: betterlinks\n"
@@ -123,17 +123,17 @@ msgstr ""
 msgid "Deactivate ThirstyAffiliates"
 msgstr ""
 
-#: includes/Helper.php:54
+#: includes/Helper.php:53
 #: assets/js/betterlinks.core.min.js:1
 msgid "Manage Links"
 msgstr ""
 
-#: includes/Helper.php:58
+#: includes/Helper.php:57
 #: assets/js/betterlinks.core.min.js:1
 msgid "Analytics"
 msgstr ""
 
-#: includes/Helper.php:62
+#: includes/Helper.php:61
 #: assets/js/betterlinks.core.min.js:1
 msgid "Settings"
 msgstr ""
@@ -469,6 +469,22 @@ msgid "No"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Hit the"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "\"Download\""
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "button below to save the QR Code on your device"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "QR Code"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Clicks: "
 msgstr ""
 
@@ -597,6 +613,10 @@ msgid "All Clicks"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "BetterLinks Analytics"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Refresh Stats"
 msgstr ""
 
@@ -657,6 +677,10 @@ msgid "If it's enabled, before a link is redirected, the click data will be save
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
+msgid "Random Link String"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
 msgid "Link Prefix"
 msgstr ""
 
@@ -670,6 +694,18 @@ msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
 msgid "/your-affiliate-link-name."
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "QR Codes"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Enable QR Code Generator"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "This will allow you to generate & download QR Code for each of your shortened URL"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -726,6 +762,10 @@ msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
 msgid "Links"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "Sample CSV File"
 msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
@@ -950,4 +990,8 @@ msgstr ""
 
 #: assets/js/betterlinks.core.min.js:1
 msgid "Go Premium"
+msgstr ""
+
+#: assets/js/betterlinks.core.min.js:1
+msgid "BetterLinks Settings"
 msgstr ""
