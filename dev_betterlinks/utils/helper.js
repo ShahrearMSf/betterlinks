@@ -95,7 +95,7 @@ export const generateTitleToSlug = (value) => {
 
 export const generateShortURL = (settings, title) => {
 	if (settings) {
-		let shortURL = settings.prefix.length > 0 ? settings.prefix + '/' : '';
+		let shortURL = settings.prefix && settings.prefix.length > 0 ? settings.prefix + '/' : '';
 		if (settings.is_random_string && title === null) {
 			return shortURL + generateRandomSlug();
 		}
