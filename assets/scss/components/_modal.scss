@@ -490,6 +490,40 @@
 		flex: 1;
 		width: 100%;
 	}
+	.btl-modal-select--mini {
+		width: 100%;
+		.btl-react-select__control {
+			background-color: #fff;
+			height: 32px;
+			min-height: 32px;
+			border: 1px solid #ebebeb;
+			border-radius: 4px;
+			.btl-react-select__value-container {
+				padding: 0 8px;
+				.btl-react-select__single-value {
+					font-size: 14px;
+					font-weight: 400;
+					margin-left: 0;
+				}
+				.btl-react-select__input {
+					input {
+						box-shadow: none;
+						height: 20px;
+						min-height: 20px;
+					}
+				}
+			}
+			&.btl-react-select__control--is-focused {
+				box-shadow: none;
+				background-color: #fff;
+			}
+		}
+		.btl-react-select__indicators {
+			.btl-react-select__dropdown-indicator {
+				padding: 2px;
+			}
+		}
+	}
 	.btl-link-field-copyable {
 		width: calc(100% - 160px);
 		height: 50px;

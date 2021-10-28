@@ -79,6 +79,7 @@ export default function AddNewKeywords(props) {
 											name="keywords"
 											isMulti
 											className="btl-modal-select--full"
+											classNamePrefix="btl-react-select"
 											options={[
 												{ value: 'chocolate', label: 'Chocolate' },
 												{ value: 'strawberry', label: 'Strawberry' },
@@ -96,6 +97,7 @@ export default function AddNewKeywords(props) {
 										<Select2
 											name="chooseLink"
 											className="btl-modal-select--full"
+											classNamePrefix="btl-react-select"
 											options={[
 												{ value: 'chocolate', label: 'Chocolate' },
 												{ value: 'strawberry', label: 'Strawberry' },
@@ -113,6 +115,7 @@ export default function AddNewKeywords(props) {
 										<Select2
 											name="postType"
 											className="btl-modal-select--full"
+											classNamePrefix="btl-react-select"
 											options={[
 												{ value: 'chocolate', label: 'Chocolate' },
 												{ value: 'strawberry', label: 'Strawberry' },
@@ -130,6 +133,7 @@ export default function AddNewKeywords(props) {
 										<Select2
 											name="category"
 											className="btl-modal-select--full"
+											classNamePrefix="btl-react-select"
 											options={[
 												{ value: 'chocolate', label: 'Chocolate' },
 												{ value: 'strawberry', label: 'Strawberry' },
@@ -148,6 +152,7 @@ export default function AddNewKeywords(props) {
 											name="tags"
 											isMulti
 											className="btl-modal-select--full"
+											classNamePrefix="btl-react-select"
 											options={[
 												{ value: 'chocolate', label: 'Chocolate' },
 												{ value: 'strawberry', label: 'Strawberry' },
@@ -165,6 +170,7 @@ export default function AddNewKeywords(props) {
 										<Select2
 											name="termGroup"
 											className="btl-modal-select--full"
+											classNamePrefix="btl-react-select"
 											options={[
 												{ value: 'chocolate', label: 'Chocolate' },
 												{ value: 'strawberry', label: 'Strawberry' },
@@ -213,6 +219,8 @@ export default function AddNewKeywords(props) {
 												</label>
 												<Select2
 													name="leftBoundary"
+													className="btl-modal-select--mini"
+													classNamePrefix="btl-react-select"
 													options={[
 														{ value: 'chocolate', label: 'Chocolate' },
 														{ value: 'strawberry', label: 'Strawberry' },
@@ -229,6 +237,8 @@ export default function AddNewKeywords(props) {
 												</label>
 												<Select2
 													name="rightBoundary"
+													className="btl-modal-select--mini"
+													classNamePrefix="btl-react-select"
 													options={[
 														{ value: 'chocolate', label: 'Chocolate' },
 														{ value: 'strawberry', label: 'Strawberry' },
