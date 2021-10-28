@@ -493,7 +493,7 @@ class WPDevNotice
             $args = $this->get_args();
             $return_notice = $args['notice_will_show'];
         } else {
-            $return_notice = $options_data[$this->plugin_name]['notice_will_show'];
+            $return_notice = (isset($options_data[$this->plugin_name]['notice_will_show']) ? $options_data[$this->plugin_name]['notice_will_show'] : '');
         }
 
         if (is_array($return_notice)) {
