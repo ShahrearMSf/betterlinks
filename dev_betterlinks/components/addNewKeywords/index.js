@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import PropTypes from 'prop-types';
-import Select from './../Select';
+import Select2 from 'react-select';
 import { __ } from '@wordpress/i18n';
 import { modalCustomStyles } from './../../utils/helper';
 
@@ -15,6 +15,7 @@ export default function AddNewKeywords(props) {
 		html: true,
 		advanced: false,
 	});
+
 	const togglePanel = (type) => {
 		setOpenLinkPanel({
 			html: false,
@@ -42,53 +43,137 @@ export default function AddNewKeywords(props) {
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={{ email: '', color: 'red', firstName: '' }}
+					initialValues={{
+						keywords: '',
+						chooseLink: '',
+						postType: '',
+						category: '',
+						tags: '',
+						termGroup: '',
+						openNewTab: '',
+						useNoFollow: '',
+						caseSensitive: '',
+						leftBoundary: '',
+						rightBoundary: '',
+						keywordBefore: '',
+						keywordBefore: '',
+						limit: '',
+						priority: '',
+					}}
 					onSubmit={(values, actions) => {
 						setTimeout(() => {
-							alert(JSON.stringify(values, null, 2));
+							console.log(values);
 							actions.setSubmitting(false);
 						}, 1000);
 					}}
 				>
 					{(props) => (
-						<Form className="w-100">
+						<Form className="w-100" onSubmit={props.handleSubmit}>
 							<div className="btl-entry-content">
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Keyword', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" type="text" name="email" placeholder="Email" />
+										<Select2
+											name="keywords"
+											isMulti
+											className="btl-modal-select--full"
+											options={[
+												{ value: 'chocolate', label: 'Chocolate' },
+												{ value: 'strawberry', label: 'Strawberry' },
+												{ value: 'vanilla', label: 'Vanilla' },
+											]}
+											onChange={(option) => {
+												props.setFieldValue('keywords', option);
+											}}
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Choose Link', 'betterlinks')}
 										</label>
-										<Select />
+										<Select2
+											name="chooseLink"
+											className="btl-modal-select--full"
+											options={[
+												{ value: 'chocolate', label: 'Chocolate' },
+												{ value: 'strawberry', label: 'Strawberry' },
+												{ value: 'vanilla', label: 'Vanilla' },
+											]}
+											onChange={(option) => {
+												props.setFieldValue('chooseLink', option);
+											}}
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Post Type', 'betterlinks')}
 										</label>
-										<Field className="btl-modal-form-control" type="text" name="text" placeholder="Email" />
+										<Select2
+											name="postType"
+											className="btl-modal-select--full"
+											options={[
+												{ value: 'chocolate', label: 'Chocolate' },
+												{ value: 'strawberry', label: 'Strawberry' },
+												{ value: 'vanilla', label: 'Vanilla' },
+											]}
+											onChange={(option) => {
+												props.setFieldValue('postType', option);
+											}}
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Category', 'betterlinks')}
 										</label>
-										<Select />
+										<Select2
+											name="category"
+											className="btl-modal-select--full"
+											options={[
+												{ value: 'chocolate', label: 'Chocolate' },
+												{ value: 'strawberry', label: 'Strawberry' },
+												{ value: 'vanilla', label: 'Vanilla' },
+											]}
+											onChange={(option) => {
+												props.setFieldValue('category', option);
+											}}
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Tags', 'betterlinks')}
 										</label>
-										<Select />
+										<Select2
+											name="tags"
+											isMulti
+											className="btl-modal-select--full"
+											options={[
+												{ value: 'chocolate', label: 'Chocolate' },
+												{ value: 'strawberry', label: 'Strawberry' },
+												{ value: 'vanilla', label: 'Vanilla' },
+											]}
+											onChange={(option) => {
+												props.setFieldValue('tags', option);
+											}}
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Term Group', 'betterlinks')}
 										</label>
-										<Select />
+										<Select2
+											name="termGroup"
+											className="btl-modal-select--full"
+											options={[
+												{ value: 'chocolate', label: 'Chocolate' },
+												{ value: 'strawberry', label: 'Strawberry' },
+												{ value: 'vanilla', label: 'Vanilla' },
+											]}
+											onChange={(option) => {
+												props.setFieldValue('termGroup', option);
+											}}
+										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label"></label>
@@ -104,15 +189,15 @@ export default function AddNewKeywords(props) {
 										</button>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="ONT" type="checkbox" />
+												<Field className="btl-check" name="openNewTab" type="checkbox" />
 												<span className="text">{__('Open New Tab', 'betterlinks')}</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="UNF" type="checkbox" />
+												<Field className="btl-check" name="useNoFollow" type="checkbox" />
 												<span className="text">{__('Use No Follow', 'betterlinks')}</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="CS" type="checkbox" />
+												<Field className="btl-check" name="caseSensitive" type="checkbox" />
 												<span className="text">{__('Case Sensitive', 'betterlinks')}</span>
 											</label>
 										</div>
@@ -126,45 +211,57 @@ export default function AddNewKeywords(props) {
 												<label className="btl-modal-form-label" htmlFor="status">
 													{__('Left Boundary', 'betterlinks')}
 												</label>
-												<select id="status">
-													<option value="publish">{__('Active', 'betterlinks')}</option>
-													<option value="expired">{__('Expired', 'betterlinks')}</option>
-													<option value="draft">{__('Draft', 'betterlinks')}</option>
-												</select>
+												<Select2
+													name="leftBoundary"
+													options={[
+														{ value: 'chocolate', label: 'Chocolate' },
+														{ value: 'strawberry', label: 'Strawberry' },
+														{ value: 'vanilla', label: 'Vanilla' },
+													]}
+													onChange={(option) => {
+														props.setFieldValue('leftBoundary', option);
+													}}
+												/>
 											</div>
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="status">
 													{__('Right Boundary', 'betterlinks')}
 												</label>
-												<select id="status">
-													<option value="publish">{__('Active', 'betterlinks')}</option>
-													<option value="expired">{__('Expired', 'betterlinks')}</option>
-													<option value="draft">{__('Draft', 'betterlinks')}</option>
-												</select>
+												<Select2
+													name="rightBoundary"
+													options={[
+														{ value: 'chocolate', label: 'Chocolate' },
+														{ value: 'strawberry', label: 'Strawberry' },
+														{ value: 'vanilla', label: 'Vanilla' },
+													]}
+													onChange={(option) => {
+														props.setFieldValue('rightBoundary', option);
+													}}
+												/>
 											</div>
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="status">
 													{__('Keyword Before', 'betterlinks')}
 												</label>
-												<input type="text" value="example-1.com" />
+												<Field type="text" name="keywordBefore" />
 											</div>
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="status">
 													{__('Keyword After', 'betterlinks')}
 												</label>
-												<input type="text" value="example-1.com" />
+												<Field type="text" name="keywordAfter" />
 											</div>
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="status">
 													{__('Limit', 'betterlinks')}
 												</label>
-												<input type="number" value="example-1.com" />
+												<Field type="number" name="limit" />
 											</div>
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="status">
 													{__('Priority', 'betterlinks')}
 												</label>
-												<input type="number" value="example-1.com" />
+												<Field type="number" name="priority" />
 											</div>
 										</div>
 									</div>
