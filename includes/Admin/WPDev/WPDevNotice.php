@@ -483,7 +483,7 @@ class WPDevNotice
     }
     /**
      * Detect which notice will show @ next.
-     * @return void
+     * @return array
      */
     protected function next_notice()
     {
@@ -501,7 +501,7 @@ class WPDevNotice
             ksort($return_notice);
         }
 
-        return $return_notice;
+        return (array) $return_notice;
     }
     /**
      * Which notice is deserve to show in next slot.
