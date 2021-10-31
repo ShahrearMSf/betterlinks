@@ -209,15 +209,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
 										<Field type="checkbox" className="btl-check" name="is_random_string" />
-										<span className="text"></span>
+										<span className="text">
+											{__('Enable Random URL Slug', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will randomly generate strings for your shortened URL', 'betterlinks')}</span>
+											</div>
+										</span>
 									</label>
-									<div className="short-description">
-										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-										{__('This will randomly generate strings for your shortened URL eg.', 'betterlinks')}
-										{site_url}
-										{props.values.prefix && <>/{props.values.prefix}</>}
-										<strong>{__('/x12yaz', 'betterlinks')}</strong>
-									</div>
 								</div>
 							</span>
 
