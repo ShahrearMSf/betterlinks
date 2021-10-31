@@ -9,7 +9,7 @@ import { modalCustomStyles } from './../../utils/helper';
 const propTypes = {};
 
 const defaultProps = {};
-export default function AddNewKeywords(props) {
+export default function AddNewKeywords({ addNewKeywordHandler }) {
 	const [modalIsOpen, setIsOpen] = React.useState(false);
 	const [isOpenLinkPanel, setOpenLinkPanel] = useState({
 		html: true,
@@ -35,7 +35,7 @@ export default function AddNewKeywords(props) {
 		<React.Fragment>
 			<div className="btl-create-autolinks">
 				<button className="btl-create-autolink-button" onClick={openModal}>
-					Add New Keywords
+					{__('Add New Keywords', 'betterlinks')}
 				</button>
 			</div>
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -61,10 +61,8 @@ export default function AddNewKeywords(props) {
 						priority: '',
 					}}
 					onSubmit={(values, actions) => {
-						setTimeout(() => {
-							console.log(values);
-							actions.setSubmitting(false);
-						}, 1000);
+						addNewKeywordHandler(values);
+						actions.setSubmitting(false);
 					}}
 				>
 					{(props) => (
@@ -86,7 +84,13 @@ export default function AddNewKeywords(props) {
 												{ value: 'vanilla', label: 'Vanilla' },
 											]}
 											onChange={(option) => {
-												props.setFieldValue('keywords', option);
+												props.setFieldValue(
+													'keywords',
+													option.reduce((acc, item) => {
+														acc.push(item.value);
+														return acc;
+													}, [])
+												);
 											}}
 										/>
 									</div>
@@ -104,7 +108,7 @@ export default function AddNewKeywords(props) {
 												{ value: 'vanilla', label: 'Vanilla' },
 											]}
 											onChange={(option) => {
-												props.setFieldValue('chooseLink', option);
+												props.setFieldValue('chooseLink', option.value);
 											}}
 										/>
 									</div>
@@ -113,6 +117,7 @@ export default function AddNewKeywords(props) {
 											{__('Post Type', 'betterlinks')}
 										</label>
 										<Select2
+											isMulti
 											name="postType"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
@@ -122,7 +127,13 @@ export default function AddNewKeywords(props) {
 												{ value: 'vanilla', label: 'Vanilla' },
 											]}
 											onChange={(option) => {
-												props.setFieldValue('postType', option);
+												props.setFieldValue(
+													'postType',
+													option.reduce((acc, item) => {
+														acc.push(item.value);
+														return acc;
+													}, [])
+												);
 											}}
 										/>
 									</div>
@@ -131,6 +142,7 @@ export default function AddNewKeywords(props) {
 											{__('Category', 'betterlinks')}
 										</label>
 										<Select2
+											isMulti
 											name="category"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
@@ -140,7 +152,13 @@ export default function AddNewKeywords(props) {
 												{ value: 'vanilla', label: 'Vanilla' },
 											]}
 											onChange={(option) => {
-												props.setFieldValue('category', option);
+												props.setFieldValue(
+													'category',
+													option.reduce((acc, item) => {
+														acc.push(item.value);
+														return acc;
+													}, [])
+												);
 											}}
 										/>
 									</div>
@@ -159,7 +177,13 @@ export default function AddNewKeywords(props) {
 												{ value: 'vanilla', label: 'Vanilla' },
 											]}
 											onChange={(option) => {
-												props.setFieldValue('tags', option);
+												props.setFieldValue(
+													'tags',
+													option.reduce((acc, item) => {
+														acc.push(item.value);
+														return acc;
+													}, [])
+												);
 											}}
 										/>
 									</div>
@@ -177,14 +201,14 @@ export default function AddNewKeywords(props) {
 												{ value: 'vanilla', label: 'Vanilla' },
 											]}
 											onChange={(option) => {
-												props.setFieldValue('termGroup', option);
+												props.setFieldValue('termGroup', option.value);
 											}}
 										/>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label"></label>
 										<button type="submit" className="btl-modal-submit-button">
-											Publish
+											{__('Publish', 'betterlinks')}
 										</button>
 									</div>
 								</div>
@@ -214,10 +238,11 @@ export default function AddNewKeywords(props) {
 										</button>
 										<div className="link-options__body">
 											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="status">
+												<label className="btl-modal-form-label" htmlFor="leftBoundary">
 													{__('Left Boundary', 'betterlinks')}
 												</label>
 												<Select2
+													id="leftBoundary"
 													name="leftBoundary"
 													className="btl-modal-select--mini"
 													classNamePrefix="btl-react-select"
@@ -227,15 +252,16 @@ export default function AddNewKeywords(props) {
 														{ value: 'vanilla', label: 'Vanilla' },
 													]}
 													onChange={(option) => {
-														props.setFieldValue('leftBoundary', option);
+														props.setFieldValue('leftBoundary', option.value);
 													}}
 												/>
 											</div>
 											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="status">
+												<label className="btl-modal-form-label" htmlFor="rightBoundary">
 													{__('Right Boundary', 'betterlinks')}
 												</label>
 												<Select2
+													id="rightBoundary"
 													name="rightBoundary"
 													className="btl-modal-select--mini"
 													classNamePrefix="btl-react-select"
@@ -245,33 +271,33 @@ export default function AddNewKeywords(props) {
 														{ value: 'vanilla', label: 'Vanilla' },
 													]}
 													onChange={(option) => {
-														props.setFieldValue('rightBoundary', option);
+														props.setFieldValue('rightBoundary', option.value);
 													}}
 												/>
 											</div>
 											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="status">
+												<label className="btl-modal-form-label" htmlFor="keywordBefore">
 													{__('Keyword Before', 'betterlinks')}
 												</label>
-												<Field type="text" name="keywordBefore" />
+												<Field id="keywordBefore" type="text" name="keywordBefore" />
 											</div>
 											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="status">
+												<label className="btl-modal-form-label" htmlFor="keywordAfter">
 													{__('Keyword After', 'betterlinks')}
 												</label>
-												<Field type="text" name="keywordAfter" />
+												<Field id="keywordAfter" type="text" name="keywordAfter" />
 											</div>
 											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="status">
+												<label className="btl-modal-form-label" htmlFor="limit">
 													{__('Limit', 'betterlinks')}
 												</label>
-												<Field type="number" name="limit" />
+												<Field id="limit" type="number" name="limit" />
 											</div>
 											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="status">
+												<label className="btl-modal-form-label" htmlFor="priority">
 													{__('Priority', 'betterlinks')}
 												</label>
-												<Field type="number" name="priority" />
+												<Field id="priority" type="number" name="priority" />
 											</div>
 										</div>
 									</div>
