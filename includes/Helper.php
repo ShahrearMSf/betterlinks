@@ -355,4 +355,17 @@ class Helper
         }
         return update_option('betterlinks_analytics_data', json_encode($results));
     }
+
+    public static function maybe_json($data)
+    {
+        if (is_array($data) || is_object($data)) {
+            return wp_json_encode($data);
+        }
+    
+        if (is_string($data)) {
+            return sanitize_text_field($data);
+        }
+    
+        return $data;
+    }
 }
