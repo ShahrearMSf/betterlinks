@@ -9,7 +9,7 @@ import { modalCustomStyles } from './../../utils/helper';
 const propTypes = {};
 
 const defaultProps = {};
-export default function AddNewKeywords({ addNewKeywordHandler }) {
+export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 	const [modalIsOpen, setIsOpen] = React.useState(false);
 	const [isOpenLinkPanel, setOpenLinkPanel] = useState({
 		html: true,
@@ -38,6 +38,7 @@ export default function AddNewKeywords({ addNewKeywordHandler }) {
 					{__('Add New Keywords', 'betterlinks')}
 				</button>
 			</div>
+			{console.log({ links })}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
@@ -102,11 +103,7 @@ export default function AddNewKeywords({ addNewKeywordHandler }) {
 											name="chooseLink"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
-											options={[
-												{ value: 'chocolate', label: 'Chocolate' },
-												{ value: 'strawberry', label: 'Strawberry' },
-												{ value: 'vanilla', label: 'Vanilla' },
-											]}
+											options={links}
 											onChange={(option) => {
 												props.setFieldValue('chooseLink', option.value);
 											}}
