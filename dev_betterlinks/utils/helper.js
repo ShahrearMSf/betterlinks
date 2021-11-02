@@ -294,3 +294,23 @@ export const makeRequest = async (payload = {}) => {
 		}
 	);
 };
+
+export const getAutoLinksInitialValues = () => {
+	return {
+		keywords: '',
+		chooseLink: '',
+		postType: '',
+		category: '',
+		tags: '',
+		termGroup: '',
+		openNewTab: '',
+		useNoFollow: '',
+		caseSensitive: '',
+		leftBoundary: '',
+		rightBoundary: '',
+		keywordBefore: '',
+		keywordAfter: '',
+		limit: '',
+		priority: '',
+	};
+};

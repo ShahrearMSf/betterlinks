@@ -5,7 +5,10 @@ function keywords(state = {}, action) {
 		case FETCH_ALL_KEYWORDS:
 			return {
 				...state,
-				keywords: payload.data,
+				data: payload.data.reduce((acc, item) => {
+					acc.push(JSON.parse(item));
+					return acc;
+				}, []),
 			};
 		case GET_KEYWORD:
 			return {
@@ -18,10 +21,7 @@ function keywords(state = {}, action) {
 		case ADD_NEW_KEYWORD:
 			return {
 				...state,
-				keywords: {
-					...state.keywords,
-					payload,
-				},
+				data: [payload.data, ...state.data],
 			};
 		case UPDATE_KEYWORD:
 			return {

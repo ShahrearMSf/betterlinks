@@ -85,11 +85,11 @@ class Keywords extends Controller
      */
     public function get_items($request)
     {
+        $results = \BetterLinks\Helper::get_keywords();
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'cache' => true,
-                'data' => [],
+                'data' => $results,
             ],
             200
         );
@@ -115,7 +115,37 @@ class Keywords extends Controller
     public function create_item($request)
     {
         $request = $request->get_params();
-        error_log(print_r($request, true));
+        $data = \BetterLinks\Helper::sanitize_text_or_array_field($request['params']);
+        $params = $request['params'];
+        $data = [
+            'keywords' => \BetterLinks\Helper::sanitize_text_or_array_field($params['keywords']),
+            'link_id' => intval(sanitize_text_field($params['chooseLink'])),
+            'post_type' => \BetterLinks\Helper::sanitize_text_or_array_field($params['postType']),
+            'category' => \BetterLinks\Helper::sanitize_text_or_array_field($params['category']),
+            'tags' => \BetterLinks\Helper::sanitize_text_or_array_field($params['tags']),
+            'term_group' => sanitize_text_field($params['termGroup']),
+            'open_new_tab' => intval(sanitize_text_field($params['openNewTab'])),
+            'use_no_follow' => intval(sanitize_text_field($params['useNoFollow'])),
+            'case_sensitive' => intval(sanitize_text_field($params['caseSensitive'])),
+            'left_boundary' => sanitize_text_field($params['leftBoundary']),
+            'right_boundary' => sanitize_text_field($params['rightBoundary']),
+            'keyword_before' => sanitize_text_field($params['keywordBefore']),
+            'limit' => intval(sanitize_text_field($params['limit'])),
+            'priority' => intval(sanitize_text_field($params['priority'])),
+            'keyword_after' => sanitize_text_field($params['keywordAfter']),
+        ];
+        
+        $link_id = (isset($data['link_id']) ? $data['link_id'] : 0);
+        $is_insert = \BetterLinks\Helper::add_link_meta($link_id, 'keywords', $data);
+        if ($is_insert) {
+            return new \WP_REST_Response(
+                [
+                    'success' => true,
+                    'data' => $data,
+                ],
+                200
+            );
+        }
         return new \WP_REST_Response(
             [
                 'success' => false,

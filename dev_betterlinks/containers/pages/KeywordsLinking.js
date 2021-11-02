@@ -45,7 +45,7 @@ const KeywordsLinking = (props) => {
 					</>
 				)}
 			/>
-			<ListKeywords />
+			<ListKeywords links={getLinks(props.links)} keywords={props.keywords} />
 		</React.Fragment>
 	);
 };

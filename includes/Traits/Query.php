@@ -634,4 +634,15 @@ trait Query
         }
         return true;
     }
+
+    public static function get_keywords()
+    {
+        global $wpdb;
+        $results = $wpdb->get_results(
+            $wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}betterlinkmeta WHERE meta_key=%s", 'keywords'),
+            ARRAY_A
+        );
+        $results = array_column($results, 'meta_value');
+        return $results;
+    }
 }

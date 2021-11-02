@@ -4,7 +4,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import PropTypes from 'prop-types';
 import Select2 from 'react-select';
 import { __ } from '@wordpress/i18n';
-import { modalCustomStyles } from './../../utils/helper';
+import { modalCustomStyles, getAutoLinksInitialValues } from './../../utils/helper';
 
 const propTypes = {};
 
@@ -38,32 +38,16 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 					{__('Add New Keywords', 'betterlinks')}
 				</button>
 			</div>
-			{console.log({ links })}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={{
-						keywords: '',
-						chooseLink: '',
-						postType: '',
-						category: '',
-						tags: '',
-						termGroup: '',
-						openNewTab: '',
-						useNoFollow: '',
-						caseSensitive: '',
-						leftBoundary: '',
-						rightBoundary: '',
-						keywordBefore: '',
-						keywordBefore: '',
-						limit: '',
-						priority: '',
-					}}
+					initialValues={getAutoLinksInitialValues()}
 					onSubmit={(values, actions) => {
 						addNewKeywordHandler(values);
 						actions.setSubmitting(false);
+						closeModal();
 					}}
 				>
 					{(props) => (
@@ -71,10 +55,11 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 							<div className="btl-entry-content">
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="link_title">
+										<label className="btl-modal-form-label" htmlFor="keywords">
 											{__('Keyword', 'betterlinks')}
 										</label>
 										<Select2
+											id="keywords"
 											name="keywords"
 											isMulti
 											className="btl-modal-select--full"
