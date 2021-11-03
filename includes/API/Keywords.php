@@ -1,10 +1,11 @@
 <?php
 namespace BetterLinks\API;
 
-use Error;
+use BetterLinks\Traits\ArgumentSchema;
 
 class Keywords extends Controller
 {
+    use ArgumentSchema;
     
     /**
      * Initialize hooks and option name
@@ -25,7 +26,7 @@ class Keywords extends Controller
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
-                'args' => [],
+                'args' => $this->get_keywords_schema(),
             ],
         ]);
 
@@ -34,7 +35,7 @@ class Keywords extends Controller
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
-                'args' => [],
+                'args' => $this->get_keywords_schema(),
             ],
         ]);
 
@@ -52,13 +53,13 @@ class Keywords extends Controller
                     'methods'             => \WP_REST_Server::READABLE,
                     'callback'            => array( $this, 'get_item' ),
                     'permission_callback' => [$this, 'permissions_check'],
-                    'args'                => [],
+                    'args' => $this->get_keywords_schema(),
                 ),
                 array(
                     'methods'             => \WP_REST_Server::EDITABLE,
                     'callback'            => array( $this, 'update_item' ),
                     'permission_callback' => [$this, 'update_item_permissions_check'],
-                    'args'                => [],
+                    'args' => $this->get_keywords_schema(),
                 ),
                 array(
                     'methods'             => \WP_REST_Server::DELETABLE,
@@ -118,12 +119,11 @@ class Keywords extends Controller
         $data = \BetterLinks\Helper::sanitize_text_or_array_field($request['params']);
         $params = $request['params'];
         $data = [
-            'keywords' => \BetterLinks\Helper::sanitize_text_or_array_field($params['keywords']),
+            'keywords' => sanitize_text_field($params['keywords']),
             'link_id' => intval(sanitize_text_field($params['chooseLink'])),
             'post_type' => \BetterLinks\Helper::sanitize_text_or_array_field($params['postType']),
             'category' => \BetterLinks\Helper::sanitize_text_or_array_field($params['category']),
             'tags' => \BetterLinks\Helper::sanitize_text_or_array_field($params['tags']),
-            'term_group' => sanitize_text_field($params['termGroup']),
             'open_new_tab' => intval(sanitize_text_field($params['openNewTab'])),
             'use_no_follow' => intval(sanitize_text_field($params['useNoFollow'])),
             'case_sensitive' => intval(sanitize_text_field($params['caseSensitive'])),
