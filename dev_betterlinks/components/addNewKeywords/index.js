@@ -6,16 +6,31 @@ import Select2 from 'react-select';
 import { __ } from '@wordpress/i18n';
 import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from '../../utils/helper';
 
-const propTypes = {};
+const propTypes = {
+	links: PropTypes.array,
+	data: PropTypes.object,
+	addNewKeywordHandler: PropTypes.func,
+};
 
-const defaultProps = {};
-export default function AddNewKeywords({ links, addNewKeywordHandler }) {
+const defaultProps = {
+	links: [],
+	data: {},
+	addNewKeywordHandler: () => {},
+};
+export default function AddNewKeywords({ links, addNewKeywordHandler, data }) {
 	useEffect(() => {}, []);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
 	const [postTypes, setPostTypes] = useState([]);
 	const [postTags, setPostTags] = useState([]);
 	const [postCategories, setPostCategories] = useState([]);
+	const boundary = [
+		{ value: 'generic', label: 'Generic' },
+		{ value: 'whitespace', label: 'White Space' },
+		{ value: 'comma', label: 'Comma' },
+		{ value: 'point', label: 'Point' },
+		{ value: 'none', label: 'None' },
+	];
 
 	function openModal() {
 		setIsOpen(true);
@@ -68,7 +83,7 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 					<i className="btl btl-cancel"></i>
 				</span>
 				<Formik
-					initialValues={getAutoLinksInitialValues()}
+					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
 						addNewKeywordHandler(values);
 						actions.setSubmitting(false);
@@ -94,6 +109,7 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
 											options={links}
+											value={links.filter((item) => item.value == props.values.chooseLink)}
 											onChange={(option) => {
 												props.setFieldValue('chooseLink', option.value);
 											}}
@@ -109,6 +125,11 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
 											options={postTypes}
+											value={postTypes.filter((item) => {
+												if (props.values.postType.includes(item.value.toString())) {
+													return item;
+												}
+											})}
 											onChange={(option) => {
 												props.setFieldValue(
 													'postType',
@@ -130,6 +151,11 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
 											options={postCategories}
+											value={postCategories.filter((item) => {
+												if (props.values.category.includes(item.value.toString())) {
+													return item;
+												}
+											})}
 											onChange={(option) => {
 												props.setFieldValue(
 													'category',
@@ -151,6 +177,11 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
 											options={postTags}
+											value={postTags.filter((item) => {
+												if (props.values.tags.includes(item.value.toString())) {
+													return item;
+												}
+											})}
 											onChange={(option) => {
 												props.setFieldValue(
 													'tags',
@@ -203,11 +234,8 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 													name="leftBoundary"
 													className="btl-modal-select--mini"
 													classNamePrefix="btl-react-select"
-													options={[
-														{ value: 'chocolate', label: 'Chocolate' },
-														{ value: 'strawberry', label: 'Strawberry' },
-														{ value: 'vanilla', label: 'Vanilla' },
-													]}
+													options={boundary}
+													value={boundary.filter((item) => item.value == props.values.leftBoundary)}
 													onChange={(option) => {
 														props.setFieldValue('leftBoundary', option.value);
 													}}
@@ -222,11 +250,8 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 													name="rightBoundary"
 													className="btl-modal-select--mini"
 													classNamePrefix="btl-react-select"
-													options={[
-														{ value: 'chocolate', label: 'Chocolate' },
-														{ value: 'strawberry', label: 'Strawberry' },
-														{ value: 'vanilla', label: 'Vanilla' },
-													]}
+													options={boundary}
+													value={boundary.filter((item) => item.value == props.values.rightBoundary)}
 													onChange={(option) => {
 														props.setFieldValue('rightBoundary', option.value);
 													}}

@@ -29,7 +29,7 @@ const getLinksListViewColumnData = (links) => {
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
-			cell: (row) => <KeywordsQuickAction />,
+			cell: (row) => <KeywordsQuickAction links={links} data={row} />,
 		},
 	];
 };

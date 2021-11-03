@@ -295,7 +295,25 @@ export const makeRequest = async (payload = {}) => {
 	);
 };
 
-export const getAutoLinksInitialValues = () => {
+export const getAutoLinksInitialValues = (data) => {
+	if (Object.keys(data).length) {
+		return {
+			keywords: data.keywords,
+			chooseLink: data.link_id,
+			postType: data.post_type,
+			category: data.category,
+			tags: data.tags,
+			openNewTab: data.open_new_tab,
+			useNoFollow: data.use_no_follow,
+			caseSensitive: data.case_sensitive,
+			leftBoundary: data.left_boundary,
+			rightBoundary: data.right_boundary,
+			keywordBefore: data.keyword_before,
+			keywordAfter: data.keyword_after,
+			limit: data.limit,
+			priority: data.priority,
+		};
+	}
 	return {
 		keywords: '',
 		chooseLink: '',

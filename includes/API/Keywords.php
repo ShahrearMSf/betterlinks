@@ -121,9 +121,9 @@ class Keywords extends Controller
         $data = [
             'keywords' => sanitize_text_field($params['keywords']),
             'link_id' => intval(sanitize_text_field($params['chooseLink'])),
-            'post_type' => \BetterLinks\Helper::sanitize_text_or_array_field($params['postType']),
-            'category' => \BetterLinks\Helper::sanitize_text_or_array_field($params['category']),
-            'tags' => \BetterLinks\Helper::sanitize_text_or_array_field($params['tags']),
+            'post_type' => array_map('sanitize_text_field', $params['postType']),
+            'category' => array_map('sanitize_text_field', $params['category']),
+            'tags' => array_map('sanitize_text_field', $params['tags']),
             'open_new_tab' => intval(sanitize_text_field($params['openNewTab'])),
             'use_no_follow' => intval(sanitize_text_field($params['useNoFollow'])),
             'case_sensitive' => intval(sanitize_text_field($params['caseSensitive'])),
