@@ -1,31 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import PropTypes from 'prop-types';
 import Select2 from 'react-select';
 import { __ } from '@wordpress/i18n';
-import { modalCustomStyles, getAutoLinksInitialValues } from './../../utils/helper';
+import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from '../../utils/helper';
 
 const propTypes = {};
 
 const defaultProps = {};
 export default function AddNewKeywords({ links, addNewKeywordHandler }) {
-	const [modalIsOpen, setIsOpen] = React.useState(false);
-	const [isOpenLinkPanel, setOpenLinkPanel] = useState({
-		html: true,
-		advanced: false,
-	});
-
-	const togglePanel = (type) => {
-		setOpenLinkPanel({
-			html: false,
-			advanced: false,
-			[type]: !isOpenLinkPanel[type],
-		});
-	};
+	useEffect(() => {}, []);
+	const [modalIsOpen, setIsOpen] = useState(false);
+	const [openPanelType, setOpenPanelType] = useState('HTML');
+	const [postTypes, setPostTypes] = useState([]);
+	const [postTags, setPostTags] = useState([]);
+	const [postCategories, setPostCategories] = useState([]);
 
 	function openModal() {
 		setIsOpen(true);
+		// get post type info
+		makeRequest({
+			action: 'betterlinks/admin/get_post_types',
+		}).then((response) => {
+			if (response.data && response.data.data) {
+				const data = Object.entries(response.data.data).reduce((acc, item) => {
+					acc.push({ label: item[1], value: item[0] });
+					return acc;
+				}, []);
+				setPostTypes(data);
+			}
+		});
+		makeRequest({
+			action: 'betterlinks/admin/get_post_tags',
+		}).then((response) => {
+			if (response.data && response.data.data) {
+				const data = Object.entries(response.data.data).reduce((acc, item) => {
+					acc.push({ label: item[1], value: item[0] });
+					return acc;
+				}, []);
+				setPostTags(data);
+			}
+		});
+		makeRequest({
+			action: 'betterlinks/admin/get_post_categories',
+		}).then((response) => {
+			const data = Object.entries(response.data.data).reduce((acc, item) => {
+				acc.push({ label: item[1], value: item[0] });
+				return acc;
+			}, []);
+			setPostCategories(data);
+		});
 	}
 
 	function closeModal() {
@@ -56,29 +81,9 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="keywords">
-											{__('Keyword', 'betterlinks')}
+											{__('Keywords', 'betterlinks')}
 										</label>
-										<Select2
-											id="keywords"
-											name="keywords"
-											isMulti
-											className="btl-modal-select--full"
-											classNamePrefix="btl-react-select"
-											options={[
-												{ value: 'chocolate', label: 'Chocolate' },
-												{ value: 'strawberry', label: 'Strawberry' },
-												{ value: 'vanilla', label: 'Vanilla' },
-											]}
-											onChange={(option) => {
-												props.setFieldValue(
-													'keywords',
-													option.reduce((acc, item) => {
-														acc.push(item.value);
-														return acc;
-													}, [])
-												);
-											}}
-										/>
+										<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
@@ -103,11 +108,7 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											name="postType"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
-											options={[
-												{ value: 'chocolate', label: 'Chocolate' },
-												{ value: 'strawberry', label: 'Strawberry' },
-												{ value: 'vanilla', label: 'Vanilla' },
-											]}
+											options={postTypes}
 											onChange={(option) => {
 												props.setFieldValue(
 													'postType',
@@ -128,11 +129,7 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											name="category"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
-											options={[
-												{ value: 'chocolate', label: 'Chocolate' },
-												{ value: 'strawberry', label: 'Strawberry' },
-												{ value: 'vanilla', label: 'Vanilla' },
-											]}
+											options={postCategories}
 											onChange={(option) => {
 												props.setFieldValue(
 													'category',
@@ -153,11 +150,7 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											isMulti
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
-											options={[
-												{ value: 'chocolate', label: 'Chocolate' },
-												{ value: 'strawberry', label: 'Strawberry' },
-												{ value: 'vanilla', label: 'Vanilla' },
-											]}
+											options={postTags}
 											onChange={(option) => {
 												props.setFieldValue(
 													'tags',
@@ -170,24 +163,6 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 										/>
 									</div>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="link_title">
-											{__('Term Group', 'betterlinks')}
-										</label>
-										<Select2
-											name="termGroup"
-											className="btl-modal-select--full"
-											classNamePrefix="btl-react-select"
-											options={[
-												{ value: 'chocolate', label: 'Chocolate' },
-												{ value: 'strawberry', label: 'Strawberry' },
-												{ value: 'vanilla', label: 'Vanilla' },
-											]}
-											onChange={(option) => {
-												props.setFieldValue('termGroup', option.value);
-											}}
-										/>
-									</div>
-									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label"></label>
 										<button type="submit" className="btl-modal-submit-button">
 											{__('Publish', 'betterlinks')}
@@ -195,8 +170,8 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 									</div>
 								</div>
 								<div className="btl-entry-content-right">
-									<div className={`link-options ${isOpenLinkPanel.html ? 'link-options--open' : ''}`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('html')}>
+									<div className={`link-options ${openPanelType === 'HTML' ? 'link-options--open' : ''}`}>
+										<button className="link-options__head" type="button" onClick={() => setOpenPanelType(openPanelType == 'HTML' ? 'ADVANCED' : 'HTML')}>
 											<h4 className="link-options__head--title">{__('HTML', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
@@ -214,8 +189,8 @@ export default function AddNewKeywords({ links, addNewKeywordHandler }) {
 											</label>
 										</div>
 									</div>
-									<div className={`link-options ${isOpenLinkPanel.advanced ? 'link-options--open' : ''} link-options--advance-keyword`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
+									<div className={`link-options ${openPanelType === 'ADVANCED' ? 'link-options--open' : ''} link-options--advance-keyword`}>
+										<button className="link-options__head" type="button" onClick={() => setOpenPanelType(openPanelType === 'ADVANCED' ? 'HTML' : 'ADVANCED')}>
 											<h4 className="link-options__head--title">{__('Advance Match', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">

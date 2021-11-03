@@ -3,6 +3,7 @@
 namespace BetterLinks\Admin;
 
 use BetterLinks\Cron;
+use Error;
 
 class Ajax
 {
@@ -48,6 +49,10 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
         add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
         add_action('wp_ajax_betterlinks/admin/fetch_analytics', [$this, 'fetch_analytics']);
+        // post type, tags, categories
+        add_action('wp_ajax_betterlinks/admin/get_post_types', [$this, 'get_post_types']);
+        add_action('wp_ajax_betterlinks/admin/get_post_tags', [$this, 'get_post_tags']);
+        add_action('wp_ajax_betterlinks/admin/get_post_categories', [$this, 'get_post_categories']);
     }
 
     public function get_prettylinks_data()
@@ -587,6 +592,37 @@ class Ajax
         }
         wp_send_json_success(
             $results,
+            200
+        );
+        wp_die();
+    }
+    public function get_post_types()
+    {
+        $post_types = get_post_types(array('public' => true));
+        wp_send_json_success(
+            $post_types,
+            200
+        );
+        wp_die();
+    }
+    public function get_post_tags()
+    {
+        $tags = get_tags(array('get'=>'all'));
+        $tags = wp_list_pluck($tags, 'name', 'term_id');
+        wp_send_json_success(
+            $tags,
+            200
+        );
+        wp_die();
+    }
+    public function get_post_categories()
+    {
+        $categories = get_categories(array(
+            'orderby' => 'name'
+        ));
+        $categories = wp_list_pluck($categories, 'name', 'term_id');
+        wp_send_json_success(
+            $categories,
             200
         );
         wp_die();

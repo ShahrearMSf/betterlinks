@@ -302,7 +302,6 @@ export const getAutoLinksInitialValues = () => {
 		postType: '',
 		category: '',
 		tags: '',
-		termGroup: '',
 		openNewTab: '',
 		useNoFollow: '',
 		caseSensitive: '',
