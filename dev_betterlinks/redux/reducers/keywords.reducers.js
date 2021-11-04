@@ -10,14 +10,6 @@ function keywords(state = {}, action) {
 					return acc;
 				}, []),
 			};
-		case GET_KEYWORD:
-			return {
-				...state,
-				keywords: {
-					...state.keywords,
-					payload,
-				},
-			};
 		case ADD_NEW_KEYWORD:
 			return {
 				...state,
@@ -26,15 +18,12 @@ function keywords(state = {}, action) {
 		case UPDATE_KEYWORD:
 			return {
 				...state,
-				keywords: {
-					...state.links,
-					payload,
-				},
+				data: [payload.data, ...state.data],
 			};
 		case DELETE_KEYWORD:
 			return {
 				...state,
-				keywords: {
+				data: {
 					...state.links,
 					payload,
 				},

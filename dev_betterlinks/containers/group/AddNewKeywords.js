@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import PropTypes from 'prop-types';
 import Select2 from 'react-select';
 import { __ } from '@wordpress/i18n';
-import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from '../../utils/helper';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import ActionButton from './../../components/ActionButton';
+import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from './../../utils/helper';
+import { add_keyword, update_keyword } from './../../redux/actions/keywords.actions';
 
 const propTypes = {
 	links: PropTypes.array,
 	data: PropTypes.object,
-	addNewKeywordHandler: PropTypes.func,
 };
 
 const defaultProps = {
 	links: [],
 	data: {},
-	addNewKeywordHandler: () => {},
 };
-export default function AddNewKeywords({ links, addNewKeywordHandler, data }) {
+const AddNewKeywords = ({ links, data, add_keyword, update_keyword }) => {
 	useEffect(() => {}, []);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
@@ -73,11 +75,15 @@ export default function AddNewKeywords({ links, addNewKeywordHandler, data }) {
 	}
 	return (
 		<React.Fragment>
-			<div className="btl-create-autolinks">
-				<button className="btl-create-autolink-button" onClick={openModal}>
-					{__('Add New Keywords', 'betterlinks')}
-				</button>
-			</div>
+			{Object.keys(data).length > 0 ? (
+				<ActionButton type="edit" label={__('Edit Keyword', 'betterlinks')} onClickHandler={openModal} />
+			) : (
+				<div className="btl-create-autolinks">
+					<button className="btl-create-autolink-button" onClick={openModal}>
+						{__('Add New Keywords', 'betterlinks')}
+					</button>
+				</div>
+			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
@@ -85,7 +91,11 @@ export default function AddNewKeywords({ links, addNewKeywordHandler, data }) {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
-						addNewKeywordHandler(values);
+						if (Object.keys(data).length > 0) {
+							update_keyword(values);
+						} else {
+							add_keyword(values);
+						}
 						actions.setSubmitting(false);
 						closeModal();
 					}}
@@ -291,7 +301,15 @@ export default function AddNewKeywords({ links, addNewKeywordHandler, data }) {
 			</Modal>
 		</React.Fragment>
 	);
-}
+};
 
 AddNewKeywords.propTypes = propTypes;
 AddNewKeywords.defaultProps = defaultProps;
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		add_keyword: bindActionCreators(add_keyword, dispatch),
+		update_keyword: bindActionCreators(update_keyword, dispatch),
+	};
+};
+export default connect(null, mapDispatchToProps)(AddNewKeywords);

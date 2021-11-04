@@ -4,18 +4,20 @@ import PropTypes from 'prop-types';
 const propTypes = {
 	type: PropTypes.string,
 	label: PropTypes.string,
+	onClickHandler: PropTypes.func,
 };
 
 const defaultProps = {
 	type: '',
 	label: '',
+	onClickHandler: () => {},
 };
 
-export default function ActionButton({ type, label }) {
+export default function ActionButton({ type, label, onClickHandler }) {
 	return (
 		<React.Fragment>
 			<div className="btl-tooltip">
-				<button className="dnd-link-button ">
+				<button className="dnd-link-button" onClick={onClickHandler}>
 					<span className="icon">
 						<i className={`btl btl-${type}`}></i>
 					</span>

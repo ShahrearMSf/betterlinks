@@ -15,16 +15,7 @@ export const fetch_keywords = () => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/get_all_keywords',
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: FETCH_ALL_KEYWORDS,
-					payload: response.data.data,
-				});
-			}
-		});
+		console.log(e);
 	}
 };
 export const get_keyword = (item) => async (dispatch) => {
@@ -37,21 +28,10 @@ export const get_keyword = (item) => async (dispatch) => {
 			payload: item,
 		});
 	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/get_keyword',
-			...item,
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: GET_KEYWORD,
-					payload: response.data.data,
-				});
-			}
-		});
+		console.log(e);
 	}
 };
-export const add_new_keyword = (formData) => async (dispatch) => {
-	console.log({ formData });
+export const add_keyword = (formData) => async (dispatch) => {
 	try {
 		const res = await API.post(namespace + 'keywords', {
 			params: formData,
@@ -63,17 +43,23 @@ export const add_new_keyword = (formData) => async (dispatch) => {
 			});
 		}
 	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/create_keyword',
-			...formData,
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: ADD_NEW_KEYWORD,
-					payload: response.data,
-				});
-			}
+		console.log(e);
+	}
+};
+
+export const update_keyword = (formData) => async (dispatch) => {
+	try {
+		const res = await API.post(namespace + 'keywords/' + formData.chooseLink, {
+			params: formData,
 		});
+		if (res.data.success) {
+			dispatch({
+				type: UPDATE_KEYWORD,
+				payload: res.data,
+			});
+		}
+	} catch (e) {
+		console.log(e);
 	}
 };
 

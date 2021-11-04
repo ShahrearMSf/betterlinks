@@ -3,10 +3,10 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_links_data } from './../../redux/actions/links.actions';
-import { fetch_keywords, add_new_keyword } from './../../redux/actions/keywords.actions';
+import { fetch_keywords } from './../../redux/actions/keywords.actions';
 import Topbar from './../group/TopBar';
 import ListKeywords from './../group/ListKeywords';
-import AddNewKeywords from '../../components/AddNewKeywords';
+import AddNewKeywords from './../group/AddNewKeywords';
 import PropTypes from 'prop-types';
 
 const propTypes = {};
@@ -41,7 +41,7 @@ const KeywordsLinking = (props) => {
 				label={__('Keywords Linking', 'betterlinks')}
 				render={() => (
 					<>
-						<AddNewKeywords links={getLinks(props.links)} addNewKeywordHandler={props.add_new_keyword} />
+						<AddNewKeywords links={getLinks(props.links)} />
 					</>
 				)}
 			/>
@@ -61,7 +61,6 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_keywords: bindActionCreators(fetch_keywords, dispatch),
 		fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
-		add_new_keyword: bindActionCreators(add_new_keyword, dispatch),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(KeywordsLinking);
