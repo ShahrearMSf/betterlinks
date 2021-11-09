@@ -11,21 +11,20 @@ import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from './../
 import { add_keyword, update_keyword } from './../../redux/actions/keywords.actions';
 
 const propTypes = {
-	links: PropTypes.array,
 	data: PropTypes.object,
 };
 
 const defaultProps = {
-	links: [],
 	data: {},
 };
-const AddNewKeywords = ({ links, data, add_keyword, update_keyword }) => {
-	useEffect(() => {}, []);
+const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
+	const [links, setLinks] = useState([]);
 	const [postTypes, setPostTypes] = useState([]);
 	const [postTags, setPostTags] = useState([]);
 	const [postCategories, setPostCategories] = useState([]);
+	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
 	const boundary = [
 		{ value: 'generic', label: 'Generic' },
 		{ value: 'whitespace', label: 'White Space' },
@@ -36,6 +35,28 @@ const AddNewKeywords = ({ links, data, add_keyword, update_keyword }) => {
 
 	function openModal() {
 		setIsOpen(true);
+		// links
+		makeRequest({
+			action: 'betterlinks/admin/get_links_by_exclude_keywords',
+		}).then((response) => {
+			if (response.data.success && response.data.data.length > 0) {
+				setLinks(
+					response.data.data.reduce((acc, item) => {
+						acc.push({ label: item.link_title, value: item.ID });
+						return acc;
+					}, [])
+				);
+			}
+		});
+		makeRequest({
+			action: 'betterlinks/admin/get_keyword_saved_link',
+			link_id: data.link_id,
+		}).then((response) => {
+			if (response.data.success) {
+				const link = response.data.data[0];
+				setChooseAbleSavedLink({ label: link.link_title, value: link.ID });
+			}
+		});
 		// get post type info
 		makeRequest({
 			action: 'betterlinks/admin/get_post_types',
@@ -119,7 +140,7 @@ const AddNewKeywords = ({ links, data, add_keyword, update_keyword }) => {
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
 											options={links}
-											value={links.filter((item) => item.value == props.values.chooseLink)}
+											value={chooseAbleSavedLink}
 											onChange={(option) => {
 												props.setFieldValue('chooseLink', option.value);
 											}}

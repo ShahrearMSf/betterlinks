@@ -23,6 +23,9 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
         add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
         add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
+        // keywords
+        add_action('wp_ajax_betterlinks/admin/get_links_by_exclude_keywords', [$this, 'get_links_by_exclude_keywords']);
+        add_action('wp_ajax_betterlinks/admin/get_keyword_saved_link', [$this, 'get_keyword_saved_link']);
         // prettylinks
         add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
         add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
@@ -195,6 +198,31 @@ class Ajax
             }
         }
         wp_send_json_success($alreadyExists);
+        wp_die();
+    }
+    public function get_links_by_exclude_keywords()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        $results = \BetterLinks\Helper::get_links_by_exclude_keywords();
+        wp_send_json_success($results);
+        wp_die();
+    }
+    public function get_keyword_saved_link()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! current_user_can('manage_options')) {
+            wp_die();
+        }
+        $link_id = (isset($_POST['link_id']) ? intval(sanitize_text_field($_POST['link_id'])) : 0);
+        if ($link_id > 0) {
+            $link = \BetterLinks\Helper::get_link_by_ID($link_id);
+            wp_send_json_success($link);
+            wp_die();
+        }
+        wp_send_json_error(null);
         wp_die();
     }
     public function get_simple301redirects_data()

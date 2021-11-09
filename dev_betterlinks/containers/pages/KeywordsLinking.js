@@ -41,7 +41,7 @@ const KeywordsLinking = (props) => {
 				label={__('Keywords Linking', 'betterlinks')}
 				render={() => (
 					<>
-						<AddNewKeywords links={getLinks(props.links)} />
+						<AddNewKeywords />
 					</>
 				)}
 			/>
