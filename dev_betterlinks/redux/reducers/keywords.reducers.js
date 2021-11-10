@@ -23,10 +23,13 @@ function keywords(state = {}, action) {
 		case DELETE_KEYWORD:
 			return {
 				...state,
-				data: {
-					...state.links,
-					payload,
-				},
+				data: [
+					...state.data.filter((item) => {
+						if (item.link_id != payload.link_id) {
+							return item;
+						}
+					}),
+				],
 			};
 		default:
 			return state;

@@ -8,12 +8,12 @@ const propTypes = {};
 
 const defaultProps = {};
 
-export default function KeywordsQuickAction({ links, data }) {
+export default function KeywordsQuickAction({ links, data, deleteKeywordHandler }) {
 	return (
 		<React.Fragment>
 			<div className="btl-actions">
 				<AddNewKeywords links={links} data={data} />
-				<ActionButton type="delete" label={__('Delete Keyword', 'betterlinks')} />
+				<ActionButton onClickHandler={deleteKeywordHandler} type="delete" label={__('Delete Keyword', 'betterlinks')} />
 			</div>
 		</React.Fragment>
 	);

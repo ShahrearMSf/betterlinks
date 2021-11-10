@@ -179,10 +179,13 @@ class Keywords extends Controller
      */
     public function delete_item($request)
     {
+        $request = $request->get_params();
+        $id = (isset($request['id']) ? intval(sanitize_text_field($request['id'])) : 0);
+        error_log(print_r($request, true));
+        $is_delete = \BetterLinks\Helper::delete_link_meta($id, 'keywords');
         return new \WP_REST_Response(
             [
-                'success' => true,
-                'data' => [],
+                'success' => $is_delete,
             ],
             200
         );
@@ -193,9 +196,9 @@ class Keywords extends Controller
         return [
             'keywords' => (isset($params['keywords']) ? sanitize_text_field($params['keywords']) : ''),
             'link_id' => (isset($params['chooseLink']) ? intval(sanitize_text_field($params['chooseLink'])) : ''),
-            'post_type' => (isset($params['postType']) ? array_map('sanitize_text_field', $params['postType']) : ''),
-            'category' => (isset($params['category']) ? array_map('sanitize_text_field', $params['category']) : ''),
-            'tags' => (isset($params['tags']) ? array_map('sanitize_text_field', $params['tags']) : ''),
+            'post_type' => (isset($params['postType']) && !empty($params['postType']) ? array_map('sanitize_text_field', $params['postType']) : ''),
+            'category' => (isset($params['category']) && !empty($params['category']) ? array_map('sanitize_text_field', $params['category']) : ''),
+            'tags' => (isset($params['tags']) && !empty($params['tags']) ? array_map('sanitize_text_field', $params['tags']) : ''),
             'open_new_tab' => (isset($params['openNewTab']) ? intval(sanitize_text_field($params['openNewTab'])) : '') ,
             'use_no_follow' => (isset($params['useNoFollow']) ? intval(sanitize_text_field($params['useNoFollow'])) : '') ,
             'case_sensitive' => (isset($params['caseSensitive']) ? intval(sanitize_text_field($params['caseSensitive'])) : ''),

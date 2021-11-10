@@ -609,14 +609,14 @@ trait Query
         return true;
     }
 
-    public static function delete_link_meta($link_id, $meta_key, $meta_value)
+    public static function delete_link_meta($link_id, $meta_key, $meta_value = '')
     {
         global $wpdb;
         $table = $wpdb->prefix . 'betterlinkmeta';
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
-        $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s", $meta_key);
+        $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
         
         if (!empty($meta_value)) {
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
@@ -626,8 +626,7 @@ trait Query
         if (! count($meta_ids)) {
             return false;
         }
-
-        $query = "DELETE FROM $table WHERE $link_id IN( " . implode(',', $meta_ids) . ' )';
+        $query = "DELETE FROM $table WHERE link_id IN( " . implode(',', $meta_ids) . ' )';
         $count = $wpdb->query($query);
         if (! $count) {
             return false;

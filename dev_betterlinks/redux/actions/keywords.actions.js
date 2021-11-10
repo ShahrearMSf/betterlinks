@@ -63,25 +63,20 @@ export const update_keyword = (formData) => async (dispatch) => {
 	}
 };
 
-export const delete_keyword = (params) => async (dispatch) => {
-	let data = [];
-	if (Array.isArray(params)) {
-		data = params;
-	} else {
-		data = [params];
-	}
-	data.map((item) => {
-		const { ID, short_url, term_id } = item;
-		makeRequest({
-			action: 'betterlinks/admin/delete_keyword',
-			ID,
-			short_url,
-			term_id,
-		}).then((response) => {
-			if (response.data) {
+export const delete_keyword = (params) => (dispatch) => {
+	params.map((item) => {
+		const { link_id } = item;
+		API.delete(namespace + 'keywords/' + link_id, {
+			params: {
+				force: true,
+			},
+		}).then((res) => {
+			if (res.data.success) {
 				dispatch({
 					type: DELETE_KEYWORD,
-					payload: response.data,
+					payload: {
+						link_id,
+					},
 				});
 			}
 		});

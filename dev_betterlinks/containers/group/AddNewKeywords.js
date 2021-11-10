@@ -135,6 +135,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Choose Link', 'betterlinks')}
 										</label>
+										{console.log(props.values.chooseLink)}
 										<Select2
 											name="chooseLink"
 											className="btl-modal-select--full"
@@ -143,6 +144,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 											value={chooseAbleSavedLink}
 											onChange={(option) => {
 												props.setFieldValue('chooseLink', option.value);
+												setChooseAbleSavedLink(option);
 											}}
 										/>
 									</div>
