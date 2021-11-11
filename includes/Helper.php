@@ -368,4 +368,8 @@ class Helper
     
         return $data;
     }
+    public static function generate_short_url($short_url)
+    {
+        return site_url('/') . trim($short_url, '/');
+    }
 }
