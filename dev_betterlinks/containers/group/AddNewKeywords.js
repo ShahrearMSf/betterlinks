@@ -112,13 +112,15 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
-						if (Object.keys(data).length > 0) {
-							update_keyword(values);
-						} else {
-							add_keyword(values);
+						if (values.chooseLink) {
+							if (Object.keys(data).length > 0) {
+								update_keyword(values);
+							} else {
+								add_keyword(values);
+							}
+							actions.setSubmitting(false);
+							closeModal();
 						}
-						actions.setSubmitting(false);
-						closeModal();
 					}}
 				>
 					{(props) => (
@@ -129,13 +131,12 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 										<label className="btl-modal-form-label" htmlFor="keywords">
 											{__('Keywords', 'betterlinks')}
 										</label>
-										<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" />
+										<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Choose Link', 'betterlinks')}
 										</label>
-										{console.log(props.values.chooseLink)}
 										<Select2
 											name="chooseLink"
 											className="btl-modal-select--full"

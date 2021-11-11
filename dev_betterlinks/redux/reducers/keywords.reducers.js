@@ -18,7 +18,14 @@ function keywords(state = {}, action) {
 		case UPDATE_KEYWORD:
 			return {
 				...state,
-				data: [payload.data, ...state.data],
+				data: [
+					payload.data,
+					...state.data.filter((item) => {
+						if (item.link_id != payload.data.link_id) {
+							return item;
+						}
+					}),
+				],
 			};
 		case DELETE_KEYWORD:
 			return {
