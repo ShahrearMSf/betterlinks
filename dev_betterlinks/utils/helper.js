@@ -306,12 +306,9 @@ export const getAutoLinksInitialValues = (data) => {
 			openNewTab: data.open_new_tab,
 			useNoFollow: data.use_no_follow,
 			caseSensitive: data.case_sensitive,
-			leftBoundary: data.left_boundary,
-			rightBoundary: data.right_boundary,
 			keywordBefore: data.keyword_before,
 			keywordAfter: data.keyword_after,
 			limit: data.limit,
-			priority: data.priority,
 		};
 	}
 	return {
@@ -323,11 +320,8 @@ export const getAutoLinksInitialValues = (data) => {
 		openNewTab: '',
 		useNoFollow: '',
 		caseSensitive: '',
-		leftBoundary: '',
-		rightBoundary: '',
 		keywordBefore: '',
 		keywordAfter: '',
-		limit: '',
-		priority: '',
+		limit: 100,
 	};
 };

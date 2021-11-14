@@ -43,17 +43,21 @@ class AutoLinks
             $link = current(\BetterLinks\Helper::get_link_by_ID($item['link_id']));
             $short_url = \BetterLinks\Helper::generate_short_url($link['short_url']);
             $search_mode = 'iu';
-            if (isset($item['case_sensitive']) && $item['case_sensitive'] == true) {
+            if ($item['case_sensitive'] == true) {
                 $search_mode = 'u';
             }
             $attribute = $this->get_link_attributes($item);
 
+            $keyword_before = (!empty($item['keyword_before']) ? $item['keyword_before'] : '');
+            $keyword_after = (!empty($item['keyword_after']) ? $item['keyword_after'] : '');
+            $limit = (int) (!empty($item['limit']) ? $item['limit'] : 100);
+    
             // step 1: added placeholder
             $content = preg_replace_callback(
-                '/\b('.$tags.')\b/' . $search_mode,
+                '/\b('.$keyword_before.')('.$tags.')('.$keyword_after.')\b/' . $search_mode,
                 array($this, 'replace_keyword_by_placeholder'),
                 $content,
-                2
+                $limit
             );
             // step 2: replace placeholer to link
             $content = preg_replace('/(\[alk\])/iu', '<a href='.$short_url.' '.$attribute.'>', $content);
@@ -95,10 +99,10 @@ class AutoLinks
     public function get_link_attributes($item)
     {
         $attribute = '';
-        if (isset($item['open_new_tab']) && $item['open_new_tab'] == true) {
+        if ($item['open_new_tab'] == true) {
             $attribute .= ' target="_blank"';
         }
-        if (isset($item['use_no_follow']) && $item['use_no_follow'] == true) {
+        if ($item['use_no_follow'] == true) {
             $attribute .= ' rel="nofollow"';
         }
         return $attribute;
