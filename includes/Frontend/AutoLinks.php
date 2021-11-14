@@ -42,15 +42,21 @@ class AutoLinks
             $tags = str_replace(',', '|', $item['keywords']);
             $link = current(\BetterLinks\Helper::get_link_by_ID($item['link_id']));
             $short_url = \BetterLinks\Helper::generate_short_url($link['short_url']);
+            $search_mode = 'iu';
+            if (isset($item['case_sensitive']) && $item['case_sensitive'] == true) {
+                $search_mode = 'u';
+            }
+            $attribute = $this->get_link_attributes($item);
+
             // step 1: added placeholder
             $content = preg_replace_callback(
-                '/\b('.$tags.')\b/iu',
+                '/\b('.$tags.')\b/' . $search_mode,
                 array($this, 'replace_keyword_by_placeholder'),
                 $content,
                 2
             );
             // step 2: replace placeholer to link
-            $content = preg_replace('/(\[alk\])/iu', '<a href='.$short_url.'>', $content);
+            $content = preg_replace('/(\[alk\])/iu', '<a href='.$short_url.' '.$attribute.'>', $content);
             $content = preg_replace('/(\[\/alk\])/iu', "</a>", $content);
         }
         return $content;
@@ -85,5 +91,16 @@ class AutoLinks
         $string = preg_replace('/\s+/', '', $string);
         $string = preg_replace('/\,+/', '|', $string);
         return $string;
+    }
+    public function get_link_attributes($item)
+    {
+        $attribute = '';
+        if (isset($item['open_new_tab']) && $item['open_new_tab'] == true) {
+            $attribute .= ' target="_blank"';
+        }
+        if (isset($item['use_no_follow']) && $item['use_no_follow'] == true) {
+            $attribute .= ' rel="nofollow"';
+        }
+        return $attribute;
     }
 }

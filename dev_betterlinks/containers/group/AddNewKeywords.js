@@ -126,6 +126,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 					{(props) => (
 						<Form className="w-100" onSubmit={props.handleSubmit}>
 							<div className="btl-entry-content">
+								{console.log(props.values)}
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="keywords">
@@ -241,15 +242,15 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 										</button>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="openNewTab" type="checkbox" />
+												<Field className="btl-check" name="openNewTab" type="checkbox" onChange={() => props.setFieldValue('openNewTab', !props.values.openNewTab)} />
 												<span className="text">{__('Open New Tab', 'betterlinks')}</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="useNoFollow" type="checkbox" />
+												<Field className="btl-check" name="useNoFollow" type="checkbox" onChange={() => props.setFieldValue('useNoFollow', !props.values.useNoFollow)} />
 												<span className="text">{__('Use No Follow', 'betterlinks')}</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="caseSensitive" type="checkbox" />
+												<Field className="btl-check" name="caseSensitive" type="checkbox" onChange={() => props.setFieldValue('caseSensitive', !props.values.caseSensitive)} />
 												<span className="text">{__('Case Sensitive', 'betterlinks')}</span>
 											</label>
 										</div>
