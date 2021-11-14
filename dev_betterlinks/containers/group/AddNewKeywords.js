@@ -121,13 +121,13 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 							<div className="btl-entry-content">
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="keywords">
+										<label className="btl-modal-form-label btl-required" htmlFor="keywords">
 											{__('Keywords', 'betterlinks')}
 										</label>
 										<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
 									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="link_title">
+									<div className="btl-modal-form-group" style={{ position: 'relative' }}>
+										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Choose Link', 'betterlinks')}
 										</label>
 										<Select2
@@ -140,6 +140,20 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 												props.setFieldValue('chooseLink', option.value);
 												setChooseAbleSavedLink(option);
 											}}
+											required={true}
+										/>
+										<input
+											tabIndex={-1}
+											autoComplete="off"
+											style={{
+												opacity: 0,
+												width: '100%',
+												height: 0,
+												position: 'absolute',
+												top: '100%',
+											}}
+											value={chooseAbleSavedLink}
+											required={true}
 										/>
 									</div>
 									<div className="btl-modal-form-group">
