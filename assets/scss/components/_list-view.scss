@@ -1,5 +1,5 @@
 .btl-list-view {
-	.rdt_TableHeader{
+	.rdt_TableHeader {
 		display: none;
 	}
 	> header {
@@ -8,6 +8,7 @@
 		justify-content: space-between;
 		padding: 0;
 		flex-wrap: wrap;
+		min-height: auto;
 		.btl-links-filter,
 		.btl-bulk-actions {
 			display: flex;
@@ -288,7 +289,7 @@
 					}
 					&:nth-child(4),
 					&:nth-child(5) {
-					min-width: 70px;
+						min-width: 70px;
 					}
 					div {
 						font-size: 14px;

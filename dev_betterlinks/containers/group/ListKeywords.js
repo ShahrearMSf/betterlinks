@@ -61,7 +61,11 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 				const deleteKeywords = () => {
 					delete_keyword([{ link_id: row.link_id }]);
 				};
-				return <KeywordsQuickAction links={links} data={row} deleteKeywordHandler={deleteKeywords} />;
+				return (
+					<>
+						<KeywordsQuickAction links={links} data={row} deleteKeywordHandler={deleteKeywords} />
+					</>
+				);
 			},
 		},
 	];

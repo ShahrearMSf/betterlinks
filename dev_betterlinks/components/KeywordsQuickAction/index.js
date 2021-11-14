@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import AddNewKeywords from './../../containers/group/AddNewKeywords';
 import ActionButton from './../ActionButton';
@@ -9,11 +9,31 @@ const propTypes = {};
 const defaultProps = {};
 
 export default function KeywordsQuickAction({ links, data, deleteKeywordHandler }) {
+	const [isOpenDeleteBox, setIsOpenDeleteBox] = useState(false);
+	const openConfirmDialog = () => {
+		setIsOpenDeleteBox(true);
+	};
 	return (
 		<React.Fragment>
-			<div className="btl-actions">
-				<AddNewKeywords links={links} data={data} />
-				<ActionButton onClickHandler={deleteKeywordHandler} type="delete" label={__('Delete Keyword', 'betterlinks')} />
+			<div className="btl-list-view-action-wrapper">
+				{isOpenDeleteBox ? (
+					<div className="btl-confirm-message">
+						<span className="action-text">{__('Are You Sure?', 'betterlinks')}</span>
+						<div className="action-set">
+							<button className="action yes" onClick={() => deleteKeywordHandler()}>
+								{__('Yes', 'betterlinks')}
+							</button>
+							<button className="action no" onClick={() => setIsOpenDeleteBox(false)}>
+								{__('No', 'betterlinks')}
+							</button>
+						</div>
+					</div>
+				) : (
+					<>
+						<AddNewKeywords links={links} data={data} />
+						<ActionButton onClickHandler={openConfirmDialog} type="delete" label={__('Delete Keyword', 'betterlinks')} />
+					</>
+				)}
 			</div>
 		</React.Fragment>
 	);
