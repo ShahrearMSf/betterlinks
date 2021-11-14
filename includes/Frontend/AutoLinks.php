@@ -13,11 +13,32 @@ class AutoLinks
         if (! is_singular() || is_attachment() || is_feed()) {
             return $content;
         }
+        // post type
+        $ID = get_the_ID();
+        $post_type = get_post_type($ID);
+        $post_category = wp_get_post_terms($ID, 'category', array( 'fields' => 'names' ));
+        $post_tags = wp_get_post_terms($ID, 'post_tag', array( 'fields' => 'names' ));
+
+
         $keywords = $this->get_keywords();
         foreach ($keywords as $item) {
+            // check keyword and link id not empty
             if (empty($item['keywords']) && empty($item['link_id'])) {
                 continue;
             }
+            // check post type
+            if (!empty($item['post_type']) && !in_array($post_type, $item['post_type'])) {
+                continue;
+            }
+            // check category
+            if (!empty($item['category']) && count(array_intersect($post_category, $item['category'])) === 0) {
+                continue;
+            }
+            // check tags
+            if (!empty($item['tags']) && count(array_intersect($post_tags, $item['tags'])) === 0) {
+                continue;
+            }
+            
             $tags = str_replace(',', '|', $item['keywords']);
             $link = current(\BetterLinks\Helper::get_link_by_ID($item['link_id']));
             $short_url = \BetterLinks\Helper::generate_short_url($link['short_url']);

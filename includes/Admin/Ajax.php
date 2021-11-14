@@ -636,7 +636,7 @@ class Ajax
     public function get_post_tags()
     {
         $tags = get_tags(array('get'=>'all'));
-        $tags = wp_list_pluck($tags, 'name', 'term_id');
+        $tags = wp_list_pluck($tags, 'name', 'slug');
         wp_send_json_success(
             $tags,
             200
@@ -648,7 +648,7 @@ class Ajax
         $categories = get_categories(array(
             'orderby' => 'name'
         ));
-        $categories = wp_list_pluck($categories, 'name', 'term_id');
+        $categories = wp_list_pluck($categories, 'name', 'slug');
         wp_send_json_success(
             $categories,
             200
