@@ -25,6 +25,13 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 	const [postTags, setPostTags] = useState([]);
 	const [postCategories, setPostCategories] = useState([]);
 	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
+	const boundary = [
+		{ value: 'generic', label: 'Generic' },
+		{ value: 'whitespace', label: 'White Space' },
+		{ value: 'comma', label: 'Comma' },
+		{ value: 'point', label: 'Point' },
+		{ value: 'none', label: 'None' },
+	];
 
 	function openModal() {
 		setIsOpen(true);
@@ -266,6 +273,38 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 											<h4 className="link-options__head--title">{__('Advance Match', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
+											<div className="btl-modal-form-group">
+												<label className="btl-modal-form-label" htmlFor="leftBoundary">
+													{__('Left Boundary', 'betterlinks')}
+												</label>
+												<Select2
+													id="leftBoundary"
+													name="leftBoundary"
+													className="btl-modal-select--mini"
+													classNamePrefix="btl-react-select"
+													options={boundary}
+													value={boundary.filter((item) => item.value == props.values.leftBoundary)}
+													onChange={(option) => {
+														props.setFieldValue('leftBoundary', option.value);
+													}}
+												/>
+											</div>
+											<div className="btl-modal-form-group">
+												<label className="btl-modal-form-label" htmlFor="rightBoundary">
+													{__('Right Boundary', 'betterlinks')}
+												</label>
+												<Select2
+													id="rightBoundary"
+													name="rightBoundary"
+													className="btl-modal-select--mini"
+													classNamePrefix="btl-react-select"
+													options={boundary}
+													value={boundary.filter((item) => item.value == props.values.rightBoundary)}
+													onChange={(option) => {
+														props.setFieldValue('rightBoundary', option.value);
+													}}
+												/>
+											</div>
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="keywordBefore">
 													{__('Keyword Before', 'betterlinks')}

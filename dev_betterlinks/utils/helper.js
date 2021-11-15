@@ -308,6 +308,8 @@ export const getAutoLinksInitialValues = (data) => {
 			caseSensitive: data.case_sensitive,
 			keywordBefore: data.keyword_before,
 			keywordAfter: data.keyword_after,
+			leftBoundary: data.left_boundary,
+			rightBoundary: data.right_boundary,
 			limit: data.limit,
 		};
 	}
@@ -322,6 +324,8 @@ export const getAutoLinksInitialValues = (data) => {
 		caseSensitive: '',
 		keywordBefore: '',
 		keywordAfter: '',
+		leftBoundary: '',
+		rightBoundary: '',
 		limit: 100,
 	};
 };

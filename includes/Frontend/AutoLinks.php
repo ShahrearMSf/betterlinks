@@ -50,11 +50,13 @@ class AutoLinks
 
             $keyword_before = (!empty($item['keyword_before']) ? $item['keyword_before'] : '');
             $keyword_after = (!empty($item['keyword_after']) ? $item['keyword_after'] : '');
+            $left_boundary = (!empty($item['left_boundary']) ? $this->get_boundary($item['left_boundary']) : '');
+            $right_boundary = (!empty($item['right_boundary']) ? $this->get_boundary($item['right_boundary']) : '');
             $limit = (int) (!empty($item['limit']) ? $item['limit'] : 100);
-    
+
             // step 1: added placeholder
             $content = preg_replace_callback(
-                '/\b('.$keyword_before.')('.$tags.')('.$keyword_after.')\b/' . $search_mode,
+                '/\b('.$keyword_before.')('.$left_boundary.')('.$tags.')('.$right_boundary.')('.$keyword_after.')\b/' . $search_mode,
                 array($this, 'replace_keyword_by_placeholder'),
                 $content,
                 $limit
@@ -67,7 +69,7 @@ class AutoLinks
     }
     public function replace_keyword_by_placeholder($match)
     {
-        return '[alk]' . $match[0] . '[/alk]';
+        return $match[1] . $match[2] . '[alk]' . $match[3] . '[/alk]' . $match[4] . $match[5];
     }
 
     public function get_keywords()
@@ -95,6 +97,32 @@ class AutoLinks
         $string = preg_replace('/\s+/', '', $string);
         $string = preg_replace('/\,+/', '|', $string);
         return $string;
+    }
+    public function get_boundary($data)
+    {
+        $boundary = '';
+        switch ($data) {
+            case 'generic':
+                $boundary = '\b';
+                break;
+
+            case 'whitespace':
+                $boundary = '\b \b';
+                break;
+
+            case 'comma':
+                $boundary = ',';
+                break;
+
+            case 'point':
+                $boundary = '\.';
+                break;
+
+            case 'none':
+                $boundary = '';
+                break;
+        }
+        return $boundary;
     }
     public function get_link_attributes($item)
     {

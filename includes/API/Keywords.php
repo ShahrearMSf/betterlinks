@@ -181,7 +181,6 @@ class Keywords extends Controller
     {
         $request = $request->get_params();
         $id = (isset($request['id']) ? intval(sanitize_text_field($request['id'])) : 0);
-        error_log(print_r($request, true));
         $is_delete = \BetterLinks\Helper::delete_link_meta($id, 'keywords');
         return new \WP_REST_Response(
             [
