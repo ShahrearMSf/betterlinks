@@ -159,6 +159,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 												position: 'absolute',
 												top: '100%',
 											}}
+											onChange={() => {}}
 											value={chooseAbleSavedLink}
 											required={true}
 										/>
