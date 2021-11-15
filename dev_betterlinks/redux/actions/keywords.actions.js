@@ -15,7 +15,16 @@ export const fetch_keywords = () => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
-		console.log(e);
+		makeRequest({
+			action: 'betterlinks/admin/get_all_keywords',
+		}).then((response) => {
+			if (response.data) {
+				dispatch({
+					type: FETCH_ALL_KEYWORDS,
+					payload: response.data,
+				});
+			}
+		});
 	}
 };
 export const get_keyword = (item) => async (dispatch) => {
@@ -43,7 +52,17 @@ export const add_keyword = (formData) => async (dispatch) => {
 			});
 		}
 	} catch (e) {
-		console.log(e);
+		makeRequest({
+			action: 'betterlinks/admin/create_keyword',
+			...formData,
+		}).then((response) => {
+			if (response.data) {
+				dispatch({
+					type: ADD_NEW_KEYWORD,
+					payload: response.data,
+				});
+			}
+		});
 	}
 };
 
@@ -59,19 +78,28 @@ export const update_keyword = (formData) => async (dispatch) => {
 			});
 		}
 	} catch (e) {
-		console.log(e);
+		makeRequest({
+			action: 'betterlinks/admin/update_keyword',
+			...formData,
+		}).then((response) => {
+			if (response.data) {
+				dispatch({
+					type: UPDATE_KEYWORD,
+					payload: response.data,
+				});
+			}
+		});
 	}
 };
 
 export const delete_keyword = (params) => (dispatch) => {
 	params.map((item) => {
 		const { link_id } = item;
-		API.delete(namespace + 'keywords/' + link_id, {
-			params: {
-				force: true,
-			},
-		}).then((res) => {
-			if (res.data.success) {
+		makeRequest({
+			action: 'betterlinks/admin/delete_keyword',
+			id: link_id,
+		}).then((response) => {
+			if (response.data.success) {
 				dispatch({
 					type: DELETE_KEYWORD,
 					payload: {
