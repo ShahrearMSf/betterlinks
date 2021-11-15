@@ -16,10 +16,15 @@ class AutoLinks
         // post type
         $ID = get_the_ID();
         $post_type = get_post_type($ID);
-        $post_category = wp_get_post_terms($ID, 'category', array( 'fields' => 'names' ));
-        $post_tags = wp_get_post_terms($ID, 'post_tag', array( 'fields' => 'names' ));
-
-
+        $post_category = get_the_category($ID);
+        if (!empty($post_category) > 0) {
+            $post_category = wp_list_pluck($post_category, 'slug');
+        }
+        $post_tags = get_the_tags($ID);
+        if (!empty($post_tags) > 0) {
+            $post_tags = wp_list_pluck($post_tags, 'slug');
+        }
+        
         $keywords = $this->get_keywords();
         foreach ($keywords as $item) {
             // check keyword and link id not empty
