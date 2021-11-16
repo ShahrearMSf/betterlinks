@@ -3,7 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import rootReducer from './reducers';
+import rootReducer from 'redux/reducers';
 
 let middleware = [thunk];
 if (process.env.NODE_ENV !== 'production') {

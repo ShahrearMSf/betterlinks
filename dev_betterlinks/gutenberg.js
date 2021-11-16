@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { redirectType } from './utils/data';
-import { API, namespace, makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate } from './utils/helper';
-import UpgradeToPro from './components/Teasers/UpgradeToPro';
+import { redirectType } from 'utils/data';
+import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate } from 'utils/helper';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 const { registerPlugin } = wp.plugins;

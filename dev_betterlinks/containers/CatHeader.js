@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { update_cat, delete_cat } from './../../redux/actions/links.actions';
-import { modalCustomSmallStyles } from './../../utils/helper';
-import CatForm from '../Terms/CatForm';
+import { update_cat, delete_cat } from 'redux/actions/links.actions';
+import { modalCustomSmallStyles } from 'utils/helper';
+import CatForm from 'components/Terms/CatForm';
+
+const propTypes = {
+	catId: PropTypes.number,
+	catName: PropTypes.string,
+	catSlug: PropTypes.string,
+};
+
+const defaultProps = {};
+
 const CatHeader = (props) => {
-	const { catId, catName, cat_slug, update_cat, delete_cat } = props;
+	const { catId, catName, catSlug, update_cat, delete_cat } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isCatAction, setCatAction] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
@@ -43,7 +53,7 @@ const CatHeader = (props) => {
 		<React.Fragment>
 			<div className="category-head">
 				<h4 className="title">{catName}</h4>
-				{cat_slug != 'uncategorized' && betterLinksHooks.applyFilters('isShowCatControl', true) && (
+				{catSlug != 'uncategorized' && betterLinksHooks.applyFilters('isShowCatControl', true) && (
 					<div className="dropdown">
 						<button className="icon" onClick={() => catActionHandler()}>
 							<i className="btl btl-more"></i>
@@ -85,11 +95,14 @@ const CatHeader = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<CatForm catId={parseInt(catId)} catName={catName} catSlug={cat_slug} submitHandler={update_cat} hideHandler={closeModal} />
+				<CatForm catId={parseInt(catId)} catName={catName} catSlug={catSlug} submitHandler={update_cat} hideHandler={closeModal} />
 			</Modal>
 		</React.Fragment>
 	);
 };
+
+CatHeader.propTypes = propTypes;
+CatHeader.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
 	links: state.links,

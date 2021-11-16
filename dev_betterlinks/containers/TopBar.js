@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url } from '../../utils/helper';
-import { linksView } from './../../redux/actions/activity.actions';
+import { plugin_root_url } from 'utils/helper';
+import { linksView } from 'redux/actions/activity.actions';
 
 import PropTypes from 'prop-types';
 

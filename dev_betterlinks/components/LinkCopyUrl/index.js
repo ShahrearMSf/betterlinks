@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import { site_url, plugin_root_url, copyShortUrl } from './../../utils/helper';
+import { site_url, plugin_root_url, copyShortUrl } from 'utils/helper';
 const LinkCopyUrl = (props) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const copyShortUrlHandler = (url) => {

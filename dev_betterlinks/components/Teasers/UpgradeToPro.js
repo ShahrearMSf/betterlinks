@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import { plugin_root_url } from './../../utils/helper';
+import { plugin_root_url } from 'utils/helper';
 
 const customStyles = {
 	overlay: {

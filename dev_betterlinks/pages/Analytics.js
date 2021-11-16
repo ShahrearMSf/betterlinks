@@ -1,8 +1,8 @@
 import React from 'react';
 import queryString from 'query-string';
 import { __ } from '@wordpress/i18n';
-import Topbar from './../group/TopBar';
-import Clicks from './../group/Clicks';
+import Topbar from 'containers/TopBar';
+import Clicks from 'containers/Clicks';
 
 const Analytics = (props) => {
 	const parsed = queryString.parse(location.search);

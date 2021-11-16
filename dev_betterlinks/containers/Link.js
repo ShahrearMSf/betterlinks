@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
-import Select from './../Select';
+import Select from 'components/Select';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_terms_data } from './../../redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url } from './../../utils/helper';
-import { redirectType } from './../../utils/data';
-import Category from './../Terms/Category';
-import Tags from './../Terms/Tags';
-import Copy from './../../components/Copy';
-import UTMBuilder from '../UTMBuilder';
-import UpgradeToPro from './../Teasers/UpgradeToPro';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url } from 'utils/helper';
+import { redirectType } from 'utils/data';
+import Category from 'components/Terms/Category';
+import Tags from 'components/Terms/Tags';
+import Copy from 'components/Copy';
+import UTMBuilder from 'components/UTMBuilder';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,

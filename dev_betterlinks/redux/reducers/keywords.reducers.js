@@ -1,4 +1,4 @@
-import { FETCH_ALL_KEYWORDS, GET_KEYWORD, ADD_NEW_KEYWORD, UPDATE_KEYWORD, DELETE_KEYWORD } from '../actions/keywords.actions';
+import { FETCH_ALL_KEYWORDS, ADD_NEW_KEYWORD, UPDATE_KEYWORD, DELETE_KEYWORD } from 'redux/actions/keywords.actions';
 function keywords(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {

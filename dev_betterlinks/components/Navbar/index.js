@@ -1,8 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Link } from 'react-router-dom';
-import { route_path, plugin_root_url } from '../../utils/helper';
-const AdminMenu = () => {
+import { route_path, plugin_root_url } from 'utils/helper';
+const Navbar = () => {
 	const currentPage = betterLinksQuery.get('page');
 	let rootLinks = 'betterlinks';
 	if (
@@ -57,4 +57,4 @@ const AdminMenu = () => {
 	);
 };
 
-export default AdminMenu;
+export default Navbar;

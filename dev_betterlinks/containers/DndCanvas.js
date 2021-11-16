@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Loader from './../../components/Loader';
-import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
-import { fetch_settings_data } from './../../redux/actions/settings.actions';
+import Loader from 'components/Loader';
+import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import CreateCategory from './../../components/CreateCategory';
-import Link from './../../components/Link';
-import CatHeader from './../../components/CatHeader';
-import LinkQuickAction from './../../components/LinkQuickAction';
-import { plugin_root_url } from './../../utils/helper';
+import CreateCategory from 'components/CreateCategory';
+import Link from 'containers/Link';
+import CatHeader from 'containers/CatHeader';
+import LinkQuickAction from 'components/LinkQuickAction';
+import { plugin_root_url } from 'utils/helper';
 
 export class List extends React.Component {
 	render() {
@@ -75,7 +75,7 @@ class CatWrap extends React.PureComponent {
 		const { ind, el, provided, props } = this.props;
 		return (
 			<div className="dnd-category">
-				<CatHeader catId={ind} catName={el.term_name} cat_slug={el.term_slug} />
+				<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
 				<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
 					<div className="category-body">
 						<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={el.lists} />

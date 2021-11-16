@@ -1,6 +1,6 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import { API, namespace, betterlinks_nonce } from './../../utils/helper';
+import { API, namespace, betterlinks_nonce } from 'utils/helper';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const fetch_clicks_data = (params) => async (dispatch) => {
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');

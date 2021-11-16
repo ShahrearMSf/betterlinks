@@ -6,9 +6,9 @@ import Select2 from 'react-select';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import ActionButton from './../../components/ActionButton';
-import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from './../../utils/helper';
-import { add_keyword, update_keyword } from './../../redux/actions/keywords.actions';
+import ActionButton from 'components/ActionButton';
+import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from 'utils/helper';
+import { add_keyword, update_keyword } from 'redux/actions/keywords.actions';
 
 const propTypes = {
 	data: PropTypes.object,

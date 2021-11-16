@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { betterlinks_nonce, route_path, plugin_root_url, modalCustomStyles } from './../../utils/helper';
+import { betterlinks_nonce, route_path, plugin_root_url, modalCustomStyles } from 'utils/helper';
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {

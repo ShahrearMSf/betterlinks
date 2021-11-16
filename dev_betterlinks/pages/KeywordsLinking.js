@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_links_data } from './../../redux/actions/links.actions';
-import { fetch_keywords } from './../../redux/actions/keywords.actions';
-import Topbar from './../group/TopBar';
-import ListKeywords from './../group/ListKeywords';
-import AddNewKeywords from './../group/AddNewKeywords';
+import { fetch_links_data } from 'redux/actions/links.actions';
+import { fetch_keywords } from 'redux/actions/keywords.actions';
+import Topbar from 'containers/TopBar';
+import ListKeywords from 'containers/ListKeywords';
+import AddNewKeywords from 'containers/AddNewKeywords';
 import PropTypes from 'prop-types';
 
 const propTypes = {};
