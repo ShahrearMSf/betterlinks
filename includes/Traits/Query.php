@@ -328,7 +328,7 @@ trait Query
         }
         // make term and link relation
         // delete term relation
-        if ($is_update) {
+        if ($is_update && count($term_data) > 0) {
             $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'link_id' => $link_id ), array( '%d' ));
             if ($is_delete) {
                 foreach ($term_data as $term) {
