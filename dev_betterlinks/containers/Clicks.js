@@ -4,7 +4,7 @@ import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
-import Graph from 'components/Graph';
+import Graph from 'containers/Graph';
 import TableLoader from 'components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';

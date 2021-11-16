@@ -6,7 +6,7 @@ import Topbar from 'containers/TopBar';
 import DndCanvas from 'containers/DndCanvas';
 import ListCanvas from 'containers/ListCanvas';
 import { add_new_link } from 'redux/actions/links.actions';
-import Link from 'components/Link';
+import Link from 'containers/Link';
 const ManageLinks = ({ add_new_link, activity }) => {
 	return (
 		<React.Fragment>

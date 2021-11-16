@@ -18,7 +18,7 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	}
 };
 
-const LinksListViewFilter = (props) => {
+const LinksFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState({});
 	const dateRangePickerOnChangeHandler = (item) => {
 		props.setCustomDateFilter([item.selection]);
@@ -121,4 +121,4 @@ const LinksListViewFilter = (props) => {
 		</React.Fragment>
 	);
 };
-export default LinksListViewFilter;
+export default LinksFilter;

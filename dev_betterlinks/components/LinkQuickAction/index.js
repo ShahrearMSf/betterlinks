@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
-import Link from 'components/Link';
+import Link from 'containers/Link';
 import QRScanner from 'components/QRScanner';
 import { site_url, route_path, copyShortUrl } from 'utils/helper';
 
