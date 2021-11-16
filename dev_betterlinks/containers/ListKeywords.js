@@ -4,9 +4,8 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
-import KeywordsQuickAction from './../../components/KeywordsQuickAction';
-import { delete_keyword } from './../../redux/actions/keywords.actions';
-import { subDays } from 'date-fns';
+import KeywordsQuickAction from 'components/KeywordsQuickAction';
+import { delete_keyword } from 'redux/actions/keywords.actions';
 
 const KeywordFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState([]);

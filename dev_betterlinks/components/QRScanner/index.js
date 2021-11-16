@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
 import QRCode from 'qrcode.react';
-import { makeShortUrl } from './../../utils/helper';
+import { makeShortUrl } from 'utils/helper';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 

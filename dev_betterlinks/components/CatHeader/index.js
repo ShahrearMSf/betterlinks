@@ -3,9 +3,9 @@ import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { update_cat, delete_cat } from './../../redux/actions/links.actions';
-import { modalCustomSmallStyles } from './../../utils/helper';
-import CatForm from '../Terms/CatForm';
+import { update_cat, delete_cat } from 'redux/actions/links.actions';
+import { modalCustomSmallStyles } from 'utils/helper';
+import CatForm from 'components/Terms/CatForm';
 const CatHeader = (props) => {
 	const { catId, catName, cat_slug, update_cat, delete_cat } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);

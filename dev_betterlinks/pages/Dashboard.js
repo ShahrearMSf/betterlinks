@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-import ManageLinks from './pages/ManageLinks';
-import Analytics from './pages/Analytics';
-import Settings from './pages/Settings';
-import KeywordsLinking from './pages/KeywordsLinking';
+import ManageLinks from 'pages/ManageLinks';
+import Analytics from 'pages/Analytics';
+import Settings from 'pages/Settings';
+import KeywordsLinking from 'pages/KeywordsLinking';
 
 const renderSwitch = (param) => {
 	switch (param) {

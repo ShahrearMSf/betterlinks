@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import AddNewKeywords from './../../containers/group/AddNewKeywords';
-import ActionButton from './../ActionButton';
+import AddNewKeywords from 'containers/AddNewKeywords';
+import ActionButton from 'components/ActionButton';
 import PropTypes from 'prop-types';
 
 const propTypes = {};

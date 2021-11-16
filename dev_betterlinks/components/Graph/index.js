@@ -6,9 +6,9 @@ import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
-import { API, namespace } from './../../utils/helper';
-import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from '../../utils/helper';
-import { fetchCustomClicksData } from '../../redux/actions/clicks.actions';
+import { API, namespace } from 'utils/helper';
+import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from 'utils/helper';
+import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
 	const data = {

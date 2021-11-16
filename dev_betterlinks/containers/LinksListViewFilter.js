@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import { DateRangePicker } from 'react-date-range';
-import { removeOverlayElement } from './../../utils/helper';
+import { removeOverlayElement } from 'utils/helper';
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	if (action.value === 'delete') {

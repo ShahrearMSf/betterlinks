@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API, namespace, betterlinks_nonce } from './../../utils/helper';
+import { API, namespace, betterlinks_nonce } from 'utils/helper';
 export const FETCH_TERMS_DATA = 'FETCH_TERMS_DATA';
 export const fetch_terms_data = (params) => async (dispatch) => {
 	try {

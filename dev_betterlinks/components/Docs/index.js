@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url } from '../../utils/helper';
+import { plugin_root_url } from 'utils/helper';
 
 const propTypes = {};
 

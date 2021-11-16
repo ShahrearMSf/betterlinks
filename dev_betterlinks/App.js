@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import AdminMenu from './group/AdminMenu';
+import Dashboard from 'pages/Dashboard';
+import Navbar from 'components/Navbar';
 
 // Let’s clear the current menu content
 const menuPage = document.getElementById('toplevel_page_betterlinks');
@@ -15,16 +15,16 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search);
 }
 
-const BetterLinks = (props) => {
+const App = (props) => {
 	window.betterLinksQuery = useQuery();
 
 	return (
 		<React.Fragment>
 			<MenuPortal>
-				<AdminMenu />
+				<Navbar />
 			</MenuPortal>
 			<Dashboard />
 		</React.Fragment>
 	);
 };
-export default BetterLinks;
+export default App;

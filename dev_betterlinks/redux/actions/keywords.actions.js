@@ -1,4 +1,4 @@
-import { API, namespace, makeRequest } from '../../utils/helper';
+import { API, namespace, makeRequest } from 'utils/helper';
 export const FETCH_ALL_KEYWORDS = 'FETCH_ALL_KEYWORDS';
 export const GET_KEYWORD = 'GET_KEYWORD';
 export const ADD_NEW_KEYWORD = 'ADD_NEW_KEYWORD';

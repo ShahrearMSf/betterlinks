@@ -1,4 +1,4 @@
-import { CHANGE_LINKS_VIEW } from './../actions/activity.actions';
+import { CHANGE_LINKS_VIEW } from 'redux/actions/activity.actions';
 const linksView = localStorage.getItem('betterLinksView');
 function activity(state = { linksView: linksView ? linksView : 'grid' }, action) {
 	const payload = action.payload;

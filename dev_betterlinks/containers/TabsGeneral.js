@@ -4,12 +4,12 @@ import { Formik, Field, Form } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import RedirectType from './../../components/RedirectType';
-import { fetch_clicks_data } from './../../redux/actions/clicks.actions';
-import { update_option } from './../../redux/actions/settings.actions';
-import { redirectType } from './../../utils/data';
-import UpgradeToPro from './../../components/Teasers/UpgradeToPro';
-import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from './../../utils/helper';
+import RedirectType from 'components/RedirectType';
+import { fetch_clicks_data } from 'redux/actions/clicks.actions';
+import { update_option } from 'redux/actions/settings.actions';
+import { redirectType } from 'utils/data';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from 'utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));

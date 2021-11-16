@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
-import Topbar from './../group/TopBar';
-import DndCanvas from './../group/DndCanvas';
-import ListCanvas from './../group/ListCanvas';
-import { add_new_link } from './../../redux/actions/links.actions';
-import Link from './../../components/Link';
+import Topbar from 'containers/TopBar';
+import DndCanvas from 'containers/DndCanvas';
+import ListCanvas from 'containers/ListCanvas';
+import { add_new_link } from 'redux/actions/links.actions';
+import Link from 'components/Link';
 const ManageLinks = ({ add_new_link, activity }) => {
 	return (
 		<React.Fragment>

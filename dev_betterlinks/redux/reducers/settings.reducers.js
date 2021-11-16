@@ -1,4 +1,4 @@
-import { FETCH_SETTINGS, UPDATE_OPTION } from '../actions/settings.actions';
+import { FETCH_SETTINGS, UPDATE_OPTION } from 'redux/actions/settings.actions';
 function settings(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {

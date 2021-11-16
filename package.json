@@ -57,6 +57,7 @@
 		"@wordpress/babel-preset-default": "^6.3.2",
 		"@wordpress/scripts": "^18.0.1",
 		"babel-loader": "^8.2.2",
+		"babel-plugin-module-resolver": "^4.1.0",
 		"clean-webpack-plugin": "^3.0.0",
 		"css-loader": "^5.2.6",
 		"eslint": "^7.29.0",

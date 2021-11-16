@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
-import Link from './../Link';
-import QRScanner from './../QRScanner';
-import { site_url, route_path, copyShortUrl } from './../../utils/helper';
+import Link from 'components/Link';
+import QRScanner from 'components/QRScanner';
+import { site_url, route_path, copyShortUrl } from 'utils/helper';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
