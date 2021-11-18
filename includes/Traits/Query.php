@@ -125,7 +125,7 @@ trait Query
     {
         global $wpdb;
         $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT ID, short_url, target_url FROM {$wpdb->prefix}betterlinks WHERE wildcards=%d", $wildcards),
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks WHERE wildcards=%d", $wildcards),
             ARRAY_A
         );
         return $link;
