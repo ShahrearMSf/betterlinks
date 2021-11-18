@@ -16,15 +16,20 @@ class Helper
             }
             return $data;
         }
-        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
-        if (!empty($options)) {
-            return [
-                'wildcards_is_active' => $options->wildcards,
-                'disablebotclicks' => $options->disablebotclicks,
-                'force_https' => $options->force_https,
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+        $args = [];
+        if (is_array($options)) {
+            $args = [
+                'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
+                'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
+                'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
             ];
         }
-        return [];
+        return wp_parse_args($args, [
+            'wildcards_is_active' => false,
+            'disablebotclicks' => false,
+            'force_https' => false,
+        ]);
     }
 
     public static function get_link_from_json_file($short_url)
