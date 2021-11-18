@@ -66,7 +66,7 @@ if (!class_exists('BetterLinks')) {
             define('BETTERLINKS_ASSETS_DIR_PATH', BETTERLINKS_ROOT_DIR_PATH . 'assets/');
             define('BETTERLINKS_ASSETS_URI', BETTERLINKS_PLUGIN_ROOT_URI . 'assets/');
             define('BETTERLINKS_UPLOAD_DIR_PATH', $this->upload_dir['basedir'] . '/betterlinks_uploads');
-            define('BETTERLINKS_EXISTS_LINKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
+            define('BETTERLINKS_EXISTS_LINKS_JSON', defined('BETTERLINKS_ALLOW_JSON_REDIRECT') ? file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json') && BETTERLINKS_ALLOW_JSON_REDIRECT : file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
             define('BETTERLINKS_EXISTS_CLICKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'));
             define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
             define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
