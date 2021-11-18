@@ -16,6 +16,14 @@ class Helper
             }
             return $data;
         }
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
+        if (!empty($options)) {
+            return [
+                'wildcards_is_active' => $options->wildcards,
+                'disablebotclicks' => $options->disablebotclicks,
+                'force_https' => $options->force_https,
+            ];
+        }
         return [];
     }
 
