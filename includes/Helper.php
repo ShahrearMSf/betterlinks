@@ -53,10 +53,6 @@ class Helper
                 'title' => __('Manage Links', 'betterlinks'),
                 'capability' => 'manage_options',
             ],
-            BETTERLINKS_PLUGIN_SLUG . '-keywords-linking' => [
-                'title' => __('Keywords Linking', 'betterlinks'),
-                'capability' => 'manage_options',
-            ],
             BETTERLINKS_PLUGIN_SLUG . '-analytics' => [
                 'title' => __('Analytics', 'betterlinks'),
                 'capability' => 'manage_options',

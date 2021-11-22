@@ -9,7 +9,6 @@ class API
         new API\Links();
         new API\Terms();
         new API\Clicks();
-        new API\Keywords();
     }
     public static function dispatch_hook()
     {
