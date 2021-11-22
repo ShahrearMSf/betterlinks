@@ -554,6 +554,21 @@ trait Query
         return $clicks;
     }
 
+    public static function get_link_meta($link_id, $meta_key)
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'betterlinkmeta';
+        if (empty($link_id) || empty($meta_key)) {
+            return false;
+        }
+        $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
+        $results = $wpdb->get_results($query);
+        if (!empty($results)) {
+            return json_decode(current($results)->meta_value);
+        }
+        return;
+    }
+
     public static function add_link_meta($link_id, $meta_key, $meta_value)
     {
         global $wpdb;

@@ -59,6 +59,9 @@ class PTLImportCSV extends BaseCSV implements ImportCsvInterface
             ]);
         $link_id = $this->insert_link($link);
         if ($link_id) {
+            if (isset($item['keywords']) && !empty($item['keywords'])) {
+                $this->insert_keywords($link_id, $item['keywords']);
+            }
             return 'Imported Successfully "' . $item['name'] . '"';
         }
         return 'import failed "' . $item['name'] . '" already exists';

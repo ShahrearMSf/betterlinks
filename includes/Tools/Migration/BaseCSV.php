@@ -27,4 +27,29 @@ class BaseCSV
         }
         return $link_id;
     }
+
+    public function insert_keywords($link_id, $keywords)
+    {
+        $results = \BetterLinks\Helper::get_link_meta($link_id, 'keywords');
+        if (!$results) {
+            $args = [
+                'keywords' => $keywords,
+                'link_id'   => $link_id,
+                'post_type' => ['post', 'page'],
+                'category'  => '',
+                'tags'      => '',
+                'open_new_tab' => false,
+                'use_no_follow' => false,
+                'case_sensitive' => false,
+                'left_boundary' => '',
+                'right_boundary' => '',
+                'keyword_before' => '',
+                'keyword_after' => '',
+                'limit' => 100,
+                'priority' => ''
+            ];
+            return \BetterLinks\Helper::add_link_meta($link_id, 'keywords', wp_json_encode($args));
+        }
+        return;
+    }
 }
