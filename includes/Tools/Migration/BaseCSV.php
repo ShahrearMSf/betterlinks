@@ -28,11 +28,11 @@ class BaseCSV
         return $link_id;
     }
 
-    public function insert_keywords($link_id, $keywords)
+    public function insert_keywords($link_id, $keywords, $arg = [])
     {
         $results = \BetterLinks\Helper::get_link_meta($link_id, 'keywords');
         if (!$results) {
-            $args = [
+            $args = wp_parse_args($arg, [
                 'keywords' => $keywords,
                 'link_id'   => $link_id,
                 'post_type' => ['post', 'page'],
@@ -47,7 +47,7 @@ class BaseCSV
                 'keyword_after' => '',
                 'limit' => 100,
                 'priority' => ''
-            ];
+            ]);
             return \BetterLinks\Helper::add_link_meta($link_id, 'keywords', wp_json_encode($args));
         }
         return;
