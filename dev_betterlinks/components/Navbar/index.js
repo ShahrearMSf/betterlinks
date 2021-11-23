@@ -38,7 +38,7 @@ const Navbar = () => {
 					)}
 					{betterLinksHooks.applyFilters('isShowKeywordsLinkingMenu', false) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-keywords-linking' ? 'current' : ''}`}>
-							<Link to={route_path + 'admin.php?page=betterlinks-keywords-linking'}>{__('Keywords Linking', 'betterlinks')}</Link>
+							<Link to={route_path + 'admin.php?page=betterlinks-keywords-linking'}>{__('Auto-Link Keywords', 'betterlinks')}</Link>
 						</li>
 					)}
 					{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (

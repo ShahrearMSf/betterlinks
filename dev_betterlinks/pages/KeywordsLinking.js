@@ -38,7 +38,7 @@ const KeywordsLinking = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar
-				label={__('Keywords Linking', 'betterlinks')}
+				label={__('Auto-Link Keywords', 'betterlinks')}
 				render={() => (
 					<>
 						<AddNewKeywords />
