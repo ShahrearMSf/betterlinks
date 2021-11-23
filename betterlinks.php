@@ -93,8 +93,6 @@ if (!class_exists('BetterLinks')) {
             BetterLinks\API::init();
             if (is_admin()) {
                 new BetterLinks\Admin();
-            } else {
-                BetterLinks\Frontend::init();
             }
             new BetterLinks\Link();
             new BetterLinks\Tools();
