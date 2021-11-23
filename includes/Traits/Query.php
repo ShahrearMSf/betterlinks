@@ -508,6 +508,10 @@ trait Query
             if (!empty($expire_date) && $now > strtotime($expire_date)) {
                 $link_status = 'draft';
             }
+            // keywords
+            $keywords = get_post_meta($thirstylink->ID, '_ta_autolink_keyword_list', true);
+            $limit = get_post_meta($thirstylink->ID, '_ta_autolink_keyword_limit', true);
+
 
             $response[] = [
                 'link_title' => $thirstylink->post_title,
@@ -529,7 +533,9 @@ trait Query
                 'link_modified_gmt' => $thirstylink->post_modified_gmt,
                 'terms'  => $term,
                 'expire'  => json_encode($expire),
-                'dynamic_redirect'  => json_encode($dynamic_redirect)
+                'dynamic_redirect'  => json_encode($dynamic_redirect),
+                'keywords'  => $keywords,
+                'limit'     => $limit
             ];
         }
         return $response;
