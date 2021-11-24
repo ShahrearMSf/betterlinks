@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import KeywordsQuickAction from 'components/KeywordsQuickAction';
+import LinkCopyUrl from 'components/LinkCopyUrl';
 import { delete_keyword } from 'redux/actions/keywords.actions';
 
 const KeywordFilter = (props) => {
@@ -49,7 +50,7 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 						return true;
 					}
 				});
-				return <div>{data.length > 0 && data[0].label}</div>;
+				return <div>{data.length > 0 && <LinkCopyUrl shortUrl={data[0].label} />}</div>;
 			},
 		},
 		{

@@ -29,7 +29,7 @@ const KeywordsLinking = (props) => {
 				return acc;
 			}, []);
 			return results.reduce((acc, item) => {
-				acc = [...acc, { value: item.ID, label: item.link_title }];
+				acc = [...acc, { value: item.ID, label: item.short_url }];
 				return acc;
 			}, []);
 		}

@@ -670,7 +670,7 @@ trait Query
     {
         global $wpdb;
         $results = $wpdb->get_results(
-            "SELECT betterlinks.ID, betterlinks.link_title FROM {$wpdb->prefix}betterlinks betterlinks WHERE NOT EXISTS (SELECT betterlinkmeta.link_id FROM {$wpdb->prefix}betterlinkmeta betterlinkmeta WHERE betterlinks.ID = betterlinkmeta.link_id)",
+            "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks WHERE NOT EXISTS (SELECT betterlinkmeta.link_id FROM {$wpdb->prefix}betterlinkmeta betterlinkmeta WHERE betterlinks.ID = betterlinkmeta.link_id)",
             ARRAY_A
         );
         return $results;
