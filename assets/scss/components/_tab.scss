@@ -70,7 +70,7 @@
 		width: 300px !important;
 		.btl-react-select__control {
 			background-color: #fafafa;
-			height: 50px;
+			min-height: 50px;
 			border: 1px solid #ebebeb;
 			border-radius: 5px;
 			.btl-react-select__value-container {
