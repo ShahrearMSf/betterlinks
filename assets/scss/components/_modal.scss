@@ -463,7 +463,7 @@
 		width: 300px;
 		.btl-react-select__control {
 			background-color: #fafafa;
-			height: 50px;
+			min-height: 50px;
 			border: 1px solid #ebebeb;
 			border-radius: 5px;
 			.btl-react-select__value-container {
@@ -476,6 +476,8 @@
 				.btl-react-select__input {
 					input {
 						box-shadow: none;
+						min-height: 20px;
+						height: 20px;
 					}
 				}
 			}
