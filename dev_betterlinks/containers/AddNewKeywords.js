@@ -252,7 +252,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 								<div className="btl-entry-content-right">
 									<div className={`link-options ${openPanelType === 'HTML' ? 'link-options--open' : ''}`}>
 										<button className="link-options__head" type="button" onClick={() => setOpenPanelType(openPanelType == 'HTML' ? 'ADVANCED' : 'HTML')}>
-											<h4 className="link-options__head--title">{__('HTML', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+											<h4 className="link-options__head--title">{__('HTML Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
@@ -271,7 +271,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 									</div>
 									<div className={`link-options ${openPanelType === 'ADVANCED' ? 'link-options--open' : ''} link-options--advance-keyword`}>
 										<button className="link-options__head" type="button" onClick={() => setOpenPanelType(openPanelType === 'ADVANCED' ? 'HTML' : 'ADVANCED')}>
-											<h4 className="link-options__head--title">{__('Advance Match', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+											<h4 className="link-options__head--title">{__('Advanced Settings', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
 											<div className="btl-modal-form-group">
