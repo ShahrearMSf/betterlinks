@@ -26,7 +26,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 	const [postCategories, setPostCategories] = useState([]);
 	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
 	const boundary = [
-		{ value: 'generic', label: 'Generic' },
+		// { value: 'generic', label: 'Generic' },
 		{ value: 'whitespace', label: 'White Space' },
 		{ value: 'comma', label: 'Comma' },
 		{ value: 'point', label: 'Point' },
