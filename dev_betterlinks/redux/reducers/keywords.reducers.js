@@ -16,12 +16,13 @@ function keywords(state = {}, action) {
 				data: [payload.data, ...state.data],
 			};
 		case UPDATE_KEYWORD:
+			console.log(payload);
 			return {
 				...state,
 				data: [
 					payload.data,
 					...state.data.filter((item) => {
-						if (item.link_id != payload.data.link_id) {
+						if (item.link_id != payload.data.old_link_id) {
 							return item;
 						}
 					}),
