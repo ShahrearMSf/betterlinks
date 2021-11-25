@@ -464,6 +464,17 @@ const Link = (props) => {
 											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 										</div>
 									</div>
+									{!betterLinksHooks.applyFilters('isActivePro', false) && (
+										<div>
+											<div className={`link-options link-options--auto-link-keywords`}>
+												<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
+													<h4 className="link-options__head--title">
+														{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+													</h4>
+												</button>
+											</div>
+										</div>
+									)}
 								</div>
 							</div>
 						</Form>
