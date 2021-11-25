@@ -16,7 +16,6 @@ function keywords(state = {}, action) {
 				data: [payload.data, ...state.data],
 			};
 		case UPDATE_KEYWORD:
-			console.log(payload);
 			return {
 				...state,
 				data: [
