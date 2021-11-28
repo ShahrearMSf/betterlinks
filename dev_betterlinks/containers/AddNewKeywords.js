@@ -119,6 +119,9 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 								add_keyword(values);
 							}
 							actions.setSubmitting(false);
+							// reset
+							actions.resetForm();
+							setChooseAbleSavedLink([]);
 							closeModal();
 						}
 					}}
@@ -138,14 +141,15 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 											{__('Choose Link', 'betterlinks')}
 										</label>
 										<Select2
+											isClearable={true}
 											name="chooseLink"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
 											options={links}
 											value={chooseAbleSavedLink}
 											onChange={(option) => {
-												props.setFieldValue('chooseLink', option.value);
-												setChooseAbleSavedLink(option);
+												props.setFieldValue('chooseLink', option ? option.value : '');
+												setChooseAbleSavedLink(option ? option : []);
 											}}
 											required={true}
 										/>
