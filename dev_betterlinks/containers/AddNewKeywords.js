@@ -114,19 +114,13 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
-						let isRightBoundaryOk = false;
-						let isLeftBoundaryOk = false;
-						if (values.leftBoundary === values.keywordBefore || (values.leftBoundary != '' && values.keywordBefore != '')) {
-							isLeftBoundaryOk = true;
-						} else {
-							setIsKeywordBeforeOk(false);
+						if (values.leftBoundary === '') {
+							values.keywordBefore = '';
 						}
-						if (values.rightBoundary === values.keywordAfter || (values.rightBoundary != '' && values.keywordAfter != '')) {
-							isRightBoundaryOk = true;
-						} else {
-							setIsKeywordAfterOk(false);
+						if (values.rightBoundary === '') {
+							values.keywordAfter = '';
 						}
-						if (values.chooseLink && isLeftBoundaryOk && isRightBoundaryOk) {
+						if (values.chooseLink) {
 							// check Left Boundary & Keyword Before
 							if (Object.keys(data).length > 0) {
 								update_keyword(values);
@@ -261,20 +255,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 											}}
 										/>
 									</div>
-									<div className="btl-modal-error" style={{ paddingLeft: '160px' }}>
-										<label className="btl-modal-form-label"></label>
-										{isKeywordBeforeOk == false && (
-											<p className="btl-error" style={{ color: 'red' }}>
-												{__('Left Boundary & Before Keyword settings error.')}
-											</p>
-										)}
-										{isKeywordAfterOk == false && (
-											<p className="btl-error" style={{ color: 'red' }}>
-												{__('Right Boundary & Right Keyword settings error.')}
-											</p>
-										)}
-									</div>
-
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label"></label>
 										<button type="submit" className="btl-modal-submit-button">
@@ -339,18 +319,23 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 													}}
 												/>
 											</div>
-											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="keywordBefore">
-													{__('Keyword Before', 'betterlinks')}
-												</label>
-												<Field id="keywordBefore" type="text" name="keywordBefore" />
-											</div>
-											<div className="btl-modal-form-group">
-												<label className="btl-modal-form-label" htmlFor="keywordAfter">
-													{__('Keyword After', 'betterlinks')}
-												</label>
-												<Field id="keywordAfter" type="text" name="keywordAfter" />
-											</div>
+											{props.values.leftBoundary != '' && (
+												<div className="btl-modal-form-group">
+													<label className="btl-modal-form-label" htmlFor="keywordBefore">
+														{__('Keyword Before', 'betterlinks')}
+													</label>
+													<Field id="keywordBefore" type="text" name="keywordBefore" />
+												</div>
+											)}
+											{props.values.rightBoundary != '' && (
+												<div className="btl-modal-form-group">
+													<label className="btl-modal-form-label" htmlFor="keywordAfter">
+														{__('Keyword After', 'betterlinks')}
+													</label>
+													<Field id="keywordAfter" type="text" name="keywordAfter" />
+												</div>
+											)}
+
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="limit">
 													{__('Limit', 'betterlinks')}
