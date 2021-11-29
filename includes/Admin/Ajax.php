@@ -440,6 +440,9 @@ class Ajax
             'term_id' => ($_REQUEST['term_id'] ? sanitize_text_field($_REQUEST['term_id']) : ''),
         ];
         $this->delete_link($args);
+        if (!empty($args['ID'])) {
+            \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
+        }
         wp_send_json_success(
             $args,
             200
