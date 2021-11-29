@@ -114,10 +114,12 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
-						if (values.leftBoundary === '') {
+						if (values.leftBoundary === '' || values.keywordBefore === '') {
+							values.leftBoundary = '';
 							values.keywordBefore = '';
 						}
-						if (values.rightBoundary === '') {
+						if (values.rightBoundary === '' || values.keywordAfter === '') {
+							values.rightBoundary = '';
 							values.keywordAfter = '';
 						}
 						if (values.chooseLink) {
