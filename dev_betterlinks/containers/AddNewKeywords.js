@@ -25,12 +25,14 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 	const [postTags, setPostTags] = useState([]);
 	const [postCategories, setPostCategories] = useState([]);
 	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
+	const [isKeywordBeforeOk, setIsKeywordBeforeOk] = useState(true);
+	const [isKeywordAfterOk, setIsKeywordAfterOk] = useState(true);
 	const boundary = [
 		// { value: 'generic', label: 'Generic' },
 		{ value: 'whitespace', label: 'White Space' },
 		{ value: 'comma', label: 'Comma' },
 		{ value: 'point', label: 'Point' },
-		{ value: 'none', label: 'None' },
+		{ value: '', label: 'None' },
 	];
 
 	function openModal() {
@@ -112,7 +114,20 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
-						if (values.chooseLink) {
+						let isRightBoundaryOk = false;
+						let isLeftBoundaryOk = false;
+						if (values.leftBoundary === values.keywordBefore || (values.leftBoundary != '' && values.keywordBefore != '')) {
+							isLeftBoundaryOk = true;
+						} else {
+							setIsKeywordBeforeOk(false);
+						}
+						if (values.rightBoundary === values.keywordAfter || (values.rightBoundary != '' && values.keywordAfter != '')) {
+							isRightBoundaryOk = true;
+						} else {
+							setIsKeywordAfterOk(false);
+						}
+						if (values.chooseLink && isLeftBoundaryOk && isRightBoundaryOk) {
+							// check Left Boundary & Keyword Before
 							if (Object.keys(data).length > 0) {
 								update_keyword(values);
 							} else {
@@ -246,6 +261,20 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 											}}
 										/>
 									</div>
+									<div className="btl-modal-error" style={{ paddingLeft: '160px' }}>
+										<label className="btl-modal-form-label"></label>
+										{isKeywordBeforeOk == false && (
+											<p className="btl-error" style={{ color: 'red' }}>
+												{__('Left Boundary & Before Keyword settings error.')}
+											</p>
+										)}
+										{isKeywordAfterOk == false && (
+											<p className="btl-error" style={{ color: 'red' }}>
+												{__('Right Boundary & Right Keyword settings error.')}
+											</p>
+										)}
+									</div>
+
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label"></label>
 										<button type="submit" className="btl-modal-submit-button">
