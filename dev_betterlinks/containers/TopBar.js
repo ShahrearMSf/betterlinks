@@ -2,10 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
-import { add_new_link } from './../../redux/actions/links.actions';
-import Link from './../../components/Link';
-import { plugin_root_url } from '../../utils/helper';
-import { linksView } from './../../redux/actions/activity.actions';
+import { plugin_root_url } from 'utils/helper';
+import { linksView } from 'redux/actions/activity.actions';
+
+import PropTypes from 'prop-types';
+
+const propTypes = {
+	label: PropTypes.string,
+	render: PropTypes.func,
+};
+
+const defaultProps = {
+	label: '',
+	render: () => {},
+};
+
 const TopBar = (props) => {
 	const mode = localStorage.getItem('betterLinksIsDarkMode');
 	const [isDarkMode, setIsDarkMode] = useState(mode ? mode : false);
@@ -35,11 +46,7 @@ const TopBar = (props) => {
 				<span className="topbar__logo__text">{props.label}</span>
 			</div>
 
-			{currentPage === 'betterlinks' && betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && (
-				<div className="btl-create-links">
-					<Link isShowIcon={false} submitHandler={props.add_new_link} />
-				</div>
-			)}
+			{props.render()}
 			<div className="topbar-inner">
 				{currentPage === 'betterlinks' && (
 					<React.Fragment>
@@ -69,6 +76,9 @@ const TopBar = (props) => {
 	);
 };
 
+TopBar.propTypes = propTypes;
+TopBar.defaultProps = defaultProps;
+
 const mapStateToProps = (state) => ({
 	activity: state.activity,
 });
@@ -76,7 +86,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
 	return {
 		linksView: bindActionCreators(linksView, dispatch),
-		add_new_link: bindActionCreators(add_new_link, dispatch),
 	};
 };
 

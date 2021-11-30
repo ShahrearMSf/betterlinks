@@ -1,4 +1,4 @@
-import { API, namespace, makeRequest } from '../../utils/helper';
+import { API, namespace, makeRequest } from 'utils/helper';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const ADD_NEW_CAT = 'ADD_NEW_CAT';

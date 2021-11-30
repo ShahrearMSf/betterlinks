@@ -3,9 +3,9 @@ import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import TextField from '@material-ui/core/TextField';
-import { plugin_root_url } from '../../utils/helper';
+import { plugin_root_url } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
-import UpgradeToPro from './UpgradeToPro';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
 const propTypes = {};
 

@@ -1,4 +1,4 @@
-import { FETCH_CLICKS_DATA } from './../actions/clicks.actions';
+import { FETCH_CLICKS_DATA } from 'redux/actions/clicks.actions';
 function clicks(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {

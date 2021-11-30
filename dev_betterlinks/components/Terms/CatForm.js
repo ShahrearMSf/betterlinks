@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
-import { betterlinks_nonce, generateSlug } from './../../utils/helper';
+import { betterlinks_nonce, generateSlug } from 'utils/helper';
 
 const propTypes = {
 	catId: PropTypes.number,

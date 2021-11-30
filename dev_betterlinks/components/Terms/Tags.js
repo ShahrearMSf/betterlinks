@@ -3,7 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useField } from 'formik';
 import CreatableSelect2 from 'react-select/creatable';
-import { betterlinks_nonce } from './../../utils/helper';
+import { betterlinks_nonce } from 'utils/helper';
 
 const propTypes = {
 	linkId: PropTypes.number,

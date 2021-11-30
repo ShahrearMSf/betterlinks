@@ -39,12 +39,14 @@
 					}
 				}
 			}
+			.link-options--advance-keyword,
 			.link-options--advanced {
 				.btl-modal-form-group {
 					align-items: center !important;
 					.btl-modal-form-label {
 						color: #b2b3bd;
 					}
+					input[type='number'],
 					input[type='text'] {
 						background: #36405a;
 						color: #fff;
@@ -127,6 +129,7 @@
 			color: #fff;
 		}
 	}
+	.btl-modal-select--mini,
 	.btl-modal-select {
 		.btl-react-select__control {
 			background-color: #36405a !important;

@@ -294,3 +294,39 @@ export const makeRequest = async (payload = {}) => {
 		}
 	);
 };
+
+export const getAutoLinksInitialValues = (data) => {
+	if (Object.keys(data).length) {
+		return {
+			keywords: data.keywords,
+			chooseLink: data.link_id,
+			oldChooseLink: data.link_id,
+			postType: data.post_type,
+			category: data.category,
+			tags: data.tags,
+			openNewTab: data.open_new_tab,
+			useNoFollow: data.use_no_follow,
+			caseSensitive: data.case_sensitive,
+			keywordBefore: data.keyword_before,
+			keywordAfter: data.keyword_after,
+			leftBoundary: data.left_boundary,
+			rightBoundary: data.right_boundary,
+			limit: data.limit,
+		};
+	}
+	return {
+		keywords: '',
+		chooseLink: '',
+		postType: '',
+		category: '',
+		tags: '',
+		openNewTab: '',
+		useNoFollow: '',
+		caseSensitive: '',
+		keywordBefore: '',
+		keywordAfter: '',
+		leftBoundary: '',
+		rightBoundary: '',
+		limit: 100,
+	};
+};

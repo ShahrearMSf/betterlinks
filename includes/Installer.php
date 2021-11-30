@@ -86,6 +86,7 @@ class Installer extends \WP_Background_Process
         $this->createBetterTermsTable();
         $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
+        $this->createBetterLinkMetaTable();
         // update plugin version
         if (!get_option('betterlinks_version')) {
             update_option('betterlinks_version', BETTERLINKS_VERSION);
@@ -173,6 +174,7 @@ class Installer extends \WP_Background_Process
     
     public function db_migration()
     {
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         if ($this->db_version && $this->db_version != BETTERLINKS_DB_VERSION) {
             if (BETTERLINKS_DB_VERSION == '1.1') {
                 $this->db_migration_1_1();
@@ -180,6 +182,8 @@ class Installer extends \WP_Background_Process
                 $this->db_migration_1_2();
             } elseif (BETTERLINKS_DB_VERSION == '1.4') {
                 $this->db_migration_1_4();
+            } elseif (BETTERLINKS_DB_VERSION == '1.5') {
+                $this->createBetterLinkMetaTable();
             }
             if (version_compare($this->db_version, '1.3', '<')) {
                 $this->db_migration_1_1();

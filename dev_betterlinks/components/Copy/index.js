@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { copyShortUrl } from './../../utils/helper';
+import { copyShortUrl } from 'utils/helper';
 const propTypes = {
 	siteUrl: PropTypes.string,
 	shortUrl: PropTypes.string,

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import { nonce } from './../../utils/helper';
+import { nonce } from 'utils/helper';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
 	const [exportMode, setExportMode] = useState('links');

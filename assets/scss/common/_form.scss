@@ -52,7 +52,7 @@
 		width: 300px;
 		.btl-react-select__control {
 			background-color: $light;
-			height: 50px;
+			min-height: 50px;
 			border: 1px solid $light;
 			border-radius: 5px;
 			.btl-react-select__value-container {
@@ -65,6 +65,8 @@
 				.btl-react-select__input {
 					input {
 						box-shadow: none;
+						min-height: 20px;
+						height: 20px;
 					}
 				}
 			}
@@ -297,8 +299,8 @@
 
 .btl-googleanalytics-container {
 	input.btl-form-control {
-        background: #fafafa;
-        border: 1px solid #ebebeb;
+		background: #fafafa;
+		border: 1px solid #ebebeb;
 		&:disabled {
 			background: #e4e4e4;
 			cursor: initial;
@@ -309,14 +311,14 @@
 span.pro-badge {
 	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 	color: #fff;
-    border-radius: 2px;
-    padding: 3px 6px;
-    font-size: 10px;
-    margin-left: 3px;
-    line-height: 1;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    border-radius: 2px;
-    transform: translateY(-10px);
+	border-radius: 2px;
+	padding: 3px 6px;
+	font-size: 10px;
+	margin-left: 3px;
+	line-height: 1;
+	text-transform: uppercase;
+	display: inline-flex;
+	align-items: center;
+	border-radius: 2px;
+	transform: translateY(-10px);
 }

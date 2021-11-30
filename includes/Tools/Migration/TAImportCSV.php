@@ -13,6 +13,11 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
             foreach ($data as $item) {
                 if (!empty($item['link_title']) && !empty($item['short_url'])) {
                     $link_id = $this->insert_link($item);
+                    if (!empty($item['keywords'])) {
+                        $this->insert_keywords($link_id, $item['keywords'], [
+                            'limit' => $item['keyword_limit']
+                        ]);
+                    }
                     if ($link_id) {
                         $message[] = 'Imported Successfully "' . $item['short_url'] . '"';
                     } else {
@@ -82,6 +87,8 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
                 'expire'  => json_encode($expire),
                 'dynamic_redirect'  => json_encode($dynamic_redirect),
                 'category'  => $item[3],
+                'keywords' => !empty($item[6]) ? str_replace(';', ',', $item[6]) : '',
+                'keyword_limit' => !empty($item[8]) ? $item[8] : 100
             ];
         }
         return $results;

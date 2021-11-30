@@ -3,18 +3,17 @@ import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { applyFilters } from '@wordpress/hooks';
 import { bindActionCreators } from 'redux';
-import { fetch_settings_data } from './../../redux/actions/settings.actions';
-import Topbar from './../group/TopBar';
-import TabsGeneral from './../group/TabsGeneral';
-import TabsTools from './../group/TabsTools';
-import Migration from './../group/Migration';
-import GoogleAnalytics from './../../components/Teasers/GoogleAnalytics';
-import RoleManagement from './../../components/Teasers/RoleManagement';
-import BrokenLinks from './../../components/Teasers/BrokenLinks';
-import GoPremium from './../../components/Teasers/GoPremium';
-import Docs from './../../components/Docs';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
+import Topbar from 'containers/TopBar';
+import TabsGeneral from 'containers/TabsGeneral';
+import TabsTools from 'containers/TabsTools';
+import Migration from 'containers/Migration';
+import GoogleAnalytics from 'components/Teasers/GoogleAnalytics';
+import RoleManagement from 'components/Teasers/RoleManagement';
+import BrokenLinks from 'components/Teasers/BrokenLinks';
+import GoPremium from 'components/Teasers/GoPremium';
+import Docs from 'components/Docs';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
