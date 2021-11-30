@@ -32,7 +32,7 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 					<h3>{__('Opps...', 'betterlinks')}</h3>
 					<p>
 						{__('You need to', 'betterlinks')} <strong>{__('upgrade', 'betterlinks')}</strong> {__('to the', 'betterlinks')}{' '}
-						<a href="https://wpdeveloper.net/in/upgrade-betterlinks" target="_blank">
+						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank">
 							{__('Premium', 'betterlinks')}
 						</a>{' '}
 						{__('Version to use this feature', 'betterlinks')}

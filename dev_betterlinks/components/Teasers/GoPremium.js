@@ -21,7 +21,7 @@ export default function GoPremium(props) {
 								)}
 							</p>
 							<p>{__('You will also get world class support from our dedicated team, 24/7.', 'betterlinks')}</p>
-							<a href="https://wpdeveloper.net/in/upgrade-betterlinks" target="_blank" className="button-primary btn-save-settings">
+							<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank" className="button-primary btn-save-settings">
 								{__('Get Premium Version', 'betterlinks')}
 							</a>
 						</div>

@@ -5,10 +5,10 @@
  * Description:		Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
  * Version:			1.2.8
  * Author:			WPDeveloper
- * Author URI:		https://wpdeveloper.net
+ * Author URI:		https://wpdeveloper.com
  * License:			GPL-3.0+
  * License URI:		http://www.gnu.org/licenses/gpl-3.0.txt
- * Author URI:		https://wpdeveloper.net
+ * Author URI:		https://wpdeveloper.com
  * Text Domain:		betterlinks
  * Domain Path:		/languages
  */
