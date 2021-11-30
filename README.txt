@@ -66,6 +66,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Carry out split tests with Dynamic Redirects [PRO]
 - Force enable secure HTTPS Redirection [PRO]
 - Broken Link Checker with Email Notification [PRO]
+- Auto-Link Keywords [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
