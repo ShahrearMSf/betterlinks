@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 1.2.7
+Stable tag: 1.2.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -95,7 +95,7 @@ Visit [WPDeveloper](https://wpdeveloper.com/) to learn more about how to do bett
 
 ## 💙 Loved BetterLinks? ##
 
-- Join our [Facebook Group](https://www.facebook.com/groups/wpdeveloper.com/)
+- Join our [Facebook Group](https://www.facebook.com/groups/wpdeveloper.net/)
 - Learn from our tutorials on [Youtube Channel](https://www.youtube.com/channel/UCOjzLEdsnpnFVkm1JKFurPA)
 - Or rate us on [WordPress](https://wordpress.org/support/plugin/betterlinks/reviews/?rate=5#new-post)
 
@@ -134,6 +134,10 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.2.8 - 30/11/2021 =
+
+- Few minor bug fix & improvements
 
 = 1.2.7 - 28/10/2021 =
 
