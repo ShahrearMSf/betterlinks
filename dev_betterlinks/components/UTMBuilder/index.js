@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
-import UpgradeToPro from './../Teasers/UpgradeToPro';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import PropTypes from 'prop-types';
-import { plugin_root_url } from './../../utils/helper';
+import { plugin_root_url } from 'utils/helper';
 
 const propTypes = {};
 

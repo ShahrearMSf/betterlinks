@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
-import LinkCopyUrl from './../../components/LinkCopyUrl';
-import LinksListViewFilter from './LinksListViewFilter';
-import { linksFilterData, formatDate, route_path, insertOverlayElement } from './../../utils/helper';
-import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from './../../redux/actions/links.actions';
-import { fetch_settings_data } from './../../redux/actions/settings.actions';
-import LinkQuickAction from './../../components/LinkQuickAction';
-import TableLoader from './../../components/Loader/TableLoader';
+import LinkCopyUrl from 'components/LinkCopyUrl';
+import LinksFilter from 'components/LinksFilter';
+import { linksFilterData, formatDate, route_path, insertOverlayElement } from 'utils/helper';
+import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
+import LinkQuickAction from 'components/LinkQuickAction';
+import TableLoader from 'components/Loader/TableLoader';
 
 const getLinksListViewColumnData = (props) => {
 	const analytic = (analytic, ID) => {
@@ -165,7 +165,7 @@ const ListCanvas = (props) => {
 			}
 		};
 		return (
-			<LinksListViewFilter
+			<LinksFilter
 				deleteLinkHandler={props.delete_link}
 				catItems={categories}
 				bulkActionData={bulkActionData}

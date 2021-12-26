@@ -1,5 +1,5 @@
-import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK } from '../actions/links.actions';
-import { move, reorder } from '../../utils/helper';
+import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK } from 'redux/actions/links.actions';
+import { move, reorder } from 'utils/helper';
 function links(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {

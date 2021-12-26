@@ -182,6 +182,9 @@ class Links extends Controller
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $this->delete_link($request);
+        if (isset($request['id'])) {
+            \BetterLinks\Helper::delete_link_meta($request['id'], 'keywords');
+        }
         return new \WP_REST_Response(
             [
                 'success' => true,

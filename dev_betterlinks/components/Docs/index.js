@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url } from '../../utils/helper';
+import { plugin_root_url } from 'utils/helper';
 
 const propTypes = {};
 
@@ -33,7 +33,7 @@ export default function Docs(props) {
 					</div>
 					<h3 className="btl-doc__title">{__('Need Help?', 'betterlinks')}</h3>
 					<p className="btl-doc__content">{__('Stuck with something? Feel free to reach out to our Live Chat agent or create a support ticket.', 'betterlinks')}</p>
-					<a href="https://wpdeveloper.net/support/" className="btl-doc__url" target="_blank">
+					<a href="https://wpdeveloper.com/support/" className="btl-doc__url" target="_blank">
 						{__('Get Help', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>
@@ -46,7 +46,7 @@ export default function Docs(props) {
 					<p className="btl-doc__content">
 						{__('Join the Facebook community and discuss with fellow developers and users. Best way to connect with people and get feedback on your projects.', 'betterlinks')}
 					</p>
-					<a href="https://www.facebook.com/groups/wpdeveloper.net/" className="btl-doc__url" target="_blank">
+					<a href="https://www.facebook.com/groups/wpdeveloper.com/" className="btl-doc__url" target="_blank">
 						{__('Join the Community', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>
@@ -62,7 +62,7 @@ export default function Docs(props) {
 							'betterlinks'
 						)}
 					</p>
-					<a href="https://wpdeveloper.net/review-betterlinks" className="btl-doc__url" target="_blank">
+					<a href="https://wpdeveloper.com/review-betterlinks" className="btl-doc__url" target="_blank">
 						{__('Leave a Review', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>

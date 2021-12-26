@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import activity from './activity.reducers';
-import settings from './settings.reducers';
-import links from './links.reducers';
-import terms from './terms.reducers';
-import clicks from './clicks.reducers';
+import activity from 'redux/reducers/activity.reducers';
+import settings from 'redux/reducers/settings.reducers';
+import links from 'redux/reducers/links.reducers';
+import terms from 'redux/reducers/terms.reducers';
+import clicks from 'redux/reducers/clicks.reducers';
+import keywords from 'redux/reducers/keywords.reducers';
 
-export default combineReducers({ activity, settings, links, terms, clicks });
+export default combineReducers({ activity, settings, links, terms, clicks, keywords });

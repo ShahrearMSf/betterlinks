@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import BetterLinks from './containers/BetterLinks';
-import store from './redux/store';
+import App from 'App';
+import store from 'redux/store';
 import { createHooks } from '@wordpress/hooks';
 window.betterLinksHooks = createHooks();
 
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	ReactDOM.render(
 		<Provider store={store}>
 			<Router>
-				<BetterLinks />
+				<App />
 			</Router>
 		</Provider>,
 		document.getElementById('betterlinksbody')

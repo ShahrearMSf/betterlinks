@@ -48,6 +48,12 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
         add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
         add_action('wp_ajax_betterlinks/admin/fetch_analytics', [$this, 'fetch_analytics']);
+        add_action('wp_ajax_betterlinks/admin/get_all_keywords', [$this, 'get_all_keywords']);
+        
+        // post type, tags, categories
+        add_action('wp_ajax_betterlinks/admin/get_post_types', [$this, 'get_post_types']);
+        add_action('wp_ajax_betterlinks/admin/get_post_tags', [$this, 'get_post_tags']);
+        add_action('wp_ajax_betterlinks/admin/get_post_categories', [$this, 'get_post_categories']);
     }
 
     public function get_prettylinks_data()
@@ -434,6 +440,9 @@ class Ajax
             'term_id' => ($_REQUEST['term_id'] ? sanitize_text_field($_REQUEST['term_id']) : ''),
         ];
         $this->delete_link($args);
+        if (!empty($args['ID'])) {
+            \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
+        }
         wp_send_json_success(
             $args,
             200
@@ -585,6 +594,50 @@ class Ajax
         } else {
             $results = $this->get_clicks_data($from, $to);
         }
+        wp_send_json_success(
+            $results,
+            200
+        );
+        wp_die();
+    }
+    public function get_post_types()
+    {
+        $post_types = get_post_types(array('public' => true));
+        wp_send_json_success(
+            $post_types,
+            200
+        );
+        wp_die();
+    }
+    public function get_post_tags()
+    {
+        $tags = get_tags(array('get'=>'all'));
+        $tags = wp_list_pluck($tags, 'name', 'slug');
+        wp_send_json_success(
+            $tags,
+            200
+        );
+        wp_die();
+    }
+    public function get_post_categories()
+    {
+        $categories = get_categories(array(
+            'orderby' => 'name'
+        ));
+        $categories = wp_list_pluck($categories, 'name', 'slug');
+        wp_send_json_success(
+            $categories,
+            200
+        );
+        wp_die();
+    }
+    public function get_all_keywords()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (! apply_filters('betterlinks/api/keywords_get_items_permission_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        $results = \BetterLinks\Helper::get_keywords();
         wp_send_json_success(
             $results,
             200

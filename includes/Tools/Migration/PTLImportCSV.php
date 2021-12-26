@@ -2,6 +2,7 @@
 namespace BetterLinks\Tools\Migration;
 
 use BetterLinks\Interfaces\ImportCsvInterface;
+use Error;
 
 class PTLImportCSV extends BaseCSV implements ImportCsvInterface
 {
@@ -58,6 +59,9 @@ class PTLImportCSV extends BaseCSV implements ImportCsvInterface
             ]);
         $link_id = $this->insert_link($link);
         if ($link_id) {
+            if (isset($item['keywords']) && !empty($item['keywords'])) {
+                $this->insert_keywords($link_id, $item['keywords']);
+            }
             return 'Imported Successfully "' . $item['name'] . '"';
         }
         return 'import failed "' . $item['name'] . '" already exists';
@@ -65,10 +69,10 @@ class PTLImportCSV extends BaseCSV implements ImportCsvInterface
 
     public function process_clicks_data($item)
     {
-        $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item['URI'], '/'));
+        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['URI'], '/'));
         if (count($link) > 0) {
             $click = [
-                    'link_id' => $link[0]->ID,
+                    'link_id' => $link[0]['ID'],
                     'ip' => $item['IP'],
                     'browser' => $item['Browser'],
                     'os' => $item['Platform'],

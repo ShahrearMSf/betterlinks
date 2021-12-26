@@ -1,4 +1,4 @@
-import { API, namespace, makeRequest } from '../../utils/helper';
+import { API, namespace, makeRequest } from 'utils/helper';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
 export const UPDATE_OPTION = 'UPDATE_OPTION';

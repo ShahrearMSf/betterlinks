@@ -328,7 +328,7 @@ trait Query
         }
         // make term and link relation
         // delete term relation
-        if ($is_update) {
+        if ($is_update && count($term_data) > 0) {
             $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'link_id' => $link_id ), array( '%d' ));
             if ($is_delete) {
                 foreach ($term_data as $term) {
@@ -508,6 +508,10 @@ trait Query
             if (!empty($expire_date) && $now > strtotime($expire_date)) {
                 $link_status = 'draft';
             }
+            // keywords
+            $keywords = get_post_meta($thirstylink->ID, '_ta_autolink_keyword_list', true);
+            $limit = get_post_meta($thirstylink->ID, '_ta_autolink_keyword_limit', true);
+
 
             $response[] = [
                 'link_title' => $thirstylink->post_title,
@@ -529,7 +533,9 @@ trait Query
                 'link_modified_gmt' => $thirstylink->post_modified_gmt,
                 'terms'  => $term,
                 'expire'  => json_encode($expire),
-                'dynamic_redirect'  => json_encode($dynamic_redirect)
+                'dynamic_redirect'  => json_encode($dynamic_redirect),
+                'keywords'  => $keywords,
+                'limit'     => $limit
             ];
         }
         return $response;
@@ -552,5 +558,121 @@ trait Query
             ARRAY_A
         );
         return $clicks;
+    }
+
+    public static function get_link_meta($link_id, $meta_key)
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'betterlinkmeta';
+        if (empty($link_id) || empty($meta_key)) {
+            return false;
+        }
+        $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
+        $results = $wpdb->get_results($query);
+        if (!empty($results)) {
+            return json_decode(current($results)->meta_value);
+        }
+        return;
+    }
+
+    public static function add_link_meta($link_id, $meta_key, $meta_value)
+    {
+        global $wpdb;
+        $meta_key   = wp_unslash($meta_key);
+        $meta_value = wp_unslash($meta_value);
+        $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
+        if (empty($link_id) || empty($meta_key)) {
+            return false;
+        }
+        $result = $wpdb->insert(
+            $wpdb->prefix . 'betterlinkmeta',
+            array(
+                'link_id'    => $link_id,
+                'meta_key'   => $meta_key,
+                'meta_value' => $meta_value,
+            )
+        );
+        if (! $result) {
+            return false;
+        }
+        return (int) $wpdb->insert_id;
+    }
+    public static function update_link_meta($link_id, $meta_key, $meta_value)
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'betterlinkmeta';
+        $link_id = absint($link_id);
+        $meta_key   = wp_unslash($meta_key);
+        $meta_value = wp_unslash($meta_value);
+        $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
+
+        if (empty($link_id) || empty($meta_key)) {
+            return false;
+        }
+
+        $meta_ids = $wpdb->get_col($wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id));
+        if (empty($meta_ids)) {
+            return self::add_link_meta($link_id, $meta_key, $meta_value);
+        }
+
+        $result = $wpdb->query($wpdb->prepare(
+            "UPDATE $table
+            SET meta_value = %s
+            WHERE link_id = %d AND meta_key=%s",
+            $meta_value,
+            $link_id,
+            $meta_key
+        ));
+
+        if (! $result) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function delete_link_meta($link_id, $meta_key, $meta_value = '')
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'betterlinkmeta';
+        if (empty($link_id) || empty($meta_key)) {
+            return false;
+        }
+        $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
+        
+        if (!empty($meta_value)) {
+            $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
+        }
+
+        $meta_ids = $wpdb->get_col($query);
+        if (! count($meta_ids)) {
+            return false;
+        }
+        $query = "DELETE FROM $table WHERE link_id IN( " . implode(',', $meta_ids) . ' )';
+        $count = $wpdb->query($query);
+        if (! $count) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function get_keywords()
+    {
+        global $wpdb;
+        $results = $wpdb->get_results(
+            $wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}betterlinkmeta WHERE meta_key=%s ORDER BY meta_id DESC", 'keywords'),
+            ARRAY_A
+        );
+        $results = array_column($results, 'meta_value');
+        return $results;
+    }
+
+    public static function get_links_by_exclude_keywords()
+    {
+        global $wpdb;
+        $results = $wpdb->get_results(
+            "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks WHERE NOT EXISTS (SELECT betterlinkmeta.link_id FROM {$wpdb->prefix}betterlinkmeta betterlinkmeta WHERE betterlinks.ID = betterlinkmeta.link_id)",
+            ARRAY_A
+        );
+        return $results;
     }
 }

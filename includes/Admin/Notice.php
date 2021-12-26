@@ -55,7 +55,7 @@ class Notice
                     ],
                 ),
                 'support' => array(
-                    'link' => 'https://wpdeveloper.net/support',
+                    'link' => 'https://wpdeveloper.com/support',
                     'label' => __('I need help', 'betterlinks'),
                     'icon_class' => 'dashicons dashicons-sos',
                 ),

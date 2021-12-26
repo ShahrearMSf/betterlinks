@@ -3,7 +3,7 @@ namespace BetterLinks\Tools\Migration;
 
 use BetterLinks\Interfaces\ImportOneClickInterface;
 
-class PTLOneClick implements ImportOneClickInterface
+class PTLOneClick extends BaseCSV implements ImportOneClickInterface
 {
     public function run_importer($type)
     {
@@ -29,7 +29,7 @@ class PTLOneClick implements ImportOneClickInterface
             if (empty($item['name']) || $item['name'] == 1) {
                 continue;
             }
-
+            
             $slug = \BetterLinks\Helper::make_slug($item['name']);
             $link = apply_filters('betterlinks/tools/migration/ptl_one_click_import_link_arg', [
                     'link_author' => $author_id,
@@ -54,6 +54,12 @@ class PTLOneClick implements ImportOneClickInterface
 
             $link_id = \BetterLinks\Helper::insert_link($link);
             if ($link_id) {
+                $keywords = $this->get_keywords($item['id'], '');
+                if (!empty($keywords)) {
+                    $keywords = wp_list_pluck($keywords, 'text');
+                    $keywords = implode(',', $keywords);
+                    $this->insert_keywords($link_id, $keywords);
+                }
                 if (isset($item['link_cpt_id']) && !empty($item['link_cpt_id'])) {
                     $term = get_the_terms($item['link_cpt_id'], 'pretty-link-category');
                     $term = !empty($term) && is_array($term) ? current($term)->name : 'uncategorized';
@@ -108,5 +114,22 @@ class PTLOneClick implements ImportOneClickInterface
         return [
             'clicks' => $message,
         ];
+    }
+    public function get_keywords($link_id)
+    {
+        global $wpdb;
+        $query = $wpdb->prepare(
+            "
+                SELECT text
+                FROM {$wpdb->prefix}prli_keywords AS kw
+                WHERE kw.link_id=%d
+            ",
+            $link_id
+        );
+        $resutls = $wpdb->get_results($query);
+        if (!empty($resutls)) {
+            return  $resutls;
+        }
+        return;
     }
 }

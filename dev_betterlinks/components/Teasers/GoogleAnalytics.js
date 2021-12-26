@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import UpgradeToPro from './UpgradeToPro';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 export default class GoogleAnalytics extends React.Component {
 	constructor(props) {
 		super(props);
