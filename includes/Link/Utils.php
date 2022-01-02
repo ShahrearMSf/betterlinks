@@ -17,18 +17,20 @@ class Utils
         // wildcards
         $links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
         if (isset($links_option['wildcards']) && $links_option['wildcards']) {
-            $results = current(\BetterLinks\Helper::get_link_by_wildcards(1));
-            foreach ($results as $key => $item) {
-                $postion = strpos($item['short_url'], '/*');
-                if ($postion !== false) {
-                    if (substr($item['short_url'], 0, $postion) == substr($slug, 0, $postion)) {
-                        $target_postion = strpos($item['target_url'], '/*');
-                        if ($target_postion !== false) {
-                            $target_url = str_replace('/*', substr($slug, $postion), $item['target_url']);
-                            $item['target_url'] = $target_url;
+            $results = \BetterLinks\Helper::get_link_by_wildcards(1);
+            if (is_array($results) && count($results) > 0) {
+                foreach ($results as $key => $item) {
+                    $postion = strpos($item['short_url'], '/*');
+                    if ($postion !== false) {
+                        if (substr($item['short_url'], 0, $postion) == substr($slug, 0, $postion)) {
+                            $target_postion = strpos($item['target_url'], '/*');
+                            if ($target_postion !== false) {
+                                $target_url = str_replace('/*', substr($slug, $postion), $item['target_url']);
+                                $item['target_url'] = $target_url;
+                                return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item), true));
+                            }
                             return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item), true));
                         }
-                        return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($item), true));
                     }
                 }
             }
