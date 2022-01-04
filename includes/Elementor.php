@@ -1,13 +1,18 @@
 <?php
+
 namespace BetterLinks;
 
 use Elementor\Controls_Manager;
+use Elementor\Plugin;
 
 class Elementor {
+	use \BetterLinks\Traits\Links;
 	use \BetterLinks\Traits\Terms;
+	use \BetterLinks\Traits\ArgumentSchema;
 
 	public function __construct() {
 		add_action( 'elementor/element/before_section_end', [ $this, 'add_controller' ], 10, 3 );
+		add_action( 'elementor/editor/after_save', [ $this, 'handle_instant_redirect_data' ], 10, 2 );
 	}
 
 	public function bl_get_link_options( $option_name = null ) {
@@ -102,8 +107,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => 'yes',
-				'default'      => $this->bl_get_link_options( 'nofollow' ) == true ? 'yes' : '',
+				'return_value' => true,
+				'default'      => $this->bl_get_link_options( 'nofollow' ) == true ? true : '',
 			]
 		);
 
@@ -114,8 +119,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => 'yes',
-				'default'      => $this->bl_get_link_options( 'sponsored' ) == true ? 'yes' : '',
+				'return_value' => true,
+				'default'      => $this->bl_get_link_options( 'sponsored' ) == true ? true : '',
 			]
 		);
 
@@ -126,8 +131,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => 'yes',
-				'default'      => $this->bl_get_link_options( 'param_forwarding' ) == true ? 'yes' : '',
+				'return_value' => true,
+				'default'      => $this->bl_get_link_options( 'param_forwarding' ) == true ? true : '',
 			]
 		);
 
@@ -138,9 +143,35 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => 'yes',
-				'default'      => $this->bl_get_link_options( 'track_me' ) == true ? 'yes' : '',
+				'return_value' => true,
+				'default'      => $this->bl_get_link_options( 'track_me' ) == true ? true : '',
 			]
 		);
+	}
+
+	public function handle_instant_redirect_data( $post_id, $editor_data ) {
+		$document              = Plugin::$instance->documents->get( $post_id, false );
+		$title                 = rand();
+		$instant_redirect_data = [
+			'ID'                => 'undefined',
+			'target_url'        => $document->get_settings( 'bl_ir_target_url' ),
+			'cat_id'            => $document->get_settings( 'bl_ir_link_category' ),
+			'redirect_type'     => $document->get_settings( 'bl_ir_redirect_type' ),
+			'nofollow'          => $document->get_settings( 'bl_ir_link_options_nofollow' ),
+			'param_forwarding'  => $document->get_settings( 'bl_ir_link_options_parameter_forwarding' ),
+			'sponsored'         => $document->get_settings( 'bl_ir_link_options_sponsored' ),
+			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ),
+			'link_slug'         => $title,
+			'link_title'        => $title,
+			'short_url'         => $title,
+			'link_date'         => '2022-1-4 18:33:1',
+			'link_date_gmt'     => '2022-1-4 18:33:1',
+			'link_modified'     => '2022-1-4 18:33:1',
+			'link_modified_gmt' => '2022-1-4 18:33:1',
+		];
+
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+		$args    = $this->sanitize_links_data( $instant_redirect_data );
+		$results = $this->insert_link( $args );
 	}
 }
