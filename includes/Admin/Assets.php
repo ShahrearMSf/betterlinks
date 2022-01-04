@@ -8,6 +8,7 @@ class Assets
     {
         add_action('admin_enqueue_scripts', [$this, 'plugin_scripts']);
         add_action('enqueue_block_editor_assets', [$this, 'block_editor_assets']);
+	    add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'elementor_editor_assets' ] );
     }
 
     /**
@@ -101,4 +102,12 @@ class Assets
         ]);
         wp_set_script_translations('betterlinks-gutenberg', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
     }
+
+	/**
+	 * Enqueue Elementor Editor Page's Assets
+	 * @return void
+	 */
+	public function elementor_editor_assets() {
+		wp_enqueue_script( 'bl-el-editor', BETTERLINKS_ASSETS_URI . 'js/betterlinks-elementor.core.min.js', array( 'jquery' ), time(), true );
+	}
 }

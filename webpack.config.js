@@ -7,6 +7,7 @@ const config = {
 	entry: {
 		'betterlinks.core.min': './dev_betterlinks/index.js',
 		'betterlinks-gutenberg.core.min': './dev_betterlinks/gutenberg.js',
+		'betterlinks-elementor.core.min': './dev_betterlinks/elementor.js',
 	},
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),
