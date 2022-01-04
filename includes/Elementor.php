@@ -4,6 +4,8 @@ namespace BetterLinks;
 use Elementor\Controls_Manager;
 
 class Elementor {
+	use \BetterLinks\Traits\Terms;
+
 	public function __construct() {
 		add_action( 'elementor/element/before_section_end', [ $this, 'add_controller' ], 10, 3 );
 	}
@@ -20,6 +22,21 @@ class Elementor {
 		}
 
 		return $links_option;
+	}
+
+	public function bl_get_category_options( $first_index = false ) {
+		$terms   = $this->get_all_terms_data( null );
+		$options = [];
+		$index   = 0;
+		foreach ( (array) $terms as $term ) {
+			if ( $first_index && $index === 0 ) {
+				return $term['ID'];
+			}
+			$options[ $term['ID'] ] = $term['term_name'];
+			$index ++;
+		}
+
+		return $options;
 	}
 
 	public function add_controller( $document, $section_id, $args ) {
@@ -65,12 +82,8 @@ class Elementor {
 			[
 				'type'    => Controls_Manager::SELECT,
 				'label'   => __( 'Choose Category', 'betterlinks' ),
-				'default' => '1',
-				'options' => [
-					'1' => esc_html__( 'Uncategorized', 'betterlinks' ),
-					'2' => esc_html__( 'For Elementor', 'betterlinks' ),
-					'3' => esc_html__( 'For Gutenberg', 'betterlinks' ),
-				],
+				'default' => $this->bl_get_category_options( true ),
+				'options' => $this->bl_get_category_options(),
 			]
 		);
 
