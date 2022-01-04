@@ -96,6 +96,7 @@ if (!class_exists('BetterLinks')) {
             }
             new BetterLinks\Link();
             new BetterLinks\Tools();
+            new BetterLinks\Elementor();
             $this->run_migrator();
         }
 
