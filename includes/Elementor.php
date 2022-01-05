@@ -162,7 +162,7 @@ class Elementor {
 			'sponsored'         => $document->get_settings( 'bl_ir_link_options_sponsored' ) === 'yes' ? 1 : '',
 			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ) === 'yes' ? 1 : '',
 			'link_slug'         => $title,
-			'link_title'        => $title,
+			'link_title'        => $document->get_settings( 'post_title' ),
 			'short_url'         => $title,
 			'link_date'         => '2022-1-4 18:33:1',
 			'link_date_gmt'     => '2022-1-4 18:33:1',
