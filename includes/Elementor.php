@@ -107,8 +107,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => true,
-				'default'      => $this->bl_get_link_options( 'nofollow' ) == true ? true : '',
+				'return_value' => 'yes',
+				'default'      => $this->bl_get_link_options( 'nofollow' ) == true ? 'yes' : '',
 			]
 		);
 
@@ -119,8 +119,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => true,
-				'default'      => $this->bl_get_link_options( 'sponsored' ) == true ? true : '',
+				'return_value' => 'yes',
+				'default'      => $this->bl_get_link_options( 'sponsored' ) == true ? 'yes' : '',
 			]
 		);
 
@@ -131,8 +131,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => true,
-				'default'      => $this->bl_get_link_options( 'param_forwarding' ) == true ? true : '',
+				'return_value' => 'yes',
+				'default'      => $this->bl_get_link_options( 'param_forwarding' ) == true ? 'yes' : '',
 			]
 		);
 
@@ -143,8 +143,8 @@ class Elementor {
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
-				'return_value' => true,
-				'default'      => $this->bl_get_link_options( 'track_me' ) == true ? true : '',
+				'return_value' => 'yes',
+				'default'      => $this->bl_get_link_options( 'track_me' ) == true ? 'yes' : '',
 			]
 		);
 	}
@@ -157,10 +157,10 @@ class Elementor {
 			'target_url'        => $document->get_settings( 'bl_ir_target_url' ),
 			'cat_id'            => $document->get_settings( 'bl_ir_link_category' ),
 			'redirect_type'     => $document->get_settings( 'bl_ir_redirect_type' ),
-			'nofollow'          => $document->get_settings( 'bl_ir_link_options_nofollow' ),
-			'param_forwarding'  => $document->get_settings( 'bl_ir_link_options_parameter_forwarding' ),
-			'sponsored'         => $document->get_settings( 'bl_ir_link_options_sponsored' ),
-			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ),
+			'nofollow'          => $document->get_settings( 'bl_ir_link_options_nofollow' ) === 'yes' ? 1 : '',
+			'param_forwarding'  => $document->get_settings( 'bl_ir_link_options_parameter_forwarding' ) === 'yes' ? 1 : '',
+			'sponsored'         => $document->get_settings( 'bl_ir_link_options_sponsored' ) === 'yes' ? 1 : '',
+			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ) === 'yes' ? 1 : '',
 			'link_slug'         => $title,
 			'link_title'        => $title,
 			'short_url'         => $title,
