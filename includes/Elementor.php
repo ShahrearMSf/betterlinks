@@ -44,6 +44,17 @@ class Elementor {
 		return $options;
 	}
 
+	public function gen_short_link_from_permalink( $page_id ) {
+		$permalink = get_permalink( $page_id );
+		$permalink = str_replace( site_url( '/' ), '', $permalink );
+
+		if ( $permalink[ - 1 ] === '/' ) {
+			$permalink = substr_replace( $permalink, '', - 1 );
+		}
+
+		return $permalink;
+	}
+
 	public function add_controller( $document, $section_id, $args ) {
 		if ( $section_id === 'document_settings' && $args['tab'] === 'settings' ) {
 			$this->instant_redirect_controls( $document );
@@ -165,7 +176,7 @@ class Elementor {
 			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ) === 'yes' ? 1 : '',
 			'link_slug'         => $title,
 			'link_title'        => $document->get_settings( 'post_title' ),
-			'short_url'         => $title,
+			'short_url'         => $this->gen_short_link_from_permalink( $post_id ),
 			'link_date'         => date( 'Y-m-d H:i:s', $current_time ),
 			'link_date_gmt'     => date( 'Y-m-d H:i:s', $current_gmt_time ),
 			'link_modified'     => date( 'Y-m-d H:i:s', $current_time ),
