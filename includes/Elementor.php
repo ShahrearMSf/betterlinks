@@ -13,6 +13,7 @@ class Elementor {
 	public function __construct() {
 		add_action( 'elementor/element/before_section_end', [ $this, 'add_controller' ], 10, 3 );
 		add_action( 'elementor/editor/after_save', [ $this, 'handle_instant_redirect_data' ], 10, 2 );
+		add_action( 'betterlinks/pre_before_redirect', [ $this, 'disable_elementor_preview_redirect' ] );
 	}
 
 	public function bl_get_link_options( $option_name = null ) {
@@ -53,6 +54,14 @@ class Elementor {
 		}
 
 		return $permalink;
+	}
+
+	public function disable_elementor_preview_redirect( $data ) {
+		if ( isset( $_GET['elementor-preview'] ) ) {
+			return false;
+		}
+
+		return $data;
 	}
 
 	public function add_controller( $document, $section_id, $args ) {
