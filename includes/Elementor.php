@@ -56,6 +56,15 @@ class Elementor {
 		return $permalink;
 	}
 
+	public function gen_slug_from_title( $title ) {
+		$string = strtolower( $title );
+		$string = preg_replace( '/-+/', '', $string );
+		$string = preg_replace( '/\s+/', '-', $string );
+		$string = preg_replace( '/[^a-z0-9-]/', '', $string );
+
+		return $string;
+	}
+
 	public function disable_elementor_preview_redirect( $data ) {
 		if ( isset( $_GET['elementor-preview'] ) ) {
 			return false;
@@ -173,7 +182,7 @@ class Elementor {
 		$document              = Plugin::$instance->documents->get( $post_id, false );
 		$current_time          = current_time( 'U' );
 		$current_gmt_time      = current_time( 'U', true );
-		$title                 = rand();
+		$title                 = $document->get_settings( 'post_title' );
 		$shortLink             = $this->gen_short_link_from_permalink( $post_id );
 		$link                  = \BetterLinks\Traits\Query::get_link_by_short_url( $shortLink );
 		$link_id               = isset( $link[0]['ID'] ) ? $link[0]['ID'] : 'undefined';
@@ -186,8 +195,8 @@ class Elementor {
 			'param_forwarding'  => $document->get_settings( 'bl_ir_link_options_parameter_forwarding' ) === 'yes' ? 1 : '',
 			'sponsored'         => $document->get_settings( 'bl_ir_link_options_sponsored' ) === 'yes' ? 1 : '',
 			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ) === 'yes' ? 1 : '',
-			'link_slug'         => $title,
-			'link_title'        => $document->get_settings( 'post_title' ),
+			'link_slug'         => $this->gen_slug_from_title( $title ),
+			'link_title'        => $title,
 			'short_url'         => $shortLink,
 			'link_date'         => date( 'Y-m-d H:i:s', $current_time ),
 			'link_date_gmt'     => date( 'Y-m-d H:i:s', $current_gmt_time ),
