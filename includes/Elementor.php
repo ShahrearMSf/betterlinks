@@ -209,6 +209,7 @@ class Elementor {
 		if ( $link_id === 'undefined ' ) {
 			$this->insert_link( $args );
 		} else {
+			unset( $args['link_date'], $args['link_date_gmt'] );
 			$this->update_link( $args );
 		}
 	}
