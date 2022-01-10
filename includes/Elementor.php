@@ -222,6 +222,7 @@ class Elementor {
 		$shortLink             = $this->gen_short_link_from_permalink( $post_id );
 		$link                  = \BetterLinks\Traits\Query::get_link_by_short_url( $shortLink );
 		$link_id               = isset( $link[0]['ID'] ) ? $link[0]['ID'] : 'undefined';
+		$is_active             = $document->get_settings( 'bl_ir_active' );
 		$instant_redirect_data = [
 			'ID'                => $link_id,
 			'target_url'        => $document->get_settings( 'bl_ir_target_url' ),
@@ -241,12 +242,21 @@ class Elementor {
 		];
 
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
-		$args = $this->sanitize_links_data( $instant_redirect_data );
-		if ( $link_id === 'undefined ' ) {
+
+		if ( $link_id === 'undefined' && $is_active === 'yes' ) {
+			$args = $this->sanitize_links_data( $instant_redirect_data );
 			$this->insert_link( $args );
-		} else {
+		} elseif ( $link_id !== 'undefined' && $is_active === 'yes' ) {
+			$args = $this->sanitize_links_data( $instant_redirect_data );
 			unset( $args['link_date'], $args['link_date_gmt'] );
 			$this->update_link( $args );
+		} elseif ( $link_id !== 'undefined' && $is_active !== 'yes' ) {
+			$args = [
+				'ID'        => $link_id,
+				'short_url' => $shortLink
+			];
+			$this->delete_link( $args );
+			\BetterLinks\Helper::delete_link_meta( $args['ID'], 'keywords' );
 		}
 	}
 }
