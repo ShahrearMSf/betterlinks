@@ -252,8 +252,8 @@ class Elementor {
 			$this->update_link( $args );
 		} elseif ( $link_id !== 'undefined' && $is_active !== 'yes' ) {
 			$args = [
-				'ID'        => $link_id,
-				'short_url' => $shortLink
+				'ID'        => sanitize_text_field( $link_id ),
+				'short_url' => sanitize_text_field( $shortLink ),
 			];
 			$this->delete_link( $args );
 			\BetterLinks\Helper::delete_link_meta( $args['ID'], 'keywords' );
