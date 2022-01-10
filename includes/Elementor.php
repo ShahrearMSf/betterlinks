@@ -174,8 +174,11 @@ class Elementor {
 		$current_time          = current_time( 'U' );
 		$current_gmt_time      = current_time( 'U', true );
 		$title                 = rand();
+		$shortLink             = $this->gen_short_link_from_permalink( $post_id );
+		$link                  = \BetterLinks\Traits\Query::get_link_by_short_url( $shortLink );
+		$link_id               = isset( $link[0]['ID'] ) ? $link[0]['ID'] : 'undefined';
 		$instant_redirect_data = [
-			'ID'                => 'undefined',
+			'ID'                => $link_id,
 			'target_url'        => $document->get_settings( 'bl_ir_target_url' ),
 			'cat_id'            => $document->get_settings( 'bl_ir_link_category' ),
 			'redirect_type'     => $document->get_settings( 'bl_ir_redirect_type' ),
@@ -185,7 +188,7 @@ class Elementor {
 			'track_me'          => $document->get_settings( 'bl_ir_link_options_tracking' ) === 'yes' ? 1 : '',
 			'link_slug'         => $title,
 			'link_title'        => $document->get_settings( 'post_title' ),
-			'short_url'         => $this->gen_short_link_from_permalink( $post_id ),
+			'short_url'         => $shortLink,
 			'link_date'         => date( 'Y-m-d H:i:s', $current_time ),
 			'link_date_gmt'     => date( 'Y-m-d H:i:s', $current_gmt_time ),
 			'link_modified'     => date( 'Y-m-d H:i:s', $current_time ),
@@ -193,7 +196,11 @@ class Elementor {
 		];
 
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
-		$args    = $this->sanitize_links_data( $instant_redirect_data );
-		$results = $this->insert_link( $args );
+		$args = $this->sanitize_links_data( $instant_redirect_data );
+		if ( $link_id === 'undefined ' ) {
+			$this->insert_link( $args );
+		} else {
+			$this->update_link( $args );
+		}
 	}
 }
