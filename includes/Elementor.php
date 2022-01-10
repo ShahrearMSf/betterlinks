@@ -90,10 +90,25 @@ class Elementor {
 		);
 
 		$controls->add_control(
+			'bl_ir_active',
+			[
+				'label'        => esc_html__( 'Active Instant Redirect', 'betterlinks' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'On', 'betterlinks' ),
+				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
+				'return_value' => 'yes',
+				'default'      => '',
+			]
+		);
+
+		$controls->add_control(
 			'bl_ir_target_url',
 			[
 				'type'  => Controls_Manager::TEXT,
 				'label' => __( 'Target URL', 'betterlinks' ),
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -108,6 +123,9 @@ class Elementor {
 					'302' => esc_html__( '302 (Temporary)', 'betterlinks' ),
 					'301' => esc_html__( '301 (Temporary)', 'betterlinks' ),
 				],
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -118,6 +136,9 @@ class Elementor {
 				'label'   => __( 'Choose Category', 'betterlinks' ),
 				'default' => $this->bl_get_category_options( true ),
 				'options' => $this->bl_get_category_options(),
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -126,6 +147,9 @@ class Elementor {
 			[
 				'type'  => Controls_Manager::HEADING,
 				'label' => __( 'Link Options', 'betterlinks' ),
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -138,6 +162,9 @@ class Elementor {
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
 				'return_value' => 'yes',
 				'default'      => $this->bl_get_link_options( 'nofollow' ) == true ? 'yes' : '',
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -150,6 +177,9 @@ class Elementor {
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
 				'return_value' => 'yes',
 				'default'      => $this->bl_get_link_options( 'sponsored' ) == true ? 'yes' : '',
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -162,6 +192,9 @@ class Elementor {
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
 				'return_value' => 'yes',
 				'default'      => $this->bl_get_link_options( 'param_forwarding' ) == true ? 'yes' : '',
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 
@@ -174,6 +207,9 @@ class Elementor {
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
 				'return_value' => 'yes',
 				'default'      => $this->bl_get_link_options( 'track_me' ) == true ? 'yes' : '',
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
 			]
 		);
 	}
