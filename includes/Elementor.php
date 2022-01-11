@@ -143,6 +143,7 @@ class Elementor {
 				'condition' => [
 					'bl_ir_active' => 'yes'
 				],
+				'separator' => 'before',
 			]
 		);
 
@@ -206,7 +207,7 @@ class Elementor {
 			]
 		);
 
-		do_action('betterlinks/elementor/controllers/before-end', $controls );
+		do_action( 'betterlinks/elementor/controllers/before-end', $controls );
 
 		$controls->end_controls_section();
 	}
