@@ -247,6 +247,19 @@ class Elementor {
 			if ( $status = $document->get_settings( 'bl_ir_adv_status' ) ) {
 				$instant_redirect_data['link_status'] = $status;
 			}
+
+			if ( $document->get_settings( 'bl_ir_adv_expire' ) === 'yes' ) {
+				$instant_redirect_data['expire'] = [
+					'status'          => 1,
+					'type'            => $document->get_settings( 'bl_ir_adv_expire_after' ),
+					'clicks'          => $document->get_settings( 'bl_ir_adv_expire_after_clicks' ),
+					'date'            => $document->get_settings( 'bl_ir_adv_expire_after_date' ),
+					'redirect_status' => $document->get_settings( 'bl_ir_adv_expire_redirect' ) === 'yes' ? 1 : 0,
+					'redirect_url'    => $document->get_settings( 'bl_ir_adv_expire_redirect_url' ),
+				];
+			} else {
+				$instant_redirect_data['expire'] = '';
+			}
 		}
 
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
