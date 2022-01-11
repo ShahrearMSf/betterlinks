@@ -11,7 +11,7 @@ class Elementor {
 	use \BetterLinks\Traits\ArgumentSchema;
 
 	public function __construct() {
-		add_action( 'elementor/element/before_section_end', [ $this, 'add_controller' ], 10, 3 );
+		add_action( 'elementor/documents/register_controls', [ $this, 'instant_redirect_controls' ] );
 		add_action( 'elementor/editor/after_save', [ $this, 'handle_instant_redirect_data' ], 10, 2 );
 		add_action( 'betterlinks/pre_before_redirect', [ $this, 'disable_elementor_preview_redirect' ] );
 	}
@@ -73,19 +73,12 @@ class Elementor {
 		return $data;
 	}
 
-	public function add_controller( $document, $section_id, $args ) {
-		if ( $section_id === 'document_settings' && $args['tab'] === 'settings' ) {
-			$this->instant_redirect_controls( $document );
-		}
-	}
-
 	public function instant_redirect_controls( $controls ) {
-		$controls->add_control(
-			'bl_instant_redirect_heading',
+		$controls->start_controls_section(
+			'bl_instant_redirect_section',
 			[
-				'type'      => Controls_Manager::HEADING,
-				'label'     => __( 'BetterLinks Instant Redirect', 'betterlinks' ),
-				'separator' => 'before',
+				'label' => __( 'BetterLinks Instant Redirect', 'betterlinks' ),
+				'tab'   => Controls_Manager::TAB_SETTINGS,
 			]
 		);
 
@@ -212,6 +205,8 @@ class Elementor {
 				],
 			]
 		);
+
+		$controls->end_controls_section();
 	}
 
 	public function handle_instant_redirect_data( $post_id, $editor_data ) {
