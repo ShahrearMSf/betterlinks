@@ -213,7 +213,7 @@ class Elementor {
 	}
 
 	public function handle_instant_redirect_data( $post_id, $editor_data ) {
-		if ( wp_doing_cron() ) {
+		if ( wp_doing_cron() || get_post_type( $post_id ) == 'revision' ) {
 			return;
 		}
 
