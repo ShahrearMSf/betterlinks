@@ -213,6 +213,10 @@ class Elementor {
 	}
 
 	public function handle_instant_redirect_data( $post_id, $editor_data ) {
+		if ( wp_doing_cron() ) {
+			return;
+		}
+
 		$document              = Plugin::$instance->documents->get( $post_id, false );
 		$current_time          = current_time( 'U' );
 		$current_gmt_time      = current_time( 'U', true );
@@ -238,6 +242,12 @@ class Elementor {
 			'link_modified'     => date( 'Y-m-d H:i:s', $current_time ),
 			'link_modified_gmt' => date( 'Y-m-d H:i:s', $current_gmt_time ),
 		];
+
+		if ( class_exists( 'BetterLinksPro' ) ) {
+			if ( $status = $document->get_settings( 'bl_ir_adv_status' ) ) {
+				$instant_redirect_data['link_status'] = $status;
+			}
+		}
 
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 
