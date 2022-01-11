@@ -21,7 +21,7 @@ function keywords(state = {}, action) {
 				data: [
 					payload.data,
 					...state.data.filter((item) => {
-						if (item.link_id != payload.data.old_link_id) {
+						if (item.link_id != payload.data.old_link_id && item.link_id != payload.data.link_id) {
 							return item;
 						}
 					}),
