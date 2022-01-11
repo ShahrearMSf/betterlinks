@@ -206,6 +206,8 @@ class Elementor {
 			]
 		);
 
+		do_action('betterlinks/elementor/controllers/before-end', $controls );
+
 		$controls->end_controls_section();
 	}
 
