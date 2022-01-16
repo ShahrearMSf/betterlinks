@@ -38,11 +38,14 @@ class Elementor {
 		$options = [];
 		$index   = 0;
 		foreach ( (array) $terms as $term ) {
+			if ( $term['term_type'] === 'tags' ) {
+				continue;
+			}
 			if ( $first_index && $index === 0 ) {
+				$index ++;
 				return $term['ID'];
 			}
 			$options[ $term['ID'] ] = $term['term_name'];
-			$index ++;
 		}
 
 		return $options;
@@ -117,7 +120,7 @@ class Elementor {
 				'options'   => [
 					'307' => esc_html__( '307 (Temporary)', 'betterlinks' ),
 					'302' => esc_html__( '302 (Temporary)', 'betterlinks' ),
-					'301' => esc_html__( '301 (Temporary)', 'betterlinks' ),
+					'301' => esc_html__( '301 (Permanent)', 'betterlinks' ),
 				],
 				'condition' => [
 					'bl_ir_active' => 'yes'
