@@ -288,7 +288,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 							<span className="btl-form-group">
-								<label className="btl-form-label">{__('Gutenberg Redirect', 'betterlinks')}</label>
+								<label className="btl-form-label">{__('Instant Redirect', 'betterlinks')}</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
 										<Field
@@ -301,7 +301,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 											{__('Allow Instant Redirect', 'betterlinks')}
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext">{__('This will allow you to redirect your links instantly from Gutenberg Editor.', 'betterlinks')}</span>
+												<span className="btl-tooltiptext">{__('This will allow you to redirect your links instantly from Gutenberg and Elementor Editor.', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>

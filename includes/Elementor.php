@@ -11,9 +11,12 @@ class Elementor {
 	use \BetterLinks\Traits\ArgumentSchema;
 
 	public function __construct() {
-		add_action( 'elementor/documents/register_controls', [ $this, 'instant_redirect_controls' ] );
-		add_action( 'elementor/editor/after_save', [ $this, 'handle_instant_redirect_data' ], 10, 2 );
 		add_action( 'betterlinks/pre_before_redirect', [ $this, 'disable_elementor_preview_redirect' ] );
+
+		if ( $this->bl_get_link_options( 'is_allow_gutenberg' ) ) {
+			add_action( 'elementor/documents/register_controls', [ $this, 'instant_redirect_controls' ] );
+			add_action( 'elementor/editor/after_save', [ $this, 'handle_instant_redirect_data' ], 10, 2 );
+		}
 	}
 
 	public function bl_get_link_options( $option_name = null ) {
