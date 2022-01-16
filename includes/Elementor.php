@@ -85,7 +85,7 @@ class Elementor {
 		$controls->add_control(
 			'bl_ir_active',
 			[
-				'label'        => esc_html__( 'Active Instant Redirect', 'betterlinks' ),
+				'label'        => esc_html__( 'Enable Instant Redirect', 'betterlinks' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'label_on'     => esc_html__( 'On', 'betterlinks' ),
 				'label_off'    => esc_html__( 'Off', 'betterlinks' ),
