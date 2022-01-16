@@ -55,7 +55,7 @@ class Elementor {
 		$permalink = get_permalink( $page_id );
 		$permalink = str_replace( site_url( '/' ), '', $permalink );
 
-		if ( $permalink[ - 1 ] === '/' ) {
+		if ( substr( $permalink, - 1 ) === '/' ) {
 			$permalink = substr_replace( $permalink, '', - 1 );
 		}
 
