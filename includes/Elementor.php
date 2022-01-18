@@ -213,6 +213,31 @@ class Elementor {
 			]
 		);
 
+		$controls->add_control(
+			'bl_ir_adv_heading',
+			[
+				'type'      => Controls_Manager::HEADING,
+				'label'     => __( 'Advanced', 'betterlinks' ),
+				'condition' => [
+					'bl_ir_active' => 'yes'
+				],
+				'separator' => 'before',
+			]
+		);
+
+		if ( ! class_exists( 'BetterLinksPro' ) ) {
+			$controls->add_control(
+				'bl_ir_adv_protext',
+				[
+					'type'      => Controls_Manager::RAW_HTML,
+					'condition' => [
+						'bl_ir_active' => 'yes'
+					],
+					'raw'       => sprintf( __( 'Get the <a href="%s" target="_blank" style="color: red;">PRO</a> version for more advanced link redirection features & many more!', 'betterlinks' ), 'https://wpdeveloper.com/in/upgrade-betterlinks' )
+				]
+			);
+		}
+
 		do_action( 'betterlinks/elementor/controllers/before-end', $controls );
 
 		$controls->end_controls_section();
