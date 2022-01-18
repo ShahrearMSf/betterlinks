@@ -14,9 +14,18 @@ class Elementor {
 		add_action( 'betterlinks/pre_before_redirect', [ $this, 'disable_elementor_preview_redirect' ] );
 
 		if ( $this->bl_get_link_options( 'is_allow_gutenberg' ) ) {
+			add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'elementor_editor_assets' ] );
 			add_action( 'elementor/documents/register_controls', [ $this, 'instant_redirect_controls' ] );
 			add_action( 'elementor/editor/after_save', [ $this, 'handle_instant_redirect_data' ], 10, 2 );
 		}
+	}
+
+	/**
+	 * Enqueue Elementor Editor Page's Assets
+	 * @return void
+	 */
+	public function elementor_editor_assets() {
+		wp_enqueue_style( 'bl-el-editor', BETTERLINKS_ASSETS_URI . 'css/elementor.css' );
 	}
 
 	public function bl_get_link_options( $option_name = null ) {
