@@ -213,18 +213,6 @@ class Elementor {
 			]
 		);
 
-		$controls->add_control(
-			'bl_ir_adv_heading',
-			[
-				'type'      => Controls_Manager::HEADING,
-				'label'     => __( 'Advanced', 'betterlinks' ),
-				'condition' => [
-					'bl_ir_active' => 'yes'
-				],
-				'separator' => 'before',
-			]
-		);
-
 		if ( ! class_exists( 'BetterLinksPro' ) ) {
 			$controls->add_control(
 				'bl_ir_adv_protext',
