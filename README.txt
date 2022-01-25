@@ -3,7 +3,7 @@ Contributors: wpdevteam, re_enter_rupok, asif2bd, tusharimran, sapanmozammel
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, shortlinks, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
 Stable tag: 1.3.0
 License: GPLv3 or later
@@ -21,7 +21,7 @@ Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings 
 - Easy-to-use WordPress link shortener
 - Create attractive looking links instantly
 - Add multiple link redirect types (301, 302, 307)
-- Analyze & track your marketing campaigns 
+- Analyze & track your marketing campaigns
 - Enhance your affiliate marketing strategies
 - Manage your links directly in Gutenberg Editor
 - Reduce link load time with optimized queries
@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
 **✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place
 
-**🧲 Quick Link Shortening:** Make your long URL links into short ones and create pretty links within minutes 
+**🧲 Quick Link Shortening:** Make your long URL links into short ones and create pretty links within minutes
 
 **💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly
 
@@ -105,7 +105,7 @@ Visit [WPDeveloper](https://wpdeveloper.com/) to learn more about how to do bett
 
 = Modern Way: =
 1. Go to the WordPress Dashboard "Add New Plugin" section.
-2. Search For "BetterLinks". 
+2. Search For "BetterLinks".
 3. Install, then Activate it.
 4. Follow the [Documentation](https://betterlinks.io/docs/)
 
@@ -127,7 +127,7 @@ If you were previously using any link shortener and redirection plugin, you can 
 
 = Who can benefit more from BetterLinks? =
 
-BetterLinks is very useful for website owners, affiliate marketers, SEO experts or anyone who requires link shortening, redirection, tracking or overall link management on WordPress. 
+BetterLinks is very useful for website owners, affiliate marketers, SEO experts or anyone who requires link shortening, redirection, tracking or overall link management on WordPress.
 
 
 
@@ -167,7 +167,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 = 1.2.5 - 07/10/2021 =
 
 - Added: ThirstyAffiliates Migration
-- Added: Translations compatibility 
+- Added: Translations compatibility
 - Few minor bug fix & improvements
 
 = 1.2.4 - 29/09/2021 =
@@ -276,7 +276,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 - Fixed: Analytics not showing instantly after regenerating stats
 - Fixed: Clicks count not working
 - Fixed: Most Recent click data not showing at the top in Analytics
-- Improved: Overall UI/UX 
+- Improved: Overall UI/UX
 - Improved: Migration from Pretty Links
 - Few minor bug fix and improvements
 
@@ -288,7 +288,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 = 1.0.0 - 11/01/2021 =
 
 - Added: 'List View' to manage links
-- Added: 'Analytics' Feature 
+- Added: 'Analytics' Feature
 - Added: Migration from PrettyLinks
 - Added: General Settings panel
 - Improved: optimized code for faster response
