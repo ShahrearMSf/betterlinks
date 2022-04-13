@@ -20,7 +20,7 @@ const propTypes = {
 
 const defaultProps = {
 	isShowAnalytics: false,
-	isShowVisitLink: false,
+	isShowVisitLink: true,
 	isShowCopyLink: true,
 	isShowEditLink: true,
 	isShowDeleteLink: true,
@@ -82,13 +82,6 @@ const LinkQuickAction = ({
 			)}
 			{!isDeleteConfirm ? (
 				<>
-					{isAlowQr && <QRScanner shortUrl={data.short_url} />}
-					{isShowCopyLink && (
-						<button className="dnd-link-button btl-tooltip" onClick={() => copyShortUrlHandler(data.short_url)}>
-							<span className="icon">{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}</span>
-							<span className="btl-tooltiptext">{__('Copy Link', 'betterlinks')}</span>
-						</button>
-					)}
 					{isShowVisitLink && (
 						<div className="btl-tooltip">
 							<a className="dnd-link-button" href={site_url + '/' + data.short_url} target="_blank">
@@ -96,6 +89,13 @@ const LinkQuickAction = ({
 							</a>
 							<span className="btl-tooltiptext">{__('Visit Link', 'betterlinks')}</span>
 						</div>
+					)}
+					{isAlowQr && <QRScanner shortUrl={data.short_url} />}
+					{isShowCopyLink && (
+						<button className="dnd-link-button btl-tooltip" onClick={() => copyShortUrlHandler(data.short_url)}>
+							<span className="icon">{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <i className="btl btl-link"></i>}</span>
+							<span className="btl-tooltiptext">{__('Copy Link', 'betterlinks')}</span>
+						</button>
 					)}
 					{isShowEditLink && (
 						<div className="btl-tooltip">
