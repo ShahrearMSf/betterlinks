@@ -13,8 +13,13 @@ import { plugin_root_url } from 'utils/helper';
 
 export class List extends React.Component {
 	render() {
+		const { catId, item, index, is_allow_qr, term_name, edit_link, delete_link } = this.props;
+
+		const parsedExpireData = typeof item.expire === 'string' && !!item.expire.trim() && JSON.parse(item.expire);
+		const expiredStatus = !!(parsedExpireData && parsedExpireData.status);
+
 		return (
-			<Draggable key={`cat-${this.props.catId}-item_${this.props.item.ID}`} draggableId={`cat-${this.props.catId}-item_${this.props.item.ID}`} index={this.props.index}>
+			<Draggable key={`cat-${catId}-item_${item.ID}`} draggableId={`cat-${catId}-item_${item.ID}`} index={index}>
 				{(provided, snapshot) => (
 					<div className={`btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 						<div className="btl-dnd-link-body">
@@ -22,17 +27,19 @@ export class List extends React.Component {
 								<span className="icon">
 									<img src={plugin_root_url + 'assets/images/move-icon.svg'} alt="icon" />
 								</span>
-								<span className="text" dangerouslySetInnerHTML={{ __html: this.props.item.link_title }}></span>
+								<span class={`btl-expire-status-dot ${expiredStatus ? 'expired' : 'active'}`}></span>
+								<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }}></span>
 							</h3>
+
 							<div className="btl-dnd-link-button-group">
 								<LinkQuickAction
-									isAlowQr={this.props.is_allow_qr}
+									isAlowQr={is_allow_qr}
 									isShowAnalytics={true}
-									catId={parseInt(this.props.catId)}
-									catName={this.props.term_name}
-									submitLinkHandler={this.props.edit_link}
-									deleteLinkHandler={this.props.delete_link}
-									data={this.props.item}
+									catId={parseInt(catId)}
+									catName={term_name}
+									submitLinkHandler={edit_link}
+									deleteLinkHandler={delete_link}
+									data={item}
 									isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowViewLink', true)}
 									isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}
 								/>
