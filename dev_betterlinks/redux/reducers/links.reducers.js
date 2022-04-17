@@ -112,13 +112,15 @@ function links(state = {}, action) {
 			};
 		case EDIT_LINK:
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
+				const stateLinksOnCatsCatIdListsClone = [...state.links[payload.cat_id].lists];
+				const itemIndexInTheCat = stateLinksOnCatsCatIdListsClone.findIndex((item) => item.ID == payload.ID);
 				return {
 					...state,
 					links: {
 						...state.links,
 						[payload.cat_id]: {
 							...state.links[payload.cat_id],
-							lists: [...state.links[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
+							lists: [...stateLinksOnCatsCatIdListsClone.slice(0, itemIndexInTheCat), payload, ...stateLinksOnCatsCatIdListsClone.slice(itemIndexInTheCat + 1)],
 						},
 					},
 				};
