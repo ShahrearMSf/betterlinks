@@ -10,13 +10,13 @@ import Link from 'containers/Link';
 import CatHeader from 'containers/CatHeader';
 import LinkQuickAction from 'components/LinkQuickAction';
 import { plugin_root_url } from 'utils/helper';
+import { useBtlExpireStatusDot } from 'utils/customHooks';
 
 export class List extends React.Component {
 	render() {
 		const { catId, item, index, is_allow_qr, term_name, edit_link, delete_link } = this.props;
 
-		const parsedExpireData = typeof item.expire === 'string' && !!item.expire.trim() && JSON.parse(item.expire);
-		const expiredStatus = !!(parsedExpireData && parsedExpireData.status);
+		const expireStatusDot = useBtlExpireStatusDot({ data: item, view: 'dnd' });
 
 		return (
 			<Draggable key={`cat-${catId}-item_${item.ID}`} draggableId={`cat-${catId}-item_${item.ID}`} index={index}>
@@ -27,7 +27,7 @@ export class List extends React.Component {
 								<span className="icon">
 									<img src={plugin_root_url + 'assets/images/move-icon.svg'} alt="icon" />
 								</span>
-								<span class={`btl-expire-status-dot ${expiredStatus ? 'expired' : 'active'}`}></span>
+								{expireStatusDot}
 								<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }}></span>
 							</h3>
 
