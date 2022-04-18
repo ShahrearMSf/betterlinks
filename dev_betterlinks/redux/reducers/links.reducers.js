@@ -112,7 +112,7 @@ function links(state = {}, action) {
 			};
 		case EDIT_LINK:
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
-				const stateLinksOnCatsCatIdListsClone = [...state.links[payload.cat_id].lists];
+				const stateLinksOnCatsCatIdListsClone = state.links[payload.cat_id].lists;
 				const itemIndexInTheCat = stateLinksOnCatsCatIdListsClone.findIndex((item) => item.ID == payload.ID);
 				return {
 					...state,
