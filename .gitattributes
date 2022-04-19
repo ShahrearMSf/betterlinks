@@ -47,7 +47,7 @@ vendor/*.md                                export-ignore
 vendor/*.yml                               export-ignore
 vendor/*.cache                             export-ignore
 vendor/*.xml                               export-ignore
-vendor/**/LICENSE   e                      xport-ignore
+vendor/**/LICENSE                          export-ignore
 vendor/**/build-phar.sh                    export-ignore
 vendor/a5hleyrich/wp-background-processing/.gitignore       export-ignore
 vendor/a5hleyrich/wp-background-processing/composer.json    export-ignore
@@ -57,4 +57,4 @@ vendor/jaybizzle/crawler-detect/.github                     export-ignore
 vendor/jaybizzle/crawler-detect/.php_cs.dist                export-ignore
 vendor/jaybizzle/crawler-detect/composer.json               export-ignore
 vendor/jaybizzle/crawler-detect/README.md                   export-ignore
-dev_betterlinks                   export-ignore
+dev_betterlinks                                             export-ignore

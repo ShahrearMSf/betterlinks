@@ -410,11 +410,11 @@ trait Query
 
     public static function get_linksNips_count(){
         global $wpdb;
-        $query = "select lid as link_id, lidc, _ip as ip, ipc from {$wpdb->prefix}betterlinks_clicks as CLICKTABLE
-                    LEFT JOIN ( select distinct link_id as lid, count(link_id) as lidc from {$wpdb->prefix}betterlinks_clicks group by link_id ) as LINKTABLE
-                        ON CLICKTABLE.link_id = LINKTABLE.lid
-                    LEFT JOIN ( select distinct ip as _ip, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip ) as IPTABLE
-                        ON IPTABLE._ip = CLICKTABLE.ip";
+
+        $query = "select link_id, ip, ipc, t2.lidc from ( select ip, link_id, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip, link_id ) as t1
+        left join ( select link_id as lid, sum(ipc) as lidc from ( select ip, link_id, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip, link_id ) as t3 group by link_id ) as t2
+        on t1.link_id = t2.lid";
+
         $results = $wpdb->get_results( $query, ARRAY_A );
         return $results;
     }
