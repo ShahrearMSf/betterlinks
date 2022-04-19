@@ -138,7 +138,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 = 1.3.1 - 19/04/2022 =
 
-- Improved: Query opimization for better performance
+- Improved: Query optimization for better performance
 - Few minor bug fixes & improvements
 
 = 1.3.0 - 19/01/2022 =
