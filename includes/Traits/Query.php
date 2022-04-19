@@ -51,8 +51,8 @@ trait Query
                 $item = wp_parse_args($item, $defaults);
                 $wpdb->query(
                     $wpdb->prepare(
-                        "INSERT INTO {$wpdb->prefix}betterlinks ( 
-                        link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect 
+                        "INSERT INTO {$wpdb->prefix}betterlinks (
+                        link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect
                     ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
                         array(
                         $item['link_author'],$item['link_date'],$item['link_date_gmt'],$item['link_title'],$item['link_slug'],$item['link_note'],$item['link_status'],$item['nofollow'],$item['sponsored'],$item['track_me'],$item['param_forwarding'],$item['param_struct'],$item['redirect_type'],$item['target_url'],$item['short_url'],$item['link_order'],$item['link_modified'],$item['link_modified_gmt'],$item['wildcards'],$item['expire'],$item['dynamic_redirect']
@@ -83,12 +83,12 @@ trait Query
         $prefix = $wpdb->prefix;
         $analytic = get_option('betterlinks_analytics_data');
         $analytic = $analytic ? json_decode($analytic, true) : [];
-        $results = $wpdb->get_results("SELECT 
-            {$prefix}betterlinks_terms.ID as cat_id, 
-            {$prefix}betterlinks_terms.term_name, 
+        $results = $wpdb->get_results("SELECT
+            {$prefix}betterlinks_terms.ID as cat_id,
+            {$prefix}betterlinks_terms.term_name,
             {$prefix}betterlinks_terms.term_slug,
-            {$prefix}betterlinks_terms.term_type, 
-            {$prefix}betterlinks.ID, 
+            {$prefix}betterlinks_terms.term_type,
+            {$prefix}betterlinks.ID,
             {$prefix}betterlinks.link_title,
             {$prefix}betterlinks.link_slug,
             {$prefix}betterlinks.link_note,
@@ -342,7 +342,7 @@ trait Query
         }
         return $term_data;
     }
-    
+
     public static function get_term_by_slug($slug)
     {
         global $wpdb;
@@ -358,15 +358,15 @@ trait Query
         global $wpdb;
         $prefix = $wpdb->prefix;
         $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT 
-            {$prefix}betterlinks_terms.ID as term_id, 
-            {$prefix}betterlinks_terms.term_name, 
+            $wpdb->prepare("SELECT
+            {$prefix}betterlinks_terms.ID as term_id,
+            {$prefix}betterlinks_terms.term_name,
             {$prefix}betterlinks_terms.term_slug,
             {$prefix}betterlinks_terms.term_type
             FROM {$prefix}betterlinks_terms
             LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
             LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-            WHERE {$prefix}betterlinks_terms_relationships.link_id = %d 
+            WHERE {$prefix}betterlinks_terms_relationships.link_id = %d
             AND {$prefix}betterlinks_terms.term_type = %s", $link_ID, $term_type),
             ARRAY_A
         );
@@ -395,7 +395,7 @@ trait Query
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
                 $wpdb->prepare(
-                    "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( 
+                    "INSERT INTO {$wpdb->prefix}betterlinks_clicks (
                         link_id, ip, browser, os, referer, host, uri, click_count, visitor_id, click_order, created_at, created_at_gmt
                     ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
                     array(
@@ -406,6 +406,17 @@ trait Query
             return $wpdb->insert_id;
         }
         return;
+    }
+
+    public static function get_linksNips_count(){
+        global $wpdb;
+        $query = "select lid as link_id, lidc, _ip as ip, ipc from {$wpdb->prefix}betterlinks_clicks as CLICKTABLE
+                    LEFT JOIN ( select distinct link_id as lid, count(link_id) as lidc from {$wpdb->prefix}betterlinks_clicks group by link_id ) as LINKTABLE
+                        ON CLICKTABLE.link_id = LINKTABLE.lid
+                    LEFT JOIN ( select distinct ip as _ip, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip ) as IPTABLE
+                        ON IPTABLE._ip = CLICKTABLE.ip";
+        $results = $wpdb->get_results( $query, ARRAY_A );
+        return $results;
     }
 
     public static function get_links_analytics()
@@ -427,7 +438,7 @@ trait Query
         global $wpdb;
         $prefix = $wpdb->prefix;
         $results = $wpdb->get_results(
-            $wpdb->prepare("SELECT CLICKS.ID as 
+            $wpdb->prepare("SELECT CLICKS.ID as
             click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
             (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
             from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s  group by CLICKS.id ORDER BY CLICKS.created_at DESC", '%' . $keyword . '%'),
@@ -441,7 +452,7 @@ trait Query
         global $wpdb;
         $prefix = $wpdb->prefix;
         $results = $wpdb->get_results(
-            $wpdb->prepare("SELECT CLICKS.ID as 
+            $wpdb->prepare("SELECT CLICKS.ID as
             click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
             (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
             from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE created_at BETWEEN  %s AND %s group by CLICKS.id ORDER BY CLICKS.created_at DESC", $from . ' 00:00:00', $to . ' 23:59:00'),
@@ -638,7 +649,7 @@ trait Query
             return false;
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
-        
+
         if (!empty($meta_value)) {
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
         }
