@@ -3,10 +3,14 @@ export const useBtlExpireStatusDot = ({ data = {}, view = 'dnd' }) => {
 	const isExpired = !!(parsedExpireData && parsedExpireData.status);
 
 	return (
-		<span
-			className={`btl-expire-status-dot ${view == 'dnd' ? 'dnd-view-expire-dot-layout' : 'list-view-expire-dot-layout'} ${
-				data.link_status == 'expired' || isExpired ? 'expired' : 'active'
-			}`}
-		></span>
+		<>
+			{!!betterLinksHooks.applyFilters('isActivePro', false) && (
+				<span
+					className={`btl-expire-status-dot ${view == 'dnd' ? 'dnd-view-expire-dot-layout' : 'list-view-expire-dot-layout'} ${
+						data.link_status == 'expired' || isExpired ? 'expired' : 'active'
+					}`}
+				></span>
+			)}
+		</>
 	);
 };
