@@ -350,16 +350,63 @@ class Helper
     {
         return preg_replace('/^(http)?s?:?\/\/[^\/]*(\/?.*)$/i', '$2', '' . $url);
     }
+
+    /**
+     * Normalizing Clicks Data
+     *
+     * This function is responsible for manualy filter the duplicates IPs and link_id's from the data.
+     * @internal this is used in update_links_analytics for clicks on cron hook called 'betterlinks/analytics'
+     *
+     * @since 1.3.1
+     *
+     * @param array $data This should be the clicks data for IP's and links.
+     * @return array
+     */
+    public static function normalize_ips_data( &$data ){
+        $_results = [];
+        if( ! empty( $data ) ) {
+            foreach( $data as &$analytic ) {
+                $_link_id = $analytic['link_id'];
+                $_link_count = $analytic['lidc'];
+                $_ip = trim( $analytic['ip'] );
+                $_ip_count = $analytic['ipc'];
+
+                if( ! isset( $_results[ $_link_id ] ) ) {
+                    $_results[ $_link_id ] = [
+                        'link_count' => $_link_count,
+                        'ip' => [],
+                    ];
+                }
+
+                if( ! isset( $_results[ $_link_id ]['ip'][ $_ip ] )) {
+                    $_results[ $_link_id ]['ip'][ $_ip ] = $_ip_count;
+                }
+            }
+        }
+
+        return $_results;
+    }
+
     public static function update_links_analytics()
     {
-        $analytics = Helper::get_links_analytics();
         $results = [];
+        $analytics = Helper::get_linksNips_count();
+        $analytics = self::normalize_ips_data( $analytics );
+
         if (!empty($analytics)) {
-            foreach ($analytics as $item) {
-                $results[$item['link_id']]['link_count'] = $item['LINKCOUNT'];
-                $results[$item['link_id']]['ip'][] = [
-                    $item['ip'] => $item['IPCOUNT'],
+            foreach ($analytics as $link_id => $item) {
+                $results[$link_id] = [
+                    'link_count' =>  $item['link_count'],
+                    'ip' => []
                 ];
+
+                if( ! empty( $item['ip'] ) ) {
+                    foreach( $item['ip'] as $_ip => $count ){
+                        $results[$link_id]['ip'][] = [
+                            $_ip => $count
+                        ];
+                    }
+                }
             }
         }
         return update_option('betterlinks_analytics_data', json_encode($results));
@@ -370,11 +417,11 @@ class Helper
         if (is_array($data) || is_object($data)) {
             return wp_json_encode($data);
         }
-    
+
         if (is_string($data)) {
             return sanitize_text_field($data);
         }
-    
+
         return $data;
     }
     public static function generate_short_url($short_url)
