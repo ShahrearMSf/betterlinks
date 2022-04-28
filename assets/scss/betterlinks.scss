@@ -34,12 +34,12 @@ body {
 			@import './control/plugin-mode';
 		}
 		@import './control/plugin-mode-modal';
-        #wpfooter{
-            color: $white;
-            a{
-                color: $success-lighten;
-            }
-        }
+		#wpfooter {
+			color: $white;
+			a {
+				color: $success-lighten;
+			}
+		}
 	}
 	> .btl-overlay {
 		position: fixed;
@@ -49,7 +49,7 @@ body {
 		left: 0;
 		background-color: #000;
 		z-index: 99;
-		opacity: .65;
+		opacity: 0.65;
 	}
 }
 .btl-date-range-picker-wrap {
@@ -123,7 +123,6 @@ body {
 @import './components/modal';
 @import './components/utm_builder';
 
-
 // expire status circle styles starts
 
 span.btl-expire-status-dot {
@@ -134,11 +133,13 @@ span.btl-expire-status-dot {
 	padding: 5px;
 	margin-right: 10px;
 }
+
+span.btl-expire-status-dot.publish {
+	background-color: #0f0;
+}
+
 span.btl-expire-status-dot.expired {
 	background-color: #f00;
-}
-span.btl-expire-status-dot.active {
-	background-color: #0f0;
 }
 
 // expire status circle styles ends
