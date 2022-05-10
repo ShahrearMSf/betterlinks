@@ -126,8 +126,8 @@ function links(state = {}, action) {
 			};
 		case EDIT_LINK: {
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
-				const stateLinksOnCatsCatIdListsClone = state.links[payload.cat_id].lists;
-				const itemIndexInTheCat = stateLinksOnCatsCatIdListsClone.findIndex((item) => item.ID == payload.ID);
+				const linksAtPayloadCat = state.links[payload.cat_id].lists;
+				const itemIndexInTheCat = linksAtPayloadCat.findIndex((item) => item.ID == payload.ID);
 				const isCategoryChanged = itemIndexInTheCat === -1;
 				let newState;
 				if (isCategoryChanged) {
@@ -150,7 +150,9 @@ function links(state = {}, action) {
 										},
 										[payload.cat_id]: {
 											...state.links[payload.cat_id],
-											lists: [payload, ...stateLinksOnCatsCatIdListsClone],
+											// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
+											lists: reorder([payload, ...linksAtPayloadCat], 0, 0),
+											// lists: [...linksAtPayloadCat.slice(0, indexInOldCatList), payload, ...linksAtPayloadCat.slice(indexInOldCatList + 1)],
 										},
 									},
 								};
@@ -165,7 +167,7 @@ function links(state = {}, action) {
 							...state.links,
 							[payload.cat_id]: {
 								...state.links[payload.cat_id],
-								lists: [...stateLinksOnCatsCatIdListsClone.slice(0, itemIndexInTheCat), payload, ...stateLinksOnCatsCatIdListsClone.slice(itemIndexInTheCat + 1)],
+								lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
 							},
 						},
 					};
