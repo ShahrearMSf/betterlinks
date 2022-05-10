@@ -41,7 +41,12 @@ export const move = (source, destination, droppableSource, droppableDestination)
 	const destClone = Array.from(destination);
 	const [removed] = sourceClone.splice(droppableSource.index, 1);
 
-	destClone.splice(droppableDestination.index, 0, removed);
+	const newItemForDest = {
+		...removed,
+		cat_id: `${droppableDestination.droppableId}`,
+	};
+
+	destClone.splice(droppableDestination.index, 0, newItemForDest);
 
 	const result = {};
 	result[droppableSource.droppableId] = sourceClone;

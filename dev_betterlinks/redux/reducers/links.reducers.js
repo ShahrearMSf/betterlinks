@@ -21,23 +21,37 @@ function links(state = {}, action) {
 			const dInd = +destination.droppableId;
 
 			if (sInd === dInd) {
-				const items = reorder(state.links[sInd].lists, source.index, destination.index);
-				const newState = state.links;
-				newState[sInd].lists = items;
-				return {
-					...state,
-					newState,
-				};
-			} else {
-				const result = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
-				const newState = state.links;
-				newState[sInd].lists = result[sInd];
-				newState[dInd].lists = result[dInd];
+				const newLists = reorder(state.links[sInd].lists, source.index, destination.index);
 
-				return {
+				const result = {
 					...state,
-					newState,
+					links: {
+						...state.links,
+						[sInd]: {
+							...state.links[sInd],
+							lists: newLists,
+						},
+					},
 				};
+
+				return result;
+			} else {
+				const newLists = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
+				const result = {
+					...state,
+					links: {
+						...state.links,
+						[sInd]: {
+							...state.links[sInd],
+							lists: newLists[sInd],
+						},
+						[dInd]: {
+							...state.links[dInd],
+							lists: newLists[dInd],
+						},
+					},
+				};
+				return result;
 			}
 		case ADD_NEW_CAT:
 			return {
@@ -110,20 +124,54 @@ function links(state = {}, action) {
 					},
 				},
 			};
-		case EDIT_LINK:
+		case EDIT_LINK: {
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
 				const stateLinksOnCatsCatIdListsClone = state.links[payload.cat_id].lists;
 				const itemIndexInTheCat = stateLinksOnCatsCatIdListsClone.findIndex((item) => item.ID == payload.ID);
-				return {
-					...state,
-					links: {
+				const isCategoryChanged = itemIndexInTheCat === -1;
+				let newState;
+				if (isCategoryChanged) {
+					const newStateLinks = {
 						...state.links,
-						[payload.cat_id]: {
-							...state.links[payload.cat_id],
-							lists: [...stateLinksOnCatsCatIdListsClone.slice(0, itemIndexInTheCat), payload, ...stateLinksOnCatsCatIdListsClone.slice(itemIndexInTheCat + 1)],
+					};
+					delete newStateLinks[payload.cat_id];
+					for (const property in newStateLinks) {
+						if (state.links[property] && state.links[property].lists) {
+							const linksOnTheOldCat = state.links[property].lists;
+							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
+							if (indexInOldCatList !== -1) {
+								newState = {
+									...state,
+									links: {
+										...state.links,
+										[property]: {
+											...state.links[property],
+											lists: [...linksOnTheOldCat.slice(0, indexInOldCatList), ...linksOnTheOldCat.slice(indexInOldCatList + 1)],
+										},
+										[payload.cat_id]: {
+											...state.links[payload.cat_id],
+											lists: [payload, ...stateLinksOnCatsCatIdListsClone],
+										},
+									},
+								};
+								break;
+							}
+						}
+					}
+				} else {
+					newState = {
+						...state,
+						links: {
+							...state.links,
+							[payload.cat_id]: {
+								...state.links[payload.cat_id],
+								lists: [...stateLinksOnCatsCatIdListsClone.slice(0, itemIndexInTheCat), payload, ...stateLinksOnCatsCatIdListsClone.slice(itemIndexInTheCat + 1)],
+							},
 						},
-					},
-				};
+					};
+				}
+
+				return newState;
 			}
 			return {
 				...state,
@@ -137,6 +185,7 @@ function links(state = {}, action) {
 					},
 				},
 			};
+		}
 		case DELETE_LINK:
 			return {
 				...state,
