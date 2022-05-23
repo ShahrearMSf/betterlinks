@@ -135,11 +135,19 @@ span.btl-expire-status-dot {
 }
 
 span.btl-expire-status-dot.publish {
-	background-color: green;
+	background-color: #0BB876;
 }
 
 span.btl-expire-status-dot.expired {
-	background-color: #f00;
+	background-color: #DC143C;
+}
+
+span.btl-expire-status-dot.scheduled {
+	background-color: #1E90FF;
+}
+
+span.btl-expire-status-dot.draft {
+	background-color: #F8E00B;
 }
 
 // expire status circle styles ends
