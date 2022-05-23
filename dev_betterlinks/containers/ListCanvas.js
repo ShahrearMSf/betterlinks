@@ -218,6 +218,9 @@ const ListCanvas = (props) => {
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
+						highlightOnHover
+						onChangeRowsPerPage={(rpp) => localStorage.setItem('btlRowsPerPage', rpp)}
+						paginationPerPage={+localStorage.getItem('btlRowsPerPage') || 10}
 						subHeaderComponent={subHeaderComponentMemo}
 						persistTableHead
 						selectableRows
