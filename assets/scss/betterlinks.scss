@@ -165,3 +165,16 @@ span.btl-expire-status-dot.draft {
 }
 
 // expire status circle styles ends
+
+// list view 'rows per page' select broken icon design fix start
+
+.btl-list-view select[aria-label='Rows per page:'] {
+	background-image: none;
+}
+
+.btl-list-view select[aria-label='Rows per page:'] + svg {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+// list view 'rows per page' select broken icon design fix end
