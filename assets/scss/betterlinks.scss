@@ -131,23 +131,37 @@ span.btl-expire-status-dot {
 	border-radius: 50%;
 	display: inline-block;
 	padding: 5px;
+}
+
+.btl-expire-status-dot-parent .btl-tooltiptext {
+	width: 90px;
+	text-transform: capitalize;
+}
+
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button.btl-tooltip.btl-expire-status-dot-parent {
+	margin: 0;
+	padding: 0;
+}
+
+.betterlinks-body .dnd-link-button.btl-tooltip.btl-expire-status-dot-parent,
+.betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button.btl-tooltip.btl-expire-status-dot-parent {
 	margin-right: 10px;
 }
 
 span.btl-expire-status-dot.publish {
-	background-color: #0BB876;
+	background-color: #0bb876;
 }
 
 span.btl-expire-status-dot.expired {
-	background-color: #DC143C;
+	background-color: #dc143c;
 }
 
 span.btl-expire-status-dot.scheduled {
-	background-color: #1E90FF;
+	background-color: #1e90ff;
 }
 
 span.btl-expire-status-dot.draft {
-	background-color: #F8E00B;
+	background-color: #f8e00b;
 }
 
 // expire status circle styles ends
