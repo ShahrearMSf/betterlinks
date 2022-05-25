@@ -47,11 +47,11 @@ class Settings extends Controller
      */
     public function get_items($request)
     {
-        $response = get_option(BETTERLINKS_LINKS_OPTION_NAME);
+        $response = get_option(BETTERLINKS_LINKS_OPTION_NAME, '[]');
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => $response ? $response : [],
+                'data' => $response,
             ],
             200
         );
