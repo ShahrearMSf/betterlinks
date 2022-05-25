@@ -2,6 +2,7 @@
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
+use BetterLinks\Helper;
 
 class Terms extends Controller
 {
@@ -68,6 +69,20 @@ class Terms extends Controller
     {
         $query_params = $request->get_query_params();
         $results = $this->get_all_terms_data($query_params);
+
+        if( count($results) <= 0 ) {
+            $_term = [
+                'term_name' => 'Uncategorized',
+                'term_slug' => 'uncategorized',
+                'term_type' => 'category',
+            ];
+            $id = Helper::insert_term($_term);
+            if( $id ) {
+                $_term['ID'] = $id;
+                $_term['term_order'] = 0;
+            }
+            $results = [ $_term ];
+        }
 
         return new \WP_REST_Response(
             [
