@@ -11,6 +11,7 @@ import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } f
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import LinkQuickAction from 'components/LinkQuickAction';
 import TableLoader from 'components/Loader/TableLoader';
+import { useBtlExpireStatusDot } from 'utils/customHooks';
 
 const getLinksListViewColumnData = (props) => {
 	const analytic = (analytic, ID) => {
@@ -27,7 +28,15 @@ const getLinksListViewColumnData = (props) => {
 			selector: 'link_title',
 			sortable: false,
 			cell: (row) => {
-				return !!row.link_title && <div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>;
+				const expireStatusDot = useBtlExpireStatusDot({ data: row, view: 'list' });
+				return (
+					!!row.link_title && (
+						<>
+							{expireStatusDot}
+							<div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>
+						</>
+					)
+				);
 			},
 		},
 		{
@@ -209,6 +218,9 @@ const ListCanvas = (props) => {
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
+						highlightOnHover
+						onChangeRowsPerPage={(rpp) => localStorage.setItem('btlRowsPerPage', rpp)}
+						paginationPerPage={+localStorage.getItem('btlRowsPerPage') || 10}
 						subHeaderComponent={subHeaderComponentMemo}
 						persistTableHead
 						selectableRows

@@ -21,23 +21,37 @@ function links(state = {}, action) {
 			const dInd = +destination.droppableId;
 
 			if (sInd === dInd) {
-				const items = reorder(state.links[sInd].lists, source.index, destination.index);
-				const newState = state.links;
-				newState[sInd].lists = items;
-				return {
-					...state,
-					newState,
-				};
-			} else {
-				const result = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
-				const newState = state.links;
-				newState[sInd].lists = result[sInd];
-				newState[dInd].lists = result[dInd];
+				const newLists = reorder(state.links[sInd].lists, source.index, destination.index);
 
-				return {
+				const result = {
 					...state,
-					newState,
+					links: {
+						...state.links,
+						[sInd]: {
+							...state.links[sInd],
+							lists: newLists,
+						},
+					},
 				};
+
+				return result;
+			} else {
+				const newLists = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
+				const result = {
+					...state,
+					links: {
+						...state.links,
+						[sInd]: {
+							...state.links[sInd],
+							lists: newLists[sInd],
+						},
+						[dInd]: {
+							...state.links[dInd],
+							lists: newLists[dInd],
+						},
+					},
+				};
+				return result;
 			}
 		case ADD_NEW_CAT:
 			return {
@@ -110,18 +124,56 @@ function links(state = {}, action) {
 					},
 				},
 			};
-		case EDIT_LINK:
+		case EDIT_LINK: {
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
-				return {
-					...state,
-					links: {
+				const linksAtPayloadCat = state.links[payload.cat_id].lists;
+				const itemIndexInTheCat = linksAtPayloadCat.findIndex((item) => item.ID == payload.ID);
+				const isCategoryChanged = itemIndexInTheCat === -1;
+				let newState;
+				if (isCategoryChanged) {
+					const newStateLinks = {
 						...state.links,
-						[payload.cat_id]: {
-							...state.links[payload.cat_id],
-							lists: [...state.links[payload.cat_id].lists.filter((item, index) => item.ID != payload.ID), payload],
+					};
+					delete newStateLinks[payload.cat_id];
+					for (const property in newStateLinks) {
+						if (state.links[property] && state.links[property].lists) {
+							const linksOnTheOldCat = state.links[property].lists;
+							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
+							if (indexInOldCatList !== -1) {
+								newState = {
+									...state,
+									links: {
+										...state.links,
+										[property]: {
+											...state.links[property],
+											lists: [...linksOnTheOldCat.slice(0, indexInOldCatList), ...linksOnTheOldCat.slice(indexInOldCatList + 1)],
+										},
+										[payload.cat_id]: {
+											...state.links[payload.cat_id],
+											// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
+											lists: reorder([payload, ...linksAtPayloadCat], 0, 0),
+											// lists: [...linksAtPayloadCat.slice(0, indexInOldCatList), payload, ...linksAtPayloadCat.slice(indexInOldCatList + 1)],
+										},
+									},
+								};
+								break;
+							}
+						}
+					}
+				} else {
+					newState = {
+						...state,
+						links: {
+							...state.links,
+							[payload.cat_id]: {
+								...state.links[payload.cat_id],
+								lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
+							},
 						},
-					},
-				};
+					};
+				}
+
+				return newState;
 			}
 			return {
 				...state,
@@ -135,6 +187,7 @@ function links(state = {}, action) {
 					},
 				},
 			};
+		}
 		case DELETE_LINK:
 			return {
 				...state,
