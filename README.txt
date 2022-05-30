@@ -138,9 +138,10 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 = 1.3.3 - 30/05/2022 =
 
-- Fixed: Sorted link not staying at the same position after editing the link 
+- Fixed: Sorted link not staying at the same position after editing the link in the Grid view
 - Fixed: 'Select option arrow' of 'Rows per page' in 'list view' not showing correctly
 - Fixed: Unable to create links as Manage Links page showing blank screen
+- Added: Visit link option in the Grid view
 - Few minor bug fixes & improvements
 
 = 1.3.2 - 25/05/2022 =
