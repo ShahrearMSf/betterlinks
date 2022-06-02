@@ -84,7 +84,23 @@ class Settings extends Controller
     {
         $response = $request->get_params();
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
+        
+        // var_dump("$response");
+        // wp_die();
+
+        if(isset($response["autolink_icon"])){
+            
+            update_option(BETTERLINKS_AUTOLINK_OPTION_NAME, $response["autolink_icon"]);
+            // var_dump($response["autolink_icon"]);
+            // wp_die();
+        }
+
+
+
         $response = json_encode($response);
+
+
+
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
         }
@@ -93,7 +109,8 @@ class Settings extends Controller
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => $response ? $response : [],
+                'data' => $response ? $response : "[]",
+                // 'data' => "----------update ited done!!!!!!"
             ],
             200
         );
@@ -110,7 +127,7 @@ class Settings extends Controller
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => [],
+                'data' => "[]",
             ],
             200
         );

@@ -46,6 +46,26 @@ class Assets
 
             $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.core.min.asset.php';
 
+
+            echo "<div style='margin:30px 0 0 200px' class='pashe_chaaapano'>";
+            echo "<h4><pre>";
+            var_dump("---BETTERLINKS_LINKS_OPTION_NAME: ", get_option(BETTERLINKS_LINKS_OPTION_NAME));
+            // echo "</pre></h4><h4><pre>";
+            // var_dump("---hzbtl_get_link_from_json_file: ", get_option('hzbtl_get_link_from_json_file'));
+            echo "</pre></h4><h4><pre>";
+
+
+            // echo "<h4><pre>";
+            // var_dump(str_replace("/betterlinkscheck/", "", "/betterlinkscheck/compare"));
+            // var_dump(ltrim("compare", "/"));
+            // echo "</pre></h4><h4>";
+            // var_dump("---hz_run_redirect_param: ", get_option('hz_run_redirect_param'));
+            // echo "</h4><h4>";
+            // var_dump("---hz_run_redirect_data: ", get_option('hz_run_redirect_data'));
+            // echo "</h4><h4>";
+            echo "</div>";
+
+
             wp_enqueue_script(
                 'betterlinks-admin-core',
                 BETTERLINKS_ASSETS_URI . 'js/betterlinks.core.min.js',

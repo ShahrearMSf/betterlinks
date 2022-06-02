@@ -123,6 +123,7 @@ class Installer extends \WP_Background_Process
                 'disablebotclicks' 	=> false,
                 'is_allow_gutenberg'=> true,
                 'force_https'		=> false,
+                'autolink_icon'     => false,
                 'prefix'            => 'go',
                 'is_allow_qr'       => false,
                 'is_random_string'  => false,
