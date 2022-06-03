@@ -78,7 +78,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 				enableReinitialize
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
-					console.log("--onsubmit fired")
+					console.log('--onsubmit fired');
 					update_option(values);
 					delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 				}}
@@ -346,12 +346,30 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 											</label>
 											<div className="link-options__body">
 												<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-													<input className="btl-check" name="autolink_icon" type="checkbox" disabled={true} />
+													<input className="btl-check" name="is_autolink_icon" type="checkbox" disabled={true} />
 													<span className="text">
 														{__('Enable Icon for Autolinks', 'betterlinks')}
 														<div className="btl-tooltip">
 															<span className="dashicons dashicons-info-outline"></span>
 															<span className="btl-tooltiptext">{__('This will show a icon with all the autolinks.', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+											</div>
+										</span>
+
+										<span className="btl-form-group btl-form-group--teaser">
+											<label className="btl-form-label">
+												{__('Autolink Inside Headings', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+											</label>
+											<div className="link-options__body">
+												<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+													<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
+													<span className="text">
+														{__('Enable Autolinks inside Heading Tags (h1-h6)', 'betterlinks')}
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('If enabled, autolinks will work inside heading tags as well (h1-h6)', 'betterlinks')}</span>
 														</div>
 													</span>
 												</label>
