@@ -69,7 +69,7 @@ class Settings extends Controller
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => [],
+                'data' => "[]",
             ],
             200
         );
