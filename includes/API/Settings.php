@@ -85,10 +85,6 @@ class Settings extends Controller
     {
         $response = $request->get_params();
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
-
-        // var_dump("$response");
-        // wp_die();
-
         update_option(
             BETTERLINKS_AUTOLINK_OPTION_NAME,
             [
@@ -96,16 +92,7 @@ class Settings extends Controller
                 "is_autolink_in_heading" => isset($response["is_autolink_headings"]) ? $response["is_autolink_headings"] : false,
             ]
         );
-
-        // var_dump($response["is_autolink_icon"]);
-        // wp_die();
-
-
-
         $response = json_encode($response);
-
-
-
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
         }
@@ -115,7 +102,6 @@ class Settings extends Controller
             [
                 'success' => true,
                 'data' => $response ? $response : "[]",
-                // 'data' => "----------update ited done!!!!!!"
             ],
             200
         );

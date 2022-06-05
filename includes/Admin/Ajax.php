@@ -480,9 +480,6 @@ class Ajax
         }
         $response = \BetterLinks\Helper::fresh_ajax_request_data($_POST);
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
-        
-        // var_dump("---update_settings:");
-        // wp_die();
 
         $response = json_encode($response);
         if ($response) {
