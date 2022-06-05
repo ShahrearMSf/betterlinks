@@ -20,8 +20,6 @@ function useQuery() {
 }
 
 const Settings = (props) => {
-	console.log('-------settings props:', { props });
-
 	const query = useQuery();
 	const currentTab = query.get('import');
 	const migration = query.get('migration');

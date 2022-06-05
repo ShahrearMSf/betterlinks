@@ -78,313 +78,299 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 				enableReinitialize
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
-					console.log('--onsubmit fired');
 					update_option(values);
 					delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 				}}
 			>
-				{(props) => {
-					console.log('----TabsGeneral formik rpops: ', { props });
-					return (
-						<Form>
-							<div className="btl-tab-panel-inner">
-								<span className="btl-form-group">
-									<label className="btl-form-label">
-										{__('Link Redirection Status', 'betterlinks')} <br />
-										{__('(Fast Mode)', 'betterlinks')}
-									</label>
-									<div className="btl-form-field">
-										<div className="status">
-											<div className={`active-status ${fastRedirectStatus ? 'Active' : 'Disable'}`}>{fastRedirectStatus ? 'Active' : 'Disable'}</div>
-											{!fastRedirectStatus && (
-												<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
-													{fastRedirectButtonText}
-												</button>
-											)}
-										</div>
-										<div className="short-description">
-											<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-											{__(
-												"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
-												'betterlinks'
-											)}
-										</div>
-									</div>
-								</span>
-								<span className="btl-form-group">
-									<label className="btl-form-label">
-										{!fastClicksStatus ? (
-											<React.Fragment>
-												{__('Click Data Status ', 'betterlinks')} <br /> {__('(Fast Mode)', 'betterlinks')}
-											</React.Fragment>
-										) : (
-											__('Fetch Analytics Data', 'betterlinks')
+				{(props) => (
+					<Form>
+						<div className="btl-tab-panel-inner">
+							<span className="btl-form-group">
+								<label className="btl-form-label">
+									{__('Link Redirection Status', 'betterlinks')} <br />
+									{__('(Fast Mode)', 'betterlinks')}
+								</label>
+								<div className="btl-form-field">
+									<div className="status">
+										<div className={`active-status ${fastRedirectStatus ? 'Active' : 'Disable'}`}>{fastRedirectStatus ? 'Active' : 'Disable'}</div>
+										{!fastRedirectStatus && (
+											<button type="button" onClick={writeLinkJSONHandler} className="button button-primary">
+												{fastRedirectButtonText}
+											</button>
 										)}
+									</div>
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
+										{__(
+											"If it's enabled, when you click on the link, it will fetch the target URL from the .json file and will redirect it. Otherwise, it will fetch directly from the database",
+											'betterlinks'
+										)}
+									</div>
+								</div>
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">
+									{!fastClicksStatus ? (
+										<React.Fragment>
+											{__('Click Data Status ', 'betterlinks')} <br /> {__('(Fast Mode)', 'betterlinks')}
+										</React.Fragment>
+									) : (
+										__('Fetch Analytics Data', 'betterlinks')
+									)}
+								</label>
+								<div className="btl-form-field">
+									<div className="status">
+										<div className={`active-status ${fastClicksStatus ? 'Active' : 'Disable'}`}>{fastClicksStatus ? 'Active' : 'Disable'}</div>
+										{!fastClicksStatus ? (
+											<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
+												{fastClicksButtonText}
+											</button>
+										) : (
+											<button type="button" onClick={analyticClicksHandler} className="button button-primary">
+												{cacheButtonText}
+											</button>
+										)}
+									</div>
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
+										{!fastClicksStatus
+											? __(
+													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
+													'betterlinks'
+											  )
+											: __("Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data", 'betterlinks')}
+									</div>
+								</div>
+							</span>
+							{settings && (
+								<span className="btl-form-group">
+									<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
+									<RedirectType
+										className="btl-modal-select--full"
+										classNamePrefix="btl-react-select"
+										id="redirect_type"
+										name="redirect_type"
+										value={redirectType}
+										defaultValue={settings.redirect_type}
+										setFieldValue={props.setFieldValue}
+										isMulti={false}
+									/>
+								</span>
+							)}
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
+										<span className="text">
+											{__('No Follow', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
+											</div>
+										</span>
 									</label>
-									<div className="btl-form-field">
-										<div className="status">
-											<div className={`active-status ${fastClicksStatus ? 'Active' : 'Disable'}`}>{fastClicksStatus ? 'Active' : 'Disable'}</div>
-											{!fastClicksStatus ? (
-												<button type="button" onClick={writeClicksJSONHandler} className="button button-primary">
-													{fastClicksButtonText}
-												</button>
-											) : (
-												<button type="button" onClick={analyticClicksHandler} className="button button-primary">
-													{cacheButtonText}
-												</button>
-											)}
-										</div>
-										<div className="short-description">
-											<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-											{!fastClicksStatus
-												? __(
-														"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
-														'betterlinks'
-												  )
-												: __("Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data", 'betterlinks')}
-										</div>
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
+										<span className="text">
+											{__('Sponsored', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="param_forwarding" type="checkbox" onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)} />
+										<span className="text">
+											{__('Parameter Forwarding', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
+										<span className="text">
+											{__('Tracking', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group btl-form-group--top">
+								<label className="btl-form-label">{__('Random URL Slug', 'betterlinks')}</label>
+								<div className="link-options__body" style={{ flexDirection: 'column' }}>
+									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
+										<Field type="checkbox" className="btl-check" name="is_random_string" />
+										<span className="text">
+											{__('Enable Random URL Slug', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will randomly generate strings for your shortened URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group btl-form-group--top">
+								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
+								<div className="link-options__body" style={{ flexDirection: 'column' }}>
+									<div style={{ maxWidth: '200px' }}>
+										<Field className="btl-text-field" name="prefix" />
 									</div>
-								</span>
-								{settings && (
-									<span className="btl-form-group">
-										<label className="btl-form-label">{__('Redirect Type', 'betterlinks')}</label>
-										<RedirectType
-											className="btl-modal-select--full"
-											classNamePrefix="btl-react-select"
-											id="redirect_type"
-											name="redirect_type"
-											value={redirectType}
-											defaultValue={settings.redirect_type}
-											setFieldValue={props.setFieldValue}
-											isMulti={false}
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+										{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
+										{site_url}
+										{props.values.prefix && (
+											<>
+												/<strong>{props.values.prefix}</strong>
+											</>
+										)}
+										{__('/your-affiliate-link-name.', 'betterlinks')}
+									</div>
+								</div>
+							</span>
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('QR Codes', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="is_allow_qr" type="checkbox" onChange={() => props.setFieldValue('is_allow_qr', !props.values.is_allow_qr)} />
+										<span className="text">
+											{__('Enable QR Code Generator', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will allow you to generate & download QR Code for each of your shortened URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="wildcards" type="checkbox" onChange={() => props.setFieldValue('wildcards', !props.values.wildcards)} />
+										<span className="text">
+											{__('Use Wildcards?', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('To use wildcards, put an asterisk (*) after the folder name that you want to redirect.', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Bot Clicks', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field className="btl-check" name="disablebotclicks" type="checkbox" onChange={() => props.setFieldValue('disablebotclicks', !props.values.disablebotclicks)} />
+										<span className="text">
+											{__('Disable Bot Clicks', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will prevent your site from bot traffic', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Instant Redirect', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="is_allow_gutenberg"
+											type="checkbox"
+											onChange={() => props.setFieldValue('is_allow_gutenberg', !props.values.is_allow_gutenberg)}
 										/>
+										<span className="text">
+											{__('Allow Instant Redirect', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will allow you to redirect your links instantly from Gutenberg and Elementor Editor.', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+							{!betterLinksHooks.applyFilters('isActivePro', false) && (
+								<>
+									<span className="btl-form-group btl-form-group--teaser">
+										<label className="btl-form-label">
+											{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable HTTPS Redirection', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will allow you to redirect your Target URLs in HTTPS.', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
+										</div>
 									</span>
-								)}
 
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
-											<span className="text">
-												{__('No Follow', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
-												</div>
-											</span>
+									<span className="btl-form-group btl-form-group--teaser">
+										<label className="btl-form-label">
+											{__('Icon For Autolinks', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 										</label>
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
-											<span className="text">
-												{__('Sponsored', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-										<label className="btl-checkbox-field block">
-											<Field
-												className="btl-check"
-												name="param_forwarding"
-												type="checkbox"
-												onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
-											/>
-											<span className="text">
-												{__('Parameter Forwarding', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
-											<span className="text">
-												{__('Tracking', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-
-								<span className="btl-form-group btl-form-group--top">
-									<label className="btl-form-label">{__('Random URL Slug', 'betterlinks')}</label>
-									<div className="link-options__body" style={{ flexDirection: 'column' }}>
-										<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
-											<Field type="checkbox" className="btl-check" name="is_random_string" />
-											<span className="text">
-												{__('Enable Random URL Slug', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will randomly generate strings for your shortened URL', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-
-								<span className="btl-form-group btl-form-group--top">
-									<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
-									<div className="link-options__body" style={{ flexDirection: 'column' }}>
-										<div style={{ maxWidth: '200px' }}>
-											<Field className="btl-text-field" name="prefix" />
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="is_autolink_icon" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable Icon for Autolinks', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will show a icon with all the autolinks.', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
 										</div>
-										<div className="short-description">
-											<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-											{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
-											{site_url}
-											{props.values.prefix && (
-												<>
-													/<strong>{props.values.prefix}</strong>
-												</>
-											)}
-											{__('/your-affiliate-link-name.', 'betterlinks')}
+									</span>
+
+									<span className="btl-form-group btl-form-group--teaser">
+										<label className="btl-form-label">
+											{__('Autolink Inside Headings', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable Autolinks inside Heading Tags (h1-h6)', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('If enabled, autolinks will work inside heading tags as well (h1-h6)', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
 										</div>
-									</div>
-								</span>
-
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('QR Codes', 'betterlinks')}</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="is_allow_qr" type="checkbox" onChange={() => props.setFieldValue('is_allow_qr', !props.values.is_allow_qr)} />
-											<span className="text">
-												{__('Enable QR Code Generator', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will allow you to generate & download QR Code for each of your shortened URL', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block">
-											<Field className="btl-check" name="wildcards" type="checkbox" onChange={() => props.setFieldValue('wildcards', !props.values.wildcards)} />
-											<span className="text">
-												{__('Use Wildcards?', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('To use wildcards, put an asterisk (*) after the folder name that you want to redirect.', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Bot Clicks', 'betterlinks')}</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block">
-											<Field
-												className="btl-check"
-												name="disablebotclicks"
-												type="checkbox"
-												onChange={() => props.setFieldValue('disablebotclicks', !props.values.disablebotclicks)}
-											/>
-											<span className="text">
-												{__('Disable Bot Clicks', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will prevent your site from bot traffic', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('Instant Redirect', 'betterlinks')}</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block">
-											<Field
-												className="btl-check"
-												name="is_allow_gutenberg"
-												type="checkbox"
-												onChange={() => props.setFieldValue('is_allow_gutenberg', !props.values.is_allow_gutenberg)}
-											/>
-											<span className="text">
-												{__('Allow Instant Redirect', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will allow you to redirect your links instantly from Gutenberg and Elementor Editor.', 'betterlinks')}</span>
-												</div>
-											</span>
-										</label>
-									</div>
-								</span>
-								{!betterLinksHooks.applyFilters('isActivePro', false) && (
-									<>
-										<span className="btl-form-group btl-form-group--teaser">
-											<label className="btl-form-label">
-												{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-											</label>
-											<div className="link-options__body">
-												<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-													<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
-													<span className="text">
-														{__('Enable HTTPS Redirection', 'betterlinks')}
-														<div className="btl-tooltip">
-															<span className="dashicons dashicons-info-outline"></span>
-															<span className="btl-tooltiptext">{__('This will allow you to redirect your Target URLs in HTTPS.', 'betterlinks')}</span>
-														</div>
-													</span>
-												</label>
-											</div>
-										</span>
-
-										<span className="btl-form-group btl-form-group--teaser">
-											<label className="btl-form-label">
-												{__('Icon For Autolinks', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-											</label>
-											<div className="link-options__body">
-												<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-													<input className="btl-check" name="is_autolink_icon" type="checkbox" disabled={true} />
-													<span className="text">
-														{__('Enable Icon for Autolinks', 'betterlinks')}
-														<div className="btl-tooltip">
-															<span className="dashicons dashicons-info-outline"></span>
-															<span className="btl-tooltiptext">{__('This will show a icon with all the autolinks.', 'betterlinks')}</span>
-														</div>
-													</span>
-												</label>
-											</div>
-										</span>
-
-										<span className="btl-form-group btl-form-group--teaser">
-											<label className="btl-form-label">
-												{__('Autolink Inside Headings', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-											</label>
-											<div className="link-options__body">
-												<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-													<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
-													<span className="text">
-														{__('Enable Autolinks inside Heading Tags (h1-h6)', 'betterlinks')}
-														<div className="btl-tooltip">
-															<span className="dashicons dashicons-info-outline"></span>
-															<span className="btl-tooltiptext">{__('If enabled, autolinks will work inside heading tags as well (h1-h6)', 'betterlinks')}</span>
-														</div>
-													</span>
-												</label>
-											</div>
-										</span>
-									</>
-								)}
-								{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
-								<button className="button-primary btn-save-settings" type="submit">
-									{formSubmitText}
-								</button>
-							</div>
-						</Form>
-					);
-				}}
+									</span>
+								</>
+							)}
+							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
+							<button className="button-primary btn-save-settings" type="submit">
+								{formSubmitText}
+							</button>
+						</div>
+					</Form>
+				)}
 			</Formik>
 		</React.Fragment>
 	);
