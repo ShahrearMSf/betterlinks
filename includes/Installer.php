@@ -124,7 +124,7 @@ class Installer extends \WP_Background_Process
                 'is_allow_gutenberg'    => true,
                 'force_https'   	    => false,
                 'is_autolink_icon'      => false,
-                'is_autolink_headings'  => false,
+                'is_autolink_headings'  => true,
                 'prefix'                => 'go',
                 'is_allow_qr'           => false,
                 'is_random_string'      => false,
