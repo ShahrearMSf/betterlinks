@@ -143,7 +143,10 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="keywords">
 											{__('Keywords', 'betterlinks')}
 										</label>
-										<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
+										<label className="extra_info_keywords">
+											<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
+											{__(' use comma(,) to add multiple keywords', 'betterlinks')}
+										</label>
 									</div>
 									<div className="btl-modal-form-group" style={{ position: 'relative' }}>
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
