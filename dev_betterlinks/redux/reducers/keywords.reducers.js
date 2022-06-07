@@ -27,7 +27,9 @@ function keywords(state = {}, action) {
 					}),
 				],
 			};
-		case DELETE_KEYWORD:
+		case DELETE_KEYWORD: {
+			console.log('----keywords reducer DELETE_KEYWORD case', { state, payload });
+
 			return {
 				...state,
 				data: [
@@ -38,6 +40,7 @@ function keywords(state = {}, action) {
 					}),
 				],
 			};
+		}
 		default:
 			return state;
 	}

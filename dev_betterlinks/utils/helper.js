@@ -304,6 +304,7 @@ export const getAutoLinksInitialValues = (data) => {
 	if (Object.keys(data).length) {
 		return {
 			keywords: data.keywords,
+			oldKeywords: data.keywords,
 			chooseLink: data.link_id,
 			oldChooseLink: data.link_id,
 			postType: data.post_type,

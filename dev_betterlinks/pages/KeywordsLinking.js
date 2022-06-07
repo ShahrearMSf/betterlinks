@@ -14,6 +14,9 @@ const propTypes = {};
 const defaultProps = {};
 
 const KeywordsLinking = (props) => {
+	const keywordsAll = props.keywords.data || [];
+	console.log('---KeywordsLinking', { props, keywordsAll });
+
 	useEffect(() => {
 		if (!props.keywords.data) {
 			props.fetch_keywords();
@@ -23,6 +26,8 @@ const KeywordsLinking = (props) => {
 		}
 	}, []);
 	const getLinks = (data) => {
+		console.log('---getLinks function', { data });
+
 		if (data.links) {
 			const results = Object.entries(data.links).reduce((acc, item) => {
 				acc = [...acc, ...item[1].lists];
@@ -35,13 +40,16 @@ const KeywordsLinking = (props) => {
 		}
 		return [];
 	};
+
+	console.log('---keywordsLinking, props.links: ', props.links, 'after getLinks', getLinks(props.links));
+
 	return (
 		<React.Fragment>
 			<Topbar
 				label={__('Auto-Link Keywords', 'betterlinks')}
 				render={() => (
 					<>
-						<AddNewKeywords />
+						<AddNewKeywords keywords={props.keywords} />
 					</>
 				)}
 			/>

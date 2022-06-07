@@ -17,7 +17,9 @@ const propTypes = {
 const defaultProps = {
 	data: {},
 };
-const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
+const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
+	console.log('---AddNewKeywords', { keywords, data });
+
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
 	const [links, setLinks] = useState([]);
@@ -39,10 +41,12 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 		makeRequest({
 			action: 'betterlinks/admin/get_links_by_exclude_keywords',
 		}).then((response) => {
+			console.log('----get_links_by_exclude_keywords', { response });
+
 			if (response.data.success && response.data.data.length > 0) {
 				setLinks(
 					response.data.data.reduce((acc, item) => {
-						acc.push({ label: item.link_title, value: item.ID });
+						acc.unshift({ label: item.link_title, value: item.ID });
 						return acc;
 					}, [])
 				);
@@ -112,6 +116,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
+						console.log('---AddNewKeywords Formik OnSubmit: ', { values });
 						if (values.leftBoundary === '' || values.keywordBefore === '') {
 							values.leftBoundary = '';
 							values.keywordBefore = '';
@@ -120,6 +125,20 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 							values.rightBoundary = '';
 							values.keywordAfter = '';
 						}
+
+						console.log('---onsubmit formik addNewKeywords.js:', { values, data, keywords });
+
+						for (const item of (keywords && keywords.data) || []) {
+							const itemKeywords = item.keywords || '';
+							const itemKeywordArr = itemKeywords.split(',');
+							const thisKeywords = values.keywords || '';
+							const thisKeywordsArr = thisKeywords.split(',');
+
+							console.log('---keywords each item', { itemKeywords, itemKeywordArr, thisKeywords, thisKeywordsArr, item });
+						}
+
+						// return false;
+
 						if (values.chooseLink) {
 							// check Left Boundary & Keyword Before
 							if (Object.keys(data).length > 0) {

@@ -7,9 +7,11 @@ export const DELETE_KEYWORD = 'DELETE_KEYWORD';
 
 export const fetch_keywords = () => async (dispatch) => {
 	try {
+		console.log('---try start ');
 		const res = await API.get(namespace + 'keywords', {
 			params: {},
 		});
+		console.log('---try fetch_keywords ', { res });
 		dispatch({
 			type: FETCH_ALL_KEYWORDS,
 			payload: res.data,
@@ -18,6 +20,8 @@ export const fetch_keywords = () => async (dispatch) => {
 		makeRequest({
 			action: 'betterlinks/admin/get_all_keywords',
 		}).then((response) => {
+			console.log('---catch then fetch_keywords ', { response });
+
 			if (response.data) {
 				dispatch({
 					type: FETCH_ALL_KEYWORDS,
@@ -67,10 +71,13 @@ export const add_keyword = (formData) => async (dispatch) => {
 };
 
 export const update_keyword = (formData) => async (dispatch) => {
+	console.log('---update keyword action init:', { formData });
 	try {
 		const res = await API.post(namespace + 'keywords/' + formData.chooseLink, {
 			params: formData,
 		});
+		console.log('---update keyword action post request:', { res });
+
 		if (res.data.success) {
 			dispatch({
 				type: UPDATE_KEYWORD,
@@ -93,6 +100,8 @@ export const update_keyword = (formData) => async (dispatch) => {
 };
 
 export const delete_keyword = (params) => (dispatch) => {
+	console.log('---delete_keyword action creators:', { params });
+
 	params.map((item) => {
 		const { link_id } = item;
 		makeRequest({

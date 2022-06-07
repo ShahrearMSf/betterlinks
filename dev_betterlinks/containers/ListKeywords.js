@@ -9,6 +9,8 @@ import LinkCopyUrl from 'components/LinkCopyUrl';
 import { delete_keyword } from 'redux/actions/keywords.actions';
 
 const KeywordFilter = (props) => {
+	console.log('---KeywordFilter', { props });
+
 	const [bulkAction, setBulkAction] = useState([]);
 	return (
 		<React.Fragment>
@@ -45,11 +47,7 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 			selector: 'short_url',
 			sortable: false,
 			cell: (row) => {
-				const data = links.filter((item) => {
-					if (item.value == row.link_id) {
-						return true;
-					}
-				});
+				const data = links.filter((item) => item.value == row.link_id);
 				return <div>{data.length > 0 && <LinkCopyUrl shortUrl={data[0].label} />}</div>;
 			},
 		},

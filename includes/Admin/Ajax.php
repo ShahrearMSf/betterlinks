@@ -441,8 +441,16 @@ class Ajax
         ];
         $this->delete_link($args);
         if (!empty($args['ID'])) {
-            \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
+            // \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
         }
+
+        update_option("delete_existing_link_ajax.php_file", [
+            "now" => date("h:i:sa"),
+            "delete_link_same_class" => "runned",
+            "delete_link_meta_from_helper" => "stopped_manually",
+            "arguments" => $args,
+        ]);
+
         wp_send_json_success(
             $args,
             200
