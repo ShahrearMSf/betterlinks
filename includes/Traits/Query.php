@@ -609,7 +609,7 @@ trait Query
         }
         return (int) $wpdb->insert_id;
     }
-    public static function update_link_meta($link_id, $meta_key, $meta_value, $old_keywords = false)
+    public static function update_link_meta($link_id, $meta_key, $meta_value, $old_keywords = false, $old_link_id = false)
     {
         global $wpdb;
         $table = $wpdb->prefix . 'betterlinkmeta';
@@ -618,37 +618,43 @@ trait Query
         $meta_value2 = wp_unslash($meta_value);
         $meta_value5 = \BetterLinks\Helper::maybe_json($meta_value2);
 
-
         update_option("hzbtl_update_link_meta_query.php_file", [
             "now" => date("h:i:sa"),
+            "result" => "--paoa jaay nai",
+            "enter_old_keyword_if_check" => "--paoa jaay nai",
             "table" => $table,
-            "link_id" => $link_id,
             "meta_key" => $meta_key,
+            "link_id" => $link_id,
+            "old_link_id" => $old_link_id,
             "old_keywords" => $old_keywords,
             "meta_value" => $meta_value,
             "meta_value2" => $meta_value2,
             "meta_value5" => $meta_value5,
         ]);
 
+
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
 
-        $meta_ids = $wpdb->get_col($wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id));
-        if (empty($meta_ids)) {
-            return self::add_link_meta($link_id, $meta_key, $meta_value5);
-        }
+        // $meta_ids = $wpdb->get_col($wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id));
+        // if (empty($meta_ids)) {
+        //     return self::add_link_meta($link_id, $meta_key, $meta_value5);
+        // }
 
         $result = false;
-        if($old_keywords){
+        $enter_old_keyword_if_check = false;
+        if($old_keywords && $old_link_id){
+            $enter_old_keyword_if_check = true;
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
-                SET meta_value = %s
+                SET meta_value = %s, link_id = %d
                 WHERE link_id = %d AND meta_key=%s AND meta_value LIKE %s",
                 $meta_value5,
                 $link_id,
+                $old_link_id,
                 $meta_key,
-                "%keywords%".$old_keywords."%link_id%"
+                '%keywords":"'.$old_keywords.'","link_id":%'
             ));
         }else{
             $result = $wpdb->query($wpdb->prepare(
@@ -661,10 +667,22 @@ trait Query
             ));
         }
 
-        if (! $result) {
-            return false;
-        }
-        return true;
+        update_option("hzbtl_update_link_meta_query.php_file", [
+            "now" => date("h:i:sa"),
+            "result" => $result,
+            "enter_old_keyword_if_check" => $enter_old_keyword_if_check,
+            "table" => $table,
+            "meta_key" => $meta_key,
+            "link_id" => $link_id,
+            "old_link_id" => $old_link_id,
+            "old_keywords" => $old_keywords,
+            "meta_value" => $meta_value,
+            "meta_value2" => $meta_value2,
+            "meta_value5" => $meta_value5,
+        ]);
+
+
+        return !!$result;
     }
 
     public static function delete_link_meta($link_id, $meta_key, $meta_value = '', $old_keywords = false)
