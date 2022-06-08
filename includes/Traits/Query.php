@@ -654,7 +654,7 @@ trait Query
                 $link_id,
                 $old_link_id,
                 $meta_key,
-                '%keywords":"'.$old_keywords.'","link_id":%'
+                '%"keywords":"'.$old_keywords.'","link_id":%'
             ));
         }else{
             $result = $wpdb->query($wpdb->prepare(
@@ -685,21 +685,25 @@ trait Query
         return !!$result;
     }
 
-    public static function delete_link_meta($link_id, $meta_key, $meta_value = '', $old_keywords = false)
+    public static function delete_link_meta($link_id, $meta_key, $meta_value = '', $keywords = false)
     {
 
         global $wpdb;
         $table = $wpdb->prefix . 'betterlinkmeta';
+
+
+        update_option("delete_link_meta",[
+            "now" => date("h:i:sa"),
+            "delete_link_meta" => "runned",
+            "link_id" => $link_id, 
+            "meta_key" => $meta_key,
+            "meta_value" => $meta_value,
+        ]);
+
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
-
-        if (!empty($meta_value)) {
-            $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
-        }
-        
-        $query2 = $query . $wpdb->prepare(' AND meta_value = %s', "hanzala");
 
         update_option("delete_link_meta",[
             "now" => date("h:i:sa"),
@@ -708,16 +712,36 @@ trait Query
             "meta_key" => $meta_key,
             "meta_value" => $meta_value,
             "query" => $query,
-            "query2" => $query2,
         ]);
 
+        if (!empty($meta_value)) {
+            $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
+        }
+        
+        if($keywords){
+            $query = $query . $wpdb->prepare(' AND meta_value LIKE %s', '%keywords":"'.$keywords.'","link_id":%');
+        }
 
         $meta_ids = $wpdb->get_col($query);
         if (! count($meta_ids)) {
             return false;
         }
-        $query = "DELETE FROM $table WHERE link_id IN( " . implode(',', $meta_ids) . ' )';
-        $count = $wpdb->query($query);
+        $query2 = "DELETE FROM $table WHERE link_id IN( " . implode(',', $meta_ids) . ' )';
+
+        
+        $count = $wpdb->query($query2);
+        
+        update_option("delete_link_meta",[
+            "now" => date("h:i:sa"),
+            "delete_link_meta" => "runned",
+            "link_id" => $link_id, 
+            "meta_key" => $meta_key,
+            "meta_value" => $meta_value,
+            "query" => $query,
+            "query2" => $query2,
+            "count" => $count,
+        ]);
+
         if (! $count) {
             return false;
         }

@@ -100,14 +100,29 @@ export const update_keyword = (formData) => async (dispatch) => {
 };
 
 export const delete_keyword = (params) => (dispatch) => {
-	console.log('---delete_keyword action creators:', { params });
+	const { keywords, link_id } = params;
+
+	console.log('---delete_keyword action creators:', { keywords, link_id, params });
 
 	params.map((item) => {
-		const { link_id } = item;
+		const {
+			row: { keywords, link_id },
+		} = item;
+
+		// const form_data = new FormData();
+		// form_data.append('action', 'betterlinks/admin/cat_slug_unique_checker');
+		// form_data.append('security', betterlinks_nonce);
+		// form_data.append('id', link_id);
+		// form_data.append('keywords', keywords);
+		console.log('--$3$3##--keywords delete action', { item, keywords, link_id });
+
 		makeRequest({
 			action: 'betterlinks/admin/delete_keyword',
 			id: link_id,
+			keywords: keywords,
 		}).then((response) => {
+			console.log('---%^&%^&%^&%^& betterlinks/admin/delete_keyword', { response });
+
 			if (response.data.success) {
 				dispatch({
 					type: DELETE_KEYWORD,

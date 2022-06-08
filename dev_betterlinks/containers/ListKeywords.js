@@ -9,9 +9,10 @@ import LinkCopyUrl from 'components/LinkCopyUrl';
 import { delete_keyword } from 'redux/actions/keywords.actions';
 
 const KeywordFilter = (props) => {
-	console.log('---KeywordFilter', { props });
-
 	const [bulkAction, setBulkAction] = useState([]);
+
+	console.log('---$$$$$$$KeywordFilter', { props, bulkAction });
+
 	return (
 		<React.Fragment>
 			<div className="btl-links-filter">
@@ -57,7 +58,7 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 			sortable: false,
 			cell: (row) => {
 				const deleteKeywords = () => {
-					delete_keyword([{ link_id: row.link_id }]);
+					delete_keyword([{ row }]);
 				};
 				return (
 					<>
