@@ -692,60 +692,51 @@ trait Query
         $table = $wpdb->prefix . 'betterlinkmeta';
 
 
-        update_option("delete_link_meta",[
+        $arr_of_vals = [
             "now" => date("h:i:sa"),
             "delete_link_meta" => "runned",
-            "link_id" => $link_id, 
+            "link_id" => $link_id,
             "meta_key" => $meta_key,
             "meta_value" => $meta_value,
-        ]);
+            "keywords" => $keywords,
+        ];
+
+        update_option("delete_link_meta___1", $arr_of_vals);
 
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
-
-        update_option("delete_link_meta",[
-            "now" => date("h:i:sa"),
-            "delete_link_meta" => "runned",
-            "link_id" => $link_id, 
-            "meta_key" => $meta_key,
-            "meta_value" => $meta_value,
-            "query" => $query,
-        ]);
-
+        
+        $koikoidhukse = [];
+        if (!empty($keywords)) {
+            $koikoidhukse = array_merge($koikoidhukse, ["keywords" => "ok"]);
+            $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s", $meta_key, $link_id, '%"keywords":"' . $keywords . '","link_id":%');
+        }
         if (!empty($meta_value)) {
+            $koikoidhukse = array_merge($koikoidhukse, ["meta_value" => "ok"]);
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
         }
-        
-        if($keywords){
-            $query = $query . $wpdb->prepare(' AND meta_value LIKE %s', '%keywords":"'.$keywords.'","link_id":%');
-        }
-
         $meta_ids = $wpdb->get_col($query);
-        if (! count($meta_ids)) {
+        if (!count($meta_ids)) {
             return false;
         }
-        $query2 = "DELETE FROM $table WHERE link_id IN( " . implode(',', $meta_ids) . ' )';
-
-        
+        $query2 = "DELETE FROM $table WHERE meta_id IN( " . implode(',', $meta_ids) . ' )';
         $count = $wpdb->query($query2);
-        
-        update_option("delete_link_meta",[
-            "now" => date("h:i:sa"),
-            "delete_link_meta" => "runned",
-            "link_id" => $link_id, 
-            "meta_key" => $meta_key,
-            "meta_value" => $meta_value,
-            "query" => $query,
-            "query2" => $query2,
-            "count" => $count,
-        ]);
 
-        if (! $count) {
-            return false;
-        }
-        return true;
+        $arr_of_vals = array_merge(
+            $arr_of_vals,
+            [
+                "count" => $count,
+                "countbool" => !!$count,
+                "meta_ids" => $meta_ids,
+                "koikoidhukse" => $koikoidhukse,
+            ]
+        );
+        update_option("delete_link_meta___2", $arr_of_vals);
+        // var_dump($arr_of_vals);
+
+        return !!$count;
     }
 
     public static function get_keywords()

@@ -128,6 +128,7 @@ export const delete_keyword = (params) => (dispatch) => {
 					type: DELETE_KEYWORD,
 					payload: {
 						link_id,
+						keywords,
 					},
 				});
 			}

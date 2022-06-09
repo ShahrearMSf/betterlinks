@@ -35,14 +35,25 @@ function keywords(state = {}, action) {
 		case DELETE_KEYWORD: {
 			console.log('----keywords reducer DELETE_KEYWORD case', { state, payload });
 
+			// const newData = state.data.filter((item) => {
+			// 	if (item.link_id != payload.link_id) {
+			// 		return item;
+			// 	}
+			// });
+
+
+			const newData = state.data.filter((item) => {
+				if (item.link_id == payload.link_id && item.keywords == payload.keywords) {
+					return false;
+				}else{
+					return true
+				}
+			});
+
 			return {
 				...state,
 				data: [
-					...state.data.filter((item) => {
-						if (item.link_id != payload.link_id) {
-							return item;
-						}
-					}),
+					...newData
 				],
 			};
 		}
