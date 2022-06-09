@@ -174,16 +174,18 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 										<label className="extra_info_keywords">
 											<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
 											{duplicate.length > 0 ? (
-												<h4 className="btl_duplicate_keyword">
-													error!! keywords:
-													{duplicate.map((item, index) => (
-														<span className="duplicate_words_wrapper" key={index}>
-															<span className="duplicate_words"> "{item}"</span>
-															<span className="duplicate_separator_comma">, </span>
-														</span>
-													))}
-													&nbsp; already exists.
-												</h4>
+												<>
+													<span className="btl_duplicate_keyword">
+														keywords:&nbsp;
+														{duplicate.map((item, index) => (
+															<span className="duplicate_words_wrapper" key={index}>
+																<span className="duplicate_words"> "{item}"</span>
+																<span className="duplicate_separator_comma">, </span>
+															</span>
+														))}
+														&nbsp; already exists.
+													</span>
+												</>
 											) : (
 												<></>
 											)}
