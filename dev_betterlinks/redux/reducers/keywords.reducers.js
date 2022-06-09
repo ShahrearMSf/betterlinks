@@ -25,7 +25,7 @@ function keywords(state = {}, action) {
 			// 	}
 			// });
 			
-			const newState = state.data.filter((item) => !(item.link_id == payload.data.old_link_id && item.keywords == payload.data.old_funny_keywords));
+			const newState = state.data.filter((item) => !(item.link_id == payload.data.old_link_id && item.keywords == payload.data.old_keywords));
 
 			return {
 				...state,
