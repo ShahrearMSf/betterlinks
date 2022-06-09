@@ -624,7 +624,7 @@ trait Query
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
                 SET meta_value = %s, link_id = %d
-                WHERE link_id = %d AND meta_key=%s AND meta_value LIKE %s",
+                WHERE link_id = %d AND meta_key=%s AND meta_value LIKE %s LIMIT 1",
                 $meta_value,
                 $link_id,
                 $old_link_id,
@@ -654,7 +654,7 @@ trait Query
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
         if (!empty($keywords)) {
-            $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s", $meta_key, $link_id, '%"keywords":"' . $keywords . '","link_id":%');
+            $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s LIMIT 1", $meta_key, $link_id, '%"keywords":"' . $keywords . '","link_id":%');
         }
         if (!empty($meta_value)) {
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
