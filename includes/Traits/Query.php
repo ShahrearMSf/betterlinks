@@ -588,7 +588,6 @@ trait Query
 
     public static function add_link_meta($link_id, $meta_key, $meta_value)
     {
-        // create betterlinks new autolink
         global $wpdb;
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
@@ -615,42 +614,18 @@ trait Query
         $table = $wpdb->prefix . 'betterlinkmeta';
         $link_id = absint($link_id);
         $meta_key   = wp_unslash($meta_key);
-        $meta_value2 = wp_unslash($meta_value);
-        $meta_value5 = \BetterLinks\Helper::maybe_json($meta_value2);
-
-        update_option("hzbtl_update_link_meta_query.php_file", [
-            "now" => date("h:i:sa"),
-            "result" => "--paoa jaay nai",
-            "enter_old_keyword_if_check" => "--paoa jaay nai",
-            "table" => $table,
-            "meta_key" => $meta_key,
-            "link_id" => $link_id,
-            "old_link_id" => $old_link_id,
-            "old_keywords" => $old_keywords,
-            "meta_value" => $meta_value,
-            "meta_value2" => $meta_value2,
-            "meta_value5" => $meta_value5,
-        ]);
-
-
+        $meta_value = wp_unslash($meta_value);
+        $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
-
-        // $meta_ids = $wpdb->get_col($wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id));
-        // if (empty($meta_ids)) {
-        //     return self::add_link_meta($link_id, $meta_key, $meta_value5);
-        // }
-
         $result = false;
-        $enter_old_keyword_if_check = false;
         if($old_keywords && $old_link_id){
-            $enter_old_keyword_if_check = true;
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
                 SET meta_value = %s, link_id = %d
                 WHERE link_id = %d AND meta_key=%s AND meta_value LIKE %s",
-                $meta_value5,
+                $meta_value,
                 $link_id,
                 $old_link_id,
                 $meta_key,
@@ -661,27 +636,11 @@ trait Query
                 "UPDATE $table
                 SET meta_value = %s
                 WHERE link_id = %d AND meta_key=%s",
-                $meta_value5,
+                $meta_value,
                 $link_id,
                 $meta_key
             ));
         }
-
-        update_option("hzbtl_update_link_meta_query.php_file", [
-            "now" => date("h:i:sa"),
-            "result" => $result,
-            "enter_old_keyword_if_check" => $enter_old_keyword_if_check,
-            "table" => $table,
-            "meta_key" => $meta_key,
-            "link_id" => $link_id,
-            "old_link_id" => $old_link_id,
-            "old_keywords" => $old_keywords,
-            "meta_value" => $meta_value,
-            "meta_value2" => $meta_value2,
-            "meta_value5" => $meta_value5,
-        ]);
-
-
         return !!$result;
     }
 
@@ -690,69 +649,32 @@ trait Query
 
         global $wpdb;
         $table = $wpdb->prefix . 'betterlinkmeta';
-
-
-        $arr_of_vals = [
-            "now" => date("h:i:sa"),
-            "delete_link_meta" => "runned",
-            "link_id" => $link_id,
-            "meta_key" => $meta_key,
-            "meta_value" => $meta_value,
-            "keywords" => $keywords,
-        ];
-
-        update_option("delete_link_meta___1", $arr_of_vals);
-
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
-        
-        $koikoidhukse = [];
         if (!empty($keywords)) {
-            $koikoidhukse = array_merge($koikoidhukse, ["keywords" => "ok"]);
             $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s", $meta_key, $link_id, '%"keywords":"' . $keywords . '","link_id":%');
         }
         if (!empty($meta_value)) {
-            $koikoidhukse = array_merge($koikoidhukse, ["meta_value" => "ok"]);
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
         }
         $meta_ids = $wpdb->get_col($query);
         if (!count($meta_ids)) {
             return false;
         }
-        $query2 = "DELETE FROM $table WHERE meta_id IN( " . implode(',', $meta_ids) . ' )';
-        $count = $wpdb->query($query2);
-
-        $arr_of_vals = array_merge(
-            $arr_of_vals,
-            [
-                "count" => $count,
-                "countbool" => !!$count,
-                "meta_ids" => $meta_ids,
-                "koikoidhukse" => $koikoidhukse,
-            ]
-        );
-        update_option("delete_link_meta___2", $arr_of_vals);
-        // var_dump($arr_of_vals);
-
+        $query = "DELETE FROM $table WHERE meta_id IN( " . implode(',', $meta_ids) . ' )';
+        $count = $wpdb->query($query);
         return !!$count;
     }
 
     public static function get_keywords()
     {
-        // initial all keywords get after reload
         global $wpdb;
         $results = $wpdb->get_results(
             $wpdb->prepare("SELECT meta_value FROM {$wpdb->prefix}betterlinkmeta WHERE meta_key=%s ORDER BY meta_id DESC", 'keywords'),
             ARRAY_A
         );
-
-        update_option("get_keywords_after_reload", [
-            "now" => date("h:i:sa"),
-            "results" => $results,
-        ]);
-
         $results = array_column($results, 'meta_value');
         return $results;
     }
@@ -761,6 +683,7 @@ trait Query
     {
         global $wpdb;
         $results = $wpdb->get_results(
+            // following query commented and written new one because we should get all the links in autolink
             // "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks WHERE NOT EXISTS (SELECT betterlinkmeta.link_id FROM {$wpdb->prefix}betterlinkmeta betterlinkmeta WHERE betterlinks.ID = betterlinkmeta.link_id)",
             "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks",
             ARRAY_A

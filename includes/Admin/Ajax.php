@@ -440,17 +440,10 @@ class Ajax
             'term_id' => ($_REQUEST['term_id'] ? sanitize_text_field($_REQUEST['term_id']) : ''),
         ];
         $this->delete_link($args);
-        if (!empty($args['ID'])) {
-            // \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
-        }
-
-        update_option("delete_existing_link_ajax.php_file", [
-            "now" => date("h:i:sa"),
-            "delete_link_same_class" => "runned",
-            "delete_link_meta_from_helper" => "stopped_manually",
-            "arguments" => $args,
-        ]);
-
+        // the folowing commented because it shouldn't happen after deleting a link
+        // if (!empty($args['ID'])) {
+        //     \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
+        // }
         wp_send_json_success(
             $args,
             200
@@ -488,7 +481,6 @@ class Ajax
         }
         $response = \BetterLinks\Helper::fresh_ajax_request_data($_POST);
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
-
         $response = json_encode($response);
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);

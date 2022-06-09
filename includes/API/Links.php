@@ -179,11 +179,6 @@ class Links extends Controller
      */
     public function delete_item($request)
     {
-        update_option("delete_item_links.php_file", [
-            "now" => date("h:i:sa"),
-            "request" => $request,
-            "delete_link_meta" => "runned",
-        ]);
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $this->delete_link($request);

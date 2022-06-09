@@ -69,7 +69,7 @@ class Settings extends Controller
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => "[]",
+                'data' => [],
             ],
             200
         );
@@ -101,7 +101,7 @@ class Settings extends Controller
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => $response ? $response : "[]",
+                'data' => $response ? $response : [],
             ],
             200
         );
@@ -118,7 +118,7 @@ class Settings extends Controller
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => "[]",
+                'data' => [],
             ],
             200
         );
