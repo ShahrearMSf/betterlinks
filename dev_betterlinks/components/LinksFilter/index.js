@@ -6,7 +6,7 @@ import { removeOverlayElement } from 'utils/helper';
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	if (action.value === 'delete') {
-		let deleteItemLists = [];
+		const deleteItemLists = [];
 		selectedRows.map((item) => {
 			deleteItemLists.push({
 				ID: item.ID,
@@ -44,7 +44,16 @@ const LinksFilter = (props) => {
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler)}>
+						<button
+							className="btl-link-apply-button"
+							onClick={() => {
+								const selected_rows = props.bulkActionData && props.bulkActionData.selectedRows;
+								const deleteLinkHandler = props.deleteLinkHandler;
+								console.log('---linksfilter-link-apply-button', { props, selected_rows, deleteLinkHandler });
+
+								rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
+							}}
+						>
 							{__('Apply', 'betterlinks')}
 						</button>
 					</div>

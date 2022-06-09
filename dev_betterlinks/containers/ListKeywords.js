@@ -25,7 +25,16 @@ const KeywordFilter = (props) => {
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button className="btl-link-apply-button" onClick={() => props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler)}>
+						<button
+							className="btl-link-apply-button"
+							onClick={() => {
+								const selected_rows_ = props.bulkActionData && props.bulkActionData.selectedRows;
+								const deleteLinkHandler = props.deleteLinkHandler;
+								console.log('----keywordfilter link apply button', { props, selected_rows_, bulkAction, deleteLinkHandler });
+								// return false;
+								props.deleteKeywordHandler(selected_rows_, bulkAction, props.deleteLinkHandler);
+							}}
+						>
 							{__('Apply', 'betterlinks')}
 						</button>
 					</div>
@@ -58,7 +67,7 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 			sortable: false,
 			cell: (row) => {
 				const deleteKeywords = () => {
-					delete_keyword([{ row }]);
+					delete_keyword([ row ]);
 				};
 				return (
 					<>
