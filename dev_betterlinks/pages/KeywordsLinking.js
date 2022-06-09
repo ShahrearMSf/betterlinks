@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,7 +13,18 @@ const propTypes = {};
 
 const defaultProps = {};
 
+// localStorage.setItem('btlNonce', false);
+// localStorage.setItem('btlNonce', betterLinksGlobal.betterlinks_nonce);
+
 const KeywordsLinking = (props) => {
+	const [isDuplicateKeywordsChecked, setIsDuplicateKeywordsChecked] = useState(false);
+
+	// useEffect(() => {
+	// 	// check for duplicate
+	
+	// }, [keywords, isDuplicateKeywordsChecked])
+	
+
 	useEffect(() => {
 		if (!props.keywords.data) {
 			props.fetch_keywords();

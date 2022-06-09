@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActionButton from 'components/ActionButton';
-import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from 'utils/helper';
+import { modalCustomStyles, getAutoLinksInitialValues, makeRequest, trimmed } from 'utils/helper';
 import { add_keyword, update_keyword } from 'redux/actions/keywords.actions';
 
 const propTypes = {
@@ -18,6 +18,9 @@ const defaultProps = {
 	data: {},
 };
 const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
+	console.log('-----keywords from AddNewKeywords:', { keywords });
+
+	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
 	const [links, setLinks] = useState([]);
@@ -111,6 +114,32 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
+						const formDuplicate = [];
+
+						const formKeywordsArr = (values.keywords || '').trim().split(',');
+
+						console.log('---AddNewKeywords Formik onSubmit', { values, keywords, formKeywordsArr });
+
+						for (const item of formKeywordsArr) {
+							const newItem = trimmed(item);
+							for (const keyItem of keywords.data) {
+								const newKeyItemsArr = trimmed(keyItem.keywords).split(',');
+								for (const keyWord of newKeyItemsArr) {
+									if (newItem.toLowerCase() === keyWord.toLocaleLowerCase()) {
+										formDuplicate.push(keyWord);
+										console.log('---for loop duplicate paoa gese ', { newItem, formDuplicate });
+									}
+								}
+							}
+						}
+
+						console.log('----formDuplicate', { formDuplicate });
+
+						if (formDuplicate.length > 0) {
+							setDuplicate(formDuplicate);
+							return false;
+						}
+
 						if (values.leftBoundary === '' || values.keywordBefore === '') {
 							values.leftBoundary = '';
 							values.keywordBefore = '';
@@ -144,6 +173,20 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 										</label>
 										<label className="extra_info_keywords">
 											<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
+											{duplicate.length > 0 ? (
+												<h4 className="btl_duplicate_keyword">
+													error!! keywords:
+													{duplicate.map((item, index) => (
+														<span className="duplicate_words_wrapper" key={index}>
+															<span className="duplicate_words"> "{item}"</span>
+															<span className="duplicate_separator_comma">, </span>
+														</span>
+													))}
+													&nbsp; already exists.
+												</h4>
+											) : (
+												<></>
+											)}
 											{__(' use comma(,) to add multiple keywords', 'betterlinks')}
 										</label>
 									</div>

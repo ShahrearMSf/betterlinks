@@ -336,3 +336,5 @@ export const getAutoLinksInitialValues = (data) => {
 		limit: 100,
 	};
 };
+
+export const trimmed = (str) => (typeof str === 'string' ? str : '').trim();
