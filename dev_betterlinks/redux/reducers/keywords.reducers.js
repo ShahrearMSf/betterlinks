@@ -24,12 +24,12 @@ function keywords(state = {}, action) {
 			// 		return true;
 			// 	}
 			// });
-			
-			const newState = state.data.filter((item) => !(item.link_id == payload.data.old_link_id && item.keywords == payload.data.old_keywords));
+
+			const indexOfPayload = state.data.findIndex((item) => item.link_id == payload.data.old_link_id && item.keywords == payload.data.old_keywords);
 
 			return {
 				...state,
-				data: [payload.data, ...newState],
+				data: [...state.data.slice(0, indexOfPayload), payload.data, ...state.data.slice(indexOfPayload + 1)],
 			};
 		}
 		case DELETE_KEYWORD: {
@@ -41,20 +41,17 @@ function keywords(state = {}, action) {
 			// 	}
 			// });
 
-
 			const newData = state.data.filter((item) => {
 				if (item.link_id == payload.link_id && item.keywords == payload.keywords) {
 					return false;
-				}else{
-					return true
+				} else {
+					return true;
 				}
 			});
 
 			return {
 				...state,
-				data: [
-					...newData
-				],
+				data: [...newData],
 			};
 		}
 		default:
