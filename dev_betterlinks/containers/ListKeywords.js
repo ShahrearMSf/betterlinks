@@ -68,10 +68,6 @@ const getLinksListViewColumnData = (links, delete_keyword, keywords) => {
 };
 
 const ListKeywords = ({ links, keywords, delete_keyword }) => {
-	console.log('--list keywords', { links, keywords });
-
-
-
 	const [bulkActionData, setBulkActionData] = useState({});
 	useEffect(() => {}, []);
 

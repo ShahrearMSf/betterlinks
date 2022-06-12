@@ -18,8 +18,6 @@ const defaultProps = {
 	data: {},
 };
 const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
-	console.log('-----keywords from AddNewKeywords:', { keywords });
-
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
@@ -115,11 +113,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
 						const formDuplicate = [];
-
 						const formKeywordsArr = (values.keywords || '').trim().split(',');
-
-						console.log('---AddNewKeywords Formik onSubmit', { values, keywords, formKeywordsArr });
-
 						for (const item of formKeywordsArr) {
 							const newItem = trimmed(item);
 							for (const keyItem of keywords.data) {
@@ -127,19 +121,14 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 								for (const keyWord of newKeyItemsArr) {
 									if (newItem.toLowerCase() === keyWord.toLocaleLowerCase()) {
 										formDuplicate.push(keyWord);
-										console.log('---for loop duplicate paoa gese ', { newItem, formDuplicate });
 									}
 								}
 							}
 						}
-
-						console.log('----formDuplicate', { formDuplicate });
-
 						if (formDuplicate.length > 0) {
 							setDuplicate(formDuplicate);
 							return false;
 						}
-
 						if (values.leftBoundary === '' || values.keywordBefore === '') {
 							values.leftBoundary = '';
 							values.keywordBefore = '';
