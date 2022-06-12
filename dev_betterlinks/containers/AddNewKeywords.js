@@ -183,9 +183,8 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 													</span>
 												</>
 											) : (
-												<></>
+												<>{__(' use comma(,) to add multiple keywords', 'betterlinks')}</>
 											)}
-											{__(' use comma(,) to add multiple keywords', 'betterlinks')}
 										</label>
 									</div>
 									<div className="btl-modal-form-group" style={{ position: 'relative' }}>
