@@ -27,3 +27,4 @@ vendor/jaybizzle/crawler-detect/.php_cs.dist
 vendor/jaybizzle/crawler-detect/composer.json
 vendor/jaybizzle/crawler-detect/README.md
 .gitattributes
+jsconfig.json

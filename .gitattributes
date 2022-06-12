@@ -58,3 +58,4 @@ vendor/jaybizzle/crawler-detect/.php_cs.dist                export-ignore
 vendor/jaybizzle/crawler-detect/composer.json               export-ignore
 vendor/jaybizzle/crawler-detect/README.md                   export-ignore
 dev_betterlinks                                             export-ignore
+jsconfig.json                                               export-ignore
