@@ -112,17 +112,24 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
+						const thisItemIndex = keywords.data.findIndex((item) => data === item);
 						const formDuplicate = [];
 						const formKeywordsArr = (values.keywords || '').trim().split(',');
 						for (const item of formKeywordsArr) {
 							const newItem = trimmed(item);
+							let x = 0;
 							for (const keyItem of keywords.data) {
+								if (x == thisItemIndex) {
+									x++;
+									continue;
+								}
 								const newKeyItemsArr = trimmed(keyItem.keywords).split(',');
 								for (const keyWord of newKeyItemsArr) {
 									if (newItem.toLowerCase() === keyWord.toLocaleLowerCase()) {
 										formDuplicate.push(keyWord);
 									}
 								}
+								x++;
 							}
 						}
 						if (formDuplicate.length > 0) {
