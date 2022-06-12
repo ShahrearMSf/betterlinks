@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
@@ -8,6 +8,7 @@ import { site_url, route_path, copyShortUrl } from 'utils/helper';
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
 	isShowVisitLink: PropTypes.bool,
+	isShowFavoriteLink: PropTypes.bool,
 	isShowCopyLink: PropTypes.bool,
 	isShowEditLink: PropTypes.bool,
 	isShowDeleteLink: PropTypes.bool,
@@ -21,6 +22,7 @@ const propTypes = {
 const defaultProps = {
 	isShowAnalytics: false,
 	isShowVisitLink: true,
+	isShowFavoriteLink: true,
 	isShowCopyLink: true,
 	isShowEditLink: true,
 	isShowDeleteLink: true,
@@ -31,6 +33,7 @@ const LinkQuickAction = ({
 	isShowCopyLink,
 	isShowAnalytics,
 	isShowVisitLink,
+	isShowFavoriteLink,
 	isShowEditLink,
 	isShowDeleteLink,
 	data,
@@ -40,6 +43,7 @@ const LinkQuickAction = ({
 	deleteLinkHandler,
 }) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
+	const [isFavorite, setIsFavorite] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
 		setDeleteConfrim(!isDeleteConfirm);
@@ -69,6 +73,7 @@ const LinkQuickAction = ({
 		}
 		return analytic.link_count + '/' + analytic.ip.length;
 	};
+
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
@@ -82,6 +87,14 @@ const LinkQuickAction = ({
 			)}
 			{!isDeleteConfirm ? (
 				<>
+					{isShowFavoriteLink && (
+						<div className="btl-tooltip btl-fav-link">
+							<button className="dnd-link-button" onClick={() => setIsFavorite(!isFavorite)}>
+								<span className={`dashicons dashicons-star-${isFavorite ? 'filled' : 'empty'}`}></span>
+							</button>
+							<span className="btl-tooltiptext">{__(`${isFavorite ? 'Unmark' : 'Mark'} as Favorite`, 'betterlinks')}</span>
+						</div>
+					)}
 					{isShowVisitLink && (
 						<div className="btl-tooltip">
 							<a className="dnd-link-button" href={site_url + '/' + data.short_url} target="_blank">
