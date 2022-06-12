@@ -1,4 +1,5 @@
 <?php
+
 namespace BetterLinks\Traits;
 
 trait Query
@@ -12,13 +13,13 @@ trait Query
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks",
                 array(
-                    'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'],'link_slug' => $item['link_slug'],'link_note' => $item['link_note'],'link_status' => $item['link_status'],'nofollow' => $item['nofollow'],'sponsored' => $item['sponsored'],'track_me' => $item['track_me'],'param_forwarding' => $item['param_forwarding'],'param_struct' => $item['param_struct'],'redirect_type' => $item['redirect_type'],'target_url' => $item['target_url'],'short_url' => $item['short_url'],'link_order' => $item['link_order'],'link_modified' => $item['link_modified'],'link_modified_gmt' => $item['link_modified_gmt'],'wildcards' => $item['wildcards'],'expire' => $item['expire'],'dynamic_redirect' => $item['dynamic_redirect']
+                    'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'], 'link_slug' => $item['link_slug'], 'link_note' => $item['link_note'], 'link_status' => $item['link_status'], 'nofollow' => $item['nofollow'], 'sponsored' => $item['sponsored'], 'track_me' => $item['track_me'], 'param_forwarding' => $item['param_forwarding'], 'param_struct' => $item['param_struct'], 'redirect_type' => $item['redirect_type'], 'target_url' => $item['target_url'], 'short_url' => $item['short_url'], 'link_order' => $item['link_order'], 'link_modified' => $item['link_modified'], 'link_modified_gmt' => $item['link_modified_gmt'], 'wildcards' => $item['wildcards'], 'expire' => $item['expire'], 'dynamic_redirect' => $item['dynamic_redirect']
                 ),
-                array( 'ID' => $item['ID'] ),
+                array('ID' => $item['ID']),
                 array(
-                    '%d','%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
+                    '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
                 ),
-                array( '%d' )
+                array('%d')
             );
             do_action('betterlinks/after_update_link', $item['ID'], $item);
             return $item['ID'];
@@ -55,8 +56,8 @@ trait Query
                         link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect
                     ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
                         array(
-                        $item['link_author'],$item['link_date'],$item['link_date_gmt'],$item['link_title'],$item['link_slug'],$item['link_note'],$item['link_status'],$item['nofollow'],$item['sponsored'],$item['track_me'],$item['param_forwarding'],$item['param_struct'],$item['redirect_type'],$item['target_url'],$item['short_url'],$item['link_order'],$item['link_modified'],$item['link_modified_gmt'],$item['wildcards'],$item['expire'],$item['dynamic_redirect']
-                    )
+                            $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
+                        )
                     )
                 );
                 do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
@@ -68,14 +69,14 @@ trait Query
     public static function delete_link($ID)
     {
         global $wpdb;
-        $wpdb->delete("{$wpdb->prefix}betterlinks", array( 'ID' => $ID ), array( '%d' ));
-        $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array( 'link_id' => $ID ), array( '%d' ));
-        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
+        $wpdb->delete("{$wpdb->prefix}betterlinks", array('ID' => $ID), array('%d'));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array('link_id' => $ID), array('%d'));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array('link_id' => $ID), array('%d'));
     }
     public static function remove_terms_relationships_by_link_ID($ID)
     {
         global $wpdb;
-        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ));
+        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array('link_id' => $ID), array('%d'));
     }
     public static function get_prepare_all_links()
     {
@@ -176,13 +177,13 @@ trait Query
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks_terms",
                 array(
-                    'term_name' => $item['term_name'],'term_slug' => $item['term_slug'],'term_type' => $item['term_type']
+                    'term_name' => $item['term_name'], 'term_slug' => $item['term_slug'], 'term_type' => $item['term_type']
                 ),
-                array( 'ID' => $item['ID'] ),
+                array('ID' => $item['ID']),
                 array(
                     '%s', '%s', '%s'
                 ),
-                array( '%d' )
+                array('%d')
             );
             return  $item['ID'];
         } else {
@@ -191,7 +192,7 @@ trait Query
                 $wpdb->query(
                     $wpdb->prepare(
                         "INSERT INTO {$wpdb->prefix}betterlinks_terms ( term_name, term_slug, term_type ) VALUES ( %s, %s, %s )",
-                        array($item['term_name'],$item['term_slug'], $item['term_type'])
+                        array($item['term_name'], $item['term_slug'], $item['term_type'])
                     )
                 );
                 return $wpdb->insert_id;
@@ -242,23 +243,23 @@ trait Query
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}betterlinks_terms_relationships ( term_id, link_id ) VALUES ( %d, %d )",
-                array($term_id,$link_id)
+                array($term_id, $link_id)
             )
         );
         return $wpdb->insert_id;
     }
 
     /**
-    * Delete term and update Term relationship to uncategorized
-    *
-    * @param term_id
-    * @return boolean
-    */
+     * Delete term and update Term relationship to uncategorized
+     *
+     * @param term_id
+     * @return boolean
+     */
     public static function delete_term_and_update_term_relationships($term_id)
     {
         global $wpdb;
         $wpdb->query("START TRANSACTION");
-        $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms', array( 'ID' => $term_id ), array( '%d' ));
+        $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms', array('ID' => $term_id), array('%d'));
         if ($is_delete) {
             $term = self::get_term_by_slug('uncategorized');
             if (count($term) > 0) {
@@ -267,11 +268,11 @@ trait Query
                     array(
                         'term_id' => current($term)['ID']
                     ),
-                    array( 'term_id' => $term_id ),
+                    array('term_id' => $term_id),
                     array(
                         '%d',
                     ),
-                    array( '%d' )
+                    array('%d')
                 );
             }
         }
@@ -329,7 +330,7 @@ trait Query
         // make term and link relation
         // delete term relation
         if ($is_update && count($term_data) > 0) {
-            $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array( 'link_id' => $link_id ), array( '%d' ));
+            $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array('link_id' => $link_id), array('%d'));
             if ($is_delete) {
                 foreach ($term_data as $term) {
                     \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
@@ -399,7 +400,7 @@ trait Query
                         link_id, ip, browser, os, referer, host, uri, click_count, visitor_id, click_order, created_at, created_at_gmt
                     ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
                     array(
-                        current($betterlinks)['ID'],$item['ip'],$item['browser'],$item['os'],$item['referer'], $item['host'],$item['uri'],$item['click_count'],$item['visitor_id'],$item['click_order'],$item['created_at'],$item['created_at_gmt']
+                        current($betterlinks)['ID'], $item['ip'], $item['browser'], $item['os'], $item['referer'], $item['host'], $item['uri'], $item['click_count'], $item['visitor_id'], $item['click_order'], $item['created_at'], $item['created_at_gmt']
                     )
                 )
             );
@@ -408,14 +409,15 @@ trait Query
         return;
     }
 
-    public static function get_linksNips_count(){
+    public static function get_linksNips_count()
+    {
         global $wpdb;
 
         $query = "select link_id, ip, ipc, t2.lidc from ( select ip, link_id, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip, link_id ) as t1
         left join ( select link_id as lid, sum(ipc) as lidc from ( select ip, link_id, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip, link_id ) as t3 group by link_id ) as t2
         on t1.link_id = t2.lid";
 
-        $results = $wpdb->get_results( $query, ARRAY_A );
+        $results = $wpdb->get_results($query, ARRAY_A);
         return $results;
     }
 
@@ -471,7 +473,7 @@ trait Query
         $response = [];
         $betterlinks_links = json_decode(get_option('betterlinks_links', '{}'), true);
         foreach ($thirstylinks as $thirstylink) {
-            $term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array( 'fields' => 'names' ));
+            $term =  wp_get_post_terms($thirstylink->ID, 'thirstylink-category', array('fields' => 'names'));
             $nofollow = get_post_meta($thirstylink->ID, '_ta_no_follow', true);
             $nofollow = ($nofollow == 'global' ? get_option('ta_no_follow', true) : $nofollow);
             $redirect_type = get_post_meta($thirstylink->ID, '_ta_redirect_type', true);
@@ -489,7 +491,7 @@ trait Query
                     ];
                 }
                 $dynamic_redirect = [
-                    'type'	    =>	'geographic',
+                    'type'        =>    'geographic',
                     'value'     => $dynamic_redirect_value,
                     'extra' => []
                 ];
@@ -591,6 +593,7 @@ trait Query
         global $wpdb;
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
+        $meta_value = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value);
         $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
         if (empty($link_id) || empty($meta_key)) {
             return false;
@@ -603,7 +606,7 @@ trait Query
                 'meta_value' => $meta_value,
             )
         );
-        if (! $result) {
+        if (!$result) {
             return false;
         }
         return (int) $wpdb->insert_id;
@@ -620,7 +623,7 @@ trait Query
             return false;
         }
         $result = false;
-        if($old_keywords && $old_link_id){
+        if ($old_keywords && $old_link_id) {
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
                 SET meta_value = %s, link_id = %d
@@ -629,9 +632,9 @@ trait Query
                 $link_id,
                 $old_link_id,
                 $meta_key,
-                '%"keywords":"'.$old_keywords.'","link_id":%'
+                '%"keywords":"' . preg_replace('/\’|\'|\‘|\`/', "'", $old_keywords) . '","link_id":%'
             ));
-        }else{
+        } else {
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
                 SET meta_value = %s
@@ -654,7 +657,7 @@ trait Query
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
         if (!empty($keywords)) {
-            $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s LIMIT 1", $meta_key, $link_id, '%"keywords":"' . $keywords . '","link_id":%');
+            $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s LIMIT 1", $meta_key, $link_id, '%"keywords":"' . preg_replace('/\’|\'|\‘|\`/', "'", $keywords) . '","link_id":%');
         }
         if (!empty($meta_value)) {
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
