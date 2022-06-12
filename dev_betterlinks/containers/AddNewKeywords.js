@@ -125,7 +125,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 								}
 								const newKeyItemsArr = trimmed(keyItem.keywords).split(',');
 								for (const keyWord of newKeyItemsArr) {
-									if (newItem.toLowerCase() === keyWord.toLocaleLowerCase()) {
+									if (newItem.toLowerCase() === keyWord.toLocaleLowerCase() && !formDuplicate.includes(keyWord)) {
 										formDuplicate.push(keyWord);
 									}
 								}
