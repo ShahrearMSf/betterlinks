@@ -172,14 +172,14 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 											{duplicate.length > 0 ? (
 												<>
 													<span className="btl_duplicate_keyword">
-														keywords:&nbsp;
+														keywords:
 														{duplicate.map((item, index) => (
 															<span className="duplicate_words_wrapper" key={index}>
 																<span className="duplicate_words"> "{item}"</span>
 																<span className="duplicate_separator_comma">, </span>
 															</span>
 														))}
-														&nbsp; already exists.
+														&nbsp;already exists.
 													</span>
 												</>
 											) : (
