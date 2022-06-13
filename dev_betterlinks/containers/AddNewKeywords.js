@@ -33,6 +33,12 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 		{ value: '', label: 'None' },
 	];
 
+	useEffect(() => {
+		return () => {
+			setDuplicate([]);
+		};
+	}, []);
+
 	function openModal() {
 		setIsOpen(true);
 		// links
@@ -93,6 +99,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 
 	function closeModal() {
 		setIsOpen(false);
+		setDuplicate([]);
 	}
 	return (
 		<React.Fragment>
@@ -123,10 +130,11 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 									x++;
 									continue;
 								}
-								const newKeyItemsArr = trimmed(keyItem.keywords).split(',');
+								const newKeyItemsArr = keyItem.keywords.split(',');
 								for (const keyWord of newKeyItemsArr) {
-									if (newItem.toLowerCase() === keyWord.toLocaleLowerCase() && !formDuplicate.includes(keyWord)) {
-										formDuplicate.push(keyWord);
+									const newKeyword = trimmed(keyWord);
+									if (newItem.toLowerCase() === newKeyword.toLocaleLowerCase() && !formDuplicate.includes(newKeyword)) {
+										formDuplicate.push(newKeyword);
 									}
 								}
 								x++;
