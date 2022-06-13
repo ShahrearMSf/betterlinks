@@ -524,8 +524,6 @@ trait Query
             // keywords
             $keywords = get_post_meta($thirstylink->ID, '_ta_autolink_keyword_list', true);
             $limit = get_post_meta($thirstylink->ID, '_ta_autolink_keyword_limit', true);
-
-
             $response[] = [
                 'link_title' => $thirstylink->post_title,
                 'link_slug' => $thirstylink->post_name,
@@ -593,7 +591,7 @@ trait Query
         global $wpdb;
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
-        $meta_value = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value);
+        $meta_value["keywords"] = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value["keywords"]);
         $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
         if (empty($link_id) || empty($meta_key)) {
             return false;
@@ -618,12 +616,14 @@ trait Query
         $link_id = absint($link_id);
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
+        $meta_value["keywords"] = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value["keywords"]);
         $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
         $result = false;
         if ($old_keywords && $old_link_id) {
+            $keywordPattern = addslashes('%"keywords":' . wp_json_encode($old_keywords) . ',"link_id":%');
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
                 SET meta_value = %s, link_id = %d
@@ -632,7 +632,7 @@ trait Query
                 $link_id,
                 $old_link_id,
                 $meta_key,
-                '%"keywords":"' . preg_replace('/\’|\'|\‘|\`/', "'", $old_keywords) . '","link_id":%'
+                $keywordPattern
             ));
         } else {
             $result = $wpdb->query($wpdb->prepare(
@@ -649,7 +649,6 @@ trait Query
 
     public static function delete_link_meta($link_id, $meta_key, $meta_value = '', $keywords = false)
     {
-
         global $wpdb;
         $table = $wpdb->prefix . 'betterlinkmeta';
         if (empty($link_id) || empty($meta_key)) {
@@ -657,7 +656,13 @@ trait Query
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
         if (!empty($keywords)) {
-            $query = $wpdb->prepare("SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s LIMIT 1", $meta_key, $link_id, '%"keywords":"' . preg_replace('/\’|\'|\‘|\`/', "'", $keywords) . '","link_id":%');
+            $keywordPattern = addslashes('%"keywords":' . wp_json_encode($keywords) . ',"link_id":%');
+            $query = $wpdb->prepare(
+                "SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s LIMIT 1",
+                $meta_key,
+                $link_id,
+                $keywordPattern
+            );
         }
         if (!empty($meta_value)) {
             $query .= $wpdb->prepare(' AND meta_value = %s', $meta_value);
