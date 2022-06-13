@@ -591,7 +591,9 @@ trait Query
         global $wpdb;
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
-        $meta_value["keywords"] = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value["keywords"]);
+        if (isset($meta_value["keywords"])) {
+            $meta_value["keywords"] = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value["keywords"]);
+        }
         $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
         if (empty($link_id) || empty($meta_key)) {
             return false;
@@ -616,7 +618,9 @@ trait Query
         $link_id = absint($link_id);
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
-        $meta_value["keywords"] = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value["keywords"]);
+        if (isset($meta_value["keywords"])) {
+            $meta_value["keywords"] = preg_replace('/\’|\'|\‘|\`/', "'", $meta_value["keywords"]);
+        }
         $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
         if (empty($link_id) || empty($meta_key)) {
             return false;
