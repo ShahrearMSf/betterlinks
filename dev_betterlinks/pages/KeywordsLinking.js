@@ -7,24 +7,10 @@ import { fetch_keywords } from 'redux/actions/keywords.actions';
 import Topbar from 'containers/TopBar';
 import ListKeywords from 'containers/ListKeywords';
 import AddNewKeywords from 'containers/AddNewKeywords';
-import PropTypes from 'prop-types';
 
 const propTypes = {};
-
 const defaultProps = {};
-
-// localStorage.setItem('btlNonce', false);
-// localStorage.setItem('btlNonce', betterLinksGlobal.betterlinks_nonce);
-
 const KeywordsLinking = (props) => {
-	const [isDuplicateKeywordsChecked, setIsDuplicateKeywordsChecked] = useState(false);
-
-	// useEffect(() => {
-	// 	// check for duplicate
-	
-	// }, [keywords, isDuplicateKeywordsChecked])
-	
-
 	useEffect(() => {
 		if (!props.keywords.data) {
 			props.fetch_keywords();
