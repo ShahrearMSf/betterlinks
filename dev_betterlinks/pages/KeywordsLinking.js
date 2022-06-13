@@ -32,17 +32,18 @@ const KeywordsLinking = (props) => {
 		}
 		return [];
 	};
+	const newLinks = getLinks(props.links || {});
 	return (
 		<React.Fragment>
 			<Topbar
 				label={__('Auto-Link Keywords', 'betterlinks')}
 				render={() => (
 					<>
-						<AddNewKeywords keywords={props.keywords} />
+						<AddNewKeywords links={newLinks} keywords={props.keywords} />
 					</>
 				)}
 			/>
-			<ListKeywords links={getLinks(props.links)} keywords={props.keywords} />
+			<ListKeywords links={newLinks} keywords={props.keywords} />
 		</React.Fragment>
 	);
 };

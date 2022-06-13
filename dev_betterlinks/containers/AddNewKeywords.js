@@ -17,11 +17,10 @@ const propTypes = {
 const defaultProps = {
 	data: {},
 };
-const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
+const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, links: allLinks }) => {
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
-	const [links, setLinks] = useState([]);
 	const [postTypes, setPostTypes] = useState([]);
 	const [postTags, setPostTags] = useState([]);
 	const [postCategories, setPostCategories] = useState([]);
@@ -42,27 +41,10 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 	function openModal() {
 		setIsOpen(true);
 		// links
-		makeRequest({
-			action: 'betterlinks/admin/get_links_by_exclude_keywords',
-		}).then((response) => {
-			if (response.data.success && response.data.data.length > 0) {
-				setLinks(
-					response.data.data.reduce((acc, item) => {
-						acc.unshift({ label: item.link_title, value: item.ID });
-						return acc;
-					}, [])
-				);
-			}
-		});
-		makeRequest({
-			action: 'betterlinks/admin/get_keyword_saved_link',
-			link_id: data.link_id,
-		}).then((response) => {
-			if (response.data.success) {
-				const link = response.data.data[0];
-				setChooseAbleSavedLink({ label: link.link_title, value: link.ID });
-			}
-		});
+		if (data.link_id) {
+			setChooseAbleSavedLink(allLinks.find((item) => item.value == `${data.link_id}`) || {});
+		}
+
 		// get post type info
 		makeRequest({
 			action: 'betterlinks/admin/get_post_types',
@@ -100,6 +82,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 	function closeModal() {
 		setIsOpen(false);
 		setDuplicate([]);
+		setChooseAbleSavedLink({});
 	}
 	return (
 		<React.Fragment>
@@ -162,7 +145,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 							actions.setSubmitting(false);
 							// reset
 							actions.resetForm();
-							setChooseAbleSavedLink([]);
 							closeModal();
 						}
 					}}
@@ -204,7 +186,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords }) => {
 											name="chooseLink"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
-											options={links}
+											options={allLinks}
 											value={chooseAbleSavedLink}
 											onChange={(option) => {
 												props.setFieldValue('chooseLink', option ? option.value : '');
