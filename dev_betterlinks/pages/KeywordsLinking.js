@@ -20,7 +20,7 @@ const KeywordsLinking = (props) => {
 		if (!props.keywords.data) {
 			props.fetch_keywords();
 		}
-		if (!props.links.data) {
+		if (!props.links.links) {
 			props.fetch_links_data();
 		}
 		// get post type info for adding or updating keywords
