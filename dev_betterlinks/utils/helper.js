@@ -300,6 +300,20 @@ export const makeRequest = async (payload = {}) => {
 	);
 };
 
+export const getLinks = (data) => {
+	if (data.links) {
+		const results = Object.entries(data.links).reduce((acc, item) => {
+			acc = [...acc, ...item[1].lists];
+			return acc;
+		}, []);
+		return results.reduce((acc, item) => {
+			acc = [...acc, { value: item.ID, label: item.short_url }];
+			return acc;
+		}, []);
+	}
+	return [];
+};
+
 export const getAutoLinksInitialValues = (data) => {
 	if (Object.keys(data).length) {
 		return {

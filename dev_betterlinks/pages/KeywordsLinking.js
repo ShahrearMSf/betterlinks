@@ -8,7 +8,7 @@ import { fetch_keywords } from 'redux/actions/keywords.actions';
 import Topbar from 'containers/TopBar';
 import ListKeywords from 'containers/ListKeywords';
 import AddNewKeywords from 'containers/AddNewKeywords';
-import { makeRequest } from 'utils/helper';
+import { makeRequest, getLinks } from 'utils/helper';
 
 const propTypes = {};
 const defaultProps = {};
@@ -56,19 +56,6 @@ const KeywordsLinking = (props) => {
 			setPostCategories(data);
 		});
 	}, []);
-	const getLinks = (data) => {
-		if (data.links) {
-			const results = Object.entries(data.links).reduce((acc, item) => {
-				acc = [...acc, ...item[1].lists];
-				return acc;
-			}, []);
-			return results.reduce((acc, item) => {
-				acc = [...acc, { value: item.ID, label: item.short_url }];
-				return acc;
-			}, []);
-		}
-		return [];
-	};
 	const newLinks = getLinks(props.links || {});
 	const postTypesProps = {
 		postTypes,
