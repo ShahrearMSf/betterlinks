@@ -34,9 +34,6 @@ const KeywordsLinking = (props) => {
 		return [];
 	};
 	const newLinks = getLinks(props.links || {});
-
-	console.log('----props.links', props.links);
-
 	return (
 		<React.Fragment>
 			<Topbar
