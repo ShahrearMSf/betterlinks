@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
+import Loader from 'components/Loader';
 import { bindActionCreators } from 'redux';
 import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_keywords } from 'redux/actions/keywords.actions';
@@ -33,6 +34,9 @@ const KeywordsLinking = (props) => {
 		return [];
 	};
 	const newLinks = getLinks(props.links || {});
+
+	console.log('----props.links', props.links);
+
 	return (
 		<React.Fragment>
 			<Topbar
@@ -43,7 +47,7 @@ const KeywordsLinking = (props) => {
 					</>
 				)}
 			/>
-			<ListKeywords links={newLinks} keywords={props.keywords} />
+			{props.links.links ? <ListKeywords links={newLinks} keywords={props.keywords} /> : <Loader />}
 		</React.Fragment>
 	);
 };
