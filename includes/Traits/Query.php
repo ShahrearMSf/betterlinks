@@ -627,7 +627,7 @@ trait Query
         }
         $result = false;
         if ($old_keywords && $old_link_id) {
-            $keywordPattern = addslashes('%"keywords":' . wp_json_encode($old_keywords) . ',"link_id":%');
+            $keywordPattern = addslashes('%"keywords":' . wp_json_encode(str_replace("\\", "", $old_keywords)) . ',"link_id":%');
             $result = $wpdb->query($wpdb->prepare(
                 "UPDATE $table
                 SET meta_value = %s, link_id = %d
@@ -660,7 +660,7 @@ trait Query
         }
         $query = $wpdb->prepare("SELECT link_id FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
         if (!empty($keywords)) {
-            $keywordPattern = addslashes('%"keywords":' . wp_json_encode($keywords) . ',"link_id":%');
+            $keywordPattern = addslashes('%"keywords":' . wp_json_encode(str_replace("\\", "", $keywords)) . ',"link_id":%');
             $query = $wpdb->prepare(
                 "SELECT meta_id FROM $table WHERE meta_key = %s AND link_id = %d AND meta_value LIKE %s LIMIT 1",
                 $meta_key,
