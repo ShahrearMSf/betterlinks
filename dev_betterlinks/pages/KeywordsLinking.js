@@ -8,10 +8,14 @@ import { fetch_keywords } from 'redux/actions/keywords.actions';
 import Topbar from 'containers/TopBar';
 import ListKeywords from 'containers/ListKeywords';
 import AddNewKeywords from 'containers/AddNewKeywords';
+import { makeRequest } from 'utils/helper';
 
 const propTypes = {};
 const defaultProps = {};
 const KeywordsLinking = (props) => {
+	const [postTypes, setPostTypes] = useState([]);
+	const [postTags, setPostTags] = useState([]);
+	const [postCategories, setPostCategories] = useState([]);
 	useEffect(() => {
 		if (!props.keywords.data) {
 			props.fetch_keywords();
@@ -19,6 +23,38 @@ const KeywordsLinking = (props) => {
 		if (!props.links.data) {
 			props.fetch_links_data();
 		}
+		// get post type info for adding or updating keywords
+		makeRequest({
+			action: 'betterlinks/admin/get_post_types',
+		}).then((response) => {
+			if (response.data && response.data.data) {
+				const data = Object.entries(response.data.data).reduce((acc, item) => {
+					acc.push({ label: item[1], value: item[0] });
+					return acc;
+				}, []);
+				setPostTypes(data);
+			}
+		});
+		makeRequest({
+			action: 'betterlinks/admin/get_post_tags',
+		}).then((response) => {
+			if (response.data && response.data.data) {
+				const data = Object.entries(response.data.data).reduce((acc, item) => {
+					acc.push({ label: item[1], value: item[0] });
+					return acc;
+				}, []);
+				setPostTags(data);
+			}
+		});
+		makeRequest({
+			action: 'betterlinks/admin/get_post_categories',
+		}).then((response) => {
+			const data = Object.entries(response.data.data).reduce((acc, item) => {
+				acc.push({ label: item[1], value: item[0] });
+				return acc;
+			}, []);
+			setPostCategories(data);
+		});
 	}, []);
 	const getLinks = (data) => {
 		if (data.links) {
@@ -34,17 +70,22 @@ const KeywordsLinking = (props) => {
 		return [];
 	};
 	const newLinks = getLinks(props.links || {});
+	const postTypesProps = {
+		postTypes,
+		postTags,
+		postCategories,
+	};
 	return (
 		<React.Fragment>
 			<Topbar
 				label={__('Auto-Link Keywords', 'betterlinks')}
 				render={() => (
 					<>
-						<AddNewKeywords links={newLinks} keywords={props.keywords} />
+						<AddNewKeywords postTypesProps={postTypesProps} links={newLinks} keywords={props.keywords} />
 					</>
 				)}
 			/>
-			{props.links.links ? <ListKeywords links={newLinks} keywords={props.keywords} /> : <Loader />}
+			{props.links.links ? <ListKeywords postTypesProps={postTypesProps} links={newLinks} keywords={props.keywords} /> : <Loader />}
 		</React.Fragment>
 	);
 };

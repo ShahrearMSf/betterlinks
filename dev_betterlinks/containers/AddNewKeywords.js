@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActionButton from 'components/ActionButton';
-import { modalCustomStyles, getAutoLinksInitialValues, makeRequest, trimmed } from 'utils/helper';
+import { modalCustomStyles, getAutoLinksInitialValues, trimmed } from 'utils/helper';
 import { add_keyword, update_keyword } from 'redux/actions/keywords.actions';
 
 const propTypes = {
@@ -17,14 +17,12 @@ const propTypes = {
 const defaultProps = {
 	data: {},
 };
-const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, links: allLinks }) => {
+const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, links: allLinks, postTypesProps }) => {
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
-	const [postTypes, setPostTypes] = useState([]);
-	const [postTags, setPostTags] = useState([]);
-	const [postCategories, setPostCategories] = useState([]);
 	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
+	const { postTypes, postTags, postCategories } = postTypesProps;
 	const boundary = [
 		{ value: 'whitespace', label: 'White Space' },
 		{ value: 'comma', label: 'Comma' },
@@ -44,39 +42,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, links: al
 		if (data.link_id) {
 			setChooseAbleSavedLink(allLinks.find((item) => item.value == `${data.link_id}`) || {});
 		}
-
-		// get post type info
-		makeRequest({
-			action: 'betterlinks/admin/get_post_types',
-		}).then((response) => {
-			if (response.data && response.data.data) {
-				const data = Object.entries(response.data.data).reduce((acc, item) => {
-					acc.push({ label: item[1], value: item[0] });
-					return acc;
-				}, []);
-				setPostTypes(data);
-			}
-		});
-		makeRequest({
-			action: 'betterlinks/admin/get_post_tags',
-		}).then((response) => {
-			if (response.data && response.data.data) {
-				const data = Object.entries(response.data.data).reduce((acc, item) => {
-					acc.push({ label: item[1], value: item[0] });
-					return acc;
-				}, []);
-				setPostTags(data);
-			}
-		});
-		makeRequest({
-			action: 'betterlinks/admin/get_post_categories',
-		}).then((response) => {
-			const data = Object.entries(response.data.data).reduce((acc, item) => {
-				acc.push({ label: item[1], value: item[0] });
-				return acc;
-			}, []);
-			setPostCategories(data);
-		});
 	}
 
 	function closeModal() {

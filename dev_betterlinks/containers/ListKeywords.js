@@ -32,7 +32,7 @@ const KeywordFilter = (props) => {
 	);
 };
 
-const getLinksListViewColumnData = (links, delete_keyword, keywords) => {
+const getLinksListViewColumnData = (links, delete_keyword, keywords, postTypesProps) => {
 	return [
 		{
 			name: __('Keywords', 'betterlinks'),
@@ -59,7 +59,7 @@ const getLinksListViewColumnData = (links, delete_keyword, keywords) => {
 				};
 				return (
 					<>
-						<KeywordsQuickAction keywords={keywords} links={links} data={row} deleteKeywordHandler={deleteKeywords} />
+						<KeywordsQuickAction keywords={keywords} postTypesProps={postTypesProps} links={links} data={row} deleteKeywordHandler={deleteKeywords} />
 					</>
 				);
 			},
@@ -67,7 +67,7 @@ const getLinksListViewColumnData = (links, delete_keyword, keywords) => {
 	];
 };
 
-const ListKeywords = ({ links, keywords, delete_keyword }) => {
+const ListKeywords = ({ links, keywords, delete_keyword, postTypesProps }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	useEffect(() => {}, []);
 
@@ -91,7 +91,7 @@ const ListKeywords = ({ links, keywords, delete_keyword }) => {
 			<div className="btl-list-view">
 				<DataTable
 					className="btl-list-view-table"
-					columns={getLinksListViewColumnData(links, delete_keyword, keywords)}
+					columns={getLinksListViewColumnData(links, delete_keyword, keywords, postTypesProps)}
 					data={getData(keywords)}
 					pagination
 					subHeader
