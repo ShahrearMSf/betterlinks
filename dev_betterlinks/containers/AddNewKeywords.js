@@ -17,7 +17,7 @@ const propTypes = {
 const defaultProps = {
 	data: {},
 };
-const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, links: allLinks, postTypesProps }) => {
+const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps }) => {
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');

@@ -300,20 +300,6 @@ export const makeRequest = async (payload = {}) => {
 	);
 };
 
-export const getLinks = (data) => {
-	if (data.links) {
-		const results = Object.entries(data.links).reduce((acc, item) => {
-			acc = [...acc, ...item[1].lists];
-			return acc;
-		}, []);
-		return results.reduce((acc, item) => {
-			acc = [...acc, { value: item.ID, label: item.short_url }];
-			return acc;
-		}, []);
-	}
-	return [];
-};
-
 export const getAutoLinksInitialValues = (data) => {
 	if (Object.keys(data).length) {
 		return {
@@ -352,3 +338,17 @@ export const getAutoLinksInitialValues = (data) => {
 };
 
 export const trimmed = (str) => (typeof str === 'string' ? str : '').trim();
+
+export const parseLinksForKeywordsListing = (data) =>
+	data.links
+		? Object.values(data.links)
+				.reduce((acc, curr) => [...acc, ...curr.lists], [])
+				.map((item) => ({ value: item.ID, label: item.short_url }))
+		: [];
+
+export const parseLinksForUpdateModal = (data) =>
+	data.links
+		? Object.values(data.links)
+				.reduce((acc, curr) => [...acc, ...curr.lists], [])
+				.map((item) => ({ value: item.ID, label: item.link_title }))
+		: [];
