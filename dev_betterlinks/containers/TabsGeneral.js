@@ -327,36 +327,18 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										</div>
 									</span>
 
-									<span className="btl-form-group btl-form-group--teaser">
+									<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
 										<label className="btl-form-label">
-											{__('Icon For Autolinks', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-										</label>
-										<div className="link-options__body">
-											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-												<input className="btl-check" name="is_autolink_icon" type="checkbox" disabled={true} />
-												<span className="text">
-													{__('Enable Icon for Autolinks', 'betterlinks')}
-													<div className="btl-tooltip">
-														<span className="dashicons dashicons-info-outline"></span>
-														<span className="btl-tooltiptext">{__('This will show a icon with all the autolinks.', 'betterlinks')}</span>
-													</div>
-												</span>
-											</label>
-										</div>
-									</span>
-
-									<span className="btl-form-group btl-form-group--teaser">
-										<label className="btl-form-label">
-											{__('Autolink Inside Headings', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+											{__('Auto-Keyword Linking', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 										</label>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
 												<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
 												<span className="text">
-													{__('Enable Autolinks inside Heading Tags (h1-h6)', 'betterlinks')}
+													{__('Enable Auto-Keywords Linking', 'betterlinks')}
 													<div className="btl-tooltip">
 														<span className="dashicons dashicons-info-outline"></span>
-														<span className="btl-tooltiptext">{__('If enabled, autolinks will work inside heading tags as well (h1-h6)', 'betterlinks')}</span>
+														<span className="btl-tooltiptext">{__('This will enable you to automatically link your keywords', 'betterlinks')}</span>
 													</div>
 												</span>
 											</label>
