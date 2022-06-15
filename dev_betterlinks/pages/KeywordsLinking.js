@@ -29,22 +29,23 @@ const KeywordsLinking = (props) => {
 	const linksForUpdateModal = parseLinksForUpdateModal(props.links);
 
 	const postTypesProps = {
-		postTypes: props.postdatas.postTypes,
-		postTags: props.postdatas.postTags,
-		postCategories: props.postdatas.postCategories,
+		postTypes: props.postdatas.postTypes || [],
+		postTags: props.postdatas.postTags || [],
+		postCategories: props.postdatas.postCategories || [],
 	};
+
+	const loadedAll = props.links.links && props.postdatas.fetchedAll && props.keywords.data;
+
 	return (
 		<React.Fragment>
-			<Topbar
-				label={__('Auto-Link Keywords', 'betterlinks')}
-				render={() => (
-					<>
-						<AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
-					</>
-				)}
-			/>
-			{props.links.links && props.postdatas.fetchedAll && props.keywords.data ? (
-				<ListKeywords postTypesProps={postTypesProps} links={parseLinksForKeywordsListing(props.links)} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
+			{loadedAll ? (
+				<>
+					<Topbar
+						label={__('Auto-Link Keywords', 'betterlinks')}
+						render={() => <AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />}
+					/>
+					<ListKeywords postTypesProps={postTypesProps} links={parseLinksForKeywordsListing(props.links)} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
+				</>
 			) : (
 				<Loader />
 			)}
