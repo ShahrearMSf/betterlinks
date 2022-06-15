@@ -37,7 +37,7 @@ export const get_keyword = (item) => async (dispatch) => {
 			payload: item,
 		});
 	} catch (e) {
-		console.log(e);
+		console.error('error at get_keyword: ', e);
 	}
 };
 export const add_keyword = (formData) => async (dispatch) => {
