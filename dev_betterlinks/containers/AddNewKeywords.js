@@ -81,7 +81,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 								const newKeyItemsArr = keyItem.keywords.split(',');
 								for (const keyWord of newKeyItemsArr) {
 									const newKeyword = trimmed(keyWord);
-									if (newItem.toLowerCase() === newKeyword.toLocaleLowerCase() && !formDuplicate.includes(newKeyword)) {
+									if (newItem.toLowerCase() === newKeyword.toLowerCase() && !formDuplicate.includes(newKeyword)) {
 										formDuplicate.push(newKeyword);
 									}
 								}
