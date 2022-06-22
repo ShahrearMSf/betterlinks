@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
 import QRScanner from 'components/QRScanner';
-import { site_url, route_path, copyShortUrl, debounce } from 'utils/helper';
-import { handle_link_favorite } from 'redux/actions/links.actions';
+import { site_url, route_path, copyShortUrl } from 'utils/helper';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
 	isShowVisitLink: PropTypes.bool,
-	isShowFavoriteLink: PropTypes.bool,
 	isShowCopyLink: PropTypes.bool,
 	isShowEditLink: PropTypes.bool,
 	isShowDeleteLink: PropTypes.bool,
@@ -26,7 +22,6 @@ const propTypes = {
 const defaultProps = {
 	isShowAnalytics: false,
 	isShowVisitLink: true,
-	isShowFavoriteLink: true,
 	isShowCopyLink: true,
 	isShowEditLink: true,
 	isShowDeleteLink: true,
@@ -37,7 +32,6 @@ const LinkQuickAction = ({
 	isShowCopyLink,
 	isShowAnalytics,
 	isShowVisitLink,
-	isShowFavoriteLink,
 	isShowEditLink,
 	isShowDeleteLink,
 	data,
@@ -45,10 +39,8 @@ const LinkQuickAction = ({
 	catName,
 	submitLinkHandler,
 	deleteLinkHandler,
-	handle_link_favorite,
 }) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
-	const [isFavorite, setIsFavorite] = useState(data.favorite?.favForAll || false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
 		setDeleteConfrim(!isDeleteConfirm);
@@ -92,24 +84,6 @@ const LinkQuickAction = ({
 			)}
 			{!isDeleteConfirm ? (
 				<>
-					{isShowFavoriteLink && (
-						<div className="btl-tooltip btl-fav-link">
-							<button
-								className="dnd-link-button"
-								onClick={() => {
-									const newFavorite = !isFavorite;
-									setIsFavorite(newFavorite);
-									handle_link_favorite({
-										ID: data.ID,
-										favForAll: newFavorite,
-									});
-								}}
-							>
-								<span className={`dashicons dashicons-star-${isFavorite ? 'filled' : 'empty'}`}></span>
-							</button>
-							<span className="btl-tooltiptext">{__(`${isFavorite ? 'Unmark' : 'Mark'} as Favorite`, 'betterlinks')}</span>
-						</div>
-					)}
 					{isShowVisitLink && (
 						<div className="btl-tooltip">
 							<a className="dnd-link-button" href={site_url + '/' + data.short_url} target="_blank">
@@ -159,10 +133,4 @@ const LinkQuickAction = ({
 LinkQuickAction.propTypes = propTypes;
 LinkQuickAction.defaultProps = defaultProps;
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		handle_link_favorite: bindActionCreators(handle_link_favorite, dispatch),
-	};
-};
-
-export default connect(null, mapDispatchToProps)(LinkQuickAction);
+export default LinkQuickAction;
