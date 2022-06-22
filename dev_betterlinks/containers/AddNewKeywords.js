@@ -47,7 +47,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 	function closeModal() {
 		setIsOpen(false);
 		setDuplicate([]);
-		setChooseAbleSavedLink({});
+		setChooseAbleSavedLink([]);
 	}
 	return (
 		<React.Fragment>
