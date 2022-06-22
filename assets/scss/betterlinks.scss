@@ -192,5 +192,6 @@ label.extra_info_keywords > input#keywords {
 // mark as favorite button tooltip css start
 .btl-fav-link.btl-tooltip .btl-tooltiptext {
 	width: 130px;
+	z-index: 33333;
 }
 // mark as favorite button tooltip css ends

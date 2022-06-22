@@ -20,7 +20,7 @@
 			word-break: break-word;
 			padding-left: 3px;
 			.icon {
-				margin-right: 8px;
+				margin-right: 4px;
 				display: inline-flex;
 				svg,
 				img {
@@ -82,7 +82,7 @@
 }
 
 .btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button,
-.btl-dnd-link .btl-dnd-link-body .btl-tooltip.btl-fav-link .dnd-link-button {
+.btl-tooltip.btl-fav-link .dnd-link-button {
 	padding: 5px;
 	border: none;
 	background: none;
@@ -107,5 +107,22 @@
 			color: #b0b2ba;
 			text-decoration: none;
 		}
+	}
+}
+
+.btl-tooltip.btl-fav-link .dnd-link-button {
+	margin-top: -3px !important;
+	margin-right: 3px !important;
+	&:focus {
+		border: none;
+		outline: none;
+		box-shadow: none;
+	}
+	&:hover {
+		color: $favorite-icon-yellow !important;
+	}
+
+	.dashicons-star-filled {
+		color: $favorite-icon-yellow !important;
 	}
 }
