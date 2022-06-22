@@ -195,13 +195,20 @@ export const handle_link_favorite = (item) => async (dispatch) => {
 		const res = await API.put(namespace + 'links_favorite/' + item.ID, {
 			params: item,
 		});
-		console.log('---handle_link_favorite,', { item, res });
 		dispatch({
 			type: HANDLE_LINK_FAVORITE,
-			payload: item,
+			payload: res?.data?.data || {},
 		});
 	} catch (e) {
-		console.error('error ON handle_link_favorite', e);
+		makeRequest({
+			action: 'betterlinks/admin/handle_favorite',
+			...item,
+		}).then((res) => {
+			dispatch({
+				type: HANDLE_LINK_FAVORITE,
+				payload: res?.data?.data || {},
+			});
+		});
 	}
 };
 

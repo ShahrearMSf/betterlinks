@@ -40,6 +40,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_all_links', [$this, 'get_all_links']);
         add_action('wp_ajax_betterlinks/admin/create_link', [$this, 'create_new_link']);
         add_action('wp_ajax_betterlinks/admin/update_link', [$this, 'update_existing_link']);
+        add_action('wp_ajax_betterlinks/admin/handle_favorite', [$this, 'handle_links_favorite_option']);
         add_action('wp_ajax_betterlinks/admin/delete_link', [$this, 'delete_existing_link']);
         add_action('wp_ajax_betterlinks/admin/get_settings', [$this, 'get_settings']);
         add_action('wp_ajax_betterlinks/admin/update_settings', [$this, 'update_settings']);
@@ -49,7 +50,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
         add_action('wp_ajax_betterlinks/admin/fetch_analytics', [$this, 'fetch_analytics']);
         add_action('wp_ajax_betterlinks/admin/get_all_keywords', [$this, 'get_all_keywords']);
-        
+
         // post type, tags, categories
         add_action('wp_ajax_betterlinks/admin/get_post_types', [$this, 'get_post_types']);
         add_action('wp_ajax_betterlinks/admin/get_post_tags', [$this, 'get_post_tags']);
@@ -427,6 +428,39 @@ class Ajax
         );
         wp_die();
     }
+    public function handle_links_favorite_option()
+    {
+        if (isset($_POST["favForAll"]) && isset($_POST["ID"])) {
+            check_ajax_referer('betterlinks_admin_nonce', 'security');
+            if (!apply_filters('betterlinks/api/links_update_item_permissions_check', current_user_can('manage_options'))) {
+                wp_die();
+            }
+            delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+            $params = [
+                "ID" => absint($_POST["ID"]),
+                "data" => [
+                    "favForAll" => $_POST["favForAll"] === 'true' ? true : false
+                ]
+            ];
+            $result = $this->update_link_favorite($params);
+            $response = [
+                "ID" => $params["ID"],
+                "favForAll" => $params["data"]["favForAll"],
+            ];
+            if ($result) {
+                wp_send_json_success(
+                    $response,
+                    200
+                );
+                wp_die();
+            }
+            wp_send_json_error(
+                $response,
+                200
+            );
+            wp_die();
+        }
+    }
     public function delete_existing_link()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
@@ -612,7 +646,7 @@ class Ajax
     }
     public function get_post_tags()
     {
-        $tags = get_tags(array('get'=>'all'));
+        $tags = get_tags(array('get' => 'all'));
         $tags = wp_list_pluck($tags, 'name', 'slug');
         wp_send_json_success(
             $tags,
@@ -635,7 +669,7 @@ class Ajax
     public function get_all_keywords()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
-        if (! apply_filters('betterlinks/api/keywords_get_items_permission_check', current_user_can('manage_options'))) {
+        if (!apply_filters('betterlinks/api/keywords_get_items_permission_check', current_user_can('manage_options'))) {
             wp_die();
         }
         $results = \BetterLinks\Helper::get_keywords();

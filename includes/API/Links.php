@@ -1,4 +1,5 @@
 <?php
+
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
@@ -66,7 +67,7 @@ class Links extends Controller
                 ),
             )
         );
-        
+
         register_rest_route(
             $this->namespace,
             $endpoint . '(?P<id>[\d]+)',
@@ -79,19 +80,19 @@ class Links extends Controller
                 ),
                 array(
                     'methods'             => \WP_REST_Server::READABLE,
-                    'callback'            => array( $this, 'get_item' ),
+                    'callback'            => array($this, 'get_item'),
                     'permission_callback' => [$this, 'permissions_check'],
                     'args'                => $this->get_links_schema(),
                 ),
                 array(
                     'methods'             => \WP_REST_Server::EDITABLE,
-                    'callback'            => array( $this, 'update_item' ),
+                    'callback'            => array($this, 'update_item'),
                     'permission_callback' => [$this, 'update_item_permissions_check'],
                     'args'                => $this->get_links_schema(),
                 ),
                 array(
                     'methods'             => \WP_REST_Server::DELETABLE,
-                    'callback'            => array( $this, 'delete_item' ),
+                    'callback'            => array($this, 'delete_item'),
                     'permission_callback' => [$this, 'permissions_check'],
                     'args'                => array(
                         'force' => array(
@@ -210,13 +211,17 @@ class Links extends Controller
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         if (isset($request["id"]) && isset($request["params"]) && isset($request["params"]["favForAll"])) {
-            $response = [
+            $params = [
                 "ID" => absint($request["id"]),
                 "data" => [
                     "favForAll" => $request["params"]["favForAll"]
                 ]
             ];
-            $result = $this->update_link_favorite($response);
+            $result = $this->update_link_favorite($params);
+            $response = [
+                "ID" => $params["ID"],
+                "favForAll" => $params["data"]["favForAll"],
+            ];
             return new \WP_REST_Response(
                 [
                     'success' => $result,
