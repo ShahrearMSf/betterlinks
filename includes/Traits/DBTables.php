@@ -29,6 +29,7 @@ trait DBTables
 			wildcards boolean NOT NULL default 0,
 			expire text default NULL,
 			dynamic_redirect text default NULL,
+            favorite varchar(255),
             PRIMARY KEY  (ID),
             KEY link_slug (link_slug(191)),
             KEY type_status_date (link_status,link_date,ID),

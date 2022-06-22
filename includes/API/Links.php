@@ -21,6 +21,7 @@ class Links extends Controller
     public function register_routes()
     {
         $endpoint = '/links/';
+        $favorite_endpoint = '/links_favorite/';
         register_rest_route($this->namespace, $endpoint, [
             [
                 'methods' => \WP_REST_Server::READABLE,
@@ -39,6 +40,33 @@ class Links extends Controller
             ],
         ]);
 
+        register_rest_route(
+            $this->namespace,
+            $favorite_endpoint . '(?P<id>[\d]+)',
+            array(
+                'args'   => array(
+                    'id' => array(
+                        'description' => __('Unique identifier for the object.'),
+                        'type'        => 'integer',
+                    ),
+                ),
+                array(
+                    'methods'             => \WP_REST_Server::EDITABLE,
+                    'callback'            => array($this, 'update_item_favorite'),
+                    'permission_callback' => [$this, 'update_item_permissions_check'],
+                    'args'                => [
+                        'ID' => [
+                            'type' => 'integer',
+                            'sanitize_callback' => 'absint',
+                        ],
+                        'favForAll' => [
+                            'type' => 'boolean',
+                        ],
+                    ],
+                ),
+            )
+        );
+        
         register_rest_route(
             $this->namespace,
             $endpoint . '(?P<id>[\d]+)',
@@ -171,6 +199,32 @@ class Links extends Controller
         );
     }
 
+    /**
+     * Update betterlinks favorite option
+     *
+     * @param WP_REST_Request $request Full data about the request.
+     * @return WP_Error|WP_REST_Request
+     */
+    public function update_item_favorite($request)
+    {
+        $request = $request->get_params();
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        if (isset($request["id"]) && isset($request["params"]) && isset($request["params"]["favForAll"])) {
+            $response = [
+                "ID" => absint($request["id"]),
+                "data" => [
+                    "favForAll" => $request["params"]["favForAll"]
+                ]
+            ];
+            $result = $this->update_link_favorite($response);
+            return new \WP_REST_Response(
+                [
+                    'success' => $result,
+                    'data' => $response,
+                ]
+            );
+        }
+    }
     /**
      * Delete betterlinks
      *

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
 import QRScanner from 'components/QRScanner';
-import { site_url, route_path, copyShortUrl } from 'utils/helper';
+import { site_url, route_path, copyShortUrl, debounce } from 'utils/helper';
+import { handle_link_favorite } from 'redux/actions/links.actions';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
@@ -17,6 +20,7 @@ const propTypes = {
 	submitLinkHandler: PropTypes.func,
 	deleteLinkHandler: PropTypes.func,
 	data: PropTypes.object,
+	handle_link_favorite: PropTypes.func,
 };
 
 const defaultProps = {
@@ -41,9 +45,10 @@ const LinkQuickAction = ({
 	catName,
 	submitLinkHandler,
 	deleteLinkHandler,
+	handle_link_favorite,
 }) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
-	const [isFavorite, setIsFavorite] = useState(false);
+	const [isFavorite, setIsFavorite] = useState(data.favorite?.favForAll || false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
 	const deleteHandler = () => {
 		setDeleteConfrim(!isDeleteConfirm);
@@ -89,7 +94,17 @@ const LinkQuickAction = ({
 				<>
 					{isShowFavoriteLink && (
 						<div className="btl-tooltip btl-fav-link">
-							<button className="dnd-link-button" onClick={() => setIsFavorite(!isFavorite)}>
+							<button
+								className="dnd-link-button"
+								onClick={() => {
+									const newFavorite = !isFavorite;
+									setIsFavorite(newFavorite);
+									handle_link_favorite({
+										ID: data.ID,
+										favForAll: newFavorite,
+									});
+								}}
+							>
 								<span className={`dashicons dashicons-star-${isFavorite ? 'filled' : 'empty'}`}></span>
 							</button>
 							<span className="btl-tooltiptext">{__(`${isFavorite ? 'Unmark' : 'Mark'} as Favorite`, 'betterlinks')}</span>
@@ -141,6 +156,13 @@ const LinkQuickAction = ({
 		</React.Fragment>
 	);
 };
-export default LinkQuickAction;
 LinkQuickAction.propTypes = propTypes;
 LinkQuickAction.defaultProps = defaultProps;
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		handle_link_favorite: bindActionCreators(handle_link_favorite, dispatch),
+	};
+};
+
+export default connect(null, mapDispatchToProps)(LinkQuickAction);
