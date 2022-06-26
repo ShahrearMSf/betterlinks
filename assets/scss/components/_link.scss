@@ -123,11 +123,8 @@
 
 .btl-tooltip.btl-fav-link.favorated .dnd-link-button {
 	color: $favorite-icon-yellow !important;
-	&:hover {
-		color: $secondary-lighten !important;
-	}
 }
-.btl-tooltip.btl-fav-link.unfavorated .dnd-link-button {
+.btl-tooltip.btl-fav-link .dnd-link-button {
 	color: $secondary-lighten !important;
 	&:hover {
 		color: $favorite-icon-yellow !important;
