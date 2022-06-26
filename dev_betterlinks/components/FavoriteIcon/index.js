@@ -10,7 +10,7 @@ function FavoriteIcon({ handle_link_favorite, data }) {
 	return (
 		<>
 			{betterLinksHooks.applyFilters('betterLinksIsShowFavorite', true) && (
-				<div className="btl-tooltip btl-fav-link">
+				<div className={`btl-tooltip btl-fav-link ${isFavorite ? 'favorated' : 'unfavorated'}`}>
 					<button
 						className="dnd-link-button"
 						onClick={() => {
@@ -22,7 +22,7 @@ function FavoriteIcon({ handle_link_favorite, data }) {
 							});
 						}}
 					>
-						<span className={`dashicons dashicons-star-${isFavorite ? 'filled' : 'empty'}`}></span>
+						<span className={`dashicons dashicons-star-filled`}></span>
 					</button>
 					<span className="btl-tooltiptext">{__(`${isFavorite ? 'Unmark' : 'Mark'} as Favorite`, 'betterlinks')}</span>
 				</div>
