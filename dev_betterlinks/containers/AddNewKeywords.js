@@ -70,8 +70,10 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 						const thisItemIndex = keywords.data.findIndex((item) => data === item);
 						const formDuplicate = [];
 						const formKeywordsArr = (values.keywords || '').trim().split(',');
+						const newKeywordsArr = [];
 						for (const item of formKeywordsArr) {
 							const newItem = trimmed(item);
+							if (newItem) newKeywordsArr.push(newItem);
 							let x = 0;
 							for (const keyItem of keywords.data) {
 								if (x == thisItemIndex) {
@@ -88,7 +90,8 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 								x++;
 							}
 						}
-						if (formDuplicate.length > 0) {
+						values.keywords = newKeywordsArr.join(', ');
+						if (formDuplicate.length > 0 || newKeywordsArr.length == 0) {
 							setDuplicate(formDuplicate);
 							return false;
 						}
