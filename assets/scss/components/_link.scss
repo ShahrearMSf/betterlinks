@@ -126,6 +126,8 @@
 }
 .btl-tooltip.btl-fav-link .dnd-link-button {
 	color: $secondary-lighten !important;
+}
+.btl-tooltip.btl-fav-link:not(.no-edit) .dnd-link-button {
 	&:hover {
 		color: $favorite-icon-yellow !important;
 	}
