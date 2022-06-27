@@ -57,7 +57,6 @@ const Settings = (props) => {
 				</TabList>
 				{tabPanel.map((item, index) => {
 					return <TabPanel key={index}>{item}</TabPanel>;
-					// return <div key={index}>{item}</div>;
 				})}
 			</Tabs>
 			{migration && <Migration mode={migration} />}

@@ -304,6 +304,7 @@ export const getAutoLinksInitialValues = (data) => {
 	if (Object.keys(data).length) {
 		return {
 			keywords: data.keywords,
+			oldKeywords: data.keywords,
 			chooseLink: data.link_id,
 			oldChooseLink: data.link_id,
 			postType: data.post_type,
@@ -335,3 +336,19 @@ export const getAutoLinksInitialValues = (data) => {
 		limit: 100,
 	};
 };
+
+export const trimmed = (str) => (typeof str === 'string' ? str : '').trim();
+
+export const parseLinksForKeywordsListing = (data) =>
+	data.links
+		? Object.values(data.links)
+				.reduce((acc, curr) => [...acc, ...curr.lists], [])
+				.map((item) => ({ value: item.ID, label: item.short_url }))
+		: [];
+
+export const parseLinksForUpdateModal = (data) =>
+	data.links
+		? Object.values(data.links)
+				.reduce((acc, curr) => [...acc, ...curr.lists], [])
+				.map((item) => ({ value: item.ID, label: item.link_title }))
+		: [];

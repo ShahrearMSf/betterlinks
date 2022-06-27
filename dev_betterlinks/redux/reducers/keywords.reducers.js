@@ -15,29 +15,20 @@ function keywords(state = {}, action) {
 				...state,
 				data: [payload.data, ...state.data],
 			};
-		case UPDATE_KEYWORD:
+		case UPDATE_KEYWORD: {
+			const indexOfPayload = state.data.findIndex((item) => item.link_id == payload.data.old_link_id && item.keywords == payload.data.old_keywords);
 			return {
 				...state,
-				data: [
-					payload.data,
-					...state.data.filter((item) => {
-						if (item.link_id != payload.data.old_link_id && item.link_id != payload.data.link_id) {
-							return item;
-						}
-					}),
-				],
+				data: [...state.data.slice(0, indexOfPayload), payload.data, ...state.data.slice(indexOfPayload + 1)],
 			};
-		case DELETE_KEYWORD:
+		}
+		case DELETE_KEYWORD: {
+			const indexOfPayload = state.data.findIndex((item) => item.link_id == payload.link_id && item.keywords == payload.keywords);
 			return {
 				...state,
-				data: [
-					...state.data.filter((item) => {
-						if (item.link_id != payload.link_id) {
-							return item;
-						}
-					}),
-				],
+				data: [...state.data.slice(0, indexOfPayload), ...state.data.slice(indexOfPayload + 1)],
 			};
+		}
 		default:
 			return state;
 	}

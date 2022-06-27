@@ -308,23 +308,43 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 							{!betterLinksHooks.applyFilters('isActivePro', false) && (
-								<span className="btl-form-group btl-form-group--teaser">
-									<label className="btl-form-label">
-										{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-									</label>
-									<div className="link-options__body">
-										<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-											<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
-											<span className="text">
-												{__('Enable HTTPS Redirection', 'betterlinks')}
-												<div className="btl-tooltip">
-													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__('This will allow you to redirect your Target URLs in HTTPS.', 'betterlinks')}</span>
-												</div>
-											</span>
+								<>
+									<span className="btl-form-group btl-form-group--teaser">
+										<label className="btl-form-label">
+											{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 										</label>
-									</div>
-								</span>
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="force_https" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable HTTPS Redirection', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will allow you to redirect your Target URLs in HTTPS.', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
+										</div>
+									</span>
+
+									<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
+										<label className="btl-form-label">
+											{__('Auto-Keyword Linking', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable Auto-Keywords Linking', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will enable you to automatically link your keywords', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
+										</div>
+									</span>
+								</>
 							)}
 							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
 							<button className="button-primary btn-save-settings" type="submit">

@@ -178,3 +178,13 @@ span.btl-expire-status-dot.draft {
 }
 
 // list view 'rows per page' select broken icon design fix end
+
+// autolink keywords' 'keywords' input field's new extra label css start
+label.extra_info_keywords {
+	color: #777;
+}
+
+label.extra_info_keywords > input#keywords {
+	margin-bottom: 5px;
+}
+// autolink keywords' 'keywords' input field's new extra label css end
