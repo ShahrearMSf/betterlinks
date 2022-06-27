@@ -432,7 +432,7 @@ class Ajax
     {
         if (isset($_POST["favForAll"]) && isset($_POST["ID"])) {
             check_ajax_referer('betterlinks_admin_nonce', 'security');
-            if (!apply_filters('betterlinks/api/links_update_item_permissions_check', current_user_can('manage_options'))) {
+            if (!apply_filters('betterlinks/api/links_update_favorite_permissions_check', current_user_can('manage_options'))) {
                 wp_die();
             }
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
