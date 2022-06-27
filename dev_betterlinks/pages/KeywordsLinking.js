@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
-import Loader from 'components/Loader';
+import TableLoader from 'components/Loader/TableLoader';
 import { bindActionCreators } from 'redux';
 import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_keywords } from 'redux/actions/keywords.actions';
@@ -47,7 +47,7 @@ const KeywordsLinking = (props) => {
 					<ListKeywords postTypesProps={postTypesProps} links={parseLinksForKeywordsListing(props.links)} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
 				</>
 			) : (
-				<Loader />
+				<TableLoader />
 			)}
 		</React.Fragment>
 	);

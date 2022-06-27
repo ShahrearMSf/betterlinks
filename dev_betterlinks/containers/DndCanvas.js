@@ -9,6 +9,7 @@ import CreateCategory from 'components/CreateCategory';
 import Link from 'containers/Link';
 import CatHeader from 'containers/CatHeader';
 import LinkQuickAction from 'components/LinkQuickAction';
+import FavoriteIcon from 'components/FavoriteIcon';
 import { plugin_root_url } from 'utils/helper';
 import { useBtlExpireStatusDot } from 'utils/customHooks';
 
@@ -27,6 +28,7 @@ export class List extends React.Component {
 								<span className="icon">
 									<img src={plugin_root_url + 'assets/images/move-icon.svg'} alt="icon" />
 								</span>
+								<FavoriteIcon data={item} />
 								{expireStatusDot}
 								<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }}></span>
 							</h3>

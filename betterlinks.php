@@ -37,6 +37,7 @@ if (!class_exists('BetterLinks')) {
             add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
             add_action('betterlinks_loaded', [$this, 'init_plugin']);
             add_action('init', [$this, 'init_dispatch']);
+            add_action('admin_init', [$this, 'fix_betterlinks_db'], 2);
             $this->dispatch_hook();
         }
 
@@ -71,11 +72,33 @@ if (!class_exists('BetterLinks')) {
             define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
             define('BETTERLINKS_AUTOLINK_OPTION_NAME', 'betterlinks_autolink_options');
             define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
+            define('BETTERLINKS_DB_ALTER_OPTIONS', 'betterlinks_db_alter_options');
         }
 
         public function upload_dir_path()
         {
             $this->upload_dir = wp_get_upload_dir();
+        }
+
+        public function fix_betterlinks_db()
+        {
+            $is_favorite_column_exist = isset(get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"]) ? get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"] : false;
+            if (!$is_favorite_column_exist) {
+                delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+                global $wpdb;
+                $table          = $wpdb->prefix . 'betterlinks';
+                $results        = $wpdb->get_col("DESC $table", 0);
+                if (in_array("favorite", $results)) {
+                    update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                        "added_favorite_column" => true,
+                    ]);
+                } else {
+                    $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
+                    update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                        "added_favorite_column" => $query_result,
+                    ]);
+                }
+            }
         }
 
         public function on_plugins_loaded()

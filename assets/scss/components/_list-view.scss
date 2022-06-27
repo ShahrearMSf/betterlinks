@@ -452,3 +452,12 @@
 		}
 	}
 }
+
+.btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .btl-tooltip.btl-fav-link {
+	margin-left: -10px;
+
+	.dnd-link-button {
+		margin-left: 0 !important;
+		padding-left: 0 !important;
+	}
+}

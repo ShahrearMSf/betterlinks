@@ -188,3 +188,10 @@ label.extra_info_keywords > input#keywords {
 	margin-bottom: 5px;
 }
 // autolink keywords' 'keywords' input field's new extra label css end
+
+// mark as favorite button tooltip css start
+.btl-fav-link.btl-tooltip .btl-tooltiptext {
+	width: 130px;
+	z-index: 33333;
+}
+// mark as favorite button tooltip css ends

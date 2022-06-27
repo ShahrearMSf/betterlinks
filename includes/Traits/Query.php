@@ -105,6 +105,7 @@ trait Query
             {$prefix}betterlinks.link_date,
             {$prefix}betterlinks.wildcards,
             {$prefix}betterlinks.expire,
+            {$prefix}betterlinks.favorite,
             {$prefix}betterlinks.dynamic_redirect
             FROM {$prefix}betterlinks_terms
             LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id

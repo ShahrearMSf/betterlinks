@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
@@ -16,6 +16,7 @@ const propTypes = {
 	submitLinkHandler: PropTypes.func,
 	deleteLinkHandler: PropTypes.func,
 	data: PropTypes.object,
+	handle_link_favorite: PropTypes.func,
 };
 
 const defaultProps = {
@@ -69,6 +70,7 @@ const LinkQuickAction = ({
 		}
 		return analytic.link_count + '/' + analytic.ip.length;
 	};
+
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
@@ -128,6 +130,7 @@ const LinkQuickAction = ({
 		</React.Fragment>
 	);
 };
-export default LinkQuickAction;
 LinkQuickAction.propTypes = propTypes;
 LinkQuickAction.defaultProps = defaultProps;
+
+export default LinkQuickAction;
