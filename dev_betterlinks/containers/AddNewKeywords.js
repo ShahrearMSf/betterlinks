@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActionButton from 'components/ActionButton';
-import { modalCustomStyles, getAutoLinksInitialValues, makeRequest } from 'utils/helper';
+import { modalCustomStyles, getAutoLinksInitialValues, trimmed } from 'utils/helper';
 import { add_keyword, update_keyword } from 'redux/actions/keywords.actions';
 
 const propTypes = {
@@ -17,82 +17,37 @@ const propTypes = {
 const defaultProps = {
 	data: {},
 };
-const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
+const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps }) => {
+	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
-	const [links, setLinks] = useState([]);
-	const [postTypes, setPostTypes] = useState([]);
-	const [postTags, setPostTags] = useState([]);
-	const [postCategories, setPostCategories] = useState([]);
 	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
+	const { postTypes, postTags, postCategories } = postTypesProps;
 	const boundary = [
-		// { value: 'generic', label: 'Generic' },
 		{ value: 'whitespace', label: 'White Space' },
 		{ value: 'comma', label: 'Comma' },
 		{ value: 'point', label: 'Point' },
 		{ value: '', label: 'None' },
 	];
 
+	useEffect(() => {
+		return () => {
+			setDuplicate([]);
+		};
+	}, []);
+
 	function openModal() {
 		setIsOpen(true);
 		// links
-		makeRequest({
-			action: 'betterlinks/admin/get_links_by_exclude_keywords',
-		}).then((response) => {
-			if (response.data.success && response.data.data.length > 0) {
-				setLinks(
-					response.data.data.reduce((acc, item) => {
-						acc.push({ label: item.link_title, value: item.ID });
-						return acc;
-					}, [])
-				);
-			}
-		});
-		makeRequest({
-			action: 'betterlinks/admin/get_keyword_saved_link',
-			link_id: data.link_id,
-		}).then((response) => {
-			if (response.data.success) {
-				const link = response.data.data[0];
-				setChooseAbleSavedLink({ label: link.link_title, value: link.ID });
-			}
-		});
-		// get post type info
-		makeRequest({
-			action: 'betterlinks/admin/get_post_types',
-		}).then((response) => {
-			if (response.data && response.data.data) {
-				const data = Object.entries(response.data.data).reduce((acc, item) => {
-					acc.push({ label: item[1], value: item[0] });
-					return acc;
-				}, []);
-				setPostTypes(data);
-			}
-		});
-		makeRequest({
-			action: 'betterlinks/admin/get_post_tags',
-		}).then((response) => {
-			if (response.data && response.data.data) {
-				const data = Object.entries(response.data.data).reduce((acc, item) => {
-					acc.push({ label: item[1], value: item[0] });
-					return acc;
-				}, []);
-				setPostTags(data);
-			}
-		});
-		makeRequest({
-			action: 'betterlinks/admin/get_post_categories',
-		}).then((response) => {
-			const data = Object.entries(response.data.data).reduce((acc, item) => {
-				acc.push({ label: item[1], value: item[0] });
-				return acc;
-			}, []);
-			setPostCategories(data);
-		});
+		if (data.link_id) {
+			setChooseAbleSavedLink(allLinks.find((item) => item.value == `${data.link_id}`) || {});
+		}
 	}
 
 	function closeModal() {
 		setIsOpen(false);
+		setDuplicate([]);
+		setChooseAbleSavedLink({});
 	}
 	return (
 		<React.Fragment>
@@ -112,6 +67,31 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 				<Formik
 					initialValues={getAutoLinksInitialValues(data)}
 					onSubmit={(values, actions) => {
+						const thisItemIndex = keywords.data.findIndex((item) => data === item);
+						const formDuplicate = [];
+						const formKeywordsArr = (values.keywords || '').trim().split(',');
+						for (const item of formKeywordsArr) {
+							const newItem = trimmed(item);
+							let x = 0;
+							for (const keyItem of keywords.data) {
+								if (x == thisItemIndex) {
+									x++;
+									continue;
+								}
+								const newKeyItemsArr = keyItem.keywords.split(',');
+								for (const keyWord of newKeyItemsArr) {
+									const newKeyword = trimmed(keyWord);
+									if (newItem.toLowerCase() === newKeyword.toLowerCase() && !formDuplicate.includes(newKeyword)) {
+										formDuplicate.push(newKeyword);
+									}
+								}
+								x++;
+							}
+						}
+						if (formDuplicate.length > 0) {
+							setDuplicate(formDuplicate);
+							return false;
+						}
 						if (values.leftBoundary === '' || values.keywordBefore === '') {
 							values.leftBoundary = '';
 							values.keywordBefore = '';
@@ -130,7 +110,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 							actions.setSubmitting(false);
 							// reset
 							actions.resetForm();
-							setChooseAbleSavedLink([]);
 							closeModal();
 						}
 					}}
@@ -143,7 +122,25 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="keywords">
 											{__('Keywords', 'betterlinks')}
 										</label>
-										<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
+										<label className="extra_info_keywords">
+											<Field id="keywords" className="btl-modal-form-control" type="text" name="keywords" required />
+											{duplicate.length > 0 ? (
+												<>
+													<span className="btl_duplicate_keyword">
+														keywords:
+														{duplicate.map((item, index) => (
+															<span className="duplicate_words_wrapper" key={index}>
+																<span className="duplicate_words"> "{item}"</span>
+																<span className="duplicate_separator_comma">, </span>
+															</span>
+														))}
+														&nbsp;already exists.
+													</span>
+												</>
+											) : (
+												<>{__(' use comma(,) to add multiple keywords', 'betterlinks')}</>
+											)}
+										</label>
 									</div>
 									<div className="btl-modal-form-group" style={{ position: 'relative' }}>
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
@@ -154,7 +151,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword }) => {
 											name="chooseLink"
 											className="btl-modal-select--full"
 											classNamePrefix="btl-react-select"
-											options={links}
+											options={allLinks}
 											value={chooseAbleSavedLink}
 											onChange={(option) => {
 												props.setFieldValue('chooseLink', option ? option.value : '');

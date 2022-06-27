@@ -6,7 +6,7 @@ import { removeOverlayElement } from 'utils/helper';
 
 const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 	if (action.value === 'delete') {
-		let deleteItemLists = [];
+		const deleteItemLists = [];
 		selectedRows.map((item) => {
 			deleteItemLists.push({
 				ID: item.ID,

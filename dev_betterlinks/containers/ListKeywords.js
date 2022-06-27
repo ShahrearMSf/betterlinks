@@ -32,7 +32,7 @@ const KeywordFilter = (props) => {
 	);
 };
 
-const getLinksListViewColumnData = (links, delete_keyword) => {
+const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypesProps, linksForUpdateModal }) => {
 	return [
 		{
 			name: __('Keywords', 'betterlinks'),
@@ -45,11 +45,7 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 			selector: 'short_url',
 			sortable: false,
 			cell: (row) => {
-				const data = links.filter((item) => {
-					if (item.value == row.link_id) {
-						return true;
-					}
-				});
+				const data = links.filter((item) => item.value == row.link_id);
 				return <div>{data.length > 0 && <LinkCopyUrl shortUrl={data[0].label} />}</div>;
 			},
 		},
@@ -59,11 +55,11 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 			sortable: false,
 			cell: (row) => {
 				const deleteKeywords = () => {
-					delete_keyword([{ link_id: row.link_id }]);
+					delete_keyword([row]);
 				};
 				return (
 					<>
-						<KeywordsQuickAction links={links} data={row} deleteKeywordHandler={deleteKeywords} />
+						<KeywordsQuickAction keywords={keywords} postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={row} deleteKeywordHandler={deleteKeywords} />
 					</>
 				);
 			},
@@ -71,7 +67,7 @@ const getLinksListViewColumnData = (links, delete_keyword) => {
 	];
 };
 
-const ListKeywords = ({ links, keywords, delete_keyword }) => {
+const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	useEffect(() => {}, []);
 
@@ -95,7 +91,7 @@ const ListKeywords = ({ links, keywords, delete_keyword }) => {
 			<div className="btl-list-view">
 				<DataTable
 					className="btl-list-view-table"
-					columns={getLinksListViewColumnData(links, delete_keyword)}
+					columns={getLinksListViewColumnData({ links, delete_keyword, keywords, postTypesProps, linksForUpdateModal })}
 					data={getData(keywords)}
 					pagination
 					subHeader

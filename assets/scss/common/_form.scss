@@ -9,6 +9,7 @@
 	}
 	.btl-form-label {
 		font-size: 16px;
+		line-height: 1.6;
 		font-weight: 500;
 		text-align: left;
 		padding-right: 20px;
@@ -322,3 +323,9 @@ span.pro-badge {
 	border-radius: 2px;
 	transform: translateY(-10px);
 }
+
+//  fix: 'Auto-Linked Keywords Icon' option checkbox is not aligned start
+.btl-form-group.btl-form-group-autolink-keyword-icon .btl-form-label {
+	padding-right: 16px;
+}
+//  fix: 'Auto-Linked Keywords Icon' option checkbox is not aligned end

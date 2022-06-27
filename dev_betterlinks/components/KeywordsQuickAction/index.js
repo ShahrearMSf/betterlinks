@@ -8,7 +8,7 @@ const propTypes = {};
 
 const defaultProps = {};
 
-export default function KeywordsQuickAction({ links, data, deleteKeywordHandler }) {
+export default function KeywordsQuickAction({ data, deleteKeywordHandler, keywords, postTypesProps, linksForUpdateModal }) {
 	const [isOpenDeleteBox, setIsOpenDeleteBox] = useState(false);
 	const openConfirmDialog = () => {
 		setIsOpenDeleteBox(true);
@@ -30,7 +30,7 @@ export default function KeywordsQuickAction({ links, data, deleteKeywordHandler 
 					</div>
 				) : (
 					<>
-						<AddNewKeywords links={links} data={data} />
+						<AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={data} keywords={keywords} />
 						<ActionButton onClickHandler={openConfirmDialog} type="delete" label={__('Delete Keyword', 'betterlinks')} />
 					</>
 				)}

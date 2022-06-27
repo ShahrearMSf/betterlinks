@@ -1,4 +1,5 @@
 <?php
+
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
@@ -84,6 +85,13 @@ class Settings extends Controller
     {
         $response = $request->get_params();
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
+        update_option(
+            BETTERLINKS_AUTOLINK_OPTION_NAME,
+            [
+                "is_show_icon" => isset($response["is_autolink_icon"]) ? $response["is_autolink_icon"] : false,
+                "is_autolink_in_heading" => isset($response["is_autolink_headings"]) ? $response["is_autolink_headings"] : false,
+            ]
+        );
         $response = json_encode($response);
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);

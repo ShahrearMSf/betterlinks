@@ -37,7 +37,7 @@ export const get_keyword = (item) => async (dispatch) => {
 			payload: item,
 		});
 	} catch (e) {
-		console.log(e);
+		console.error('error at get_keyword: ', e);
 	}
 };
 export const add_keyword = (formData) => async (dispatch) => {
@@ -94,16 +94,18 @@ export const update_keyword = (formData) => async (dispatch) => {
 
 export const delete_keyword = (params) => (dispatch) => {
 	params.map((item) => {
-		const { link_id } = item;
+		const { keywords, link_id } = item;
 		makeRequest({
 			action: 'betterlinks/admin/delete_keyword',
 			id: link_id,
+			keywords: keywords,
 		}).then((response) => {
 			if (response.data.success) {
 				dispatch({
 					type: DELETE_KEYWORD,
 					payload: {
 						link_id,
+						keywords,
 					},
 				});
 			}
