@@ -57,21 +57,6 @@ class Helper
                 }
             }
         }
-        // made short url case insensitive in case all keys/'$short_url' in not lowercased when writting to json;
-        if (isset($betterlinks['links'])) {
-            $allLinks = $betterlinks['links'];
-            $keys = array_keys($allLinks);
-            $foundKey = false;
-            foreach ($keys as $key) {
-                if ($short_url == strtolower($key)) {
-                    $foundKey = $key;
-                    break;
-                }
-            }
-            if ($foundKey) {
-                return $allLinks[$foundKey];
-            }
-        }
     }
 
     public static function get_menu_items()
