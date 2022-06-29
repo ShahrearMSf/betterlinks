@@ -234,7 +234,24 @@ const Link = (props) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
 											{__('Redirect Type', 'betterlinks')}
 										</label>
-										<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} isMulti={false} />
+										<Select
+											id="redirect_type"
+											name="redirect_type"
+											value={
+												betterLinksHooks.applyFilters('isActivePro', false)
+													? [
+															...redirectType,
+															{
+																value: 'cloaked',
+																label: __('Cloaked', 'betterlinks'),
+															},
+													  ]
+													: redirectType
+											}
+											setFieldValue={props.setFieldValue}
+											disabled={isDisableLinkFormEditView}
+											isMulti={false}
+										/>
 									</div>
 									<div className="btl-modal-form-group btl-has-utm-button">
 										<label className="btl-modal-form-label btl-required" htmlFor="target_url">
