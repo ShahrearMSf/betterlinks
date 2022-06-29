@@ -143,6 +143,7 @@ export const delete_cat = (params) => async (dispatch) => {
 };
 
 export const add_new_link = (formData) => async (dispatch) => {
+	console.log('------add_new_link action, item', { formData });
 	try {
 		const res = await API.post(namespace + 'links', {
 			params: formData,
@@ -168,6 +169,7 @@ export const add_new_link = (formData) => async (dispatch) => {
 	}
 };
 export const edit_link = (item) => async (dispatch) => {
+	console.log('------edit_link action, item', { item });
 	try {
 		const res = await API.put(namespace + 'links/' + item.ID, {
 			params: item,
