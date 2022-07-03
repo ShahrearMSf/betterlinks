@@ -243,7 +243,7 @@ const Link = (props) => {
 													? [
 															...redirectType,
 															{
-																value: 'cloaked',
+																value: 'cloak',
 																label: __('Cloaked', 'betterlinks'),
 															},
 													  ]
