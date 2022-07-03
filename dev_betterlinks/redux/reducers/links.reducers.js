@@ -31,7 +31,7 @@ function links(state = {}, action) {
 			if (sInd === dInd) {
 				const newLists = reorder(state.links[sInd].lists, source.index, destination.index);
 
-				const result = {
+				return {
 					...state,
 					links: {
 						...state.links,
@@ -41,11 +41,9 @@ function links(state = {}, action) {
 						},
 					},
 				};
-
-				return result;
 			} else {
 				const newLists = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
-				const result = {
+				return {
 					...state,
 					links: {
 						...state.links,
@@ -59,7 +57,6 @@ function links(state = {}, action) {
 						},
 					},
 				};
-				return result;
 			}
 		case ADD_NEW_CAT:
 			return {
@@ -137,7 +134,6 @@ function links(state = {}, action) {
 				const linksAtPayloadCat = state.links[payload.cat_id].lists;
 				const itemIndexInTheCat = linksAtPayloadCat.findIndex((item) => item.ID == payload.ID);
 				const isCategoryChanged = itemIndexInTheCat === -1;
-				let newState;
 				if (isCategoryChanged) {
 					const newStateLinks = {
 						...state.links,
@@ -148,7 +144,7 @@ function links(state = {}, action) {
 							const linksOnTheOldCat = state.links[property].lists;
 							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
 							if (indexInOldCatList !== -1) {
-								newState = {
+								return {
 									...state,
 									links: {
 										...state.links,
@@ -163,24 +159,20 @@ function links(state = {}, action) {
 										},
 									},
 								};
-								break;
 							}
 						}
 					}
-				} else {
-					newState = {
-						...state,
-						links: {
-							...state.links,
-							[payload.cat_id]: {
-								...state.links[payload.cat_id],
-								lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
-							},
-						},
-					};
 				}
-
-				return newState;
+				return {
+					...state,
+					links: {
+						...state.links,
+						[payload.cat_id]: {
+							...state.links[payload.cat_id],
+							lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
+						},
+					},
+				};
 			}
 			return {
 				...state,
@@ -200,14 +192,13 @@ function links(state = {}, action) {
 			for (const [key, value] of Object.entries(state.links || {})) {
 				const linkLists = (value.lists || []).map((item, index) => {
 					if (item.ID == payload.ID) {
-						const newItem = {
+						return {
 							...item,
 							favorite: {
 								...item.favorite,
 								favForAll: payload.favForAll,
 							},
 						};
-						return newItem;
 					}
 					return item;
 				});
@@ -216,13 +207,12 @@ function links(state = {}, action) {
 					lists: linkLists,
 				};
 			}
-			const newState = {
+			return {
 				...state,
 				links: {
 					...newLinks,
 				},
 			};
-			return newState;
 		}
 		case DELETE_LINK:
 			return {
