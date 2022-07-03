@@ -162,9 +162,9 @@ trait Query
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
                 if ($item->wildcards == true) {
-                    $formattedArray['wildcards'][$item->short_url] = $item;
+                    $formattedArray['wildcards'][strtolower($item->short_url)] = $item;
                 } else {
-                    $formattedArray['links'][$item->short_url] = $item;
+                    $formattedArray['links'][strtolower($item->short_url)] = $item;
                 }
             }
         }
