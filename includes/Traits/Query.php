@@ -10,15 +10,22 @@ trait Query
         if ($is_update) {
             $defaults = self::get_link_by_ID($item['ID']);
             $item = wp_parse_args($item, current($defaults));
+            $favorite_exist = isset($item['favorite']);
+            $link_data_array = array(
+                'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'], 'link_slug' => $item['link_slug'], 'link_note' => $item['link_note'], 'link_status' => $item['link_status'], 'nofollow' => $item['nofollow'], 'sponsored' => $item['sponsored'], 'track_me' => $item['track_me'], 'param_forwarding' => $item['param_forwarding'], 'param_struct' => $item['param_struct'], 'redirect_type' => $item['redirect_type'], 'target_url' => $item['target_url'], 'short_url' => $item['short_url'], 'link_order' => $item['link_order'], 'link_modified' => $item['link_modified'], 'link_modified_gmt' => $item['link_modified_gmt'], 'wildcards' => $item['wildcards'], 'expire' => $item['expire'], 'dynamic_redirect' => $item['dynamic_redirect']
+            );
+            $link_data_place_array = array(
+                '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
+            );
+            if ($favorite_exist) {
+                $link_data_array['favorite'] = $item['favorite'];
+                $link_data_place_array[] = '%s';
+            }
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks",
-                array(
-                    'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'], 'link_slug' => $item['link_slug'], 'link_note' => $item['link_note'], 'link_status' => $item['link_status'], 'nofollow' => $item['nofollow'], 'sponsored' => $item['sponsored'], 'track_me' => $item['track_me'], 'param_forwarding' => $item['param_forwarding'], 'param_struct' => $item['param_struct'], 'redirect_type' => $item['redirect_type'], 'target_url' => $item['target_url'], 'short_url' => $item['short_url'], 'link_order' => $item['link_order'], 'link_modified' => $item['link_modified'], 'link_modified_gmt' => $item['link_modified_gmt'], 'wildcards' => $item['wildcards'], 'expire' => $item['expire'], 'dynamic_redirect' => $item['dynamic_redirect'],'favorite' => $item['favorite']
-                ),
+                $link_data_array,
                 array('ID' => $item['ID']),
-                array(
-                    '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s'
-                ),
+                $link_data_place_array,
                 array('%d')
             );
             do_action('betterlinks/after_update_link', $item['ID'], $item);
@@ -26,7 +33,8 @@ trait Query
         } else {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
             if (count($betterlinks) === 0) {
-                $defaults = apply_filters('betterlinks/insert_link_default_args', array(
+                $favorite_exist = isset($item['favorite']);
+                $initial_defaults_arr = array(
                     'link_author' => get_current_user_id(),
                     'link_date' => current_time('mysql'),
                     'link_date_gmt' => current_time('mysql', 1),
@@ -48,19 +56,36 @@ trait Query
                     'wildcards' => '',
                     'expire' => '',
                     'dynamic_redirect' => '',
-                    'favorite' => '',
-                ));
-                $item = wp_parse_args($item, $defaults);
-                $wpdb->query(
-                    $wpdb->prepare(
-                        "INSERT INTO {$wpdb->prefix}betterlinks (
-                        link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect,favorite
-                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s )",
-                        array(
-                            $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect'], $item['favorite']
-                        )
-                    )
                 );
+                if($favorite_exist){
+                    $initial_defaults_arr['favorite'] = "";
+                }
+                $defaults = apply_filters('betterlinks/insert_link_default_args', $initial_defaults_arr);
+                $item = wp_parse_args($item, $defaults);
+                if($favorite_exist){
+                    $wpdb->query(
+                        $wpdb->prepare(
+                            "INSERT INTO {$wpdb->prefix}betterlinks (
+                            link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect,favorite
+                        ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s )",
+                            array(
+                                $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect'], $item['favorite']
+                            )
+                        )
+                    );
+                }else{
+                    $wpdb->query(
+                        $wpdb->prepare(
+                            "INSERT INTO {$wpdb->prefix}betterlinks (
+                            link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect
+                        ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
+                            array(
+                                $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
+                            )
+                        )
+                    );
+                }
+                
                 do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
                 return $wpdb->insert_id;
             }
