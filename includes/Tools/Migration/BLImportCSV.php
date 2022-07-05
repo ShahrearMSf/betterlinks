@@ -31,13 +31,16 @@ class BLImportCSV extends BaseCSV implements ImportCsvInterface
                 } else {
                     $click_message[] = 'import failed "' . $item['short_url'] . '" already exists';
                 }
-            } elseif (is_array($item) && count($item) === 24) {
+            } elseif (is_array($item) && count($item) === 25) {
                 $is_insert = $this->insert_link_data($item);
                 if ($is_insert) {
                     $link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
                 } else {
                     $link_message[] = 'import failed "' . $item['short_url'] . '" already exists';
                 }
+            } elseif (is_array($item) && count($item) === 24) {
+                // for older csv
+                // work to do
             }
         }
         return ['links' => $link_message, 'clicks' => $click_message];
