@@ -10,6 +10,7 @@ import { linksFilterData, formatDate, route_path, insertOverlayElement } from 'u
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import LinkQuickAction from 'components/LinkQuickAction';
+import FavoriteIcon from 'components/FavoriteIcon';
 import TableLoader from 'components/Loader/TableLoader';
 import { useBtlExpireStatusDot } from 'utils/customHooks';
 
@@ -32,6 +33,7 @@ const getLinksListViewColumnData = (props) => {
 				return (
 					!!row.link_title && (
 						<>
+							<FavoriteIcon data={row} />
 							{expireStatusDot}
 							<div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>
 						</>

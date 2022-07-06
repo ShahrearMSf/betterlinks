@@ -7,6 +7,7 @@ export const DELETE_CAT = 'DELETE_CAT';
 export const ADD_NEW_LINK = 'ADD_NEW_LINK';
 export const DELETE_LINK = 'DELETE_LINK';
 export const EDIT_LINK = 'EDIT_LINK';
+export const HANDLE_LINK_FAVORITE = 'HANDLE_LINK_FAVORITE';
 
 export const onDragEnd = (result) => async (dispatch) => {
 	var [notUsed, ID] = result.draggableId.split('_');
@@ -186,6 +187,27 @@ export const edit_link = (item) => async (dispatch) => {
 					payload: response.data.data,
 				});
 			}
+		});
+	}
+};
+export const handle_link_favorite = (item) => async (dispatch) => {
+	try {
+		const res = await API.put(namespace + 'links_favorite/' + item.ID, {
+			params: item,
+		});
+		dispatch({
+			type: HANDLE_LINK_FAVORITE,
+			payload: res?.data?.data || {},
+		});
+	} catch (e) {
+		makeRequest({
+			action: 'betterlinks/admin/handle_favorite',
+			...item,
+		}).then((res) => {
+			dispatch({
+				type: HANDLE_LINK_FAVORITE,
+				payload: res?.data?.data || {},
+			});
 		});
 	}
 };

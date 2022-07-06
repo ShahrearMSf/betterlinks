@@ -95,6 +95,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 					data={getData(keywords)}
 					pagination
 					subHeader
+					highlightOnHover
 					subHeaderComponent={subHeaderComponentMemo}
 					persistTableHead
 					selectableRows

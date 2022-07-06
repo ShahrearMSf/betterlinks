@@ -19,8 +19,8 @@
 			color: $secondary-darken;
 			word-break: break-word;
 			padding-left: 3px;
-			.icon{
-				margin-right: 8px;
+			.icon {
+				margin-right: 4px;
 				display: inline-flex;
 				svg,
 				img {
@@ -35,33 +35,6 @@
 			display: flex;
 			align-items: center;
 			min-height: 25px;
-			.dnd-link-button {
-				padding: 5px;
-				border: none;
-				background: none;
-				color: $secondary-lighten;
-				font-size: 12px;
-				cursor: pointer;
-				transition: color 0.2s ease 0s;
-				text-decoration: none;
-				&:focus {
-					border: none;
-					outline: none;
-					box-shadow: none;
-				}
-				&:hover {
-					color: $success;
-				}
-				&.delete-button:hover {
-					color: $danger;
-				}
-				span.icon {
-					a {
-						color: #b0b2ba;
-						text-decoration: none;
-					}
-				}
-			}
 		}
 	}
 	.btl-confirm-message {
@@ -107,3 +80,72 @@
 		}
 	}
 }
+
+.btl-dnd-link .btl-dnd-link-body .btl-dnd-link-button-group .dnd-link-button,
+.btl-tooltip.btl-fav-link .dnd-link-button {
+	padding: 5px;
+	border: none;
+	background: none;
+	color: $secondary-lighten;
+	font-size: 12px;
+	cursor: pointer;
+	transition: color 0.2s ease 0s;
+	text-decoration: none;
+	&:focus {
+		border: none;
+		outline: none;
+		box-shadow: none;
+	}
+	&:hover {
+		color: $success;
+	}
+	&.delete-button:hover {
+		color: $danger;
+	}
+	span.icon {
+		a {
+			color: #b0b2ba;
+			text-decoration: none;
+		}
+	}
+}
+
+// common css start
+.no-btn {
+	border: none;
+	background: none;
+}
+.c-pointer {
+	cursor: pointer;
+}
+.c-default {
+	cursor: default;
+}
+// common css end
+
+// favorite icon css start
+.btl-tooltip.btl-fav-link {
+	svg.favorite-svg .fav-icon-svg-path {
+		transition: 0.3s !important;
+	}
+	&:focus {
+		border: none;
+		outline: none;
+		box-shadow: none;
+	}
+}
+.btl-tooltip.btl-fav-link svg.favorite-svg {
+	width: 16px;
+	.fav-icon-svg-path {
+		fill: $favorite-icon-grey !important;
+	}
+}
+.btl-tooltip.btl-fav-link.favorated svg.favorite-svg .fav-icon-svg-path {
+	fill: $favorite-icon-yellow !important;
+}
+.btl-tooltip.btl-fav-link:not(.no-edit) {
+	&:hover svg.favorite-svg .fav-icon-svg-path {
+		fill: $favorite-icon-yellow !important;
+	}
+}
+// favorite icon css start

@@ -1,13 +1,21 @@
-import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK } from 'redux/actions/links.actions';
+import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK, HANDLE_LINK_FAVORITE } from 'redux/actions/links.actions';
 import { move, reorder } from 'utils/helper';
 function links(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
-		case FETCH_INITIAL_DATA:
+		case FETCH_INITIAL_DATA: {
+			const cats = Object.values(payload.data || {});
+			for (const catItem of cats) {
+				const linksInCat = catItem.lists || [];
+				for (const link of linksInCat) {
+					link.favorite = JSON.parse(link.favorite || '{}');
+				}
+			}
 			return {
 				...state,
 				links: payload.data,
 			};
+		}
 		case DRAG_AND_DROP:
 			const { source, destination } = payload;
 			// dropped outside the list
@@ -23,7 +31,7 @@ function links(state = {}, action) {
 			if (sInd === dInd) {
 				const newLists = reorder(state.links[sInd].lists, source.index, destination.index);
 
-				const result = {
+				return {
 					...state,
 					links: {
 						...state.links,
@@ -33,11 +41,9 @@ function links(state = {}, action) {
 						},
 					},
 				};
-
-				return result;
 			} else {
 				const newLists = move(state.links[sInd].lists, state.links[dInd].lists, source, destination);
-				const result = {
+				return {
 					...state,
 					links: {
 						...state.links,
@@ -51,7 +57,6 @@ function links(state = {}, action) {
 						},
 					},
 				};
-				return result;
 			}
 		case ADD_NEW_CAT:
 			return {
@@ -129,7 +134,6 @@ function links(state = {}, action) {
 				const linksAtPayloadCat = state.links[payload.cat_id].lists;
 				const itemIndexInTheCat = linksAtPayloadCat.findIndex((item) => item.ID == payload.ID);
 				const isCategoryChanged = itemIndexInTheCat === -1;
-				let newState;
 				if (isCategoryChanged) {
 					const newStateLinks = {
 						...state.links,
@@ -140,7 +144,7 @@ function links(state = {}, action) {
 							const linksOnTheOldCat = state.links[property].lists;
 							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
 							if (indexInOldCatList !== -1) {
-								newState = {
+								return {
 									...state,
 									links: {
 										...state.links,
@@ -155,24 +159,20 @@ function links(state = {}, action) {
 										},
 									},
 								};
-								break;
 							}
 						}
 					}
-				} else {
-					newState = {
-						...state,
-						links: {
-							...state.links,
-							[payload.cat_id]: {
-								...state.links[payload.cat_id],
-								lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
-							},
-						},
-					};
 				}
-
-				return newState;
+				return {
+					...state,
+					links: {
+						...state.links,
+						[payload.cat_id]: {
+							...state.links[payload.cat_id],
+							lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
+						},
+					},
+				};
 			}
 			return {
 				...state,
@@ -184,6 +184,33 @@ function links(state = {}, action) {
 						term_type: 'category',
 						lists: [payload],
 					},
+				},
+			};
+		}
+		case HANDLE_LINK_FAVORITE: {
+			const newLinks = {};
+			for (const [key, value] of Object.entries(state.links || {})) {
+				const linkLists = (value.lists || []).map((item, index) => {
+					if (item.ID == payload.ID) {
+						return {
+							...item,
+							favorite: {
+								...item.favorite,
+								favForAll: payload.favForAll,
+							},
+						};
+					}
+					return item;
+				});
+				newLinks[`${key}`] = {
+					...value,
+					lists: linkLists,
+				};
+			}
+			return {
+				...state,
+				links: {
+					...newLinks,
 				},
 			};
 		}

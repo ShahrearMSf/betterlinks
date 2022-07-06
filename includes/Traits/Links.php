@@ -103,6 +103,24 @@ trait Links
         \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg, true);
         $wpdb->query("COMMIT");
     }
+    public function update_link_favorite($args)
+    {
+        if (isset($args["ID"], $args["data"])) {
+            $id = absint($args["ID"]);
+            $data = wp_json_encode($args["data"]);
+            global $wpdb;
+            $table = $wpdb->prefix . 'betterlinks';
+            return $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE $table
+                    SET favorite = %s
+                    WHERE ID = %d LIMIT 1",
+                    $data,
+                    $id
+                )
+            );
+        }
+    }
     public function delete_link($args)
     {
         \BetterLinks\Helper::delete_link($args['ID']);
