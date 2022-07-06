@@ -34,6 +34,7 @@ class Helper
 
     public static function get_link_from_json_file($short_url)
     {
+        $short_url = strtolower($short_url);
         global $betterlinks;
         if (isset($betterlinks['links'][$short_url])) {
             return $betterlinks['links'][$short_url];
@@ -56,7 +57,6 @@ class Helper
                 }
             }
         }
-        return;
     }
 
     public static function get_menu_items()

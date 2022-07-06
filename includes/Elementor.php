@@ -92,7 +92,7 @@ class Elementor {
 		$controls->start_controls_section(
 			'bl_instant_redirect_section',
 			[
-				'label' => sprintf( '<i class="btl btl-logo"></i> %s', __( 'BetterLinks Logo', 'betterlinks' ), __( 'BetterLinks Instant Redirect', 'betterlinks' ) ),
+				'label' => sprintf( '<i class="btl btl-logo"></i> %s', __( 'BetterLinks Instant Redirect', 'betterlinks' ) ),
 				'tab'   => Controls_Manager::TAB_SETTINGS,
 			]
 		);
