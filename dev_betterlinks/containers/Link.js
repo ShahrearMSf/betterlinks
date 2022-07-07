@@ -8,7 +8,7 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url } from 'utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
 import Tags from 'components/Terms/Tags';
@@ -239,7 +239,7 @@ const Link = (props) => {
 											id="redirect_type"
 											name="redirect_type"
 											value={
-												betterLinksHooks.applyFilters('isActivePro', false)
+												is_pro_enabled
 													? [
 															...redirectType,
 															{
