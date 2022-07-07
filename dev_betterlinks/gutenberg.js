@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { redirectType } from 'utils/data';
-import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate } from 'utils/helper';
+import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate, is_pro_enabled } from 'utils/helper';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -327,7 +327,17 @@ const CustomSidebarMetaComponent = (props) => {
 			/>
 			<SelectControl
 				label={__('Redirect Type', 'betterlinks')}
-				options={redirectType}
+				options={
+					is_pro_enabled
+						? [
+								...redirectType,
+								{
+									value: 'cloak',
+									label: __('Cloaked', 'betterlinks'),
+								},
+						  ]
+						: redirectType
+				}
 				value={getDefaultRedirectType(redirectMode)}
 				onChange={(mode) => {
 					onSetRedirectType(mode);
