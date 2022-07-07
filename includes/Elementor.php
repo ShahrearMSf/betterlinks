@@ -130,6 +130,7 @@ class Elementor {
 					'307' => esc_html__( '307 (Temporary)', 'betterlinks' ),
 					'302' => esc_html__( '302 (Temporary)', 'betterlinks' ),
 					'301' => esc_html__( '301 (Permanent)', 'betterlinks' ),
+					'cloak' => esc_html__( 'Cloaked', 'betterlinks' ),
 				],
 				'condition' => [
 					'bl_ir_active' => 'yes'
