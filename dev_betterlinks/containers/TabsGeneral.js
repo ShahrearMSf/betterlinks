@@ -9,7 +9,7 @@ import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from 'utils/helper';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled } from 'utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
@@ -150,7 +150,17 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										classNamePrefix="btl-react-select"
 										id="redirect_type"
 										name="redirect_type"
-										value={redirectType}
+										value={
+											is_pro_enabled
+												? [
+														...redirectType,
+														{
+															value: 'cloak',
+															label: __('Cloaked', 'betterlinks'),
+														},
+												  ]
+												: redirectType
+										}
 										defaultValue={settings.redirect_type}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}
