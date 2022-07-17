@@ -231,6 +231,22 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 							</span>
 
 							<span className="btl-form-group btl-form-group--top">
+								<label className="btl-form-label">{__('Case Sensitivity', 'betterlinks')}</label>
+								<div className="link-options__body" style={{ flexDirection: 'column' }}>
+									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
+										<Field type="checkbox" className="btl-check" name="is_case_sensitive" />
+										<span className="text">
+											{__('Enable Case Sensitive Links', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('If enabled this will make the links case sensitive', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group btl-form-group--top">
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<div style={{ maxWidth: '200px' }}>
