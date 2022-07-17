@@ -34,6 +34,12 @@ var expire_redirect_url;
 
 var isSavingPost = true; // flag for multiple request break
 
+const permalinkToShortUrl = (permalink) => {
+	if (!permalink) return permalink;
+	var short_url = permalink.replace(site_url + '/', '');
+	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
+};
+
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
@@ -563,12 +569,6 @@ const CustomSidebarComponent = () => {
 			)}
 		</Fragment>
 	);
-};
-
-const permalinkToShortUrl = (permalink) => {
-	if (!permalink) return permalink;
-	var short_url = permalink.replace(site_url + '/', '');
-	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 };
 
 registerPlugin('betterlinks-sidebar', {
