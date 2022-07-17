@@ -34,8 +34,10 @@ class Helper
 
     public static function get_link_from_json_file($short_url)
     {
-        $short_url = strtolower($short_url);
         global $betterlinks;
+        if (!(isset($betterlinks['is_case_sensitive']) && $betterlinks['is_case_sensitive'])) {
+            $short_url = strtolower($short_url);
+        }
         if (isset($betterlinks['links'][$short_url])) {
             return $betterlinks['links'][$short_url];
         }

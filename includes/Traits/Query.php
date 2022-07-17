@@ -57,12 +57,12 @@ trait Query
                     'expire' => '',
                     'dynamic_redirect' => '',
                 );
-                if($favorite_exist){
+                if ($favorite_exist) {
                     $initial_defaults_arr['favorite'] = "";
                 }
                 $defaults = apply_filters('betterlinks/insert_link_default_args', $initial_defaults_arr);
                 $item = wp_parse_args($item, $defaults);
-                if($favorite_exist){
+                if ($favorite_exist) {
                     $wpdb->query(
                         $wpdb->prepare(
                             "INSERT INTO {$wpdb->prefix}betterlinks (
@@ -73,7 +73,7 @@ trait Query
                             )
                         )
                     );
-                }else{
+                } else {
                     $wpdb->query(
                         $wpdb->prepare(
                             "INSERT INTO {$wpdb->prefix}betterlinks (
@@ -85,7 +85,7 @@ trait Query
                         )
                     );
                 }
-                
+
                 do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
                 return $wpdb->insert_id;
             }
@@ -184,14 +184,16 @@ trait Query
             $formattedArray['wildcards_is_active'] = $options->wildcards;
             $formattedArray['disablebotclicks'] = $options->disablebotclicks;
             $formattedArray['force_https'] = $options->force_https;
-            $formattedArray['is_case_sensitive'] = $options->is_case_sensitive;
+            $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false ;
         }
+        $is_links_case_sensitive = isset($formattedArray['is_case_sensitive']) ? $formattedArray['is_case_sensitive'] : false;
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
+                $short_url = $is_links_case_sensitive ? $item->short_url : strtolower($item->short_url);
                 if ($item->wildcards == true) {
-                    $formattedArray['wildcards'][strtolower($item->short_url)] = $item;
+                    $formattedArray['wildcards'][$short_url] = $item;
                 } else {
-                    $formattedArray['links'][strtolower($item->short_url)] = $item;
+                    $formattedArray['links'][$short_url] = $item;
                 }
             }
         }
