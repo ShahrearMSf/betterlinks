@@ -12,8 +12,6 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-window.betterLinksHooks = createHooks();
-
 var BetterLinksID;
 var target_url;
 var redirect_type;
@@ -83,7 +81,7 @@ const CustomSidebarMetaComponent = (props) => {
 			onSetParamForwarding(!!props.data.param_forwarding);
 			onSetTrackMe(!!props.data.track_me);
 
-			if (betterLinksHooks.applyFilters('isActivePro', false)) {
+			if (is_pro_enabled) {
 				const expire = getJsonString(props.data.expire);
 				if (expire) {
 					onSetLinkStatus(props.data.link_status);
@@ -263,7 +261,7 @@ const CustomSidebarMetaComponent = (props) => {
 						link_modified: currentDate,
 						link_modified_gmt: currentDate,
 					};
-					if (betterLinksHooks.applyFilters('isActivePro', false)) {
+					if (is_pro_enabled) {
 						params.link_status = link_status;
 						params.expire = {
 							status: expire,
@@ -405,7 +403,7 @@ const CustomSidebarMetaComponent = (props) => {
 						<strong>{__('Advanced', 'betterlinks')}</strong>
 					</h4>
 				</div>
-				{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+				{!is_pro_enabled ? (
 					<>
 						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
 							<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
