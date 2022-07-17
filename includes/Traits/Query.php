@@ -184,6 +184,7 @@ trait Query
             $formattedArray['wildcards_is_active'] = $options->wildcards;
             $formattedArray['disablebotclicks'] = $options->disablebotclicks;
             $formattedArray['force_https'] = $options->force_https;
+            $formattedArray['is_case_sensitive'] = $options->is_case_sensitive;
         }
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
