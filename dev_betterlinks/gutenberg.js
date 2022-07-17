@@ -517,15 +517,9 @@ const CustomSidebarMetaComponent = (props) => {
 	);
 };
 
-const CustomSidebarMeta = compose([
-	withDispatch((dispatch) => {
-		return {
-			showSaveButton: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } });
-			},
-		};
-	}),
-])(CustomSidebarMetaComponent);
+const CustomSidebarMeta = withDispatch((dispatch) => ({
+	showSaveButton: (value) => dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } }),
+}))(CustomSidebarMetaComponent);
 
 const CustomSidebarComponent = () => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
