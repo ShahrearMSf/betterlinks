@@ -6,7 +6,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
-import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
