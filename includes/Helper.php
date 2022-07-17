@@ -196,6 +196,12 @@ class Helper
         wp_schedule_single_event(time() + 5, 'betterlinks/write_json_links');
     }
 
+    public static function write_links_inside_json()
+    {
+        $cron = new Cron();
+        $cron->write_json_links();
+    }
+
     public static function create_cron_jobs_for_analytics()
     {
         wp_clear_scheduled_hook('betterlinks/analytics');
