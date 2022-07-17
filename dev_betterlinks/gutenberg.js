@@ -37,7 +37,6 @@ var isSavingPost = true; // flag for multiple request break
 
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [isFetchData, setIsFetchData] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
