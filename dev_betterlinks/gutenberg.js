@@ -10,8 +10,7 @@ import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
-const { compose } = wp.compose;
-const { withDispatch, withSelect, subscribe } = wp.data;
+const { withDispatch, subscribe } = wp.data;
 
 window.betterLinksHooks = createHooks();
 
