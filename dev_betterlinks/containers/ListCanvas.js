@@ -53,7 +53,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Redirect Type', 'betterlinks'),
 			selector: 'redirect_type',
 			sortable: false,
-			cell: (row) => <div>{row.redirect_type}</div>,
+			cell: (row) => <div>{row.redirect_type == 'cloak' ? 'Cloaked' : row.redirect_type}</div>,
 		},
 		{
 			name: __('Clicks', 'betterlinks'),
