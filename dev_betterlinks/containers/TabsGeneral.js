@@ -161,7 +161,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 												  ]
 												: redirectType
 										}
-										defaultValue={settings.redirect_type}
+										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}
 									/>
