@@ -128,6 +128,7 @@ class Installer extends \WP_Background_Process
                 'is_random_string'      => false,
                 'is_autolink_icon'      => false,
                 'is_autolink_headings'  => true,
+                'is_case_sensitive'     => false,
             ];
             add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }

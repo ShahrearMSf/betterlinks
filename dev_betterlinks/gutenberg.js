@@ -6,14 +6,10 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
-import { createHooks } from '@wordpress/hooks';
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
-const { compose } = wp.compose;
-const { withDispatch, withSelect, subscribe } = wp.data;
-
-window.betterLinksHooks = createHooks();
+const { withDispatch, subscribe } = wp.data;
 
 var BetterLinksID;
 var target_url;
@@ -35,9 +31,14 @@ var expire_redirect_url;
 
 var isSavingPost = true; // flag for multiple request break
 
+const permalinkToShortUrl = (permalink) => {
+	if (!permalink) return permalink;
+	const short_url = permalink.replace(site_url + '/', '');
+	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
+};
+
 const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [isFetchData, setIsFetchData] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
@@ -79,7 +80,7 @@ const CustomSidebarMetaComponent = (props) => {
 			onSetParamForwarding(!!props.data.param_forwarding);
 			onSetTrackMe(!!props.data.track_me);
 
-			if (betterLinksHooks.applyFilters('isActivePro', false)) {
+			if (is_pro_enabled) {
 				const expire = getJsonString(props.data.expire);
 				if (expire) {
 					onSetLinkStatus(props.data.link_status);
@@ -259,7 +260,7 @@ const CustomSidebarMetaComponent = (props) => {
 						link_modified: currentDate,
 						link_modified_gmt: currentDate,
 					};
-					if (betterLinksHooks.applyFilters('isActivePro', false)) {
+					if (is_pro_enabled) {
 						params.link_status = link_status;
 						params.expire = {
 							status: expire,
@@ -401,7 +402,7 @@ const CustomSidebarMetaComponent = (props) => {
 						<strong>{__('Advanced', 'betterlinks')}</strong>
 					</h4>
 				</div>
-				{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+				{!is_pro_enabled ? (
 					<>
 						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
 							<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
@@ -517,15 +518,9 @@ const CustomSidebarMetaComponent = (props) => {
 	);
 };
 
-const CustomSidebarMeta = compose([
-	withDispatch((dispatch) => {
-		return {
-			showSaveButton: function (value) {
-				dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } });
-			},
-		};
-	}),
-])(CustomSidebarMetaComponent);
+const CustomSidebarMeta = withDispatch((dispatch) => ({
+	showSaveButton: (value) => dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } }),
+}))(CustomSidebarMetaComponent);
 
 const CustomSidebarComponent = () => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
@@ -571,12 +566,6 @@ const CustomSidebarComponent = () => {
 			)}
 		</Fragment>
 	);
-};
-
-const permalinkToShortUrl = (permalink) => {
-	if (!permalink) return permalink;
-	var short_url = permalink.replace(site_url + '/', '');
-	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 };
 
 registerPlugin('betterlinks-sidebar', {

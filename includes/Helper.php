@@ -34,8 +34,10 @@ class Helper
 
     public static function get_link_from_json_file($short_url)
     {
-        $short_url = strtolower($short_url);
         global $betterlinks;
+        if (!(isset($betterlinks['is_case_sensitive']) && $betterlinks['is_case_sensitive'])) {
+            $short_url = strtolower($short_url);
+        }
         if (isset($betterlinks['links'][$short_url])) {
             return $betterlinks['links'][$short_url];
         }
@@ -194,6 +196,12 @@ class Helper
     {
         wp_clear_scheduled_hook('betterlinks/write_json_links');
         wp_schedule_single_event(time() + 5, 'betterlinks/write_json_links');
+    }
+
+    public static function write_links_inside_json()
+    {
+        $cron = new Cron();
+        $cron->write_json_links();
     }
 
     public static function create_cron_jobs_for_analytics()
