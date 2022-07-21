@@ -312,17 +312,19 @@ class Helper
     {
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
-        if (isset($existingData['wildcards'][$short_url])) {
+        if (isset($existingData['wildcards'][$short_url]) || isset($existingData['wildcards'][strToLower($short_url)])) {
             $tempArray = $existingData['wildcards'];
             if (is_array($tempArray)) {
                 unset($tempArray[$short_url]);
+                unset($tempArray[strToLower($short_url)]);
                 $existingData['wildcards'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
-        } elseif (isset($existingData['links'][$short_url])) {
+        } elseif (isset($existingData['links'][$short_url]) || isset($existingData['links'][strToLower($short_url)])) {
             $tempArray = $existingData['links'];
             if (is_array($tempArray)) {
                 unset($tempArray[$short_url]);
+                unset($tempArray[strToLower($short_url)]);
                 $existingData['links'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
