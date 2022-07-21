@@ -279,25 +279,30 @@ class Helper
     }
     public static function update_json_into_file($file, $data, $old_short_url = '')
     {
+        if(!isset($data['short_url'])) return false;
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
+        $case_sensitive_is_enabled = isset($existingData['is_case_sensitive']) ? $existingData['is_case_sensitive'] : false;
+        $short_url = $case_sensitive_is_enabled ? $data['short_url'] : strtolower($data['short_url']);
         if (isset($data['wildcards']) && !empty($data['wildcards'])) {
             $tempArray = $existingData['wildcards'];
-            if (is_array($tempArray) && isset($data['short_url'])) {
-                if (!empty($old_short_url) && isset($tempArray[$old_short_url])) {
+            if (is_array($tempArray)) {
+                if (!empty($old_short_url)) {
                     unset($tempArray[$old_short_url]);
+                    unset($tempArray[strToLower($old_short_url)]);
                 }
-                $tempArray[$data['short_url']] = self::json_link_formatter($data);
+                $tempArray[$short_url] = self::json_link_formatter($data);
                 $existingData['wildcards'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
         } else {
             $tempArray = $existingData['links'];
-            if (is_array($tempArray) && isset($data['short_url'])) {
-                if (!empty($old_short_url) && isset($tempArray[$old_short_url])) {
+            if (is_array($tempArray)) {
+                if (!empty($old_short_url)) {
                     unset($tempArray[$old_short_url]);
+                    unset($tempArray[strToLower($old_short_url)]);
                 }
-                $tempArray[$data['short_url']] = self::json_link_formatter($data);
+                $tempArray[$short_url] = self::json_link_formatter($data);
                 $existingData['links'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
