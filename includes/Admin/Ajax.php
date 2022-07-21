@@ -527,7 +527,7 @@ class Ajax
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
         }
         // regenerate links for wildcards option update
-        \BetterLinks\Helper::create_cron_jobs_for_json_links();
+        \BetterLinks\Helper::write_links_inside_json(); // it's better to write the links instantly here than scheduling/corning it
         wp_send_json_success(
             $response,
             200
