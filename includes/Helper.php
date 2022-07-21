@@ -264,13 +264,15 @@ class Helper
     {
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
+        $case_sensitive_is_enabled = isset($existingData['is_case_sensitive']) ? $existingData['is_case_sensitive'] : false;
+        $short_url = $case_sensitive_is_enabled ? $data['short_url'] : strtolower($data['short_url']);
         if (isset($data['wildcards']) && $data['wildcards']) {
             $tempArray = $existingData['wildcards'];
-            $tempArray[$data['short_url']] = self::json_link_formatter($data);
+            $tempArray[$short_url] = self::json_link_formatter($data);
             $existingData['wildcards'] = $tempArray;
         } else {
             $tempArray = (isset($existingData['links']) ? $existingData['links'] : []);
-            $tempArray[$data['short_url']] = self::json_link_formatter($data);
+            $tempArray[$short_url] = self::json_link_formatter($data);
             $existingData['links'] = $tempArray;
         }
         return file_put_contents($file, json_encode($existingData));
