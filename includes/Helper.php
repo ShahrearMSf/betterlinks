@@ -307,7 +307,6 @@ class Helper
                 return file_put_contents($file, json_encode($existingData));
             }
         }
-        return;
     }
     public static function delete_json_into_file($file, $short_url)
     {
