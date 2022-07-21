@@ -98,7 +98,6 @@ class Settings extends Controller
         }
         // regenerate links for wildcards option update
         \BetterLinks\Helper::write_links_inside_json(); // it's better to write the links instantly here than scheduling/corning it
-        // \BetterLinks\Helper::create_cron_jobs_for_json_links();
         return new \WP_REST_Response(
             [
                 'success' => true,
