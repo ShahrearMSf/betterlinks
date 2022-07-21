@@ -180,13 +180,13 @@ trait Query
         $formattedArray = [];
         $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
         $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
+        $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false;
+        $is_links_case_sensitive = $formattedArray['is_case_sensitive'];
         if (!empty($options)) {
             $formattedArray['wildcards_is_active'] = $options->wildcards;
             $formattedArray['disablebotclicks'] = $options->disablebotclicks;
             $formattedArray['force_https'] = $options->force_https;
-            $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false ;
         }
-        $is_links_case_sensitive = isset($formattedArray['is_case_sensitive']) ? $formattedArray['is_case_sensitive'] : false;
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
                 $short_url = $is_links_case_sensitive ? $item->short_url : strtolower($item->short_url);
