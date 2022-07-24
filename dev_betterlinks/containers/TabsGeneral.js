@@ -151,23 +151,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										id="redirect_type"
 										name="redirect_type"
 										setUpgradeToProModal={setUpgradeToProModal}
-										value={
-											is_pro_enabled
-												? [
-														...redirectType,
-														{
-															value: 'cloak',
-															label: __('Cloaked', 'betterlinks'),
-														},
-												  ]
-												: [
-														...redirectType,
-														{
-															value: 'pro',
-															label: __('Cloaked (pro)', 'betterlinks'),
-														},
-												  ]
-										}
+										value={[
+											...redirectType,
+											{
+												value: is_pro_enabled ? 'cloak' : 'pro',
+												label: __('Cloaked', 'betterlinks'),
+											},
+										]}
 										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}

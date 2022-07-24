@@ -237,23 +237,13 @@ const Link = (props) => {
 										<Select
 											id="redirect_type"
 											name="redirect_type"
-											value={
-												is_pro_enabled
-													? [
-															...redirectType,
-															{
-																value: 'cloak',
-																label: __('Cloaked', 'betterlinks'),
-															},
-													  ]
-													: [
-															...redirectType,
-															{
-																value: 'pro',
-																label: __('Cloaked (pro)', 'betterlinks'),
-															},
-													  ]
-											}
+											value={[
+												...redirectType,
+												{
+													value: is_pro_enabled ? 'cloak' : 'pro',
+													label: __('Cloaked', 'betterlinks'),
+												},
+											]}
 											setUpgradeToProModal={setUpgradeToProModal}
 											setFieldValue={props.setFieldValue}
 											disabled={isDisableLinkFormEditView}
