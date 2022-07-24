@@ -4,6 +4,8 @@ import Select2 from 'react-select';
 
 const RedirectType = (props) => {
 	const [field] = useField(props.name);
+	const [selectValue, setSelectValue] = useState(field.value);
+
 	const onChange = (option) => {
 		if (option == null) {
 			return props.setFieldValue(field.name, '');
@@ -21,6 +23,7 @@ const RedirectType = (props) => {
 				defaultValue={props.value && props.value.filter((item) => item.value == props.defaultValue)}
 				onChange={onChange}
 				options={props.value}
+				value={selectValue}
 				isMulti={props.isMulti}
 			/>
 		</React.Fragment>
