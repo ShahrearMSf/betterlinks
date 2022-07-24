@@ -254,6 +254,7 @@ const Link = (props) => {
 															},
 													  ]
 											}
+											setUpgradeToProModal={setUpgradeToProModal}
 											setFieldValue={props.setFieldValue}
 											disabled={isDisableLinkFormEditView}
 											isMulti={false}
