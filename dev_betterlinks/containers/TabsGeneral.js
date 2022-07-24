@@ -239,7 +239,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 											{__('Enable Case Sensitive Links', 'betterlinks')}
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext">{__('If enabled this will make the links case sensitive', 'betterlinks')}</span>
+												<span className="btl-tooltiptext">{__('This will make your shortened URLs case sensitive', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>
