@@ -26,7 +26,7 @@ const RedirectType = (props) => {
 	return (
 		<React.Fragment>
 			<Select2
-				className="btl-modal-select--full"
+				className={`btl-modal-select--full ${props.value && props.value.find((item) => item.value == 'pro') ? 'btl-modal-select-need-pro-teaser' : ''}`}
 				classNamePrefix="btl-react-select"
 				id={field.id}
 				name={field.name}
