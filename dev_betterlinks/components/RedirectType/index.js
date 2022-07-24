@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import Select2 from 'react-select';
 
 const RedirectType = (props) => {
-	const [field] = useField(props.name);
+	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
 	const [selectValue, setSelectValue] = useState(field.value);
 
 	const onChange = (option) => {
