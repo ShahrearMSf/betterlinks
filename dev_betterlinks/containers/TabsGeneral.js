@@ -159,7 +159,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 															label: __('Cloaked', 'betterlinks'),
 														},
 												  ]
-												: redirectType
+												: [
+														...redirectType,
+														{
+															value: 'pro',
+															label: __('Cloaked (pro)', 'betterlinks'),
+														},
+												  ]
 										}
 										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 										setFieldValue={props.setFieldValue}
