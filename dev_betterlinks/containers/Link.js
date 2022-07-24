@@ -246,7 +246,13 @@ const Link = (props) => {
 																label: __('Cloaked', 'betterlinks'),
 															},
 													  ]
-													: redirectType
+													: [
+															...redirectType,
+															{
+																value: 'pro',
+																label: __('Cloaked (pro)', 'betterlinks'),
+															},
+													  ]
 											}
 											setFieldValue={props.setFieldValue}
 											disabled={isDisableLinkFormEditView}
