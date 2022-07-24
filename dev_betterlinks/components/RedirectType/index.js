@@ -20,7 +20,7 @@ const RedirectType = (props) => {
 				name={field.name}
 				defaultValue={props.value && props.value.filter((item) => item.value == props.defaultValue)}
 				onChange={onChange}
-				options={props.value && props.value.map((item) => item)}
+				options={props.value}
 				isMulti={props.isMulti}
 			/>
 		</React.Fragment>
