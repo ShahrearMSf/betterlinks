@@ -142,7 +142,6 @@ const Link = (props) => {
 					if (link_title) {
 						values.link_title = link_title;
 						setModalIsOpen(false);
-						console.log('---------Link onSubmit values: ', { values });
 						return submitHandler(values);
 					}
 				}
@@ -247,8 +246,15 @@ const Link = (props) => {
 																label: __('Cloaked', 'betterlinks'),
 															},
 													  ]
-													: redirectType
+													: [
+															...redirectType,
+															{
+																value: 'pro',
+																label: __('Cloaked (pro)', 'betterlinks'),
+															},
+													  ]
 											}
+											setUpgradeToProModal={setUpgradeToProModal}
 											setFieldValue={props.setFieldValue}
 											disabled={isDisableLinkFormEditView}
 											isMulti={false}

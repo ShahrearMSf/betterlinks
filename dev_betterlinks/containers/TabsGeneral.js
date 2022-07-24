@@ -150,6 +150,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										classNamePrefix="btl-react-select"
 										id="redirect_type"
 										name="redirect_type"
+										setUpgradeToProModal={setUpgradeToProModal}
 										value={
 											is_pro_enabled
 												? [
@@ -159,7 +160,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 															label: __('Cloaked', 'betterlinks'),
 														},
 												  ]
-												: redirectType
+												: [
+														...redirectType,
+														{
+															value: 'pro',
+															label: __('Cloaked (pro)', 'betterlinks'),
+														},
+												  ]
 										}
 										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 										setFieldValue={props.setFieldValue}
