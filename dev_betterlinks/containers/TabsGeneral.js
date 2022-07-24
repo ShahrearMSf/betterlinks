@@ -150,6 +150,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										classNamePrefix="btl-react-select"
 										id="redirect_type"
 										name="redirect_type"
+										setUpgradeToProModal={setUpgradeToProModal}
 										value={
 											is_pro_enabled
 												? [
