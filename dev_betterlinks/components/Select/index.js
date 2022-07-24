@@ -24,7 +24,7 @@ const Select = (props) => {
 				classNamePrefix="btl-react-select"
 				id={field.id}
 				name={field.name}
-				defaultValue={(props.value && props.value.find((item) => item.value == defaultValue)) || { label: '307 (Temporary)', value: '307' }}
+				defaultValue={(props.value && props.value.filter((item) => item.value == defaultValue)) || [{ label: '307 (Temporary)', value: '307' }]}
 				onChange={onChange}
 				options={props.value}
 				isMulti={props.isMulti}
