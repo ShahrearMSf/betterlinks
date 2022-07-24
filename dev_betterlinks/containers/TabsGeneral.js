@@ -214,7 +214,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 
-							<span className="btl-form-group btl-form-group--top">
+							<span className="btl-form-group btl-form-group--make-center">
 								<label className="btl-form-label">{__('Random URL Slug', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
@@ -230,7 +230,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 
-							<span className="btl-form-group btl-form-group--top">
+							<span className="btl-form-group btl-form-group--make-center">
 								<label className="btl-form-label">{__('Case Sensitivity', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
