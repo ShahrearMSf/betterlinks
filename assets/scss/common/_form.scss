@@ -325,7 +325,19 @@ span.pro-badge {
 }
 
 //  fix: 'Auto-Linked Keywords Icon' option checkbox is not aligned start
-.btl-form-group.btl-form-group-autolink-keyword-icon .btl-form-label {
-	padding-right: 16px;
+.btl-form-group.btl-form-group-autolink-keyword-icon {
+	.btl-form-label {
+		padding-right: 16px;
+	}
+	& > div.btl-form-field {
+		margin-top: 5px;
+	}
 }
+
 //  fix: 'Auto-Linked Keywords Icon' option checkbox is not aligned end
+
+//  fix: 'Random URL Slug' & 'Case Sensitivity' option not aligned - start
+.btl-form-group.btl-form-group--make-center .link-options__body {
+	margin-top: -5px;
+}
+//  fix: 'Random URL Slug' & 'Case Sensitivity' option not aligned - end
