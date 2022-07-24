@@ -142,7 +142,6 @@ const Link = (props) => {
 					if (link_title) {
 						values.link_title = link_title;
 						setModalIsOpen(false);
-						console.log('---------Link onSubmit values: ', { values });
 						return submitHandler(values);
 					}
 				}
