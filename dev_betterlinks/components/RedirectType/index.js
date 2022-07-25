@@ -4,12 +4,12 @@ import Select2 from 'react-select';
 
 const RedirectType = (props) => {
 	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
-	const [selectValue, setSelectValue] = useState(field.value);
+	const [selectValue, setSelectValue] = useState(field?.value);
 
 	useEffect(() => {
-		if (field.value === 'pro') {
-			setThisFieldValue(selectValue.value, false);
-			props.setFieldValue(field.name, selectValue.value);
+		if (field?.value === 'pro') {
+			setThisFieldValue(selectValue?.value, false);
+			props.setFieldValue(field.name, selectValue?.value);
 			props.setUpgradeToProModal(true);
 		} else {
 			setSelectValue((props.value || []).find((item) => item.value == field.value));
