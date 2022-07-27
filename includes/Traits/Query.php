@@ -149,7 +149,7 @@ trait Query
         );
         $link_options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME, '{}'), true);
         if (isset($link[0]['short_url']) && isset($link_options['is_case_sensitive']) && $link_options['is_case_sensitive'] && $link[0]['short_url'] != $short_url) {
-            return false;
+            return [];
         }
         return $link;
     }
