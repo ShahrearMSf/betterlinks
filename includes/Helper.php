@@ -34,8 +34,10 @@ class Helper
 
     public static function get_link_from_json_file($short_url)
     {
-        $short_url = strtolower($short_url);
         global $betterlinks;
+        if (!(isset($betterlinks['is_case_sensitive']) && $betterlinks['is_case_sensitive'])) {
+            $short_url = strtolower($short_url);
+        }
         if (isset($betterlinks['links'][$short_url])) {
             return $betterlinks['links'][$short_url];
         }
@@ -196,6 +198,12 @@ class Helper
         wp_schedule_single_event(time() + 5, 'betterlinks/write_json_links');
     }
 
+    public static function write_links_inside_json()
+    {
+        $cron = new Cron();
+        $cron->write_json_links();
+    }
+
     public static function create_cron_jobs_for_analytics()
     {
         wp_clear_scheduled_hook('betterlinks/analytics');
@@ -256,59 +264,67 @@ class Helper
     {
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
+        $case_sensitive_is_enabled = isset($existingData['is_case_sensitive']) ? $existingData['is_case_sensitive'] : false;
+        $short_url = $case_sensitive_is_enabled ? $data['short_url'] : strtolower($data['short_url']);
         if (isset($data['wildcards']) && $data['wildcards']) {
             $tempArray = $existingData['wildcards'];
-            $tempArray[$data['short_url']] = self::json_link_formatter($data);
+            $tempArray[$short_url] = self::json_link_formatter($data);
             $existingData['wildcards'] = $tempArray;
         } else {
             $tempArray = (isset($existingData['links']) ? $existingData['links'] : []);
-            $tempArray[$data['short_url']] = self::json_link_formatter($data);
+            $tempArray[$short_url] = self::json_link_formatter($data);
             $existingData['links'] = $tempArray;
         }
         return file_put_contents($file, json_encode($existingData));
     }
     public static function update_json_into_file($file, $data, $old_short_url = '')
     {
+        if(!isset($data['short_url'])) return false;
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
+        $case_sensitive_is_enabled = isset($existingData['is_case_sensitive']) ? $existingData['is_case_sensitive'] : false;
+        $short_url = $case_sensitive_is_enabled ? $data['short_url'] : strtolower($data['short_url']);
         if (isset($data['wildcards']) && !empty($data['wildcards'])) {
             $tempArray = $existingData['wildcards'];
-            if (is_array($tempArray) && isset($data['short_url'])) {
-                if (!empty($old_short_url) && isset($tempArray[$old_short_url])) {
+            if (is_array($tempArray)) {
+                if (!empty($old_short_url)) {
                     unset($tempArray[$old_short_url]);
+                    unset($tempArray[strToLower($old_short_url)]);
                 }
-                $tempArray[$data['short_url']] = self::json_link_formatter($data);
+                $tempArray[$short_url] = self::json_link_formatter($data);
                 $existingData['wildcards'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
         } else {
             $tempArray = $existingData['links'];
-            if (is_array($tempArray) && isset($data['short_url'])) {
-                if (!empty($old_short_url) && isset($tempArray[$old_short_url])) {
+            if (is_array($tempArray)) {
+                if (!empty($old_short_url)) {
                     unset($tempArray[$old_short_url]);
+                    unset($tempArray[strToLower($old_short_url)]);
                 }
-                $tempArray[$data['short_url']] = self::json_link_formatter($data);
+                $tempArray[$short_url] = self::json_link_formatter($data);
                 $existingData['links'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
         }
-        return;
     }
     public static function delete_json_into_file($file, $short_url)
     {
         $existingData = file_get_contents($file);
         $existingData = json_decode($existingData, true);
-        if (isset($existingData['wildcards'][$short_url])) {
+        if (isset($existingData['wildcards'][$short_url]) || isset($existingData['wildcards'][strToLower($short_url)])) {
             $tempArray = $existingData['wildcards'];
             if (is_array($tempArray)) {
                 unset($tempArray[$short_url]);
+                unset($tempArray[strToLower($short_url)]);
                 $existingData['wildcards'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
-        } elseif (isset($existingData['links'][$short_url])) {
+        } elseif (isset($existingData['links'][$short_url]) || isset($existingData['links'][strToLower($short_url)])) {
             $tempArray = $existingData['links'];
             if (is_array($tempArray)) {
                 unset($tempArray[$short_url]);
+                unset($tempArray[strToLower($short_url)]);
                 $existingData['links'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }

@@ -62,7 +62,8 @@ class Assets
                 'route_path' => parse_url(admin_url(), PHP_URL_PATH),
                 'exists_links_json' => BETTERLINKS_EXISTS_LINKS_JSON,
                 'exists_clicks_json' => BETTERLINKS_EXISTS_CLICKS_JSON,
-                'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : ''
+                'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '',
+                'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
             ]);
         }
         wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
@@ -96,6 +97,7 @@ class Assets
             'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
             'site_url' => site_url(),
             'route_path' => parse_url(admin_url(), PHP_URL_PATH),
+            'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
         ]);
         wp_set_script_translations('betterlinks-gutenberg', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
     }

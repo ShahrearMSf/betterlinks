@@ -9,7 +9,7 @@ import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged } from 'utils/helper';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled } from 'utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
@@ -150,8 +150,15 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 										classNamePrefix="btl-react-select"
 										id="redirect_type"
 										name="redirect_type"
-										value={redirectType}
-										defaultValue={settings.redirect_type}
+										setUpgradeToProModal={setUpgradeToProModal}
+										value={[
+											...redirectType,
+											{
+												value: is_pro_enabled ? 'cloak' : 'pro',
+												label: __('Cloaked', 'betterlinks'),
+											},
+										]}
+										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}
 									/>
@@ -204,7 +211,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 								</div>
 							</span>
 
-							<span className="btl-form-group btl-form-group--top">
+							<span className="btl-form-group btl-form-group--make-center">
 								<label className="btl-form-label">{__('Random URL Slug', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
@@ -214,6 +221,22 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
 												<span className="btl-tooltiptext">{__('This will randomly generate strings for your shortened URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group btl-form-group--make-center">
+								<label className="btl-form-label">{__('Case Sensitivity', 'betterlinks')}</label>
+								<div className="link-options__body" style={{ flexDirection: 'column' }}>
+									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
+										<Field type="checkbox" className="btl-check" name="is_case_sensitive" />
+										<span className="text">
+											{__('Enable Case Sensitive Links', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will make your shortened URLs case sensitive', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>

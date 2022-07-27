@@ -92,7 +92,7 @@ class Elementor {
 		$controls->start_controls_section(
 			'bl_instant_redirect_section',
 			[
-				'label' => sprintf( '<i class="btl btl-logo"></i> %s', __( 'BetterLinks Logo', 'betterlinks' ), __( 'BetterLinks Instant Redirect', 'betterlinks' ) ),
+				'label' => sprintf( '<i class="btl btl-logo"></i> %s', __( 'BetterLinks Instant Redirect', 'betterlinks' ) ),
 				'tab'   => Controls_Manager::TAB_SETTINGS,
 			]
 		);
@@ -130,6 +130,7 @@ class Elementor {
 					'307' => esc_html__( '307 (Temporary)', 'betterlinks' ),
 					'302' => esc_html__( '302 (Temporary)', 'betterlinks' ),
 					'301' => esc_html__( '301 (Permanent)', 'betterlinks' ),
+					'cloak' => esc_html__( 'Cloaked', 'betterlinks' ),
 				],
 				'condition' => [
 					'bl_ir_active' => 'yes'

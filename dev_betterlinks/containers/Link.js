@@ -8,7 +8,7 @@ import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url } from 'utils/helper';
+import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
 import Tags from 'components/Terms/Tags';
@@ -234,7 +234,21 @@ const Link = (props) => {
 										<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
 											{__('Redirect Type', 'betterlinks')}
 										</label>
-										<Select id="redirect_type" name="redirect_type" value={redirectType} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} isMulti={false} />
+										<Select
+											id="redirect_type"
+											name="redirect_type"
+											value={[
+												...redirectType,
+												{
+													value: is_pro_enabled ? 'cloak' : 'pro',
+													label: __('Cloaked', 'betterlinks'),
+												},
+											]}
+											setUpgradeToProModal={setUpgradeToProModal}
+											setFieldValue={props.setFieldValue}
+											disabled={isDisableLinkFormEditView}
+											isMulti={false}
+										/>
 									</div>
 									<div className="btl-modal-form-group btl-has-utm-button">
 										<label className="btl-modal-form-label btl-required" htmlFor="target_url">

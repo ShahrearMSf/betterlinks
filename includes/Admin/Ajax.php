@@ -515,12 +515,19 @@ class Ajax
         }
         $response = \BetterLinks\Helper::fresh_ajax_request_data($_POST);
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
+        update_option(
+            BETTERLINKS_AUTOLINK_OPTION_NAME,
+            [
+                "is_show_icon" => isset($response["is_autolink_icon"]) ? $response["is_autolink_icon"] : false,
+                "is_autolink_in_heading" => isset($response["is_autolink_headings"]) ? $response["is_autolink_headings"] : false,
+            ]
+        );
         $response = json_encode($response);
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
         }
         // regenerate links for wildcards option update
-        \BetterLinks\Helper::create_cron_jobs_for_json_links();
+        \BetterLinks\Helper::write_links_inside_json(); // it's better to write the links instantly here than scheduling/corning it
         wp_send_json_success(
             $response,
             200
