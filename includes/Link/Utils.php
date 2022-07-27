@@ -10,7 +10,9 @@ class Utils
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
             return apply_filters('betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file($slug));
         }
-        $results = current(\BetterLinks\Helper::get_link_by_short_url($slug));
+        $link_options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME, '{}'), true);
+        $is_case_sensitive = isset($link_options['is_case_sensitive']) ? $link_options['is_case_sensitive'] : false;
+        $results = current(\BetterLinks\Helper::get_link_by_short_url($slug, $is_case_sensitive));
         if (!empty($results)) {
             return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($results), true));
         }

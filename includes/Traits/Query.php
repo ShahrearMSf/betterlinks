@@ -140,17 +140,14 @@ trait Query
         $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
         return $results;
     }
-    public static function get_link_by_short_url($short_url)
+    public static function get_link_by_short_url($short_url, $is_case_sensitive = false)
     {
         global $wpdb;
         $link = $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
             ARRAY_A
         );
-        $link_options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME, '{}'), true);
-        if (isset($link[0]['short_url']) && isset($link_options['is_case_sensitive']) && $link_options['is_case_sensitive'] && $link[0]['short_url'] != $short_url) {
-            return [];
-        }
+        if (isset($link[0]['short_url']) && $is_case_sensitive && $link[0]['short_url'] != $short_url) return [];
         return $link;
     }
     public static function get_link_by_wildcards($wildcards)
