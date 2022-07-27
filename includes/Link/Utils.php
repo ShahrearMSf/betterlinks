@@ -24,7 +24,13 @@ class Utils
                 foreach ($results as $key => $item) {
                     $postion = strpos($item['short_url'], '/*');
                     if ($postion !== false) {
-                        if (substr($item['short_url'], 0, $postion) == substr($slug, 0, $postion)) {
+                        $item_short_url_substr = substr($item['short_url'], 0, $postion);
+                        $slug_substr = substr($slug, 0, $postion);
+                        if(!$is_case_sensitive){
+                            $item_short_url_substr = strtolower($item_short_url_substr);
+                            $slug_substr = strtolower($slug_substr);
+                        }
+                        if ($item_short_url_substr == $slug_substr) {
                             $target_postion = strpos($item['target_url'], '/*');
                             if ($target_postion !== false) {
                                 $target_url = str_replace('/*', substr($slug, $postion), $item['target_url']);
