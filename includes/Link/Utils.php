@@ -10,9 +10,10 @@ class Utils
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
             return apply_filters('betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file($slug));
         }
-        $results = current(\BetterLinks\Helper::get_link_by_short_url($slug));
-        if (!empty($results)) {
-            return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($results), true));
+
+        $db_link_by_short_url = \BetterLinks\Helper::get_link_by_short_url($slug);
+        if (is_array($db_link_by_short_url) && !empty(current($db_link_by_short_url))) {
+            return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode(current($db_link_by_short_url)), true));
         }
         // wildcards
         $links_option = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);

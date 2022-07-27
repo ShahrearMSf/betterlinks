@@ -147,6 +147,10 @@ trait Query
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks WHERE short_url=%s", $short_url),
             ARRAY_A
         );
+        $link_options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME, '{}'), true);
+        if (isset($link[0]['short_url']) && isset($link_options['is_case_sensitive']) && $link_options['is_case_sensitive'] && $link[0]['short_url'] != $short_url) {
+            return false;
+        }
         return $link;
     }
     public static function get_link_by_wildcards($wildcards)
