@@ -1,5 +1,11 @@
 const { __ } = wp.i18n;
-const { RichTextToolbarButton } = wp.blockEditor;
+const { create, insert, isCollapsed, applyFormat, useAnchorRef, removeFormat, slice, replace } = wp.richText;
+const { useState, useRef, useMemo, createInterpolateElement } = wp.element;
+const { Popover, Button, ToggleControl, TextControl } = wp.components;
+const { RichTextToolbarButton, URLPopover } = wp.blockEditor;
+const { useSelect } = wp.data;
+const { getRectangleFromRange } = wp.dom;
+import { keyboardReturn } from '@wordpress/icons';
 
 import { betterlinksIcon } from './icon';
 
@@ -15,5 +21,88 @@ export const betterlinksFormat = {
 		url: 'href',
 		target: 'target',
 	},
-	edit: ({ isActive }) => <RichTextToolbarButton icon={betterlinksIcon} title={title} isActive={isActive} />,
+	edit: ({ isActive, contentRef, value, onChange }) => {
+		console.log('---betterlinks/link-format edit:', { isActive });
+
+		const onClick = () => {
+			setVisiblility(true);
+		};
+
+		const [isVisible, setVisiblility] = useState(false);
+		const [url, setUrl] = useState('');
+
+		const close = () => setVisiblility(false);
+		const setTarget = () => {};
+
+		const handleSubmit = (e) => {
+			console.log('----handleSubmit', { e });
+			e.preventDefault();
+			close();
+			//
+			onChange(
+				applyFormat(value, {
+					type: 'core/link',
+					attributes: {
+						url: 'alexa.com',
+						rel: 'nofollow noindex sponsored noreferrer noopener',
+						target: '_blank',
+						'aria-label': 'alexa (opens in new tab)',
+					},
+				})
+			);
+		};
+
+		const handleUrlInputChange = (e) => {
+			console.log('---handleUrlInputChange:', { e });
+			setUrl(e);
+		};
+
+		const anchorRect = useMemo(() => {
+			const selection = window.getSelection();
+			const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+			if (!range) {
+				return false;
+			}
+
+			if (isVisible) {
+				return getRectangleFromRange(range);
+			}
+
+			let element = range.startContainer;
+
+			// If the caret is right before the element, select the next element.
+			element = element.nextElementSibling || element;
+
+			while (element.nodeType !== window.Node.ELEMENT_NODE) {
+				element = element.parentNode;
+			}
+
+			const closest = element.closest('a');
+			if (closest) {
+				return closest.getBoundingClientRect();
+			}
+		}, [isVisible, value.start, value.end]);
+
+		return (
+			<>
+				<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} isActive={isActive} />
+
+				{isVisible && (
+					<>
+						<URLPopover
+							//
+							anchorRect={anchorRect}
+							onClose={close}
+							renderSettings={() => <ToggleControl label={__('Open in new tab')} onChange={setTarget} />}
+						>
+							<form onSubmit={handleSubmit}>
+								<TextControl value={url} onChange={handleUrlInputChange} />
+								<Button icon={keyboardReturn} label={__('Apply')} type="submit" />
+							</form>
+						</URLPopover>
+					</>
+				)}
+			</>
+		);
+	},
 };
