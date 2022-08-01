@@ -1,6 +1,6 @@
-.btl-link-generator{
-  margin-top: 12px!important;
-  margin-bottom: 10px!important;
+.btl-link-generator {
+	margin-top: 12px !important;
+	margin-bottom: 10px !important;
 }
 .betterlinks-instant-redirect {
 	.betterlinks-instant-redirect-form-group {
@@ -22,10 +22,10 @@
 				transform: translateY(-10px);
 			}
 		}
-    input[type="checkbox"]{
-      margin-top: 2px;
-      background: #ddd;
-    }
+		input[type='checkbox'] {
+			margin-top: 2px;
+			background: #ddd;
+		}
 		&:not(:last-child) {
 			margin-bottom: 10px;
 		}
@@ -35,30 +35,30 @@
 	}
 }
 .betterlinks-upgradetopro {
-  text-align: center;
-  h3 {
-    color: rgba(0,0,0,.65);
-    font-weight: 600;
-    font-size: 27px;
-  }
-  p {
-    a {
-      color: #e64942;
-      font-weight: 600;
-    }
-  }
-  .btn-close {
-    background: #e64942;
-    color: #fff;
-    padding: 10px 20px;
-    border: 0;
-    border-radius: 4px;
-    cursor: pointer;
-    float: right;
-  }
+	text-align: center;
+	h3 {
+		color: rgba(0, 0, 0, 0.65);
+		font-weight: 600;
+		font-size: 27px;
+	}
+	p {
+		a {
+			color: #e64942;
+			font-weight: 600;
+		}
+	}
+	.btn-close {
+		background: #e64942;
+		color: #fff;
+		padding: 10px 20px;
+		border: 0;
+		border-radius: 4px;
+		cursor: pointer;
+		float: right;
+	}
 }
-.ReactModal__Content{
-  padding: 60px!important;
+.ReactModal__Content {
+	padding: 60px !important;
 	width: 60%;
 	@media screen and (max-width: 1599px) {
 		width: 75%;
