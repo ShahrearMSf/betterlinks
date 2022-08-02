@@ -10,7 +10,9 @@ class Utils
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
             return apply_filters('betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file($slug));
         }
-        $results = current(\BetterLinks\Helper::get_link_by_short_url($slug));
+        $link_options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME, '{}'), true);
+        $is_case_sensitive = isset($link_options['is_case_sensitive']) ? $link_options['is_case_sensitive'] : false;
+        $results = current(\BetterLinks\Helper::get_link_by_short_url($slug, $is_case_sensitive));
         if (!empty($results)) {
             return apply_filters('betterlinks/link/get_link_by_slug', json_decode(json_encode($results), true));
         }
@@ -22,7 +24,13 @@ class Utils
                 foreach ($results as $key => $item) {
                     $postion = strpos($item['short_url'], '/*');
                     if ($postion !== false) {
-                        if (substr($item['short_url'], 0, $postion) == substr($slug, 0, $postion)) {
+                        $item_short_url_substr = substr($item['short_url'], 0, $postion);
+                        $slug_substr = substr($slug, 0, $postion);
+                        if(!$is_case_sensitive){
+                            $item_short_url_substr = strtolower($item_short_url_substr);
+                            $slug_substr = strtolower($slug_substr);
+                        }
+                        if ($item_short_url_substr == $slug_substr) {
                             $target_postion = strpos($item['target_url'], '/*');
                             if ($target_postion !== false) {
                                 $target_url = str_replace('/*', substr($slug, $postion), $item['target_url']);
