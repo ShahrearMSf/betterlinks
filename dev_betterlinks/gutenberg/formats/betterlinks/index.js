@@ -50,6 +50,7 @@ export const betterlinksFormat = {
 					},
 				})
 			);
+			setUrl('');
 		};
 
 		const handleUrlInputChange = (e) => {
@@ -93,7 +94,7 @@ export const betterlinksFormat = {
 							//
 							anchorRect={anchorRect}
 							onClose={close}
-							renderSettings={() => <ToggleControl label={__('Open in new tab')} onChange={setTarget} />}
+							renderSettings={() => <ToggleControl label={__(`Hanzala's Open in new tab`)} onChange={setTarget} />}
 						>
 							<form onSubmit={handleSubmit}>
 								<TextControl value={url} onChange={handleUrlInputChange} />
