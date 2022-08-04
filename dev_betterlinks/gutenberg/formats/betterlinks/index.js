@@ -1,3 +1,4 @@
+//
 const { __ } = wp.i18n;
 const { create, insert, isCollapsed, applyFormat, useAnchorRef, removeFormat, slice, replace } = wp.richText;
 const { useState, useRef, useMemo, createInterpolateElement } = wp.element;
@@ -7,6 +8,11 @@ const { useSelect } = wp.data;
 const { getRectangleFromRange } = wp.dom;
 import { keyboardReturn } from '@wordpress/icons';
 
+// redux imports
+import { gutenStore } from 'redux/store';
+import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+
+//
 import { betterlinksIcon } from './icon';
 
 const name = 'betterlinks/link-format';
@@ -25,7 +31,14 @@ export const betterlinksFormat = {
 		console.log('---betterlinks/link-format edit:', { isActive });
 
 		const onClick = () => {
+			//
 			setVisiblility(true);
+			const state = gutenStore.getState();
+			console.log('----getState inside onClick of betterlinksFormat', { gutenStore, state });
+			if (!state?.links?.links) {
+				console.log('----Links paay naai so trying again inside onClick of betterlinksFormat', { gutenStore, state });
+				fetch_links_data()(gutenStore.dispatch);
+			}
 		};
 
 		const [isVisible, setVisiblility] = useState(false);

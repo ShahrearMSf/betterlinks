@@ -8,3 +8,7 @@ import keywords from 'redux/reducers/keywords.reducers';
 import postdatas from 'redux/reducers/posttypesdata.reducers';
 
 export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas });
+
+export const gutenbergReducers = combineReducers({
+	links,
+});
