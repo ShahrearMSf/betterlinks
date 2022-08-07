@@ -8,6 +8,9 @@ const { useSelect } = wp.data;
 const { getRectangleFromRange } = wp.dom;
 import { keyboardReturn } from '@wordpress/icons';
 
+// external library imports
+import reactStringReplace from 'react-string-replace';
+
 // redux imports
 import { gutenStore } from 'redux/store';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
@@ -34,6 +37,8 @@ export const betterlinksFormat = {
 		const [gutenStoreLinks, setgutenStoreLinks] = useState([]);
 		const [isVisible, setVisiblility] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
+		const [matchedLinks, setMatchedLinks] = useState([]);
+		const [matchedLinksJsx, setMatchedLinksJsx] = useState(null);
 
 		const onClick = () => {
 			setVisiblility(true);
@@ -58,6 +63,8 @@ export const betterlinksFormat = {
 		const close = () => {
 			setVisiblility(false);
 			setSearchedText('');
+			setMatchedLinks([]);
+			setMatchedLinksJsx(null);
 		};
 		const setTarget = () => {};
 
@@ -78,9 +85,59 @@ export const betterlinksFormat = {
 			);
 		};
 
+		const handleMatchedLiClick = (shortUrl) => {
+			console.log('site url:----', betterLinksGlobal.site_url);
+		};
+
 		const handleUrlInputChange = (value) => {
 			console.log('---handleUrlInputChange:', { value });
 			setSearchedText(value);
+			const spacesRemoved = value.replace(/\s+/g, '');
+			if (spacesRemoved.length < 1) {
+				return setMatchedLinks([]);
+			}
+			const regex = new RegExp(
+				// wrapped 'inputValue' with parenthesis to use regex capturegroup and use it later inside 'string.replace' function like: '$1'
+				`(${value})`,
+				'gi'
+			);
+			const matchedLinks = gutenStoreLinks.filter(
+				(item) => regex.test(item.link_title)
+				// || regex.test(item.short_url)
+			);
+			setMatchedLinks(matchedLinks);
+
+			setMatchedLinksJsx(
+				matchedLinks.map((item, index) => {
+					const title = reactStringReplace(item.link_title, regex, (match, i) => (
+						<span key={i} className="hl">
+							{match}
+						</span>
+					));
+					// const shortUrl = reactStringReplace(item.short_url, regex, (match, i) => (
+					// 	<span key={i} class="hl">
+					// 		{match}
+					// 	</span>
+					// ));
+					return (
+						<li
+							index={index}
+							key={item.ID}
+							onClick={() => {
+								handleMatchedLiClick(item.short_url);
+							}}
+							className={`betterlinks-suggessted-link-li `}
+						>
+							{title}
+							{
+								// shortUrl
+							}
+						</li>
+					);
+				})
+			);
+
+			console.log('---handleUrlInputChange', { matchedLinks });
 		};
 
 		const anchorRect = useMemo(() => {
@@ -118,7 +175,9 @@ export const betterlinksFormat = {
 				<style>{`
 
 
-
+li.betterlinks-suggessted-link-li{
+	padding: 5px 0;
+}
 
 				`}</style>
 
@@ -150,6 +209,7 @@ export const betterlinksFormat = {
 									value={searchedText}
 									onChange={handleUrlInputChange}
 								/>
+
 								<Button
 									//
 									className="btl-submit-button"
@@ -158,6 +218,11 @@ export const betterlinksFormat = {
 									type="submit"
 								/>
 							</form>
+							{matchedLinks.length > 0 && (
+								<Popover position="bottom" noArrow focusOnMount={false}>
+									<ul className="betterlinks-suggessions-wrapper">{matchedLinksJsx}</ul>
+								</Popover>
+							)}
 						</URLPopover>
 					</div>
 				)}
