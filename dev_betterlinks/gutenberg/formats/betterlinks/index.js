@@ -76,22 +76,26 @@ export const betterlinksFormat = {
 			}
 
 			if (isVisible) {
-				return getRectangleFromRange(range);
+				const elRectFromRange = getRectangleFromRange(range);
+				console.log({ elRectFromRange });
+				return elRectFromRange;
 			}
 
-			let element = range.startContainer;
+			console.log("----'if isVisible' checked out to be false");
 
-			// If the caret is right before the element, select the next element.
-			element = element.nextElementSibling || element;
+			// let element = range.startContainer;
 
-			while (element.nodeType !== window.Node.ELEMENT_NODE) {
-				element = element.parentNode;
-			}
+			// // If the caret is right before the element, select the next element.
+			// element = element.nextElementSibling || element;
 
-			const closest = element.closest('a');
-			if (closest) {
-				return closest.getBoundingClientRect();
-			}
+			// while (element.nodeType !== window.Node.ELEMENT_NODE) {
+			// 	element = element.parentNode;
+			// }
+
+			// const closest = element.closest('a');
+			// if (closest) {
+			// 	return closest.getBoundingClientRect();
+			// }
 		}, [isVisible, value.start, value.end]);
 
 		return (
