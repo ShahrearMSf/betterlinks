@@ -40,7 +40,7 @@ export const betterlinksFormat = {
 		};
 
 		const [isVisible, setVisiblility] = useState(false);
-		const [url, setUrl] = useState('');
+		const [searchedText, setSearchedText] = useState('');
 
 		const close = () => setVisiblility(false);
 		const setTarget = () => {};
@@ -60,12 +60,12 @@ export const betterlinksFormat = {
 					},
 				})
 			);
-			setUrl('');
+			setSearchedText('');
 		};
 
-		const handleUrlInputChange = (e) => {
-			console.log('---handleUrlInputChange:', { e });
-			setUrl(e);
+		const handleUrlInputChange = (value) => {
+			console.log('---handleUrlInputChange:', { value });
+			setSearchedText(value);
 		};
 
 		const anchorRect = useMemo(() => {
@@ -132,7 +132,7 @@ export const betterlinksFormat = {
 								<TextControl
 									//
 									className="btl-url-search-field"
-									value={url}
+									value={searchedText}
 									onChange={handleUrlInputChange}
 								/>
 								<Button
