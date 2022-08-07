@@ -13,8 +13,10 @@ import { betterlinksFormat } from 'gutenberg/formats';
 
 // Redux Works
 const state = gutenStore.getState();
-console.log('----redux gutenStore in gutenberg', { gutenStore, state });
-fetch_links_data()(gutenStore.dispatch);
+const fetchedData = fetch_links_data()(gutenStore.dispatch)
+	.then((res) => console.log('fetched all links', { res }))
+	.catch((err) => console.log({ err }));
+console.log('----redux gutenStore in gutenberg', { gutenStore, state, fetchedData });
 
 gutenStore.subscribe(() => {
 	const state = gutenStore.getState();

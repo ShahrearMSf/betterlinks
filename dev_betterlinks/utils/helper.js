@@ -364,3 +364,9 @@ export const parseLinksForUpdateModal = (data) =>
 				.reduce((acc, curr) => [...acc, ...curr.lists], [])
 				.map((item) => ({ value: item.ID, label: item.link_title }))
 		: [];
+
+export const makeAllLinksArr = (store) =>
+	store?.getState()?.links?.links
+		? Object.values(store?.getState()?.links?.links).reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
+		: // if all links are not fetched properly then return false
+		  false;

@@ -12,8 +12,9 @@ import { keyboardReturn } from '@wordpress/icons';
 import { gutenStore } from 'redux/store';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 
-// other imports
+// local imports
 import { betterlinksIcon } from './icon';
+import { makeAllLinksArr } from 'utils/helper';
 
 const name = 'betterlinks/link-format';
 const title = __('Betterlinks');
@@ -29,20 +30,35 @@ export const betterlinksFormat = {
 	},
 	edit: ({ isActive, contentRef, value, onChange }) => {
 		console.log('---betterlinks/link-format edit:', { isActive });
-		const onClick = () => {
-			setVisiblility(true);
-			const state = gutenStore.getState();
-			console.log('----getState inside onClick of betterlinksFormat', { gutenStore, state });
-			if (!state?.links?.links) {
-				console.log('----Links paay naai so trying again inside onClick of betterlinksFormat', { gutenStore, state });
-				fetch_links_data()(gutenStore.dispatch);
-			}
-		};
 
+		const [gutenStoreLinks, setgutenStoreLinks] = useState([]);
 		const [isVisible, setVisiblility] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 
-		const close = () => setVisiblility(false);
+		const onClick = () => {
+			setVisiblility(true);
+
+			const allLinksArr = makeAllLinksArr(gutenStore);
+			if (allLinksArr) {
+				return setgutenStoreLinks(allLinksArr);
+			}
+
+			fetch_links_data()(gutenStore.dispatch)
+				.then(() => {
+					const allLinksArr = makeAllLinksArr(gutenStore);
+					if (allLinksArr) {
+						return setgutenStoreLinks(allLinksArr);
+					}
+				})
+				.catch((err) => console.log({ err }));
+		};
+
+		console.log({ gutenStoreLinks });
+
+		const close = () => {
+			setVisiblility(false);
+			setSearchedText('');
+		};
 		const setTarget = () => {};
 
 		const handleSubmit = (e) => {
@@ -60,7 +76,6 @@ export const betterlinksFormat = {
 					},
 				})
 			);
-			setSearchedText('');
 		};
 
 		const handleUrlInputChange = (value) => {
