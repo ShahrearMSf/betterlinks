@@ -70,3 +70,34 @@
 		padding: 20px !important;
 	}
 }
+
+//
+// gutenberg richtext 'betterlinks format' css -> start
+.btl-url-popover-slot {
+	& > .components-popover__content {
+		box-shadow: rgb(36 36 36 / 10%) 0px 0px 20px;
+	}
+
+	form.btl-links-search-form {
+		display: flex;
+
+		.btl-url-search-field {
+			width: 300px;
+
+			& > .components-base-control__field {
+				margin: 0;
+			}
+
+			button.btl-submit-button {
+				padding: 5px 0;
+			}
+
+			input.components-text-control__input {
+				padding: 10px;
+				border: 1px solid #ccc;
+				margin: 0;
+			}
+		}
+	}
+}
+// gutenberg richtext 'betterlinks format' css -> end

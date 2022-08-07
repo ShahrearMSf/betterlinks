@@ -1,4 +1,4 @@
-//
+// wordpress imports
 const { __ } = wp.i18n;
 const { create, insert, isCollapsed, applyFormat, useAnchorRef, removeFormat, slice, replace } = wp.richText;
 const { useState, useRef, useMemo, createInterpolateElement } = wp.element;
@@ -12,7 +12,7 @@ import { keyboardReturn } from '@wordpress/icons';
 import { gutenStore } from 'redux/store';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 
-//
+// other imports
 import { betterlinksIcon } from './icon';
 
 const name = 'betterlinks/link-format';
@@ -29,9 +29,7 @@ export const betterlinksFormat = {
 	},
 	edit: ({ isActive, contentRef, value, onChange }) => {
 		console.log('---betterlinks/link-format edit:', { isActive });
-
 		const onClick = () => {
-			//
 			setVisiblility(true);
 			const state = gutenStore.getState();
 			console.log('----getState inside onClick of betterlinksFormat', { gutenStore, state });
@@ -51,7 +49,6 @@ export const betterlinksFormat = {
 			console.log('----handleSubmit', { e });
 			e.preventDefault();
 			close();
-			//
 			onChange(
 				applyFormat(value, {
 					type: 'core/link',
@@ -99,22 +96,51 @@ export const betterlinksFormat = {
 
 		return (
 			<>
+				<style>{`
+
+
+
+
+				`}</style>
+
 				<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} isActive={isActive} />
 
 				{isVisible && (
-					<>
+					<div className="betterlinks-links-popover-wrapper">
 						<URLPopover
-							//
+							className="btl-url-popover-slot"
 							anchorRect={anchorRect}
 							onClose={close}
-							renderSettings={() => <ToggleControl label={__(`Hanzala's Open in new tab`)} onChange={setTarget} />}
+							renderSettings={() => {
+								return (
+									<>
+										<ToggleControl
+											//
+											className="btl-open-in-new-tab"
+											label={__(`Hanzala's Open in new tab`)}
+											onChange={setTarget}
+										/>
+									</>
+								);
+							}}
 						>
-							<form onSubmit={handleSubmit}>
-								<TextControl value={url} onChange={handleUrlInputChange} />
-								<Button icon={keyboardReturn} label={__('Apply')} type="submit" />
+							<form className="btl-links-search-form" onSubmit={handleSubmit}>
+								<TextControl
+									//
+									className="btl-url-search-field"
+									value={url}
+									onChange={handleUrlInputChange}
+								/>
+								<Button
+									//
+									className="btl-submit-button"
+									icon={keyboardReturn}
+									label={__('Apply')}
+									type="submit"
+								/>
 							</form>
 						</URLPopover>
-					</>
+					</div>
 				)}
 			</>
 		);
