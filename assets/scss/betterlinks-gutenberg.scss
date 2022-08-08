@@ -112,19 +112,20 @@
 	}
 }
 
-ul.betterlinks-suggessions-wrapper {
+ul.betterlinks-suggessions-wrapper-ul {
 	margin: 0;
 	padding: 10px 0;
 	width: 300px;
 }
 
-ul.betterlinks-suggessions-wrapper li.betterlinks-suggessted-link-li {
+ul.betterlinks-suggessions-wrapper-ul li.betterlinks-suggessted-link-li {
 	cursor: pointer;
 	margin: 0;
 	padding: 5px 10px;
 }
 
-ul.betterlinks-suggessions-wrapper li.betterlinks-suggessted-link-li:hover {
+ul.betterlinks-suggessions-wrapper-ul li.betterlinks-suggessted-link-li:hover,
+ul.betterlinks-suggessions-wrapper-ul li.betterlinks-suggessted-link-li.active {
 	background-color: #e3e3e3;
 }
 
@@ -149,6 +150,11 @@ body.betterlinks-formatting-enabled {
 
 	.interface-interface-skeleton__body {
 		z-index: 33 !important;
+	}
+
+	#adminmenuback,
+	#adminmenuwrap {
+		z-index: 0 !important;
 	}
 }
 // gutenberg richtext 'betterlinks format' css -> end

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ReactReduxContext } from 'react-redux';
 
 export const {
 	betterlinks_nonce,
@@ -370,3 +371,25 @@ export const makeAllLinksArr = (store) =>
 		? Object.values(store?.getState()?.links?.links).reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
 		: // if all links are not fetched properly then return false
 		  false;
+
+export const makeLinkFormat = ({ url, linkTarget }) => {
+	const attributes = { url };
+
+	if (linkTarget) {
+		attributes.target = '_blank';
+	}
+
+	const result = {
+		type: 'core/link',
+		attributes,
+	};
+
+	console.log('+=+=+=----makeLinkTargetFIred', result);
+
+	// if (nofollow) {
+	// 	attributes.rel = 'nofollow';
+	// }
+	// rel: 'nofollow noindex sponsored noreferrer noopener',
+
+	return result;
+};

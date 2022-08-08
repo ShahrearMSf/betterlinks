@@ -18,7 +18,7 @@ import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, dele
 
 // local imports
 import { betterlinksIcon } from './icon';
-import { makeAllLinksArr } from 'utils/helper';
+import { makeAllLinksArr, makeLinkFormat } from 'utils/helper';
 
 const name = 'betterlinks/link-format';
 const title = __('Betterlinks');
@@ -39,30 +39,47 @@ export const betterlinksFormat = {
 		const [isVisible, setVisiblility] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
-		const [matchedLinksJsx, setMatchedLinksJsx] = useState(null);
-		const [selectedIndex, setSelectedIndex] = useState(0);
+		const [selectedIndex, setSelectedIndex] = useState(null);
+		const [regex, setRegex] = useState(false);
+
+		const [linkTarget, setLinkTarget] = useState(false);
+
+		const matchedLinksUl = useRef(null);
 
 		useEffect(() => {
-			//  if needed to scroll to found elements popover ul -> start
-			//
-			// const scrollableFoundItems = document.querySelector('.btl-url-popover-slot + .components-popover .components-popover__content');
-			// const firstLiOffsetTop = scrollableFoundItems.querySelector('li:first-child')?.OffsetTop;
-			// const lastLiOffsetTop = scrollableFoundItems.querySelector('li:last-child')?.OffsetTop;
-			// //
-			// scrollableFoundItems.scrollTop = firstLiOffsetTop;
-			// scrollableFoundItems.scrollTop = lastLiOffsetTop;
-			//
-			//  if needed to scroll to found elements popover ul -> end
+			const matchedLinksDomUl = matchedLinksUl?.current;
+			if (!matchedLinksDomUl && selectedIndex === null) return () => {};
 
-			//
-			document.body.classList.add('betterlinks-formatting-enabled');
+			const allLi = matchedLinksDomUl.querySelectorAll(`li`);
+			const selectedLi = matchedLinksDomUl.querySelector(`li.betterlinks-suggessted-link-li-${selectedIndex}`);
+			for (const item of allLi) {
+				item.classList.remove('active');
+			}
+			selectedLi.classList.add('active');
+
+			// to scroll to the selected item
+			// when number of matched items are
+			// too much to fit inside the screen
+			// ---start---
+			const scrollableFoundItems = matchedLinksDomUl.closest('.betterlinks-suggession-popover .components-popover__content');
+			const offsetTopOfTheLi = selectedLi?.offsetTop;
+			scrollableFoundItems.scrollTop = offsetTopOfTheLi;
+			// ---END---
+		}, [selectedIndex]);
+
+		useEffect(() => {
+			if (isVisible) {
+				document.body.classList.add('betterlinks-formatting-enabled');
+			} else {
+				document.body.classList.remove('betterlinks-formatting-enabled');
+			}
 			return () => {
 				document.body.classList.remove('betterlinks-formatting-enabled');
 			};
 		}, [isVisible]);
 
 		useEffect(() => {
-			setSelectedIndex(0);
+			setSelectedIndex(null);
 		}, [matchedLinks]);
 
 		const onClick = () => {
@@ -83,31 +100,17 @@ export const betterlinksFormat = {
 				.catch((err) => console.log({ err }));
 		};
 
-		console.log({ gutenStoreLinks, selectedIndex });
-
 		const close = () => {
 			setVisiblility(false);
 			setSearchedText('');
 			setMatchedLinks([]);
-			setMatchedLinksJsx(null);
-			setSelectedIndex(false);
+			setSelectedIndex(null);
 		};
-		const setTarget = () => {};
 
 		const handleSubmit = (e) => {
 			console.log('----handleSubmit', { e });
 			e.preventDefault();
-			onChange(
-				applyFormat(value, {
-					type: 'core/link',
-					attributes: {
-						url: searchedText,
-						rel: 'nofollow noindex sponsored noreferrer noopener',
-						target: '_blank',
-						'aria-label': 'alexa (opens in new tab)',
-					},
-				})
-			);
+			onChange(applyFormat(value, makeLinkFormat({ url: searchedText, linkTarget })));
 			close();
 		};
 
@@ -119,11 +122,14 @@ export const betterlinksFormat = {
 
 		const handleUrlInputChange = (e) => {
 			const value = e?.target?.value;
-			console.log('---handleUrlInputChange:', { e, value });
 			setSearchedText(value || '');
 			const spacesRemoved = value.replace(/\s+/g, '');
+			console.log('---handleUrlInputChange:', { e, value, spacesRemoved });
 			if (spacesRemoved.length < 2) {
-				return setMatchedLinks([]);
+				console.log('---less than 2:', { e, value, spacesRemoved });
+				setMatchedLinks([]);
+				setRegex(false);
+				return false;
 			}
 			const regex = new RegExp(
 				// wrapped 'inputValue' with parenthesis to use regex capturegroup and use it later inside 'string.replace' function like: '$1'
@@ -134,44 +140,8 @@ export const betterlinksFormat = {
 				(item) => regex.test(item.link_title)
 				// || regex.test(item.short_url)
 			);
+			setRegex(regex);
 			setMatchedLinks(matchedLinks);
-
-			setMatchedLinksJsx(
-				matchedLinks.map((item, index) => {
-					const title = reactStringReplace(
-						// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
-						new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
-						regex,
-						(match, i) => {
-							return (
-								<span key={i} className="hl">
-									{match}
-								</span>
-							);
-						}
-					);
-					// const shortUrl = reactStringReplace(item.short_url, regex, (match, i) => (
-					// 	<span key={i} class="hl">
-					// 		{match}
-					// 	</span>
-					// ));
-					return (
-						<li
-							index={index + 1}
-							key={item.ID}
-							onClick={() => {
-								handleMatchedLiClick(item.short_url);
-							}}
-							className={`betterlinks-suggessted-link-li `}
-						>
-							{title}
-							{
-								// shortUrl
-							}
-						</li>
-					);
-				})
-			);
 
 			console.log('---handleUrlInputChange', { matchedLinks });
 		};
@@ -211,23 +181,52 @@ export const betterlinksFormat = {
 			console.log('----handleKeyDown', { e });
 			e.stopPropagation();
 			const matchedLinksCount = matchedLinks.length;
-			if (matchedLinksCount < 1) return false;
+			if (matchedLinksCount < 1) return setSelectedIndex(null);
 
 			switch (e.keyCode) {
 				case UP: {
-					//
+					const prevIndex = typeof selectedIndex === 'number' ? selectedIndex - 1 : matchedLinksCount - 1;
+					setSelectedIndex(prevIndex === -1 ? matchedLinksCount - 1 : prevIndex);
 					break;
 				}
 
 				case DOWN: {
-					//
+					const prevIndex = typeof selectedIndex === 'number' ? selectedIndex + 1 : 0;
+					setSelectedIndex(prevIndex > matchedLinksCount - 1 ? 0 : prevIndex);
 					break;
 				}
 
-				default:
+				case ENTER: {
+					if (typeof selectedIndex === 'number') {
+						const shortUrl = matchedLinks[selectedIndex].short_url;
+						const siteUrl = betterLinksGlobal.site_url;
+						const url = `${siteUrl}/${shortUrl}`;
+						const attributes = { url };
+
+						if (linkTarget) {
+							attributes.target = '_blank';
+						}
+
+						console.log('enter pressed', {
+							shortUrl,
+							siteUrl,
+							url,
+							attributes,
+						});
+
+						// if (nofollow) {
+						// 	attributes.rel = 'nofollow';
+						// }
+						// rel: 'nofollow noindex sponsored noreferrer noopener',
+						setSearchedText(url);
+					}
+
 					break;
+				}
 			}
 		};
+
+		console.log({ gutenStoreLinks, selectedIndex, matchedLinks });
 
 		return (
 			<>
@@ -251,7 +250,7 @@ export const betterlinksFormat = {
 											//
 											className="btl-open-in-new-tab"
 											label={__(`Hanzala's Open in new tab`)}
-											onChange={setTarget}
+											onChange={() => setLinkTarget(!linkTarget)}
 										/>
 									</>
 								);
@@ -267,9 +266,43 @@ export const betterlinksFormat = {
 
 								<input type="text" onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" onKeyDown={handleOnKeyDown} />
 
-								{matchedLinks.length > 0 && (
-									<Popover position="left" focusOnMount={false}>
-										<ul className="betterlinks-suggessions-wrapper">{matchedLinksJsx}</ul>
+								{matchedLinks.length > 0 && regex && (
+									<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
+										<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
+											{matchedLinks.map((item, index) => {
+												const title = reactStringReplace(
+													// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
+													new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
+													regex,
+													(match, i) => {
+														return (
+															<span key={i} className="hl">
+																{match}
+															</span>
+														);
+													}
+												);
+												// const shortUrl = reactStringReplace(item.short_url, regex, (match, i) => (
+												// 	<span key={i} class="hl">
+												// 		{match}
+												// 	</span>
+												// ));
+												return (
+													<li
+														key={item.ID}
+														onClick={() => {
+															handleMatchedLiClick(item.short_url);
+														}}
+														className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
+													>
+														{title}
+														{
+															// shortUrl
+														}
+													</li>
+												);
+											})}
+										</ul>
 									</Popover>
 								)}
 
