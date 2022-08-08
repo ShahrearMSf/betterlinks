@@ -5,6 +5,7 @@ const { useState, useEffect, useRef, useMemo, createInterpolateElement } = wp.el
 const { Popover, Button, ToggleControl, TextControl } = wp.components;
 const { RichTextToolbarButton, URLPopover } = wp.blockEditor;
 const { useSelect } = wp.data;
+const { UP, DOWN, ENTER, TAB, right } = wp.keycodes;
 const { getRectangleFromRange } = wp.dom;
 import { keyboardReturn } from '@wordpress/icons';
 
@@ -39,6 +40,7 @@ export const betterlinksFormat = {
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
 		const [matchedLinksJsx, setMatchedLinksJsx] = useState(null);
+		const [selectedIndex, setSelectedIndex] = useState(0);
 
 		useEffect(() => {
 			//  if needed to scroll to found elements popover ul -> start
@@ -59,6 +61,10 @@ export const betterlinksFormat = {
 			};
 		}, [isVisible]);
 
+		useEffect(() => {
+			setSelectedIndex(0);
+		}, [matchedLinks]);
+
 		const onClick = () => {
 			setVisiblility(true);
 
@@ -77,35 +83,38 @@ export const betterlinksFormat = {
 				.catch((err) => console.log({ err }));
 		};
 
-		console.log({ gutenStoreLinks });
+		console.log({ gutenStoreLinks, selectedIndex });
 
 		const close = () => {
 			setVisiblility(false);
 			setSearchedText('');
 			setMatchedLinks([]);
 			setMatchedLinksJsx(null);
+			setSelectedIndex(false);
 		};
 		const setTarget = () => {};
 
 		const handleSubmit = (e) => {
 			console.log('----handleSubmit', { e });
 			e.preventDefault();
-			close();
 			onChange(
 				applyFormat(value, {
 					type: 'core/link',
 					attributes: {
-						url: 'alexa.com',
+						url: searchedText,
 						rel: 'nofollow noindex sponsored noreferrer noopener',
 						target: '_blank',
 						'aria-label': 'alexa (opens in new tab)',
 					},
 				})
 			);
+			close();
 		};
 
 		const handleMatchedLiClick = (shortUrl) => {
-			console.log('site url:----', betterLinksGlobal.site_url);
+			console.log('site url:----', { betterLinksGlobal, shortUrl });
+			setSearchedText(`${betterLinksGlobal.site_url}/${shortUrl}`);
+			setMatchedLinks([]);
 		};
 
 		const handleUrlInputChange = (e) => {
@@ -148,7 +157,7 @@ export const betterlinksFormat = {
 					// ));
 					return (
 						<li
-							index={index}
+							index={index + 1}
 							key={item.ID}
 							onClick={() => {
 								handleMatchedLiClick(item.short_url);
@@ -197,6 +206,29 @@ export const betterlinksFormat = {
 			// }
 		}, [isVisible, value.start, value.end]);
 
+		const handleOnKeyDown = (e) => {
+			//
+			console.log('----handleKeyDown', { e });
+			e.stopPropagation();
+			const matchedLinksCount = matchedLinks.length;
+			if (matchedLinksCount < 1) return false;
+
+			switch (e.keyCode) {
+				case UP: {
+					//
+					break;
+				}
+
+				case DOWN: {
+					//
+					break;
+				}
+
+				default:
+					break;
+			}
+		};
+
 		return (
 			<>
 				<style>{`
@@ -233,7 +265,7 @@ export const betterlinksFormat = {
 									onChange={handleUrlInputChange}
 								/> */}
 
-								<input type="text" onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" />
+								<input type="text" onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" onKeyDown={handleOnKeyDown} />
 
 								{matchedLinks.length > 0 && (
 									<Popover position="left" focusOnMount={false}>
