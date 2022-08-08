@@ -100,4 +100,33 @@
 		}
 	}
 }
+
+ul.betterlinks-suggessions-wrapper {
+	margin: 0;
+	padding: 10px 0;
+	width: 300px;
+}
+
+ul.betterlinks-suggessions-wrapper li.betterlinks-suggessted-link-li {
+	cursor: pointer;
+	margin: 0;
+	padding: 5px 10px;
+}
+
+ul.betterlinks-suggessions-wrapper li.betterlinks-suggessted-link-li:hover {
+	background-color: #e3e3e3;
+}
+
+.btl-url-popover-slot + .components-popover {
+	margin: 0 !important;
+}
+
+.btl-url-popover-slot + .components-popover > .components-popover__content {
+	margin-left: -18px;
+}
+
+span.hl {
+	color: #222;
+	font-weight: 700;
+}
 // gutenberg richtext 'betterlinks format' css -> end

@@ -93,7 +93,7 @@ export const betterlinksFormat = {
 			console.log('---handleUrlInputChange:', { value });
 			setSearchedText(value);
 			const spacesRemoved = value.replace(/\s+/g, '');
-			if (spacesRemoved.length < 1) {
+			if (spacesRemoved.length < 2) {
 				return setMatchedLinks([]);
 			}
 			const regex = new RegExp(
@@ -109,11 +109,18 @@ export const betterlinksFormat = {
 
 			setMatchedLinksJsx(
 				matchedLinks.map((item, index) => {
-					const title = reactStringReplace(item.link_title, regex, (match, i) => (
-						<span key={i} className="hl">
-							{match}
-						</span>
-					));
+					const title = reactStringReplace(
+						// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
+						new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
+						regex,
+						(match, i) => {
+							return (
+								<span key={i} className="hl">
+									{match}
+								</span>
+							);
+						}
+					);
 					// const shortUrl = reactStringReplace(item.short_url, regex, (match, i) => (
 					// 	<span key={i} class="hl">
 					// 		{match}
@@ -175,10 +182,6 @@ export const betterlinksFormat = {
 				<style>{`
 
 
-li.betterlinks-suggessted-link-li{
-	padding: 5px 0;
-}
-
 				`}</style>
 
 				<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} isActive={isActive} />
@@ -210,6 +213,12 @@ li.betterlinks-suggessted-link-li{
 									onChange={handleUrlInputChange}
 								/>
 
+								{matchedLinks.length > 0 && (
+									<Popover position="left" focusOnMount={false}>
+										<ul className="betterlinks-suggessions-wrapper">{matchedLinksJsx}</ul>
+									</Popover>
+								)}
+
 								<Button
 									//
 									className="btl-submit-button"
@@ -218,11 +227,6 @@ li.betterlinks-suggessted-link-li{
 									type="submit"
 								/>
 							</form>
-							{matchedLinks.length > 0 && (
-								<Popover position="bottom" noArrow focusOnMount={false}>
-									<ul className="betterlinks-suggessions-wrapper">{matchedLinksJsx}</ul>
-								</Popover>
-							)}
 						</URLPopover>
 					</div>
 				)}
