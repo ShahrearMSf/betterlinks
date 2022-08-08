@@ -129,4 +129,15 @@ span.hl {
 	color: #222;
 	font-weight: 700;
 }
+
+body.betterlinks-formatting-enabled {
+	#wpadminbar,
+	.interface-interface-skeleton__footer {
+		z-index: -1 !important;
+	}
+
+	.interface-interface-skeleton__body {
+		z-index: 33 !important;
+	}
+}
 // gutenberg richtext 'betterlinks format' css -> end

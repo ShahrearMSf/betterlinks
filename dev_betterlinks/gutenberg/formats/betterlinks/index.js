@@ -1,7 +1,7 @@
 // wordpress imports
 const { __ } = wp.i18n;
 const { create, insert, isCollapsed, applyFormat, useAnchorRef, removeFormat, slice, replace } = wp.richText;
-const { useState, useRef, useMemo, createInterpolateElement } = wp.element;
+const { useState, useEffect, useRef, useMemo, createInterpolateElement } = wp.element;
 const { Popover, Button, ToggleControl, TextControl } = wp.components;
 const { RichTextToolbarButton, URLPopover } = wp.blockEditor;
 const { useSelect } = wp.data;
@@ -39,6 +39,25 @@ export const betterlinksFormat = {
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
 		const [matchedLinksJsx, setMatchedLinksJsx] = useState(null);
+
+		useEffect(() => {
+			//  if needed to scroll to found elements popover ul -> start
+			//
+			// const scrollableFoundItems = document.querySelector('.btl-url-popover-slot + .components-popover .components-popover__content');
+			// const firstLiOffsetTop = scrollableFoundItems.querySelector('li:first-child')?.OffsetTop;
+			// const lastLiOffsetTop = scrollableFoundItems.querySelector('li:last-child')?.OffsetTop;
+			// //
+			// scrollableFoundItems.scrollTop = firstLiOffsetTop;
+			// scrollableFoundItems.scrollTop = lastLiOffsetTop;
+			//
+			//  if needed to scroll to found elements popover ul -> end
+
+			//
+			document.body.classList.add('betterlinks-formatting-enabled');
+			return () => {
+				document.body.classList.remove('betterlinks-formatting-enabled');
+			};
+		}, [isVisible]);
 
 		const onClick = () => {
 			setVisiblility(true);
