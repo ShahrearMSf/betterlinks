@@ -108,9 +108,10 @@ export const betterlinksFormat = {
 			console.log('site url:----', betterLinksGlobal.site_url);
 		};
 
-		const handleUrlInputChange = (value) => {
-			console.log('---handleUrlInputChange:', { value });
-			setSearchedText(value);
+		const handleUrlInputChange = (e) => {
+			const value = e?.target?.value;
+			console.log('---handleUrlInputChange:', { e, value });
+			setSearchedText(value || '');
 			const spacesRemoved = value.replace(/\s+/g, '');
 			if (spacesRemoved.length < 2) {
 				return setMatchedLinks([]);
@@ -225,12 +226,14 @@ export const betterlinksFormat = {
 							}}
 						>
 							<form className="btl-links-search-form" onSubmit={handleSubmit}>
-								<TextControl
+								{/* <TextControl
 									//
 									className="btl-url-search-field"
 									value={searchedText}
 									onChange={handleUrlInputChange}
-								/>
+								/> */}
+
+								<input type="text" onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" />
 
 								{matchedLinks.length > 0 && (
 									<Popover position="left" focusOnMount={false}>
