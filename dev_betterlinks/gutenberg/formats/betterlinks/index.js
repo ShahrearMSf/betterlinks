@@ -51,10 +51,11 @@ export const betterlinksFormat = {
 			if (!matchedLinksDomUl && selectedIndex === null) return () => {};
 
 			const allLi = matchedLinksDomUl.querySelectorAll(`li`);
-			const selectedLi = matchedLinksDomUl.querySelector(`li.betterlinks-suggessted-link-li-${selectedIndex}`);
 			for (const item of allLi) {
 				item.classList.remove('active');
 			}
+			const selectedLi = matchedLinksDomUl.querySelector(`li.betterlinks-suggessted-link-li-${selectedIndex}`);
+			if (!selectedLi) return () => {};
 			selectedLi.classList.add('active');
 
 			// to scroll to the selected item
@@ -62,6 +63,7 @@ export const betterlinksFormat = {
 			// too much to fit inside the screen
 			// ---start---
 			const scrollableFoundItems = matchedLinksDomUl.closest('.betterlinks-suggession-popover .components-popover__content');
+			if (!scrollableFoundItems) return () => {};
 			const offsetTopOfTheLi = selectedLi?.offsetTop;
 			scrollableFoundItems.scrollTop = offsetTopOfTheLi;
 			// ---END---
