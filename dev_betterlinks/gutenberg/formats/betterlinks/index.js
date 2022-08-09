@@ -45,6 +45,7 @@ export const betterlinksFormat = {
 		const [linkTarget, setLinkTarget] = useState(false);
 
 		const matchedLinksUl = useRef(null);
+		const searchFieldRef = useRef(null);
 
 		useEffect(() => {
 			const matchedLinksDomUl = matchedLinksUl?.current;
@@ -120,6 +121,9 @@ export const betterlinksFormat = {
 			console.log('site url:----', { betterLinksGlobal, shortUrl });
 			setSearchedText(`${betterLinksGlobal.site_url}/${shortUrl}`);
 			setMatchedLinks([]);
+			const searchFieldDomRef = searchFieldRef?.current;
+			if (!searchFieldDomRef) return false;
+			searchFieldDomRef.focus();
 		};
 
 		const handleUrlInputChange = (e) => {
@@ -266,7 +270,7 @@ export const betterlinksFormat = {
 									onChange={handleUrlInputChange}
 								/> */}
 
-								<input type="text" onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" onKeyDown={handleOnKeyDown} />
+								<input type="text" ref={searchFieldRef} onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" onKeyDown={handleOnKeyDown} />
 
 								{matchedLinks.length > 0 && regex && (
 									<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
