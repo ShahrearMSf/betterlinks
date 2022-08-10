@@ -304,7 +304,15 @@ export const betterlinksFormat = {
 									onChange={handleUrlInputChange}
 								/> */}
 
-								<input type="text" ref={searchFieldRef} onChange={handleUrlInputChange} value={searchedText} className="btl-url-search-field" onKeyDown={handleOnKeyDown} />
+								<input
+									type="text"
+									ref={searchFieldRef}
+									placeholder="search from your betterlinks or paste the link"
+									onChange={handleUrlInputChange}
+									value={searchedText}
+									className="btl-url-search-field"
+									onKeyDown={handleOnKeyDown}
+								/>
 
 								{matchedLinks.length > 0 && regex && (
 									<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
