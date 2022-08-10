@@ -42,7 +42,7 @@ export const betterlinksFormat = {
 		const [selectedIndex, setSelectedIndex] = useState(null);
 		const [regex, setRegex] = useState(false);
 
-		const [linkTarget, setLinkTarget] = useState(false);
+		const [linkNewTab, setLinkNewTab] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -113,7 +113,7 @@ export const betterlinksFormat = {
 		const handleSubmit = (e) => {
 			console.log('----handleSubmit', { e });
 			e.preventDefault();
-			onChange(applyFormat(value, makeLinkFormat({ url: searchedText, linkTarget })));
+			onChange(applyFormat(value, makeLinkFormat({ url: searchedText, linkNewTab })));
 			close();
 		};
 
@@ -209,7 +209,7 @@ export const betterlinksFormat = {
 						const url = `${siteUrl}/${shortUrl}`;
 						const attributes = { url };
 
-						if (linkTarget) {
+						if (linkNewTab) {
 							attributes.target = '_blank';
 						}
 
@@ -255,8 +255,9 @@ export const betterlinksFormat = {
 										<ToggleControl
 											//
 											className="btl-open-in-new-tab"
-											label={__(`Hanzala's Open in new tab`)}
-											onChange={() => setLinkTarget(!linkTarget)}
+											label={__(`Open in new tab`)}
+											checked={linkNewTab}
+											onChange={() => setLinkNewTab(!linkNewTab)}
 										/>
 									</>
 								);

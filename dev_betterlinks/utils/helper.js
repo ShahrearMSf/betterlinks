@@ -372,10 +372,10 @@ export const makeAllLinksArr = (store) =>
 		: // if all links are not fetched properly then return false
 		  false;
 
-export const makeLinkFormat = ({ url, linkTarget }) => {
+export const makeLinkFormat = ({ url, linkNewTab }) => {
 	const attributes = { url };
 
-	if (linkTarget) {
+	if (linkNewTab) {
 		attributes.target = '_blank';
 	}
 
