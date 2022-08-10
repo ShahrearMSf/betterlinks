@@ -46,7 +46,10 @@ export const betterlinksFormat = {
 		const [selectedIndex, setSelectedIndex] = useState(null);
 		const [regex, setRegex] = useState(false);
 
+		//
 		const [linkNewTab, setLinkNewTab] = useState(false);
+		const [sponsored, setSponsored] = useState(false);
+		const [noFollow, setNoFollow] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -111,11 +114,15 @@ export const betterlinksFormat = {
 
 			if (settings) {
 				setGutenStoreSettings(settings);
+				setSponsored(!!settings?.sponsored);
+				setNoFollow(!!settings?.nofollow);
 			} else {
 				fetch_settings_data()(gutenStore.dispatch)
 					.then(() => {
 						const settings = gutenStore?.getState()?.settings?.settings;
 						setGutenStoreSettings(settings);
+						setSponsored(!!settings?.sponsored);
+						setNoFollow(!!settings?.nofollow);
 					})
 					.catch((err) => console.log(err));
 			}
@@ -142,7 +149,7 @@ export const betterlinksFormat = {
 		const handleSubmit = (e) => {
 			console.log('----handleSubmit', { e });
 			e.preventDefault();
-			onChange(applyFormat(value, makeLinkFormat({ url: searchedText, linkNewTab })));
+			onChange(applyFormat(value, makeLinkFormat({ url: searchedText, linkNewTab, sponsored, noFollow })));
 			close();
 		};
 
@@ -279,15 +286,12 @@ export const betterlinksFormat = {
 							anchorRect={anchorRect}
 							onClose={close}
 							renderSettings={() => {
+								//
 								return (
 									<>
-										<ToggleControl
-											//
-											className="btl-open-in-new-tab"
-											label={__(`Open in new tab`)}
-											checked={linkNewTab}
-											onChange={() => setLinkNewTab(!linkNewTab)}
-										/>
+										<ToggleControl label={__(`Open in new tab`)} checked={linkNewTab} onChange={() => setLinkNewTab(!linkNewTab)} />
+										<ToggleControl label={__(`Sponsored`)} checked={sponsored} onChange={() => setSponsored(!sponsored)} />
+										<ToggleControl label={__(`Nofollow`)} checked={noFollow} onChange={() => setNoFollow(!noFollow)} />
 									</>
 								);
 							}}

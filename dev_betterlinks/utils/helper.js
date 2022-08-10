@@ -372,24 +372,30 @@ export const makeAllLinksArr = (store) =>
 		: // if all links are not fetched properly then return false
 		  false;
 
-export const makeLinkFormat = ({ url, linkNewTab }) => {
+export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 	const attributes = { url };
+	let rel = '';
 
 	if (linkNewTab) {
 		attributes.target = '_blank';
+		rel = 'noreferrer noopener ';
+	}
+
+	if (sponsored) {
+		rel += 'sponsored ';
+	}
+
+	if (noFollow) {
+		rel += 'nofollow noindex ';
+	}
+
+	if (rel) {
+		attributes.rel = rel;
 	}
 
 	const result = {
 		type: 'core/link',
 		attributes,
 	};
-
-	console.log('+=+=+=----makeLinkTargetFIred', result);
-
-	// if (nofollow) {
-	// 	attributes.rel = 'nofollow';
-	// }
-	// rel: 'nofollow noindex sponsored noreferrer noopener',
-
 	return result;
 };
