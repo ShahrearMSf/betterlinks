@@ -11,4 +11,6 @@ export default combineReducers({ activity, settings, links, terms, clicks, keywo
 
 export const gutenbergReducers = combineReducers({
 	links,
+	settings,
+	terms,
 });

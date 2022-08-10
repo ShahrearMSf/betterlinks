@@ -6,6 +6,8 @@ const { Fragment, useState, useEffect } = wp.element;
 // redux imports
 import { gutenStore } from 'redux/store';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { CustomSidebar } from 'gutenberg/components';
@@ -13,10 +15,20 @@ import { betterlinksFormat } from 'gutenberg/formats';
 
 // Redux Works
 const state = gutenStore.getState();
-const fetchedData = fetch_links_data()(gutenStore.dispatch)
+
+const fetchedLinksData = fetch_links_data()(gutenStore.dispatch)
 	.then((res) => console.log('fetched all links', { res }))
 	.catch((err) => console.log({ err }));
-console.log('----redux gutenStore in gutenberg', { gutenStore, state, fetchedData });
+
+const fetchedTermsData = fetch_terms_data()(gutenStore.dispatch)
+	.then((res) => console.log('fetched all terms', { res }))
+	.catch((err) => console.log({ err }));
+
+const fetchedSettingsData = fetch_settings_data()(gutenStore.dispatch)
+	.then((res) => console.log('fetched all settings', { res }))
+	.catch((err) => console.log({ err }));
+
+console.log('----redux gutenStore in gutenberg', { gutenStore, state, fetchedTermsData, fetchedLinksData, fetchedSettingsData });
 
 gutenStore.subscribe(() => {
 	const state = gutenStore.getState();

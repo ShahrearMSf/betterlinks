@@ -15,6 +15,8 @@ import reactStringReplace from 'react-string-replace';
 // redux imports
 import { gutenStore } from 'redux/store';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { betterlinksIcon } from './icon';
@@ -35,7 +37,9 @@ export const betterlinksFormat = {
 	edit: ({ isActive, contentRef, value, onChange }) => {
 		console.log('---betterlinks/link-format edit:', { isActive });
 
-		const [gutenStoreLinks, setgutenStoreLinks] = useState([]);
+		const [gutenStoreLinks, setGutenStoreLinks] = useState([]);
+		const [gutenStoreTerms, setGutenStoreTerms] = useState([]);
+		const [gutenStoreSettings, setGutenStoreSettings] = useState({});
 		const [isVisible, setVisiblility] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
@@ -89,18 +93,43 @@ export const betterlinksFormat = {
 			setVisiblility(true);
 
 			const allLinksArr = makeAllLinksArr(gutenStore);
+			const settings = gutenStore?.getState()?.settings?.settings;
+			const terms = gutenStore?.getState()?.terms?.terms;
+
 			if (allLinksArr) {
-				return setgutenStoreLinks(allLinksArr);
+				setGutenStoreLinks(allLinksArr);
+			} else {
+				fetch_links_data()(gutenStore.dispatch)
+					.then(() => {
+						const allLinksArr = makeAllLinksArr(gutenStore);
+						if (allLinksArr) {
+							setGutenStoreLinks(allLinksArr);
+						}
+					})
+					.catch((err) => console.log({ err }));
 			}
 
-			fetch_links_data()(gutenStore.dispatch)
-				.then(() => {
-					const allLinksArr = makeAllLinksArr(gutenStore);
-					if (allLinksArr) {
-						return setgutenStoreLinks(allLinksArr);
-					}
-				})
-				.catch((err) => console.log({ err }));
+			if (settings) {
+				setGutenStoreSettings(settings);
+			} else {
+				fetch_settings_data()(gutenStore.dispatch)
+					.then(() => {
+						const settings = gutenStore?.getState()?.settings?.settings;
+						setGutenStoreSettings(settings);
+					})
+					.catch((err) => console.log(err));
+			}
+
+			if (terms) {
+				setGutenStoreTerms(terms);
+			} else {
+				fetch_terms_data()(gutenStore.dispatch)
+					.then(() => {
+						const terms = gutenStore?.getState()?.terms?.terms;
+						setGutenStoreTerms(terms);
+					})
+					.catch((err) => console.log(err));
+			}
 		};
 
 		const close = () => {
