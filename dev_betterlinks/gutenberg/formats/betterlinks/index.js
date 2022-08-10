@@ -2,7 +2,7 @@
 const { __ } = wp.i18n;
 const { create, insert, isCollapsed, applyFormat, useAnchorRef, removeFormat, slice, replace } = wp.richText;
 const { useState, useEffect, useRef, useMemo, createInterpolateElement } = wp.element;
-const { Popover, Button, ToggleControl, TextControl } = wp.components;
+const { Popover, Button, ToggleControl, TextControl, Spinner } = wp.components;
 const { RichTextToolbarButton, URLPopover } = wp.blockEditor;
 const { useSelect } = wp.data;
 const { UP, DOWN, ENTER, TAB, right } = wp.keycodes;
@@ -105,8 +105,11 @@ export const betterlinksFormat = {
 		const handleNewLinkSubmit = (e) => {
 			e.preventDefault();
 
-			if (newLinkTitle.trim() && newLinkTargetUrl.trim() && newLinkShortUrl.trim()) {
+			if (!(newLinkTitle.trim() && newLinkTargetUrl.trim() && newLinkShortUrl.trim())) {
 				setIsNewLinkSubmissionFailed(true);
+				setIsSubmittedNewLink(false);
+				setIsSubmittingNewLink(false);
+				return false;
 			}
 
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -134,6 +137,7 @@ export const betterlinksFormat = {
 			//
 			setIsSubmittingNewLink(true);
 			setIsSubmittedNewLink(false);
+			setIsNewLinkSubmissionFailed(false);
 
 			//
 			axios
@@ -159,6 +163,14 @@ export const betterlinksFormat = {
 									setNewLinkShortUrl('');
 									const searchFieldDomRef = searchFieldRef?.current;
 									if (!searchFieldDomRef) return false;
+									searchFieldDomRef.classList.add('temporary-focus');
+									setTimeout(() => {
+										console.log('class remove kora hocche...............');
+										if (searchFieldDomRef) {
+											searchFieldDomRef.classList.remove('temporary-focus');
+											console.log('searchFieldDomRef class remove kora done ================');
+										}
+									}, 5000);
 									searchFieldDomRef.focus();
 								})
 								.catch((err) => {
@@ -167,6 +179,7 @@ export const betterlinksFormat = {
 						}
 					} else {
 						setIsNewLinkSubmissionFailed(true);
+						setIsSubmittingNewLink(false);
 					}
 				})
 				.catch((error) => {
@@ -241,6 +254,9 @@ export const betterlinksFormat = {
 			setSearchedText('');
 			setMatchedLinks([]);
 			setSelectedIndex(null);
+			setIsSubmittingNewLink(false);
+			setIsSubmittedNewLink(false);
+			setIsNewLinkSubmissionFailed(false);
 		};
 
 		const handleSubmit = (e) => {
@@ -397,12 +413,30 @@ export const betterlinksFormat = {
 										<ToggleControl label={__(`Sponsored`)} checked={sponsored} onChange={() => setSponsored(!sponsored)} />
 										<ToggleControl label={__(`Nofollow`)} checked={noFollow} onChange={() => setNoFollow(!noFollow)} />
 										<hr />
+										{isSubmittedNewLink && (
+											<>
+												<p className="betterlinks-format-new-link-created-success">
+													Success!! <br />
+													Link SuccessFully Created!!!
+												</p>
+											</>
+										)}
+										{isNewLinkSubmissionFailed && (
+											<>
+												<p className="betterlinks-format-new-link-creating-failed">
+													Link creation failed!!! <br />
+													Please make sure to use a unique short link that doesn't already exist. <br />
+													Also make sure no fields are empty
+												</p>
+											</>
+										)}
 										<form className="betterlinks-format-new-link-form" onSubmit={handleNewLinkSubmit}>
 											<h4>Create New Betterlink</h4>
 											<input type="text" onChange={handleTitleChange} placeholder={__('Link Title')} value={newLinkTitle} />
 											<input type="text" onChange={handleTargetUrlChange} placeholder={__('Target Url')} value={newLinkTargetUrl} />
 											<input type="text" onChange={handleShortUrlChange} placeholder={__('Betterlink Shortened Url Slug')} value={newLinkShortUrl} />
 											<button type="submit">Create Link</button>
+											{isSubmittingNewLink && <Spinner />}
 										</form>
 									</div>
 								);

@@ -81,6 +81,9 @@
 	form.btl-links-search-form {
 		display: flex;
 
+		.btl-url-search-field.temporary-focus {
+			border: 3px solid #2271b199;
+		}
 		.btl-url-search-field {
 			width: 300px;
 			color: #555;
