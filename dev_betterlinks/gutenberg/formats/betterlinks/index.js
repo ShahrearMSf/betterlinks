@@ -21,6 +21,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 // local imports
 import { betterlinksIcon } from './icon';
 import { makeAllLinksArr, makeLinkFormat } from 'utils/helper';
+import { IconButton } from '@material-ui/core';
 
 const name = 'betterlinks/link-format';
 const title = __('Betterlinks');
@@ -50,6 +51,11 @@ export const betterlinksFormat = {
 		const [linkNewTab, setLinkNewTab] = useState(false);
 		const [sponsored, setSponsored] = useState(false);
 		const [noFollow, setNoFollow] = useState(false);
+
+		//
+		const [newLinkTitle, setNewLinkTitle] = useState('');
+		const [newLinkTargetUrl, setNewLinkTargetUrl] = useState('');
+		const [newLinkShortUrl, setNewLinkShortUrl] = useState('');
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -91,6 +97,24 @@ export const betterlinksFormat = {
 		useEffect(() => {
 			setSelectedIndex(null);
 		}, [matchedLinks]);
+
+		const handleNewLinkSubmit = (e) => {
+			e.preventDefault();
+			console.log('++++++++++handleNewLinkSubmit', { e });
+			return false;
+		};
+
+		const handleTitleChange = (e) => {
+			setNewLinkTitle(e.target.value);
+		};
+
+		const handleTargetUrlChange = (e) => {
+			setNewLinkTargetUrl(e.target.value);
+		};
+
+		const handleShortUrlChange = (e) => {
+			setNewLinkShortUrl(e.target.value);
+		};
 
 		const onClick = () => {
 			setVisiblility(true);
@@ -288,11 +312,18 @@ export const betterlinksFormat = {
 							renderSettings={() => {
 								//
 								return (
-									<>
+									<div className="betterlinks-expanded-format-options">
 										<ToggleControl label={__(`Open in new tab`)} checked={linkNewTab} onChange={() => setLinkNewTab(!linkNewTab)} />
 										<ToggleControl label={__(`Sponsored`)} checked={sponsored} onChange={() => setSponsored(!sponsored)} />
 										<ToggleControl label={__(`Nofollow`)} checked={noFollow} onChange={() => setNoFollow(!noFollow)} />
-									</>
+										<form className="betterlinks-format-new-link-form" onSubmit={handleNewLinkSubmit}>
+											<h4>Create New Betterlink</h4>
+											<input type="text" onChange={handleTitleChange} placeholder={__('Link Title')} value={newLinkTitle} />
+											<input type="text" onChange={handleTargetUrlChange} placeholder={__('Target Url')} value={newLinkTargetUrl} />
+											<input type="text" onChange={handleShortUrlChange} placeholder={__('Betterlink Shortened Url')} value={newLinkShortUrl} />
+											<button type="submit">Create Link</button>
+										</form>
+									</div>
 								);
 							}}
 						>
@@ -307,7 +338,7 @@ export const betterlinksFormat = {
 								<input
 									type="text"
 									ref={searchFieldRef}
-									placeholder="search from your betterlinks or paste the link"
+									placeholder="search betterlinks or paste the link"
 									onChange={handleUrlInputChange}
 									value={searchedText}
 									className="btl-url-search-field"
