@@ -10,6 +10,7 @@ const { getRectangleFromRange } = wp.dom;
 import { keyboardReturn } from '@wordpress/icons';
 
 // external library imports
+import axios from 'axios';
 import reactStringReplace from 'react-string-replace';
 
 // redux imports
@@ -20,9 +21,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { betterlinksIcon } from './icon';
-import { makeAllLinksArr, makeLinkFormat, generateShortURL } from 'utils/helper';
-
-import { IconButton } from '@material-ui/core';
+import { makeAllLinksArr, makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
 
 const name = 'betterlinks/link-format';
 const title = __('Betterlinks');
@@ -57,6 +56,9 @@ export const betterlinksFormat = {
 		const [newLinkTitle, setNewLinkTitle] = useState('');
 		const [newLinkTargetUrl, setNewLinkTargetUrl] = useState('');
 		const [newLinkShortUrl, setNewLinkShortUrl] = useState('');
+		const [isSubmittingNewLink, setIsSubmittingNewLink] = useState(false);
+		const [isSubmittedNewLink, setIsSubmittedNewLink] = useState(false);
+		const [isNewLinkSubmissionFailed, setIsNewLinkSubmissionFailed] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -99,10 +101,76 @@ export const betterlinksFormat = {
 			setSelectedIndex(null);
 		}, [matchedLinks]);
 
+		//
 		const handleNewLinkSubmit = (e) => {
 			e.preventDefault();
+
+			if (newLinkTitle.trim() && newLinkTargetUrl.trim() && newLinkShortUrl.trim()) {
+				setIsNewLinkSubmissionFailed(true);
+			}
+
+			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+			const values = {
+				link_title: newLinkTitle,
+				target_url: newLinkTargetUrl,
+				short_url: newLinkShortUrl,
+				link_date: currentDate,
+				link_date_gmt: currentDate,
+				link_modified: currentDate,
+				link_modified_gmt: currentDate,
+				link_note: '',
+				cat_id: gutenStoreTerms.filter((item) => item.term_slug == 'uncategorized')[0]?.ID,
+				...gutenStoreSettings,
+				nofollow: !!noFollow,
+				sponsored: !!sponsored,
+			};
+
+			const form_data = new FormData();
+			form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
+			form_data.append('security', betterlinks_nonce);
+			form_data.append('ID', undefined);
+			form_data.append('slug', newLinkShortUrl);
+
+			//
+			setIsSubmittingNewLink(true);
+			setIsSubmittedNewLink(false);
+
+			//
+			axios
+				.post(ajaxurl, form_data)
+				.then((response) => {
+					// setSlugIsExists(response.data.data);
+					const resData = response?.data?.data;
+					console.log('----handleNewLinkSubmit', { resData });
+					if (!resData) {
+						values.link_slug = generateSlug(values.link_title);
+						values.wildcards = Number(values.short_url.includes('*'));
+						if (values.cat_id) {
+							values.link_title = values.link_title.trim();
+							add_new_link(values)(gutenStore.dispatch)
+								.then((res) => {
+									console.log('----add_new_link', { res });
+									setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
+									setIsNewLinkSubmissionFailed(false);
+									setIsSubmittingNewLink(false);
+									setIsSubmittedNewLink(true);
+									setNewLinkTitle('');
+									setNewLinkTargetUrl('');
+									setNewLinkShortUrl('');
+								})
+								.catch((err) => {
+									console.log({ err });
+								});
+						}
+					} else {
+						setIsNewLinkSubmissionFailed(true);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
 			console.log('++++++++++handleNewLinkSubmit', { e });
-			return false;
 		};
 
 		const handleTitleChange = (e) => {
@@ -115,7 +183,7 @@ export const betterlinksFormat = {
 		};
 
 		const handleShortUrlChange = (e) => {
-			setNewLinkShortUrl(e.target.value);
+			setNewLinkShortUrl(e.target.value.replace(/\s/g, '-'));
 		};
 
 		const onClick = () => {
@@ -294,7 +362,14 @@ export const betterlinksFormat = {
 			}
 		};
 
-		console.log({ gutenStoreLinks, selectedIndex, matchedLinks });
+		console.log({
+			isSubmittingNewLink,
+			isSubmittedNewLink,
+			isNewLinkSubmissionFailed,
+			gutenStoreLinks,
+			selectedIndex,
+			matchedLinks,
+		});
 
 		return (
 			<>
@@ -323,7 +398,7 @@ export const betterlinksFormat = {
 											<h4>Create New Betterlink</h4>
 											<input type="text" onChange={handleTitleChange} placeholder={__('Link Title')} value={newLinkTitle} />
 											<input type="text" onChange={handleTargetUrlChange} placeholder={__('Target Url')} value={newLinkTargetUrl} />
-											<input type="text" onChange={handleShortUrlChange} placeholder={__('Betterlink Shortened Url')} value={newLinkShortUrl} />
+											<input type="text" onChange={handleShortUrlChange} placeholder={__('Betterlink Shortened Url Slug')} value={newLinkShortUrl} />
 											<button type="submit">Create Link</button>
 										</form>
 									</div>
