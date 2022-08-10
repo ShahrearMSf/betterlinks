@@ -157,6 +157,9 @@ export const betterlinksFormat = {
 									setNewLinkTitle('');
 									setNewLinkTargetUrl('');
 									setNewLinkShortUrl('');
+									const searchFieldDomRef = searchFieldRef?.current;
+									if (!searchFieldDomRef) return false;
+									searchFieldDomRef.focus();
 								})
 								.catch((err) => {
 									console.log({ err });
