@@ -316,6 +316,7 @@ export const betterlinksFormat = {
 										<ToggleControl label={__(`Open in new tab`)} checked={linkNewTab} onChange={() => setLinkNewTab(!linkNewTab)} />
 										<ToggleControl label={__(`Sponsored`)} checked={sponsored} onChange={() => setSponsored(!sponsored)} />
 										<ToggleControl label={__(`Nofollow`)} checked={noFollow} onChange={() => setNoFollow(!noFollow)} />
+										<hr />
 										<form className="betterlinks-format-new-link-form" onSubmit={handleNewLinkSubmit}>
 											<h4>Create New Betterlink</h4>
 											<input type="text" onChange={handleTitleChange} placeholder={__('Link Title')} value={newLinkTitle} />
