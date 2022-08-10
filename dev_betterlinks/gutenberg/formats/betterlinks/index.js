@@ -20,7 +20,8 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { betterlinksIcon } from './icon';
-import { makeAllLinksArr, makeLinkFormat } from 'utils/helper';
+import { makeAllLinksArr, makeLinkFormat, generateShortURL } from 'utils/helper';
+
 import { IconButton } from '@material-ui/core';
 
 const name = 'betterlinks/link-format';
@@ -106,6 +107,7 @@ export const betterlinksFormat = {
 
 		const handleTitleChange = (e) => {
 			setNewLinkTitle(e.target.value);
+			setNewLinkShortUrl(generateShortURL(gutenStoreSettings, e.target.value));
 		};
 
 		const handleTargetUrlChange = (e) => {
@@ -339,7 +341,7 @@ export const betterlinksFormat = {
 								<input
 									type="text"
 									ref={searchFieldRef}
-									placeholder="search betterlinks or paste the link"
+									placeholder="Search betterlinks or paste the link"
 									onChange={handleUrlInputChange}
 									value={searchedText}
 									className="btl-url-search-field"
