@@ -185,7 +185,7 @@ export const betterlinksFormat = {
 		};
 
 		const handleTargetUrlChange = (e) => {
-			setNewLinkTargetUrl(e.target.value);
+			setNewLinkTargetUrl(e.target.value.replace(/\s+/g, ''));
 		};
 
 		const handleShortUrlChange = (e) => {
