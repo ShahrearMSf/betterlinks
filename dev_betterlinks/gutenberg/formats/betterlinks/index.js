@@ -38,7 +38,7 @@ export const betterlinksFormat = {
 		const [gutenStoreLinks, setGutenStoreLinks] = useState([]);
 		const [gutenStoreTerms, setGutenStoreTerms] = useState([]);
 		const [gutenStoreSettings, setGutenStoreSettings] = useState({});
-		const [isVisible, setVisiblility] = useState(false);
+		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
 		const [selectedIndex, setSelectedIndex] = useState(null);
@@ -192,7 +192,7 @@ export const betterlinksFormat = {
 		};
 
 		const onClick = () => {
-			setVisiblility(true);
+			setIsVisible(true);
 
 			const allLinksArr = makeAllLinksArr(gutenStore);
 			const settings = gutenStore?.getState()?.settings?.settings;
@@ -239,7 +239,7 @@ export const betterlinksFormat = {
 		};
 
 		const close = () => {
-			setVisiblility(false);
+			setIsVisible(false);
 			setSearchedText('');
 			setMatchedLinks([]);
 			setSelectedIndex(null);
