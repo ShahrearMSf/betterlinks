@@ -3,7 +3,7 @@ const { __ } = wp.i18n;
 const { applyFormat } = wp.richText;
 const { useState, useEffect, useRef, useMemo } = wp.element;
 const { Popover, Button, ToggleControl, Spinner } = wp.components;
-const { RichTextToolbarButton, URLPopover } = wp.blockEditor;
+const { RichTextToolbarButton, URLPopover, RichTextShortcut } = wp.blockEditor;
 const { UP, DOWN, ENTER } = wp.keycodes;
 const { getRectangleFromRange } = wp.dom;
 import { keyboardReturn } from '@wordpress/icons';
@@ -328,6 +328,7 @@ export const betterlinksFormat = {
 
 		return (
 			<>
+				{!isVisible && <RichTextShortcut type="primary" character="j" onUse={onClick} />}
 				<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} isActive={isActive} />
 
 				{isVisible && (
