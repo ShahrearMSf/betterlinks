@@ -1,6 +1,6 @@
 // wordpress imports
 const { __ } = wp.i18n;
-const { applyFormat } = wp.richText;
+const { applyFormat, create, insert, isCollapsed } = wp.richText;
 const { useState, useEffect, useRef, useMemo } = wp.element;
 const { Popover, Button, ToggleControl, Spinner } = wp.components;
 const { RichTextToolbarButton, URLPopover, RichTextShortcut } = wp.blockEditor;
@@ -251,7 +251,20 @@ export const betterlinksFormat = {
 
 		const handleSubmit = (e) => {
 			e.preventDefault();
-			onChange(applyFormat(value, makeLinkFormat({ url: searchedText, linkNewTab, sponsored, noFollow })));
+			const newText = searchedText.trim();
+			if (!newText) return false;
+			// scenario: the search filed is empty
+
+			const withHttp = /^https?\:\/\//i.test(newText) ? newText : `http://${newText}`;
+			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored, noFollow });
+
+			if (isCollapsed(value)) {
+				// Scenario: we don't have any actively selected text
+				const toInsert = applyFormat(create({ text: withHttp }), linkFormat, 0, withHttp.length);
+				onChange(insert(value, toInsert));
+			} else {
+				onChange(applyFormat(value, linkFormat));
+			}
 			close();
 		};
 
