@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ReactReduxContext } from 'react-redux';
 
 export const {
 	betterlinks_nonce,
