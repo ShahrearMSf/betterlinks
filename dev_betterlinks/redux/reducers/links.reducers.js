@@ -4,16 +4,22 @@ function links(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_INITIAL_DATA: {
-			const cats = Object.values(payload.data || {});
-			for (const catItem of cats) {
-				const linksInCat = catItem.lists || [];
-				for (const link of linksInCat) {
-					link.favorite = JSON.parse(link.favorite || '{}');
+			const data = payload.data;
+			const newLinksData = {};
+			for (const key in data) {
+				const newLinksListsArr = [];
+				for (const item of data[key]?.lists || []) {
+					newLinksListsArr.push({ ...item, favorite: JSON.parse(item.favorite || '{}') });
 				}
+				newLinksData[key] = {
+					...data[key],
+					lists: newLinksListsArr,
+				};
 			}
+
 			return {
 				...state,
-				links: payload.data,
+				links: newLinksData,
 			};
 		}
 		case DRAG_AND_DROP:
