@@ -33,6 +33,7 @@ export const betterlinksFormat = {
 	attributes: {
 		url: 'href',
 		target: 'target',
+		rel: 'rel',
 	},
 	edit: ({ isActive, value, onChange }) => {
 		const [gutenStoreLinks, setGutenStoreLinks] = useState([]);
