@@ -16,7 +16,7 @@ function links(state = {}, action) {
 					lists: newLinksListsArr,
 				};
 			}
-
+			delete payload.data;
 			return {
 				...state,
 				links: newLinksData,
