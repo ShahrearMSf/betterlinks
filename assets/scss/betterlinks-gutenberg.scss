@@ -192,6 +192,10 @@ body.betterlinks-formatting-enabled {
 	background: #006ba1;
 }
 
+.betterlinks-expanded-format-options .components-base-control__field {
+	margin-bottom: 5px !important;
+}
+
 .betterlinks-expanded-format-options form.betterlinks-format-new-link-form button:focus {
 	box-shadow: none;
 }
