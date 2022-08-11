@@ -40,7 +40,6 @@ export const onDragEnd = (result) => async (dispatch) => {
 	}
 };
 export const fetch_links_data = () => async (dispatch) => {
-	console.log('---fetch_links_data', { dispatch });
 	try {
 		const res = await API.get(namespace + 'links', {
 			params: {},

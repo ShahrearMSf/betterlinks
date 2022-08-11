@@ -1,11 +1,10 @@
 // wordpress dependecies
 const { registerFormatType } = wp.richText;
 const { registerPlugin } = wp.plugins;
-const { Fragment, useState, useEffect } = wp.element;
 
 // redux imports
 import { gutenStore } from 'redux/store';
-import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
@@ -14,28 +13,18 @@ import { CustomSidebar } from 'gutenberg/components';
 import { betterlinksFormat } from 'gutenberg/formats';
 
 // Redux Works
-const state = gutenStore.getState();
+fetch_links_data()(gutenStore.dispatch)
+	.then(() => {})
+	.catch((err) => console.log('Error! fetch_links_data failed', { err }));
 
-const fetchedLinksData = fetch_links_data()(gutenStore.dispatch)
-	.then((res) => console.log('fetched all links', { res }))
-	.catch((err) => console.log({ err }));
+fetch_terms_data()(gutenStore.dispatch)
+	.then(() => {})
+	.catch((err) => console.log('Error! fetch_terms_data failed', { err }));
 
-const fetchedTermsData = fetch_terms_data()(gutenStore.dispatch)
-	.then((res) => console.log('fetched all terms', { res }))
-	.catch((err) => console.log({ err }));
+fetch_settings_data()(gutenStore.dispatch)
+	.then(() => {})
+	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
 
-const fetchedSettingsData = fetch_settings_data()(gutenStore.dispatch)
-	.then((res) => console.log('fetched all settings', { res }))
-	.catch((err) => console.log({ err }));
-
-console.log('----redux gutenStore in gutenberg', { gutenStore, state, fetchedTermsData, fetchedLinksData, fetchedSettingsData });
-
-gutenStore.subscribe(() => {
-	const state = gutenStore.getState();
-	console.log('----getState inside subscribe', { gutenStore, state });
-});
-
-//
 // Sidebar Panel in Gutenberg Edit 'page/post'
 registerPlugin('betterlinks-sidebar', {
 	render: CustomSidebar,
