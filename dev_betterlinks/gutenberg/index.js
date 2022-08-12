@@ -13,7 +13,7 @@ import { CustomSidebar } from 'gutenberg/components';
 import { betterlinksFormat } from 'gutenberg/formats';
 
 // Redux Works
-fetch_links_data()(gutenStore.dispatch)
+fetch_links_data(true)(gutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_links_data failed', { err }));
 

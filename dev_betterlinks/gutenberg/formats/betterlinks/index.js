@@ -20,7 +20,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { betterlinksIcon } from './icon';
-import { makeAllLinksArr, makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
+import { makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
 
 const name = 'betterlinks/link-format';
 const title = __('Betterlinks');
@@ -195,16 +195,16 @@ export const betterlinksFormat = {
 		const onClick = () => {
 			setIsVisible(true);
 
-			const allLinksArr = makeAllLinksArr(gutenStore);
+			const allLinksArr = gutenStore?.getState()?.links?.links;
 			const settings = gutenStore?.getState()?.settings?.settings;
 			const terms = gutenStore?.getState()?.terms?.terms;
 
 			if (allLinksArr) {
 				setGutenStoreLinks(allLinksArr);
 			} else {
-				fetch_links_data()(gutenStore.dispatch)
+				fetch_links_data(true)(gutenStore.dispatch)
 					.then(() => {
-						const allLinksArr = makeAllLinksArr(gutenStore);
+						const allLinksArr = gutenStore?.getState()?.links?.links;
 						if (allLinksArr) {
 							setGutenStoreLinks(allLinksArr);
 						}
