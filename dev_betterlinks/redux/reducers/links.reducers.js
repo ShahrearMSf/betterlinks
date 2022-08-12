@@ -6,6 +6,7 @@ import {
 	UPDATE_CAT,
 	DELETE_CAT,
 	ADD_NEW_LINK,
+	ADD_NEW_LINK_FOR_GUTEN_STORE,
 	EDIT_LINK,
 	DELETE_LINK,
 	HANDLE_LINK_FAVORITE,
@@ -151,6 +152,11 @@ function links(state = {}, action) {
 						lists: [payload.data],
 					},
 				},
+			};
+		case ADD_NEW_LINK_FOR_GUTEN_STORE:
+			return {
+				...state,
+				links: [...state.links, payload.data],
 			};
 		case EDIT_LINK: {
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
