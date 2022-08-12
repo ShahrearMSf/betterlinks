@@ -1,6 +1,7 @@
 import { API, namespace, makeRequest } from 'utils/helper';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
+export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
 export const ADD_NEW_CAT = 'ADD_NEW_CAT';
 export const UPDATE_CAT = 'UPDATE_CAT';
 export const DELETE_CAT = 'DELETE_CAT';
@@ -39,28 +40,30 @@ export const onDragEnd = (result) => async (dispatch) => {
 		}
 	}
 };
-export const fetch_links_data = () => async (dispatch) => {
-	try {
-		const res = await API.get(namespace + 'links', {
-			params: {},
-		});
-		dispatch({
-			type: FETCH_INITIAL_DATA,
-			payload: res.data,
-		});
-	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/get_all_links',
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: FETCH_INITIAL_DATA,
-					payload: response.data.data,
-				});
-			}
-		});
-	}
-};
+export const fetch_links_data =
+	(forGutenbergStore = false) =>
+	async (dispatch) => {
+		try {
+			const res = await API.get(namespace + 'links', {
+				params: {},
+			});
+			dispatch({
+				type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
+				payload: res.data,
+			});
+		} catch (e) {
+			makeRequest({
+				action: 'betterlinks/admin/get_all_links',
+			}).then((response) => {
+				if (response.data) {
+					dispatch({
+						type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
+						payload: response.data.data,
+					});
+				}
+			});
+		}
+	};
 
 export const add_new_cat = (data) => async (dispatch) => {
 	try {

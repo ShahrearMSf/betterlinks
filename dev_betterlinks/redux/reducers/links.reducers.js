@@ -1,4 +1,15 @@
-import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK, HANDLE_LINK_FAVORITE } from 'redux/actions/links.actions';
+import {
+	FETCH_WITHOUT_CATEGORY_INITIAL_DATA,
+	FETCH_INITIAL_DATA,
+	DRAG_AND_DROP,
+	ADD_NEW_CAT,
+	UPDATE_CAT,
+	DELETE_CAT,
+	ADD_NEW_LINK,
+	EDIT_LINK,
+	DELETE_LINK,
+	HANDLE_LINK_FAVORITE,
+} from 'redux/actions/links.actions';
 import { move, reorder } from 'utils/helper';
 function links(state = {}, action) {
 	const payload = action.payload;
@@ -20,6 +31,12 @@ function links(state = {}, action) {
 			return {
 				...state,
 				links: newLinksData,
+			};
+		}
+		case FETCH_WITHOUT_CATEGORY_INITIAL_DATA: {
+			return {
+				...state,
+				links: Object.values(payload?.data || []).reduce((acc, curr) => [...acc, ...(curr?.lists || [])], []),
 			};
 		}
 		case DRAG_AND_DROP:
