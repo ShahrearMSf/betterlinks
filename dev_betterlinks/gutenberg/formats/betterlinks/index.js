@@ -146,7 +146,10 @@ export const betterlinksFormat = {
 						values.wildcards = Number(values.short_url.includes('*'));
 						if (values.cat_id) {
 							values.link_title = values.link_title.trim();
-							add_new_link(values)(gutenStore.dispatch)
+							add_new_link(
+								values,
+								true
+							)(gutenStore.dispatch)
 								.then((res) => {
 									setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
 									setIsNewLinkSubmissionFailed(false);
