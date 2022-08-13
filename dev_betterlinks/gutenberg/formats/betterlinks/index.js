@@ -117,7 +117,7 @@ export const betterlinksFormat = {
 				link_modified: currentDate,
 				link_modified_gmt: currentDate,
 				link_note: '',
-				cat_id: (gutenStore?.getState()?.terms?.terms || []).filter((item) => item.term_slug == 'uncategorized')[0]?.ID,
+				cat_id: (gutenStore?.getState()?.terms?.terms || []).find((item) => item.term_slug == 'uncategorized')?.ID,
 				...gutenStore?.getState()?.settings?.settings,
 				nofollow: !!noFollow,
 				sponsored: !!sponsored,
