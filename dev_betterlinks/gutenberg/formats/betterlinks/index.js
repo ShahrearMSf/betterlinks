@@ -36,19 +36,16 @@ export const betterlinksFormat = {
 		rel: 'rel',
 	},
 	edit: ({ isActive, value, onChange }) => {
-		//
 		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
 		const [selectedIndex, setSelectedIndex] = useState(null);
 		const [regex, setRegex] = useState(false);
 
-		//
 		const [linkNewTab, setLinkNewTab] = useState(false);
 		const [sponsored, setSponsored] = useState(false);
 		const [noFollow, setNoFollow] = useState(false);
 
-		//
 		const [newLinkTitle, setNewLinkTitle] = useState('');
 		const [newLinkTargetUrl, setNewLinkTargetUrl] = useState('');
 		const [newLinkShortUrl, setNewLinkShortUrl] = useState('');
@@ -129,17 +126,17 @@ export const betterlinksFormat = {
 			form_data.append('ID', undefined);
 			form_data.append('slug', newLinkShortUrl);
 
-			//
 			setIsSubmittingNewLink(true);
 			setIsSubmittedNewLink(false);
 			setIsNewLinkSubmissionFailed(false);
 
-			//
+			// shortlink uniqueness check
 			axios
 				.post(ajaxurl, form_data)
 				.then((response) => {
 					const resData = response?.data?.data;
 					if (!resData) {
+						// scenario: shortlink slug is unique
 						values.link_slug = generateSlug(values.link_title);
 						values.wildcards = Number(values.short_url.includes('*'));
 						if (values.cat_id) {
@@ -166,17 +163,18 @@ export const betterlinksFormat = {
 									}, 5000);
 									searchFieldDomRef.focus();
 								})
-								.catch((err) => {
-									console.log({ err });
+								.catch((error) => {
+									console.log('error!! aading new link failed', error);
 								});
 						}
 					} else {
+						// scenario: duplicate shortlink slug, shortlink already exist
 						setIsNewLinkSubmissionFailed(true);
 						setIsSubmittingNewLink(false);
 					}
 				})
 				.catch((error) => {
-					console.log(error);
+					console.log('error!! shortlink url check cannot be performed', error);
 				});
 		};
 
