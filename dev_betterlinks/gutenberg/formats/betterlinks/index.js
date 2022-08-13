@@ -36,9 +36,7 @@ export const betterlinksFormat = {
 		rel: 'rel',
 	},
 	edit: ({ isActive, value, onChange }) => {
-		const [gutenStoreLinks, setGutenStoreLinks] = useState([]);
-		const [gutenStoreTerms, setGutenStoreTerms] = useState([]);
-		const [gutenStoreSettings, setGutenStoreSettings] = useState({});
+		//
 		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
@@ -119,8 +117,8 @@ export const betterlinksFormat = {
 				link_modified: currentDate,
 				link_modified_gmt: currentDate,
 				link_note: '',
-				cat_id: gutenStoreTerms.filter((item) => item.term_slug == 'uncategorized')[0]?.ID,
-				...gutenStoreSettings,
+				cat_id: (gutenStore?.getState()?.terms?.terms || []).filter((item) => item.term_slug == 'uncategorized')[0]?.ID,
+				...gutenStore?.getState()?.settings?.settings,
 				nofollow: !!noFollow,
 				sponsored: !!sponsored,
 			};
@@ -184,7 +182,7 @@ export const betterlinksFormat = {
 
 		const handleTitleChange = (e) => {
 			setNewLinkTitle(e.target.value);
-			setNewLinkShortUrl(generateShortURL(gutenStoreSettings, e.target.value));
+			setNewLinkShortUrl(generateShortURL(gutenStore?.getState()?.settings?.settings, e.target.value));
 		};
 
 		const handleTargetUrlChange = (e) => {
@@ -198,47 +196,30 @@ export const betterlinksFormat = {
 		const onClick = () => {
 			setIsVisible(true);
 
-			const allLinksArr = gutenStore?.getState()?.links?.links;
-			const settings = gutenStore?.getState()?.settings?.settings;
-			const terms = gutenStore?.getState()?.terms?.terms;
-
-			if (allLinksArr) {
-				setGutenStoreLinks(allLinksArr);
-			} else {
+			if (!gutenStore?.getState()?.links?.links) {
 				fetch_links_data(true)(gutenStore.dispatch)
-					.then(() => {
-						const allLinksArr = gutenStore?.getState()?.links?.links;
-						if (allLinksArr) {
-							setGutenStoreLinks(allLinksArr);
-						}
-					})
-					.catch((err) => console.log({ err }));
+					.then(() => {})
+					.catch((err) => console.log('error!! failed fetching links', err));
 			}
 
+			const settings = gutenStore?.getState()?.settings?.settings;
 			if (settings) {
-				setGutenStoreSettings(settings);
 				setSponsored(!!settings?.sponsored);
 				setNoFollow(!!settings?.nofollow);
 			} else {
 				fetch_settings_data()(gutenStore.dispatch)
 					.then(() => {
 						const settings = gutenStore?.getState()?.settings?.settings;
-						setGutenStoreSettings(settings);
 						setSponsored(!!settings?.sponsored);
 						setNoFollow(!!settings?.nofollow);
 					})
-					.catch((err) => console.log(err));
+					.catch((err) => console.log('error!! failed fetching betterlinks Settings data', err));
 			}
 
-			if (terms) {
-				setGutenStoreTerms(terms);
-			} else {
+			if (!gutenStore?.getState()?.terms?.terms) {
 				fetch_terms_data()(gutenStore.dispatch)
-					.then(() => {
-						const terms = gutenStore?.getState()?.terms?.terms;
-						setGutenStoreTerms(terms);
-					})
-					.catch((err) => console.log(err));
+					.then(() => {})
+					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 			}
 		};
 
@@ -290,7 +271,7 @@ export const betterlinksFormat = {
 				return false;
 			}
 			const regex = new RegExp(`(${value})`, 'gi');
-			const matchedLinks = gutenStoreLinks.filter((item) => regex.test(item.link_title));
+			const matchedLinks = gutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
 			setRegex(regex);
 			setMatchedLinks(matchedLinks);
 		};
