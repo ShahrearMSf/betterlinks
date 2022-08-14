@@ -10,7 +10,6 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-var target_url;
 var redirect_type;
 var cat_id;
 var nofollow;
@@ -38,7 +37,7 @@ const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [ID, setID] = useState(null);
 	const [terms, setTerms] = useState(false);
-	const [targetUrl, setTargetUrl] = useState(target_url);
+	const [targetUrl, setTargetUrl] = useState(null);
 	const [redirectMode, setRedirectMode] = useState(redirect_type);
 	const [catId, setCatId] = useState(cat_id);
 	const [isNofollow, setIsNoFollow] = useState(nofollow);
@@ -98,7 +97,6 @@ const CustomSidebarMetaComponent = (props) => {
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
-		target_url = url;
 	};
 
 	const onSetRedirectType = (type) => {
@@ -240,7 +238,7 @@ const CustomSidebarMetaComponent = (props) => {
 			isSavingPost = false;
 		} else {
 			if (!isSavingPost && wp.data.select('core/editor').getPermalink()) {
-				if (target_url && target_url.trim() != '') {
+				if (targetUrl && targetUrl.trim() != '') {
 					var permalink = wp.data.select('core/editor').getPermalink();
 					var currentPost = wp.data.select('core/editor').getCurrentPost();
 					const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -254,7 +252,7 @@ const CustomSidebarMetaComponent = (props) => {
 						redirect_type: redirect_type,
 						short_url: permalinkToShortUrl(permalink),
 						sponsored: sponsored,
-						target_url: target_url,
+						target_url: targetUrl,
 						track_me: track_me,
 						link_modified: currentDate,
 						link_modified_gmt: currentDate,
