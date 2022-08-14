@@ -4,7 +4,6 @@ import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate, is
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
