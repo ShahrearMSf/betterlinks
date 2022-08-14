@@ -22,8 +22,7 @@ var track_me;
 var link_status;
 var expire;
 var expire_type;
-var currentDate = new Date();
-var expire_date = currentDate;
+var expire_date = new Date();
 var expire_clicks;
 var expire_redirect;
 var expire_redirect_url;
@@ -37,6 +36,7 @@ const permalinkToShortUrl = (permalink) => {
 };
 
 const CustomSidebarMetaComponent = (props) => {
+	console.log('---CustomSidebarMetaComponent', { props });
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
@@ -150,7 +150,6 @@ const CustomSidebarMetaComponent = (props) => {
 
 	const onSetExpireDate = (value) => {
 		setExpireDate(value);
-		expire_date = value;
 	};
 
 	const onSetExpireClicks = (value) => {
@@ -236,6 +235,7 @@ const CustomSidebarMetaComponent = (props) => {
 	};
 
 	subscribe(() => {
+		console.log('----betterlinks sidebar subscribe runned');
 		if (wp.data.select('core/editor').isSavingPost()) {
 			isSavingPost = false;
 		} else {
@@ -522,6 +522,7 @@ const CustomSidebarMeta = withDispatch((dispatch) => ({
 }))(CustomSidebarMetaComponent);
 
 const CustomSidebarComponent = () => {
+	console.log('---CustomSidebarComponent rendered');
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [data, setData] = useState(false);
 	const [settings, setSettings] = useState({});
