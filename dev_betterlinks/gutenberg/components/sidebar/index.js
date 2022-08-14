@@ -10,7 +10,7 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-var BetterLinksID;
+
 var target_url;
 var redirect_type;
 var cat_id;
@@ -38,7 +38,7 @@ const permalinkToShortUrl = (permalink) => {
 const CustomSidebarMetaComponent = (props) => {
 	console.log('---CustomSidebarMetaComponent', { props });
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [ID, setID] = useState(BetterLinksID);
+	const [ID, setID] = useState(null);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(target_url);
 	const [redirectMode, setRedirectMode] = useState(redirect_type);
@@ -69,7 +69,6 @@ const CustomSidebarMetaComponent = (props) => {
 		}
 
 		if (props.data) {
-			BetterLinksID = props.data.ID;
 			setID(props.data.ID);
 			onSetTargetUrl(props.data.target_url);
 			onSetRedirectType(props.data.redirect_type);
@@ -103,6 +102,7 @@ const CustomSidebarMetaComponent = (props) => {
 		setTargetUrl(url);
 		target_url = url;
 	};
+
 	const onSetRedirectType = (type) => {
 		setRedirectMode(type);
 		redirect_type = type;
@@ -193,6 +193,7 @@ const CustomSidebarMetaComponent = (props) => {
 		onSetLinkStatus('publish');
 		return 'publish';
 	};
+
 	const getDefaultExpireType = (type) => {
 		if (type && type != '') {
 			return type;
@@ -200,6 +201,7 @@ const CustomSidebarMetaComponent = (props) => {
 		onSetExpireType('date');
 		return 'date';
 	};
+
 	const deleteInstantRedirect = () => {
 		if (ID && confirm(__('Are you sure you want to delete your Instant Redirect Rule?', 'betterlinks'))) {
 			makeRequest({
@@ -207,7 +209,6 @@ const CustomSidebarMetaComponent = (props) => {
 				ID,
 				short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
 			}).then((response) => {
-				BetterLinksID = '';
 				setID('');
 				onSetTargetUrl('');
 				onSetRedirectType('');
@@ -226,6 +227,7 @@ const CustomSidebarMetaComponent = (props) => {
 			});
 		}
 	};
+
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
 	};
@@ -245,7 +247,7 @@ const CustomSidebarMetaComponent = (props) => {
 					var currentPost = wp.data.select('core/editor').getCurrentPost();
 					const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 					var params = {
-						ID: BetterLinksID,
+						ID: ID,
 						cat_id: cat_id,
 						link_title: currentPost.title,
 						link_slug: currentPost.slug,
@@ -270,14 +272,13 @@ const CustomSidebarMetaComponent = (props) => {
 							redirect_url: expire_redirect_url,
 						};
 					}
-					if (BetterLinksID) {
+					if (ID) {
 						makeRequest({
 							action: 'betterlinks/admin/update_link',
-							ID: BetterLinksID,
+							ID: ID,
 							...params,
 						}).then((response) => {
 							if (response.data.data) {
-								BetterLinksID = response.data.data.ID;
 								setID(response.data.data.ID);
 							}
 						});
@@ -289,7 +290,6 @@ const CustomSidebarMetaComponent = (props) => {
 							...params,
 						}).then((response) => {
 							if (response.data.data) {
-								BetterLinksID = response.data.data.ID;
 								setID(response.data.data.ID);
 							}
 						});
