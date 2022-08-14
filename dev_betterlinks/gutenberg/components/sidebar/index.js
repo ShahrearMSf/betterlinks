@@ -10,7 +10,6 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-var redirect_type;
 var cat_id;
 var nofollow;
 var sponsored;
@@ -38,7 +37,7 @@ const CustomSidebarMetaComponent = (props) => {
 	const [ID, setID] = useState(null);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState(null);
-	const [redirectMode, setRedirectMode] = useState(redirect_type);
+	const [redirectMode, setRedirectMode] = useState(null);
 	const [catId, setCatId] = useState(cat_id);
 	const [isNofollow, setIsNoFollow] = useState(nofollow);
 	const [isSponsored, setSponsored] = useState(sponsored);
@@ -101,7 +100,6 @@ const CustomSidebarMetaComponent = (props) => {
 
 	const onSetRedirectType = (type) => {
 		setRedirectMode(type);
-		redirect_type = type;
 	};
 
 	const onSetCatId = (catid) => {
@@ -249,7 +247,7 @@ const CustomSidebarMetaComponent = (props) => {
 						link_slug: currentPost.slug,
 						nofollow: nofollow,
 						param_forwarding: param_forwarding,
-						redirect_type: redirect_type,
+						redirect_type: redirectMode,
 						short_url: permalinkToShortUrl(permalink),
 						sponsored: sponsored,
 						target_url: targetUrl,
