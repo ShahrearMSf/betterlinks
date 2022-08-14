@@ -10,7 +10,6 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-
 var target_url;
 var redirect_type;
 var cat_id;
@@ -22,7 +21,6 @@ var track_me;
 var link_status;
 var expire;
 var expire_type;
-var expire_date = new Date();
 var expire_clicks;
 var expire_redirect;
 var expire_redirect_url;
@@ -51,7 +49,7 @@ const CustomSidebarMetaComponent = (props) => {
 	const [linkStatus, setLinkStatus] = useState(link_status);
 	const [isExpire, setIsExpire] = useState(expire);
 	const [expireType, setExpireType] = useState(expire_type);
-	const [expireDate, setExpireDate] = useState(expire_date);
+	const [expireDate, setExpireDate] = useState(new Date());
 	const [expireClicks, setExpireClicks] = useState(expire_clicks);
 	const [expireRedirect, setExpireRedirect] = useState(expire_redirect);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState(expire_redirect_url);
@@ -267,7 +265,7 @@ const CustomSidebarMetaComponent = (props) => {
 							status: expire,
 							type: expire_type,
 							clicks: expire_clicks,
-							date: expire_date,
+							date: new Date(),
 							redirect_status: expire_redirect,
 							redirect_url: expire_redirect_url,
 						};
