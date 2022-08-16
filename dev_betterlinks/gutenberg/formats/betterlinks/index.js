@@ -204,12 +204,18 @@ export const betterlinksFormat = {
 			if (settings) {
 				setSponsored(!!settings?.sponsored);
 				setNoFollow(!!settings?.nofollow);
+				if (settings.is_random_string) {
+					setNewLinkShortUrl(generateShortURL(settings, null));
+				}
 			} else {
 				fetch_settings_data()(gutenStore.dispatch)
 					.then(() => {
 						const settings = gutenStore?.getState()?.settings?.settings;
 						setSponsored(!!settings?.sponsored);
 						setNoFollow(!!settings?.nofollow);
+						if (settings.is_random_string) {
+							setNewLinkShortUrl(generateShortURL(settings, null));
+						}
 					})
 					.catch((err) => console.log('error!! failed fetching betterlinks Settings data', err));
 			}
