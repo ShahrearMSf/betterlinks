@@ -10,21 +10,6 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-var cat_id;
-var nofollow;
-var sponsored;
-var param_forwarding;
-var track_me;
-
-var link_status;
-var expire;
-var expire_type;
-var expire_clicks;
-var expire_redirect;
-var expire_redirect_url;
-
-var isSavingPost = true; // flag for multiple request break
-
 const permalinkToShortUrl = (permalink) => {
 	if (!permalink) return permalink;
 	const short_url = permalink.replace(site_url + '/', '');
@@ -36,21 +21,21 @@ const CustomSidebarMetaComponent = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [ID, setID] = useState(null);
 	const [terms, setTerms] = useState(false);
-	const [targetUrl, setTargetUrl] = useState(null);
+	const [targetUrl, setTargetUrl] = useState('');
 	const [redirectMode, setRedirectMode] = useState(null);
-	const [catId, setCatId] = useState(cat_id);
-	const [isNofollow, setIsNoFollow] = useState(nofollow);
-	const [isSponsored, setSponsored] = useState(sponsored);
-	const [isParamForwarding, setIsParamForwarding] = useState(param_forwarding);
-	const [isTrackMe, setIsTrackMe] = useState(track_me);
+	const [catId, setCatId] = useState(null);
+	const [isNofollow, setIsNoFollow] = useState(null);
+	const [isSponsored, setSponsored] = useState(null);
+	const [isParamForwarding, setIsParamForwarding] = useState(null);
+	const [isTrackMe, setIsTrackMe] = useState(null);
 
-	const [linkStatus, setLinkStatus] = useState(link_status);
-	const [isExpire, setIsExpire] = useState(expire);
-	const [expireType, setExpireType] = useState(expire_type);
+	const [linkStatus, setLinkStatus] = useState(null);
+	const [isExpire, setIsExpire] = useState();
+	const [expireType, setExpireType] = useState(null);
 	const [expireDate, setExpireDate] = useState(new Date());
-	const [expireClicks, setExpireClicks] = useState(expire_clicks);
-	const [expireRedirect, setExpireRedirect] = useState(expire_redirect);
-	const [expireRedirectUrl, setExpireRedirectUrl] = useState(expire_redirect_url);
+	const [expireClicks, setExpireClicks] = useState(null);
+	const [expireRedirect, setExpireRedirect] = useState(null);
+	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
@@ -104,42 +89,34 @@ const CustomSidebarMetaComponent = (props) => {
 
 	const onSetCatId = (catid) => {
 		setCatId(catid);
-		cat_id = catid;
 	};
 
 	const onSetNoFollow = (isnofollow) => {
 		setIsNoFollow(isnofollow);
-		nofollow = isnofollow;
 	};
 
 	const onSetSponsored = (issponsored) => {
 		setSponsored(issponsored);
-		sponsored = issponsored;
 	};
 
 	const onSetParamForwarding = (isparamforwarding) => {
 		setIsParamForwarding(isparamforwarding);
-		param_forwarding = isparamforwarding;
 	};
 
 	const onSetTrackMe = (istrackme) => {
 		setIsTrackMe(istrackme);
-		track_me = istrackme;
 	};
 
 	const onSetLinkStatus = (status) => {
 		setLinkStatus(status);
-		link_status = status;
 	};
 
 	const onSetExpire = (value) => {
 		setIsExpire(value);
-		expire = value;
 	};
 
 	const onSetExpireType = (value) => {
 		setExpireType(value);
-		expire_type = value;
 	};
 
 	const onSetExpireDate = (value) => {
@@ -148,17 +125,14 @@ const CustomSidebarMetaComponent = (props) => {
 
 	const onSetExpireClicks = (value) => {
 		setExpireClicks(value);
-		expire_clicks = value;
 	};
 
 	const onSetExpireRedirect = (value) => {
 		setExpireRedirect(value);
-		expire_redirect = value;
 	};
 
 	const onSetExpireRedirectUrl = (value) => {
 		setExpireRedirectUrl(value);
-		expire_redirect_url = value;
 	};
 
 	const getDefaultCatID = (savedCatID, terms) => {
@@ -232,64 +206,58 @@ const CustomSidebarMetaComponent = (props) => {
 
 	subscribe(() => {
 		console.log('----betterlinks sidebar subscribe runned');
-		if (wp.data.select('core/editor').isSavingPost()) {
-			isSavingPost = false;
-		} else {
-			if (!isSavingPost && wp.data.select('core/editor').getPermalink()) {
-				if (targetUrl && targetUrl.trim() != '') {
-					var permalink = wp.data.select('core/editor').getPermalink();
-					var currentPost = wp.data.select('core/editor').getCurrentPost();
-					const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
-					var params = {
-						ID: ID,
-						cat_id: cat_id,
-						link_title: currentPost.title,
-						link_slug: currentPost.slug,
-						nofollow: nofollow,
-						param_forwarding: param_forwarding,
-						redirect_type: redirectMode,
-						short_url: permalinkToShortUrl(permalink),
-						sponsored: sponsored,
-						target_url: targetUrl,
-						track_me: track_me,
-						link_modified: currentDate,
-						link_modified_gmt: currentDate,
-					};
-					if (is_pro_enabled) {
-						params.link_status = link_status;
-						params.expire = {
-							status: expire,
-							type: expire_type,
-							clicks: expire_clicks,
-							date: new Date(),
-							redirect_status: expire_redirect,
-							redirect_url: expire_redirect_url,
-						};
+		if (wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getPermalink() && targetUrl && targetUrl.trim() != '') {
+			console.log('----betterlinks subscribe passed the if check. actual code running started.');
+			var permalink = wp.data.select('core/editor').getPermalink();
+			var currentPost = wp.data.select('core/editor').getCurrentPost();
+			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+			var params = {
+				ID: ID,
+				cat_id: catId,
+				link_title: currentPost.title,
+				link_slug: currentPost.slug,
+				nofollow: isNofollow,
+				param_forwarding: isParamForwarding,
+				redirect_type: redirectMode,
+				short_url: permalinkToShortUrl(permalink),
+				sponsored: isSponsored,
+				target_url: targetUrl,
+				track_me: isTrackMe,
+				link_modified: currentDate,
+				link_modified_gmt: currentDate,
+			};
+			if (is_pro_enabled) {
+				params.link_status = linkStatus;
+				params.expire = {
+					status: isExpire,
+					type: expireType,
+					clicks: expireClicks,
+					date: new Date(),
+					redirect_status: expireRedirect,
+					redirect_url: expireRedirectUrl,
+				};
+			}
+			if (ID) {
+				makeRequest({
+					action: 'betterlinks/admin/update_link',
+					ID: ID,
+					...params,
+				}).then((response) => {
+					if (response.data.data) {
+						setID(response.data.data.ID);
 					}
-					if (ID) {
-						makeRequest({
-							action: 'betterlinks/admin/update_link',
-							ID: ID,
-							...params,
-						}).then((response) => {
-							if (response.data.data) {
-								setID(response.data.data.ID);
-							}
-						});
-					} else {
-						params.link_date = currentDate;
-						params.link_date_gmt = currentDate;
-						makeRequest({
-							action: 'betterlinks/admin/create_link',
-							...params,
-						}).then((response) => {
-							if (response.data.data) {
-								setID(response.data.data.ID);
-							}
-						});
+				});
+			} else {
+				params.link_date = currentDate;
+				params.link_date_gmt = currentDate;
+				makeRequest({
+					action: 'betterlinks/admin/create_link',
+					...params,
+				}).then((response) => {
+					if (response.data.data) {
+						setID(response.data.data.ID);
 					}
-				}
-				isSavingPost = true;
+				});
 			}
 		}
 	});
