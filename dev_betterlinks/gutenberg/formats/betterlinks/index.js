@@ -23,7 +23,7 @@ import { betterlinksIcon } from './icon';
 import { makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
 
 const name = 'betterlinks/link-format';
-const title = __('Betterlinks');
+const title = __('BetterLinks');
 
 export const betterlinksFormat = {
 	name,
