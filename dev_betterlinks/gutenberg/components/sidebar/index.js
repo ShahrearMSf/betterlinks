@@ -208,10 +208,10 @@ const CustomSidebarMetaComponent = (props) => {
 		console.log('----betterlinks sidebar subscribe runned');
 		if (wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getPermalink() && targetUrl && targetUrl.trim() != '') {
 			console.log('----betterlinks subscribe passed the if check. actual code running started.');
-			var permalink = wp.data.select('core/editor').getPermalink();
-			var currentPost = wp.data.select('core/editor').getCurrentPost();
+			const permalink = wp.data.select('core/editor').getPermalink();
+			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
-			var params = {
+			const params = {
 				ID: ID,
 				cat_id: catId,
 				link_title: currentPost.title,
