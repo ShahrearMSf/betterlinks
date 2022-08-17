@@ -377,7 +377,7 @@ export const betterlinksFormat = {
 								<input
 									type="text"
 									ref={searchFieldRef}
-									placeholder="Search betterlinks or paste the link"
+									placeholder="Paste URL or type to search"
 									onChange={handleUrlInputChange}
 									value={searchedText}
 									className="btl-url-search-field"
