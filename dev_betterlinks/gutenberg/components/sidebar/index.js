@@ -88,10 +88,11 @@ const CustomSidebarMetaComponent = (props) => {
 				}
 			}
 		} else {
-			onSetNoFollow(!!props.settings.nofollow);
-			onSetSponsored(!!props.settings.sponsored);
-			onSetParamForwarding(!!props.settings.param_forwarding);
-			onSetTrackMe(!!props.settings.track_me);
+			const settings = gutenStore?.getState()?.settings?.settings;
+			onSetNoFollow(!!settings.nofollow);
+			onSetSponsored(!!settings.sponsored);
+			onSetParamForwarding(!!settings.param_forwarding);
+			onSetTrackMe(!!settings.track_me);
 		}
 	}, [ID, props.data]);
 
@@ -580,7 +581,7 @@ const CustomSidebarComponent = () => {
 		<Fragment>
 			{isAllowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
-					<CustomSidebarMeta settings={gutenStore?.getState()?.settings?.settings} data={data} />
+					<CustomSidebarMeta data={data} />
 				</PluginDocumentSettingPanel>
 			)}
 		</Fragment>
