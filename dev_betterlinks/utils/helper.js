@@ -393,7 +393,7 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 	}
 
 	const result = {
-		type: 'core/link',
+		type: 'betterlinks/link-format',
 		attributes,
 	};
 	return result;
