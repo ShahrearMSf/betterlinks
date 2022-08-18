@@ -4,6 +4,12 @@ import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate, is
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+
+import { gutenStore } from 'redux/store';
+import { fetch_links_data, add_new_link } from 'redux/actions/links.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
+
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
@@ -44,9 +50,19 @@ const CustomSidebarMetaComponent = (props) => {
 				action: 'betterlinks/admin/get_terms',
 			}).then((response) => {
 				if (response.data.data) {
+					console.log('-----betterlinks/admin/get_terms response.data.data', response.data.data);
 					setTerms(response.data.data);
 				}
 			});
+
+			const storeTerms = gutenStore?.getState()?.terms?.terms;
+			console.log('-----sidebar ', { storeTerms });
+			if (!storeTerms) {
+				console.log('-----betterlinks/admin/get_terms response.data.data', response.data.data);
+				fetch_terms_data()(gutenStore.dispatch)
+					.then(() => {})
+					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
+			}
 		}
 
 		if (props.data) {
@@ -526,18 +542,20 @@ const CustomSidebarComponent = () => {
 	console.log('---CustomSidebarComponent rendered');
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [data, setData] = useState(false);
-	const [settings, setSettings] = useState({});
 	useEffect(() => {
 		// Settings
-		makeRequest({
-			action: 'betterlinks/admin/get_settings',
-		}).then((response) => {
-			if (response.data.data) {
-				const settings = getJsonString(response.data.data);
-				setSettings(settings);
-				setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
-			}
-		});
+		const settings = gutenStore?.getState()?.settings?.settings;
+		if (settings) {
+			setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+		} else {
+			fetch_settings_data()(gutenStore.dispatch)
+				.then(() => {
+					const settings = gutenStore?.getState()?.settings?.settings;
+					setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+				})
+				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
+		}
+
 		// get links
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
@@ -562,7 +580,7 @@ const CustomSidebarComponent = () => {
 		<Fragment>
 			{isAllowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
-					<CustomSidebarMeta settings={settings} data={data} />
+					<CustomSidebarMeta settings={gutenStore?.getState()?.settings?.settings} data={data} />
 				</PluginDocumentSettingPanel>
 			)}
 		</Fragment>
