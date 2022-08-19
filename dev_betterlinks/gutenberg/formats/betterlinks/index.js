@@ -28,7 +28,7 @@ const title = __('BetterLinks');
 export const betterlinksFormat = {
 	name,
 	title,
-	tagName: 'btl',
+	tagName: 'a',
 	className: 'betterlinks-linked-text',
 	attributes: {
 		url: 'href',
