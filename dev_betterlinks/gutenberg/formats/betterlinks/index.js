@@ -22,6 +22,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { betterlinksIcon } from './icon';
 import { makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
 import { RenderSettings } from './renderSettings';
+import { LinkPreview } from './linkPreview';
 
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
@@ -40,7 +41,8 @@ export const betterlinksFormat = {
 		isActive,
 		value,
 		onChange,
-		// activeAttributes,
+		//
+		activeAttributes,
 	}) => {
 		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
@@ -343,7 +345,7 @@ export const betterlinksFormat = {
 		};
 
 		//
-		// console.log({ activeAttributes, isActive, value });
+		console.log({ activeAttributes, isActive, value, anchorRect });
 
 		return (
 			<>
@@ -359,7 +361,7 @@ export const betterlinksFormat = {
 					</>
 				)}
 
-				{isVisible && (
+				{(isVisible || isActive) && (
 					<div className="betterlinks-links-popover-wrapper">
 						<URLPopover
 							className="btl-url-popover-slot"
@@ -435,6 +437,7 @@ export const betterlinksFormat = {
 
 								<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
 							</form>
+							{isActive && <LinkPreview close={close} />}
 						</URLPopover>
 					</div>
 				)}
