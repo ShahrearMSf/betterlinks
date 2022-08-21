@@ -21,6 +21,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 // local imports
 import { betterlinksIcon } from './icon';
 import { makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
+import { RenderSettings } from './renderSettings';
 
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
@@ -351,39 +352,29 @@ export const betterlinksFormat = {
 						<URLPopover
 							className="btl-url-popover-slot"
 							anchorRect={anchorRect}
-							onClose={close}
+							onClose={() => {
+								console.log('---URLPopover onClose runned');
+								close();
+							}}
 							renderSettings={() => (
-								<div className="betterlinks-expanded-format-options">
-									<ToggleControl label={__(`Open in new tab`)} checked={linkNewTab} onChange={() => setLinkNewTab(!linkNewTab)} />
-									<ToggleControl label={__(`Sponsored`)} checked={sponsored} onChange={() => setSponsored(!sponsored)} />
-									<ToggleControl label={__(`Nofollow`)} checked={noFollow} onChange={() => setNoFollow(!noFollow)} />
-									<hr />
-									{isSubmittedNewLink && (
-										<>
-											<p className="betterlinks-format-new-link-created-success">
-												Success!! <br />
-												Link SuccessFully Created!!!
-											</p>
-										</>
-									)}
-									{isNewLinkSubmissionFailed && (
-										<>
-											<p className="betterlinks-format-new-link-creating-failed">
-												Link creation failed!!! <br />
-												Please make sure to use a unique short link that doesn't already exist. <br />
-												Also make sure no fields are empty
-											</p>
-										</>
-									)}
-									<form className="betterlinks-format-new-link-form" onSubmit={handleNewLinkSubmit}>
-										<h4>Create New Betterlink</h4>
-										<input type="text" onChange={handleTitleChange} placeholder={__('Link Title')} value={newLinkTitle} />
-										<input type="text" onChange={handleTargetUrlChange} placeholder={__('Target Url')} value={newLinkTargetUrl} />
-										<input type="text" onChange={handleShortUrlChange} placeholder={__('Betterlink Shortened Url Slug')} value={newLinkShortUrl} />
-										<button type="submit">Create Link</button>
-										{isSubmittingNewLink && <Spinner />}
-									</form>
-								</div>
+								<RenderSettings
+									setLinkNewTab={setLinkNewTab}
+									linkNewTab={linkNewTab}
+									setSponsored={setSponsored}
+									sponsored={sponsored}
+									setNoFollow={setNoFollow}
+									noFollow={noFollow}
+									newLinkTitle={newLinkTitle}
+									newLinkTargetUrl={newLinkTargetUrl}
+									newLinkShortUrl={newLinkShortUrl}
+									isSubmittedNewLink={isSubmittedNewLink}
+									isSubmittingNewLink={isSubmittingNewLink}
+									isNewLinkSubmissionFailed={isNewLinkSubmissionFailed}
+									handleTitleChange={handleTitleChange}
+									handleTargetUrlChange={handleTargetUrlChange}
+									handleShortUrlChange={handleShortUrlChange}
+									handleNewLinkSubmit={handleNewLinkSubmit}
+								/>
 							)}
 						>
 							<form className="btl-links-search-form" onSubmit={handleSubmit}>
