@@ -59,6 +59,8 @@ export const betterlinksFormat = {
 		const [isSubmittedNewLink, setIsSubmittedNewLink] = useState(false);
 		const [isNewLinkSubmissionFailed, setIsNewLinkSubmissionFailed] = useState(false);
 
+		const [submitDone, setSubmitDone] = useState(false);
+
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
 
@@ -259,6 +261,7 @@ export const betterlinksFormat = {
 				onChange(applyFormat(value, linkFormat));
 			}
 			reset();
+			setSubmitDone(true);
 		};
 
 		const handleMatchedLiClick = (shortUrl) => {
