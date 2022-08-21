@@ -155,11 +155,15 @@ function links(state = {}, action) {
 					},
 				},
 			};
-		case ADD_NEW_LINK_FOR_GUTEN_STORE:
+		case ADD_NEW_LINK_FOR_GUTEN_STORE: {
+			//👇 trimmed off any forward slashes in the short url
+			const newData = { ...payload.data, short_url: payload.data.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
+
 			return {
 				...state,
-				links: [...state.links, payload.data],
+				links: [...state.links, newData],
 			};
+		}
 		case EDIT_LINK: {
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
 				const linksAtPayloadCat = state.links[payload.cat_id].lists;
