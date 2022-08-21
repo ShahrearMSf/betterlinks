@@ -1,8 +1,8 @@
 // wordpress imports
 const { __ } = wp.i18n;
-const { applyFormat, create, insert, isCollapsed } = wp.richText;
+const { applyFormat, removeFormat, create, insert, isCollapsed } = wp.richText;
 const { useState, useEffect, useRef, useMemo } = wp.element;
-const { Popover, Button, ToggleControl, Spinner } = wp.components;
+const { Popover, Button } = wp.components;
 const { RichTextToolbarButton, URLPopover, RichTextShortcut } = wp.blockEditor;
 const { UP, DOWN, ENTER } = wp.keycodes;
 const { getRectangleFromRange } = wp.dom;
@@ -347,12 +347,16 @@ export const betterlinksFormat = {
 
 		return (
 			<>
-				{!isVisible && <RichTextShortcut type="primary" character="j" onUse={onClick} />}
-
 				{isActive ? (
-					<RichTextToolbarButton icon="editor-unlink" title={__('Remove Betterlink')} onClick={onClick} />
+					<>
+						<RichTextShortcut type="primaryShift" character="j" onUse={() => onChange(removeFormat(value, name))} />
+						<RichTextToolbarButton icon="editor-unlink" title={__('Remove Betterlink')} onClick={() => onChange(removeFormat(value, name))} />
+					</>
 				) : (
-					<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} />
+					<>
+						<RichTextShortcut type="primary" character="j" onUse={onClick} />
+						<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} />
+					</>
 				)}
 
 				{isVisible && (
