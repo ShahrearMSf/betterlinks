@@ -245,6 +245,7 @@ export const betterlinksFormat = {
 			setIsSubmittingNewLink(false);
 			setIsSubmittedNewLink(false);
 			setIsNewLinkSubmissionFailed(false);
+			setIsLinkInvalid(false);
 		};
 
 		const handleSubmit = (e) => {
@@ -311,6 +312,7 @@ export const betterlinksFormat = {
 			const matchedLinks = gutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
 			setRegex(regex);
 			setMatchedLinks(matchedLinks);
+			setIsLinkInvalid(false);
 		};
 
 		const anchorRect = useMemo(() => {
