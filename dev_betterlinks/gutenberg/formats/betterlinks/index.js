@@ -35,7 +35,12 @@ export const betterlinksFormat = {
 		target: 'target',
 		rel: 'rel',
 	},
-	edit: ({ isActive, value, onChange }) => {
+	edit: ({
+		isActive,
+		value,
+		onChange,
+		// activeAttributes,
+	}) => {
 		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
@@ -328,10 +333,18 @@ export const betterlinksFormat = {
 			}
 		};
 
+		//
+		// console.log({ activeAttributes, isActive, value });
+
 		return (
 			<>
 				{!isVisible && <RichTextShortcut type="primary" character="j" onUse={onClick} />}
-				<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} isActive={isActive} />
+
+				{isActive ? (
+					<RichTextToolbarButton icon="editor-unlink" title={__('Remove Betterlink')} onClick={onClick} />
+				) : (
+					<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} />
+				)}
 
 				{isVisible && (
 					<div className="betterlinks-links-popover-wrapper">
