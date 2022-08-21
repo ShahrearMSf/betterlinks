@@ -62,6 +62,7 @@ export const betterlinksFormat = {
 		const [isNewLinkSubmissionFailed, setIsNewLinkSubmissionFailed] = useState(false);
 
 		const [submitDone, setSubmitDone] = useState(false);
+		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -252,6 +253,28 @@ export const betterlinksFormat = {
 			if (!newText) return false;
 			// scenario: the search filed is empty
 
+			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '');
+			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
+			const justShortlink = newText
+				.replace(/https?\:\/\//g, '')
+				.replace(siteUrlRegex, '')
+				.replace(/\/+$/, '')
+				.replace(/^\/+/, '');
+
+			const foundLink = (gutenStore?.getState()?.links?.links || []).find((item) => item.shortUrl === justShortlink);
+
+			console.log({
+				justShortlink,
+				siteUrlWithoutHttp,
+				siteUrlRegex,
+				foundLink,
+			});
+
+			if (!foundLink) {
+				setIsLinkInvalid(true);
+				return false;
+			}
+
 			const withHttp = /^https?\:\/\//i.test(newText) ? newText : `http://${newText}`;
 			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored, noFollow });
 
@@ -407,6 +430,14 @@ export const betterlinksFormat = {
 										onKeyDown={handleOnKeyDown}
 									/>
 
+									{isLinkInvalid && (
+										<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
+											<div className="invalid Warning">
+												Invalid Link. <button>create Link</button>
+											</div>
+										</Popover>
+									)}
+
 									{matchedLinks.length > 0 && regex && (
 										<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
 											<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
@@ -443,6 +474,7 @@ export const betterlinksFormat = {
 									<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
 								</form>
 							)}
+
 							{isActive && <LinkPreview close={close} />}
 						</URLPopover>
 					</div>
