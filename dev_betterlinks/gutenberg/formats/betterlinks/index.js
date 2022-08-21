@@ -370,73 +370,79 @@ export const betterlinksFormat = {
 								console.log('---URLPopover onClose runned');
 								close();
 							}}
-							renderSettings={() => (
-								<RenderSettings
-									setLinkNewTab={setLinkNewTab}
-									linkNewTab={linkNewTab}
-									setSponsored={setSponsored}
-									sponsored={sponsored}
-									setNoFollow={setNoFollow}
-									noFollow={noFollow}
-									newLinkTitle={newLinkTitle}
-									newLinkTargetUrl={newLinkTargetUrl}
-									newLinkShortUrl={newLinkShortUrl}
-									isSubmittedNewLink={isSubmittedNewLink}
-									isSubmittingNewLink={isSubmittingNewLink}
-									isNewLinkSubmissionFailed={isNewLinkSubmissionFailed}
-									handleTitleChange={handleTitleChange}
-									handleTargetUrlChange={handleTargetUrlChange}
-									handleShortUrlChange={handleShortUrlChange}
-									handleNewLinkSubmit={handleNewLinkSubmit}
-								/>
-							)}
+							renderSettings={
+								!isActive && !submitDone
+									? () => (
+											<RenderSettings
+												setLinkNewTab={setLinkNewTab}
+												linkNewTab={linkNewTab}
+												setSponsored={setSponsored}
+												sponsored={sponsored}
+												setNoFollow={setNoFollow}
+												noFollow={noFollow}
+												newLinkTitle={newLinkTitle}
+												newLinkTargetUrl={newLinkTargetUrl}
+												newLinkShortUrl={newLinkShortUrl}
+												isSubmittedNewLink={isSubmittedNewLink}
+												isSubmittingNewLink={isSubmittingNewLink}
+												isNewLinkSubmissionFailed={isNewLinkSubmissionFailed}
+												handleTitleChange={handleTitleChange}
+												handleTargetUrlChange={handleTargetUrlChange}
+												handleShortUrlChange={handleShortUrlChange}
+												handleNewLinkSubmit={handleNewLinkSubmit}
+											/>
+									  )
+									: undefined
+							}
 						>
-							<form className="btl-links-search-form" onSubmit={handleSubmit}>
-								<input
-									type="text"
-									ref={searchFieldRef}
-									placeholder="Paste URL or type to search"
-									onChange={handleUrlInputChange}
-									value={searchedText}
-									className="btl-url-search-field"
-									onKeyDown={handleOnKeyDown}
-								/>
+							{!isActive && !submitDone && (
+								<form className="btl-links-search-form" onSubmit={handleSubmit}>
+									<input
+										type="text"
+										ref={searchFieldRef}
+										placeholder="Paste URL or type to search"
+										onChange={handleUrlInputChange}
+										value={searchedText}
+										className="btl-url-search-field"
+										onKeyDown={handleOnKeyDown}
+									/>
 
-								{matchedLinks.length > 0 && regex && (
-									<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
-										<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
-											{matchedLinks.map((item, index) => {
-												const title = reactStringReplace(
-													// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
-													new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
-													regex,
-													(match, i) => {
-														return (
-															<span key={i} className="hl">
-																{match}
-															</span>
-														);
-													}
-												);
+									{matchedLinks.length > 0 && regex && (
+										<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
+											<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
+												{matchedLinks.map((item, index) => {
+													const title = reactStringReplace(
+														// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
+														new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
+														regex,
+														(match, i) => {
+															return (
+																<span key={i} className="hl">
+																	{match}
+																</span>
+															);
+														}
+													);
 
-												return (
-													<li
-														key={item.ID}
-														onClick={() => {
-															handleMatchedLiClick(item.short_url);
-														}}
-														className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
-													>
-														{title}
-													</li>
-												);
-											})}
-										</ul>
-									</Popover>
-								)}
+													return (
+														<li
+															key={item.ID}
+															onClick={() => {
+																handleMatchedLiClick(item.short_url);
+															}}
+															className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
+														>
+															{title}
+														</li>
+													);
+												})}
+											</ul>
+										</Popover>
+									)}
 
-								<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
-							</form>
+									<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
+								</form>
+							)}
 							{isActive && <LinkPreview close={close} />}
 						</URLPopover>
 					</div>
