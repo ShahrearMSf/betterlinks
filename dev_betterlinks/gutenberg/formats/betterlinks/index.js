@@ -233,8 +233,7 @@ export const betterlinksFormat = {
 			}
 		};
 
-		const close = () => {
-			setIsVisible(false);
+		const reset = () => {
 			setSearchedText('');
 			setMatchedLinks([]);
 			setSelectedIndex(null);
@@ -259,7 +258,7 @@ export const betterlinksFormat = {
 			} else {
 				onChange(applyFormat(value, linkFormat));
 			}
-			close();
+			reset();
 		};
 
 		const handleMatchedLiClick = (shortUrl) => {
@@ -332,6 +331,12 @@ export const betterlinksFormat = {
 					break;
 				}
 			}
+		};
+
+		const close = () => {
+			reset();
+			setIsVisible(false);
+			setSubmitDone(false);
 		};
 
 		//
