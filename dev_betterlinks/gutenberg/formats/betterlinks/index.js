@@ -264,7 +264,7 @@ export const betterlinksFormat = {
 				.replace(/\/+$/, '')
 				.replace(/^\/+/, '');
 
-			const foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.shortUrl === justShortlink);
+			const foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.short_url === justShortlink);
 
 			console.log({
 				justShortlink,
