@@ -13,7 +13,7 @@ import axios from 'axios';
 import reactStringReplace from 'react-string-replace';
 
 // redux imports
-import { gutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/store';
 import { fetch_links_data, add_new_link } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
@@ -125,8 +125,8 @@ export const betterlinksFormat = {
 				link_modified: currentDate,
 				link_modified_gmt: currentDate,
 				link_note: '',
-				cat_id: (gutenStore?.getState()?.terms?.terms || []).find((item) => item.term_slug == 'uncategorized')?.ID,
-				...gutenStore?.getState()?.settings?.settings,
+				cat_id: (betterlinksGutenStore?.getState()?.terms?.terms || []).find((item) => item.term_slug == 'uncategorized')?.ID,
+				...betterlinksGutenStore?.getState()?.settings?.settings,
 				nofollow: !!noFollow,
 				sponsored: !!sponsored,
 			};
@@ -155,7 +155,7 @@ export const betterlinksFormat = {
 							add_new_link(
 								values,
 								true
-							)(gutenStore.dispatch)
+							)(betterlinksGutenStore.dispatch)
 								.then((res) => {
 									setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
 									setIsNewLinkSubmissionFailed(false);
@@ -191,7 +191,7 @@ export const betterlinksFormat = {
 
 		const handleTitleChange = (e) => {
 			setNewLinkTitle(e.target.value);
-			setNewLinkShortUrl(generateShortURL(gutenStore?.getState()?.settings?.settings, e.target.value));
+			setNewLinkShortUrl(generateShortURL(betterlinksGutenStore?.getState()?.settings?.settings, e.target.value));
 		};
 
 		const handleTargetUrlChange = (e) => {
@@ -205,13 +205,13 @@ export const betterlinksFormat = {
 		const onClick = () => {
 			setIsVisible(true);
 
-			if (!gutenStore?.getState()?.links?.links) {
-				fetch_links_data(true)(gutenStore.dispatch)
+			if (!betterlinksGutenStore?.getState()?.links?.links) {
+				fetch_links_data(true)(betterlinksGutenStore.dispatch)
 					.then(() => {})
 					.catch((err) => console.log('error!! failed fetching links', err));
 			}
 
-			const settings = gutenStore?.getState()?.settings?.settings;
+			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			if (settings) {
 				setSponsored(!!settings?.sponsored);
 				setNoFollow(!!settings?.nofollow);
@@ -219,9 +219,9 @@ export const betterlinksFormat = {
 					setNewLinkShortUrl(generateShortURL(settings, null));
 				}
 			} else {
-				fetch_settings_data()(gutenStore.dispatch)
+				fetch_settings_data()(betterlinksGutenStore.dispatch)
 					.then(() => {
-						const settings = gutenStore?.getState()?.settings?.settings;
+						const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 						setSponsored(!!settings?.sponsored);
 						setNoFollow(!!settings?.nofollow);
 						if (settings.is_random_string) {
@@ -231,8 +231,8 @@ export const betterlinksFormat = {
 					.catch((err) => console.log('error!! failed fetching betterlinks Settings data', err));
 			}
 
-			if (!gutenStore?.getState()?.terms?.terms) {
-				fetch_terms_data()(gutenStore.dispatch)
+			if (!betterlinksGutenStore?.getState()?.terms?.terms) {
+				fetch_terms_data()(betterlinksGutenStore.dispatch)
 					.then(() => {})
 					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 			}
@@ -262,7 +262,7 @@ export const betterlinksFormat = {
 				.replace(/\/+$/, '')
 				.replace(/^\/+/, '');
 
-			const foundLink = (gutenStore?.getState()?.links?.links || []).find((item) => item.shortUrl === justShortlink);
+			const foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.shortUrl === justShortlink);
 
 			console.log({
 				justShortlink,
@@ -309,7 +309,7 @@ export const betterlinksFormat = {
 				return false;
 			}
 			const regex = new RegExp(`(${value})`, 'gi');
-			const matchedLinks = gutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
+			const matchedLinks = betterlinksGutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
 			setRegex(regex);
 			setMatchedLinks(matchedLinks);
 			setIsLinkInvalid(false);

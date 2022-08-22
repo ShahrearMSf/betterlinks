@@ -3,7 +3,7 @@ const { registerFormatType } = wp.richText;
 const { registerPlugin } = wp.plugins;
 
 // redux imports
-import { gutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/store';
 import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
@@ -13,15 +13,15 @@ import { CustomSidebar } from 'gutenberg/components';
 import { betterlinksFormat } from 'gutenberg/formats';
 
 // Redux Works
-fetch_links_data(true)(gutenStore.dispatch)
+fetch_links_data(true)(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_links_data failed', { err }));
 
-fetch_terms_data()(gutenStore.dispatch)
+fetch_terms_data()(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_terms_data failed', { err }));
 
-fetch_settings_data()(gutenStore.dispatch)
+fetch_settings_data()(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
 

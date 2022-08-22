@@ -12,4 +12,4 @@ if (process.env.NODE_ENV !== 'production') {
 
 export default createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(...middleware)));
 
-export const gutenStore = createStore(gutenbergReducers, {}, composeWithDevTools(applyMiddleware(...middleware)));
+export const betterlinksGutenStore = createStore(gutenbergReducers, {}, composeWithDevTools(applyMiddleware(...middleware)));
