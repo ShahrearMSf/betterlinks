@@ -23,6 +23,7 @@ import { betterlinksIcon } from './icon';
 import { makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
 import { RenderSettings } from './renderSettings';
 import { LinkPreview } from './linkPreview';
+import { Link } from 'containers/Link';
 
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
@@ -63,6 +64,7 @@ export const betterlinksFormat = {
 
 		const [submitDone, setSubmitDone] = useState(false);
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
+		const [showLinkModal, setShowLinkModal] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -370,7 +372,7 @@ export const betterlinksFormat = {
 		};
 
 		//
-		console.log({ activeAttributes, isActive, value, anchorRect });
+		console.log({ activeAttributes, isActive, value, anchorRect, showLinkModal, isVisible });
 
 		return (
 			<>
@@ -435,7 +437,15 @@ export const betterlinksFormat = {
 									{isLinkInvalid && (
 										<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
 											<div className="invalid Warning">
-												Invalid Link. <button>create Link</button>
+												Invalid Link
+												<button
+													onClick={() => {
+														setShowLinkModal(true);
+														setIsLinkInvalid(false);
+													}}
+												>
+													create Link
+												</button>
 											</div>
 										</Popover>
 									)}
@@ -478,6 +488,45 @@ export const betterlinksFormat = {
 							)}
 
 							{isActive && <LinkPreview close={close} />}
+
+							{showLinkModal && (
+								<Link
+									betterlinksGutenStore={betterlinksGutenStore}
+									isShowIcon={false}
+									setShowLinkModal={setShowLinkModal}
+									submitHandler={(values) => {
+										add_new_link(
+											values,
+											true
+										)(betterlinksGutenStore.dispatch)
+											.then((res) => {
+												setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
+												setIsNewLinkSubmissionFailed(false);
+												setIsSubmittingNewLink(false);
+												setIsSubmittedNewLink(true);
+												setNewLinkTitle('');
+												setNewLinkTargetUrl('');
+												setNewLinkShortUrl('');
+
+												//
+												setShowLinkModal(false);
+
+												const searchFieldDomRef = searchFieldRef?.current;
+												if (!searchFieldDomRef) return false;
+												searchFieldDomRef.classList.add('temporary-focus');
+												setTimeout(() => {
+													if (searchFieldDomRef) {
+														searchFieldDomRef.classList.remove('temporary-focus');
+													}
+												}, 5000);
+												searchFieldDomRef.focus();
+											})
+											.catch((error) => {
+												console.log('error!! aading new link failed', error);
+											});
+									}}
+								/>
+							)}
 						</URLPopover>
 					</div>
 				)}
