@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { __ } from '@wordpress/i18n';
@@ -7,7 +7,8 @@ import Select from 'components/Select';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
+//👇 slight tweak (rename 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
+import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/terms.actions';
 import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
@@ -28,8 +29,24 @@ const defaultProps = {
 	isShowIcon: true,
 };
 
-const Link = (props) => {
-	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings } = props;
+export const Link = (props) => {
+	const {
+		isShowIcon,
+		catId,
+		data,
+		submitHandler,
+		fetch_terms_data,
+
+		//👇 these flowwowing props will be passed from the component's gutenberg call
+		betterlinksGutenStore,
+		setShowLinkModal = () => {},
+	} = props;
+
+	//👇 slight tweaks to use <Link /> component inside gutenberg
+	const settings = betterlinksGutenStore ? betterlinksGutenStore?.getState()?.settings : props.settings;
+	const terms = betterlinksGutenStore ? betterlinksGutenStore?.getState()?.terms : props.terms;
+	window.betterLinksHooks = betterlinksGutenStore ? { applyFilters: (handle, defaultVal) => defaultVal } : window.betterLinksHooks;
+
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
@@ -43,6 +60,16 @@ const Link = (props) => {
 		advanced: false,
 		dynamicRedirect: false,
 	});
+
+	//👇 this useEffect is only for this 'Link' component's gutenberg implementation
+	useEffect(() => {
+		if (betterlinksGutenStore) {
+			setModalIsOpen(true);
+		}
+		return () => {
+			console.log('---link UseEffect cleanup runned');
+		};
+	}, [betterlinksGutenStore]);
 
 	const initialValues = {
 		link_title: '',
@@ -68,6 +95,10 @@ const Link = (props) => {
 
 	function openModal() {
 		setIsFetchTerms(true);
+
+		//👇 this line added because for gutenberg implementaton 'fetch_terms_data' function call isn't needed
+		if (betterlinksGutenStore) return false;
+
 		fetch_terms_data().then(() => {
 			setModalIsOpen(true);
 			setIsFetchTerms(false);
@@ -76,6 +107,9 @@ const Link = (props) => {
 
 	function closeModal() {
 		setModalIsOpen(false);
+
+		//👇 this following code is only for gutenberg implementation of the 'Link' component
+		setShowLinkModal(false);
 	}
 
 	const openUTMModal = () => {
@@ -141,8 +175,10 @@ const Link = (props) => {
 					const link_title = values.link_title.trim();
 					if (link_title) {
 						values.link_title = link_title;
+						submitHandler(values);
 						setModalIsOpen(false);
-						return submitHandler(values);
+						//👇 this following code is only for gutenberg implementation of the 'Link' component
+						setShowLinkModal(false);
 					}
 				}
 			}
@@ -157,6 +193,7 @@ const Link = (props) => {
 			[type]: !isOpenLinkPanel[type],
 		});
 	};
+
 	return (
 		<>
 			{data ? (
@@ -502,7 +539,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
+		//👇 slight tweak (rename 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
+		fetch_terms_data: bindActionCreators(fetch_terms_action_function, dispatch),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);
