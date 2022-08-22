@@ -432,96 +432,101 @@ export const Link = (props) => {
 											</label>
 										</div>
 									</div>
-									<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
-											<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-											<i className="btl btl-angle-arrow-down"></i>
-										</button>
-										<div className="link-options__body">
-											{!is_pro_enabled && (
-												<div className="link-options--teasers">
-													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-														<label className="btl-modal-form-label" htmlFor="status">
-															{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-														</label>
-														<select id="status" disabled>
-															<option value="publish">{__('Active', 'betterlinks')}</option>
-															<option value="expired">{__('Expired', 'betterlinks')}</option>
-															<option value="draft">{__('Draft', 'betterlinks')}</option>
-														</select>
-													</div>
-													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-														<label className="btl-modal-form-label" htmlFor="expire">
-															{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-														</label>
-														<input id="expire" type="checkbox" disabled />
-													</div>
-												</div>
-											)}
-											{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
-										</div>
-									</div>
-									<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
-											<h4 className="link-options__head--title">
-												{__('Dynamic Redirects', 'betterlinks')}{' '}
-												{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
-													<span className="status">{__('ON', 'betterlinks')}</span>
-												) : (
-													''
-												)}
-											</h4>{' '}
-											<i className="btl btl-angle-arrow-down"></i>
-										</button>
-										<div className="link-options__body">
-											{!is_pro_enabled && (
-												<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
-													<div className="link-options-info">
-														<ul>
-															<li>
-																<label>
-																	{__('Redirection Type:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-															</li>
-															<li>
-																<label>
-																	{__('Target URL 1:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-																<input type="text" value="example-1.com" disabled />
-															</li>
-															<li>
-																<label>
-																	{__('Target URL 2:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-																<input type="text" value="example-2.com" disabled />
-															</li>
-															<li>
-																<label>
-																	{__('Split Test:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-																<input id="splittest" type="checkbox" disabled />
-															</li>
-														</ul>
-													</div>
-												</div>
-											)}
-											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
-										</div>
-									</div>
-									{!is_pro_enabled && (
-										<div>
-											<div className={`link-options link-options--auto-link-keywords`}>
-												<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
-													<h4 className="link-options__head--title">
-														{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-													</h4>
+
+									{!betterlinksGutenStore && (
+										<>
+											<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
+												<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
+													<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+													<i className="btl btl-angle-arrow-down"></i>
 												</button>
+												<div className="link-options__body">
+													{!is_pro_enabled && (
+														<div className="link-options--teasers">
+															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																<label className="btl-modal-form-label" htmlFor="status">
+																	{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																</label>
+																<select id="status" disabled>
+																	<option value="publish">{__('Active', 'betterlinks')}</option>
+																	<option value="expired">{__('Expired', 'betterlinks')}</option>
+																	<option value="draft">{__('Draft', 'betterlinks')}</option>
+																</select>
+															</div>
+															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																<label className="btl-modal-form-label" htmlFor="expire">
+																	{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																</label>
+																<input id="expire" type="checkbox" disabled />
+															</div>
+														</div>
+													)}
+													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
+												</div>
 											</div>
-										</div>
+											<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
+												<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
+													<h4 className="link-options__head--title">
+														{__('Dynamic Redirects', 'betterlinks')}{' '}
+														{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
+															<span className="status">{__('ON', 'betterlinks')}</span>
+														) : (
+															''
+														)}
+													</h4>{' '}
+													<i className="btl btl-angle-arrow-down"></i>
+												</button>
+												<div className="link-options__body">
+													{!is_pro_enabled && (
+														<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
+															<div className="link-options-info">
+																<ul>
+																	<li>
+																		<label>
+																			{__('Redirection Type:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																	</li>
+																	<li>
+																		<label>
+																			{__('Target URL 1:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																		<input type="text" value="example-1.com" disabled />
+																	</li>
+																	<li>
+																		<label>
+																			{__('Target URL 2:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																		<input type="text" value="example-2.com" disabled />
+																	</li>
+																	<li>
+																		<label>
+																			{__('Split Test:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																		<input id="splittest" type="checkbox" disabled />
+																	</li>
+																</ul>
+															</div>
+														</div>
+													)}
+													{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
+												</div>
+											</div>
+											{!is_pro_enabled && (
+												<div>
+													<div className={`link-options link-options--auto-link-keywords`}>
+														<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
+															<h4 className="link-options__head--title">
+																{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+															</h4>
+														</button>
+													</div>
+												</div>
+											)}
+										</>
 									)}
 								</div>
 							</div>
