@@ -84,7 +84,7 @@ const Link = (props) => {
 	};
 
 	const builtInUTMModalOpenHandler = () => {
-		if (betterLinksHooks.applyFilters('isActivePro', false)) {
+		if (is_pro_enabled) {
 			setIsShowCustomUTMModalContent(false);
 			openUTMModal();
 		} else {
@@ -267,7 +267,7 @@ const Link = (props) => {
 											<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
 												{__('UTM', 'betterlinks')}
 											</button>
-											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+											{!is_pro_enabled ? (
 												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
 													<i className="btl btl-share"></i>
 													<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
@@ -401,7 +401,7 @@ const Link = (props) => {
 											<i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
-											{!betterLinksHooks.applyFilters('isActivePro', false) && (
+											{!is_pro_enabled && (
 												<div className="link-options--teasers">
 													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
 														<label className="btl-modal-form-label" htmlFor="status">
@@ -428,10 +428,7 @@ const Link = (props) => {
 										<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
 											<h4 className="link-options__head--title">
 												{__('Dynamic Redirects', 'betterlinks')}{' '}
-												{betterLinksHooks.applyFilters('isActivePro', false) &&
-												props.values.dynamic_redirect &&
-												props.values.dynamic_redirect.type &&
-												props.values.dynamic_redirect.type !== 'none' ? (
+												{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
 													<span className="status">{__('ON', 'betterlinks')}</span>
 												) : (
 													''
@@ -440,7 +437,7 @@ const Link = (props) => {
 											<i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
-											{!betterLinksHooks.applyFilters('isActivePro', false) && (
+											{!is_pro_enabled && (
 												<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
 													<div className="link-options-info">
 														<ul>
@@ -478,7 +475,7 @@ const Link = (props) => {
 											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 										</div>
 									</div>
-									{!betterLinksHooks.applyFilters('isActivePro', false) && (
+									{!is_pro_enabled && (
 										<div>
 											<div className={`link-options link-options--auto-link-keywords`}>
 												<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
