@@ -407,16 +407,16 @@ export const betterlinksFormat = {
 												sponsored={sponsored}
 												setNoFollow={setNoFollow}
 												noFollow={noFollow}
-												newLinkTitle={newLinkTitle}
-												newLinkTargetUrl={newLinkTargetUrl}
-												newLinkShortUrl={newLinkShortUrl}
-												isSubmittedNewLink={isSubmittedNewLink}
-												isSubmittingNewLink={isSubmittingNewLink}
-												isNewLinkSubmissionFailed={isNewLinkSubmissionFailed}
-												handleTitleChange={handleTitleChange}
-												handleTargetUrlChange={handleTargetUrlChange}
-												handleShortUrlChange={handleShortUrlChange}
-												handleNewLinkSubmit={handleNewLinkSubmit}
+												// newLinkTitle={newLinkTitle}
+												// newLinkTargetUrl={newLinkTargetUrl}
+												// newLinkShortUrl={newLinkShortUrl}
+												// isSubmittedNewLink={isSubmittedNewLink}
+												// isSubmittingNewLink={isSubmittingNewLink}
+												// isNewLinkSubmissionFailed={isNewLinkSubmissionFailed}
+												// handleTitleChange={handleTitleChange}
+												// handleTargetUrlChange={handleTargetUrlChange}
+												// handleShortUrlChange={handleShortUrlChange}
+												// handleNewLinkSubmit={handleNewLinkSubmit}
 											/>
 									  )
 									: undefined
