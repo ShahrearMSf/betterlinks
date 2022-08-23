@@ -93,7 +93,7 @@ export const betterlinksFormat = {
 		}, [selectedIndex]);
 
 		useEffect(() => {
-			if (isVisible) {
+			if (isVisible || isActive) {
 				document.body.classList.add('betterlinks-formatting-enabled');
 			} else {
 				document.body.classList.remove('betterlinks-formatting-enabled');
@@ -101,7 +101,7 @@ export const betterlinksFormat = {
 			return () => {
 				document.body.classList.remove('betterlinks-formatting-enabled');
 			};
-		}, [isVisible]);
+		}, [isVisible, isActive]);
 
 		useEffect(() => {
 			setSelectedIndex(null);
