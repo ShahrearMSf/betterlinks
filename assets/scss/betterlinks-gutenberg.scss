@@ -150,16 +150,21 @@
 			cursor: pointer;
 			padding: 0;
 			font-size: 20px;
+			margin-left: 5px;
 
 			&:focus {
 				border: none;
 				box-shadow: none;
 				outline: none;
 			}
+		}
 
-			span {
-				margin-left: 5px;
-			}
+		button.betterlinks-format-change-link {
+			//
+		}
+		button.betterlinks-format-edit-link {
+			font-size: 13px;
+			color: #b0b2ba;
 		}
 	}
 }
@@ -169,7 +174,7 @@
 		width: 300px;
 		color: red;
 		padding: 5px 10px;
-		button {
+		& button {
 			padding: 5px 10px;
 			margin-left: 10px;
 			border: 1px solid #007cba;

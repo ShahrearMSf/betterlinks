@@ -29,8 +29,12 @@ export const LinkPreview = ({ close, activeAttributes }) => {
 		};
 	}, []);
 
-	const handlePreviewLinkEditClick = () => {
-		console.log('----------handlePreviewLinkEditClick fired');
+	const handleChangeLink = () => {
+		console.log('----------handleChangeLink fired');
+	};
+
+	const handleEditBetterLink = () => {
+		console.log('----------handleEditBetterLink fired');
 	};
 
 	const { url } = activeAttributes;
@@ -41,8 +45,13 @@ export const LinkPreview = ({ close, activeAttributes }) => {
 				{url?.replace(/^https?\:\/\//gi, '')}
 				<i class="btl btl-visit-url"></i>
 			</a>
-			<button onClick={handlePreviewLinkEditClick} ref={btnRef}>
+
+			<button className="betterlinks-format-change-link" onClick={handleChangeLink} ref={btnRef}>
 				<span className="dashicons dashicons-edit"></span>
+			</button>
+
+			<button className="betterlinks-format-edit-link icon" onClick={handleEditBetterLink} ref={btnRef}>
+				<i class="btl btl-edit"></i>
 			</button>
 		</div>
 	);
