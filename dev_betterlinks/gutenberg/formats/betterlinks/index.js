@@ -28,6 +28,8 @@ import { Link } from 'containers/Link';
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
 
+const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
+const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 export const betterlinksFormat = {
 	name,
 	title,
@@ -159,8 +161,6 @@ export const betterlinksFormat = {
 			if (!newText) return false;
 			// scenario: the search filed is empty
 
-			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '');
-			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const justShortlink = newText
 				.replace(/https?\:\/\//g, '')
 				.replace(siteUrlRegex, '')
