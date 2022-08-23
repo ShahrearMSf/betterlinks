@@ -211,13 +211,37 @@ export const betterlinksFormat = {
 			if (spacesRemoved.length < 2) {
 				setMatchedLinks([]);
 				setRegex(false);
+				setIsLinkInvalid(false);
 				return false;
 			}
 			const regex = new RegExp(`(${value})`, 'gi');
 			const matchedLinks = betterlinksGutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
+
+			const bool1 = (spacesRemoved || '').replace(/\s+/g, '').length < 2;
+			const bool2 = siteUrlRegex.test(spacesRemoved);
+			// ---in the scenario where every charecter insertion after 'siteurl', bool2 (regex) gets changed wieredly every time & whereas bool3 works just fine.
+			const bool3 = (spacesRemoved || '').toLowerCase().includes(siteUrlWithoutHttp);
+			const bool4 = matchedLinks.length > 0;
+
+			console.log('---', {
+				bool1,
+				bool2,
+				bool3,
+				bool4,
+				searchedText,
+			});
+
+			if (bool1 || bool2 || bool3 || bool4) {
+				setIsLinkInvalid(false);
+				console.log('---setIsLinkInvalid false passed');
+			} else {
+				setIsLinkInvalid(true);
+				console.log('---setIsLinkInvalid true passed---');
+			}
+
 			setRegex(regex);
 			setMatchedLinks(matchedLinks);
-			setIsLinkInvalid(false);
+			console.log('-----sobar sesh line of onCHange------');
 		};
 
 		const anchorRect = useMemo(() => {
@@ -275,7 +299,17 @@ export const betterlinksFormat = {
 		};
 
 		//
-		console.log({ activeAttributes, isActive, value, anchorRect, showLinkModal, isVisible });
+		console.log(siteUrlRegex.test(searchedText), '---', searchedText.includes(siteUrlWithoutHttp), '---', {
+			searchedText,
+			activeAttributes,
+			isActive,
+			value,
+			anchorRect,
+			showLinkModal,
+			isVisible,
+			siteUrlRegex,
+			siteUrlWithoutHttp,
+		});
 
 		return (
 			<>
