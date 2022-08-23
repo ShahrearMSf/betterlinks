@@ -1,12 +1,28 @@
 const {
 	// useState,
 	useEffect,
-	// useRef,
+	useRef,
 	// useMemo,
 } = wp.element;
 
 export const LinkPreview = ({ close, activeAttributes }) => {
+	const btnRef = useRef(null);
+
 	useEffect(() => {
+		// clearing all selection
+		if (getSelection().empty) {
+			// Chrome
+			getSelection().empty();
+		} else if (getSelection().removeAllRanges) {
+			// Firefox
+			getSelection().removeAllRanges();
+		}
+
+		//
+		if (btnRef?.current) {
+			btnRef.current.focus();
+		}
+
 		return () => {
 			console.log('----LinkPreview component cleanup runned');
 			close();
