@@ -40,6 +40,7 @@ export const Link = (props) => {
 		//👇 these flowwowing props will be passed from the component's gutenberg call
 		betterlinksGutenStore,
 		setShowLinkModal = () => {},
+		searchFieldRef,
 	} = props;
 
 	//👇 slight tweaks to use <Link /> component inside gutenberg
@@ -68,6 +69,9 @@ export const Link = (props) => {
 		}
 		return () => {
 			console.log('---link UseEffect cleanup runned');
+			if (searchFieldRef?.current) {
+				searchFieldRef?.current?.focus();
+			}
 		};
 	}, [betterlinksGutenStore]);
 

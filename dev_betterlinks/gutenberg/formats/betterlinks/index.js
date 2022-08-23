@@ -494,6 +494,7 @@ export const betterlinksFormat = {
 									betterlinksGutenStore={betterlinksGutenStore}
 									isShowIcon={false}
 									setShowLinkModal={setShowLinkModal}
+									searchFieldRef={searchFieldRef}
 									submitHandler={(values) => {
 										add_new_link(
 											values,
