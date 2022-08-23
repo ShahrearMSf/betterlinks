@@ -436,7 +436,7 @@ export const betterlinksFormat = {
 
 									{isLinkInvalid && (
 										<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
-											<div className="invalid Warning">
+											<div className="betterlinks_format_invalid_link_warning">
 												Invalid Link
 												<button
 													onClick={() => {

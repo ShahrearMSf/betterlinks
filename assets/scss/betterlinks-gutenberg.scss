@@ -164,6 +164,30 @@
 	}
 }
 
+.betterlinks-invalid-link-popover {
+	.betterlinks_format_invalid_link_warning {
+		width: 300px;
+		color: red;
+		padding: 5px 10px;
+		button {
+			padding: 5px 10px;
+			margin-left: 10px;
+			border: 1px solid #007cba;
+			background: #007cba;
+			color: #fff;
+			border-radius: 3px;
+			font-size: 15px;
+			cursor: pointer;
+			&:hover {
+				background: #006ba1;
+			}
+			&:focus {
+				box-shadow: none;
+			}
+		}
+	}
+}
+
 ul.betterlinks-suggessions-wrapper-ul {
 	margin: 0;
 	padding: 10px 0;
