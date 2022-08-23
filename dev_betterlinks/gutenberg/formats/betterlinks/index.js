@@ -487,7 +487,7 @@ export const betterlinksFormat = {
 								</form>
 							)}
 
-							{isActive && <LinkPreview close={close} />}
+							{isActive && <LinkPreview activeAttributes={activeAttributes} close={close} />}
 
 							{showLinkModal && (
 								<Link
