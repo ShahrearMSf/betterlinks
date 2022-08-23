@@ -237,8 +237,9 @@ body.betterlinks-formatting-enabled {
 		z-index: 33 !important;
 	}
 
-	#adminmenuback,
-	#adminmenuwrap {
+	.interface-interface-skeleton__sidebar,
+	#adminmenuwrap,
+	#adminmenuback {
 		z-index: 0 !important;
 	}
 }
