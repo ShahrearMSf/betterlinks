@@ -170,6 +170,16 @@
 		button.betterlinks-format-edit-link {
 			font-size: 13px;
 		}
+
+		button.betterlinks-format-remove-link {
+			margin-left: 10px;
+
+			span.dashicons-editor-unlink {
+				font-size: 18px;
+				display: block;
+				align-items: center;
+			}
+		}
 	}
 }
 
