@@ -139,6 +139,10 @@ export const betterlinksFormat = {
 			}
 		};
 
+		const removeBtlFormat = (value) => {
+			onChange(removeFormat(value, name));
+		};
+
 		const reset = () => {
 			console.log('---reset runned');
 			setSearchedText('');
@@ -350,73 +354,76 @@ export const betterlinksFormat = {
 							}
 						>
 							{!isActive && !submitDone && (
-								<form className="btl-links-search-form" onSubmit={handleSubmit}>
-									<input
-										type="text"
-										ref={searchFieldRef}
-										placeholder="Paste URL or type to search"
-										onChange={handleUrlInputChange}
-										value={searchedText}
-										className="btl-url-search-field"
-										onKeyDown={handleOnKeyDown}
-									/>
+								<>
+									<form className="btl-links-search-form" onSubmit={handleSubmit}>
+										<input
+											type="text"
+											ref={searchFieldRef}
+											placeholder="Paste URL or type to search"
+											onChange={handleUrlInputChange}
+											value={searchedText}
+											className="btl-url-search-field"
+											onKeyDown={handleOnKeyDown}
+										/>
 
-									{isLinkInvalid && (
-										<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
-											<div className="betterlinks_format_invalid_link_warning">
-												Invalid Link
-												<button
-													onClick={() => {
-														setShowLinkModal(true);
-														setIsLinkInvalid(false);
-													}}
-												>
-													create Link
-												</button>
-											</div>
-										</Popover>
-									)}
+										{isLinkInvalid && (
+											<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
+												<div className="betterlinks_format_invalid_link_warning">
+													Invalid Link
+													<button
+														onClick={() => {
+															setShowLinkModal(true);
+															setIsLinkInvalid(false);
+														}}
+													>
+														create Link
+													</button>
+												</div>
+											</Popover>
+										)}
 
-									{matchedLinks.length > 0 && regex && (
-										<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
-											<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
-												{matchedLinks.map((item, index) => {
-													const title = reactStringReplace(
-														// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
-														new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
-														regex,
-														(match, i) => {
-															return (
-																<span key={i} className="hl">
-																	{match}
-																</span>
-															);
-														}
-													);
+										{matchedLinks.length > 0 && regex && (
+											<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
+												<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
+													{matchedLinks.map((item, index) => {
+														const title = reactStringReplace(
+															// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
+															new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
+															regex,
+															(match, i) => {
+																return (
+																	<span key={i} className="hl">
+																		{match}
+																	</span>
+																);
+															}
+														);
 
-													return (
-														<li
-															key={item.ID}
-															onClick={() => {
-																handleMatchedLiClick(item.short_url);
-															}}
-															className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
-														>
-															{title}
-														</li>
-													);
-												})}
-											</ul>
-										</Popover>
-									)}
+														return (
+															<li
+																key={item.ID}
+																onClick={() => {
+																	handleMatchedLiClick(item.short_url);
+																}}
+																className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
+															>
+																{title}
+															</li>
+														);
+													})}
+												</ul>
+											</Popover>
+										)}
 
-									<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
-								</form>
+										<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
+									</form>
+								</>
 							)}
 
 							{isActive && (
 								<LinkPreview
 									//
+									removeBtlFormat={removeBtlFormat}
 									value={value}
 									editModalActiveBtlFormatLink={editModalActiveBtlFormatLink}
 									activeAttributes={activeAttributes}

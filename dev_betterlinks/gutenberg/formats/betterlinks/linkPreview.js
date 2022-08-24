@@ -37,7 +37,7 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value }) => {
+export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value, removeBtlFormat }) => {
 	const { url, rel = '' } = activeAttributes;
 
 	const [showLinkModal, setShowLinkModal] = useState(false);
@@ -108,6 +108,17 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 				>
 					<i class="btl btl-edit"></i>
 					<span class="btl-tooltiptext">Edit In Betterlinks</span>
+				</button>
+
+				<button
+					className="betterlinks-format-remove-link btl-tooltip"
+					onClick={() => {
+						removeBtlFormat(value);
+					}}
+					ref={btnRef}
+				>
+					<span class="dashicons dashicons-editor-unlink"></span>
+					<span class="btl-tooltiptext">Remove Link</span>
 				</button>
 			</div>
 
