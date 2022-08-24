@@ -45,18 +45,8 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 	const btnRef = useRef(null);
 
 	useEffect(() => {
-		// clearing all selection
-		if (getSelection().empty) {
-			// Chrome
-			getSelection().empty();
-		} else if (getSelection().removeAllRanges) {
-			// Firefox
-			getSelection().removeAllRanges();
-		}
-
 		const btnEl = btnRef?.current;
 		if (btnEl) {
-			btnEl.focus();
 			btnEl.closest('body').classList.add('betterlinks-format-link-preview-mounted');
 		}
 		console.log('----LinkPreview useEffec runned with []', { btnEl });
@@ -65,12 +55,11 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 			reset();
 			const btnEl = btnRef?.current;
 			if (btnEl) {
-				btnEl.focus();
 				btnEl.closest('body').classList.remove('betterlinks-format-link-preview-mounted');
 			}
 			console.log('----LinkPreview component cleanup runned', { btnEl });
 		};
-	}, []);
+	}, [value]);
 
 	const handleChangeLink = () => {
 		console.log('----------handleChangeLink fired');
