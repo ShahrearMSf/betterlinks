@@ -37,7 +37,7 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value, removeBtlFormat }) => {
+export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value, removeBtlFormat, setIsChangeLink }) => {
 	const { url, rel = '' } = activeAttributes;
 
 	const [showLinkModal, setShowLinkModal] = useState(false);
@@ -68,6 +68,7 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 
 	const handleChangeLink = () => {
 		console.log('----------handleChangeLink fired');
+		setIsChangeLink(true);
 	};
 
 	const handleEditBetterLink = () => {

@@ -66,6 +66,7 @@ export const betterlinksFormat = {
 		const [submitDone, setSubmitDone] = useState(false);
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
 		const [showLinkModal, setShowLinkModal] = useState(false);
+		const [isChangeLink, setIsChangeLink] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -108,7 +109,7 @@ export const betterlinksFormat = {
 			return () => {
 				document.body.classList.remove('betterlinks-formatting-enabled');
 			};
-		}, [isVisible, isActive]);
+		}, [isVisible, isActive, isChangeLink]);
 
 		useEffect(() => {
 			setSelectedIndex(null);
@@ -169,6 +170,7 @@ export const betterlinksFormat = {
 			reset();
 			setIsVisible(false);
 			setSubmitDone(false);
+			setIsChangeLink(false);
 		};
 
 		const handleSubmit = (e) => {
@@ -326,6 +328,7 @@ export const betterlinksFormat = {
 			isVisible,
 			siteUrlRegex,
 			siteUrlWithoutHttp,
+			isChangeLink,
 		});
 
 		return (
@@ -369,7 +372,7 @@ export const betterlinksFormat = {
 									: undefined
 							}
 						>
-							{!isActive && !submitDone && (
+							{((!isActive && !submitDone) || isChangeLink) && (
 								<>
 									<form className="btl-links-search-form" onSubmit={handleSubmit}>
 										<input
@@ -436,9 +439,10 @@ export const betterlinksFormat = {
 								</>
 							)}
 
-							{isActive && (
+							{isActive && !isChangeLink && (
 								<LinkPreview
 									//
+									setIsChangeLink={setIsChangeLink}
 									removeBtlFormat={removeBtlFormat}
 									value={value}
 									editModalActiveBtlFormatLink={editModalActiveBtlFormatLink}
