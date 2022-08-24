@@ -9,16 +9,7 @@ export const RenderSettings = ({
 	sponsored,
 	setNoFollow,
 	noFollow,
-	// newLinkTitle,
-	// newLinkTargetUrl,
-	// newLinkShortUrl,
-	// isSubmittedNewLink,
-	// isSubmittingNewLink,
-	// isNewLinkSubmissionFailed,
-	// handleTitleChange,
-	// handleTargetUrlChange,
-	// handleShortUrlChange,
-	// handleNewLinkSubmit,
+	//
 }) => {
 	return (
 		<div className="betterlinks-expanded-format-options">

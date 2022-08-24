@@ -9,7 +9,6 @@ const { getRectangleFromRange } = wp.dom;
 import { keyboardReturn } from '@wordpress/icons';
 
 // external library imports
-import axios from 'axios';
 import reactStringReplace from 'react-string-replace';
 
 // redux imports
@@ -41,10 +40,10 @@ export const betterlinksFormat = {
 		rel: 'rel',
 	},
 	edit: ({
+		//
 		isActive,
 		value,
 		onChange,
-		//
 		activeAttributes,
 	}) => {
 		const [isVisible, setIsVisible] = useState(false);
@@ -56,13 +55,6 @@ export const betterlinksFormat = {
 		const [linkNewTab, setLinkNewTab] = useState(false);
 		const [sponsored, setSponsored] = useState(false);
 		const [noFollow, setNoFollow] = useState(false);
-
-		const [newLinkTitle, setNewLinkTitle] = useState('');
-		const [newLinkTargetUrl, setNewLinkTargetUrl] = useState('');
-		const [newLinkShortUrl, setNewLinkShortUrl] = useState('');
-		const [isSubmittingNewLink, setIsSubmittingNewLink] = useState(false);
-		const [isSubmittedNewLink, setIsSubmittedNewLink] = useState(false);
-		const [isNewLinkSubmissionFailed, setIsNewLinkSubmissionFailed] = useState(false);
 
 		const [submitDone, setSubmitDone] = useState(false);
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
@@ -110,6 +102,7 @@ export const betterlinksFormat = {
 		}, [matchedLinks]);
 
 		const onClick = () => {
+			console.log('----onClick fired');
 			setIsVisible(true);
 
 			if (!betterlinksGutenStore?.getState()?.links?.links) {
@@ -122,18 +115,12 @@ export const betterlinksFormat = {
 			if (settings) {
 				setSponsored(!!settings?.sponsored);
 				setNoFollow(!!settings?.nofollow);
-				if (settings.is_random_string) {
-					setNewLinkShortUrl(generateShortURL(settings, null));
-				}
 			} else {
 				fetch_settings_data()(betterlinksGutenStore.dispatch)
 					.then(() => {
 						const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 						setSponsored(!!settings?.sponsored);
 						setNoFollow(!!settings?.nofollow);
-						if (settings.is_random_string) {
-							setNewLinkShortUrl(generateShortURL(settings, null));
-						}
 					})
 					.catch((err) => console.log('error!! failed fetching betterlinks Settings data', err));
 			}
@@ -146,12 +133,10 @@ export const betterlinksFormat = {
 		};
 
 		const reset = () => {
+			console.log('---reset runned');
 			setSearchedText('');
 			setMatchedLinks([]);
 			setSelectedIndex(null);
-			setIsSubmittingNewLink(false);
-			setIsSubmittedNewLink(false);
-			setIsNewLinkSubmissionFailed(false);
 			setIsLinkInvalid(false);
 		};
 
@@ -344,16 +329,6 @@ export const betterlinksFormat = {
 												sponsored={sponsored}
 												setNoFollow={setNoFollow}
 												noFollow={noFollow}
-												// newLinkTitle={newLinkTitle}
-												// newLinkTargetUrl={newLinkTargetUrl}
-												// newLinkShortUrl={newLinkShortUrl}
-												// isSubmittedNewLink={isSubmittedNewLink}
-												// isSubmittingNewLink={isSubmittingNewLink}
-												// isNewLinkSubmissionFailed={isNewLinkSubmissionFailed}
-												// handleTitleChange={handleTitleChange}
-												// handleTargetUrlChange={handleTargetUrlChange}
-												// handleShortUrlChange={handleShortUrlChange}
-												// handleNewLinkSubmit={handleNewLinkSubmit}
 											/>
 									  )
 									: undefined
@@ -439,14 +414,6 @@ export const betterlinksFormat = {
 										)(betterlinksGutenStore.dispatch)
 											.then((res) => {
 												setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
-												setIsNewLinkSubmissionFailed(false);
-												setIsSubmittingNewLink(false);
-												setIsSubmittedNewLink(true);
-												setNewLinkTitle('');
-												setNewLinkTargetUrl('');
-												setNewLinkShortUrl('');
-
-												//
 												setShowLinkModal(false);
 
 												const searchFieldDomRef = searchFieldRef?.current;
