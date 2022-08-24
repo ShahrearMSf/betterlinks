@@ -120,8 +120,7 @@ export const betterlinksFormat = {
 				console.log('===-075----[value] useEffect cleanup runned');
 				close();
 			};
-		}, [value]);
-
+		}, [value.start, value.end]);
 		const onClick = () => {
 			console.log('----onClick fired');
 			setIsVisible(true);
