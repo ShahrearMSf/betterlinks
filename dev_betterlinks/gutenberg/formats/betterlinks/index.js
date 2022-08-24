@@ -330,17 +330,19 @@ export const betterlinksFormat = {
 
 		return (
 			<>
-				{isActive ? (
-					<>
-						<RichTextShortcut type="primaryShift" character="j" onUse={() => onChange(removeFormat(value, name))} />
-						<RichTextToolbarButton icon="editor-unlink" title={__('Remove Betterlink')} onClick={() => onChange(removeFormat(value, name))} />
-					</>
-				) : (
-					<>
-						<RichTextShortcut type="primary" character="j" onUse={onClick} />
-						<RichTextToolbarButton icon={betterlinksIcon} title={title} onClick={onClick} />
-					</>
-				)}
+				{isActive ? <RichTextShortcut type="primaryShift" character="j" onUse={() => removeBtlFormat(value)} /> : <RichTextShortcut type="primary" character="j" onUse={onClick} />}
+
+				<RichTextToolbarButton
+					icon={isActive ? 'editor-unlink' : betterlinksIcon}
+					title={isActive ? __('Remove Betterlink') : title}
+					onClick={() => {
+						if (isActive) {
+							removeBtlFormat(value);
+						} else {
+							onClick();
+						}
+					}}
+				/>
 
 				{(isVisible || isActive) && (
 					<div className="betterlinks-links-popover-wrapper">
