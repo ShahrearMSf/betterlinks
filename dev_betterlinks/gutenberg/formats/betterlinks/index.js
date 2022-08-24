@@ -202,7 +202,7 @@ export const betterlinksFormat = {
 			const withHttp = /^https?\:\/\//i.test(newText) ? newText : `http://${newText}`;
 			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored, noFollow });
 
-			if (isCollapsed(value)) {
+			if (isCollapsed(value) && !isActive) {
 				// Scenario: we don't have any actively selected text
 				const toInsert = applyFormat(create({ text: withHttp }), linkFormat, 0, withHttp.length);
 				onChange(insert(value, toInsert));
