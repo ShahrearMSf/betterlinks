@@ -353,6 +353,7 @@ export const betterlinksFormat = {
 								console.log('---URLPopover onClose runned');
 								close();
 							}}
+							focusOnMount={!isActive && !submitDone ? true : false}
 							renderSettings={
 								!isActive && !submitDone
 									? () => (
