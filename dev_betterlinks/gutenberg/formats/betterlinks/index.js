@@ -19,7 +19,16 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { betterlinksIcon } from './icon';
-import { makeLinkFormat, generateShortURL, generateSlug, formatDate, betterlinks_nonce } from 'utils/helper';
+import {
+	makeLinkFormat,
+	// //
+	// generateShortURL,
+	// generateSlug,
+	// formatDate,
+	// betterlinks_nonce,
+	siteUrlWithoutHttp,
+	siteUrlRegex,
+} from 'utils/helper';
 import { RenderSettings } from './renderSettings';
 import { LinkPreview } from './linkPreview';
 import { Link } from 'containers/Link';
@@ -27,8 +36,6 @@ import { Link } from 'containers/Link';
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
 
-const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
-const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 export const betterlinksFormat = {
 	name,
 	title,
