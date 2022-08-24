@@ -92,12 +92,12 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 			<div className="betterlinks-format-link-preview-wrapper">
 				<a href={url} target="_blank">
 					{url?.replace(/^https?\:\/\//gi, '')}
-					<i class="btl btl-visit-url"></i>
+					<i className="btl btl-visit-url"></i>
 				</a>
 
 				<button className="betterlinks-format-change-link btl-tooltip" onClick={handleChangeLink} ref={btnRef}>
 					<span className="dashicons dashicons-edit"></span>
-					<span class="btl-tooltiptext">Change Link</span>
+					<span className="btl-tooltiptext">Change Link</span>
 				</button>
 
 				<button
@@ -107,8 +107,8 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 					}}
 					ref={btnRef}
 				>
-					<i class="btl btl-edit"></i>
-					<span class="btl-tooltiptext">Edit In Betterlinks</span>
+					<i className="btl btl-edit"></i>
+					<span className="btl-tooltiptext">Edit In Betterlinks</span>
 				</button>
 
 				<button
@@ -118,8 +118,8 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 					}}
 					ref={btnRef}
 				>
-					<span class="dashicons dashicons-editor-unlink"></span>
-					<span class="btl-tooltiptext">Remove Link</span>
+					<span className="dashicons dashicons-editor-unlink"></span>
+					<span className="btl-tooltiptext">Remove Link</span>
 				</button>
 			</div>
 
