@@ -37,7 +37,7 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({ close, activeAttributes, editModalActiveBtlFormatLink, value }) => {
+export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value }) => {
 	const [showLinkModal, setShowLinkModal] = useState(false);
 	const [linkData, setLinkData] = useState(null);
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
@@ -62,7 +62,7 @@ export const LinkPreview = ({ close, activeAttributes, editModalActiveBtlFormatL
 		console.log('----LinkPreview useEffec runned with []', { btnEl });
 
 		return () => {
-			close();
+			reset();
 			const btnEl = btnRef?.current;
 			if (btnEl) {
 				btnEl.focus();

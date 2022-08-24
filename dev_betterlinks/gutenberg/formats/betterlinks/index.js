@@ -414,7 +414,15 @@ export const betterlinksFormat = {
 								</form>
 							)}
 
-							{isActive && <LinkPreview value={value} editModalActiveBtlFormatLink={editModalActiveBtlFormatLink} activeAttributes={activeAttributes} close={close} />}
+							{isActive && (
+								<LinkPreview
+									//
+									value={value}
+									editModalActiveBtlFormatLink={editModalActiveBtlFormatLink}
+									activeAttributes={activeAttributes}
+									reset={reset}
+								/>
+							)}
 
 							{showLinkModal && (
 								<Link
