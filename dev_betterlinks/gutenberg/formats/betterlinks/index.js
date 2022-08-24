@@ -114,6 +114,13 @@ export const betterlinksFormat = {
 			setSelectedIndex(null);
 		}, [matchedLinks]);
 
+		useEffect(() => {
+			return () => {
+				console.log('===-075----[value] useEffect cleanup runned');
+				close();
+			};
+		}, [value]);
+
 		const onClick = () => {
 			console.log('----onClick fired');
 			setIsVisible(true);
