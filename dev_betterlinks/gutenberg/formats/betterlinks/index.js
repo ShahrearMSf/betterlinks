@@ -148,6 +148,7 @@ export const betterlinksFormat = {
 		};
 
 		const close = () => {
+			console.log('----close runned');
 			reset();
 			setIsVisible(false);
 			setSubmitDone(false);
@@ -191,6 +192,13 @@ export const betterlinksFormat = {
 			}
 			reset();
 			setSubmitDone(true);
+		};
+
+		const editModalActiveBtlFormatLink = ({ value, inputUrl, linkNewTab, sponsored, noFollow }) => {
+			const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
+			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored, noFollow });
+			onChange(applyFormat(value, linkFormat));
+			reset();
 		};
 
 		const handleMatchedLiClick = (shortUrl) => {
@@ -406,7 +414,7 @@ export const betterlinksFormat = {
 								</form>
 							)}
 
-							{isActive && <LinkPreview activeAttributes={activeAttributes} close={close} />}
+							{isActive && <LinkPreview value={value} editModalActiveBtlFormatLink={editModalActiveBtlFormatLink} activeAttributes={activeAttributes} close={close} />}
 
 							{showLinkModal && (
 								<Link
