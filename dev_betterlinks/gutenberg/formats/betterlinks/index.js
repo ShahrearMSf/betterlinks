@@ -94,6 +94,12 @@ export const betterlinksFormat = {
 		}, [selectedIndex]);
 
 		useEffect(() => {
+			const searchFieldDomRef = searchFieldRef?.current;
+			if ((isVisible && !isActive && searchFieldDomRef) || isChangeLink) {
+				console.log('$$$@#@#@#@%%%%%%searchFieldDomRef e focus hoise');
+				searchFieldDomRef.focus();
+			}
+
 			if (isVisible || isActive) {
 				document.body.classList.add('betterlinks-formatting-enabled');
 			} else {
