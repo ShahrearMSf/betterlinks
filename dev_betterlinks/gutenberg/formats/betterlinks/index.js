@@ -140,6 +140,12 @@ export const betterlinksFormat = {
 			setIsLinkInvalid(false);
 		};
 
+		const close = () => {
+			reset();
+			setIsVisible(false);
+			setSubmitDone(false);
+		};
+
 		const handleSubmit = (e) => {
 			e.preventDefault();
 			const newText = searchedText.trim();
@@ -275,12 +281,6 @@ export const betterlinksFormat = {
 					break;
 				}
 			}
-		};
-
-		const close = () => {
-			reset();
-			setIsVisible(false);
-			setSubmitDone(false);
 		};
 
 		//
