@@ -38,6 +38,8 @@ import {
 } from 'utils/helper';
 
 export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value }) => {
+	const { url, rel = '' } = activeAttributes;
+
 	const [showLinkModal, setShowLinkModal] = useState(false);
 	const [linkData, setLinkData] = useState(null);
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
@@ -80,8 +82,6 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 			setIslinkNotFound(true);
 		}
 	};
-
-	const { url, rel = '' } = activeAttributes;
 
 	return (
 		<>
