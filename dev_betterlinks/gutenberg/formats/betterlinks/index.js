@@ -96,7 +96,7 @@ export const betterlinksFormat = {
 
 		useEffect(() => {
 			const searchFieldDomRef = searchFieldRef?.current;
-			if ((isVisible && !isActive && searchFieldDomRef) || isChangeLink) {
+			if ((isVisible && !isActive && searchFieldDomRef?.focus) || isChangeLink) {
 				console.log('$$$@#@#@#@%%%%%%searchFieldDomRef e focus hoise');
 				searchFieldDomRef.focus();
 			}
@@ -224,7 +224,7 @@ export const betterlinksFormat = {
 			setSearchedText(`${betterLinksGlobal.site_url}/${shortUrl}`);
 			setMatchedLinks([]);
 			const searchFieldDomRef = searchFieldRef?.current;
-			if (!searchFieldDomRef) return false;
+			if (!searchFieldDomRef?.focus) return false;
 			searchFieldDomRef.focus();
 		};
 
@@ -467,10 +467,10 @@ export const betterlinksFormat = {
 												setShowLinkModal(false);
 
 												const searchFieldDomRef = searchFieldRef?.current;
-												if (!searchFieldDomRef) return false;
+												if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
 												searchFieldDomRef.classList.add('temporary-focus');
 												setTimeout(() => {
-													if (searchFieldDomRef) {
+													if (searchFieldDomRef?.classList) {
 														searchFieldDomRef.classList.remove('temporary-focus');
 													}
 												}, 5000);
