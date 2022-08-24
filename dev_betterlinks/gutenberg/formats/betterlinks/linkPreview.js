@@ -5,11 +5,11 @@ const {
 	useRef,
 	// useMemo,
 } = wp.element;
-// const {
-// 	//
-// 	// Button
-// 	Popover,
-// } = wp.components;
+const {
+	//
+	// Button
+	Popover,
+} = wp.components;
 
 // redux import
 import { betterlinksGutenStore } from 'redux/store';
@@ -149,6 +149,23 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 							});
 					}}
 				/>
+			)}
+
+			{islinkNotFound && (
+				<Popover position="left" focusOnMount={false} className="betterlinks-link-deleted-after-applying-format">
+					<h5 style={{ width: '400px', color: 'red', padding: '0 20px' }}>
+						Error!! Link not found. You probably 'changed the short url' or 'deleted this link' from your betterlinks. <br />
+						<button
+							onClick={() => {
+								handleChangeLink();
+								setIslinkNotFound(false);
+							}}
+						>
+							click here
+						</button>{' '}
+						to apply a new link here
+					</h5>
+				</Popover>
 			)}
 		</>
 	);
