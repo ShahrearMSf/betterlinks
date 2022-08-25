@@ -37,7 +37,18 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value, removeBtlFormat, setIsChangeLink, linkNewTab, setLinkNewTab }) => {
+export const LinkPreview = ({
+	reset,
+	activeAttributes,
+	editModalActiveBtlFormatLink,
+	value,
+	removeBtlFormat,
+	setIsChangeLink,
+	linkNewTab,
+	setLinkNewTab,
+	isSubmittingForGutenberg,
+	setIsSubmittingForGutenberg,
+}) => {
 	const { url, rel = '' } = activeAttributes;
 
 	const [showLinkModal, setShowLinkModal] = useState(false);
@@ -125,6 +136,8 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 
 			{showLinkModal && linkData && !islinkNotFound && (
 				<Link
+					isSubmittingForGutenberg={isSubmittingForGutenberg}
+					setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
 					linkNewTab={linkNewTab}
 					setLinkNewTab={setLinkNewTab}
 					betterlinksGutenStore={betterlinksGutenStore}
@@ -140,6 +153,7 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 							.then((res) => {
 								const inputUrl = `${betterLinksGlobal.site_url}/${values.short_url}`;
 								editModalActiveBtlFormatLink({ inputUrl, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, value });
+								setIsSubmittingForGutenberg(false);
 								setShowLinkModal(false);
 							})
 							.catch((error) => {

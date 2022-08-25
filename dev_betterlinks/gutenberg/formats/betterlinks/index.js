@@ -2,7 +2,7 @@
 const { __ } = wp.i18n;
 const { applyFormat, removeFormat, create, insert, isCollapsed } = wp.richText;
 const { useState, useEffect, useRef, useMemo } = wp.element;
-const { Popover, Button } = wp.components;
+const { Popover, Button, Spinner } = wp.components;
 const { RichTextToolbarButton, URLPopover, RichTextShortcut } = wp.blockEditor;
 const { UP, DOWN, ENTER } = wp.keycodes;
 const { getRectangleFromRange } = wp.dom;
@@ -65,6 +65,9 @@ export const betterlinksFormat = {
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
 		const [showLinkModal, setShowLinkModal] = useState(false);
 		const [isChangeLink, setIsChangeLink] = useState(false);
+
+		//👇 this state is only for this 'Link' component's gutenberg implementation
+		const [isSubmittingForGutenberg, setIsSubmittingForGutenberg] = useState(false);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
@@ -162,6 +165,7 @@ export const betterlinksFormat = {
 			setSubmitDone(false);
 			setIsChangeLink(false);
 			setLinkNewTab(false);
+			setIsSubmittingForGutenberg(false);
 		};
 
 		const handleSubmit = (e) => {
@@ -346,134 +350,134 @@ export const betterlinksFormat = {
 								close();
 							}}
 							focusOnMount={!isActive && !submitDone ? true : false}
-							renderSettings={
-								!isActive && !submitDone
-									? () => (
-											<RenderSettings
-												setLinkNewTab={setLinkNewTab}
-												linkNewTab={linkNewTab}
-												setSponsored={setSponsored}
-												sponsored={sponsored}
-												setNoFollow={setNoFollow}
-												noFollow={noFollow}
-											/>
-									  )
-									: undefined
-							}
+							renderSettings={!isActive && !submitDone && !isSubmittingForGutenberg ? () => <RenderSettings setLinkNewTab={setLinkNewTab} linkNewTab={linkNewTab} /> : undefined}
 						>
-							{((!isActive && !submitDone) || isChangeLink) && (
+							{isSubmittingForGutenberg ? (
+								<div className="betterlinks-submitted-link-for-gutenberg">
+									<Spinner />
+								</div>
+							) : (
 								<>
-									<form className="btl-links-search-form" onSubmit={handleSubmit}>
-										<input
-											type="text"
-											ref={searchFieldRef}
-											placeholder="Paste URL or type to search"
-											onChange={handleUrlInputChange}
-											value={searchedText}
-											className="btl-url-search-field"
-											onKeyDown={handleOnKeyDown}
-										/>
+									{((!isActive && !submitDone) || isChangeLink) && (
+										<>
+											<form className="btl-links-search-form" onSubmit={handleSubmit}>
+												<input
+													type="text"
+													ref={searchFieldRef}
+													placeholder="Paste URL or type to search"
+													onChange={handleUrlInputChange}
+													value={searchedText}
+													className="btl-url-search-field"
+													onKeyDown={handleOnKeyDown}
+												/>
 
-										{isLinkInvalid && (
-											<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
-												<div className="betterlinks_format_invalid_link_warning">
-													Invalid Link
-													<button
-														onClick={() => {
-															setShowLinkModal(true);
-															setIsLinkInvalid(false);
-														}}
-													>
-														create Link
-													</button>
-												</div>
-											</Popover>
-										)}
-
-										{matchedLinks.length > 0 && regex && (
-											<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
-												<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
-													{matchedLinks.map((item, index) => {
-														const title = reactStringReplace(
-															// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
-															new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
-															regex,
-															(match, i) => {
-																return (
-																	<span key={i} className="hl">
-																		{match}
-																	</span>
-																);
-															}
-														);
-
-														return (
-															<li
-																key={item.ID}
+												{isLinkInvalid && (
+													<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
+														<div className="betterlinks_format_invalid_link_warning">
+															Invalid Link
+															<button
 																onClick={() => {
-																	handleMatchedLiClick(item.short_url);
+																	setShowLinkModal(true);
+																	setIsLinkInvalid(false);
 																}}
-																className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
 															>
-																{title}
-															</li>
-														);
-													})}
-												</ul>
-											</Popover>
-										)}
+																create Link
+															</button>
+														</div>
+													</Popover>
+												)}
 
-										<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
-									</form>
+												{matchedLinks.length > 0 && regex && (
+													<Popover position="left" focusOnMount={false} className="betterlinks-suggession-popover">
+														<ul ref={matchedLinksUl} className="betterlinks-suggessions-wrapper-ul">
+															{matchedLinks.map((item, index) => {
+																const title = reactStringReplace(
+																	// used DomPersar to convert the html entities back to the unescaped actual value & show it to preview
+																	new DOMParser().parseFromString(item.link_title, 'text/html').documentElement.textContent,
+																	regex,
+																	(match, i) => {
+																		return (
+																			<span key={i} className="hl">
+																				{match}
+																			</span>
+																		);
+																	}
+																);
+
+																return (
+																	<li
+																		key={item.ID}
+																		onClick={() => {
+																			handleMatchedLiClick(item.short_url);
+																		}}
+																		className={`betterlinks-suggessted-link-li betterlinks-suggessted-link-li-${index}`}
+																	>
+																		{title}
+																	</li>
+																);
+															})}
+														</ul>
+													</Popover>
+												)}
+
+												<Button className="btl-submit-button" icon={keyboardReturn} label={__('Apply')} type="submit" />
+											</form>
+										</>
+									)}
+
+									{isActive && !isChangeLink && (
+										<LinkPreview
+											//
+											linkNewTab={linkNewTab}
+											setLinkNewTab={setLinkNewTab}
+											setIsChangeLink={setIsChangeLink}
+											removeBtlFormat={removeBtlFormat}
+											value={value}
+											editModalActiveBtlFormatLink={editModalActiveBtlFormatLink}
+											activeAttributes={activeAttributes}
+											reset={reset}
+											isSubmittingForGutenberg={isSubmittingForGutenberg}
+											setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
+										/>
+									)}
+
+									{showLinkModal && (
+										<Link
+											linkNewTab={linkNewTab}
+											setLinkNewTab={setLinkNewTab}
+											betterlinksGutenStore={betterlinksGutenStore}
+											isShowIcon={false}
+											setShowLinkModal={setShowLinkModal}
+											searchFieldRef={searchFieldRef}
+											isSubmittingForGutenberg={isSubmittingForGutenberg}
+											setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
+											submitHandler={(values) => {
+												add_new_link(
+													values,
+													true
+												)(betterlinksGutenStore.dispatch)
+													.then((res) => {
+														setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
+														setShowLinkModal(false);
+														setIsSubmittingForGutenberg(false);
+
+														const searchFieldDomRef = searchFieldRef?.current;
+														if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
+														searchFieldDomRef.classList.add('temporary-focus');
+														setTimeout(() => {
+															if (searchFieldDomRef?.classList) {
+																searchFieldDomRef.classList.remove('temporary-focus');
+															}
+														}, 5000);
+														searchFieldDomRef.focus();
+													})
+													.catch((error) => {
+														console.log('error!! aading new link failed', error);
+													});
+											}}
+										/>
+									)}
 								</>
-							)}
-
-							{isActive && !isChangeLink && (
-								<LinkPreview
-									//
-									linkNewTab={linkNewTab}
-									setLinkNewTab={setLinkNewTab}
-									setIsChangeLink={setIsChangeLink}
-									removeBtlFormat={removeBtlFormat}
-									value={value}
-									editModalActiveBtlFormatLink={editModalActiveBtlFormatLink}
-									activeAttributes={activeAttributes}
-									reset={reset}
-								/>
-							)}
-
-							{showLinkModal && (
-								<Link
-									linkNewTab={linkNewTab}
-									setLinkNewTab={setLinkNewTab}
-									betterlinksGutenStore={betterlinksGutenStore}
-									isShowIcon={false}
-									setShowLinkModal={setShowLinkModal}
-									searchFieldRef={searchFieldRef}
-									submitHandler={(values) => {
-										add_new_link(
-											values,
-											true
-										)(betterlinksGutenStore.dispatch)
-											.then((res) => {
-												setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
-												setShowLinkModal(false);
-
-												const searchFieldDomRef = searchFieldRef?.current;
-												if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
-												searchFieldDomRef.classList.add('temporary-focus');
-												setTimeout(() => {
-													if (searchFieldDomRef?.classList) {
-														searchFieldDomRef.classList.remove('temporary-focus');
-													}
-												}, 5000);
-												searchFieldDomRef.focus();
-											})
-											.catch((error) => {
-												console.log('error!! aading new link failed', error);
-											});
-									}}
-								/>
 							)}
 						</URLPopover>
 					</div>

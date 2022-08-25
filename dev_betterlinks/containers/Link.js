@@ -43,6 +43,7 @@ export const Link = (props) => {
 		searchFieldRef,
 		linkNewTab,
 		setLinkNewTab = () => {},
+		setIsSubmittingForGutenberg = () => {},
 	} = props;
 
 	//👇 slight tweaks to use <Link /> component inside gutenberg
@@ -179,6 +180,7 @@ export const Link = (props) => {
 			setLinkNewTab(isOPenNewTab);
 			console.log('83888888888----setLinkNewTab runned from <Link /> component', { setLinkNewTab, isOPenNewTab });
 			delete values.openInNewTab;
+			setIsSubmittingForGutenberg(true);
 		}
 
 		const { short_url } = values;
