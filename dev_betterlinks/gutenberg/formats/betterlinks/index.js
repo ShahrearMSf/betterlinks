@@ -27,7 +27,7 @@ import {
 	// formatDate,
 	// betterlinks_nonce,
 	siteUrlWithoutHttp,
-	siteUrlRegex,
+	// siteUrlRegex,
 } from 'utils/helper';
 import { RenderSettings } from './renderSettings';
 import { LinkPreview } from './linkPreview';
@@ -178,6 +178,7 @@ export const betterlinksFormat = {
 			if (!newText) return false;
 			// scenario: the search filed is empty
 
+			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const justShortlink = newText
 				.replace(/https?\:\/\//g, '')
 				.replace(siteUrlRegex, '')
@@ -240,11 +241,11 @@ export const betterlinksFormat = {
 				return false;
 			}
 			const regex = new RegExp(`(${value})`, 'gi');
+			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const matchedLinks = betterlinksGutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
 
 			const bool1 = (spacesRemoved || '').replace(/\s+/g, '').length < 2;
 			const bool2 = siteUrlRegex.test(spacesRemoved);
-			// ---in the scenario where every charecter insertion after 'siteurl', bool2 (regex) gets changed wieredly every time & whereas bool3 works just fine.
 			const bool3 = (spacesRemoved || '').toLowerCase().includes(siteUrlWithoutHttp);
 			const bool4 = matchedLinks.length > 0;
 
@@ -318,6 +319,7 @@ export const betterlinksFormat = {
 		};
 
 		//
+		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 		console.log(siteUrlRegex.test(searchedText), '---', searchedText.includes(siteUrlWithoutHttp), '---', {
 			searchedText,
 			activeAttributes,
