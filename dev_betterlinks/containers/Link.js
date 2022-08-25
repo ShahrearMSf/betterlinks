@@ -41,6 +41,8 @@ export const Link = (props) => {
 		betterlinksGutenStore,
 		setShowLinkModal = () => {},
 		searchFieldRef,
+		linkNewTab,
+		setLinkNewTab = () => {},
 	} = props;
 
 	//👇 slight tweaks to use <Link /> component inside gutenberg
@@ -75,6 +77,12 @@ export const Link = (props) => {
 		};
 	}, [betterlinksGutenStore]);
 
+	const objForGutenTargetBlank = betterlinksGutenStore
+		? {
+				openInNewTab: linkNewTab,
+		  }
+		: {};
+
 	const initialValues = {
 		link_title: '',
 		link_slug: '',
@@ -87,6 +95,7 @@ export const Link = (props) => {
 		link_modified_gmt: currentDate,
 		cat_id: catId ? catId : null,
 		...settings.settings,
+		...objForGutenTargetBlank,
 	};
 
 	const initialUpdateValues = {
@@ -95,6 +104,7 @@ export const Link = (props) => {
 		cat_id: catId,
 		old_short_url: data ? data.short_url : '',
 		...data,
+		...objForGutenTargetBlank,
 	};
 
 	function openModal() {
@@ -162,6 +172,15 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
+		//👇 this following codes is written as it's not required to submit 'openInNewTab'.
+		if (betterlinksGutenStore) {
+			setShowLinkModal(false);
+			const isOPenNewTab = !!values.openInNewTab;
+			setLinkNewTab(isOPenNewTab);
+			console.log('83888888888----setLinkNewTab runned from <Link /> component', { setLinkNewTab, isOPenNewTab });
+			delete values.openInNewTab;
+		}
+
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID).then((isDuplicate) => {
@@ -181,8 +200,6 @@ export const Link = (props) => {
 						values.link_title = link_title;
 						submitHandler(values);
 						setModalIsOpen(false);
-						//👇 this following code is only for gutenberg implementation of the 'Link' component
-						setShowLinkModal(false);
 					}
 				}
 			}
@@ -370,6 +387,25 @@ export const Link = (props) => {
 											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
+											{betterlinksGutenStore && (
+												<label className="btl-checkbox-field">
+													<Field
+														className="btl-check"
+														name="openInNewTab"
+														type="checkbox"
+														onChange={() => props.setFieldValue('openInNewTab', !props.values.openInNewTab)}
+														disabled={false}
+													/>
+													<span className="text">
+														{__('Open In New Tab', 'betterlinks')}
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('This will open your link in a new tab when clicked', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+											)}
+
 											<label className="btl-checkbox-field">
 												<Field
 													className="btl-check"

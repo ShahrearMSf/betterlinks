@@ -21,12 +21,12 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { betterlinksIcon } from './icon';
 import {
 	makeLinkFormat,
+	siteUrlWithoutHttp,
 	// //
 	// generateShortURL,
 	// generateSlug,
 	// formatDate,
 	// betterlinks_nonce,
-	siteUrlWithoutHttp,
 	// siteUrlRegex,
 } from 'utils/helper';
 import { RenderSettings } from './renderSettings';
@@ -170,6 +170,7 @@ export const betterlinksFormat = {
 			setIsVisible(false);
 			setSubmitDone(false);
 			setIsChangeLink(false);
+			setLinkNewTab(false);
 		};
 
 		const handleSubmit = (e) => {
@@ -439,6 +440,8 @@ export const betterlinksFormat = {
 							{isActive && !isChangeLink && (
 								<LinkPreview
 									//
+									linkNewTab={linkNewTab}
+									setLinkNewTab={setLinkNewTab}
 									setIsChangeLink={setIsChangeLink}
 									removeBtlFormat={removeBtlFormat}
 									value={value}
@@ -450,6 +453,8 @@ export const betterlinksFormat = {
 
 							{showLinkModal && (
 								<Link
+									linkNewTab={linkNewTab}
+									setLinkNewTab={setLinkNewTab}
 									betterlinksGutenStore={betterlinksGutenStore}
 									isShowIcon={false}
 									setShowLinkModal={setShowLinkModal}

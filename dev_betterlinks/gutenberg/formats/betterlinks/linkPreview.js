@@ -37,7 +37,7 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value, removeBtlFormat, setIsChangeLink }) => {
+export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatLink, value, removeBtlFormat, setIsChangeLink, linkNewTab, setLinkNewTab }) => {
 	const { url, rel = '' } = activeAttributes;
 
 	const [showLinkModal, setShowLinkModal] = useState(false);
@@ -125,6 +125,8 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 
 			{showLinkModal && linkData && !islinkNotFound && (
 				<Link
+					linkNewTab={linkNewTab}
+					setLinkNewTab={setLinkNewTab}
 					betterlinksGutenStore={betterlinksGutenStore}
 					isShowIcon={false}
 					setShowLinkModal={setShowLinkModal}
@@ -137,11 +139,7 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 						)(betterlinksGutenStore.dispatch)
 							.then((res) => {
 								const inputUrl = `${betterLinksGlobal.site_url}/${values.short_url}`;
-								const linkNewTab = rel.includes('noreferrer');
-								const sponsored = rel.includes('sponsored');
-								const noFollow = rel.includes('noFollow');
-
-								editModalActiveBtlFormatLink({ inputUrl, linkNewTab, sponsored, noFollow, value });
+								editModalActiveBtlFormatLink({ inputUrl, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, value });
 								setShowLinkModal(false);
 							})
 							.catch((error) => {
