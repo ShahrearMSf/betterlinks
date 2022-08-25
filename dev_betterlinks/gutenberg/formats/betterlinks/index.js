@@ -113,6 +113,14 @@ export const betterlinksFormat = {
 		}, [isVisible, isActive, isChangeLink]);
 
 		useEffect(() => {
+			if (activeAttributes.target == '_blank') {
+				setLinkNewTab(true);
+			}
+
+			console.log('7473874387++++=== [activeAttributes] useEffect runned ', { activeAttributes });
+		}, [activeAttributes]);
+
+		useEffect(() => {
 			setSelectedIndex(null);
 		}, [matchedLinks]);
 
@@ -122,6 +130,7 @@ export const betterlinksFormat = {
 				close();
 			};
 		}, [value.start, value.end]);
+
 		const onClick = () => {
 			console.log('----onClick fired');
 			setIsVisible(true);
