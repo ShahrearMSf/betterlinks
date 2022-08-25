@@ -1,6 +1,6 @@
 // wordpress imports
 const { __ } = wp.i18n;
-const { ToggleControl, Spinner } = wp.components;
+const { ToggleControl } = wp.components;
 
 export const RenderSettings = ({ setLinkNewTab, linkNewTab }) => {
 	return (
