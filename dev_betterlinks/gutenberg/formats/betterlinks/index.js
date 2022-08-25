@@ -210,6 +210,7 @@ export const betterlinksFormat = {
 			}
 			reset();
 			setSubmitDone(true);
+			setIsChangeLink(false);
 		};
 
 		const editModalActiveBtlFormatLink = ({ value, inputUrl, linkNewTab, sponsored, noFollow }) => {
