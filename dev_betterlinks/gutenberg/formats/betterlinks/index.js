@@ -60,8 +60,6 @@ export const betterlinksFormat = {
 		const [regex, setRegex] = useState(false);
 
 		const [linkNewTab, setLinkNewTab] = useState(false);
-		const [sponsored, setSponsored] = useState(false);
-		const [noFollow, setNoFollow] = useState(false);
 
 		const [submitDone, setSubmitDone] = useState(false);
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
@@ -132,16 +130,9 @@ export const betterlinksFormat = {
 			}
 
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-			if (settings) {
-				setSponsored(!!settings?.sponsored);
-				setNoFollow(!!settings?.nofollow);
-			} else {
+			if (!settings) {
 				fetch_settings_data()(betterlinksGutenStore.dispatch)
-					.then(() => {
-						const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-						setSponsored(!!settings?.sponsored);
-						setNoFollow(!!settings?.nofollow);
-					})
+					.then(() => {})
 					.catch((err) => console.log('error!! failed fetching betterlinks Settings data', err));
 			}
 
@@ -201,7 +192,7 @@ export const betterlinksFormat = {
 			}
 
 			const withHttp = /^https?\:\/\//i.test(newText) ? newText : `http://${newText}`;
-			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored, noFollow });
+			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow });
 
 			if (isCollapsed(value) && !isActive) {
 				// Scenario: we don't have any actively selected text
