@@ -225,14 +225,16 @@ function links(state = {}, action) {
 		}
 
 		case EDIT_LINK_FORGUTENBERG: {
-			//
-			console.log({ payload });
+			const allLinks = state.links;
+			const itemIndexInLinks = allLinks.findIndex((item) => item.ID == payload.ID);
 			const newData = { ...payload, short_url: payload.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
+			const newLinks = [...allLinks.slice(0, itemIndexInLinks), newData, ...allLinks.slice(itemIndexInLinks + 1)];
+
 			console.log({ payload, newData });
 
 			return {
 				...state,
-				links: [...state.links, newData],
+				links: newLinks,
 			};
 		}
 
