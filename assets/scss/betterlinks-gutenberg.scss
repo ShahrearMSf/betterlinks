@@ -317,7 +317,10 @@ a.betterlinks-linked-text {
 }
 
 // gutenberg richtext 'betterlinks format' css -> end
-
+.betterlinks-submitted-link-for-gutenberg > svg {
+	height: 100px !important;
+	width: 100px !important;
+}
 //
 
 @import './betterlinks.scss';
