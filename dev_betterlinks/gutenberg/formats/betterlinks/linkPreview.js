@@ -64,7 +64,7 @@ export const LinkPreview = ({ reset, activeAttributes, editModalActiveBtlFormatL
 			setLinkData(null);
 			console.log('----LinkPreview component cleanup runned', { btnEl });
 		};
-	}, [value]);
+	}, [value.start, value.end]);
 
 	const handleChangeLink = () => {
 		console.log('----------handleChangeLink fired');
