@@ -2,7 +2,7 @@
 const { __ } = wp.i18n;
 const { applyFormat, removeFormat, create, insert, isCollapsed } = wp.richText;
 const { useState, useEffect, useRef, useMemo } = wp.element;
-const { Popover, Button, Spinner } = wp.components;
+const { Popover, Button, Spinner, ToggleControl } = wp.components;
 const { RichTextToolbarButton, URLPopover, RichTextShortcut } = wp.blockEditor;
 const { UP, DOWN, ENTER } = wp.keycodes;
 const { getRectangleFromRange } = wp.dom;
@@ -29,7 +29,6 @@ import {
 	// betterlinks_nonce,
 	// siteUrlRegex,
 } from 'utils/helper';
-import { RenderSettings } from './renderSettings';
 import { LinkPreview } from './linkPreview';
 import { Link } from 'containers/Link';
 
@@ -359,7 +358,15 @@ export const betterlinksFormat = {
 								close();
 							}}
 							focusOnMount={!isActive && !submitDone ? true : false}
-							renderSettings={!isActive && !submitDone && !isSubmittingForGutenberg ? () => <RenderSettings setLinkNewTab={setLinkNewTab} linkNewTab={linkNewTab} /> : undefined}
+							renderSettings={
+								!isActive && !submitDone && !isSubmittingForGutenberg
+									? () => (
+											<div className="betterlinks-expanded-format-options">
+												<ToggleControl label={__(`Open in new tab`)} checked={linkNewTab} onChange={() => setLinkNewTab(!linkNewTab)} />
+											</div>
+									  )
+									: undefined
+							}
 						>
 							{isSubmittingForGutenberg ? (
 								<div className="betterlinks-submitted-link-for-gutenberg">
