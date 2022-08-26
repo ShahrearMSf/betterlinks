@@ -47,7 +47,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 	useEffect(() => {
 		const btnEl = btnRef?.current;
 		if (btnEl) {
-			btnEl.closest('body').classList.add('betterlinks-format-link-preview-mounted');
+			btnEl.closest('body')?.classList?.add('betterlinks-format-link-preview-mounted');
 		}
 		console.log('----LinkPreview useEffec runned with []', { btnEl });
 
@@ -55,7 +55,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 			reset();
 			const btnEl = btnRef?.current;
 			if (btnEl) {
-				btnEl.closest('body').classList.remove('betterlinks-format-link-preview-mounted');
+				btnEl.closest('body')?.classList?.remove('betterlinks-format-link-preview-mounted');
 			}
 			setIslinkNotFound(false);
 			console.log('----LinkPreview component cleanup runned', { btnEl });
