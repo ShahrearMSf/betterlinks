@@ -13,18 +13,18 @@ const {
 
 // redux import
 import { betterlinksGutenStore } from 'redux/store';
-import {
-	// //
-	// fetch_links_data,
-	// onDragEnd,
-	// add_new_cat,
-	// add_new_link,
-	// delete_link,
-	edit_link,
-} from 'redux/actions/links.actions';
+// import {
+// 	// //
+// 	// fetch_links_data,
+// 	// onDragEnd,
+// 	// add_new_cat,
+// 	// add_new_link,
+// 	// delete_link,
+// edit_link,
+// } from 'redux/actions/links.actions';
 
 // internal imports
-import { Link } from 'containers/Link';
+// import { Link } from 'containers/Link';
 import {
 	// makeLinkFormat,
 	// generateShortURL,
@@ -38,7 +38,7 @@ import {
 } from 'utils/helper';
 
 export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData }) => {
-	const { url, rel = '' } = activeAttributes;
+	const { url } = activeAttributes;
 
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
 
