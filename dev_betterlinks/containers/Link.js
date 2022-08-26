@@ -120,10 +120,12 @@ export const Link = (props) => {
 	}
 
 	function closeModal() {
-		setModalIsOpen(false);
-
-		//👇 this following code is only for gutenberg implementation of the 'Link' component
-		setShowLinkModal(false);
+		//👇 this following code is only for gutenberg implementation of the 'Link' component & to make sure memory leak doesn't happen ('Can't perform a React state update on an unmounted component')
+		if (betterlinksGutenStore) {
+			setShowLinkModal(false);
+		} else {
+			setModalIsOpen(false);
+		}
 	}
 
 	const openUTMModal = () => {
@@ -196,7 +198,10 @@ export const Link = (props) => {
 					if (link_title) {
 						values.link_title = link_title;
 						submitHandler(values);
-						setModalIsOpen(false);
+						// 👇 fixed memory leak warning 'Can't perform a React state update on an unmounted component' when using this component for gutenberg format
+						if (!betterlinksGutenStore) {
+							setModalIsOpen(false);
+						}
 					}
 				}
 			}
