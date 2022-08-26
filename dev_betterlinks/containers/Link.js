@@ -42,7 +42,6 @@ export const Link = (props) => {
 		setShowLinkModal = () => {},
 		searchFieldRef,
 		linkNewTab,
-		setLinkNewTab = () => {},
 		setIsSubmittingForGutenberg = () => {},
 	} = props;
 
@@ -176,10 +175,6 @@ export const Link = (props) => {
 		//👇 this following codes is written as it's not required to submit 'openInNewTab'.
 		if (betterlinksGutenStore) {
 			setShowLinkModal(false);
-			const isOPenNewTab = !!values.openInNewTab;
-			setLinkNewTab(isOPenNewTab);
-			console.log('83888888888----setLinkNewTab runned from <Link /> component', { setLinkNewTab, isOPenNewTab });
-			delete values.openInNewTab;
 			setIsSubmittingForGutenberg(true);
 		}
 

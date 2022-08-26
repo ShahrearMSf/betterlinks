@@ -112,14 +112,6 @@ export const betterlinksFormat = {
 		}, [isVisible, isActive, isChangeLink]);
 
 		useEffect(() => {
-			if (activeAttributes.target == '_blank') {
-				setLinkNewTab(true);
-			}
-
-			console.log('7473874387++++=== [activeAttributes] useEffect runned ', { activeAttributes });
-		}, [activeAttributes]);
-
-		useEffect(() => {
 			setSelectedIndex(null);
 		}, [matchedLinks]);
 
@@ -443,8 +435,6 @@ export const betterlinksFormat = {
 
 									{isActive && !isChangeLink && (
 										<LinkPreview
-											//
-											linkNewTab={linkNewTab}
 											setLinkNewTab={setLinkNewTab}
 											setIsChangeLink={setIsChangeLink}
 											removeBtlFormat={removeBtlFormat}
@@ -459,8 +449,7 @@ export const betterlinksFormat = {
 
 									{showLinkModal && (
 										<Link
-											linkNewTab={linkNewTab}
-											setLinkNewTab={setLinkNewTab}
+											linkNewTab={linkNewTab || activeAttributes.target == '_blank'}
 											betterlinksGutenStore={betterlinksGutenStore}
 											isShowIcon={false}
 											setShowLinkModal={setShowLinkModal}
@@ -468,11 +457,17 @@ export const betterlinksFormat = {
 											isSubmittingForGutenberg={isSubmittingForGutenberg}
 											setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
 											submitHandler={(values) => {
+												const linkNewTab = !!values.openInNewTab;
+												delete values.openInNewTab;
+
+												console.log('----add_new_link', { values, linkNewTab });
+
 												add_new_link(
 													values,
 													true
 												)(betterlinksGutenStore.dispatch)
 													.then((res) => {
+														setLinkNewTab(linkNewTab);
 														setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
 														setShowLinkModal(false);
 														setIsSubmittingForGutenberg(false);

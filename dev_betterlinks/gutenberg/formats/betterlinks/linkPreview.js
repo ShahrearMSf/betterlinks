@@ -44,7 +44,6 @@ export const LinkPreview = ({
 	value,
 	removeBtlFormat,
 	setIsChangeLink,
-	linkNewTab,
 	setLinkNewTab,
 	isSubmittingForGutenberg,
 	setIsSubmittingForGutenberg,
@@ -138,20 +137,24 @@ export const LinkPreview = ({
 				<Link
 					isSubmittingForGutenberg={isSubmittingForGutenberg}
 					setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
-					linkNewTab={linkNewTab}
-					setLinkNewTab={setLinkNewTab}
+					linkNewTab={activeAttributes.target == '_blank'}
 					betterlinksGutenStore={betterlinksGutenStore}
 					isShowIcon={false}
 					setShowLinkModal={setShowLinkModal}
 					data={linkData}
 					submitHandler={(values) => {
-						console.log('----edit_link', { values });
+						const linkNewTab = !!values.openInNewTab;
+						delete values.openInNewTab;
+
+						console.log('----edit_link', { values, linkNewTab });
+
 						edit_link(
 							values,
 							true
 						)(betterlinksGutenStore.dispatch)
 							.then((res) => {
 								const inputUrl = `${betterLinksGlobal.site_url}/${values.short_url}`;
+								setLinkNewTab(linkNewTab);
 								editModalActiveBtlFormatLink({ inputUrl, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, value });
 								setIsSubmittingForGutenberg(false);
 								setShowLinkModal(false);
