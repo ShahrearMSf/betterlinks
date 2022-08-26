@@ -57,9 +57,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 			if (btnEl) {
 				btnEl.closest('body').classList.remove('betterlinks-format-link-preview-mounted');
 			}
-			setShowLinkModal(false);
 			setIslinkNotFound(false);
-			setLinkData(null);
 			console.log('----LinkPreview component cleanup runned', { btnEl });
 		};
 	}, [value.start, value.end]);
