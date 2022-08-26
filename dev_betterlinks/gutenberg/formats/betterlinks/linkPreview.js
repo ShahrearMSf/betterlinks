@@ -37,21 +37,9 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({
-	reset,
-	activeAttributes,
-	editModalActiveBtlFormatLink,
-	value,
-	removeBtlFormat,
-	setIsChangeLink,
-	setLinkNewTab,
-	isSubmittingForGutenberg,
-	setIsSubmittingForGutenberg,
-}) => {
+export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData }) => {
 	const { url, rel = '' } = activeAttributes;
 
-	const [showLinkModal, setShowLinkModal] = useState(false);
-	const [linkData, setLinkData] = useState(null);
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
 
 	const btnRef = useRef(null);
@@ -132,39 +120,6 @@ export const LinkPreview = ({
 					<span className="btl-tooltiptext">Remove Link</span>
 				</button>
 			</div>
-
-			{showLinkModal && linkData && !islinkNotFound && (
-				<Link
-					isSubmittingForGutenberg={isSubmittingForGutenberg}
-					setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
-					linkNewTab={activeAttributes.target == '_blank'}
-					betterlinksGutenStore={betterlinksGutenStore}
-					isShowIcon={false}
-					setShowLinkModal={setShowLinkModal}
-					data={linkData}
-					submitHandler={(values) => {
-						const linkNewTab = !!values.openInNewTab;
-						delete values.openInNewTab;
-
-						console.log('----edit_link', { values, linkNewTab });
-
-						edit_link(
-							values,
-							true
-						)(betterlinksGutenStore.dispatch)
-							.then((res) => {
-								const inputUrl = `${betterLinksGlobal.site_url}/${values.short_url}`;
-								setLinkNewTab(linkNewTab);
-								editModalActiveBtlFormatLink({ inputUrl, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, value });
-								setIsSubmittingForGutenberg(false);
-								setShowLinkModal(false);
-							})
-							.catch((error) => {
-								console.log('error!! editing link failed', error);
-							});
-					}}
-				/>
-			)}
 
 			{islinkNotFound && (
 				<Popover position="left" focusOnMount={false} className="betterlinks-link-deleted-after-applying-format">

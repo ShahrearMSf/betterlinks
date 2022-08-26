@@ -13,7 +13,7 @@ import reactStringReplace from 'react-string-replace';
 
 // redux imports
 import { betterlinksGutenStore } from 'redux/store';
-import { fetch_links_data, add_new_link } from 'redux/actions/links.actions';
+import { fetch_links_data, add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
@@ -64,6 +64,8 @@ export const betterlinksFormat = {
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
 		const [showLinkModal, setShowLinkModal] = useState(false);
 		const [isChangeLink, setIsChangeLink] = useState(false);
+
+		const [linkData, setLinkData] = useState(null);
 
 		//👇 this state is only for this 'Link' component's gutenberg implementation
 		const [isSubmittingForGutenberg, setIsSubmittingForGutenberg] = useState(false);
@@ -166,6 +168,7 @@ export const betterlinksFormat = {
 			setIsChangeLink(false);
 			setLinkNewTab(false);
 			setIsSubmittingForGutenberg(false);
+			setLinkData(null);
 		};
 
 		const handleSubmit = (e) => {
@@ -208,13 +211,6 @@ export const betterlinksFormat = {
 			reset();
 			setSubmitDone(true);
 			setIsChangeLink(false);
-		};
-
-		const editModalActiveBtlFormatLink = ({ value, inputUrl, linkNewTab, sponsored, noFollow }) => {
-			const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
-			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored, noFollow });
-			onChange(applyFormat(value, linkFormat));
-			reset();
 		};
 
 		const handleMatchedLiClick = (shortUrl) => {
@@ -435,56 +431,75 @@ export const betterlinksFormat = {
 
 									{isActive && !isChangeLink && (
 										<LinkPreview
-											setLinkNewTab={setLinkNewTab}
-											setIsChangeLink={setIsChangeLink}
-											removeBtlFormat={removeBtlFormat}
-											value={value}
-											editModalActiveBtlFormatLink={editModalActiveBtlFormatLink}
-											activeAttributes={activeAttributes}
 											reset={reset}
-											isSubmittingForGutenberg={isSubmittingForGutenberg}
-											setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
+											activeAttributes={activeAttributes}
+											value={value}
+											removeBtlFormat={removeBtlFormat}
+											setIsChangeLink={setIsChangeLink}
+											setShowLinkModal={setShowLinkModal}
+											setLinkData={setLinkData}
 										/>
 									)}
 
 									{showLinkModal && (
 										<Link
-											linkNewTab={linkNewTab || activeAttributes.target == '_blank'}
+											searchFieldRef={linkData ? null : searchFieldRef}
+											linkNewTab={linkData ? activeAttributes.target == '_blank' : linkNewTab || activeAttributes.target == '_blank'}
 											betterlinksGutenStore={betterlinksGutenStore}
 											isShowIcon={false}
 											setShowLinkModal={setShowLinkModal}
-											searchFieldRef={searchFieldRef}
 											isSubmittingForGutenberg={isSubmittingForGutenberg}
 											setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
+											data={linkData || undefined}
 											submitHandler={(values) => {
 												const linkNewTab = !!values.openInNewTab;
 												delete values.openInNewTab;
 
-												console.log('----add_new_link', { values, linkNewTab });
+												if (linkData) {
+													console.log('----edit_link', { values, linkNewTab });
+													edit_link(
+														values,
+														true
+													)(betterlinksGutenStore.dispatch)
+														.then((res) => {
+															const inputUrl = `${betterLinksGlobal.site_url}/${values.short_url}`;
+															setLinkNewTab(linkNewTab);
+															const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
+															const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow });
+															onChange(applyFormat(value, linkFormat));
+															reset();
+															setIsSubmittingForGutenberg(false);
+															setShowLinkModal(false);
+														})
+														.catch((error) => {
+															console.log('error!! editing link failed', error);
+														});
+												} else {
+													console.log('----add_new_link', { values, linkNewTab });
+													add_new_link(
+														values,
+														true
+													)(betterlinksGutenStore.dispatch)
+														.then((res) => {
+															setLinkNewTab(linkNewTab);
+															setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
+															setShowLinkModal(false);
+															setIsSubmittingForGutenberg(false);
 
-												add_new_link(
-													values,
-													true
-												)(betterlinksGutenStore.dispatch)
-													.then((res) => {
-														setLinkNewTab(linkNewTab);
-														setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
-														setShowLinkModal(false);
-														setIsSubmittingForGutenberg(false);
-
-														const searchFieldDomRef = searchFieldRef?.current;
-														if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
-														searchFieldDomRef.classList.add('temporary-focus');
-														setTimeout(() => {
-															if (searchFieldDomRef?.classList) {
-																searchFieldDomRef.classList.remove('temporary-focus');
-															}
-														}, 5000);
-														searchFieldDomRef.focus();
-													})
-													.catch((error) => {
-														console.log('error!! aading new link failed', error);
-													});
+															const searchFieldDomRef = searchFieldRef?.current;
+															if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
+															searchFieldDomRef.classList.add('temporary-focus');
+															setTimeout(() => {
+																if (searchFieldDomRef?.classList) {
+																	searchFieldDomRef.classList.remove('temporary-focus');
+																}
+															}, 5000);
+															searchFieldDomRef.focus();
+														})
+														.catch((error) => {
+															console.log('error!! aading new link failed', error);
+														});
+												}
 											}}
 										/>
 									)}
