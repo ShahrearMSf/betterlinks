@@ -21,7 +21,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { betterlinksIcon } from './icon';
 import {
 	makeLinkFormat,
-	siteUrlWithoutHttp,
+	// siteUrlWithoutHttp,
 	// //
 	// generateShortURL,
 	// generateSlug,
@@ -178,6 +178,7 @@ export const betterlinksFormat = {
 			if (!newText) return false;
 			// scenario: the search filed is empty
 
+			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
 			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const justShortlink = newText
 				.replace(/https?\:\/\//g, '')
@@ -234,6 +235,8 @@ export const betterlinksFormat = {
 				return false;
 			}
 			const regex = new RegExp(`(${value})`, 'gi');
+
+			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
 			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const matchedLinks = betterlinksGutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
 
@@ -312,6 +315,7 @@ export const betterlinksFormat = {
 		};
 
 		//
+		const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
 		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 		console.log(siteUrlRegex.test(searchedText), '---', searchedText.includes(siteUrlWithoutHttp), '---', {
 			searchedText,

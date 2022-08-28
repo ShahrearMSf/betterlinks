@@ -398,16 +398,3 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 	};
 	return result;
 };
-
-//
-
-export const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
-export const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
-
-export const getShortUrlFromLink = ({ url = '' }) =>
-	url
-		.trim()
-		.replace(/http\:\/\//gi, '')
-		.replace(siteUrlRegex, '')
-		.replace(/\/+$/, '')
-		.replace(/^\/+/, '');

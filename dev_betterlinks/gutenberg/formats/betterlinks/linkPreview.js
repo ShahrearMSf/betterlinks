@@ -25,17 +25,17 @@ import { betterlinksGutenStore } from 'redux/store';
 
 // internal imports
 // import { Link } from 'containers/Link';
-import {
-	// makeLinkFormat,
-	// generateShortURL,
-	// generateSlug,
-	// formatDate,
-	// betterlinks_nonce,
-	// //
-	// siteUrlWithoutHttp,
-	// siteUrlRegex,
-	getShortUrlFromLink,
-} from 'utils/helper';
+// import {
+// 	// makeLinkFormat,
+// 	// generateShortURL,
+// 	// generateSlug,
+// 	// formatDate,
+// 	// betterlinks_nonce,
+// 	// //
+// 	// siteUrlWithoutHttp,
+// 	// siteUrlRegex,
+// 	// getShortUrlFromLink,
+// } from 'utils/helper';
 
 export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
 	const { url } = activeAttributes;
@@ -68,12 +68,25 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 	};
 
 	const handleEditBetterLink = () => {
-		const justShortlink = getShortUrlFromLink({ url });
-		const foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.short_url === justShortlink);
+		const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
+		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
+		const justShortlink = url
+			.trim()
+			.replace(/https?\:\/\//gi, '')
+			.replace(siteUrlRegex, '')
+			.replace(/\/+$/, '')
+			.replace(/^\/+/, '');
+
+		const allLinksArr = betterlinksGutenStore?.getState()?.links?.links || [];
+		const foundLink = allLinksArr.find((item) => {
+			console.log('item.short_url-- ', item.short_url, ' -justShortlink-- ', justShortlink);
+			return item.short_url === justShortlink;
+		});
 		console.log('----------handleEditBetterLink fired', {
 			justShortlink,
 			url,
 			foundLink,
+			allLinksArr,
 		});
 		if (foundLink) {
 			setShowLinkModal(true);
