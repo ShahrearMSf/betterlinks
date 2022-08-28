@@ -451,6 +451,7 @@ export const betterlinksFormat = {
 											isSubmittingForGutenberg={isSubmittingForGutenberg}
 											setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
 											data={linkData || undefined}
+											catId={linkData ? linkData.cat_id : undefined}
 											submitHandler={(values) => {
 												const linkNewTab = !!values.openInNewTab;
 												delete values.openInNewTab;
