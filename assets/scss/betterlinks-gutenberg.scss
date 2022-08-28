@@ -316,11 +316,40 @@ a.betterlinks-linked-text {
 	}
 }
 
-// gutenberg richtext 'betterlinks format' css -> end
+body.betterlinks-loading-spinner-mounted .btl-url-popover-slot {
+	height: 100vh !important;
+	width: 100vw !important;
+	top: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	display: flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	background: rgba(0, 0, 0, 0.5) !important;
+}
+
+body.betterlinks-loading-spinner-mounted .betterlinks-submitted-link-for-gutenberg {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	display: flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+}
+
 .betterlinks-submitted-link-for-gutenberg > svg {
 	height: 100px !important;
 	width: 100px !important;
+	color: #000;
 }
+// gutenberg richtext 'betterlinks format' css -> end
 //
 
 @import './betterlinks.scss';

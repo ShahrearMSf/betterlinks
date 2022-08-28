@@ -2,7 +2,7 @@
 const { __ } = wp.i18n;
 const { applyFormat, removeFormat, create, insert, isCollapsed } = wp.richText;
 const { useState, useEffect, useRef, useMemo } = wp.element;
-const { Popover, Button, Spinner, ToggleControl } = wp.components;
+const { Popover, Button, ToggleControl } = wp.components;
 const { RichTextToolbarButton, URLPopover, RichTextShortcut } = wp.blockEditor;
 const { UP, DOWN, ENTER } = wp.keycodes;
 const { getRectangleFromRange } = wp.dom;
@@ -19,6 +19,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
 import { betterlinksIcon } from './icon';
+import { LoadingSpinner } from './LoadingSpinner';
 import {
 	makeLinkFormat,
 	// siteUrlWithoutHttp,
@@ -362,9 +363,7 @@ export const betterlinksFormat = {
 							}
 						>
 							{isSubmittingForGutenberg ? (
-								<div className="betterlinks-submitted-link-for-gutenberg">
-									<Spinner />
-								</div>
+								<LoadingSpinner anchorRect={anchorRect} />
 							) : (
 								<>
 									{((!isActive && !submitDone) || isChangeLink) && (
