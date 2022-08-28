@@ -104,7 +104,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 					ref={btnRef}
 				>
 					<i className="btl btl-edit"></i>
-					<span className="btl-tooltiptext">Edit In Betterlinks</span>
+					<span className="btl-tooltiptext">Edit In BetterLinks</span>
 				</button>
 
 				<button
