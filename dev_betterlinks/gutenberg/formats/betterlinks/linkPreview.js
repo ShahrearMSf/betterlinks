@@ -37,7 +37,7 @@ import {
 	getShortUrlFromLink,
 } from 'utils/helper';
 
-export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData }) => {
+export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
 	const { url } = activeAttributes;
 
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
@@ -111,6 +111,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 					className="betterlinks-format-remove-link btl-tooltip"
 					onClick={() => {
 						removeBtlFormat(value);
+						close();
 					}}
 					ref={btnRef}
 				>

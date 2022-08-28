@@ -97,6 +97,7 @@ export const betterlinksFormat = {
 		}, [selectedIndex]);
 
 		useEffect(() => {
+			console.log('---useEffect for [isVisible, isActive, isChangeLink] runned');
 			const searchFieldDomRef = searchFieldRef?.current;
 			if (((isVisible && !isActive) || isChangeLink) && searchFieldDomRef?.focus) {
 				console.log('$$$@#@#@#@%%%%%%searchFieldDomRef e focus hoise');
@@ -438,6 +439,7 @@ export const betterlinksFormat = {
 											setIsChangeLink={setIsChangeLink}
 											setShowLinkModal={setShowLinkModal}
 											setLinkData={setLinkData}
+											close={close}
 										/>
 									)}
 
