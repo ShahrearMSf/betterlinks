@@ -73,6 +73,22 @@
 
 //
 // gutenberg richtext 'betterlinks format' css -> start
+
+// fixed: in gutenberg edit 'page/post' betterlinks 'add/edit link modal' design breaking (when 'spectra' plugin is activated) start
+body.betterlinks-formatting-enabled {
+	.ReactModal__Content {
+		box-sizing: content-box !important;
+		* {
+			box-sizing: content-box;
+		}
+
+		.btl-entry-content .btl-entry-content-right .link-options * {
+			box-sizing: border-box !important;
+		}
+	}
+}
+// fixed: in gutenberg edit 'page/post' betterlinks 'add/edit link modal' design breaking (when 'spectra' plugin is activated) end
+
 .btl-url-popover-slot {
 	& > .components-popover__content {
 		box-shadow: rgb(36 36 36 / 10%) 0px 0px 20px;
