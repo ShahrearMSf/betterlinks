@@ -20,16 +20,7 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 // local imports
 import { betterlinksIcon } from './icon';
 import { LoadingSpinner } from './LoadingSpinner';
-import {
-	makeLinkFormat,
-	// siteUrlWithoutHttp,
-	// //
-	// generateShortURL,
-	// generateSlug,
-	// formatDate,
-	// betterlinks_nonce,
-	// siteUrlRegex,
-} from 'utils/helper';
+import { makeLinkFormat } from 'utils/helper';
 import { LinkPreview } from './linkPreview';
 import { Link } from 'containers/Link';
 
@@ -46,29 +37,19 @@ export const betterlinksFormat = {
 		target: 'target',
 		rel: 'rel',
 	},
-	edit: ({
-		//
-		isActive,
-		value,
-		onChange,
-		activeAttributes,
-	}) => {
+	edit: ({ isActive, value, onChange, activeAttributes }) => {
 		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
 		const [selectedIndex, setSelectedIndex] = useState(null);
 		const [regex, setRegex] = useState(false);
-
 		const [linkNewTab, setLinkNewTab] = useState(false);
-
 		const [submitDone, setSubmitDone] = useState(false);
 		const [isLinkInvalid, setIsLinkInvalid] = useState(false);
 		const [showLinkModal, setShowLinkModal] = useState(false);
 		const [isChangeLink, setIsChangeLink] = useState(false);
-
 		const [linkData, setLinkData] = useState(null);
-
-		//👇 this state is only for this 'Link' component's gutenberg implementation
+		//👇 this state is only for the '<Link />' component's gutenberg implementation
 		const [isSubmittingForGutenberg, setIsSubmittingForGutenberg] = useState(false);
 
 		const matchedLinksUl = useRef(null);
@@ -98,13 +79,9 @@ export const betterlinksFormat = {
 		}, [selectedIndex]);
 
 		useEffect(() => {
-			console.log('---useEffect for [isVisible, isActive, isChangeLink] runned');
-			const searchFieldDomRef = searchFieldRef?.current;
-			if (((isVisible && !isActive) || isChangeLink) && searchFieldDomRef?.focus) {
-				console.log('$$$@#@#@#@%%%%%%searchFieldDomRef e focus hoise');
-				searchFieldDomRef.focus();
+			if ((isVisible && !isActive) || isChangeLink) {
+				searchFieldRef?.current?.focus();
 			}
-
 			if (isVisible || isActive) {
 				document.body.classList.add('betterlinks-formatting-enabled');
 			} else {
@@ -121,28 +98,23 @@ export const betterlinksFormat = {
 
 		useEffect(() => {
 			return () => {
-				console.log('===-075----[value] useEffect cleanup runned');
 				close();
 			};
 		}, [value.start, value.end]);
 
 		const onClick = () => {
-			console.log('----onClick fired');
 			setIsVisible(true);
-
 			if (!betterlinksGutenStore?.getState()?.links?.links) {
 				fetch_links_data(true)(betterlinksGutenStore.dispatch)
 					.then(() => {})
 					.catch((err) => console.log('error!! failed fetching links', err));
 			}
-
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			if (!settings) {
 				fetch_settings_data()(betterlinksGutenStore.dispatch)
 					.then(() => {})
 					.catch((err) => console.log('error!! failed fetching betterlinks Settings data', err));
 			}
-
 			if (!betterlinksGutenStore?.getState()?.terms?.terms) {
 				fetch_terms_data()(betterlinksGutenStore.dispatch)
 					.then(() => {})
@@ -155,7 +127,6 @@ export const betterlinksFormat = {
 		};
 
 		const reset = () => {
-			console.log('---reset runned');
 			setSearchedText('');
 			setMatchedLinks([]);
 			setSelectedIndex(null);
@@ -163,7 +134,6 @@ export const betterlinksFormat = {
 		};
 
 		const close = () => {
-			console.log('----close runned');
 			reset();
 			setIsVisible(false);
 			setSubmitDone(false);
@@ -176,9 +146,10 @@ export const betterlinksFormat = {
 		const handleSubmit = (e) => {
 			e.preventDefault();
 			const newText = searchedText.trim();
-			if (!newText) return false;
-			// scenario: the search filed is empty
-
+			//👇 if statement scenario: the search filed is empty then return
+			if (!newText) {
+				return false;
+			}
 			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
 			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const justShortlink = newText
@@ -186,26 +157,15 @@ export const betterlinksFormat = {
 				.replace(siteUrlRegex, '')
 				.replace(/\/+$/, '')
 				.replace(/^\/+/, '');
-
 			const foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.short_url === justShortlink);
-
-			console.log({
-				justShortlink,
-				siteUrlWithoutHttp,
-				siteUrlRegex,
-				foundLink,
-			});
-
 			if (!foundLink) {
 				setIsLinkInvalid(true);
 				return false;
 			}
-
 			const withHttp = /^https?\:\/\//i.test(newText) ? newText : `http://${newText}`;
 			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow });
-
 			if (isCollapsed(value) && !isActive) {
-				// Scenario: we don't have any actively selected text
+				// Scenario: we don't have any selected text && even the cursor isn't on
 				const toInsert = applyFormat(create({ text: withHttp }), linkFormat, 0, withHttp.length);
 				onChange(insert(value, toInsert));
 			} else {
@@ -246,25 +206,14 @@ export const betterlinksFormat = {
 			const bool3 = (spacesRemoved || '').toLowerCase().includes(siteUrlWithoutHttp);
 			const bool4 = matchedLinks.length > 0;
 
-			console.log('---', {
-				bool1,
-				bool2,
-				bool3,
-				bool4,
-				searchedText,
-			});
-
 			if (bool1 || bool2 || bool3 || bool4) {
 				setIsLinkInvalid(false);
-				console.log('---setIsLinkInvalid false passed');
 			} else {
 				setIsLinkInvalid(true);
-				console.log('---setIsLinkInvalid true passed---');
 			}
 
 			setRegex(regex);
 			setMatchedLinks(matchedLinks);
-			console.log('-----sobar sesh line of onCHange------');
 		};
 
 		const anchorRect = useMemo(() => {
@@ -315,22 +264,6 @@ export const betterlinksFormat = {
 			}
 		};
 
-		//
-		const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
-		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
-		console.log(siteUrlRegex.test(searchedText), '---', searchedText.includes(siteUrlWithoutHttp), '---', {
-			searchedText,
-			activeAttributes,
-			isActive,
-			value,
-			anchorRect,
-			showLinkModal,
-			isVisible,
-			siteUrlRegex,
-			siteUrlWithoutHttp,
-			isChangeLink,
-		});
-
 		return (
 			<>
 				{isActive ? (
@@ -347,10 +280,7 @@ export const betterlinksFormat = {
 						<URLPopover
 							className="btl-url-popover-slot"
 							anchorRect={anchorRect}
-							onClose={() => {
-								console.log('---URLPopover onClose runned');
-								close();
-							}}
+							onClose={close}
 							focusOnMount={!isActive && !submitDone ? true : false}
 							renderSettings={
 								!isActive && !submitDone && !isSubmittingForGutenberg
@@ -462,7 +392,6 @@ export const betterlinksFormat = {
 												delete values.openInNewTab;
 
 												if (linkData) {
-													console.log('----edit_link', { values, linkNewTab });
 													edit_link(
 														values,
 														true
@@ -481,7 +410,6 @@ export const betterlinksFormat = {
 															console.log('error!! editing link failed', error);
 														});
 												} else {
-													console.log('----add_new_link', { values, linkNewTab });
 													add_new_link(
 														values,
 														true

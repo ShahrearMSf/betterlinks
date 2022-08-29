@@ -230,8 +230,6 @@ function links(state = {}, action) {
 			const newData = { ...payload, short_url: payload.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
 			const newLinks = [...allLinks.slice(0, itemIndexInLinks), newData, ...allLinks.slice(itemIndexInLinks + 1)];
 
-			console.log({ payload, newData });
-
 			return {
 				...state,
 				links: newLinks,

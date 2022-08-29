@@ -1,47 +1,13 @@
 // WordPress Imports
-const {
-	useState,
-	useEffect,
-	useRef,
-	// useMemo,
-} = wp.element;
-const {
-	//
-	// Button
-	Popover,
-} = wp.components;
+const { useState, useEffect, useRef } = wp.element;
+const { Popover } = wp.components;
 
 // redux import
 import { betterlinksGutenStore } from 'redux/store';
-// import {
-// 	// //
-// 	// fetch_links_data,
-// 	// onDragEnd,
-// 	// add_new_cat,
-// 	// add_new_link,
-// 	// delete_link,
-// edit_link,
-// } from 'redux/actions/links.actions';
-
-// internal imports
-// import { Link } from 'containers/Link';
-// import {
-// 	// makeLinkFormat,
-// 	// generateShortURL,
-// 	// generateSlug,
-// 	// formatDate,
-// 	// betterlinks_nonce,
-// 	// //
-// 	// siteUrlWithoutHttp,
-// 	// siteUrlRegex,
-// 	// getShortUrlFromLink,
-// } from 'utils/helper';
 
 export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
 	const { url } = activeAttributes;
-
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
-
 	const btnRef = useRef(null);
 
 	useEffect(() => {
@@ -49,8 +15,6 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 		if (btnEl) {
 			btnEl.closest('body')?.classList?.add('betterlinks-format-link-preview-mounted');
 		}
-		console.log('----LinkPreview useEffec runned with []', { btnEl });
-
 		return () => {
 			reset();
 			const btnEl = btnRef?.current;
@@ -58,12 +22,10 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 				btnEl.closest('body')?.classList?.remove('betterlinks-format-link-preview-mounted');
 			}
 			setIslinkNotFound(false);
-			console.log('----LinkPreview component cleanup runned', { btnEl });
 		};
 	}, [value.start, value.end]);
 
 	const handleChangeLink = () => {
-		console.log('----------handleChangeLink fired');
 		setIsChangeLink(true);
 	};
 
@@ -78,16 +40,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 			.replace(/^\/+/, '');
 
 		const allLinksArr = betterlinksGutenStore?.getState()?.links?.links || [];
-		const foundLink = allLinksArr.find((item) => {
-			console.log('item.short_url-- ', item.short_url, ' -justShortlink-- ', justShortlink);
-			return item.short_url === justShortlink;
-		});
-		console.log('----------handleEditBetterLink fired', {
-			justShortlink,
-			url,
-			foundLink,
-			allLinksArr,
-		});
+		const foundLink = allLinksArr.find((item) => item.short_url === justShortlink);
 		if (foundLink) {
 			setShowLinkModal(true);
 			setLinkData(foundLink);
@@ -144,7 +97,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 							}}
 						>
 							click here
-						</button>{' '}
+						</button>
 						to apply a new link here
 					</h5>
 				</Popover>

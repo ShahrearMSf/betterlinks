@@ -7,8 +7,10 @@ import Select from 'components/Select';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-//👇 slight tweak (rename 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
+
+//👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
 import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/terms.actions';
+
 import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
@@ -45,10 +47,11 @@ export const Link = (props) => {
 		setIsSubmittingForGutenberg = () => {},
 	} = props;
 
-	//👇 slight tweaks to use <Link /> component inside gutenberg
+	//👇 slight tweaks to use <Link /> component inside gutenberg start
 	const settings = betterlinksGutenStore ? betterlinksGutenStore?.getState()?.settings : props.settings;
 	const terms = betterlinksGutenStore ? betterlinksGutenStore?.getState()?.terms : props.terms;
 	window.betterLinksHooks = betterlinksGutenStore ? { applyFilters: (handle, defaultVal) => defaultVal } : window.betterLinksHooks;
+	//👆 slight tweaks to use <Link /> component inside gutenberg end
 
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
@@ -64,18 +67,18 @@ export const Link = (props) => {
 		dynamicRedirect: false,
 	});
 
-	//👇 this useEffect is only for this 'Link' component's gutenberg implementation
+	//👇 this useEffect is only for this 'Link' component's gutenberg implementation start
 	useEffect(() => {
 		if (betterlinksGutenStore) {
 			setModalIsOpen(true);
 		}
 		return () => {
-			console.log('---link UseEffect cleanup runned');
 			if (searchFieldRef?.current) {
 				searchFieldRef?.current?.focus();
 			}
 		};
 	}, [betterlinksGutenStore]);
+	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation start
 
 	const objForGutenTargetBlank = betterlinksGutenStore
 		? {
@@ -174,7 +177,7 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
-		//👇 this following codes is written as it's not required to submit 'openInNewTab'.
+		//👇 this following 'if statement' is only for this 'Link' component's gutenberg implementation
 		if (betterlinksGutenStore) {
 			setShowLinkModal(false);
 			setIsSubmittingForGutenberg(true);
@@ -198,7 +201,7 @@ export const Link = (props) => {
 					if (link_title) {
 						values.link_title = link_title;
 						submitHandler(values);
-						// 👇 fixed memory leak warning 'Can't perform a React state update on an unmounted component' when using this component for gutenberg format
+						// 👇 the 'if statement' is to fix memory leak warning 'Can't perform a React state update on an unmounted component' when using this <Link /> component for gutenberg format
 						if (!betterlinksGutenStore) {
 							setModalIsOpen(false);
 						}
@@ -586,7 +589,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		//👇 slight tweak (rename 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
+		//👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
 		fetch_terms_data: bindActionCreators(fetch_terms_action_function, dispatch),
 	};
 };
