@@ -88,8 +88,8 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 
 			{islinkNotFound && (
 				<Popover position="left" focusOnMount={false} className="betterlinks-link-deleted-after-applying-format">
-					<h5 style={{ width: '400px', color: 'red', padding: '0 20px' }}>
-						Error!! Link not found. You probably 'changed the short url' or 'deleted this link' from your betterlinks. <br />
+					<h5 className="no-link-warning-after-added">
+						Error!! Link not found. You probably 'changed the short url' or 'deleted this link' from your betterlinks. to apply a new link: <br />
 						<button
 							onClick={() => {
 								handleChangeLink();
@@ -98,7 +98,6 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 						>
 							click here
 						</button>
-						to apply a new link here
 					</h5>
 				</Popover>
 			)}

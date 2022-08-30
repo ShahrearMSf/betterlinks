@@ -365,6 +365,27 @@ body.betterlinks-loading-spinner-mounted .betterlinks-submitted-link-for-gutenbe
 	width: 50px !important;
 	color: #000;
 }
+
+.betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added > button {
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	color: #555;
+	border-radius: 5px;
+	margin-top: 10px;
+	cursor: pointer;
+	background: #eee;
+}
+
+.betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added > button:hover {
+	background: #ddd;
+}
+
+.betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added {
+	font-size: 12px;
+	width: 400px;
+	color: red;
+	padding: 0 20px;
+}
 // gutenberg richtext 'betterlinks format' css -> end
 //
 
