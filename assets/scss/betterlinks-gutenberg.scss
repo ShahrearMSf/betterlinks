@@ -268,6 +268,10 @@ body.betterlinks-formatting-enabled {
 	#adminmenuback {
 		z-index: 0 !important;
 	}
+
+	.btl-modal-select * {
+		overflow-x: hidden !important;
+	}
 }
 
 body.betterlinks-format-link-preview-mounted .btl-url-popover-slot > .components-popover__content {
