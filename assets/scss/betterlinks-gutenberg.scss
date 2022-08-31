@@ -357,9 +357,37 @@ body.betterlinks-loading-spinner-mounted .betterlinks-submitted-link-for-gutenbe
 	bottom: 0 !important;
 	padding: 0 !important;
 	margin: 0 !important;
-	display: flex !important;
-	justify-content: center !important;
-	align-items: center !important;
+}
+
+.betterlinks-round-loader {
+	border: 5px solid rgba(255, 255, 255, 0.5);
+	border-radius: 50%;
+	border-top: 5px solid #666;
+	width: 50px;
+	height: 50px;
+	-webkit-animation: spin 1s linear infinite; /* Safari */
+	animation: spin 1s linear infinite;
+	margin-top: -25px;
+	margin-left: -25px;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 .betterlinks-submitted-link-for-gutenberg > svg {

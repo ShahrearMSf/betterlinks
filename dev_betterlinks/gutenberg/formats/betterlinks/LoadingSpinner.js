@@ -1,5 +1,4 @@
 const { useEffect } = wp.element;
-const { Spinner } = wp.components;
 
 export const LoadingSpinner = ({ anchorRect = {} }) => {
 	useEffect(() => {
@@ -10,7 +9,7 @@ export const LoadingSpinner = ({ anchorRect = {} }) => {
 	}, []);
 	return (
 		<div className="betterlinks-submitted-link-for-gutenberg">
-			<Spinner />
+			<div className="betterlinks-round-loader"></div>
 		</div>
 	);
 };
