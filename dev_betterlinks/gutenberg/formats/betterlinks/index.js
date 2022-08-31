@@ -293,7 +293,7 @@ export const betterlinksFormat = {
 							}
 						>
 							{isSubmittingForGutenberg ? (
-								<LoadingSpinner anchorRect={anchorRect} />
+								<LoadingSpinner />
 							) : (
 								<>
 									{((!isActive && !submitDone) || isChangeLink) && (

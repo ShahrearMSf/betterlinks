@@ -1,6 +1,6 @@
 const { useEffect } = wp.element;
 
-export const LoadingSpinner = ({ anchorRect = {} }) => {
+export const LoadingSpinner = () => {
 	useEffect(() => {
 		document?.body?.classList?.add('betterlinks-loading-spinner-mounted');
 		return () => {
