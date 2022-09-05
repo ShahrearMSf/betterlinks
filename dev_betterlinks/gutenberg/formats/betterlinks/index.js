@@ -17,8 +17,8 @@ import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
+import { LoadingSpinner } from 'gutenberg/components';
 import { betterlinksIcon } from './icon';
-import { LoadingSpinner } from './LoadingSpinner';
 import { makeLinkFormat } from 'utils/helper';
 import { LinkPreview } from './linkPreview';
 import { Link } from 'containers/Link';
