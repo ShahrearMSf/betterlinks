@@ -204,62 +204,101 @@ const CustomSidebarMetaComponent = (props) => {
 		setUpgradeToProModal(false);
 	};
 
-	subscribe(() => {
-		console.log('----betterlinks sidebar subscribe runned');
-		if (wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getPermalink() && targetUrl && targetUrl.trim() != '') {
-			console.log('----betterlinks subscribe passed the if check. actual code running started.');
-			const permalink = wp.data.select('core/editor').getPermalink();
-			const currentPost = wp.data.select('core/editor').getCurrentPost();
-			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
-			const params = {
-				ID: ID,
-				cat_id: catId,
-				link_title: currentPost.title,
-				link_slug: currentPost.slug,
-				nofollow: isNofollow,
-				param_forwarding: isParamForwarding,
-				redirect_type: redirectMode,
-				short_url: permalinkToShortUrl(permalink),
-				sponsored: isSponsored,
-				target_url: targetUrl,
-				track_me: isTrackMe,
-				link_modified: currentDate,
-				link_modified_gmt: currentDate,
-			};
-			if (is_pro_enabled) {
-				params.link_status = linkStatus;
-				params.expire = {
-					status: isExpire,
-					type: expireType,
-					clicks: expireClicks,
-					date: new Date(),
-					redirect_status: expireRedirect,
-					redirect_url: expireRedirectUrl,
-				};
-			}
-			if (ID) {
-				makeRequest({
-					action: 'betterlinks/admin/update_link',
+	useEffect(() => {
+		const unsubscribe = subscribe(() => {
+			console.log('----betterlinks sidebar subscribe runned');
+			if (wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getPermalink() && targetUrl && targetUrl.trim() != '') {
+				console.log('----betterlinks subscribe passed the if check. actual code running started.');
+				const permalink = wp.data.select('core/editor').getPermalink();
+				const currentPost = wp.data.select('core/editor').getCurrentPost();
+				const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+				const params = {
 					ID: ID,
-					...params,
-				}).then((response) => {
-					if (response.data.data) {
-						setID(response.data.data.ID);
-					}
-				});
-			} else {
-				params.link_date = currentDate;
-				params.link_date_gmt = currentDate;
-				makeRequest({
-					action: 'betterlinks/admin/create_link',
-					...params,
-				}).then((response) => {
-					if (response.data.data) {
-						setID(response.data.data.ID);
-					}
-				});
+					cat_id: catId,
+					link_title: currentPost.title,
+					link_slug: currentPost.slug,
+					nofollow: isNofollow,
+					param_forwarding: isParamForwarding,
+					redirect_type: redirectMode,
+					short_url: permalinkToShortUrl(permalink),
+					sponsored: isSponsored,
+					target_url: targetUrl,
+					track_me: isTrackMe,
+					link_modified: currentDate,
+					link_modified_gmt: currentDate,
+				};
+				if (is_pro_enabled) {
+					params.link_status = linkStatus;
+					params.expire = {
+						status: isExpire,
+						type: expireType,
+						clicks: expireClicks,
+						date: new Date(),
+						redirect_status: expireRedirect,
+						redirect_url: expireRedirectUrl,
+					};
+				}
+				if (ID) {
+					makeRequest({
+						action: 'betterlinks/admin/update_link',
+						ID: ID,
+						...params,
+					}).then((response) => {
+						if (response.data.data) {
+							setID(response.data.data.ID);
+						}
+					});
+				} else {
+					params.link_date = currentDate;
+					params.link_date_gmt = currentDate;
+					makeRequest({
+						action: 'betterlinks/admin/create_link',
+						...params,
+					}).then((response) => {
+						if (response.data.data) {
+							setID(response.data.data.ID);
+						}
+					});
+				}
 			}
-		}
+		});
+
+		return () => {
+			console.log('---subscribe cleanup runned');
+			unsubscribe();
+		};
+	}, [
+		ID,
+		catId,
+		isNofollow,
+		isParamForwarding,
+		redirectMode,
+		isSponsored,
+		targetUrl,
+		isTrackMe,
+		linkStatus,
+		isExpire,
+		expireType,
+		expireClicks,
+		expireRedirect,
+		expireRedirectUrl,
+	]);
+
+	console.log({
+		ID,
+		catId,
+		isNofollow,
+		isParamForwarding,
+		redirectMode,
+		isSponsored,
+		targetUrl,
+		isTrackMe,
+		linkStatus,
+		isExpire,
+		expireType,
+		expireClicks,
+		expireRedirect,
+		expireRedirectUrl,
 	});
 
 	return (
