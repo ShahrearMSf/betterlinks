@@ -20,7 +20,7 @@ const { withDispatch, subscribe } = wp.data;
 
 export const FETCH_LINK_FOR_PERMALINK = 'FETCH_LINK_FOR_PERMALINK';
 
-export const fetch_link_for_permalink = () => async () => {
+export const fetch_link_for_permalink = async () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 	console.log('---fetch_link_for_permalink', { short_url }, "------wp.data.select('core/editor').getPermalink()-----", wp.data.select('core/editor').getPermalink());
 	if (!short_url) return false;

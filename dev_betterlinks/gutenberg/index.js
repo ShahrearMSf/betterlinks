@@ -29,7 +29,7 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 const intervalId = setInterval(() => {
 	console.log('---intervalLoading---', wp.data.select('core/editor').getPermalink());
 	if (wp.data.select('core/editor').getPermalink()) {
-		fetch_link_for_permalink()(betterlinksGutenStore.dispatch)
+		fetch_link_for_permalink()
 			.then(() => {
 				console.log('fetch_link_for_permalink done');
 			})
