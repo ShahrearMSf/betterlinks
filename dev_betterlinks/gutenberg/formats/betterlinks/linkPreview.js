@@ -3,7 +3,7 @@ const { useState, useEffect, useRef } = wp.element;
 const { Popover } = wp.components;
 
 // redux import
-import { betterlinksGutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
 
 export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
 	const { url } = activeAttributes;

@@ -5,7 +5,7 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import { betterlinksGutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
@@ -19,6 +19,7 @@ const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
 export const FETCH_LINK_FOR_PERMALINK = 'FETCH_LINK_FOR_PERMALINK';
+export const EDIT_GUTENBERG_LINK = 'EDIT_GUTENBERG_LINK';
 
 export const fetch_link_for_permalink = async () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
@@ -72,4 +73,11 @@ export const fetch_link_for_permalink = async () => {
 			console.log(error);
 		}
 	);
+};
+
+export const edit_gutenberg_link = (payload) => {
+	betterlinksGutenStore.dispatch({
+		type: EDIT_GUTENBERG_LINK,
+		payload,
+	});
 };

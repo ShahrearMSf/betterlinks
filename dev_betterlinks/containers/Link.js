@@ -177,6 +177,7 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
+		console.log('----Link component onSubmit values---', { values });
 		//👇 this following 'if statement' is only for this 'Link' component's gutenberg implementation
 		if (betterlinksGutenStore) {
 			setShowLinkModal(false);

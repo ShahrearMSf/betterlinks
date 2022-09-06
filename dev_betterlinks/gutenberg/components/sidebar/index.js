@@ -5,9 +5,10 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-import { betterlinksGutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_link_for_permalink, edit_gutenberg_link } from 'redux/actions/gutenbergredirectlink.actions';
 
 //
 import { LoadingSpinner } from 'gutenberg/components';

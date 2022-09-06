@@ -1,4 +1,4 @@
-import { FETCH_LINK_FOR_PERMALINK } from 'redux/actions/gutenbergredirectlink.actions';
+import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK } from 'redux/actions/gutenbergredirectlink.actions';
 
 export default function gutenbergRedirectLink(state = {}, action) {
 	const payload = action.payload;
@@ -8,6 +8,16 @@ export default function gutenbergRedirectLink(state = {}, action) {
 			return {
 				...state,
 				linkData: payload,
+			};
+		}
+		case EDIT_GUTENBERG_LINK: {
+			console.log('----EDIT_GUTENBERG_LINK reducer data ', { payload });
+			return {
+				...state,
+				linkData: {
+					...state?.linkData,
+					...payload,
+				},
 			};
 		}
 		default:
