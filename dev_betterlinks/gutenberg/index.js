@@ -7,6 +7,7 @@ import { betterlinksGutenStore } from 'redux/store';
 import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
 
 // local imports
 import { CustomSidebar } from 'gutenberg/components';
@@ -24,6 +25,19 @@ fetch_terms_data()(betterlinksGutenStore.dispatch)
 fetch_settings_data()(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
+
+const intervalId = setInterval(() => {
+	console.log('---intervalLoading---', wp.data.select('core/editor').getPermalink());
+	if (wp.data.select('core/editor').getPermalink()) {
+		fetch_link_for_permalink()(betterlinksGutenStore.dispatch)
+			.then(() => {
+				console.log('fetch_link_for_permalink done');
+			})
+			.catch((error) => console.error(error));
+
+		clearInterval(intervalId);
+	}
+}, 100);
 
 // Sidebar Panel in Gutenberg Edit 'page/post'
 registerPlugin('betterlinks-sidebar', {

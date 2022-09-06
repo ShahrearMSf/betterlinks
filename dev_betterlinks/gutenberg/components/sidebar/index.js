@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { redirectType } from 'utils/data';
-import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate, is_pro_enabled } from 'utils/helper';
+import { makeRequest, betterlinks_nonce, getJsonString, formatDate, is_pro_enabled, permalinkToShortUrl } from 'utils/helper';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { betterlinksGutenStore } from 'redux/store';
-import { fetch_links_data, add_new_link } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
@@ -18,12 +17,6 @@ const { Fragment, useState, useEffect } = wp.element;
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
-
-const permalinkToShortUrl = (permalink) => {
-	if (!permalink) return permalink;
-	const short_url = permalink.replace(site_url + '/', '');
-	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
-};
 
 const CustomSidebarComponent = (props) => {
 	console.log('=====**======CustomSidebarComponent', { props });
