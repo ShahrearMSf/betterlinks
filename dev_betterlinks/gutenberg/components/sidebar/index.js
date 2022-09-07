@@ -26,7 +26,6 @@ const CustomSidebarComponent = (props) => {
 	const [linkData, setLinkData] = useState(false);
 	const [isDeletingInstantGutenbergRedirect, setIsDeletingInstantGutenbergRedirect] = useState(false);
 
-	//
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [ID, setID] = useState(null);
 	const [terms, setTerms] = useState(false);
@@ -65,6 +64,30 @@ const CustomSidebarComponent = (props) => {
 			}
 		}
 
+		const setAllStatesForLinkData = (linkData) => {
+			if (!linkData) return false;
+			setLinkData(linkData);
+			if (linkData.ID || linkData.ID === 0) {
+				setIsAllowInstantRedirect(true);
+			}
+			setID(linkData.ID);
+			setTargetUrl(linkData.target_url);
+			setRedirectMode(linkData.redirect_type);
+			setCatId(linkData.cat_id);
+			setIsNoFollow(linkData.nofollow);
+			setSponsored(linkData.sponsored);
+			setIsParamForwarding(linkData.param_forwarding);
+			setIsTrackMe(linkData.track_me);
+			setLinkStatus(linkData.link_status);
+
+			setIsExpire(linkData.expire?.status);
+			setExpireType(linkData.expire?.type);
+			setExpireDate(linkData.expire?.date);
+			setExpireClicks(linkData.expire?.clicks);
+			setExpireRedirect(linkData.expire?.redirect_status);
+			setExpireRedirectUrl(linkData.expire?.redirect_url);
+		};
+
 		// Settings
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 		if (settings) {
@@ -81,7 +104,7 @@ const CustomSidebarComponent = (props) => {
 		const linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
 		if (linkData) {
 			console.log('----fetch_link_for_permalink inside useEffect[] found linkData in store', { linkData });
-			setLinkData(linkData);
+			setAllStatesForLinkData(linkData);
 		} else {
 			console.log("---wp.data.select('core/editor').getPermalink()---", wp.data.select('core/editor').getPermalink());
 
@@ -95,7 +118,7 @@ const CustomSidebarComponent = (props) => {
 						};
 					}
 					console.log('----fetch_link_for_permalink inside useEffect[] had to be fetched', { linkData });
-					setLinkData(linkData);
+					setAllStatesForLinkData(linkData);
 				})
 				.catch((error) => console.log(error));
 		}
