@@ -26,19 +26,6 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
 
-const intervalId = setInterval(() => {
-	console.log('---intervalLoading---', wp.data.select('core/editor').getPermalink());
-	if (wp.data.select('core/editor').getPermalink()) {
-		fetch_link_for_permalink()
-			.then(() => {
-				console.log('fetch_link_for_permalink done');
-			})
-			.catch((error) => console.error(error));
-
-		clearInterval(intervalId);
-	}
-}, 100);
-
 // Sidebar Panel in Gutenberg Edit 'page/post'
 registerPlugin('betterlinks-sidebar', {
 	render: CustomSidebar,

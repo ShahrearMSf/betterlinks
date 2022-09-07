@@ -59,49 +59,26 @@ const CustomSidebarComponent = (props) => {
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
 
-		// get links
-		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		if (short_url) {
-			let form_data = new FormData();
-			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
-			form_data.append('security', betterlinks_nonce);
-			form_data.append('short_url', short_url);
-			axios.post(ajaxurl, form_data).then(
-				(response) => {
-					console.log('betterlinks/admin/get_links_by_short_url', { response });
-					const linkData = response.data.data;
-					if (linkData) {
-						setIsAllowInstantRedirect(true);
-						setLinkData(linkData);
+		const linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+		if (linkData) {
+			console.log('----fetch_link_for_permalink inside useEffect[] found linkData in store', { linkData });
+			setLinkData(linkData);
+		} else {
+			console.log("---wp.data.select('core/editor').getPermalink()---", wp.data.select('core/editor').getPermalink());
 
-						//
-						setID(linkData.ID);
-						onSetTargetUrl(linkData.target_url);
-						onSetRedirectType(linkData.redirect_type);
-						onSetCatId(linkData.term_id);
-						onSetNoFollow(!!linkData.nofollow);
-						onSetSponsored(!!linkData.sponsored);
-						onSetParamForwarding(!!linkData.param_forwarding);
-						onSetTrackMe(!!linkData.track_me);
-
-						if (is_pro_enabled) {
-							const expire = getJsonString(linkData.expire);
-							if (expire) {
-								onSetLinkStatus(linkData.link_status);
-								onSetExpire(expire.status);
-								onSetExpireType(expire.type);
-								onSetExpireDate(expire.date);
-								onSetExpireClicks(expire.clicks);
-								onSetExpireRedirect(expire.redirect_status);
-								onSetExpireRedirectUrl(expire.redirect_url);
-							}
-						}
+			fetch_link_for_permalink()
+				.then(() => {
+					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+					if (typeof linkData?.expire === 'string') {
+						linkData = {
+							...linkData,
+							expire: getJsonString(linkData.expire),
+						};
 					}
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
+					console.log('----fetch_link_for_permalink inside useEffect[] had to be fetched', { linkData });
+					setLinkData(linkData);
+				})
+				.catch((error) => console.log(error));
 		}
 	}, []);
 
@@ -297,20 +274,6 @@ const CustomSidebarComponent = (props) => {
 	useEffect(() => {
 		console.log('---subscribe useEffect runned');
 		const unsubscribe = subscribe(() => {
-			console.log(
-				'----betterlinks sidebar subscribe runned',
-
-				"---wp.data.select('core/editor').isSavingPost(),---",
-				wp.data.select('core/editor').isSavingPost(),
-				"---!wp.data.select('core/editor').isAutosavingPost(),---",
-				!wp.data.select('core/editor').isAutosavingPost(),
-				"---wp.data.select('core/editor').getPermalink(),---",
-				wp.data.select('core/editor').getPermalink(),
-				'---targetUrl,---',
-				targetUrl,
-				"---targetUrl.trim() != ''---",
-				targetUrl.trim() != ''
-			);
 			if (
 				wp.data.select('core/editor').isSavingPost() &&
 				!wp.data.select('core/editor').isAutosavingPost() &&
@@ -398,6 +361,7 @@ const CustomSidebarComponent = (props) => {
 	]);
 
 	console.log({
+		linkData,
 		isDeletingInstantGutenbergRedirect,
 		ID,
 		catId,

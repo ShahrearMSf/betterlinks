@@ -29,11 +29,17 @@ export const fetch_link_for_permalink = async () => {
 	form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
 	form_data.append('security', betterlinks_nonce);
 	form_data.append('short_url', short_url);
-	axios.post(ajaxurl, form_data).then(
+	return axios.post(ajaxurl, form_data).then(
 		(response) => {
 			console.log('betterlinks/admin/get_links_by_short_url', { response });
-			const linkData = response?.data?.data;
+			let linkData = response?.data?.data;
 			if (linkData) {
+				if (typeof linkData?.expire === 'string') {
+					linkData = {
+						...linkData,
+						expire: getJsonString(linkData.expire),
+					};
+				}
 				betterlinksGutenStore.dispatch({
 					type: FETCH_LINK_FOR_PERMALINK,
 					payload: linkData,
