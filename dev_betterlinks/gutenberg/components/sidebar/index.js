@@ -47,6 +47,24 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	useEffect(() => {
+		// terms
+		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
+		if (short_url) {
+			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+			console.log('-----betterlinksGutenStore?.getState()?.terms?.terms ', { storeTerms });
+			if (storeTerms) {
+				setTerms(storeTerms);
+			} else {
+				fetch_terms_data()(betterlinksGutenStore.dispatch)
+					.then(() => {
+						const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+						console.log('----- !storeTerms =-= betterlinksGutenStore?.getState()?.terms?.terms', { storeTerms });
+						setTerms(storeTerms);
+					})
+					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
+			}
+		}
+
 		// Settings
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 		if (settings) {
@@ -82,55 +100,6 @@ const CustomSidebarComponent = (props) => {
 				.catch((error) => console.log(error));
 		}
 	}, []);
-
-	useEffect(() => {
-		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		if (short_url) {
-			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
-			console.log('-----betterlinksGutenStore?.getState()?.terms?.terms ', { storeTerms });
-			if (storeTerms) {
-				setTerms(storeTerms);
-			} else {
-				fetch_terms_data()(betterlinksGutenStore.dispatch)
-					.then(() => {
-						const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
-						console.log('----- !storeTerms =-= betterlinksGutenStore?.getState()?.terms?.terms', { storeTerms });
-						setTerms(storeTerms);
-					})
-					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
-			}
-		}
-
-		if (linkData) {
-			setID(linkData.ID);
-			onSetTargetUrl(linkData.target_url);
-			onSetRedirectType(linkData.redirect_type);
-			onSetCatId(linkData.term_id);
-			onSetNoFollow(!!linkData.nofollow);
-			onSetSponsored(!!linkData.sponsored);
-			onSetParamForwarding(!!linkData.param_forwarding);
-			onSetTrackMe(!!linkData.track_me);
-
-			if (is_pro_enabled) {
-				const expire = getJsonString(linkData.expire);
-				if (expire) {
-					onSetLinkStatus(linkData.link_status);
-					onSetExpire(expire.status);
-					onSetExpireType(expire.type);
-					onSetExpireDate(expire.date);
-					onSetExpireClicks(expire.clicks);
-					onSetExpireRedirect(expire.redirect_status);
-					onSetExpireRedirectUrl(expire.redirect_url);
-				}
-			}
-		} else {
-			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-			onSetNoFollow(!!settings.nofollow);
-			onSetSponsored(!!settings.sponsored);
-			onSetParamForwarding(!!settings.param_forwarding);
-			onSetTrackMe(!!settings.track_me);
-		}
-	}, [ID]);
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
