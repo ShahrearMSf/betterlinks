@@ -7,6 +7,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 //
@@ -40,14 +41,47 @@ export const fetch_link_for_permalink = async () => {
 						expire: getJsonString(linkData.expire),
 					};
 				}
-				betterlinksGutenStore.dispatch({
-					type: FETCH_LINK_FOR_PERMALINK,
-					payload: linkData,
-				});
-				console.log('----dispatch FETCH_LINK_FOR_PERMALINK action linkData ', { linkData });
-				return false;
-			}
 
+				if (!(linkData.ID || linkData.ID === 0)) {
+					betterlinksGutenStore.dispatch({
+						type: FETCH_LINK_FOR_PERMALINK,
+						payload: linkData,
+					});
+					console.log('----dispatch FETCH_LINK_FOR_PERMALINK --!(linkData.ID || linkData.ID === 0)-- ', { linkData });
+					return false;
+				}
+
+				if (betterlinksGutenStore.getState()?.links?.links) {
+					const cat_id = (betterlinksGutenStore.getState()?.links?.links || []).find((item) => `${item.ID}` === `${linkData.ID}`)?.cat_id;
+					linkData = {
+						...linkData,
+						cat_id,
+					};
+					betterlinksGutenStore.dispatch({
+						type: FETCH_LINK_FOR_PERMALINK,
+						payload: linkData,
+					});
+					console.log('----dispatch FETCH_LINK_FOR_PERMALINK --in if block betterlinksGutenStore.getState()?.links?.links-- ', { linkData });
+					return false;
+				}
+
+				if (!betterlinksGutenStore.getState()?.links?.links) {
+					return fetch_links_data(true)(betterlinksGutenStore.dispatch)
+						.then(() => {
+							const cat_id = (betterlinksGutenStore.getState()?.links?.links || []).find((item) => `${item.ID}` === `${linkData.ID}`)?.cat_id;
+							linkData = {
+								...linkData,
+								cat_id,
+							};
+							betterlinksGutenStore.dispatch({
+								type: FETCH_LINK_FOR_PERMALINK,
+								payload: linkData,
+							});
+							console.log('----dispatch FETCH_LINK_FOR_PERMALINK --in if block else case betterlinksGutenStore.getState()?.links?.links-- ', { linkData });
+						})
+						.catch((error) => console.log(error));
+				}
+			}
 			//👇 if link not found for the post/page
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
