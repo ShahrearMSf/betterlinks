@@ -8,6 +8,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+// import { delete_link } from 'redux/actions/links.actions';
 import { fetch_link_for_permalink, edit_gutenberg_link } from 'redux/actions/gutenbergredirectlink.actions';
 
 //
@@ -85,21 +86,16 @@ const CustomSidebarComponent = (props) => {
 	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
-			makeRequest({
-				action: 'betterlinks/admin/get_terms',
-			}).then((response) => {
-				if (response.data.data) {
-					console.log('-----betterlinks/admin/get_terms response.data.data', response.data.data);
-					setTerms(response.data.data);
-				}
-			});
-
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
 			console.log('-----betterlinksGutenStore?.getState()?.terms?.terms ', { storeTerms });
-			if (!storeTerms) {
+			if (storeTerms) {
+				setTerms(storeTerms);
+			} else {
 				fetch_terms_data()(betterlinksGutenStore.dispatch)
 					.then(() => {
-						console.log('----- !storeTerms =-= betterlinksGutenStore?.getState()?.terms?.terms', betterlinksGutenStore?.getState()?.terms?.terms);
+						const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+						console.log('----- !storeTerms =-= betterlinksGutenStore?.getState()?.terms?.terms', { storeTerms });
+						setTerms(storeTerms);
 					})
 					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 			}
