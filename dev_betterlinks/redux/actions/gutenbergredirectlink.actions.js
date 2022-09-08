@@ -38,10 +38,34 @@ export const fetch_link_for_permalink = async () => {
 			//👇 if link found for the post/page
 			if (linkData) {
 				if (typeof linkData?.expire === 'string') {
+					const expire = getJsonString(linkData.expire);
 					linkData = {
 						...linkData,
-						expire: getJsonString(linkData.expire),
+						expire,
 					};
+				}
+
+				if (typeof linkData?.dynamic_redirect === 'string') {
+					const dynamic_redirect = getJsonString(linkData.dynamic_redirect);
+					if (dynamic_redirect.length === 0 || !dynamic_redirect.value) {
+						linkData = {
+							...linkData,
+							dynamic_redirect: {
+								type: '',
+								value: [],
+								extra: {
+									rotation_mode: 'weighted',
+									split_test: false,
+									goal_link: '',
+								},
+							},
+						};
+					} else {
+						linkData = {
+							...linkData,
+							dynamic_redirect,
+						};
+					}
 				}
 
 				if (!(linkData.ID || linkData.ID === 0)) {

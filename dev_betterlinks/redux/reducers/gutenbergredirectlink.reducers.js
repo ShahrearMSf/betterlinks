@@ -11,7 +11,7 @@ export default function gutenbergRedirectLink(state = {}, action) {
 			};
 		}
 		case EDIT_GUTENBERG_LINK: {
-			console.log('----EDIT_GUTENBERG_LINK reducer data ', { payload, count });
+			console.log('----EDIT_GUTENBERG_LINK reducer data ', { payload });
 			return {
 				...state,
 				linkData: {

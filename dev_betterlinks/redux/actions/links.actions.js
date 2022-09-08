@@ -154,6 +154,7 @@ export const add_new_link =
 			const res = await API.post(namespace + 'links', {
 				params: formData,
 			});
+			console.log('====try block add_new_link==', { formData, res });
 			if (res.data.success) {
 				dispatch({
 					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
@@ -165,6 +166,7 @@ export const add_new_link =
 				action: 'betterlinks/admin/create_link',
 				...formData,
 			}).then((response) => {
+				console.log('====catch block add_new_link==', { formData, response });
 				if (response.data) {
 					dispatch({
 						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
@@ -181,6 +183,7 @@ export const edit_link =
 			const res = await API.put(namespace + 'links/' + item.ID, {
 				params: item,
 			});
+			console.log('====try block edit_link==', { item, res });
 			dispatch({
 				type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
 				payload: item,
@@ -191,6 +194,7 @@ export const edit_link =
 				...item,
 			}).then((response) => {
 				if (response.data) {
+					console.log('====catch block edit_link==', { item, response });
 					dispatch({
 						type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
 						payload: response.data.data,
