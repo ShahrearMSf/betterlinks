@@ -175,8 +175,9 @@ const CustomSidebarComponent = (props) => {
 	};
 
 	const onSetExpireDate = (value) => {
-		setExpireDate(value);
-		edit_link_expire_option({ date: value });
+		const newDateValue = formatDate(value, 'yyyy-mm-dd h:m:s');
+		setExpireDate(newDateValue);
+		edit_link_expire_option({ date: newDateValue });
 	};
 
 	const onSetExpireClicks = (value) => {
