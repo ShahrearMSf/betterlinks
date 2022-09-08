@@ -21,6 +21,7 @@ const { withDispatch, subscribe } = wp.data;
 
 export const FETCH_LINK_FOR_PERMALINK = 'FETCH_LINK_FOR_PERMALINK';
 export const EDIT_GUTENBERG_LINK = 'EDIT_GUTENBERG_LINK';
+export const EDIT_LINK_EXPIRE_OPTION = 'EDIT_LINK_EXPIRE_OPTION';
 
 export const fetch_link_for_permalink = async () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
@@ -34,6 +35,7 @@ export const fetch_link_for_permalink = async () => {
 		(response) => {
 			console.log('betterlinks/admin/get_links_by_short_url', { response });
 			let linkData = response?.data?.data;
+			//👇 if link found for the post/page
 			if (linkData) {
 				if (typeof linkData?.expire === 'string') {
 					linkData = {
@@ -82,6 +84,7 @@ export const fetch_link_for_permalink = async () => {
 						.catch((error) => console.log(error));
 				}
 			}
+
 			//👇 if link not found for the post/page
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
@@ -118,6 +121,12 @@ export const fetch_link_for_permalink = async () => {
 export const edit_gutenberg_link = (payload) => {
 	betterlinksGutenStore.dispatch({
 		type: EDIT_GUTENBERG_LINK,
+		payload,
+	});
+};
+export const edit_link_expire_option = (payload) => {
+	betterlinksGutenStore.dispatch({
+		type: EDIT_LINK_EXPIRE_OPTION,
 		payload,
 	});
 };

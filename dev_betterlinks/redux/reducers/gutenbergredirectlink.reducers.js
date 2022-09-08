@@ -1,4 +1,4 @@
-import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK } from 'redux/actions/gutenbergredirectlink.actions';
+import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/gutenbergredirectlink.actions';
 
 export default function gutenbergRedirectLink(state = {}, action) {
 	const payload = action.payload;
@@ -11,12 +11,25 @@ export default function gutenbergRedirectLink(state = {}, action) {
 			};
 		}
 		case EDIT_GUTENBERG_LINK: {
-			console.log('----EDIT_GUTENBERG_LINK reducer data ', { payload });
+			console.log('----EDIT_GUTENBERG_LINK reducer data ', { payload, count });
 			return {
 				...state,
 				linkData: {
 					...state?.linkData,
 					...payload,
+				},
+			};
+		}
+		case EDIT_LINK_EXPIRE_OPTION: {
+			console.log('----EDIT_LINK_EXPIRE_OPTION reducer data ', { payload });
+			return {
+				...state,
+				linkData: {
+					...state?.linkData,
+					expire: {
+						...(state?.linkData?.expire || {}),
+						...payload,
+					},
 				},
 			};
 		}

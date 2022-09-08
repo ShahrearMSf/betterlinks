@@ -9,7 +9,7 @@ import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 // import { delete_link } from 'redux/actions/links.actions';
-import { fetch_link_for_permalink, edit_gutenberg_link } from 'redux/actions/gutenbergredirectlink.actions';
+import { fetch_link_for_permalink, edit_gutenberg_link, edit_link_expire_option } from 'redux/actions/gutenbergredirectlink.actions';
 
 //
 import { LoadingSpinner } from 'gutenberg/components';
@@ -126,58 +126,72 @@ const CustomSidebarComponent = (props) => {
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
+		edit_gutenberg_link({ target_url: url });
 	};
 
 	const onSetRedirectType = (type) => {
 		setRedirectMode(type);
+		edit_gutenberg_link({ redirect_type: type });
 	};
 
 	const onSetCatId = (catid) => {
 		setCatId(catid);
+		edit_gutenberg_link({ cat_id: catid });
 	};
 
 	const onSetNoFollow = (isnofollow) => {
 		setIsNoFollow(isnofollow);
+		edit_gutenberg_link({ nofollow: isnofollow });
 	};
 
 	const onSetSponsored = (issponsored) => {
 		setSponsored(issponsored);
+		edit_gutenberg_link({ sponsored: issponsored });
 	};
 
 	const onSetParamForwarding = (isparamforwarding) => {
 		setIsParamForwarding(isparamforwarding);
+		edit_gutenberg_link({ param_forwarding: isparamforwarding });
 	};
 
 	const onSetTrackMe = (istrackme) => {
 		setIsTrackMe(istrackme);
+		edit_gutenberg_link({ track_me: istrackme });
 	};
 
 	const onSetLinkStatus = (status) => {
 		setLinkStatus(status);
+		edit_gutenberg_link({ link_status: status });
 	};
 
 	const onSetExpire = (value) => {
 		setIsExpire(value);
+		edit_link_expire_option({ status: value });
 	};
 
 	const onSetExpireType = (value) => {
 		setExpireType(value);
+		edit_link_expire_option({ type: value });
 	};
 
 	const onSetExpireDate = (value) => {
 		setExpireDate(value);
+		edit_link_expire_option({ date: value });
 	};
 
 	const onSetExpireClicks = (value) => {
 		setExpireClicks(value);
+		edit_link_expire_option({ clicks: value });
 	};
 
 	const onSetExpireRedirect = (value) => {
 		setExpireRedirect(value);
+		edit_link_expire_option({ redirect_status: value });
 	};
 
 	const onSetExpireRedirectUrl = (value) => {
 		setExpireRedirectUrl(value);
+		edit_link_expire_option({ redirect_url: value });
 	};
 
 	const getDefaultCatID = (savedCatID, terms) => {
