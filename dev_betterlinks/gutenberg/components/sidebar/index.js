@@ -639,6 +639,7 @@ const CustomSidebarComponent = (props) => {
 					} else {
 						add_new_link(
 							params,
+							true,
 							true
 						)(betterlinksGutenStore.dispatch)
 							.then((response) => {

@@ -1,4 +1,5 @@
-import { API, namespace, makeRequest } from 'utils/helper';
+import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
+import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -148,7 +149,7 @@ export const delete_cat = (params) => async (dispatch) => {
 };
 
 export const add_new_link =
-	(formData, forGutenbergStore = false) =>
+	(formData, forGutenbergStore = false, isThisInstantGutenbergRedirectLink = false) =>
 	async (dispatch) => {
 		try {
 			const res = await API.post(namespace + 'links', {
@@ -160,18 +161,82 @@ export const add_new_link =
 					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
 					payload: res.data,
 				});
+
+				console.log('--------', { isThisInstantGutenbergRedirectLink });
+				if (isThisInstantGutenbergRedirectLink) {
+					console.log('----entered isThisInstantGutenbergRedirectLink----');
+
+					const originalResponseData = res.data?.data;
+
+					const clonedResponseData = {
+						...(originalResponseData || {}),
+					};
+
+					delete clonedResponseData.expire;
+					delete clonedResponseData.link_status;
+					delete clonedResponseData.dynamic_redirect;
+
+					dispatch({
+						type: EDIT_GUTENBERG_LINK,
+						payload: clonedResponseData,
+					});
+
+					console.log('----EDIT_LINK_EXPIRE_OPTION add_new_link originalResponseData?.expire ---:', originalResponseData?.expire);
+
+					dispatch({
+						type: EDIT_LINK_EXPIRE_OPTION,
+						payload:
+							typeof originalResponseData?.expire === 'object'
+								? originalResponseData.expire
+								: typeof originalResponseData?.expire === 'string'
+								? getJsonString(originalResponseData.expire)
+								: {},
+					});
+				}
 			}
 		} catch (e) {
 			makeRequest({
 				action: 'betterlinks/admin/create_link',
 				...formData,
-			}).then((response) => {
-				console.log('====catch block add_new_link==', { formData, response });
-				if (response.data) {
+			}).then((res) => {
+				console.log('====catch block add_new_link==', { formData, res });
+				if (res.data) {
 					dispatch({
 						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
-						payload: response.data,
+						payload: res.data,
 					});
+
+					console.log('--------', { isThisInstantGutenbergRedirectLink });
+					if (isThisInstantGutenbergRedirectLink) {
+						console.log('----try failed, catch entered add_new_link----');
+
+						const originalResponseData = res.data?.data;
+
+						const clonedResponseData = {
+							...(originalResponseData || {}),
+						};
+
+						delete clonedResponseData.expire;
+						delete clonedResponseData.link_status;
+						delete clonedResponseData.dynamic_redirect;
+
+						dispatch({
+							type: EDIT_GUTENBERG_LINK,
+							payload: clonedResponseData,
+						});
+
+						console.log('----EDIT_LINK_EXPIRE_OPTION add_new_link originalResponseData?.expire ---:', originalResponseData?.expire);
+
+						dispatch({
+							type: EDIT_LINK_EXPIRE_OPTION,
+							payload:
+								typeof originalResponseData?.expire === 'object'
+									? originalResponseData.expire
+									: typeof originalResponseData?.expire === 'string'
+									? getJsonString(originalResponseData.expire)
+									: {},
+						});
+					}
 				}
 			});
 		}
