@@ -1,4 +1,4 @@
-import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/gutenbergredirectlink.actions';
+import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
 
 export default function gutenbergRedirectLink(state = {}, action) {
 	const payload = action.payload;

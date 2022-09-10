@@ -19,9 +19,10 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 
-export const FETCH_LINK_FOR_PERMALINK = 'FETCH_LINK_FOR_PERMALINK';
-export const EDIT_GUTENBERG_LINK = 'EDIT_GUTENBERG_LINK';
-export const EDIT_LINK_EXPIRE_OPTION = 'EDIT_LINK_EXPIRE_OPTION';
+// export const FETCH_LINK_FOR_PERMALINK = 'FETCH_LINK_FOR_PERMALINK';
+// export const EDIT_GUTENBERG_LINK = 'EDIT_GUTENBERG_LINK';
+// export const EDIT_LINK_EXPIRE_OPTION = 'EDIT_LINK_EXPIRE_OPTION';
+import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
 
 export const fetch_link_for_permalink = async () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
