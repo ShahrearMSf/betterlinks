@@ -548,9 +548,9 @@ const CustomSidebarComponent = (props) => {
 
 	subscribe(() => {
 		if (
-			wp?.data?.select &&
 			wp.data.select('core/editor')?.isSavingPost() &&
 			!wp.data.select('core/editor')?.isAutosavingPost() &&
+			wp.data.select('core/editor')?.isCurrentPostPublished() &&
 			wp.data.select('core/editor')?.getPermalink() &&
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
