@@ -296,7 +296,7 @@ const CustomSidebarComponent = (props) => {
 
 	return (
 		<Fragment>
-			{isAllowInstantRedirect && (
+			{isAllowInstantRedirect && wp.data.select('core/editor')?.isCurrentPostPublished() && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
 
