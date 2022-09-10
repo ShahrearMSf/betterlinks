@@ -573,11 +573,17 @@ const CustomSidebarComponent = (props) => {
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
 
+			const short_url = permalinkToShortUrl(permalink);
+			const link_title = currentPost.title;
+			const link_slug = currentPost.slug;
+
+			console.log('----permalink & shortUrl---', { permalink, short_url, currentPost, link_title, link_slug });
+
 			const params = {
 				...freeParams,
-				short_url: permalinkToShortUrl(permalink),
-				link_title: currentPost.title,
-				link_slug: currentPost.slug,
+				short_url,
+				link_title,
+				link_slug,
 				link_modified: currentDate,
 				link_modified_gmt: currentDate,
 			};
@@ -608,22 +614,22 @@ const CustomSidebarComponent = (props) => {
 
 			console.log('---freeParams & values---', { freeParams, values });
 
-			if (!values.cat_id) {
+			if (!params.cat_id) {
 				const { ID } = terms.filter((item) => item.term_slug == 'uncategorized')[0];
-				values.cat_id = ID;
+				params.cat_id = ID;
 			}
-			if (!values.link_slug) {
-				values.link_slug = generateSlug(values.link_title);
+			if (!params.link_slug) {
+				params.link_slug = generateSlug(params.link_title);
 			}
-			values.wildcards = Number(values.short_url.includes('*'));
-			if (values.cat_id) {
-				const link_title = values.link_title.trim();
+			params.wildcards = Number(params.short_url.includes('*'));
+			if (params.cat_id) {
+				const link_title = params.link_title.trim();
 				if (link_title) {
-					values.link_title = link_title;
+					params.link_title = link_title;
 
-					if (values.ID) {
+					if (params.ID) {
 						edit_link(
-							values,
+							params,
 							true
 						)(betterlinksGutenStore.dispatch)
 							.then((response) => {
@@ -632,7 +638,7 @@ const CustomSidebarComponent = (props) => {
 							.catch((error) => console.error(error));
 					} else {
 						add_new_link(
-							values,
+							params,
 							true
 						)(betterlinksGutenStore.dispatch)
 							.then((response) => {
