@@ -409,11 +409,13 @@ body.betterlinks-loading-spinner-mounted {
 .betterlinks-loader-sidebar-wrapper {
 	display: none;
 }
-body.betterlinks-guten-store-initial-data-still-fetching .betterlinks-loader-sidebar-wrapper {
+body.betterlinks-guten-store-initial-data-still-fetching .betterlinks-loader-sidebar-wrapper,
+body.betterlinks-guten-link-data-not-rendered-in-sidebar .betterlinks-loader-sidebar-wrapper {
 	display: block;
 }
 
-body.betterlinks-guten-store-initial-data-still-fetching {
+body.betterlinks-guten-store-initial-data-still-fetching,
+body.betterlinks-guten-link-data-not-rendered-in-sidebar {
 	* {
 		z-index: 1 !important;
 	}

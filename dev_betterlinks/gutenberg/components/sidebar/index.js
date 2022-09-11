@@ -88,6 +88,13 @@ const CustomSidebarComponent = (props) => {
 			setExpireClicks(linkData.expire?.clicks);
 			setExpireRedirect(linkData.expire?.redirect_status);
 			setExpireRedirectUrl(linkData.expire?.redirect_url);
+
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+				console.log(
+					'---removed loader----===================---removed loader----===================---removed loader----===================---removed loader----===================---removed loader----'
+				);
+			}, 100);
 		};
 
 		// Settings

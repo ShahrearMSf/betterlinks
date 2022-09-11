@@ -39,6 +39,7 @@ const intervalId = setInterval(() => {
 		console.log('interval cleard');
 	} else {
 		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 	}
 }, 100);
 
