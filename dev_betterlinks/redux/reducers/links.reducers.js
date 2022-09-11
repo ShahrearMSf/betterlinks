@@ -38,11 +38,13 @@ function links(state = {}, action) {
 			};
 		}
 		case FETCH_WITHOUT_CATEGORY_INITIAL_DATA: {
+			console.log('----FETCH_WITHOUT_CATEGORY_INITIAL_DATA', { payload });
 			return {
 				...state,
 				links: Object.values(payload?.data || [])
 					.reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
-					.map((item) => ({ ...item, short_url: item.short_url.replace(/\/+$/, '').replace(/^\/+/, '') })),
+					.filter((item) => item.ID && item.short_url)
+					.map((item) => ({ ...item, short_url: (item.short_url || '').replace(/\/+$/, '').replace(/^\/+/, '') })),
 			};
 		}
 		case DRAG_AND_DROP:
