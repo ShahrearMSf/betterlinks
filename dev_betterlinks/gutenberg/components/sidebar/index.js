@@ -300,6 +300,12 @@ const CustomSidebarComponent = (props) => {
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
 
+					<div className="betterlinks-loader-sidebar-wrapper">
+						<div className="betterlinks-loader-for-sidebar">
+							<div className="betterlinks-round-loader"></div>
+						</div>
+					</div>
+
 					{isDeletingInstantGutenbergRedirect && (
 						<>
 							<h3>heeeeeeeeeeeeeeeeeee!!!!</h3>
