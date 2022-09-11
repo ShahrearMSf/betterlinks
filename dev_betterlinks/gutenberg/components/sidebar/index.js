@@ -282,8 +282,6 @@ const CustomSidebarComponent = (props) => {
 					payload: linkData,
 				});
 
-				document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
-
 				setID('');
 				onSetTargetUrl('');
 				onSetCatId('');
@@ -298,6 +296,8 @@ const CustomSidebarComponent = (props) => {
 				onSetSponsored(settings.sponsored);
 				onSetParamForwarding(settings.param_forwarding);
 				onSetTrackMe(settings.track_me);
+
+				document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
 
 				// props.showSaveButton();
 			})
