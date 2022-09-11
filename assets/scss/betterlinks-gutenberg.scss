@@ -460,6 +460,14 @@ body.betterlinks-guten-store-initial-data-still-fetching {
 	}
 }
 
+.betterlinks-instant-gutenberg-redirect-delete-button-wrapper {
+	display: none;
+}
+
+body.betterlinks-guten-instant-redirect-has-link .betterlinks-instant-gutenberg-redirect-delete-button-wrapper {
+	display: block;
+}
+
 .betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added > button:hover {
 	background: #ddd;
 }

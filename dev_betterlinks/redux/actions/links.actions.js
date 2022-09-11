@@ -291,6 +291,7 @@ export const handle_link_favorite = (item) => async (dispatch) => {
 };
 
 export const delete_link = (params) => async (dispatch) => {
+	console.log('---delete_link params', { params });
 	let data = [];
 	if (Array.isArray(params)) {
 		data = params;

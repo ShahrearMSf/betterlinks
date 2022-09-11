@@ -202,7 +202,7 @@ export const getBrowser = (agent) => {
 	return browser;
 };
 
-export const formatDate = (date, format) => {
+export const formatDate = (date = new Date(), format) => {
 	const map = {
 		mm: date.getMonth() + 1,
 		dd: date.getDate(),

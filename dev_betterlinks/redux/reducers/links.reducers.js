@@ -12,6 +12,8 @@ import {
 	DELETE_LINK,
 	HANDLE_LINK_FAVORITE,
 } from 'redux/actions/links.actions';
+import { DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
+
 import { move, reorder } from 'utils/helper';
 function links(state = {}, action) {
 	const payload = action.payload;
@@ -273,6 +275,15 @@ function links(state = {}, action) {
 						lists: state.links[payload.data.term_id] ? state.links[payload.data.term_id].lists.filter((item, index) => item.ID != payload.data.ID) : [],
 					},
 				},
+			};
+		case DELETE_GUTENBERG_LINK:
+			const allLinks = state.links;
+			const itemIndexInLinks = allLinks.findIndex((item) => item.ID == payload.ID);
+			const newLinks = [...allLinks.slice(0, itemIndexInLinks), ...allLinks.slice(itemIndexInLinks + 1)];
+
+			return {
+				...state,
+				links: newLinks,
 			};
 		default:
 			return state;

@@ -42,6 +42,14 @@ const intervalId = setInterval(() => {
 	}
 }, 100);
 
+betterlinksGutenStore.subscribe(() => {
+	if (betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.ID) {
+		document?.body?.classList?.add('betterlinks-guten-instant-redirect-has-link');
+	} else {
+		document?.body?.classList?.remove('betterlinks-guten-instant-redirect-has-link');
+	}
+});
+
 // Sidebar Panel in Gutenberg Edit 'page/post'
 registerPlugin('betterlinks-sidebar', {
 	render: CustomSidebar,

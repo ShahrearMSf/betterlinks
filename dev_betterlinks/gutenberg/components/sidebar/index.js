@@ -5,10 +5,11 @@ import { redirectType } from 'utils/data';
 import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl } from 'utils/helper';
 
 import { edit_gutenberg_link, edit_link_expire_option, fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
-import { add_new_link, edit_link } from 'redux/actions/links.actions';
+import { add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
+import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
 
 //
 import { LoadingSpinner } from 'gutenberg/components';
@@ -233,21 +234,61 @@ const CustomSidebarComponent = (props) => {
 
 	const deleteInstantRedirect = () => {
 		console.log('deleteInstantRedirect function runned');
-		if (ID) {
-			console.log('setIsDeletingInstantGutenbergRedirect runned & set to true');
-			makeRequest({
-				action: 'betterlinks/admin/delete_link',
-				ID,
-				short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
-			}).then((response) => {
-				console.log('betterlinks/admin/delete_link response returned');
+
+		const ID = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.ID;
+		const short_url = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.short_url;
+		const cat_id = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.cat_id;
+
+		if (!ID) return false;
+
+		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+		makeRequest({
+			action: 'betterlinks/admin/delete_link',
+			ID,
+			short_url,
+			cat_id,
+		})
+			.then((response) => {
+				console.log('----deleting instant gutenberg redirect link done---', { response });
 				const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+
+				const linkData = {
+					ID: '',
+					cat_id: '',
+					target_url: '',
+					link_title: '',
+					link_slug: '',
+					expire: {
+						status: false,
+					},
+					link_status: 'publish',
+					redirect_type: settings.redirect_type,
+					nofollow: settings.nofollow,
+					sponsored: settings.sponsored,
+					param_forwarding: settings.param_forwarding,
+					track_me: settings.track_me,
+				};
+
+				betterlinksGutenStore.dispatch({
+					type: DELETE_GUTENBERG_LINK,
+					payload: {
+						...response?.data?.data,
+						cat_id,
+					},
+				});
+
+				betterlinksGutenStore.dispatch({
+					type: RESET_GUTENBERG_INSTANT_REDIRECT,
+					payload: linkData,
+				});
+
+				document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+
 				setID('');
 				onSetTargetUrl('');
 				onSetCatId('');
 				onSetLinkStatus('');
 				onSetExpireType('');
-				onSetExpireDate('');
 				onSetExpireClicks('');
 				onSetExpire(false);
 				onSetExpireRedirect(false);
@@ -258,13 +299,11 @@ const CustomSidebarComponent = (props) => {
 				onSetParamForwarding(settings.param_forwarding);
 				onSetTrackMe(settings.track_me);
 
-				//
-				setIsDeletingInstantGutenbergRedirect(false);
 				// props.showSaveButton();
+			})
+			.catch((error) => {
+				console.log(error);
 			});
-		} else {
-			setIsDeletingInstantGutenbergRedirect(false);
-		}
 	};
 
 	const openUpgradeToProModal = () => {
@@ -277,7 +316,6 @@ const CustomSidebarComponent = (props) => {
 
 	console.log({
 		linkData,
-		isDeletingInstantGutenbergRedirect,
 		ID,
 		catId,
 		isNofollow,
@@ -306,25 +344,14 @@ const CustomSidebarComponent = (props) => {
 						</div>
 					</div>
 
-					{isDeletingInstantGutenbergRedirect && (
-						<>
-							<h3>heeeeeeeeeeeeeeeeeee!!!!</h3>
-							<LoadingSpinner />
-						</>
-					)}
-
 					<div className="betterlinks-instant-redirect">
 						<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 
-						{ID && (
+						<div className="betterlinks-instant-gutenberg-redirect-delete-button-wrapper">
 							<Button
 								isDestructive={true}
 								onClick={() => {
-									setIsDeletingInstantGutenbergRedirect(true);
-									if (
-										// confirm(__('Are you sure you want to delete your Instant Redirect Rule?', 'betterlinks'))
-										true
-									) {
+									if (confirm(__('Are you sure you want to delete your Instant Redirect Rule?', 'betterlinks'))) {
 										deleteInstantRedirect();
 									}
 								}}
@@ -332,7 +359,7 @@ const CustomSidebarComponent = (props) => {
 							>
 								Delete Instant Redirect
 							</Button>
-						)}
+						</div>
 
 						<TextControl
 							label={__('Target URL', 'betterlinks')}
