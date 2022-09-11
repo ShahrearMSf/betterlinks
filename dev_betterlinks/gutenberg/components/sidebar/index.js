@@ -74,7 +74,12 @@ const CustomSidebarComponent = (props) => {
 			}
 			setID(linkData.ID);
 			setTargetUrl(linkData.target_url);
-			setRedirectMode(linkData.redirect_type);
+			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
+				edit_gutenberg_link({ redirect_type: '307' });
+				setRedirectMode('307');
+			} else {
+				setRedirectMode(linkData.redirect_type);
+			}
 			setCatId(linkData.cat_id);
 			setIsNoFollow(linkData.nofollow);
 			setSponsored(linkData.sponsored);
