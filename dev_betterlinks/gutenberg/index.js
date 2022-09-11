@@ -26,6 +26,22 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
 
+const intervalId = setInterval(() => {
+	console.log('interval running each 100ms');
+	if (
+		betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData &&
+		betterlinksGutenStore?.getState()?.links?.links &&
+		betterlinksGutenStore?.getState()?.terms?.terms &&
+		betterlinksGutenStore?.getState()?.settings?.settings
+	) {
+		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+		clearInterval(intervalId);
+		console.log('interval cleard');
+	} else {
+		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+	}
+}, 100);
+
 // Sidebar Panel in Gutenberg Edit 'page/post'
 registerPlugin('betterlinks-sidebar', {
 	render: CustomSidebar,
