@@ -10,7 +10,7 @@ export const ADD_NEW_LINK = 'ADD_NEW_LINK';
 export const ADD_NEW_LINK_FOR_GUTEN_STORE = 'ADD_NEW_LINK_FOR_GUTEN_STORE';
 export const DELETE_LINK = 'DELETE_LINK';
 export const EDIT_LINK = 'EDIT_LINK';
-export const EDIT_LINK_FORGUTENBERG = 'EDIT_LINK_FORGUTENBERG';
+export const EDIT_LINK_FOR_GUTENBERG = 'EDIT_LINK_FOR_GUTENBERG';
 export const HANDLE_LINK_FAVORITE = 'HANDLE_LINK_FAVORITE';
 
 export const onDragEnd = (result) => async (dispatch) => {
@@ -250,7 +250,7 @@ export const edit_link =
 			});
 			console.log('====try block edit_link==', { item, res });
 			dispatch({
-				type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
+				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 				payload: item,
 			});
 		} catch (e) {
@@ -261,7 +261,7 @@ export const edit_link =
 				if (response.data) {
 					console.log('====catch block edit_link==', { item, response });
 					dispatch({
-						type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
+						type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 						payload: response.data.data,
 					});
 				}

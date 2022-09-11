@@ -8,7 +8,7 @@ import {
 	ADD_NEW_LINK,
 	ADD_NEW_LINK_FOR_GUTEN_STORE,
 	EDIT_LINK,
-	EDIT_LINK_FORGUTENBERG,
+	EDIT_LINK_FOR_GUTENBERG,
 	DELETE_LINK,
 	HANDLE_LINK_FAVORITE,
 } from 'redux/actions/links.actions';
@@ -228,7 +228,7 @@ function links(state = {}, action) {
 			};
 		}
 
-		case EDIT_LINK_FORGUTENBERG: {
+		case EDIT_LINK_FOR_GUTENBERG: {
 			const allLinks = state.links;
 			const itemIndexInLinks = allLinks.findIndex((item) => item.ID == payload.ID);
 			const newData = { ...payload, short_url: payload.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
