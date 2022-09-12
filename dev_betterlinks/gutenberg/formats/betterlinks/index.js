@@ -311,14 +311,14 @@ export const betterlinksFormat = {
 												{isLinkInvalid && (
 													<Popover position="left" focusOnMount={false} className="betterlinks-invalid-link-popover">
 														<div className="betterlinks_format_invalid_link_warning">
-															Invalid Link
+															No Links Found
 															<button
 																onClick={() => {
 																	setShowLinkModal(true);
 																	setIsLinkInvalid(false);
 																}}
 															>
-																create Link
+																Create a New Link
 															</button>
 														</div>
 													</Popover>
