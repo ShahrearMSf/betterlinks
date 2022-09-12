@@ -96,7 +96,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 								setIslinkNotFound(false);
 							}}
 						>
-							click here
+							Change Link
 						</button>
 					</h5>
 				</Popover>
