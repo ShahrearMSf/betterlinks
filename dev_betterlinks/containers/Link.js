@@ -78,8 +78,9 @@ export const Link = (props) => {
 			}
 		};
 	}, [betterlinksGutenStore]);
-	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation start
+	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation end
 
+	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
 	const objForGutenTargetBlank = betterlinksGutenStore
 		? {
 				openInNewTab: linkNewTab,
