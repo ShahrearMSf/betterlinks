@@ -199,8 +199,9 @@ body.betterlinks-formatting-enabled {
 .betterlinks-invalid-link-popover {
 	.betterlinks_format_invalid_link_warning {
 		width: 300px;
-		color: red;
+		color: #333;
 		padding: 5px 10px;
+		font-weight: 700;
 		& button {
 			padding: 5px 10px;
 			margin-left: 10px;
@@ -210,6 +211,7 @@ body.betterlinks-formatting-enabled {
 			border-radius: 3px;
 			font-size: 15px;
 			cursor: pointer;
+			font-weight: 400;
 			&:hover {
 				background: #006ba1;
 			}
