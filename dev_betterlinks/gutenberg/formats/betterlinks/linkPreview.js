@@ -89,7 +89,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 			{islinkNotFound && (
 				<Popover position="left" focusOnMount={false} className="betterlinks-link-deleted-after-applying-format">
 					<h5 className="no-link-warning-after-added">
-						Whoops! seems like the shortened URL has been changed or removed. <br />
+						Whoops! seems like the shortened URL has been changed or removed.
 						<button
 							onClick={() => {
 								handleChangeLink();
