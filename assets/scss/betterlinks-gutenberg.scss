@@ -188,12 +188,9 @@ body.betterlinks-formatting-enabled {
 		}
 
 		button.betterlinks-format-remove-link {
-			margin-left: 10px;
-
 			span.dashicons-editor-unlink {
 				font-size: 18px;
-				display: block;
-				align-items: center;
+				margin-bottom: -3px;
 			}
 		}
 	}
@@ -426,6 +423,7 @@ body.betterlinks-loading-spinner-mounted {
 	color: red;
 	padding: 0 20px;
 }
+
 // gutenberg richtext 'betterlinks format' css -> end
 //
 
