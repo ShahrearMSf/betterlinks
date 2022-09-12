@@ -40,7 +40,8 @@ function links(state = {}, action) {
 				...state,
 				links: Object.values(payload?.data || [])
 					.reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
-					.map((item) => ({ ...item, short_url: item.short_url.replace(/\/+$/, '').replace(/^\/+/, '') })),
+					.filter((item) => item.ID && item.short_url)
+					.map((item) => ({ ...item, short_url: (item.short_url || '').replace(/\/+$/, '').replace(/^\/+/, '') })),
 			};
 		}
 		case DRAG_AND_DROP:
