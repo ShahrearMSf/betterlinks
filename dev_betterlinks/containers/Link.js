@@ -190,11 +190,6 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
-		//👇 this following 'if statement' is only for this 'Link' component's gutenberg implementation
-		if (betterlinksGutenStore) {
-			add_top_loader(document);
-		}
-
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID).then((isDuplicate) => {
@@ -225,6 +220,7 @@ export const Link = (props) => {
 									remove_top_loader(document);
 								})
 								.catch((error) => console.log('---error (submitHandler)--', { error }));
+							add_top_loader(document);
 						}
 					}
 				}

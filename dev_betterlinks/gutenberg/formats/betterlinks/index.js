@@ -436,7 +436,6 @@ export const betterlinksFormat = {
 														}
 													}, 5000);
 													searchFieldDomRef.focus();
-													console.log('----add_new_link---', { res });
 													return res;
 												})
 												.catch((error) => {
