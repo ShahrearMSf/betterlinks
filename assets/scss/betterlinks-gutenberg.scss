@@ -405,6 +405,21 @@ body.betterlinks-loading-spinner-mounted {
 			animation: spin 1s linear infinite;
 		}
 	}
+
+	.betterlinks-top-loader-wrap {
+		position: fixed;
+		top: 0 !important;
+		left: 0 !important;
+		z-index: 999999 !important;
+		height: 100vh !important;
+		width: 100vw !important;
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	.ReactModalPortal,
+	.ReactModalPortal * {
+		z-index: 0 !important;
+	}
 }
 
 .betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added {

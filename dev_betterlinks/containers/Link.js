@@ -11,7 +11,19 @@ import { bindActionCreators } from 'redux';
 //👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
 import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/terms.actions';
 
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
+import {
+	modalCustomStyles,
+	modalCustomSmallStyles,
+	betterlinks_nonce,
+	site_url,
+	generateSlug,
+	generateShortURL,
+	formatDate,
+	plugin_root_url,
+	is_pro_enabled,
+	add_top_loader,
+	remove_top_loader,
+} from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
 import Tags from 'components/Terms/Tags';
@@ -180,8 +192,7 @@ export const Link = (props) => {
 	const onSubmit = (values) => {
 		//👇 this following 'if statement' is only for this 'Link' component's gutenberg implementation
 		if (betterlinksGutenStore) {
-			setShowLinkModal(false);
-			setIsSubmittingForGutenberg(true);
+			add_top_loader(document);
 		}
 
 		const { short_url } = values;
@@ -201,10 +212,19 @@ export const Link = (props) => {
 					const link_title = values.link_title.trim();
 					if (link_title) {
 						values.link_title = link_title;
-						submitHandler(values);
 						// 👇 the 'if statement' is to fix memory leak warning 'Can't perform a React state update on an unmounted component' when using this <Link /> component for gutenberg format
 						if (!betterlinksGutenStore) {
+							submitHandler(values);
 							setModalIsOpen(false);
+						} else {
+							submitHandler(values)
+								.then((response) => {
+									if (response?.data) {
+										setShowLinkModal(false);
+									}
+									remove_top_loader(document);
+								})
+								.catch((error) => console.log('---error (submitHandler)--', { error }));
 						}
 					}
 				}
