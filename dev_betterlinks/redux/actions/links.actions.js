@@ -1,12 +1,15 @@
 import { API, namespace, makeRequest } from 'utils/helper';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
+export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
 export const ADD_NEW_CAT = 'ADD_NEW_CAT';
 export const UPDATE_CAT = 'UPDATE_CAT';
 export const DELETE_CAT = 'DELETE_CAT';
 export const ADD_NEW_LINK = 'ADD_NEW_LINK';
+export const ADD_NEW_LINK_FOR_GUTEN_STORE = 'ADD_NEW_LINK_FOR_GUTEN_STORE';
 export const DELETE_LINK = 'DELETE_LINK';
 export const EDIT_LINK = 'EDIT_LINK';
+export const EDIT_LINK_FORGUTENBERG = 'EDIT_LINK_FORGUTENBERG';
 export const HANDLE_LINK_FAVORITE = 'HANDLE_LINK_FAVORITE';
 
 export const onDragEnd = (result) => async (dispatch) => {
@@ -39,28 +42,30 @@ export const onDragEnd = (result) => async (dispatch) => {
 		}
 	}
 };
-export const fetch_links_data = () => async (dispatch) => {
-	try {
-		const res = await API.get(namespace + 'links', {
-			params: {},
-		});
-		dispatch({
-			type: FETCH_INITIAL_DATA,
-			payload: res.data,
-		});
-	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/get_all_links',
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: FETCH_INITIAL_DATA,
-					payload: response.data.data,
-				});
-			}
-		});
-	}
-};
+export const fetch_links_data =
+	(forGutenbergStore = false) =>
+	async (dispatch) => {
+		try {
+			const res = await API.get(namespace + 'links', {
+				params: {},
+			});
+			dispatch({
+				type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
+				payload: res.data,
+			});
+		} catch (e) {
+			makeRequest({
+				action: 'betterlinks/admin/get_all_links',
+			}).then((response) => {
+				if (response.data) {
+					dispatch({
+						type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
+						payload: response.data.data,
+					});
+				}
+			});
+		}
+	};
 
 export const add_new_cat = (data) => async (dispatch) => {
 	try {
@@ -142,54 +147,60 @@ export const delete_cat = (params) => async (dispatch) => {
 	}
 };
 
-export const add_new_link = (formData) => async (dispatch) => {
-	try {
-		const res = await API.post(namespace + 'links', {
-			params: formData,
-		});
-		if (res.data.success) {
-			dispatch({
-				type: ADD_NEW_LINK,
-				payload: res.data,
+export const add_new_link =
+	(formData, forGutenbergStore = false) =>
+	async (dispatch) => {
+		try {
+			const res = await API.post(namespace + 'links', {
+				params: formData,
+			});
+			if (res.data.success) {
+				dispatch({
+					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
+					payload: res.data,
+				});
+			}
+			return res;
+		} catch (e) {
+			return makeRequest({
+				action: 'betterlinks/admin/create_link',
+				...formData,
+			}).then((response) => {
+				if (response.data) {
+					dispatch({
+						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
+						payload: response.data,
+					});
+				}
 			});
 		}
-	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/create_link',
-			...formData,
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: ADD_NEW_LINK,
-					payload: response.data,
-				});
-			}
-		});
-	}
-};
-export const edit_link = (item) => async (dispatch) => {
-	try {
-		const res = await API.put(namespace + 'links/' + item.ID, {
-			params: item,
-		});
-		dispatch({
-			type: EDIT_LINK,
-			payload: item,
-		});
-	} catch (e) {
-		makeRequest({
-			action: 'betterlinks/admin/update_link',
-			...item,
-		}).then((response) => {
-			if (response.data) {
-				dispatch({
-					type: EDIT_LINK,
-					payload: response.data.data,
-				});
-			}
-		});
-	}
-};
+	};
+export const edit_link =
+	(item, forGutenbergStore = false) =>
+	async (dispatch) => {
+		try {
+			const res = await API.put(namespace + 'links/' + item.ID, {
+				params: item,
+			});
+			dispatch({
+				type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
+				payload: item,
+			});
+			return res;
+		} catch (e) {
+			return makeRequest({
+				action: 'betterlinks/admin/update_link',
+				...item,
+			}).then((response) => {
+				if (response.data) {
+					dispatch({
+						type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
+						payload: response.data.data,
+					});
+				}
+			});
+		}
+	};
 export const handle_link_favorite = (item) => async (dispatch) => {
 	try {
 		const res = await API.put(namespace + 'links_favorite/' + item.ID, {

@@ -364,3 +364,55 @@ export const parseLinksForUpdateModal = (data) =>
 				.reduce((acc, curr) => [...acc, ...curr.lists], [])
 				.map((item) => ({ value: item.ID, label: item.link_title }))
 		: [];
+
+export const makeAllLinksArr = (store) =>
+	store?.getState()?.links?.links
+		? Object.values(store?.getState()?.links?.links).reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
+		: // if all links are not fetched properly then return false
+		  false;
+
+export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
+	const attributes = { url };
+	let rel = '';
+
+	if (linkNewTab) {
+		attributes.target = '_blank';
+		rel = 'noreferrer noopener ';
+	}
+
+	if (sponsored) {
+		rel += 'sponsored ';
+	}
+
+	if (noFollow) {
+		rel += 'nofollow noindex ';
+	}
+
+	if (rel) {
+		attributes.rel = rel;
+	}
+
+	const result = {
+		type: 'betterlinks/link-format',
+		attributes,
+	};
+	return result;
+};
+
+export const add_top_loader = (document) => {
+	document?.body?.classList?.add('betterlinks-loading-spinner-mounted');
+	const loader = document?.createElement('div');
+	loader.classList.add('betterlinks-top-loader-wrap');
+	loader.innerHTML = `
+		<div class="betterlinks-submitted-link-for-gutenberg">
+			<div class="betterlinks-round-loader"></div>
+		</div>
+	`;
+	document?.body?.prepend(loader);
+};
+export const remove_top_loader = (document) => {
+	document?.body?.classList?.remove('betterlinks-loading-spinner-mounted');
+	document?.querySelectorAll('.betterlinks-top-loader-wrap')?.forEach((item) => {
+		item?.remove();
+	});
+};

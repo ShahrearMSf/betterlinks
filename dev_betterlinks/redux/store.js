@@ -3,7 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import rootReducer from 'redux/reducers';
+import rootReducer, { gutenbergReducers } from 'redux/reducers';
 
 let middleware = [thunk];
 if (process.env.NODE_ENV !== 'production') {
@@ -11,3 +11,5 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(...middleware)));
+
+export const betterlinksGutenStore = createStore(gutenbergReducers, {}, composeWithDevTools(applyMiddleware(...middleware)));

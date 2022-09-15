@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { __ } from '@wordpress/i18n';
@@ -7,8 +7,23 @@ import Select from 'components/Select';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
+
+//👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
+import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/terms.actions';
+
+import {
+	modalCustomStyles,
+	modalCustomSmallStyles,
+	betterlinks_nonce,
+	site_url,
+	generateSlug,
+	generateShortURL,
+	formatDate,
+	plugin_root_url,
+	is_pro_enabled,
+	add_top_loader,
+	remove_top_loader,
+} from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
 import Tags from 'components/Terms/Tags';
@@ -28,8 +43,28 @@ const defaultProps = {
 	isShowIcon: true,
 };
 
-const Link = (props) => {
-	const { isShowIcon, catId, data, terms, submitHandler, fetch_terms_data, settings } = props;
+export const Link = (props) => {
+	const {
+		isShowIcon,
+		catId,
+		data,
+		submitHandler,
+		fetch_terms_data,
+
+		//👇 these flowwowing props will be passed from the component's gutenberg call
+		betterlinksGutenStore,
+		setShowLinkModal = () => {},
+		searchFieldRef,
+		linkNewTab,
+		setIsSubmittingForGutenberg = () => {},
+	} = props;
+
+	//👇 slight tweaks to use <Link /> component inside gutenberg start
+	const settings = betterlinksGutenStore ? betterlinksGutenStore?.getState()?.settings : props.settings;
+	const terms = betterlinksGutenStore ? betterlinksGutenStore?.getState()?.terms : props.terms;
+	window.betterLinksHooks = betterlinksGutenStore ? { applyFilters: (handle, defaultVal) => defaultVal } : window.betterLinksHooks;
+	//👆 slight tweaks to use <Link /> component inside gutenberg end
+
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
@@ -44,6 +79,26 @@ const Link = (props) => {
 		dynamicRedirect: false,
 	});
 
+	//👇 this useEffect is only for this 'Link' component's gutenberg implementation start
+	useEffect(() => {
+		if (betterlinksGutenStore) {
+			setModalIsOpen(true);
+		}
+		return () => {
+			if (searchFieldRef?.current) {
+				searchFieldRef?.current?.focus();
+			}
+		};
+	}, [betterlinksGutenStore]);
+	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation end
+
+	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
+	const objForGutenTargetBlank = betterlinksGutenStore
+		? {
+				openInNewTab: linkNewTab,
+		  }
+		: {};
+
 	const initialValues = {
 		link_title: '',
 		link_slug: '',
@@ -56,6 +111,7 @@ const Link = (props) => {
 		link_modified_gmt: currentDate,
 		cat_id: catId ? catId : null,
 		...settings.settings,
+		...objForGutenTargetBlank,
 	};
 
 	const initialUpdateValues = {
@@ -64,10 +120,15 @@ const Link = (props) => {
 		cat_id: catId,
 		old_short_url: data ? data.short_url : '',
 		...data,
+		...objForGutenTargetBlank,
 	};
 
 	function openModal() {
 		setIsFetchTerms(true);
+
+		//👇 this line added because for gutenberg implementaton 'fetch_terms_data' function call isn't needed
+		if (betterlinksGutenStore) return false;
+
 		fetch_terms_data().then(() => {
 			setModalIsOpen(true);
 			setIsFetchTerms(false);
@@ -75,7 +136,12 @@ const Link = (props) => {
 	}
 
 	function closeModal() {
-		setModalIsOpen(false);
+		//👇 this following code is only for gutenberg implementation of the 'Link' component & to make sure memory leak doesn't happen ('Can't perform a React state update on an unmounted component')
+		if (betterlinksGutenStore) {
+			setShowLinkModal(false);
+		} else {
+			setModalIsOpen(false);
+		}
 	}
 
 	const openUTMModal = () => {
@@ -84,7 +150,7 @@ const Link = (props) => {
 	};
 
 	const builtInUTMModalOpenHandler = () => {
-		if (betterLinksHooks.applyFilters('isActivePro', false)) {
+		if (is_pro_enabled) {
 			setIsShowCustomUTMModalContent(false);
 			openUTMModal();
 		} else {
@@ -126,8 +192,8 @@ const Link = (props) => {
 	const onSubmit = (values) => {
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
-		shortURLUniqueCheck(values.short_url, values.ID).then((isUnique) => {
-			if (!isUnique) {
+		shortURLUniqueCheck(values.short_url, values.ID).then((isDuplicate) => {
+			if (!isDuplicate) {
 				if (!values.cat_id) {
 					const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
 					values.cat_id = ID;
@@ -141,8 +207,21 @@ const Link = (props) => {
 					const link_title = values.link_title.trim();
 					if (link_title) {
 						values.link_title = link_title;
-						setModalIsOpen(false);
-						return submitHandler(values);
+						// 👇 the 'if statement' is to fix memory leak warning 'Can't perform a React state update on an unmounted component' when using this <Link /> component for gutenberg format
+						if (!betterlinksGutenStore) {
+							submitHandler(values);
+							setModalIsOpen(false);
+						} else {
+							submitHandler(values)
+								.then((response) => {
+									if (response?.data) {
+										setShowLinkModal(false);
+									}
+									remove_top_loader(document);
+								})
+								.catch((error) => console.log('---error (submitHandler)--', { error }));
+							add_top_loader(document);
+						}
 					}
 				}
 			}
@@ -157,6 +236,7 @@ const Link = (props) => {
 			[type]: !isOpenLinkPanel[type],
 		});
 	};
+
 	return (
 		<>
 			{data ? (
@@ -267,7 +347,7 @@ const Link = (props) => {
 											<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
 												{__('UTM', 'betterlinks')}
 											</button>
-											{!betterLinksHooks.applyFilters('isActivePro', false) ? (
+											{!is_pro_enabled ? (
 												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
 													<i className="btl btl-share"></i>
 													<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
@@ -329,6 +409,25 @@ const Link = (props) => {
 											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
 										<div className="link-options__body">
+											{betterlinksGutenStore && (
+												<label className="btl-checkbox-field">
+													<Field
+														className="btl-check"
+														name="openInNewTab"
+														type="checkbox"
+														onChange={() => props.setFieldValue('openInNewTab', !props.values.openInNewTab)}
+														disabled={false}
+													/>
+													<span className="text">
+														{__('Open In New Tab', 'betterlinks')}
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('This will open your link in a new tab when clicked', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+											)}
+
 											<label className="btl-checkbox-field">
 												<Field
 													className="btl-check"
@@ -395,99 +494,101 @@ const Link = (props) => {
 											</label>
 										</div>
 									</div>
-									<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
-											<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-											<i className="btl btl-angle-arrow-down"></i>
-										</button>
-										<div className="link-options__body">
-											{!betterLinksHooks.applyFilters('isActivePro', false) && (
-												<div className="link-options--teasers">
-													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-														<label className="btl-modal-form-label" htmlFor="status">
-															{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-														</label>
-														<select id="status" disabled>
-															<option value="publish">{__('Active', 'betterlinks')}</option>
-															<option value="expired">{__('Expired', 'betterlinks')}</option>
-															<option value="draft">{__('Draft', 'betterlinks')}</option>
-														</select>
-													</div>
-													<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-														<label className="btl-modal-form-label" htmlFor="expire">
-															{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-														</label>
-														<input id="expire" type="checkbox" disabled />
-													</div>
-												</div>
-											)}
-											{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
-										</div>
-									</div>
-									<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
-											<h4 className="link-options__head--title">
-												{__('Dynamic Redirects', 'betterlinks')}{' '}
-												{betterLinksHooks.applyFilters('isActivePro', false) &&
-												props.values.dynamic_redirect &&
-												props.values.dynamic_redirect.type &&
-												props.values.dynamic_redirect.type !== 'none' ? (
-													<span className="status">{__('ON', 'betterlinks')}</span>
-												) : (
-													''
-												)}
-											</h4>{' '}
-											<i className="btl btl-angle-arrow-down"></i>
-										</button>
-										<div className="link-options__body">
-											{!betterLinksHooks.applyFilters('isActivePro', false) && (
-												<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
-													<div className="link-options-info">
-														<ul>
-															<li>
-																<label>
-																	{__('Redirection Type:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-															</li>
-															<li>
-																<label>
-																	{__('Target URL 1:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-																<input type="text" value="example-1.com" disabled />
-															</li>
-															<li>
-																<label>
-																	{__('Target URL 2:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-																<input type="text" value="example-2.com" disabled />
-															</li>
-															<li>
-																<label>
-																	{__('Split Test:', 'betterlinks')}
-																	<span className="pro-badge">Pro</span>
-																</label>
-																<input id="splittest" type="checkbox" disabled />
-															</li>
-														</ul>
-													</div>
-												</div>
-											)}
-											{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
-										</div>
-									</div>
-									{!betterLinksHooks.applyFilters('isActivePro', false) && (
-										<div>
-											<div className={`link-options link-options--auto-link-keywords`}>
-												<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
-													<h4 className="link-options__head--title">
-														{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-													</h4>
+
+									{!betterlinksGutenStore && (
+										<>
+											<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
+												<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
+													<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+													<i className="btl btl-angle-arrow-down"></i>
 												</button>
+												<div className="link-options__body">
+													{!is_pro_enabled && (
+														<div className="link-options--teasers">
+															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																<label className="btl-modal-form-label" htmlFor="status">
+																	{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																</label>
+																<select id="status" disabled>
+																	<option value="publish">{__('Active', 'betterlinks')}</option>
+																	<option value="expired">{__('Expired', 'betterlinks')}</option>
+																	<option value="draft">{__('Draft', 'betterlinks')}</option>
+																</select>
+															</div>
+															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																<label className="btl-modal-form-label" htmlFor="expire">
+																	{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																</label>
+																<input id="expire" type="checkbox" disabled />
+															</div>
+														</div>
+													)}
+													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
+												</div>
 											</div>
-										</div>
+											<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
+												<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
+													<h4 className="link-options__head--title">
+														{__('Dynamic Redirects', 'betterlinks')}{' '}
+														{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
+															<span className="status">{__('ON', 'betterlinks')}</span>
+														) : (
+															''
+														)}
+													</h4>{' '}
+													<i className="btl btl-angle-arrow-down"></i>
+												</button>
+												<div className="link-options__body">
+													{!is_pro_enabled && (
+														<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
+															<div className="link-options-info">
+																<ul>
+																	<li>
+																		<label>
+																			{__('Redirection Type:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																	</li>
+																	<li>
+																		<label>
+																			{__('Target URL 1:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																		<input type="text" value="example-1.com" disabled />
+																	</li>
+																	<li>
+																		<label>
+																			{__('Target URL 2:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																		<input type="text" value="example-2.com" disabled />
+																	</li>
+																	<li>
+																		<label>
+																			{__('Split Test:', 'betterlinks')}
+																			<span className="pro-badge">Pro</span>
+																		</label>
+																		<input id="splittest" type="checkbox" disabled />
+																	</li>
+																</ul>
+															</div>
+														</div>
+													)}
+													{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
+												</div>
+											</div>
+											{!is_pro_enabled && (
+												<div>
+													<div className={`link-options link-options--auto-link-keywords`}>
+														<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
+															<h4 className="link-options__head--title">
+																{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+															</h4>
+														</button>
+													</div>
+												</div>
+											)}
+										</>
 									)}
 								</div>
 							</div>
@@ -505,7 +606,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
+		//👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
+		fetch_terms_data: bindActionCreators(fetch_terms_action_function, dispatch),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);

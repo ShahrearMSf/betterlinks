@@ -568,7 +568,4 @@ const CustomSidebarComponent = () => {
 	);
 };
 
-registerPlugin('betterlinks-sidebar', {
-	render: CustomSidebarComponent,
-	icon: '',
-});
+export default CustomSidebarComponent;

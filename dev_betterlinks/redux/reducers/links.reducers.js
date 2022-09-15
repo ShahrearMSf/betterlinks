@@ -1,19 +1,47 @@
-import { FETCH_INITIAL_DATA, DRAG_AND_DROP, ADD_NEW_CAT, UPDATE_CAT, DELETE_CAT, ADD_NEW_LINK, EDIT_LINK, DELETE_LINK, HANDLE_LINK_FAVORITE } from 'redux/actions/links.actions';
+import {
+	FETCH_WITHOUT_CATEGORY_INITIAL_DATA,
+	FETCH_INITIAL_DATA,
+	DRAG_AND_DROP,
+	ADD_NEW_CAT,
+	UPDATE_CAT,
+	DELETE_CAT,
+	ADD_NEW_LINK,
+	ADD_NEW_LINK_FOR_GUTEN_STORE,
+	EDIT_LINK,
+	EDIT_LINK_FORGUTENBERG,
+	DELETE_LINK,
+	HANDLE_LINK_FAVORITE,
+} from 'redux/actions/links.actions';
 import { move, reorder } from 'utils/helper';
 function links(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_INITIAL_DATA: {
-			const cats = Object.values(payload.data || {});
-			for (const catItem of cats) {
-				const linksInCat = catItem.lists || [];
-				for (const link of linksInCat) {
-					link.favorite = JSON.parse(link.favorite || '{}');
+			const data = payload.data;
+			const newLinksData = {};
+			for (const key in data) {
+				const newLinksListsArr = [];
+				for (const item of data[key]?.lists || []) {
+					newLinksListsArr.push({ ...item, favorite: JSON.parse(item.favorite || '{}') });
 				}
+				newLinksData[key] = {
+					...data[key],
+					lists: newLinksListsArr,
+				};
 			}
+			delete payload.data;
 			return {
 				...state,
-				links: payload.data,
+				links: newLinksData,
+			};
+		}
+		case FETCH_WITHOUT_CATEGORY_INITIAL_DATA: {
+			return {
+				...state,
+				links: Object.values(payload?.data || [])
+					.reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
+					.filter((item) => item.ID && item.short_url)
+					.map((item) => ({ ...item, short_url: (item.short_url || '').replace(/\/+$/, '').replace(/^\/+/, '') })),
 			};
 		}
 		case DRAG_AND_DROP:
@@ -129,6 +157,15 @@ function links(state = {}, action) {
 					},
 				},
 			};
+		case ADD_NEW_LINK_FOR_GUTEN_STORE: {
+			//👇 trimmed off any forward slashes in the short url
+			const newData = { ...payload.data, short_url: payload.data.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
+
+			return {
+				...state,
+				links: [...state.links, newData],
+			};
+		}
 		case EDIT_LINK: {
 			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
 				const linksAtPayloadCat = state.links[payload.cat_id].lists;
@@ -187,6 +224,19 @@ function links(state = {}, action) {
 				},
 			};
 		}
+
+		case EDIT_LINK_FORGUTENBERG: {
+			const allLinks = state.links;
+			const itemIndexInLinks = allLinks.findIndex((item) => item.ID == payload.ID);
+			const newData = { ...payload, short_url: payload.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
+			const newLinks = [...allLinks.slice(0, itemIndexInLinks), newData, ...allLinks.slice(itemIndexInLinks + 1)];
+
+			return {
+				...state,
+				links: newLinks,
+			};
+		}
+
 		case HANDLE_LINK_FAVORITE: {
 			const newLinks = {};
 			for (const [key, value] of Object.entries(state.links || {})) {
