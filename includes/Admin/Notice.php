@@ -127,7 +127,7 @@ public function usage_tracker()
             'html' => sprintf(
                 '<p>%1$s</p>',
                 sprintf(
-                    __('🥳 10,000+ Users Milestone Unlocked! Get <strong>%1$s</strong> access for unlimited sites at <strong>$199</strong> only <strong><a href="%2$s" target="_blank">%3$s</a></strong>.', 'betterlinks'),
+                    __('🥳 10,000+ Users Milestone Unlocked! Get <strong>%1$s</strong> access for unlimited sites at <strong>$199</strong> only. <strong><a class="button button-small button-primary" href="%2$s" target="_blank">%3$s</a></strong>', 'betterlinks'),
                     __('LIFETIME', 'betterlinks'),
                     esc_url('https://betterlinks.io/#pricing'),
                     __('Grab The Deal', 'betterlinks')
@@ -141,8 +141,10 @@ public function usage_tracker()
             [
                 'classes'     => 'updated put-dismiss-notice',
                 'start'       => $notices->time(),
-                'expire'      => strtotime('11:59:59pm 26th September, 2022'),
+				'recurrence'  => 7,
+                'expire'      => strtotime('11:59:59pm 20th October, 2022'),
                 'dismissible' => true,
+				'display_if'  => ! is_array( $notices->is_installed( 'betterlinks-pro/betterlinks-pro.php' ) )
             ]
         );
 
