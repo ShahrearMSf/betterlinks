@@ -122,13 +122,13 @@ public function usage_tracker()
             ]
         );
 
+
         $lifetime_notice = [
             'thumbnail' => self::ASSET_URL . 'images/logo-large.svg',
             'html' => sprintf(
                 '<p>%1$s</p>',
                 sprintf(
-                    __('🥳 10,000+ Users Milestone Unlocked! Get <strong>%1$s</strong> access for unlimited sites at <strong>$199</strong> only. <strong><a class="button button-small button-primary" href="%2$s" target="_blank">%3$s</a></strong>', 'betterlinks'),
-                    __('LIFETIME', 'betterlinks'),
+                    __('BetterLinks Reached 10,000+ Users! 🎉 As a gratitude towards all of you, we are offering <strong>HUGE</strong> discounts on <strong>LIFETIME</strong> plan, starting now at <strong>$199</strong>! <strong><a class="button button-small button-primary" href="%1$s" target="_blank">%2$s</a></strong>', 'betterlinks'),
                     esc_url('https://betterlinks.io/#pricing'),
                     __('Grab The Deal', 'betterlinks')
                 )
