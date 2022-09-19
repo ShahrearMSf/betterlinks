@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
 {
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'PriyoMukul\\WPNotice\\' => 20,
+        ),
         'J' => 
         array (
             'Jaybizzle\\CrawlerDetect\\' => 24,
@@ -18,6 +22,10 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
     );
 
     public static $prefixDirsPsr4 = array (
+        'PriyoMukul\\WPNotice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/priyomukul/wp-notice/src',
+        ),
         'Jaybizzle\\CrawlerDetect\\' => 
         array (
             0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
