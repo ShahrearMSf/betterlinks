@@ -1,11 +1,11 @@
 === BetterLinks - Shorten, Track and Manage any URL ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, tusharimran, sapanmozammel, priyomukul
+Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hztyfoon
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, shortlinks, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
 Requires at least: 5.0
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -135,6 +135,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.5.0 - 20/09/2022 =
+
+- Added: Option to Add/Manage Links inside Gutenberg Editor
+- Few minor bug fixes & improvements
 
 = 1.4.1 - 03/08/2022 =
 
