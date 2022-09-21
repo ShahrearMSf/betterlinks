@@ -8,7 +8,7 @@ class Admin
         $this->add_menu();
         $this->add_scripts();
         $this->dispath_action();
-        $this->usage_tracker();
+        // $this->usage_tracker();
     }
     public function add_menu()
     {
@@ -36,19 +36,6 @@ class Admin
             return true;
         }
         return false;
-    }
-    public function usage_tracker()
-    {
-        $tracker = Admin\WPDev\PluginUsageTracker::get_instance(BETTERLINKS_PLUGIN_FILE, [
-            'opt_in'       => true,
-            'goodbye_form' => true,
-            'item_id'      => '720bbe6537bffcb73f37',
-        ]);
-        $tracker->set_notice_options(array(
-            'notice'       => __('Want to help make <strong>BetterLinks</strong> even more awesome? Be the first to get access to <strong>BetterLinks PRO</strong> with a huge <strong>50% Early Bird Discount</strong> if you allow us to track the non-sensitive usage data.', 'betterlinks'),
-            'extra_notice' => __('We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise.', 'betterlinks'),
-        ));
-        $tracker->init();
     }
     public function insert_plugin_links($links)
     {

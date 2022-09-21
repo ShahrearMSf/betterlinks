@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e182c3514f65999b98e2691323444f0",
+    "content-hash": "8205aadc81f8a5b2aba4fc67df07db7a",
     "packages": [
         {
             "name": "a5hleyrich/wp-background-processing",
@@ -51,16 +51,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.106",
+            "version": "v1.2.111",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "78bf6792cbf9c569dc0bf2465481978fd2ed0de9"
+                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/78bf6792cbf9c569dc0bf2465481978fd2ed0de9",
-                "reference": "78bf6792cbf9c569dc0bf2465481978fd2ed0de9",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
+                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
                 "shasum": ""
             },
             "require": {
@@ -97,18 +97,53 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.106"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.111"
             },
-            "time": "2021-05-24T20:30:32+00:00"
+            "time": "2022-03-15T22:19:01+00:00"
+        },
+        {
+            "name": "priyomukul/wp-notice",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:priyomukul/wp-notice.git",
+                "reference": "832119aa1f4ddc32375ea88168fc84c2e58e9c29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/priyomukul/wp-notice/zipball/832119aa1f4ddc32375ea88168fc84c2e58e9c29",
+                "reference": "832119aa1f4ddc32375ea88168fc84c2e58e9c29",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PriyoMukul\\WPNotice\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Priyo Mukul",
+                    "email": "17237437+priyomukul@users.noreply.github.com"
+                }
+            ],
+            "support": {
+                "source": "https://github.com/priyomukul/wp-notice/tree/main",
+                "issues": "https://github.com/priyomukul/wp-notice/issues"
+            },
+            "time": "2022-08-01T07:22:57+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "priyomukul/wp-notice": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

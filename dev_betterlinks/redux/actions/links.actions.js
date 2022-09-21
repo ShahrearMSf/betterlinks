@@ -194,8 +194,9 @@ export const add_new_link =
 					});
 				}
 			}
+			return res;
 		} catch (e) {
-			makeRequest({
+			return makeRequest({
 				action: 'betterlinks/admin/create_link',
 				...formData,
 			}).then((res) => {
@@ -253,8 +254,9 @@ export const edit_link =
 				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 				payload: item,
 			});
+			return res;
 		} catch (e) {
-			makeRequest({
+			return makeRequest({
 				action: 'betterlinks/admin/update_link',
 				...item,
 			}).then((response) => {

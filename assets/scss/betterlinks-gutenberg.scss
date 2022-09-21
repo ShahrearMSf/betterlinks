@@ -188,12 +188,9 @@ body.betterlinks-formatting-enabled {
 		}
 
 		button.betterlinks-format-remove-link {
-			margin-left: 10px;
-
 			span.dashicons-editor-unlink {
 				font-size: 18px;
-				display: block;
-				align-items: center;
+				margin-bottom: -3px;
 			}
 		}
 	}
@@ -202,8 +199,9 @@ body.betterlinks-formatting-enabled {
 .betterlinks-invalid-link-popover {
 	.betterlinks_format_invalid_link_warning {
 		width: 300px;
-		color: red;
+		color: #333;
 		padding: 5px 10px;
+		font-weight: 700;
 		& button {
 			padding: 5px 10px;
 			margin-left: 10px;
@@ -213,6 +211,7 @@ body.betterlinks-formatting-enabled {
 			border-radius: 3px;
 			font-size: 15px;
 			cursor: pointer;
+			font-weight: 400;
 			&:hover {
 				background: #006ba1;
 			}
@@ -330,7 +329,9 @@ a.betterlinks-linked-text {
 		display: inline-block;
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
-		vertical-align: sub;
+		// vertical-align: sub;
+		vertical-align: middle;
+		line-height: 1;
 	}
 }
 
@@ -404,6 +405,21 @@ body.betterlinks-loading-spinner-mounted {
 			animation: spin 1s linear infinite;
 		}
 	}
+
+	.betterlinks-top-loader-wrap {
+		position: fixed;
+		top: 0 !important;
+		left: 0 !important;
+		z-index: 999999 !important;
+		height: 100vh !important;
+		width: 100vw !important;
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	.ReactModalPortal,
+	.ReactModalPortal * {
+		z-index: 0 !important;
+	}
 }
 
 .betterlinks-loader-sidebar-wrapper {
@@ -470,15 +486,31 @@ body.betterlinks-guten-instant-redirect-has-link .betterlinks-instant-gutenberg-
 	display: block;
 }
 
-.betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added > button:hover {
-	background: #ddd;
-}
-
 .betterlinks-link-deleted-after-applying-format h5.no-link-warning-after-added {
+	color: #333;
+	font-weight: 700;
 	font-size: 12px;
 	width: 400px;
-	color: red;
 	padding: 0 20px;
+
+	& > button {
+		padding: 5px 10px;
+		border: 1px solid #007cba;
+		background: #007cba;
+		color: #fff;
+		border-radius: 3px;
+		font-size: 15px;
+		cursor: pointer;
+		font-weight: 400;
+		margin-top: 5px;
+		margin-left: 5px;
+		&:hover {
+			background: #006ba1;
+		}
+		&:focus {
+			box-shadow: none;
+		}
+	}
 }
 // gutenberg richtext 'betterlinks format' css -> end
 //

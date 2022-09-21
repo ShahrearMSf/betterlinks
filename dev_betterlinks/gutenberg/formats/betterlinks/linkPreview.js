@@ -69,8 +69,8 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 					}}
 					ref={btnRef}
 				>
-					<i className="btl btl-edit"></i>
-					<span className="btl-tooltiptext">Edit In BetterLinks</span>
+					<span class="dashicons dashicons-admin-generic"></span>
+					<span className="btl-tooltiptext">Edit Link</span>
 				</button>
 
 				<button
@@ -89,14 +89,14 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 			{islinkNotFound && (
 				<Popover position="left" focusOnMount={false} className="betterlinks-link-deleted-after-applying-format">
 					<h5 className="no-link-warning-after-added">
-						Error!! Link not found. You probably 'changed the short url' or 'deleted this link' from your betterlinks. to apply a new link: <br />
+						Whoops! seems like the shortened URL has been changed or removed.
 						<button
 							onClick={() => {
 								handleChangeLink();
 								setIslinkNotFound(false);
 							}}
 						>
-							click here
+							Change Link
 						</button>
 					</h5>
 				</Popover>

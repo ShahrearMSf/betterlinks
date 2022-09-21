@@ -399,7 +399,6 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 	return result;
 };
 
-//
 
 export const permalinkToShortUrl = (permalink) => {
 	if (!permalink) return permalink;
@@ -432,3 +431,24 @@ export const getLinkDataFromSettings = ({ settings, currentPost, short_url }) =>
 	}
 	return params;
 };
+
+
+export const add_top_loader = (document) => {
+	document?.body?.classList?.add('betterlinks-loading-spinner-mounted');
+	const loader = document?.createElement('div');
+	loader.classList.add('betterlinks-top-loader-wrap');
+	loader.innerHTML = `
+		<div class="betterlinks-submitted-link-for-gutenberg">
+			<div class="betterlinks-round-loader"></div>
+		</div>
+	`;
+	document?.body?.prepend(loader);
+};
+export const remove_top_loader = (document) => {
+	document?.body?.classList?.remove('betterlinks-loading-spinner-mounted');
+	document?.querySelectorAll('.betterlinks-top-loader-wrap')?.forEach((item) => {
+		item?.remove();
+	});
+};
+
+

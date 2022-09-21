@@ -11,7 +11,19 @@ import { bindActionCreators } from 'redux';
 //👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
 import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/terms.actions';
 
-import { modalCustomStyles, modalCustomSmallStyles, betterlinks_nonce, site_url, generateSlug, generateShortURL, formatDate, plugin_root_url, is_pro_enabled } from 'utils/helper';
+import {
+	modalCustomStyles,
+	modalCustomSmallStyles,
+	betterlinks_nonce,
+	site_url,
+	generateSlug,
+	generateShortURL,
+	formatDate,
+	plugin_root_url,
+	is_pro_enabled,
+	add_top_loader,
+	remove_top_loader,
+} from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
 import Tags from 'components/Terms/Tags';
@@ -78,8 +90,9 @@ export const Link = (props) => {
 			}
 		};
 	}, [betterlinksGutenStore]);
-	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation start
+	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation end
 
+	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
 	const objForGutenTargetBlank = betterlinksGutenStore
 		? {
 				openInNewTab: linkNewTab,
@@ -177,13 +190,6 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
-		console.log('----Link component onSubmit values---', { values });
-		//👇 this following 'if statement' is only for this 'Link' component's gutenberg implementation
-		if (betterlinksGutenStore) {
-			setShowLinkModal(false);
-			setIsSubmittingForGutenberg(true);
-		}
-
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID).then((isDuplicate) => {
@@ -201,10 +207,20 @@ export const Link = (props) => {
 					const link_title = values.link_title.trim();
 					if (link_title) {
 						values.link_title = link_title;
-						submitHandler(values);
 						// 👇 the 'if statement' is to fix memory leak warning 'Can't perform a React state update on an unmounted component' when using this <Link /> component for gutenberg format
 						if (!betterlinksGutenStore) {
+							submitHandler(values);
 							setModalIsOpen(false);
+						} else {
+							submitHandler(values)
+								.then((response) => {
+									if (response?.data) {
+										setShowLinkModal(false);
+									}
+									remove_top_loader(document);
+								})
+								.catch((error) => console.log('---error (submitHandler)--', { error }));
+							add_top_loader(document);
 						}
 					}
 				}

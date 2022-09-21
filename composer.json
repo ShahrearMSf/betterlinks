@@ -6,9 +6,16 @@
 			"name": "wpdevteam"
 		}
 	],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/priyomukul/wp-notice"
+		}
+	],
 	"require": {
 		"a5hleyrich/wp-background-processing": "^1.0",
-		"jaybizzle/crawler-detect": "^1.2"
+		"jaybizzle/crawler-detect": "^1.2",
+		"priyomukul/wp-notice": "dev-main"
 	},
 	"autoload": {
 		"psr-4": {
