@@ -188,6 +188,10 @@ function links(state = {}, action) {
 							const linksOnTheOldCat = state.links[property].lists;
 							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
 							if (indexInOldCatList !== -1) {
+								setTimeout(() => {
+									// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
+									reorder([payload, ...linksAtPayloadCat], 0, 0);
+								}, 0);
 								return {
 									...state,
 									links: {
@@ -198,8 +202,7 @@ function links(state = {}, action) {
 										},
 										[payload.cat_id]: {
 											...state.links[payload.cat_id],
-											// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
-											lists: reorder([payload, ...linksAtPayloadCat], 0, 0),
+											lists: [payload, ...linksAtPayloadCat],
 										},
 									},
 								};
