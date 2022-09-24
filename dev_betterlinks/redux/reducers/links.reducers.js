@@ -137,6 +137,10 @@ function links(state = {}, action) {
 			};
 		case ADD_NEW_LINK:
 			if (state.links[payload.data.cat_id] && state.links[payload.data.cat_id].lists) {
+				setTimeout(() => {
+					// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
+					reorder([payload.data, ...state.links[payload.data.cat_id].lists], 0, 0);
+				}, 0);
 				return {
 					...state,
 					links: {
