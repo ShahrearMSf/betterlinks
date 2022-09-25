@@ -23,9 +23,14 @@ export const API = axios.create({
 	},
 });
 export const reorder = (list, startIndex, endIndex) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
+	let result = [];
+	if (startIndex == endIndex) {
+		result = list;
+	} else {
+		result = Array.from(list);
+		const [removed] = result.splice(startIndex, 1);
+		result.splice(endIndex, 0, removed);
+	}
 
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/links_reorder');
@@ -399,7 +404,6 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 	return result;
 };
 
-
 export const permalinkToShortUrl = (permalink) => {
 	if (!permalink) return permalink;
 	const short_url = permalink.replace(site_url + '/', '');
@@ -432,7 +436,6 @@ export const getLinkDataFromSettings = ({ settings, currentPost, short_url }) =>
 	return params;
 };
 
-
 export const add_top_loader = (document) => {
 	document?.body?.classList?.add('betterlinks-loading-spinner-mounted');
 	const loader = document?.createElement('div');
@@ -450,5 +453,3 @@ export const remove_top_loader = (document) => {
 		item?.remove();
 	});
 };
-
-
