@@ -198,6 +198,10 @@ trait Query
                 }
             }
         }
+        if (defined('BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME') && BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME) {
+            $analytic_data = get_option(BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME, []);
+            $formattedArray = array_merge($analytic_data, $formattedArray);
+        }
         return $formattedArray;
     }
 
