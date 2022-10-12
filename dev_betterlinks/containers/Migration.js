@@ -7,7 +7,7 @@ import { betterlinks_nonce, route_path, plugin_root_url, modalCustomStyles } fro
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
-	const [migrationSubmitText, setMigrationSubmitText] = useState('Migrate Now');
+	const [migrationSubmitText, setMigrationSubmitText] = useState('Run Migration');
 	const [modalIsOpen, setIsOpen] = useState(true);
 	const [dataIsFetch, setDataIsFetch] = useState(false);
 	const [prettyLinksRes, setPrettyLinksRes] = useState({});
