@@ -63,10 +63,10 @@ class Ajax
         if (!current_user_can('manage_options')) {
             wp_die();
         }
-        $links = \BetterLinks\Helper::get_prettylinks_links();
-        $clicks = \BetterLinks\Helper::get_prettylinks_clicks();
-        set_transient('betterlinks_migration_data_prettylinks', ['links' => $links, 'clicks' => $clicks], 60 * 5);
-        wp_send_json_success(['links' => $links, 'clicks' => $clicks]);
+        $links_count = \BetterLinks\Helper::get_prettylinks_links();
+        $clicks_count = \BetterLinks\Helper::get_prettylinks_clicks();
+        set_transient('betterlinks_migration_data_prettylinks', ['links_count' => $links_count, 'clicks_count' => $clicks_count], 60 * 5);
+        wp_send_json_success(['links_count' => $links_count, 'clicks_count' => $clicks_count]);
         wp_die();
     }
 
