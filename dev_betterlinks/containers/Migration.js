@@ -88,6 +88,7 @@ const Migration = (props) => {
 		history.push(route_path + 'admin.php?page=betterlinks');
 		history.go(0);
 	}
+
 	return (
 		<React.Fragment>
 			<Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={false} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -112,23 +113,23 @@ const Migration = (props) => {
 												{__('Pick Data that You want to Import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
 											</h3>
 											<div className="btl-modal-migration__item">
-												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
+												{prettyLinksRes?.links_count > 0 && (
 													<>
 														<Field id="links" type="checkbox" name="checked" value="links" />
 														<label htmlFor="links">
 															{__('Links ', 'betterlinks')}
-															{`(${prettyLinksRes.links.length})`}
+															{`(${prettyLinksRes.links_count})`}
 														</label>
 													</>
 												)}
 											</div>
 											<div className="btl-modal-migration__item">
-												{prettyLinksRes.clicks && prettyLinksRes.clicks.length > 0 && (
+												{prettyLinksRes?.clicks_count > 0 && (
 													<>
 														<Field id="clicks" type="checkbox" name="checked" value="clicks" />
 														<label htmlFor="clicks">
 															{__('Clicks ', 'betterlinks')}
-															{`(${prettyLinksRes.clicks.length})`}
+															{`(${prettyLinksRes.clicks_count})`}
 														</label>
 													</>
 												)}
