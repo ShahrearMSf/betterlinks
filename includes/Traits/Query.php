@@ -586,8 +586,8 @@ trait Query
     public static function get_prettylinks_links()
     {
         global $wpdb;
-        $link = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_links");
-        return $link;
+        $links = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_links");
+        return $links;
     }
     public static function get_prettylinks_clicks()
     {
