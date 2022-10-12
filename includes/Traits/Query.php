@@ -586,19 +586,13 @@ trait Query
     public static function get_prettylinks_links()
     {
         global $wpdb;
-        $link = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_links",
-            ARRAY_A
-        );
+        $link = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_links");
         return $link;
     }
     public static function get_prettylinks_clicks()
     {
         global $wpdb;
-        $clicks = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_clicks",
-            ARRAY_A
-        );
+        $clicks = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks");
         return $clicks;
     }
 
