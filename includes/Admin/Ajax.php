@@ -67,7 +67,6 @@ class Ajax
         $clicks_count = \BetterLinks\Helper::get_prettylinks_clicks();
         set_transient('betterlinks_migration_data_prettylinks', ['links_count' => $links_count, 'clicks_count' => $clicks_count], 60 * 5);
         wp_send_json_success(['links_count' => $links_count, 'clicks_count' => $clicks_count]);
-        wp_die();
     }
 
     public function run_prettylinks_migration()
