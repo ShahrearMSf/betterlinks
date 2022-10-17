@@ -583,13 +583,13 @@ trait Query
         return $response;
     }
 
-    public static function get_prettylinks_links()
+    public static function get_prettylinks_links_count()
     {
         global $wpdb;
         $links = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_links");
         return $links;
     }
-    public static function get_prettylinks_clicks()
+    public static function get_prettylinks_clicks_count()
     {
         global $wpdb;
         $clicks = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks");
