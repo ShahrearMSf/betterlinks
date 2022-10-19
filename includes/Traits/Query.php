@@ -587,7 +587,7 @@ trait Query
     {
         global $wpdb;
         $links = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_links LIMIT 100 OFFSET {$x}",
+            "SELECT * FROM {$wpdb->prefix}prli_links LIMIT 10000 OFFSET {$x}",
             ARRAY_A
         );
         return $links;
@@ -596,7 +596,7 @@ trait Query
     {
         global $wpdb;
         $clicks = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_clicks LIMIT 100 OFFSET {$x}",
+            "SELECT * FROM {$wpdb->prefix}prli_clicks LIMIT 10000 OFFSET {$x}",
             ARRAY_A
         );
         return $clicks;

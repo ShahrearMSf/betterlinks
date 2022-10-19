@@ -41,7 +41,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             $this->recursively_import_links();
         }
     }
-    
+
     public function recursively_import_clicks()
     {
         $batch_pointer = absint($this->clicks_batch);
@@ -51,13 +51,13 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         //     $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}options WHERE option_name=%s", "btl_prettylink_migration_links_batch_pointer"),
         //     ARRAY_A
         // );
-        
+
         error_log("--recursively_import_clicks started running: \\". $this->clicks_batch . "\\ & count clicks: \\". $count_clicks ."\\ --result \\ " . json_encode($batch_pointer) . "\\--");
         if($count_clicks > 0 && $batch_pointer < 10000000){
             $this->process_clicks_data($clicks)->recursively_import_clicks();
         }
     }
-    
+
     public function process_links_data($data)
     {
         $author_id = get_current_user_id();
@@ -67,7 +67,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             if (empty($item['name']) || $item['name'] == 1) {
                 continue;
             }
-            
+
             $slug = \BetterLinks\Helper::make_slug($item['name']);
             $link = apply_filters('betterlinks/tools/migration/ptl_one_click_import_link_arg', [
                     'link_author' => $author_id,
@@ -128,6 +128,78 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             }
         }
         // error_log("--process_links_data ended running. \$this->links_batch: \\". $this->links_batch . "");
+    }
+
+    public function insert_clicks( $click_id ){
+        global $wpdb;
+        $item = $wpdb->get_row(
+            "SELECT * FROM {$wpdb->prefix}prli_clicks WHERE id = $click_id LIMIT 1",
+            ARRAY_A
+        );
+
+        if ( empty( $item ) || empty( $item['uri'] ) ) {
+            return true;
+        }
+
+        $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item['uri'], '/'));
+        if(count($link) == 0){
+            // error_log("--count(\$link) less than zeo 111: \\". count($link) . "\\");
+            $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
+        }
+        if (count($link) == 0){
+            // error_log("--count(\$link) less than zeo 222: \\". count($link) . "\\");
+            $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/') . "/");
+        }
+        if (count($link) == 0){
+            // error_log("--count(\$link) less than zeo 333: \\". count($link) . "\\");
+            $link = \BetterLinks\Helper::get_link_by_short_url("/" . \trim($item['uri'], '/'));
+        }
+        if (count($link) == 0){
+            // error_log("--count(\$link) less than zeo 333: \\". count($link) . "\\");
+            $link = \BetterLinks\Helper::get_link_by_short_url("/" . \trim($item['uri'], '/') . "/");
+        }
+
+        if (count($link) > 0) {
+            $click = [
+                'link_id' => $link[0]['ID'],
+                'ip' => $item['ip'],
+                'browser' => $item['browser'],
+                'os' => $item['os'],
+                'referer' => $item['referer'],
+                'host' => $item['host'],
+                'uri' => $item['uri'],
+                'click_count' => '',
+                'visitor_id' => $item['vuid'],
+                'click_order' => '',
+                'created_at' => $item['created_at'],
+                'created_at_gmt' => $item['created_at'],
+            ];
+            $is_insert = \BetterLinks\Helper::insert_click($click);
+            if ($is_insert) {
+                $curr_click_data = [
+                    "item" => $item,
+                    "timezone" => get_option("gmt_offset"),
+                    "time_hour_minutes" => date('H:i'),
+                ];
+                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data);
+                return true;
+            }else{
+                // error_log("--btl_failed_migration_prettylinks_clicks_not_inserted id: \\". $item["id"] . "\\");
+
+                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
+                array_push($failed_clicks, $item["id"]);
+                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", $failed_clicks);
+                return false;
+            }
+        }else{
+            // error_log("--btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri id: \\". $item["id"] . "\\");
+
+            $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri");
+            array_push($failed_clicks, $item["id"]);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", $failed_clicks);
+        }
+
+        return true;
     }
 
     public function process_clicks_data($clicks)
@@ -200,14 +272,14 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             }
         }
         $this->clicks_batch = $this->clicks_batch + count($clicks);
-        
+
         // $this->clicks_batch = $new_batch;
 
         // $result = $this->wpdb->get_results(
         //     $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}options WHERE option_name=%s", "btl_prettylink_migration_links_batch_pointer"),
         //     ARRAY_A
         // );
-        // if(!empty($result[0]["option_id"])){                
+        // if(!empty($result[0]["option_id"])){
         //     $result = $this->wpdb->query(
         //         $this->wpdb->prepare("UPDATE {$this->wpdb->prefix}options SET option_value=%s WHERE option_name=%s", json_encode($new_batch), "btl_prettylink_migration_links_batch_pointer")
         //     );
@@ -218,7 +290,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
 
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_links_batch_pointer", $this->clicks_batch);
         return $this;
-        
+
 
     }
     public function get_keywords($link_id)

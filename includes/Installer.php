@@ -7,7 +7,7 @@ class Installer extends \WP_Background_Process
     use Traits\DBMigrate;
     protected $wpdb;
     protected $charset_collate;
-    protected $action;
+    protected $action = 'betterlinks_background_task';
     public $activation;
     public $migration;
     public $db_version;
@@ -18,7 +18,6 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->action = 'betterlinks_background_task';
         $this->activation = ['create_db_tables', 'db_migration', 'insert_terms_data','create_json_files','save_settings','update_json_links'];
         $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
         $this->ptl_migration = ['prettylinks_background_migration'];
@@ -41,7 +40,7 @@ class Installer extends \WP_Background_Process
     {
         add_option($this->action, true);
     }
-    
+
     /**
      * Task
      *
@@ -64,6 +63,12 @@ class Installer extends \WP_Background_Process
                     trigger_error('BetterLinks background task triggered fatal error for callback ' . esc_html($item), E_USER_WARNING); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
                 }
             }
+        } elseif( is_numeric( $item ) ) {
+            //TODO: Flag for max given chances to insert for the same ID ( click ).
+            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
+            if( ! $migrator->insert_clicks( absint( $item ) ) ) {
+                return true;
+            }
         }
         return false;
     }
@@ -79,7 +84,7 @@ class Installer extends \WP_Background_Process
         parent::complete();
         // Show notice to user or perform some other arbitrary task...
     }
-    
+
     public function create_db_tables()
     {
         // error_log("--create_db_tables started running in background--");
@@ -179,7 +184,7 @@ class Installer extends \WP_Background_Process
         $Cron->write_json_links();
         // error_log("--update_json_links ended running in background--");
     }
-    
+
     public function db_migration()
     {
         // error_log("--db_migration started running in background--");
@@ -239,9 +244,9 @@ class Installer extends \WP_Background_Process
         }
         error_log("--prettylinks_background_migration method started running two--");
 
-        
+
         // $type = get_option("ptrl_migration_type");
-        
+
 
 
         // $type = "";

@@ -77,8 +77,8 @@ class Ajax
         }
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
         error_log("--run_prettylinks_migration started running. type: \\". $type . "\\ --");
-        
-        // 
+
+        //
         // 1111
 
         $result = \BetterLinks\Helper::btl_update_option("ptrl_migration_type", $type);
@@ -104,7 +104,7 @@ class Ajax
         //         )
         //     );
         //     // error_log("--empty ptrl_migration_type option_value \$result  \\" . json_encode($result) . " \\");
-        // }else{                    
+        // }else{
         //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $type], ["option_name" => "ptrl_migration_type"]);
         //     if($result !== false){
         //         $result = true;
@@ -112,9 +112,9 @@ class Ajax
         //     // error_log("--not empty ptrl_migration_type option_value \$result  \\" . json_encode($result) . " \\");
         // }
 
-        
 
-        // 
+
+        //
         // 2222
 
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_links_batch_pointer", 0);
@@ -139,7 +139,7 @@ class Ajax
         //         )
         //     );
         //     error_log("--empty btl_prettylink_migration_links_batch_pointer option_value \$result  \\" . json_encode($result) . " \\");
-        // }else{                    
+        // }else{
         //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => 0], ["option_name" => "btl_prettylink_migration_links_batch_pointer"]);
         //     if($result !== false){
         //         $result = true;
@@ -147,7 +147,7 @@ class Ajax
         //     error_log("--not empty btl_prettylink_migration_links_batch_pointer option_value \$result  \\" . json_encode($result) . " \\");
         // }
 
-        // 
+        //
         // 3333
 
 
@@ -172,7 +172,7 @@ class Ajax
         //         )
         //     );
         //     error_log("--empty should_btl_prettylink_migration_start_in_background option_value \$result  \\" . json_encode($result) . " \\");
-        // }else{                    
+        // }else{
         //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => json_encode(true)], ["option_name" => "should_btl_prettylink_migration_start_in_background"]);
         //     if($result !== false){
         //         $result = true;
@@ -186,10 +186,33 @@ class Ajax
         // }
 
         $installer = new \BetterLinks\Installer();
-        foreach ($installer->ptl_migration as $task) {
-            $installer->push_to_queue($task);
+
+        global $wpdb;
+
+        $total_clicks = $wpdb->get_var(
+            "SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks",
+        );
+
+
+        $per_page = 10000;
+        $total_page = ceil($total_clicks / $per_page);
+
+        for( $page = 1; $page <= $total_page; $page++ ){
+            $offset = ($page - 1) * $per_page;
+
+            $clicks = $wpdb->get_col(
+                "SELECT ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
+                0
+            );
+            $installer->data( $clicks )->save();
         }
-        $installer->save()->dispatch();
+
+        $installer->dispatch();
+
+        // foreach ($installer->ptl_migration as $task) {
+        //     $installer->push_to_queue($task)->save();
+        // }
+
         wp_send_json_success(["started_running_in_background" => true]);
     }
 
