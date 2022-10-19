@@ -444,4 +444,43 @@ class Helper
     {
         return site_url('/') . trim($short_url, '/');
     }
+
+    public static function btl_get_option($option_name)
+    {
+        global $wpdb;
+        $result = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+            ARRAY_A
+        );
+        $value = false;
+        if(!empty($result[0]["option_id"])){
+            $value = json_decode($result[0]["option_value"]);
+        }
+        return $value;
+    }
+    public static function btl_update_option($option_name, $option_value)
+    {
+        global $wpdb;
+        $option_value = json_encode($option_value);
+        $result = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+            ARRAY_A
+        );
+        if(empty($result[0]["option_id"])){
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
+                    array(
+                        $option_name, $option_value, "no"
+                    )
+                )
+            );
+        }else{                    
+            $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
+            if($result !== false){
+                $result = true;
+            }
+        }
+        return $result;
+    }
 }

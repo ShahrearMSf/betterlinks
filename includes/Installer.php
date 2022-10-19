@@ -21,6 +21,7 @@ class Installer extends \WP_Background_Process
         $this->action = 'betterlinks_background_task';
         $this->activation = ['create_db_tables', 'db_migration', 'insert_terms_data','create_json_files','save_settings','update_json_links'];
         $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
+        $this->ptl_migration = ['prettylinks_background_migration'];
         $this->db_version = get_option('betterlinks_db_version');
     }
 
@@ -81,6 +82,7 @@ class Installer extends \WP_Background_Process
     
     public function create_db_tables()
     {
+        // error_log("--create_db_tables started running in background--");
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $this->createBetterLinksTable();
         $this->createBetterTermsTable();
@@ -95,6 +97,7 @@ class Installer extends \WP_Background_Process
         if (!get_option('betterlinks_db_version')) {
             update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
         }
+        // error_log("--create_db_tables ended running in background--");
     }
 
     public function insert_terms_data()
@@ -171,12 +174,15 @@ class Installer extends \WP_Background_Process
 
     public function update_json_links()
     {
+        // error_log("--update_json_links started running in background--");
         $Cron = new Cron();
         $Cron->write_json_links();
+        // error_log("--update_json_links ended running in background--");
     }
     
     public function db_migration()
     {
+        // error_log("--db_migration started running in background--");
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         if ($this->db_version && $this->db_version != BETTERLINKS_DB_VERSION) {
             if (BETTERLINKS_DB_VERSION == '1.1') {
@@ -194,10 +200,68 @@ class Installer extends \WP_Background_Process
             }
         }
         update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        // error_log("--db_migration stopped running in background--");
     }
 
     public function clear_cache()
     {
+        // error_log("--clear_cache started running in background--");
         Helper::clear_query_cache();
+        // error_log("--clear_cache ended running in background--");
+    }
+
+    public function prettylinks_background_migration()
+    {
+        error_log("--prettylinks_background_migration method started running one--");
+        // global $wpdb;
+        // $result = $wpdb->get_results(
+        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "should_btl_prettylink_migration_start_in_background"),
+        //     ARRAY_A
+        // );
+        // if(!empty($result[0]["option_id"]) && json_decode($result[0]["option_value"])){
+        //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => json_encode(false)], ["option_name" => "should_btl_prettylink_migration_start_in_background"]);
+        //     if($result !== false){
+        //         $result = true;
+        //     }
+        //     error_log("--should_btl_prettylink_migration_start_in_background option_value is 'true' and now setted to 'false' \$result  \\" . json_encode($result) . " \\");
+        // }else{
+        //     error_log("--should_btl_prettylink_migration_start_in_background option_value is 'false'. Meaning, probably a duplicate background process of 'prettylinks_background_migration' is trying to start. So, returned 'false' to make sure the whole background process doesn't start again");
+        //     return false;
+        // }
+
+        $result = \BetterLinks\Helper::btl_get_option("should_btl_prettylink_migration_start_in_background");
+        if($result){
+            error_log("--should_btl_prettylink_migration_start_in_background option_value is 'true' and now setted to 'false' \$result  \\" . json_encode($result) . " \\");
+            \BetterLinks\Helper::btl_update_option("should_btl_prettylink_migration_start_in_background", false);
+        }else{
+            error_log("--should_btl_prettylink_migration_start_in_background option_value is 'false'. Meaning, probably a duplicate background process of 'prettylinks_background_migration' is trying to start. So, returned 'false' to make sure the whole background process doesn't start again");
+            return false;
+        }
+        error_log("--prettylinks_background_migration method started running two--");
+
+        
+        // $type = get_option("ptrl_migration_type");
+        
+
+
+        // $type = "";
+        // global $wpdb;
+        // $result = $wpdb->get_results(
+        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "ptrl_migration_type"),
+        //     ARRAY_A
+        // );
+        // if(!empty($result[0]["option_id"])){
+        //     $type = $result[0]["option_value"];
+        // }
+
+        $type = \BetterLinks\Helper::btl_get_option("ptrl_migration_type");
+        $type = explode(',', $type);
+
+        $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
+        $resutls = $migrator->run_importer($type);
+        do_action('betterlinks/admin/after_import_data');
+        \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
+        \BetterLinks\Helper::btl_update_option('btl_prettylinks_background_migration_completed', ["bg_process_finished" => true]);
+        error_log("--prettylinks_background_migration process completed--");
     }
 }
