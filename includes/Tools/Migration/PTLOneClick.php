@@ -168,9 +168,10 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                 \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data);
                 return true;
             }else{
-                // error_log("--btl_failed_migration_prettylinks_clicks_not_inserted id: \\". $item["id"] . "\\");
-
-                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
+                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted");
+                if(in_array($item["id"], $failed_clicks)){
+                    return true;
+                }
                 array_push($failed_clicks, $item["id"]);
                 \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", $failed_clicks);
                 return false;
@@ -193,7 +194,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             // skip csv header row
             if (!isset($item['uri'])) {
                 // error_log("--btl_failed_migration_prettylinks_clicks_uri_nai id: \\". $item["id"] . "\\");
-                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_uri_nai", []);
+                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_uri_nai");
                 array_push($failed_clicks, $item["id"]);
                 \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", $failed_clicks);
                 continue;
@@ -243,7 +244,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                 }else{
                     // error_log("--btl_failed_migration_prettylinks_clicks_not_inserted id: \\". $item["id"] . "\\");
 
-                    $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
+                    $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted");
                     array_push($failed_clicks, $item["id"]);
                     \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", $failed_clicks);
                 }
