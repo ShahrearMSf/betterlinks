@@ -78,44 +78,11 @@ class Ajax
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
         error_log("--run_prettylinks_migration started running. type: \\". $type . "\\ --");
 
-        //
-        // 1111
-
         $result = \BetterLinks\Helper::btl_update_option("ptrl_migration_type", $type);
         if(!$result){
             error_log("--ptrl_migration_type update hoy nai");
             return false;
         }
-
-        // global $wpdb;
-        // $result = $wpdb->get_results(
-        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "ptrl_migration_type"),
-        //     ARRAY_A
-        // );
-        // // error_log("--selecting ptrl_migration_type \$result  \\" . json_encode($result) . " \\");
-
-        // if(empty($result[0]["option_id"])){
-        //     $result = $wpdb->query(
-        //         $wpdb->prepare(
-        //             "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
-        //             array(
-        //                 "ptrl_migration_type", $type, "no"
-        //             )
-        //         )
-        //     );
-        //     // error_log("--empty ptrl_migration_type option_value \$result  \\" . json_encode($result) . " \\");
-        // }else{
-        //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $type], ["option_name" => "ptrl_migration_type"]);
-        //     if($result !== false){
-        //         $result = true;
-        //     }
-        //     // error_log("--not empty ptrl_migration_type option_value \$result  \\" . json_encode($result) . " \\");
-        // }
-
-
-
-        //
-        // 2222
 
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_links_batch_pointer", 0);
         \BetterLinks\Helper::btl_update_option("btl_should_run_clicks_migration_recursion", true);
@@ -123,96 +90,24 @@ class Ajax
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", []);
-
-        // $result = $wpdb->get_results(
-        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "btl_prettylink_migration_links_batch_pointer"),
-        //     ARRAY_A
-        // );
-        // error_log("--selecting btl_prettylink_migration_links_batch_pointer \$result  \\" . json_encode($result) . " \\");
-        // if(empty($result[0]["option_id"])){
-        //     $result = $wpdb->query(
-        //         $wpdb->prepare(
-        //             "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
-        //             array(
-        //                 "btl_prettylink_migration_links_batch_pointer", 0, "no"
-        //             )
-        //         )
-        //     );
-        //     error_log("--empty btl_prettylink_migration_links_batch_pointer option_value \$result  \\" . json_encode($result) . " \\");
-        // }else{
-        //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => 0], ["option_name" => "btl_prettylink_migration_links_batch_pointer"]);
-        //     if($result !== false){
-        //         $result = true;
-        //     }
-        //     error_log("--not empty btl_prettylink_migration_links_batch_pointer option_value \$result  \\" . json_encode($result) . " \\");
-        // }
-
-        //
-        // 3333
-
-
-        $result = \BetterLinks\Helper::btl_update_option("should_btl_prettylink_migration_start_in_background", true);
-        if(!$result){
-            error_log("--should_btl_prettylink_migration_start_in_background update hoy nai");
-            return false;
-        }
-
-        // $result = $wpdb->get_results(
-        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "should_btl_prettylink_migration_start_in_background"),
-        //     ARRAY_A
-        // );
-        // error_log("--selecting should_btl_prettylink_migration_start_in_background \$result  \\" . json_encode($result) . " \\");
-        // if(empty($result[0]["option_id"])){
-        //     $result = $wpdb->query(
-        //         $wpdb->prepare(
-        //             "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
-        //             array(
-        //                 "should_btl_prettylink_migration_start_in_background", json_encode(true), "no"
-        //             )
-        //         )
-        //     );
-        //     error_log("--empty should_btl_prettylink_migration_start_in_background option_value \$result  \\" . json_encode($result) . " \\");
-        // }else{
-        //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => json_encode(true)], ["option_name" => "should_btl_prettylink_migration_start_in_background"]);
-        //     if($result !== false){
-        //         $result = true;
-        //     }
-        //     error_log("--not empty should_btl_prettylink_migration_start_in_background option_value \$result  \\" . json_encode($result) . " \\");
-        // }
-
-        // if(!$result){
-        //     error_log("--should_btl_prettylink_migration_start_in_background update hoy nai");
-        //     return false;
-        // }
-
+        
+        \BetterLinks\Helper::btl_update_option("should_btl_prettylink_migration_start_in_background", true);
         $installer = new \BetterLinks\Installer();
-
         global $wpdb;
-
         $total_clicks = $wpdb->get_var(
             "SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks",
         );
-
-
         $per_page = 10000;
         $total_page = ceil($total_clicks / $per_page);
-
         for( $page = 1; $page <= $total_page; $page++ ){
             $offset = ($page - 1) * $per_page;
-
             $clicks = $wpdb->get_col(
                 "SELECT ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
                 0
             );
             $installer->data( $clicks )->save();
         }
-
         $installer->dispatch();
-
-        // foreach ($installer->ptl_migration as $task) {
-        //     $installer->push_to_queue($task)->save();
-        // }
-
         wp_send_json_success(["started_running_in_background" => true]);
     }
 
