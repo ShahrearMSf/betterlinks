@@ -55,7 +55,7 @@ class Installer extends \WP_Background_Process
      */
     protected function task($item)
     {
-        if (method_exists($this, $item)) {
+        if (! is_numeric( $item ) && method_exists($this, $item)) {
             try {
                 $this->$item();
             } catch (\Exception $e) {
