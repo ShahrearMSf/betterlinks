@@ -76,38 +76,15 @@ class Ajax
             wp_die();
         }
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
-        error_log("--run_prettylinks_migration started running. type: \\". $type . "\\ --");
-
-        $result = \BetterLinks\Helper::btl_update_option("ptrl_migration_type", $type);
-        if(!$result){
-            error_log("--ptrl_migration_type update hoy nai");
-            return false;
-        }
-
-        \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_links_batch_pointer", 0);
-        \BetterLinks\Helper::btl_update_option("btl_should_run_clicks_migration_recursion", true);
+        \BetterLinks\Helper::btl_update_option("ptrl_migration_type", $type);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", []);
-        
-        \BetterLinks\Helper::btl_update_option("should_btl_prettylink_migration_start_in_background", true);
-        $installer = new \BetterLinks\Installer();
-        global $wpdb;
-        $total_clicks = $wpdb->get_var(
-            "SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks",
-        );
-        $per_page = 10000;
-        $total_page = ceil($total_clicks / $per_page);
-        for( $page = 1; $page <= $total_page; $page++ ){
-            $offset = ($page - 1) * $per_page;
-            $clicks = $wpdb->get_col(
-                "SELECT ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
-                0
-            );
-            $installer->data( $clicks )->save();
-        }
-        $installer->dispatch();
+        \BetterLinks\Helper::btl_update_option("btl_should_prettylink_migration_start_in_background", true);
+
+        \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background();
+
         wp_send_json_success(["started_running_in_background" => true]);
     }
 

@@ -217,47 +217,13 @@ class Installer extends \WP_Background_Process
 
     public function prettylinks_background_migration()
     {
-        error_log("--prettylinks_background_migration method started running one--");
-        // global $wpdb;
-        // $result = $wpdb->get_results(
-        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "should_btl_prettylink_migration_start_in_background"),
-        //     ARRAY_A
-        // );
-        // if(!empty($result[0]["option_id"]) && json_decode($result[0]["option_value"])){
-        //     $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => json_encode(false)], ["option_name" => "should_btl_prettylink_migration_start_in_background"]);
-        //     if($result !== false){
-        //         $result = true;
-        //     }
-        //     error_log("--should_btl_prettylink_migration_start_in_background option_value is 'true' and now setted to 'false' \$result  \\" . json_encode($result) . " \\");
-        // }else{
-        //     error_log("--should_btl_prettylink_migration_start_in_background option_value is 'false'. Meaning, probably a duplicate background process of 'prettylinks_background_migration' is trying to start. So, returned 'false' to make sure the whole background process doesn't start again");
-        //     return false;
-        // }
 
-        $result = \BetterLinks\Helper::btl_get_option("should_btl_prettylink_migration_start_in_background");
+        $result = \BetterLinks\Helper::btl_get_option("btl_should_prettylink_migration_start_in_background");
         if($result){
-            error_log("--should_btl_prettylink_migration_start_in_background option_value is 'true' and now setted to 'false' \$result  \\" . json_encode($result) . " \\");
-            \BetterLinks\Helper::btl_update_option("should_btl_prettylink_migration_start_in_background", false);
+            \BetterLinks\Helper::btl_update_option("btl_should_prettylink_migration_start_in_background", false);
         }else{
-            error_log("--should_btl_prettylink_migration_start_in_background option_value is 'false'. Meaning, probably a duplicate background process of 'prettylinks_background_migration' is trying to start. So, returned 'false' to make sure the whole background process doesn't start again");
             return false;
         }
-        error_log("--prettylinks_background_migration method started running two--");
-
-
-        // $type = get_option("ptrl_migration_type");
-
-
-
-        // $type = "";
-        // global $wpdb;
-        // $result = $wpdb->get_results(
-        //     $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", "ptrl_migration_type"),
-        //     ARRAY_A
-        // );
-        // if(!empty($result[0]["option_id"])){
-        //     $type = $result[0]["option_value"];
-        // }
 
         $type = \BetterLinks\Helper::btl_get_option("ptrl_migration_type");
         $type = explode(',', $type);
@@ -267,6 +233,5 @@ class Installer extends \WP_Background_Process
         do_action('betterlinks/admin/after_import_data');
         \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
         \BetterLinks\Helper::btl_update_option('btl_prettylinks_background_migration_completed', ["bg_process_finished" => true]);
-        error_log("--prettylinks_background_migration process completed--");
     }
 }

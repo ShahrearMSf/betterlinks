@@ -483,4 +483,23 @@ class Helper
         }
         return $result;
     }
+    public static function run_migration_for_ptrl_clicks_in_background()
+    {
+        $installer = new \BetterLinks\Installer();
+        global $wpdb;
+        $total_clicks = $wpdb->get_var(
+            "SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks",
+        );
+        $per_page = 10000;
+        $total_page = ceil($total_clicks / $per_page);
+        for( $page = 1; $page <= $total_page; $page++ ){
+            $offset = ($page - 1) * $per_page;
+            $clicks = $wpdb->get_col(
+                "SELECT ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
+                0
+            );
+            $installer->data( $clicks )->save();
+        }
+        $installer->dispatch();
+    }
 }

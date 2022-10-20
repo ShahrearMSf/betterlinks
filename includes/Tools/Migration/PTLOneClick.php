@@ -61,7 +61,6 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
     public function process_links_data($data)
     {
         $author_id = get_current_user_id();
-        // error_log("--process_links_data started running. \$data: \\". $data . "");
         foreach ($data as $key => $item) {
             // skip csv header row
             if (empty($item['name']) || $item['name'] == 1) {
@@ -127,7 +126,6 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                 update_option("btl_migration_prettylinks_failed_links", $ptl_failed_links, false);
             }
         }
-        // error_log("--process_links_data ended running. \$this->links_batch: \\". $this->links_batch . "");
     }
 
     public function insert_clicks( $click_id ){
