@@ -84,7 +84,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                     'param_struct' => '',
                     'redirect_type' => isset($item['redirect_type']) ? $item['redirect_type'] : '',
                     'target_url' => isset($item['url']) ? $item['url'] : '',
-                    'short_url' => isset($item['slug']) ? rtrim($item['slug'], '/') : '',
+                    'short_url' => isset($item['slug']) ? trim($item['slug'], '/') : '',
                     'link_order' => 0,
                     'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
                     'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
@@ -141,23 +141,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             return true;
         }
 
-        $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item['uri'], '/'));
-        if(count($link) == 0){
-            // error_log("--count(\$link) less than zeo 111: \\". count($link) . "\\");
-            $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
-        }
-        if (count($link) == 0){
-            // error_log("--count(\$link) less than zeo 222: \\". count($link) . "\\");
-            $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/') . "/");
-        }
-        if (count($link) == 0){
-            // error_log("--count(\$link) less than zeo 333: \\". count($link) . "\\");
-            $link = \BetterLinks\Helper::get_link_by_short_url("/" . \trim($item['uri'], '/'));
-        }
-        if (count($link) == 0){
-            // error_log("--count(\$link) less than zeo 333: \\". count($link) . "\\");
-            $link = \BetterLinks\Helper::get_link_by_short_url("/" . \trim($item['uri'], '/') . "/");
-        }
+        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
 
         if (count($link) > 0) {
             $click = [
