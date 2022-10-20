@@ -200,23 +200,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                 continue;
             }
 
-            $link = \BetterLinks\Helper::get_link_by_short_url(\ltrim($item['uri'], '/'));
-            if(count($link) == 0){
-                // error_log("--count(\$link) less than zeo 111: \\". count($link) . "\\");
-                $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
-            }
-            if (count($link) == 0){
-                // error_log("--count(\$link) less than zeo 222: \\". count($link) . "\\");
-                $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/') . "/");
-            }
-            if (count($link) == 0){
-                // error_log("--count(\$link) less than zeo 333: \\". count($link) . "\\");
-                $link = \BetterLinks\Helper::get_link_by_short_url("/" . \trim($item['uri'], '/'));
-            }
-            if (count($link) == 0){
-                // error_log("--count(\$link) less than zeo 333: \\". count($link) . "\\");
-                $link = \BetterLinks\Helper::get_link_by_short_url("/" . \trim($item['uri'], '/') . "/");
-            }
+            $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
 
             if (count($link) > 0) {
                 $click = [
