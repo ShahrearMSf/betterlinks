@@ -64,7 +64,6 @@ class Installer extends \WP_Background_Process
                 }
             }
         } elseif( is_numeric( $item ) ) {
-            //TODO: Flag for max given chances to insert for the same ID ( click ).
             $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
             if( ! $migrator->insert_clicks( absint( $item ) ) ) {
                 return true;
