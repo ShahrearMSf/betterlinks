@@ -454,14 +454,14 @@ class Helper
         );
         $value = false;
         if(!empty($result[0]["option_id"])){
-            $value = json_decode($result[0]["option_value"]);
+            $value = maybe_unserialize($result[0]["option_value"]);
         }
         return $value;
     }
     public static function btl_update_option($option_name, $option_value)
     {
         global $wpdb;
-        $option_value = json_encode($option_value);
+        $option_value = maybe_serialize($option_value);
         $result = $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
             ARRAY_A
