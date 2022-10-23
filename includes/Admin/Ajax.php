@@ -75,7 +75,7 @@ class Ajax
         if (!current_user_can('manage_options')) {
             wp_die();
         }
-        $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
+        $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
 
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", []);
