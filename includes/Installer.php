@@ -68,6 +68,12 @@ class Installer extends \WP_Background_Process
             if( ! $migrator->insert_clicks( absint( $item ) ) ) {
                 return true;
             }
+        } elseif($item === "ptrl_clicks_migration_completed"){
+            // 'betterlinks/admin/after_import_data' hook's work done here
+            $Cron = new \BetterLinks\Cron();
+            $Cron->write_json_links();
+            $Cron->analytics();
+            \BetterLinks\Helper::clear_query_cache();
         }
         return false;
     }

@@ -497,6 +497,7 @@ class Helper
             );
             $installer->data( $clicks )->save();
         }
+        $installer->data( [ 'ptrl_clicks_migration_completed' ] )->save();
         $installer->dispatch();
     }
 }
