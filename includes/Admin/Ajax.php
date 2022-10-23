@@ -76,14 +76,18 @@ class Ajax
             wp_die();
         }
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
-        \BetterLinks\Helper::btl_update_option("ptrl_migration_type", $type);
+
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", []);
         \BetterLinks\Helper::btl_update_option("btl_should_prettylink_migration_start_in_background", true);
 
-        \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background();
+        $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
+        if( str_contains($type, "clicks") && !empty($total_links_clicks["clicks_count"]) ){
+            $clicks_count = absint($total_links_clicks["clicks_count"]);
+            \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($clicks_count);
+        }
 
         wp_send_json_success(["started_running_in_background" => true]);
     }
