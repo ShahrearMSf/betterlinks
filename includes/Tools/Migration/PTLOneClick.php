@@ -19,7 +19,6 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
 
     public function run_importer($type)
     {
-        error_log("--run_importer method started running--");
         foreach ($type as $item) {
             if ($item === 'links') {
                 $this->recursively_import_links();
@@ -33,7 +32,6 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
     {
         $links = \BetterLinks\Helper::get_prettylinks_links($this->links_batch);
         $count_links = is_array($links) ? count($links) : 0;
-        // error_log("--recursively_import_links started running: \\". $this->links_batch . "\\ & count links: \\". $count_links ."\\ --");
         if($count_links > 0){
             $this->process_links_data($links);
             $this->links_batch = $this->links_batch + $count_links;
@@ -47,12 +45,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         $batch_pointer = absint($this->clicks_batch);
         $clicks = \BetterLinks\Helper::get_prettylinks_clicks($batch_pointer);
         $count_clicks = is_array($clicks) ? count($clicks) : 0;
-        // $result = $this->wpdb->get_results(
-        //     $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}options WHERE option_name=%s", "btl_prettylink_migration_links_batch_pointer"),
-        //     ARRAY_A
-        // );
 
-        error_log("--recursively_import_clicks started running: \\". $this->clicks_batch . "\\ & count clicks: \\". $count_clicks ."\\ --result \\ " . json_encode($batch_pointer) . "\\--");
         if($count_clicks > 0 && $batch_pointer < 10000000){
             $this->process_clicks_data($clicks)->recursively_import_clicks();
         }
@@ -175,8 +168,6 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                 return false;
             }
         }else{
-            // error_log("--btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri id: \\". $item["id"] . "\\");
-
             $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri");
             array_push($failed_clicks, $item["id"]);
             \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", $failed_clicks);
@@ -187,11 +178,9 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
 
     public function process_clicks_data($clicks)
     {
-        // error_log("--process_clicks_data started running. \$clicks: \\");
         foreach ($clicks as $key => $item) {
             // skip csv header row
             if (!isset($item['uri'])) {
-                // error_log("--btl_failed_migration_prettylinks_clicks_uri_nai id: \\". $item["id"] . "\\");
                 $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_uri_nai");
                 array_push($failed_clicks, $item["id"]);
                 \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", $failed_clicks);
@@ -224,36 +213,17 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                     ];
                     \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data);
                 }else{
-                    // error_log("--btl_failed_migration_prettylinks_clicks_not_inserted id: \\". $item["id"] . "\\");
-
                     $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted");
                     array_push($failed_clicks, $item["id"]);
                     \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", $failed_clicks);
                 }
             }else{
-                // error_log("--btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri id: \\". $item["id"] . "\\");
-
                 $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri");
                 array_push($failed_clicks, $item["id"]);
                 \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", $failed_clicks);
             }
         }
         $this->clicks_batch = $this->clicks_batch + count($clicks);
-
-        // $this->clicks_batch = $new_batch;
-
-        // $result = $this->wpdb->get_results(
-        //     $this->wpdb->prepare("SELECT * FROM {$this->wpdb->prefix}options WHERE option_name=%s", "btl_prettylink_migration_links_batch_pointer"),
-        //     ARRAY_A
-        // );
-        // if(!empty($result[0]["option_id"])){
-        //     $result = $this->wpdb->query(
-        //         $this->wpdb->prepare("UPDATE {$this->wpdb->prefix}options SET option_value=%s WHERE option_name=%s", json_encode($new_batch), "btl_prettylink_migration_links_batch_pointer")
-        //     );
-        //     if($result !== false){
-        //         $result = true;
-        //     }
-        // }
 
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_links_batch_pointer", $this->clicks_batch);
         return $this;

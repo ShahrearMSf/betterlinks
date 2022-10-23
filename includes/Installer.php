@@ -87,7 +87,6 @@ class Installer extends \WP_Background_Process
 
     public function create_db_tables()
     {
-        // error_log("--create_db_tables started running in background--");
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $this->createBetterLinksTable();
         $this->createBetterTermsTable();
@@ -102,7 +101,6 @@ class Installer extends \WP_Background_Process
         if (!get_option('betterlinks_db_version')) {
             update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
         }
-        // error_log("--create_db_tables ended running in background--");
     }
 
     public function insert_terms_data()
@@ -179,15 +177,12 @@ class Installer extends \WP_Background_Process
 
     public function update_json_links()
     {
-        // error_log("--update_json_links started running in background--");
         $Cron = new Cron();
         $Cron->write_json_links();
-        // error_log("--update_json_links ended running in background--");
     }
 
     public function db_migration()
     {
-        // error_log("--db_migration started running in background--");
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         if ($this->db_version && $this->db_version != BETTERLINKS_DB_VERSION) {
             if (BETTERLINKS_DB_VERSION == '1.1') {
@@ -205,14 +200,11 @@ class Installer extends \WP_Background_Process
             }
         }
         update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
-        // error_log("--db_migration stopped running in background--");
     }
 
     public function clear_cache()
     {
-        // error_log("--clear_cache started running in background--");
         Helper::clear_query_cache();
-        // error_log("--clear_cache ended running in background--");
     }
 
     public function prettylinks_background_migration()
