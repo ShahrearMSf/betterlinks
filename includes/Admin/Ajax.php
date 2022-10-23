@@ -84,7 +84,9 @@ class Ajax
         \BetterLinks\Helper::btl_update_option("btl_should_prettylink_migration_start_in_background", true);
 
         $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
-        if( str_contains($type, "clicks") && !empty($total_links_clicks["clicks_count"]) ){
+        $should_migrate_clicks = !(strpos($type, "clicks") === false);
+
+        if( $should_migrate_clicks && !empty($total_links_clicks["clicks_count"]) ){
             $clicks_count = absint($total_links_clicks["clicks_count"]);
             \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($clicks_count);
         }
