@@ -483,6 +483,23 @@ class Helper
         }
         return $result;
     }
+    public static function run_migration_for_ptrl_links_in_background($links_count)
+    {
+        $installer = new \BetterLinks\Installer();
+        global $wpdb;
+        $per_page = 1000;
+        $total_page = ceil($links_count / $per_page);
+        for( $page = 1; $page <= $total_page; $page++ ){
+            $offset = ($page - 1) * $per_page;
+            $links = $wpdb->get_col(
+                "SELECT concat('prli_links-', ID) AS ID FROM {$wpdb->prefix}prli_links LIMIT $per_page OFFSET {$offset}",
+                0
+            );
+            $installer->data( $links )->save();
+        }
+        $installer->data( [ 'ptrl_links_migration_completed' ] )->save();
+        $installer->dispatch();
+    }
     public static function run_migration_for_ptrl_clicks_in_background($clicks_count)
     {
         $installer = new \BetterLinks\Installer();
@@ -499,9 +516,5 @@ class Helper
         }
         $installer->data( [ 'ptrl_clicks_migration_completed' ] )->save();
         $installer->dispatch();
-    }
-    public static function run_migration_for_ptrl_links_in_background($links_count)
-    {
-        // to do: codes for links migration
     }
 }
