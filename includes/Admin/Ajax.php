@@ -85,6 +85,7 @@ class Ajax
 
         $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
         $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
+        $should_migrate_links = !(strpos($type, "links") === false);
         $should_migrate_clicks = !(strpos($type, "clicks") === false);
 
         if( $should_migrate_clicks && !empty($total_links_clicks["clicks_count"]) ){
