@@ -89,6 +89,8 @@ const Migration = (props) => {
 		history.go(0);
 	}
 
+	console.log({ migrateRes });
+
 	return (
 		<React.Fragment>
 			<Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={false} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -190,15 +192,19 @@ const Migration = (props) => {
 					<div className="btl-modal-migration">
 						<div id="response">
 							<h3>
-								{__('Migration is Complete', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
+								{migrateRes.btl_prettylinks_migration_running_in_background
+									? __('Migration is running in the background', 'betterlinks')
+									: __('Migration is Complete', 'betterlinks')}{' '}
+								<img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
 							</h3>
-							{Object.entries(migrateRes).map(
-								([index, item]) =>
-									Object.entries(item).length > 0 &&
-									Object.entries(item).map(([chiildIndex, childItem]) => (
-										<div key={chiildIndex}>{Array.isArray(childItem) ? childItem.map((item, index) => <div key={index}>{item}</div>) : childItem}</div>
-									))
-							)}
+							{!migrateRes.btl_prettylinks_migration_running_in_background &&
+								Object.entries(migrateRes).map(
+									([index, item]) =>
+										Object.entries(item).length > 0 &&
+										Object.entries(item).map(([chiildIndex, childItem]) => (
+											<div key={chiildIndex}>{Array.isArray(childItem) ? childItem.map((item, index) => <div key={index}>{item}</div>) : childItem}</div>
+										))
+								)}
 						</div>
 						<p style={{ textAlign: 'left' }}>
 							<button className="button button-primary" type="button" onClick={closeModal}>
