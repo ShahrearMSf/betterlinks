@@ -91,6 +91,7 @@ class Ajax
             \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($clicks_count);
         }
 
+        \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
         wp_send_json_success(["started_running_in_background" => true]);
     }
 
