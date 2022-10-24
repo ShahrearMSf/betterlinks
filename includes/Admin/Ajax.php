@@ -88,16 +88,19 @@ class Ajax
         $should_migrate_links = !(strpos($type, "links") === false);
         $should_migrate_clicks = !(strpos($type, "clicks") === false);
 
+        $installer = new \BetterLinks\Installer();
         if( $should_migrate_links && !empty($total_links_clicks["links_count"]) ){
             $links_count = absint($total_links_clicks["links_count"]);
-            \BetterLinks\Helper::run_migration_for_ptrl_links_in_background($links_count);
+            $installer = \BetterLinks\Helper::run_migration_for_ptrl_links_in_background($installer, $links_count);
         }
 
         if( $should_migrate_clicks && !empty($total_links_clicks["clicks_count"]) ){
             $clicks_count = absint($total_links_clicks["clicks_count"]);
-            \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($clicks_count);
+            $installer = \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($installer, $clicks_count);
         }
 
+        $installer->data( [ 'ptrl_migration_completed' ] )->save();
+        $installer->dispatch();
         \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
         wp_send_json_success(["started_running_in_background" => true]);
     }

@@ -483,9 +483,8 @@ class Helper
         }
         return $result;
     }
-    public static function run_migration_for_ptrl_links_in_background($links_count)
+    public static function run_migration_for_ptrl_links_in_background($installer, $links_count)
     {
-        $installer = new \BetterLinks\Installer();
         global $wpdb;
         $per_page = 10000;
         $total_page = ceil($links_count / $per_page);
@@ -497,12 +496,10 @@ class Helper
             );
             $installer->data( $links )->save();
         }
-        $installer->data( [ 'ptrl_links_migration_completed' ] )->save();
-        $installer->dispatch();
+        return $installer;
     }
-    public static function run_migration_for_ptrl_clicks_in_background($clicks_count)
+    public static function run_migration_for_ptrl_clicks_in_background($installer, $clicks_count)
     {
-        $installer = new \BetterLinks\Installer();
         global $wpdb;
         $per_page = 10000;
         $total_page = ceil($clicks_count / $per_page);
@@ -514,7 +511,6 @@ class Helper
             );
             $installer->data( $clicks )->save();
         }
-        $installer->data( [ 'ptrl_clicks_migration_completed' ] )->save();
-        $installer->dispatch();
+        return $installer;
     }
 }
