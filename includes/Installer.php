@@ -68,9 +68,9 @@ class Installer extends \WP_Background_Process
             if( ! $migrator->insert_clicks( $item ) ) {
                 return true;
             }
-        } elseif($item === "ptrl_clicks_migration_completed"){
+        } elseif($item === "ptrl_clicks_migration_completed" || $item === "ptrl_links_migration_completed"){
             $this->after_migration_done();
-            Helper::btl_update_option('btl_prettylinks_clicks_background_migration_completed', ["bg_process_finished" => true]);
+            Helper::btl_update_option($item, ["bg_process_finished" => true]);
         }
         return false;
     }
