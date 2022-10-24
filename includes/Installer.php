@@ -65,13 +65,13 @@ class Installer extends \WP_Background_Process
         } elseif(!(strpos($item, "prli_clicks-") === false)) {
             $item = absint(substr($item, 12)); // getting the ID(number) by deleting 'prli_clicks-' (used 12 because the length of 'prli_clicks-' is 12)
             $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
-            if( ! $migrator->insert_clicks( $item ) ) {
+            if( ! $migrator->insert_click( $item ) ) {
                 return true;
             }
         } elseif(!(strpos($item, "prli_links-") === false)) {
             $item = absint(substr($item, 11)); // getting the ID(number) by deleting 'prli_links-' (used 11 because the length of 'prli_links-' is 11)
             $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
-            if( ! $migrator->insert_links( $item ) ) {
+            if( ! $migrator->insert_link( $item ) ) {
                 return true;
             }
         } elseif($item === "ptrl_migration_completed"){

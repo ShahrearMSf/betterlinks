@@ -121,7 +121,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         }
     }
 
-    public function insert_links( $link_id ){
+    public function insert_link( $link_id ){
         global $wpdb;
         $item = $wpdb->get_row(
             "SELECT * FROM {$wpdb->prefix}prli_links WHERE id = $link_id LIMIT 1",
@@ -199,7 +199,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         return true;
     }
 
-    public function insert_clicks( $click_id ){
+    public function insert_click( $click_id ){
         global $wpdb;
         $item = $wpdb->get_row(
             "SELECT * FROM {$wpdb->prefix}prli_clicks WHERE id = $click_id LIMIT 1",
