@@ -97,7 +97,7 @@ class PTLOneClick extends BaseCSV
 
         $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
         if(count($link) === 0){
-            $link = \BetterLinks\Helper::get_link_by_short_url(\trim(current(explode("?", $item["uri"]))));
+            $link = \BetterLinks\Helper::get_link_by_short_url(\trim(current(explode('?', $item['uri'])), '/'));
         }
 
         if (count($link) > 0) {
