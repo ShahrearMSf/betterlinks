@@ -102,7 +102,7 @@ class Ajax
         $installer->data( [ 'ptrl_migration_completed' ] )->save();
         $installer->dispatch();
         \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
-        wp_send_json_success(["started_running_in_background" => true]);
+        wp_send_json_success(["btl_prettylinks_migration_running_in_background" => true]);
     }
 
     public function migration_prettylinks_notice_hide()
