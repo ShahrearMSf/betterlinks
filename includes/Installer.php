@@ -69,11 +69,7 @@ class Installer extends \WP_Background_Process
                 return true;
             }
         } elseif($item === "ptrl_clicks_migration_completed"){
-            // 'betterlinks/admin/after_import_data' hook's work done here
-            $Cron = new \BetterLinks\Cron();
-            $Cron->write_json_links();
-            $Cron->analytics();
-            \BetterLinks\Helper::clear_query_cache();
+            $this->after_migration_done();
             \BetterLinks\Helper::btl_update_option('btl_prettylinks_clicks_background_migration_completed', ["bg_process_finished" => true]);
         }
         return false;
@@ -89,6 +85,14 @@ class Installer extends \WP_Background_Process
     {
         parent::complete();
         // Show notice to user or perform some other arbitrary task...
+    }
+
+    public function after_migration_done(){
+        // 'betterlinks/admin/after_import_data' hook's work done here
+        $Cron = new \BetterLinks\Cron();
+        $Cron->write_json_links();
+        $Cron->analytics();
+        \BetterLinks\Helper::clear_query_cache();
     }
 
     public function create_db_tables()
