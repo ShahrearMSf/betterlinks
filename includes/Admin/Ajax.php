@@ -75,18 +75,15 @@ class Ajax
         if (!current_user_can('manage_options')) {
             wp_die();
         }
-        $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
-
         if(\BetterLinks\Helper::btl_get_option("btl_prettylink_migration_should_not_start_in_background")){
             // preventing multiple migration call to prevent duplicate datas from migrating
             wp_send_json_error(["duplicate_migration_detected__so_prevented_it_here" => true]);
         }
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_should_not_start_in_background", true);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", []);
-        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", []);
-        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", []);
-        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", []);
+        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", []);
 
+        $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
         $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
         $should_migrate_clicks = !(strpos($type, "clicks") === false);
 

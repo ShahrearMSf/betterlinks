@@ -159,18 +159,18 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                 \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data);
                 return true;
             }else{
-                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted");
-                if(in_array($item["id"], $failed_clicks)){
+                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
+                if(in_array("not_inserted-" . $item["id"], $failed_clicks)){
                     return true;
                 }
-                array_push($failed_clicks, $item["id"]);
-                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", $failed_clicks);
+                array_push($failed_clicks, "not_inserted-" . $item["id"]);
+                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
                 return false;
             }
         }else{
-            $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri");
-            array_push($failed_clicks, $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", $failed_clicks);
+            $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
+            array_push($failed_clicks, "link_not_found-" . $item["id"]);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
         }
 
         return true;
@@ -181,9 +181,9 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         foreach ($clicks as $key => $item) {
             // skip csv header row
             if (!isset($item['uri'])) {
-                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_uri_nai");
+                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
                 array_push($failed_clicks, $item["id"]);
-                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_uri_nai", $failed_clicks);
+                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
                 continue;
             }
 
@@ -213,14 +213,14 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
                     ];
                     \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data);
                 }else{
-                    $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_not_inserted");
+                    $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
                     array_push($failed_clicks, $item["id"]);
-                    \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_not_inserted", $failed_clicks);
+                    \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
                 }
             }else{
-                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri");
+                $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
                 array_push($failed_clicks, $item["id"]);
-                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks_link_pay_nai_for_the_uri", $failed_clicks);
+                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
             }
         }
         $this->clicks_batch = $this->clicks_batch + count($clicks);
