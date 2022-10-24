@@ -133,6 +133,9 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         );
 
         if ( empty( $item['uri'] ) ) {
+            $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
+            array_push($failed_clicks, "uri_doesnot_exist-" . $item["id"]);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
             return true;
         }
 
