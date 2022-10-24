@@ -194,7 +194,7 @@ const Migration = (props) => {
 							<h3>
 								{migrateRes.btl_prettylinks_migration_running_in_background
 									? __('Migration is running in the background', 'betterlinks')
-									: __('Migration is Complete', 'betterlinks')}{' '}
+									: __('Migration is Complete', 'betterlinks')}
 								<img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
 							</h3>
 							{!migrateRes.btl_prettylinks_migration_running_in_background &&
