@@ -216,3 +216,4 @@ class Installer extends \WP_Background_Process
     {
         Helper::clear_query_cache();
     }
+}
