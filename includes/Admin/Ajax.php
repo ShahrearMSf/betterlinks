@@ -88,6 +88,10 @@ class Ajax
         $should_migrate_links = !(strpos($type, "links") === false);
         $should_migrate_clicks = !(strpos($type, "clicks") === false);
 
+        if( $should_migrate_links && !empty($total_links_clicks["links_count"]) ){
+            // to do links migration method
+        }
+
         if( $should_migrate_clicks && !empty($total_links_clicks["clicks_count"]) ){
             $clicks_count = absint($total_links_clicks["clicks_count"]);
             \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($clicks_count);
