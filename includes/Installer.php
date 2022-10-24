@@ -20,7 +20,6 @@ class Installer extends \WP_Background_Process
         $this->charset_collate = $wpdb->get_charset_collate();
         $this->activation = ['create_db_tables', 'db_migration', 'insert_terms_data','create_json_files','save_settings','update_json_links'];
         $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
-        $this->ptl_migration = ['prettylinks_background_migration'];
         $this->db_version = get_option('betterlinks_db_version');
     }
 
@@ -212,24 +211,3 @@ class Installer extends \WP_Background_Process
     {
         Helper::clear_query_cache();
     }
-
-    public function prettylinks_background_migration()
-    {
-
-        $result = \BetterLinks\Helper::btl_get_option("btl_should_prettylink_migration_start_in_background");
-        if($result){
-            \BetterLinks\Helper::btl_update_option("btl_should_prettylink_migration_start_in_background", false);
-        }else{
-            return false;
-        }
-
-        $type = \BetterLinks\Helper::btl_get_option("ptrl_migration_type");
-        $type = explode(',', $type);
-
-        $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
-        $resutls = $migrator->run_importer($type);
-        do_action('betterlinks/admin/after_import_data');
-        \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
-        \BetterLinks\Helper::btl_update_option('btl_prettylinks_background_migration_completed', ["bg_process_finished" => true]);
-    }
-}
