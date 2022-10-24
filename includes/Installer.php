@@ -74,6 +74,7 @@ class Installer extends \WP_Background_Process
             $Cron->write_json_links();
             $Cron->analytics();
             \BetterLinks\Helper::clear_query_cache();
+            \BetterLinks\Helper::btl_update_option('btl_prettylinks_clicks_background_migration_completed', ["bg_process_finished" => true]);
         }
         return false;
     }
