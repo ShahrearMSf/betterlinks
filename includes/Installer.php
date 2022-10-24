@@ -68,6 +68,12 @@ class Installer extends \WP_Background_Process
             if( ! $migrator->insert_clicks( $item ) ) {
                 return true;
             }
+        } elseif(!(strpos($item, "prli_links-") === false)) {
+            $item = absint(substr($item, 11)); // getting the ID(number) by deleting 'prli_links-' (used 11 because the length of 'prli_links-' is 11)
+            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
+            if( ! $migrator->insert_links( $item ) ) {
+                return true;
+            }
         } elseif($item === "ptrl_clicks_migration_completed" || $item === "ptrl_links_migration_completed"){
             $this->after_migration_done();
             Helper::btl_update_option($item, ["bg_process_finished" => true]);

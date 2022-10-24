@@ -121,6 +121,10 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
         }
     }
 
+    public function insert_links( $link_id ){
+        // to do: inserting link to betterlinks links db table
+    }
+
     public function insert_clicks( $click_id ){
         global $wpdb;
         $item = $wpdb->get_row(
