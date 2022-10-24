@@ -487,7 +487,7 @@ class Helper
     {
         $installer = new \BetterLinks\Installer();
         global $wpdb;
-        $per_page = 1000;
+        $per_page = 10000;
         $total_page = ceil($links_count / $per_page);
         for( $page = 1; $page <= $total_page; $page++ ){
             $offset = ($page - 1) * $per_page;
