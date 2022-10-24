@@ -492,7 +492,7 @@ class Helper
         for( $page = 1; $page <= $total_page; $page++ ){
             $offset = ($page - 1) * $per_page;
             $clicks = $wpdb->get_col(
-                "SELECT ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
+                "SELECT concat('prli_clicks-', ID) AS ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
                 0
             );
             $installer->data( $clicks )->save();
