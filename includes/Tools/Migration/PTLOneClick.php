@@ -122,7 +122,81 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
     }
 
     public function insert_links( $link_id ){
-        // to do: inserting link to betterlinks links db table
+        global $wpdb;
+        $item = $wpdb->get_row(
+            "SELECT * FROM {$wpdb->prefix}prli_links WHERE id = $link_id LIMIT 1",
+            ARRAY_A
+        );
+
+        if ( empty($item['name']) || $item['name'] == 1 ) {
+            $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
+            if(in_array("invalid_item_name-" . $item["id"], $failed_links)){
+                return true;
+            }
+            array_push($failed_links, "invalid_item_name-" . $item["id"]);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links);
+            return false;
+        }
+
+        $author_id = get_current_user_id();
+
+        $slug = \BetterLinks\Helper::make_slug($item['name']);
+        $link = apply_filters('betterlinks/tools/migration/ptl_one_click_import_link_arg', [
+            'link_author' => $author_id,
+            'link_date' => $item['created_at'],
+            'link_date_gmt' => $item['created_at'],
+            'link_title' => $item['name'],
+            'link_slug' => $slug,
+            'link_note' => '',
+            'link_status' => 'publish',
+            'nofollow' => isset($item['nofollow']) && $item['nofollow'] == 1 ? $item['nofollow'] : '',
+            'sponsored' => isset($item['sponsored']) && $item['sponsored'] == 1 ? $item['sponsored'] : '',
+            'track_me' => isset($item['track_me']) && $item['track_me'] == 1 ? $item['track_me'] : '',
+            'param_forwarding' => isset($item['param_forwarding']) && $item['param_forwarding'] == 1 ? $item['param_forwarding'] : '',
+            'param_struct' => '',
+            'redirect_type' => isset($item['redirect_type']) ? $item['redirect_type'] : '',
+            'target_url' => isset($item['url']) ? $item['url'] : '',
+            'short_url' => isset($item['slug']) ? trim($item['slug'], '/') : '',
+            'link_order' => 0,
+            'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
+            'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
+        ], $item);
+
+        $link_id = \BetterLinks\Helper::insert_link($link);
+        if ($link_id) {
+            $keywords = $this->get_keywords($item['id'], '');
+            if (!empty($keywords)) {
+                $keywords = wp_list_pluck($keywords, 'text');
+                $keywords = implode(',', $keywords);
+                $this->insert_keywords($link_id, $keywords);
+            }
+            if (isset($item['link_cpt_id']) && !empty($item['link_cpt_id'])) {
+                $term = get_the_terms($item['link_cpt_id'], 'pretty-link-category');
+                $term = !empty($term) && is_array($term) ? current($term)->name : 'uncategorized';
+                $terms_ids = \BetterLinks\Helper::insert_category_terms([$term]);
+                if (count($terms_ids) > 0) {
+                    foreach ($terms_ids as $term_id) {
+                        \BetterLinks\Helper::insert_terms_relationships($term_id, $link_id);
+                    }
+                }
+            }
+            $curr_link_data = [
+                "item" => $item,
+                "timezone" => get_option("gmt_offset"),
+                "time_hour_minutes" => date('H:i'),
+            ];
+            \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_link", $curr_link_data);
+            return true;
+        } else {
+            $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
+            if(in_array("insert_link_failed-" . $item["id"], $failed_links)){
+                return true;
+            }
+            array_push($failed_links, "insert_link_failed-" . $item["id"]);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links);
+            return false;
+        }
+        return true;
     }
 
     public function insert_clicks( $click_id ){
