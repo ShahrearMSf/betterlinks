@@ -54,7 +54,7 @@ class Installer extends \WP_Background_Process
      */
     protected function task($item)
     {
-        if (! is_numeric( $item ) && method_exists($this, $item)) {
+        if (method_exists($this, $item)) {
             try {
                 $this->$item();
             } catch (\Exception $e) {
@@ -62,9 +62,10 @@ class Installer extends \WP_Background_Process
                     trigger_error('BetterLinks background task triggered fatal error for callback ' . esc_html($item), E_USER_WARNING); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
                 }
             }
-        } elseif( is_numeric( $item ) ) {
+        } elseif(!(strpos($item, "prli_clicks-") === false)) {
+            $item = absint(substr($item, 12)); // getting the ID(number) by deleting 'prli_clicks-' (used 12 because the length of 'prli_clicks-' is 12)
             $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
-            if( ! $migrator->insert_clicks( absint( $item ) ) ) {
+            if( ! $migrator->insert_clicks( $item ) ) {
                 return true;
             }
         } elseif($item === "ptrl_clicks_migration_completed"){
