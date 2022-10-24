@@ -132,7 +132,7 @@ class PTLOneClick extends BaseCSV implements ImportOneClickInterface
             ARRAY_A
         );
 
-        if ( empty( $item ) || empty( $item['uri'] ) ) {
+        if ( empty( $item['uri'] ) ) {
             return true;
         }
 
