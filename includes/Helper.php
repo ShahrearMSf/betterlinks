@@ -500,4 +500,8 @@ class Helper
         $installer->data( [ 'ptrl_clicks_migration_completed' ] )->save();
         $installer->dispatch();
     }
+    public static function run_migration_for_ptrl_links_in_background($links_count)
+    {
+        // to do: codes for links migration
+    }
 }
