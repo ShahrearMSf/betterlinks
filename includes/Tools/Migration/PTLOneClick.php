@@ -16,7 +16,7 @@ class PTLOneClick extends BaseCSV
                 return true;
             }
             array_push($failed_links, "invalid_item_name-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
             return false;
         }
 
@@ -70,12 +70,12 @@ class PTLOneClick extends BaseCSV
             \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_link", $curr_link_data);
             return true;
         } else {
-            $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
+            $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links", false, true);
             if(in_array("insert_link_failed-" . $item["id"], $failed_links)){
                 return true;
             }
             array_push($failed_links, "insert_link_failed-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
             return false;
         }
         return true;
