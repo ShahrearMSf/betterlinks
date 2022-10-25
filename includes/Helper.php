@@ -482,11 +482,8 @@ class Helper
         }
         if($careless_update || !empty($result[0]["option_id"])){                    
             $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
-            if($result !== false){
-                $result = true;
-            }
+            return $result !== false;
         }
-        return $result;
     }
     public static function run_migration_for_ptrl_links_in_background($installer, $links_count)
     {
