@@ -13,13 +13,10 @@ class PrettyLinks extends MigrationNotice
         if (defined('PRLI_VERSION') && !get_option('betterlinks_notice_ptl_migrate')) {
             global $pagenow;
             $self::$pagenow = $pagenow;
-            if (!get_option('betterlinks_hide_notice_ptl_migrate')) {
+            if (!get_option('betterlinks_hide_notice_ptl_migrate') || $pagenow === 'admin.php') {
                 add_action('admin_notices', [$self, 'migration_notice']);
                 add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
-            } elseif ($pagenow === 'admin.php') {
-                add_action('admin_notices', [$self, 'migration_notice']);
-                add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
-            }
+            } 
         } elseif (defined('PRLI_VERSION') && get_option('betterlinks_notice_ptl_migrate')) {
             global $pagenow;
             $self::$pagenow = $pagenow;
