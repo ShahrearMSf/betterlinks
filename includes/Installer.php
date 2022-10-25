@@ -76,7 +76,7 @@ class Installer extends \WP_Background_Process
             }
         } elseif($item === "ptrl_migration_completed"){
             $this->after_migration_done();
-            Helper::btl_update_option($item, ["bg_process_finished" => true]);
+            Helper::btl_update_option($item, true);
         }
         return false;
     }
