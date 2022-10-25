@@ -90,6 +90,8 @@ class Ajax
         $wpdb->query($query);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", [], true);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", [], true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_links_count", 0, true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_clicks_count", 0, true);
 
         $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
         $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
