@@ -80,6 +80,14 @@ class Ajax
             wp_send_json_error(["duplicate_migration_detected__so_prevented_it_here" => true]);
         }
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_should_not_start_in_background", true, true);
+        global $wpdb;
+        $query = "DELETE FROM {$wpdb->prefix}options WHERE option_name IN(
+                'btl_failed_migration_prettylinks_links',
+                'btl_failed_migration_prettylinks_clicks',
+                'btl_migration_prettylinks_last_successful_link',
+                'btl_migration_prettylinks_last_successful_click'
+        )";
+        $wpdb->query($query);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", [], true);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", [], true);
         \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_link", [], true);
