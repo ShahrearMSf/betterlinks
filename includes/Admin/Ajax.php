@@ -79,7 +79,7 @@ class Ajax
             // preventing multiple migration call to prevent duplicate datas from migrating
             wp_send_json_error(["duplicate_migration_detected__so_prevented_it_here" => true]);
         }
-        \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_should_not_start_in_background", true);
+        \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_should_not_start_in_background", true, true);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", []);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", []);
 
