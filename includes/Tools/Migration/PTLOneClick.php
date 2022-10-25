@@ -67,7 +67,7 @@ class PTLOneClick extends BaseCSV
                 "timezone" => get_option("gmt_offset"),
                 "time_hour_minutes" => date('H:i'),
             ];
-            \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_link", $curr_link_data);
+            \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_links_count", $curr_link_data);
             return true;
         } else {
             $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links", false, true);
@@ -122,7 +122,7 @@ class PTLOneClick extends BaseCSV
                     "timezone" => get_option("gmt_offset"),
                     "time_hour_minutes" => date('H:i'),
                 ];
-                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data, false, true);
+                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_clicks_count", $curr_click_data, false, true);
                 return true;
             }else{
                 $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");

@@ -84,14 +84,14 @@ class Ajax
         $query = "DELETE FROM {$wpdb->prefix}options WHERE option_name IN(
                 'btl_failed_migration_prettylinks_links',
                 'btl_failed_migration_prettylinks_clicks',
-                'btl_migration_prettylinks_last_successful_link',
-                'btl_migration_prettylinks_last_successful_click'
+                'btl_migration_prettylinks_current_successful_links_count',
+                'btl_migration_prettylinks_current_successful_clicks_count'
         )";
         $wpdb->query($query);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", [], true);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", [], true);
-        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_link", [], true);
-        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", [], true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_links_count", 0, true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_clicks_count", 0, true);
 
         $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
         $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
