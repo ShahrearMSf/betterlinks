@@ -83,6 +83,7 @@ class Ajax
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", [], true);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", [], true);
         \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_link", [], true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", [], true);
 
         $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
         $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
