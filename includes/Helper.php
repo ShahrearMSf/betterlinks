@@ -496,6 +496,7 @@ class Helper
             );
             $installer->data( $links )->save();
         }
+        $installer->data( ['betterlinks_ptl_links_migrated'] )->save();
         return $installer;
     }
     public static function run_migration_for_ptrl_clicks_in_background($installer, $clicks_count)
