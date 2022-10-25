@@ -458,15 +458,18 @@ class Helper
         }
         return $value;
     }
-    public static function btl_update_option($option_name, $option_value)
+    public static function btl_update_option($option_name, $option_value, $row_exist = false)
     {
         global $wpdb;
         $option_value = maybe_serialize($option_value);
-        $result = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
-            ARRAY_A
-        );
-        if(empty($result[0]["option_id"])){
+        $result = false;
+        if(!$row_exist){
+            $result = $wpdb->get_results(
+                $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+                ARRAY_A
+            );
+        }
+        if(!$row_exist && empty($result[0]["option_id"])){
             $result = $wpdb->query(
                 $wpdb->prepare(
                     "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
@@ -475,13 +478,11 @@ class Helper
                     )
                 )
             );
+            return $result;
         }else{                    
             $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
-            if($result !== false){
-                $result = true;
-            }
+            return $result !== false;
         }
-        return $result;
     }
     public static function run_migration_for_ptrl_links_in_background($installer, $links_count)
     {
