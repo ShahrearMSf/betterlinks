@@ -10,25 +10,27 @@ class PrettyLinks extends MigrationNotice
     public static function init()
     {
         $self = new self();
-        if (defined('PRLI_VERSION') && !get_option('betterlinks_notice_ptl_migrate')) {
-            global $pagenow;
-            $self::$pagenow = $pagenow;
-            if (!get_option('betterlinks_hide_notice_ptl_migrate') || $pagenow === 'admin.php') {
-                if(get_option('betterlinks_notice_ptl_migration_running_in_background')){
-                    add_action('admin_notices', [$self, 'migration_running_notice']);
-                }else{
-                    add_action('admin_notices', [$self, 'migration_notice']);
+        if(defined('PRLI_VERSION')){
+            if (!get_option('betterlinks_notice_ptl_migrate')) {
+                global $pagenow;
+                $self::$pagenow = $pagenow;
+                if (!get_option('betterlinks_hide_notice_ptl_migrate') || $pagenow === 'admin.php') {
+                    if(get_option('betterlinks_notice_ptl_migration_running_in_background')){
+                        add_action('admin_notices', [$self, 'migration_running_notice']);
+                    }else{
+                        add_action('admin_notices', [$self, 'migration_notice']);
+                    }
+                    add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }
-                add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
-            } 
-        } elseif (defined('PRLI_VERSION') && get_option('betterlinks_notice_ptl_migrate')) {
-            global $pagenow;
-            $self::$pagenow = $pagenow;
-            if (!get_option('betterlinks_hide_notice_ptl_deactive')) {
-                if (!isset($_GET['post_type']) || (isset($_GET['post_type']) && $_GET['post_type'] !== 'pretty-link')) {
-                    add_action('admin_notices', [$self, 'deactive_notice']);
+            } else {
+                global $pagenow;
+                $self::$pagenow = $pagenow;
+                if (!get_option('betterlinks_hide_notice_ptl_deactive')) {
+                    if (!isset($_GET['post_type']) || (isset($_GET['post_type']) && $_GET['post_type'] !== 'pretty-link')) {
+                        add_action('admin_notices', [$self, 'deactive_notice']);
+                    }
+                    add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }
-                add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
             }
         }
     }
