@@ -14,7 +14,11 @@ class PrettyLinks extends MigrationNotice
             global $pagenow;
             $self::$pagenow = $pagenow;
             if (!get_option('betterlinks_hide_notice_ptl_migrate') || $pagenow === 'admin.php') {
-                add_action('admin_notices', [$self, 'migration_notice']);
+                if(get_option('betterlinks_notice_ptl_migration_running_in_background')){
+                    add_action('admin_notices', [$self, 'migration_running_notice']);
+                }else{
+                    add_action('admin_notices', [$self, 'migration_notice']);
+                }
                 add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
             } 
         } elseif (defined('PRLI_VERSION') && get_option('betterlinks_notice_ptl_migrate')) {
@@ -27,6 +31,18 @@ class PrettyLinks extends MigrationNotice
                 add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
             }
         }
+    }
+
+    public function migration_running_notice()
+    {
+        // todo: get the total successful links & clicks count here
+        ?>
+        <div class="notice notice-info betterlinks-notice-pt-migrate <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
+            <p>
+                <?php _e('Migration of your Pretty Links data to BetterLinks running in background...', 'betterlinks'); ?>
+            </p>
+        </div>
+        <?php
     }
 
     public function migration_notice()
@@ -72,6 +88,7 @@ class PrettyLinks extends MigrationNotice
 			jQuery('.betterlinks-notice-deactive-prettylinks button.notice-dismiss').on('click', function(){
 				jQuery.post(ajaxurl, {
 					'action': 'betterlinks/admin/migration_prettylinks_notice_hide',
+                    // 
 					'security': "<?php echo $nonce; ?>",
 					'type': 'deactive'
 				}, function(response) {});
