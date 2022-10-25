@@ -7,10 +7,14 @@ use BetterLinks\Abstracts\MigrationNotice;
 class PrettyLinks extends MigrationNotice
 {
     public static $pagenow;
+    public static $failed_links = [];
+    public static $failed_clicks = [];
     public static function init()
     {
         $self = new self();
         if(defined('PRLI_VERSION')){
+            $self::$failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
+            $self::$failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
             if (!get_option('betterlinks_notice_ptl_migrate')) {
                 global $pagenow;
                 $self::$pagenow = $pagenow;
@@ -74,6 +78,10 @@ class PrettyLinks extends MigrationNotice
     {
         $nonce = wp_create_nonce('betterlinks_admin_nonce'); ?>
 		<script type='text/javascript'>
+        window.betterlinksAdminPrettylinksMigrationRequiredDatas = {
+            failed_links: <?php echo json_encode(self::$failed_links); ?>,
+            failed_clicks: <?php echo json_encode(self::$failed_clicks); ?>,
+        }
 		jQuery( document ).ready(function() {
 			jQuery('.betterlinks-notice-deactive-prettylinks a.deactive').on('click', function(e){
 				e.preventDefault();
