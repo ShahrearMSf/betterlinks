@@ -99,9 +99,8 @@ class Ajax
             $installer = \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($installer, $clicks_count);
         }
 
-        $installer->data( [ 'ptrl_migration_completed' ] )->save();
+        $installer->data( [ 'betterlinks_notice_ptl_migrate' ] )->save();
         $installer->dispatch();
-        \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migrate', true);
         wp_send_json_success(["btl_prettylinks_migration_running_in_background" => true]);
     }
 

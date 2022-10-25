@@ -74,7 +74,7 @@ class Installer extends \WP_Background_Process
             if( ! $migrator->insert_link( $item ) ) {
                 return true;
             }
-        } elseif($item === "ptrl_migration_completed"){
+        } elseif($item === "betterlinks_notice_ptl_migrate"){
             $this->after_migration_done();
             Helper::btl_update_option($item, true);
         }
