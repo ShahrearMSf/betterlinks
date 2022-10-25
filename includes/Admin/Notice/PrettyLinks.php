@@ -9,12 +9,16 @@ class PrettyLinks extends MigrationNotice
     public static $pagenow;
     public static $failed_links = [];
     public static $failed_clicks = [];
+    public static $total_successful_links = 0;
+    public static $total_successful_clicks = 0;
     public static function init()
     {
         $self = new self();
         if(defined('PRLI_VERSION')){
             $self::$failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
             $self::$failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
+            $self::$total_successful_links = \BetterLinks\Helper::btl_get_option("btl_migration_prettylinks_current_successful_links_count");
+            $self::$total_successful_clicks = \BetterLinks\Helper::btl_get_option("btl_migration_prettylinks_current_successful_clicks_count");
             if (!get_option('betterlinks_notice_ptl_migrate')) {
                 global $pagenow;
                 $self::$pagenow = $pagenow;
@@ -81,6 +85,8 @@ class PrettyLinks extends MigrationNotice
         window.betterlinksAdminPrettylinksMigrationRequiredDatas = {
             failed_links: <?php echo json_encode(self::$failed_links); ?>,
             failed_clicks: <?php echo json_encode(self::$failed_clicks); ?>,
+            total_successful_links: <?php echo json_encode(self::$total_successful_links); ?>,
+            total_successful_clicks: <?php echo json_encode(self::$total_successful_clicks); ?>,
         }
 		jQuery( document ).ready(function() {
 			jQuery('.betterlinks-notice-deactive-prettylinks a.deactive').on('click', function(e){
