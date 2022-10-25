@@ -117,12 +117,9 @@ class PTLOneClick extends BaseCSV
             ];
             $is_insert = \BetterLinks\Helper::insert_click($click);
             if ($is_insert) {
-                $curr_click_data = [
-                    "item" => $item,
-                    "timezone" => get_option("gmt_offset"),
-                    "time_hour_minutes" => date('H:i'),
-                ];
-                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_clicks_count", $curr_click_data, false, true);
+                $current_clicks_count = \BetterLinks\Helper::btl_get_option("btl_migration_prettylinks_current_successful_clicks_count");
+                $current_clicks_count = absint($current_clicks_count) + 1;
+                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_clicks_count", $current_clicks_count, false, true);
                 return true;
             }else{
                 $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
