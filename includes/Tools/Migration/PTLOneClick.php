@@ -91,7 +91,7 @@ class PTLOneClick extends BaseCSV
         if ( empty( $item['uri'] ) ) {
             $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
             array_push($failed_clicks, "uri_doesnot_exist-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
             return true;
         }
 
@@ -122,7 +122,7 @@ class PTLOneClick extends BaseCSV
                     "timezone" => get_option("gmt_offset"),
                     "time_hour_minutes" => date('H:i'),
                 ];
-                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data);
+                \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_last_successful_click", $curr_click_data, false, true);
                 return true;
             }else{
                 $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
@@ -130,13 +130,13 @@ class PTLOneClick extends BaseCSV
                     return true;
                 }
                 array_push($failed_clicks, "not_inserted-" . $item["id"]);
-                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
+                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
                 return false;
             }
         }else{
             $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
             array_push($failed_clicks, "link_not_found-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks);
+            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
         }
 
         return true;
