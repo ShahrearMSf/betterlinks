@@ -491,7 +491,7 @@ class Helper
         for( $page = 1; $page <= $total_page; $page++ ){
             $offset = ($page - 1) * $per_page;
             $links = $wpdb->get_col(
-                "SELECT concat('prli_links-', ID) AS ID FROM {$wpdb->prefix}prli_links LIMIT $per_page OFFSET {$offset}",
+                "SELECT concat('prli_links-', ID) AS ID FROM {$wpdb->prefix}prli_links ORDER BY id LIMIT $per_page OFFSET {$offset}",
                 0
             );
             $installer->data( $links )->save();
@@ -506,7 +506,7 @@ class Helper
         for( $page = 1; $page <= $total_page; $page++ ){
             $offset = ($page - 1) * $per_page;
             $clicks = $wpdb->get_col(
-                "SELECT concat('prli_clicks-', ID) AS ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
+                "SELECT concat('prli_clicks-', ID) AS ID FROM {$wpdb->prefix}prli_clicks ORDER BY id LIMIT $per_page OFFSET {$offset}",
                 0
             );
             $installer->data( $clicks )->save();
