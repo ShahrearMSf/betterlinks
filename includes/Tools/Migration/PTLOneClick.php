@@ -155,14 +155,14 @@ class PTLOneClick extends BaseCSV
     public function log_failed_links($item, $prefix = "_-"){
         $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
         if(count($failed_links) > 10000) return true;
-        $slug = empty($item["slug"]) ? "-_" : "-" . $item['slug'];
+        $slug = empty($item["slug"]) ? "_" : $item['slug'];
         array_push($failed_links, $prefix . $item['id'] . "-" . $slug);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
     }
     public function log_failed_clicks($item, $prefix = "_-"){
         $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
         if(count($failed_clicks) > 10000) return true;
-        $uri = empty($item["uri"]) ? "-_" : "-" . $item['uri'];
+        $uri = empty($item["uri"]) ? "_" : $item['uri'];
         array_push($failed_clicks, $prefix . $item['id'] . "-" . $uri);
         \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
     }
