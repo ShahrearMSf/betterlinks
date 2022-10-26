@@ -15,8 +15,7 @@ class PTLOneClick extends BaseCSV
             if(in_array("invalid_item_name-" . $item["id"], $failed_links)){
                 return true;
             }
-            array_push($failed_links, "invalid_item_name-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
+            $this->log_failed_links($item, "invalid_item_name-");
             return false;
         }
 
@@ -71,8 +70,7 @@ class PTLOneClick extends BaseCSV
             if(in_array("insert_link_failed-" . $item["id"], $failed_links)){
                 return true;
             }
-            array_push($failed_links, "insert_link_failed-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
+            $this->log_failed_links($item, "insert_link_failed-");
             return false;
         }
         return true;
@@ -154,6 +152,12 @@ class PTLOneClick extends BaseCSV
         return;
     }
 
+    public function log_failed_links($item, $prefix = "_-"){
+        $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
+        $slug = empty($item["slug"]) ? "-_" : "-" . $item['slug'];
+        array_push($failed_links, $prefix . $item['id'] . "-" . $slug);
+        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
+    }
     public function log_failed_clicks($item, $prefix = "_-"){
         $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
         $uri = empty($item["uri"]) ? "-_" : "-" . $item['uri'];
