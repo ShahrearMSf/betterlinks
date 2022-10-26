@@ -92,9 +92,11 @@ class PTLOneClick extends BaseCSV
             return true;
         }
 
-        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/'));
+        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '%20 /'));
         if(count($link) === 0){
-            $link = \BetterLinks\Helper::get_link_by_short_url(\trim(current(explode('?', $item['uri'])), '/'));
+            $cleaned_uri=current(explode('?', $item['uri']));
+            $cleaned_uri=\trim($cleaned_uri, '%20 /');
+            $link = \BetterLinks\Helper::get_link_by_short_url(($cleaned_uri));
         }
 
         if (count($link) > 0) {
@@ -129,7 +131,7 @@ class PTLOneClick extends BaseCSV
             }
         }else{
             $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
-            array_push($failed_clicks, "link_not_found-" . $item["id"]);
+            array_push($failed_clicks, "link_not_found-" . $item["id"] . "-" . $item["uri"]);
             \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
         }
 
