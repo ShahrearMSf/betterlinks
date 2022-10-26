@@ -86,9 +86,7 @@ class PTLOneClick extends BaseCSV
         );
 
         if ( empty( $item['uri'] ) ) {
-            $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
-            array_push($failed_clicks, "uri_doesnot_exist-" . $item["id"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
+            $this->log_failed_clicks($item, "uri_doesnot_exist-");
             return true;
         }
 
@@ -125,14 +123,14 @@ class PTLOneClick extends BaseCSV
                 if(in_array("not_inserted-" . $item["id"], $failed_clicks)){
                     return true;
                 }
-                array_push($failed_clicks, "not_inserted-" . $item["id"]);
-                \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
+                $this->log_failed_clicks($item, "not_inserted-");
                 return false;
             }
         }else{
             $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
             array_push($failed_clicks, "link_not_found-" . $item["id"] . "-" . $item["uri"]);
             \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
+            $this->log_failed_clicks($item, "link_not_found-");
         }
 
         return true;
@@ -154,5 +152,12 @@ class PTLOneClick extends BaseCSV
             return  $resutls;
         }
         return;
+    }
+
+    public function log_failed_clicks($item, $prefix = "_-"){
+        $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
+        $uri = empty($item["uri"]) ? "-_" : "-" . $item['uri'];
+        array_push($failed_clicks, $prefix . $item['id'] . "-" . $uri);
+        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
     }
 }
