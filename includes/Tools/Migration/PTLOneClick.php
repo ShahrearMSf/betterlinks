@@ -15,8 +15,7 @@ class PTLOneClick extends BaseCSV
             if(in_array("invalid_item_name-" . $item["id"], $failed_links)){
                 return true;
             }
-            $this->log_failed_links($item, "invalid_item_name-");
-            return false;
+            return $this->log_failed_links($item, "invalid_item_name-");
         }
 
         $author_id = get_current_user_id();
@@ -66,12 +65,11 @@ class PTLOneClick extends BaseCSV
             \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_links_count", $current_links_count, false, true);
             return true;
         } else {
-            $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links", false, true);
+            $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
             if(in_array("insert_link_failed-" . $item["id"], $failed_links)){
                 return true;
             }
-            $this->log_failed_links($item, "insert_link_failed-");
-            return false;
+            return $this->log_failed_links($item, "insert_link_failed-");
         }
         return true;
     }
@@ -157,24 +155,24 @@ class PTLOneClick extends BaseCSV
 
     public function log_failed_links($item, $prefix = "_-"){
         $failed_links = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_links");
-        if(count($failed_links) > 10000) {
+        $total_failed_links = count($failed_links);
+        if($total_failed_links > 10000) {
             return true;
         }
         $slug = empty($item["slug"]) ? "_" : $item['slug'];
         array_push($failed_links, $prefix . $item['id'] . "-" . $slug);
-        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
+        $result = \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", $failed_links, false, true);
+        return !$result;
     }
     public function log_failed_clicks($item, $prefix = "_-"){
         $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
         $total_failed_clicks = count($failed_clicks);
-        
         if($total_failed_clicks > 10000) {
             return true;
         }
         $uri = empty($item["uri"]) ? "_" : $item['uri'];
         array_push($failed_clicks, $prefix . $item['id'] . "-" . $uri);
         $result = \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
-        
         return !$result;
     }
 }
