@@ -84,8 +84,11 @@ class PTLOneClick extends BaseCSV
         );
 
         if ( empty( $item['uri'] ) ) {
-            $this->log_failed_clicks($item, "uri_doesnot_exist-");
-            return true;
+            $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
+            if(in_array("uri_doesnot_exist-" . $item["id"], $failed_clicks)){
+                return true;
+            }
+            return $this->log_failed_clicks($item, "uri_doesnot_exist-");
         }
 
         $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '%20 /'));
@@ -121,14 +124,14 @@ class PTLOneClick extends BaseCSV
                 if(in_array("not_inserted-" . $item["id"], $failed_clicks)){
                     return true;
                 }
-                $this->log_failed_clicks($item, "not_inserted-");
-                return false;
+                return $this->log_failed_clicks($item, "not_inserted-");
             }
         }else{
             $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
-            array_push($failed_clicks, "link_not_found-" . $item["id"] . "-" . $item["uri"]);
-            \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
-            $this->log_failed_clicks($item, "link_not_found-");
+            if(in_array("link_not_found-" . $item["id"], $failed_clicks)){
+                return true;
+            }
+            return $this->log_failed_clicks($item, "link_not_found-");
         }
 
         return true;
@@ -163,11 +166,15 @@ class PTLOneClick extends BaseCSV
     }
     public function log_failed_clicks($item, $prefix = "_-"){
         $failed_clicks = \BetterLinks\Helper::btl_get_option("btl_failed_migration_prettylinks_clicks");
-        if(count($failed_clicks) > 10000) {
+        $total_failed_clicks = count($failed_clicks);
+        
+        if($total_failed_clicks > 10000) {
             return true;
         }
         $uri = empty($item["uri"]) ? "_" : $item['uri'];
         array_push($failed_clicks, $prefix . $item['id'] . "-" . $uri);
-        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
+        $result = \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", $failed_clicks, false, true);
+        
+        return !$result;
     }
 }
