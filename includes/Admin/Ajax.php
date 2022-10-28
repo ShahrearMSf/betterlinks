@@ -82,6 +82,7 @@ class Ajax
         \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_should_not_start_in_background", true, true);
         global $wpdb;
         $query = "DELETE FROM {$wpdb->prefix}options WHERE option_name IN(
+                'betterlinks_notice_ptl_migration_running_in_background',
                 'btl_failed_migration_prettylinks_links',
                 'btl_failed_migration_prettylinks_clicks',
                 'btl_migration_prettylinks_current_successful_links_count',
