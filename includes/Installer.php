@@ -74,7 +74,11 @@ class Installer extends \WP_Background_Process
             if( ! $migrator->insert_click( $item ) ) {
                 return true;
             }
-        } elseif($item === "betterlinks_notice_ptl_migrate" || $item === "betterlinks_ptl_links_migrated"){
+        } elseif(
+            $item === "betterlinks_notice_ptl_migrate" || 
+            $item === "betterlinks_ptl_links_migrated" || 
+            $item === "betterlinks_ptl_clicks_migrated"
+        ){
             $this->after_migration_done();
             Helper::btl_update_option($item, true);
         }

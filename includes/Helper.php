@@ -514,6 +514,7 @@ class Helper
             );
             $installer->data( $clicks )->save();
         }
+        $installer->data( ['betterlinks_ptl_clicks_migrated'] )->save();
         return $installer;
     }
 }
