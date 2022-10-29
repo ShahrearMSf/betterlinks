@@ -34,9 +34,8 @@ if (!class_exists('BetterLinks')) {
             $this->Installer = new BetterLinks\Installer();
             register_activation_hook(__FILE__, [$this, 'activate']);
             register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-            add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
-            add_action('betterlinks_loaded', [$this, 'init_plugin']);
-            add_action('admin_init', [$this, 'init_dispatch']);
+            add_action('plugins_loaded', [$this, 'init_plugin']);
+            add_action('admin_init', [$this, 'run_migrator']);
             $this->dispatch_hook();
         }
 
@@ -100,7 +99,6 @@ if (!class_exists('BetterLinks')) {
             new BetterLinks\Link();
             new BetterLinks\Tools();
             new BetterLinks\Elementor();
-            $this->run_migrator();
         }
 
         public function dispatch_hook()
@@ -108,8 +106,6 @@ if (!class_exists('BetterLinks')) {
             BetterLinks\API::dispatch_hook();
             BetterLinks\Cron::init();
         }
-
-
 
         public function load_textdomain()
         {
@@ -124,33 +120,20 @@ if (!class_exists('BetterLinks')) {
         public function run_migrator()
         {
             if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
-                if (!$this->Installer->doing_dispatch()) {
-                    update_option('betterlinks_version', BETTERLINKS_VERSION);
-                    $this->Installer->init();
-                    foreach ($this->Installer->migration as $task) {
-                        $this->Installer->push_to_queue($task);
-                    }
-                    $this->Installer->save();
+                foreach ($this->Installer->migration as $task) {
+                    $this->Installer->push_to_queue($task);
                 }
-            }
-        }
-
-        public function init_dispatch()
-        {
-            if ($this->Installer->should_dispatch()) {
-                $this->Installer->dispatch();
+                $this->Installer->save()->dispatch();
+                update_option('betterlinks_version', BETTERLINKS_VERSION);
             }
         }
 
         public function activate()
         {
-            if (!$this->Installer->doing_dispatch()) {
-                $this->Installer->init();
-                foreach ($this->Installer->activation as $task) {
-                    $this->Installer->push_to_queue($task);
-                }
-                $this->Installer->save();
+            foreach ($this->Installer->activation as $task) {
+                $this->Installer->push_to_queue($task);
             }
+            $this->Installer->save()->dispatch();
         }
 
         public function deactivate()
