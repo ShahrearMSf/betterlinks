@@ -36,7 +36,7 @@ if (!class_exists('BetterLinks')) {
             register_deactivation_hook(__FILE__, [$this, 'deactivate']);
             add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
             add_action('betterlinks_loaded', [$this, 'init_plugin']);
-            add_action('init', [$this, 'init_dispatch']);
+            add_action('admin_init', [$this, 'init_dispatch']);
             add_action('admin_init', [$this, 'fix_betterlinks_db'], 2);
             $this->dispatch_hook();
         }
