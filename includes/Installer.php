@@ -18,8 +18,8 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->activation = ['create_db_tables', 'db_migration', 'insert_terms_data','create_json_files','save_settings','update_json_links'];
-        $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
+        $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db' ,'insert_terms_data','create_json_files','save_settings','update_json_links'];
+        $this->migration = ['db_migration',  'update_json_links', 'clear_cache'];
         $this->db_version = get_option('betterlinks_db_version');
     }
 
@@ -225,5 +225,26 @@ class Installer extends \WP_Background_Process
     public function clear_cache()
     {
         Helper::clear_query_cache();
+    }
+
+    public function fix_betterlinks_db()
+    {
+        $is_favorite_column_exist = isset(get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"]) ? get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"] : false;
+        if (!$is_favorite_column_exist) {
+            delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+            global $wpdb;
+            $table          = $wpdb->prefix . 'betterlinks';
+            $results        = $wpdb->get_col("DESC $table", 0);
+            if (in_array("favorite", $results)) {
+                update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                    "added_favorite_column" => true,
+                ]);
+            } else {
+                $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
+                update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                    "added_favorite_column" => $query_result,
+                ]);
+            }
+        }
     }
 }
