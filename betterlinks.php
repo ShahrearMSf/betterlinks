@@ -119,12 +119,12 @@ if (!class_exists('BetterLinks')) {
 
         public function run_migrator()
         {
-            if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
+            if (BetterLinks\Helper::btl_get_option('betterlinks_version') != BETTERLINKS_VERSION) {
                 foreach ($this->Installer->migration as $task) {
                     $this->Installer->push_to_queue($task);
                 }
                 $this->Installer->save()->dispatch();
-                update_option('betterlinks_version', BETTERLINKS_VERSION);
+                BetterLinks\Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION);
             }
         }
 
