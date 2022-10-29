@@ -18,8 +18,8 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db' ,'insert_terms_data','create_json_files','save_settings','update_json_links'];
-        $this->migration = ['db_migration',  'update_json_links', 'clear_cache'];
+        $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
+        $this->migration = ['db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
         $this->db_version = get_option('betterlinks_db_version');
     }
 
