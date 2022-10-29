@@ -23,7 +23,7 @@ class Installer extends \WP_Background_Process
         $this->db_version = get_option('betterlinks_db_version');
     }
 
-    public function start_dispatch()
+    public function should_dispatch()
     {
         if (get_option($this->action)) {
             delete_option($this->action);

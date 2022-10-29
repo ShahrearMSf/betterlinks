@@ -158,7 +158,7 @@ if (!class_exists('BetterLinks')) {
 
         public function init_dispatch()
         {
-            if ($this->Installer->start_dispatch()) {
+            if ($this->Installer->should_dispatch()) {
                 $this->Installer->dispatch();
             }
         }
