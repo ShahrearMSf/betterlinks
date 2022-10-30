@@ -20,7 +20,7 @@ class Installer extends \WP_Background_Process
         $this->charset_collate = $wpdb->get_charset_collate();
         $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
         $this->migration = ['db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
-        $this->db_version = get_option('betterlinks_db_version');
+        $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
 
     /**
@@ -97,12 +97,12 @@ class Installer extends \WP_Background_Process
         $this->createBetterClicksTable();
         $this->createBetterLinkMetaTable();
         // update plugin version
-        if (!get_option('betterlinks_version')) {
-            update_option('betterlinks_version', BETTERLINKS_VERSION);
+        if (!Helper::btl_get_option('betterlinks_version')) {
+            Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION);
         }
         // update db version
-        if (!get_option('betterlinks_db_version')) {
-            update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        if (!Helper::btl_get_option('betterlinks_db_version')) {
+            Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
         }
     }
 
@@ -121,7 +121,7 @@ class Installer extends \WP_Background_Process
 
     public function save_settings()
     {
-        if (!get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
+        if (!Helper::btl_get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
             $value = [
                 'redirect_type'         => '307',
                 'nofollow'   		    => true,
@@ -139,7 +139,7 @@ class Installer extends \WP_Background_Process
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
             ];
-            add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
+            Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
     }
 
@@ -202,7 +202,7 @@ class Installer extends \WP_Background_Process
                 $this->db_migration_1_2();
             }
         }
-        update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }
 
     public function clear_cache()
@@ -212,19 +212,19 @@ class Installer extends \WP_Background_Process
 
     public function fix_betterlinks_db()
     {
-        $is_favorite_column_exist = isset(get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"]) ? get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"] : false;
+        $is_favorite_column_exist = isset(Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"]) ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"] : false;
         if (!$is_favorite_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
             global $wpdb;
             $table          = $wpdb->prefix . 'betterlinks';
             $results        = $wpdb->get_col("DESC $table", 0);
             if (in_array("favorite", $results)) {
-                update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
                     "added_favorite_column" => true,
                 ]);
             } else {
                 $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
-                update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
                     "added_favorite_column" => $query_result,
                 ]);
             }
