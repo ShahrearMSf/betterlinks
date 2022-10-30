@@ -36,7 +36,7 @@ class PTLOneClick extends BaseCSV
             'param_struct' => '',
             'redirect_type' => isset($item['redirect_type']) ? $item['redirect_type'] : '',
             'target_url' => isset($item['url']) ? $item['url'] : '',
-            'short_url' => isset($item['slug']) ? trim($item['slug'], '/') : '',
+            'short_url' => isset($item['slug']) ? trim($item['slug'], '/ ') : '',
             'link_order' => 0,
             'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
             'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
@@ -89,10 +89,10 @@ class PTLOneClick extends BaseCSV
             return $this->log_failed_clicks($item, "uri_doesnot_exist-");
         }
 
-        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '%20 /'));
+        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/ '));
         if(count($link) === 0){
             $cleaned_uri=current(explode('?', $item['uri']));
-            $cleaned_uri=\trim($cleaned_uri, '%20 /');
+            $cleaned_uri=\trim($cleaned_uri, '/ ');
             $link = \BetterLinks\Helper::get_link_by_short_url(($cleaned_uri));
         }
 
