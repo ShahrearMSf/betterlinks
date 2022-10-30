@@ -98,11 +98,11 @@ class Installer extends \WP_Background_Process
         $this->createBetterLinkMetaTable();
         // update plugin version
         if (!Helper::btl_get_option('betterlinks_version')) {
-            Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION);
+            Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION, true);
         }
         // update db version
         if (!Helper::btl_get_option('betterlinks_db_version')) {
-            Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
+            Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION, true);
         }
     }
 
