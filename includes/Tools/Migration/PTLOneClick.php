@@ -89,11 +89,13 @@ class PTLOneClick extends BaseCSV
             return $this->log_failed_clicks($item, "uri_doesnot_exist-");
         }
 
-        $link = \BetterLinks\Helper::get_link_by_short_url(\trim($item['uri'], '/ '));
+        $uri=current(explode('?', $item['uri']));
+        $uri=\trim($uri, '/ ');
+        $link = \BetterLinks\Helper::get_link_by_short_url($uri);
         if(count($link) === 0){
-            $cleaned_uri=current(explode('?', $item['uri']));
-            $cleaned_uri=\trim($cleaned_uri, '/ ');
-            $link = \BetterLinks\Helper::get_link_by_short_url(($cleaned_uri));
+            $uri = current(explode('%20', $uri));
+            $uri=\trim($uri, '/ ');
+            $link = \BetterLinks\Helper::get_link_by_short_url($uri);
         }
 
         if (count($link) > 0) {
