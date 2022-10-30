@@ -212,7 +212,8 @@ class Installer extends \WP_Background_Process
 
     public function fix_betterlinks_db()
     {
-        $is_favorite_column_exist = isset(Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"]) ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"] : false;
+        $btl_db_alter_options = Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS);
+        $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
         if (!$is_favorite_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
             global $wpdb;
