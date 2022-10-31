@@ -36,7 +36,33 @@ if (!class_exists('BetterLinks')) {
             register_deactivation_hook(__FILE__, [$this, 'deactivate']);
             add_action('plugins_loaded', [$this, 'init_plugin']);
             add_action('admin_init', [$this, 'run_migrator']);
+            add_action('admin_init', [$this, 'do_the_works_if_failed_during_activation'], 100);
             $this->dispatch_hook();
+        }
+
+        public function do_the_works_if_failed_during_activation()
+        {
+            global $wpdb;
+            $prefix = $wpdb->prefix;
+            $btl_links_table_name = "{$prefix}betterlinks";
+            $btl_clicks_table_name = "{$prefix}betterlinks_clicks";
+            if($wpdb->get_var("SHOW TABLES LIKE '$btl_links_table_name'") != $btl_links_table_name && $wpdb->get_var("SHOW TABLES LIKE '$btl_clicks_table_name'") != $btl_clicks_table_name) {
+                $betterlinks_activation_flag = BetterLinks\Helper::btl_get_option("betterlinks_activation_flag");
+                $waiting_time_in_seconds = 5;
+                if(empty($betterlinks_activation_flag["timestamp"]) || (absInt($betterlinks_activation_flag["timestamp"]) + $waiting_time_in_seconds) > time()){
+                    // don't go any further and return false here if, 
+                    // activation flag didn't get setted yet or 
+                    // $waiting_time_in_seconds (in this case 5 seconds) haven't passed yet since the activation flag was setted
+                    return false;
+                }
+                $all_tasks = array_merge(
+                    $this->Installer->activation,
+                    $this->Installer->migration
+                );
+                foreach ($all_tasks as $task) {
+                    $this->Installer->$task();
+                }
+            }
         }
 
         public static function init()
