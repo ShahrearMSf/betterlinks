@@ -129,6 +129,9 @@ if (!class_exists('BetterLinks')) {
         public function activate()
         {
             $this->Installer->data($this->Installer->activation)->save()->dispatch();
+            BetterLinks\Helper::btl_update_option('betterlinks_activation_flag', [
+                "timestamp" => time(),
+            ]);
         }
 
         public function deactivate()
