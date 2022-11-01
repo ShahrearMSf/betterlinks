@@ -448,7 +448,7 @@ class Helper
     public static function btl_get_option($option_name)
     {
         global $wpdb;
-        $result = $wpdb->get_results(
+        $result = $wpdb->get_row(
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
             ARRAY_A
         );
