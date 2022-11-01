@@ -453,8 +453,8 @@ class Helper
             ARRAY_A
         );
         $value = false;
-        if(!empty($result[0]["option_id"])){
-            $value = maybe_unserialize($result[0]["option_value"]);
+        if( !empty( $result["option_id"] ) ){
+            $value = maybe_unserialize( $result["option_value"] );
         }
         return $value;
     }
@@ -469,7 +469,7 @@ class Helper
                 ARRAY_A
             );
         }
-        if($careless_insert || (!$careless_update && empty($result[0]["option_id"]))){
+        if( $careless_insert || ( !$careless_update && empty( $result["option_id"] ) ) ){
             $result = $wpdb->query(
                 $wpdb->prepare(
                     "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
@@ -480,7 +480,7 @@ class Helper
             );
             return $result;
         }
-        if($careless_update || !empty($result[0]["option_id"])){                    
+        if( $careless_update || !empty( $result["option_id"] ) ){
             $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
             return $result !== false;
         }
