@@ -583,22 +583,35 @@ trait Query
         return $response;
     }
 
-    public static function get_prettylinks_links()
+    public static function get_prettylinks_links($x)
     {
         global $wpdb;
-        $link = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_links",
+        $links = $wpdb->get_results(
+            "SELECT * FROM {$wpdb->prefix}prli_links LIMIT 10000 OFFSET {$x}",
             ARRAY_A
         );
-        return $link;
+        return $links;
     }
-    public static function get_prettylinks_clicks()
+    public static function get_prettylinks_clicks($x)
     {
         global $wpdb;
         $clicks = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_clicks",
+            "SELECT * FROM {$wpdb->prefix}prli_clicks LIMIT 10000 OFFSET {$x}",
             ARRAY_A
         );
+        return $clicks;
+    }
+
+    public static function get_prettylinks_links_count()
+    {
+        global $wpdb;
+        $links = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_links");
+        return $links;
+    }
+    public static function get_prettylinks_clicks_count()
+    {
+        global $wpdb;
+        $clicks = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks");
         return $clicks;
     }
 

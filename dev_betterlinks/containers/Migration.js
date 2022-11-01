@@ -7,7 +7,7 @@ import { betterlinks_nonce, route_path, plugin_root_url, modalCustomStyles } fro
 import { useHistory } from 'react-router-dom';
 
 const Migration = (props) => {
-	const [migrationSubmitText, setMigrationSubmitText] = useState('Migrate Now');
+	const [migrationSubmitText, setMigrationSubmitText] = useState('Run Migration');
 	const [modalIsOpen, setIsOpen] = useState(true);
 	const [dataIsFetch, setDataIsFetch] = useState(false);
 	const [prettyLinksRes, setPrettyLinksRes] = useState({});
@@ -88,6 +88,9 @@ const Migration = (props) => {
 		history.push(route_path + 'admin.php?page=betterlinks');
 		history.go(0);
 	}
+
+	console.log({ migrateRes });
+
 	return (
 		<React.Fragment>
 			<Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={false} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
@@ -112,23 +115,23 @@ const Migration = (props) => {
 												{__('Pick Data that You want to Import', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/pointing-down.svg'} alt="icon" />
 											</h3>
 											<div className="btl-modal-migration__item">
-												{prettyLinksRes.links && prettyLinksRes.links.length > 0 && (
+												{prettyLinksRes?.links_count > 0 && (
 													<>
 														<Field id="links" type="checkbox" name="checked" value="links" />
 														<label htmlFor="links">
 															{__('Links ', 'betterlinks')}
-															{`(${prettyLinksRes.links.length})`}
+															{`(${prettyLinksRes.links_count})`}
 														</label>
 													</>
 												)}
 											</div>
 											<div className="btl-modal-migration__item">
-												{prettyLinksRes.clicks && prettyLinksRes.clicks.length > 0 && (
+												{prettyLinksRes?.clicks_count > 0 && (
 													<>
 														<Field id="clicks" type="checkbox" name="checked" value="clicks" />
 														<label htmlFor="clicks">
 															{__('Clicks ', 'betterlinks')}
-															{`(${prettyLinksRes.clicks.length})`}
+															{`(${prettyLinksRes.clicks_count})`}
 														</label>
 													</>
 												)}
@@ -189,15 +192,19 @@ const Migration = (props) => {
 					<div className="btl-modal-migration">
 						<div id="response">
 							<h3>
-								{__('Migration is Complete', 'betterlinks')} <img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
+								{migrateRes.btl_prettylinks_migration_running_in_background
+									? __('Migration is running in the background', 'betterlinks')
+									: __('Migration is Complete', 'betterlinks')}
+								<img width="25" src={plugin_root_url + 'assets/images/checkmark.svg'} alt="icon" />
 							</h3>
-							{Object.entries(migrateRes).map(
-								([index, item]) =>
-									Object.entries(item).length > 0 &&
-									Object.entries(item).map(([chiildIndex, childItem]) => (
-										<div key={chiildIndex}>{Array.isArray(childItem) ? childItem.map((item, index) => <div key={index}>{item}</div>) : childItem}</div>
-									))
-							)}
+							{!migrateRes.btl_prettylinks_migration_running_in_background &&
+								Object.entries(migrateRes).map(
+									([index, item]) =>
+										Object.entries(item).length > 0 &&
+										Object.entries(item).map(([chiildIndex, childItem]) => (
+											<div key={chiildIndex}>{Array.isArray(childItem) ? childItem.map((item, index) => <div key={index}>{item}</div>) : childItem}</div>
+										))
+								)}
 						</div>
 						<p style={{ textAlign: 'left' }}>
 							<button className="button button-primary" type="button" onClick={closeModal}>

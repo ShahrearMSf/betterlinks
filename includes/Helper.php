@@ -444,4 +444,77 @@ class Helper
     {
         return site_url('/') . trim($short_url, '/');
     }
+
+    public static function btl_get_option($option_name)
+    {
+        global $wpdb;
+        $result = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+            ARRAY_A
+        );
+        $value = false;
+        if(!empty($result[0]["option_id"])){
+            $value = maybe_unserialize($result[0]["option_value"]);
+        }
+        return $value;
+    }
+    public static function btl_update_option($option_name, $option_value, $careless_insert=false, $careless_update=false)
+    {
+        global $wpdb;
+        $option_value = maybe_serialize($option_value);
+        $result = false;
+        if(!$careless_insert && !$careless_update){
+            $result = $wpdb->get_results(
+                $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+                ARRAY_A
+            );
+        }
+        if($careless_insert || (!$careless_update && empty($result[0]["option_id"]))){
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}options ( option_name, option_value, autoload ) VALUES ( %s, %s, %s )",
+                    array(
+                        $option_name, $option_value, "no"
+                    )
+                )
+            );
+            return $result;
+        }
+        if($careless_update || !empty($result[0]["option_id"])){                    
+            $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
+            return $result !== false;
+        }
+    }
+    public static function run_migration_for_ptrl_links_in_background($installer, $links_count)
+    {
+        global $wpdb;
+        $per_page = 10000;
+        $total_page = ceil($links_count / $per_page);
+        for( $page = 1; $page <= $total_page; $page++ ){
+            $offset = ($page - 1) * $per_page;
+            $links = $wpdb->get_col(
+                "SELECT concat('prli_links-', ID) AS ID FROM {$wpdb->prefix}prli_links LIMIT $per_page OFFSET {$offset}",
+                0
+            );
+            $installer->data( $links )->save();
+        }
+        $installer->data( ['betterlinks_ptl_links_migrated'] )->save();
+        return $installer;
+    }
+    public static function run_migration_for_ptrl_clicks_in_background($installer, $clicks_count)
+    {
+        global $wpdb;
+        $per_page = 10000;
+        $total_page = ceil($clicks_count / $per_page);
+        for( $page = 1; $page <= $total_page; $page++ ){
+            $offset = ($page - 1) * $per_page;
+            $clicks = $wpdb->get_col(
+                "SELECT concat('prli_clicks-', ID) AS ID FROM {$wpdb->prefix}prli_clicks LIMIT $per_page OFFSET {$offset}",
+                0
+            );
+            $installer->data( $clicks )->save();
+        }
+        $installer->data( ['betterlinks_ptl_clicks_migrated'] )->save();
+        return $installer;
+    }
 }
