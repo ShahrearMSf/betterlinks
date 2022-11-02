@@ -140,6 +140,9 @@ class PTLOneClick extends BaseCSV
     public function get_keywords($link_id)
     {
         global $wpdb;
+        if($wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}prli_keywords'") != "{$wpdb->prefix}prli_keywords"){
+            return false;
+        }
         $query = $wpdb->prepare(
             "
                 SELECT text
