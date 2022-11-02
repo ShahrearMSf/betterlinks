@@ -464,7 +464,7 @@ class Helper
         $option_value = maybe_serialize($option_value);
         $result = false;
         if(!$careless_insert && !$careless_update){
-            $result = $wpdb->get_results(
+            $result = $wpdb->get_row(
                 $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
                 ARRAY_A
             );
