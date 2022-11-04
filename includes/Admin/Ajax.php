@@ -75,6 +75,8 @@ class Ajax
         if (!current_user_can('manage_options')) {
             wp_die();
         }
+        // give betterlinks a lot of time to properly set the migration work for background
+        ini_set('max_execution_time', 3000);
         if(\BetterLinks\Helper::btl_get_option("btl_prettylink_migration_should_not_start_in_background")){
             // preventing multiple migration call to prevent duplicate datas from migrating
             wp_send_json_error(["duplicate_migration_detected__so_prevented_it_here" => true]);
