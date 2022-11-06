@@ -49,7 +49,7 @@ class PrettyLinks extends MigrationNotice
         ?>
         <div class="notice notice-info betterlinks-notice-pt-migrate <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('Migration of your Pretty Links data to BetterLinks running in background...', 'betterlinks'); ?>
+                <?php _e('Migration of Pretty Links data to BetterLinks is currently running in background. Migration might take a little while, please be patient.', 'betterlinks'); ?>
             </p>
         </div>
         <?php
