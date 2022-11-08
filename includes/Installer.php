@@ -7,7 +7,7 @@ class Installer extends \WP_Background_Process
     use Traits\DBMigrate;
     protected $wpdb;
     protected $charset_collate;
-    protected $action;
+    protected $action = 'betterlinks_background_task';
     public $activation;
     public $migration;
     public $db_version;
@@ -18,29 +18,11 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->action = 'betterlinks_background_task';
-        $this->activation = ['create_db_tables', 'db_migration', 'insert_terms_data','create_json_files','save_settings','update_json_links'];
-        $this->migration = ['db_migration', 'update_json_links', 'clear_cache'];
-        $this->db_version = get_option('betterlinks_db_version');
+        $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
+        $this->migration = ['db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
+        $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
 
-    public function start_dispatch()
-    {
-        if (get_option($this->action)) {
-            delete_option($this->action);
-            return true;
-        }
-        return false;
-    }
-    public function doing_dispatch()
-    {
-        return get_option($this->action);
-    }
-    public function init()
-    {
-        add_option($this->action, true);
-    }
-    
     /**
      * Task
      *
@@ -63,6 +45,25 @@ class Installer extends \WP_Background_Process
                     trigger_error('BetterLinks background task triggered fatal error for callback ' . esc_html($item), E_USER_WARNING); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
                 }
             }
+        } elseif(!(strpos($item, "prli_links-") === false)) {
+            $item = absint(substr($item, 11)); // getting the ID(number) by deleting 'prli_links-' (used 11 because the length of 'prli_links-' is 11)
+            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
+            if( ! $migrator->insert_link( $item ) ) {
+                return true;
+            }
+        } elseif(!(strpos($item, "prli_clicks-") === false)) {
+            $item = absint(substr($item, 12)); // getting the ID(number) by deleting 'prli_clicks-' (used 12 because the length of 'prli_clicks-' is 12)
+            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
+            if( ! $migrator->insert_click( $item ) ) {
+                return true;
+            }
+        } elseif(
+            $item === "betterlinks_notice_ptl_migrate" || 
+            $item === "betterlinks_ptl_links_migrated" || 
+            $item === "betterlinks_ptl_clicks_migrated"
+        ){
+            $this->after_migration_done();
+            Helper::btl_update_option($item, true);
         }
         return false;
     }
@@ -78,7 +79,15 @@ class Installer extends \WP_Background_Process
         parent::complete();
         // Show notice to user or perform some other arbitrary task...
     }
-    
+
+    public function after_migration_done(){
+        // 'betterlinks/admin/after_import_data' hook's work done here
+        $Cron = new \BetterLinks\Cron();
+        $Cron->write_json_links();
+        $Cron->analytics();
+        Helper::clear_query_cache();
+    }
+
     public function create_db_tables()
     {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -87,13 +96,15 @@ class Installer extends \WP_Background_Process
         $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
         $this->createBetterLinkMetaTable();
-        // update plugin version
-        if (!get_option('betterlinks_version')) {
-            update_option('betterlinks_version', BETTERLINKS_VERSION);
+        // set plugin version in 'option table' if not already setted 
+        // (i.e. when this plugin gets installed on a site for the very first time)
+        if (!Helper::btl_get_option('betterlinks_version')) {
+            Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION, true);
         }
-        // update db version
-        if (!get_option('betterlinks_db_version')) {
-            update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        // set db version in 'option table' if not already setted 
+        // (i.e. when this plugin gets installed on a site for the very first time)
+        if (!Helper::btl_get_option('betterlinks_db_version')) {
+            Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION, true);
         }
     }
 
@@ -112,7 +123,7 @@ class Installer extends \WP_Background_Process
 
     public function save_settings()
     {
-        if (!get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
+        if (!Helper::btl_get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
             $value = [
                 'redirect_type'         => '307',
                 'nofollow'   		    => true,
@@ -130,7 +141,7 @@ class Installer extends \WP_Background_Process
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
             ];
-            add_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
+            Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
     }
 
@@ -174,7 +185,7 @@ class Installer extends \WP_Background_Process
         $Cron = new Cron();
         $Cron->write_json_links();
     }
-    
+
     public function db_migration()
     {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -193,11 +204,33 @@ class Installer extends \WP_Background_Process
                 $this->db_migration_1_2();
             }
         }
-        update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
+        Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }
 
     public function clear_cache()
     {
         Helper::clear_query_cache();
+    }
+
+    public function fix_betterlinks_db()
+    {
+        $btl_db_alter_options = Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS);
+        $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
+        if (!$is_favorite_column_exist) {
+            delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+            global $wpdb;
+            $table          = $wpdb->prefix . 'betterlinks';
+            $results        = $wpdb->get_col("DESC $table", 0);
+            if (in_array("favorite", $results)) {
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                    "added_favorite_column" => true,
+                ]);
+            } else {
+                $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
+                    "added_favorite_column" => $query_result,
+                ]);
+            }
+        }
     }
 }
