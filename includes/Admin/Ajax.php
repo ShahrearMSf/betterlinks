@@ -63,11 +63,10 @@ class Ajax
         if (!current_user_can('manage_options')) {
             wp_die();
         }
-        $links = \BetterLinks\Helper::get_prettylinks_links();
-        $clicks = \BetterLinks\Helper::get_prettylinks_clicks();
-        set_transient('betterlinks_migration_data_prettylinks', ['links' => $links, 'clicks' => $clicks], 60 * 5);
-        wp_send_json_success(['links' => $links, 'clicks' => $clicks]);
-        wp_die();
+        $links_count = \BetterLinks\Helper::get_prettylinks_links_count();
+        $clicks_count = \BetterLinks\Helper::get_prettylinks_clicks_count();
+        set_transient('betterlinks_migration_data_prettylinks', ['links_count' => $links_count, 'clicks_count' => $clicks_count], 60 * 5);
+        wp_send_json_success(['links_count' => $links_count, 'clicks_count' => $clicks_count]);
     }
 
     public function run_prettylinks_migration()
@@ -76,19 +75,49 @@ class Ajax
         if (!current_user_can('manage_options')) {
             wp_die();
         }
-        try {
-            $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
-            $type = explode(',', $type);
-            $migrator = new \BetterLinks\Tools\Migration\PTLOneClick();
-            $resutls = $migrator->run_importer($type);
-            do_action('betterlinks/admin/after_import_data');
-            update_option('betterlinks_notice_ptl_migrate', true);
-            wp_send_json_success($resutls);
-            wp_die();
-        } catch (\Throwable $th) {
-            wp_send_json_error($th->getMessage());
-            wp_die();
+        // give betterlinks a lot of time to properly set the migration work for background
+        if(function_exists("ini_set")){
+            ini_set('max_execution_time', 300);
         }
+        if(\BetterLinks\Helper::btl_get_option("btl_prettylink_migration_should_not_start_in_background")){
+            // preventing multiple migration call to prevent duplicate datas from migrating
+            wp_send_json_error(["duplicate_migration_detected__so_prevented_it_here" => true]);
+        }
+        \BetterLinks\Helper::btl_update_option("btl_prettylink_migration_should_not_start_in_background", true, true);
+        global $wpdb;
+        $query = "DELETE FROM {$wpdb->prefix}options WHERE option_name IN(
+                'betterlinks_notice_ptl_migration_running_in_background',
+                'btl_failed_migration_prettylinks_links',
+                'btl_failed_migration_prettylinks_clicks',
+                'btl_migration_prettylinks_current_successful_links_count',
+                'btl_migration_prettylinks_current_successful_clicks_count'
+        )";
+        $wpdb->query($query);
+        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_links", [], true);
+        \BetterLinks\Helper::btl_update_option("btl_failed_migration_prettylinks_clicks", [], true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_links_count", 0, true);
+        \BetterLinks\Helper::btl_update_option("btl_migration_prettylinks_current_successful_clicks_count", 0, true);
+
+        $type = isset($_POST['type']) ? strtolower(sanitize_text_field($_POST['type'])) : '';
+        $total_links_clicks = get_transient("betterlinks_migration_data_prettylinks");
+        $should_migrate_links = !(strpos($type, "links") === false);
+        $should_migrate_clicks = !(strpos($type, "clicks") === false);
+
+        $installer = new \BetterLinks\Installer();
+        if( $should_migrate_links && !empty($total_links_clicks["links_count"]) ){
+            $links_count = absint($total_links_clicks["links_count"]);
+            $installer = \BetterLinks\Helper::run_migration_for_ptrl_links_in_background($installer, $links_count);
+        }
+
+        if( $should_migrate_clicks && !empty($total_links_clicks["clicks_count"]) ){
+            $clicks_count = absint($total_links_clicks["clicks_count"]);
+            $installer = \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background($installer, $clicks_count);
+        }
+
+        $installer->data( [ 'betterlinks_notice_ptl_migrate' ] )->save();
+        $installer->dispatch();
+        \BetterLinks\Helper::btl_update_option('betterlinks_notice_ptl_migration_running_in_background', true, true);
+        wp_send_json_success(["btl_prettylinks_migration_running_in_background" => true]);
     }
 
     public function migration_prettylinks_notice_hide()

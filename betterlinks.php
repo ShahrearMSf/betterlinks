@@ -3,7 +3,7 @@
  * Plugin Name:		BetterLinks
  * Plugin URI:		https://betterlinks.io/
  * Description:		Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
- * Version:			1.5.0
+ * Version:			1.5.1
  * Author:			WPDeveloper
  * Author URI:		https://wpdeveloper.com
  * License:			GPL-3.0+
@@ -36,9 +36,34 @@ if (!class_exists('BetterLinks')) {
             register_deactivation_hook(__FILE__, [$this, 'deactivate']);
             add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
             add_action('betterlinks_loaded', [$this, 'init_plugin']);
-            add_action('init', [$this, 'init_dispatch']);
-            add_action('admin_init', [$this, 'fix_betterlinks_db'], 2);
+            add_action('admin_init', [$this, 'run_migrator']);
+            add_action('admin_init', [$this, 'do_the_works_if_failed_during_activation'], 100);
             $this->dispatch_hook();
+        }
+
+        public function do_the_works_if_failed_during_activation()
+        {
+            global $wpdb;
+            $prefix = $wpdb->prefix;
+            $btl_links_table_name = "{$prefix}betterlinks";
+            $btl_clicks_table_name = "{$prefix}betterlinks_clicks";
+            if($wpdb->get_var("SHOW TABLES LIKE '$btl_links_table_name'") != $btl_links_table_name && $wpdb->get_var("SHOW TABLES LIKE '$btl_clicks_table_name'") != $btl_clicks_table_name) {
+                $betterlinks_activation_flag = BetterLinks\Helper::btl_get_option("betterlinks_activation_flag");
+                $waiting_time_in_seconds = 5;
+                if(empty($betterlinks_activation_flag["timestamp"]) || (absInt($betterlinks_activation_flag["timestamp"]) + $waiting_time_in_seconds) > time()){
+                    // don't go any further and return false here if, 
+                    // activation flag didn't get setted yet or 
+                    // $waiting_time_in_seconds (in this case 5 seconds) haven't passed yet since the activation flag was setted
+                    return false;
+                }
+                $all_tasks = array_merge(
+                    $this->Installer->activation,
+                    $this->Installer->migration
+                );
+                foreach ($all_tasks as $task) {
+                    $this->Installer->$task();
+                }
+            }
         }
 
         public static function init()
@@ -56,7 +81,7 @@ if (!class_exists('BetterLinks')) {
             /**
              * Defines CONSTANTS for Whole plugins.
              */
-            define('BETTERLINKS_VERSION', '1.5.0');
+            define('BETTERLINKS_VERSION', '1.5.1');
             define('BETTERLINKS_DB_VERSION', '1.5');
             define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
             define('BETTERLINKS_PLUGIN_FILE', __FILE__);
@@ -80,26 +105,6 @@ if (!class_exists('BetterLinks')) {
             $this->upload_dir = wp_get_upload_dir();
         }
 
-        public function fix_betterlinks_db()
-        {
-            $is_favorite_column_exist = isset(get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"]) ? get_option(BETTERLINKS_DB_ALTER_OPTIONS)["added_favorite_column"] : false;
-            if (!$is_favorite_column_exist) {
-                delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-                global $wpdb;
-                $table          = $wpdb->prefix . 'betterlinks';
-                $results        = $wpdb->get_col("DESC $table", 0);
-                if (in_array("favorite", $results)) {
-                    update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
-                        "added_favorite_column" => true,
-                    ]);
-                } else {
-                    $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
-                    update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
-                        "added_favorite_column" => $query_result,
-                    ]);
-                }
-            }
-        }
 
         public function on_plugins_loaded()
         {
@@ -121,7 +126,6 @@ if (!class_exists('BetterLinks')) {
             new BetterLinks\Link();
             new BetterLinks\Tools();
             new BetterLinks\Elementor();
-            $this->run_migrator();
         }
 
         public function dispatch_hook()
@@ -129,8 +133,6 @@ if (!class_exists('BetterLinks')) {
             BetterLinks\API::dispatch_hook();
             BetterLinks\Cron::init();
         }
-
-
 
         public function load_textdomain()
         {
@@ -144,34 +146,19 @@ if (!class_exists('BetterLinks')) {
 
         public function run_migrator()
         {
-            if (get_option('betterlinks_version') != BETTERLINKS_VERSION) {
-                if (!$this->Installer->doing_dispatch()) {
-                    update_option('betterlinks_version', BETTERLINKS_VERSION);
-                    $this->Installer->init();
-                    foreach ($this->Installer->migration as $task) {
-                        $this->Installer->push_to_queue($task);
-                    }
-                    $this->Installer->save();
-                }
-            }
-        }
-
-        public function init_dispatch()
-        {
-            if ($this->Installer->start_dispatch()) {
-                $this->Installer->dispatch();
+            $btl_version = BetterLinks\Helper::btl_get_option('betterlinks_version');
+            $should_insert = $btl_version===false;
+            if ($btl_version != BETTERLINKS_VERSION && BetterLinks\Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION, $should_insert, !$should_insert)) {
+                $this->Installer->data($this->Installer->migration)->save()->dispatch();
             }
         }
 
         public function activate()
         {
-            if (!$this->Installer->doing_dispatch()) {
-                $this->Installer->init();
-                foreach ($this->Installer->activation as $task) {
-                    $this->Installer->push_to_queue($task);
-                }
-                $this->Installer->save();
-            }
+            $this->Installer->data($this->Installer->activation)->save()->dispatch();
+            BetterLinks\Helper::btl_update_option('betterlinks_activation_flag', [
+                "timestamp" => time(),
+            ]);
         }
 
         public function deactivate()

@@ -587,22 +587,16 @@ trait Query
         return $response;
     }
 
-    public static function get_prettylinks_links()
+    public static function get_prettylinks_links_count()
     {
         global $wpdb;
-        $link = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_links",
-            ARRAY_A
-        );
-        return $link;
+        $links = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_links");
+        return $links;
     }
-    public static function get_prettylinks_clicks()
+    public static function get_prettylinks_clicks_count()
     {
         global $wpdb;
-        $clicks = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}prli_clicks",
-            ARRAY_A
-        );
+        $clicks = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}prli_clicks");
         return $clicks;
     }
 
