@@ -22,6 +22,7 @@ const getLinksListViewColumnData = (props) => {
 		}
 		return analytic.link_count + '/' + analytic.ip.length;
 	};
+	const is_allow_qr = props?.settings?.settings?.is_allow_qr;
 
 	return [
 		{
@@ -90,6 +91,7 @@ const getLinksListViewColumnData = (props) => {
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction
+						isAlowQr={is_allow_qr}
 						isShowVisitLink={true}
 						isShowAnalytics={false}
 						isShowCopyLink={false}
@@ -209,8 +211,6 @@ const ListCanvas = (props) => {
 		setIsOpenCustomDateFilter,
 		resetFilterHandler,
 	]);
-
-	// console.log({ settings });
 
 	return (
 		<React.Fragment>
