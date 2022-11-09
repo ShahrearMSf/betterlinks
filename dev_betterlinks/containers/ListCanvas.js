@@ -107,7 +107,8 @@ const getLinksListViewColumnData = (props) => {
 };
 
 const ListCanvas = (props) => {
-	const { links, settings } = props.links;
+	const { links } = props.links;
+	const { settings } = props.settings;
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -208,6 +209,8 @@ const ListCanvas = (props) => {
 		setIsOpenCustomDateFilter,
 		resetFilterHandler,
 	]);
+
+	// console.log({ settings });
 
 	return (
 		<React.Fragment>

@@ -71,6 +71,7 @@ const LinkQuickAction = ({
 		return analytic.link_count + '/' + analytic.ip.length;
 	};
 
+	// console.log({ isAlowQr });
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
