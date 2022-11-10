@@ -43,14 +43,6 @@ export default class ExternalAnalytics extends React.Component {
 										</label>
 									</div>
 								</div>
-								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
-									<label className="btl-form-label">
-										{__('Google Analytics Tracking ID', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-									</label>
-									<div className="link-options__body">
-										<input type="text" className="btl-form-control" name="ga_tracking_code" disabled />
-									</div>
-								</div>
 							</form>
 						</div>
 
@@ -73,22 +65,6 @@ export default class ExternalAnalytics extends React.Component {
 											<input type="checkbox" className="btl-check" name="is_enable_pixel" disabled />
 											<span className="text"></span>
 										</label>
-									</div>
-								</div>
-								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
-									<label className="btl-form-label">
-										{__('Pixel ID', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-									</label>
-									<div className="link-options__body">
-										<input type="text" className="btl-form-control" name="pixel_id" disabled />
-									</div>
-								</div>
-								<div className="btl-role-item btl-form-group" onClick={() => this.openModal()}>
-									<label className="btl-form-label">
-										{__('Pixel API Access Token', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-									</label>
-									<div className="link-options__body">
-										<textarea type="text" className="btl-form-control" name="pixel_access_token" disabled />
 									</div>
 								</div>
 							</form>
