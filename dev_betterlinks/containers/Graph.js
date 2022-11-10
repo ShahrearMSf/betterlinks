@@ -93,7 +93,7 @@ const Graph = (props) => {
 		setFilterButtonText(__('Filtering...', 'betterlinks'));
 		try {
 			const res = await API.get(endPoint, {
-				params: { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') },
+				params: { from: formatDate(customDateFilter[0].startDate, 'mm-dd-yyyy'), to: formatDate(customDateFilter[0].endDate, 'mm-dd-yyyy') },
 			});
 			setTimeout(function () {
 				props.fetchCustomClicksData(res.data);
@@ -106,8 +106,8 @@ const Graph = (props) => {
 			let form_data = new FormData();
 			form_data.append('action', 'betterlinks/admin/fetch_analytics');
 			form_data.append('security', betterlinks_nonce);
-			form_data.append('from', formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'));
-			form_data.append('to', formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd'));
+			form_data.append('from', formatDate(customDateFilter[0].startDate, 'mm-dd-yyyy'));
+			form_data.append('to', formatDate(customDateFilter[0].endDate, 'mm-dd-yyyy'));
 			await axios.post(ajaxurl, form_data).then(
 				(response) => {
 					if (response.data) {
@@ -148,10 +148,11 @@ const Graph = (props) => {
 									<span className="dashicons dashicons-no-alt"></span>
 								</button>
 								<DateRangePicker
+								// 
 									onChange={(item) => dateRangePickerOnChangeHandler(item)}
 									showSelectionPreview={true}
 									moveRangeOnFirstSelection={false}
-									months={2}
+									months={4}
 									ranges={customDateFilter}
 									direction="horizontal"
 								/>
@@ -164,7 +165,9 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
+				{/*  */}
 				<Line data={data} options={options} />
+				{/* <h3>Hey there</h3> */}
 			</div>
 		</React.Fragment>
 	);

@@ -9,7 +9,11 @@ const Analytics = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Analytics', 'betterlinks')} />
-			{betterLinksHooks.applyFilters('analyticsInnerChild', <Clicks />, parsed)}
+			
+			{betterLinksHooks.applyFilters('analyticsInnerChild', 
+			<Clicks />, 
+			// false,
+			parsed)}
 		</React.Fragment>
 	);
 };
