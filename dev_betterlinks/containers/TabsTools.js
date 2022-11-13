@@ -27,6 +27,9 @@ const TabsTools = ({ query }) => {
 		}
 	}, []);
 
+	const result = 'admin.php?page=' + query.get('page') + '&import=true';
+	console.log({ result });
+
 	return (
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
@@ -88,7 +91,7 @@ const TabsTools = ({ query }) => {
 							</div>
 							{importerMode === 'thirstyaffiliates' && (
 								<>
-									<input type="text" placeholder="Link Prefix" value={taPrefix} onChange={(e) => setTaPrefix(e.target.value)} />
+									<input name="ta_prefix" id="ta_prefix" type="text" placeholder="Link Prefix" value={taPrefix} onChange={(e) => setTaPrefix(e.target.value)} />
 								</>
 							)}
 							<p className="btl-file-chooser">
