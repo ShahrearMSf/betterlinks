@@ -12,7 +12,7 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $item) {
                 if (!empty($item['link_title']) && !empty($item['short_url'])) {
-                    $item["short_url"] = $ta_link_prefix . $item["short_url"];
+                    $item["short_url"] = $ta_link_prefix . "/" . $item["short_url"];
                     $link_id = $this->insert_link($item, $ta_link_prefix);
                     if (!empty($item['keywords'])) {
                         $this->insert_keywords($link_id, $item['keywords'], [
