@@ -28,7 +28,7 @@ const Settings = (props) => {
 		__('General', 'betterlinks'),
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
-		__('External Analytics', 'betterlinks'),
+		__('Tracking', 'betterlinks'),
 		__('Broken Link Checker', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
