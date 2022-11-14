@@ -203,7 +203,7 @@ trait Query
             if(is_array($analytic_data)){
                 $formattedArray = array_merge($analytic_data, $formattedArray);
             }else{
-                $analytic_data = is_string($analytic_data) ? json_decode($analytic_data) : [];
+                $analytic_data = is_string($analytic_data) ? json_decode($analytic_data, true) : [];
                 $formattedArray = array_merge($analytic_data, $formattedArray);
             }
         }
