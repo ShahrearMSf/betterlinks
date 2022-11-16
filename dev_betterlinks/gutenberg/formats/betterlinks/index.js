@@ -410,7 +410,6 @@ export const betterlinksFormat = {
 													reset();
 													setIsSubmittingForGutenberg(false);
 													setShowLinkModal(false);
-													console.log('----edit_link---', { res });
 													return res;
 												})
 												.catch((error) => {

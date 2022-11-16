@@ -4,14 +4,12 @@ export default function gutenbergRedirectLink(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_LINK_FOR_PERMALINK: {
-			console.log('----FETCH_LINK_FOR_PERMALINK reducer data ', { payload });
 			return {
 				...state,
 				linkData: payload,
 			};
 		}
 		case EDIT_GUTENBERG_LINK: {
-			console.log('----EDIT_GUTENBERG_LINK reducer data ', { payload });
 			return {
 				...state,
 				linkData: {
@@ -21,7 +19,6 @@ export default function gutenbergRedirectLink(state = {}, action) {
 			};
 		}
 		case EDIT_LINK_EXPIRE_OPTION: {
-			console.log('----EDIT_LINK_EXPIRE_OPTION reducer data ', { payload });
 			return {
 				...state,
 				linkData: {
@@ -38,7 +35,6 @@ export default function gutenbergRedirectLink(state = {}, action) {
 				...state,
 				linkData: payload,
 			};
-			console.log('-----newResettedData', { newResettedData });
 			return newResettedData;
 		default:
 			return state;

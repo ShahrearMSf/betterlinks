@@ -29,11 +29,9 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 (() => {
 	let x = 1;
 	const intervalId = setInterval(() => {
-		console.log('interval running each 100ms');
 		x++;
 		if (x > 60000) {
 			clearInterval(intervalId);
-			console.log('interval cleard');
 		}
 		if (
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData &&
@@ -43,7 +41,6 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 		) {
 			document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
 			clearInterval(intervalId);
-			console.log('interval cleard');
 		} else {
 			document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
 			document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');

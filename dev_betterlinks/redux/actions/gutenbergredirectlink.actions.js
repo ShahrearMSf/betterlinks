@@ -26,7 +26,6 @@ import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION 
 
 export const fetch_link_for_permalink = async () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-	console.log('---fetch_link_for_permalink', { short_url }, "------wp.data.select('core/editor').getPermalink()-----", wp.data.select('core/editor').getPermalink());
 	if (!short_url) return false;
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
@@ -34,7 +33,6 @@ export const fetch_link_for_permalink = async () => {
 	form_data.append('short_url', short_url);
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
-			console.log('betterlinks/admin/get_links_by_short_url', { response });
 			let linkData = response?.data?.data;
 			//👇 if link found for the post/page
 			if (linkData) {
@@ -74,7 +72,6 @@ export const fetch_link_for_permalink = async () => {
 						type: FETCH_LINK_FOR_PERMALINK,
 						payload: linkData,
 					});
-					console.log('----dispatch FETCH_LINK_FOR_PERMALINK --!(linkData.ID || linkData.ID === 0)-- ', { linkData });
 					return false;
 				}
 
@@ -88,7 +85,6 @@ export const fetch_link_for_permalink = async () => {
 						type: FETCH_LINK_FOR_PERMALINK,
 						payload: linkData,
 					});
-					console.log('----dispatch FETCH_LINK_FOR_PERMALINK --in if block betterlinksGutenStore.getState()?.links?.links-- ', { linkData });
 					return false;
 				}
 
@@ -104,7 +100,6 @@ export const fetch_link_for_permalink = async () => {
 								type: FETCH_LINK_FOR_PERMALINK,
 								payload: linkData,
 							});
-							console.log('----dispatch FETCH_LINK_FOR_PERMALINK --in if block else case betterlinksGutenStore.getState()?.links?.links-- ', { linkData });
 						})
 						.catch((error) => console.log(error));
 				}
@@ -120,7 +115,6 @@ export const fetch_link_for_permalink = async () => {
 					type: FETCH_LINK_FOR_PERMALINK,
 					payload: linkData,
 				});
-				console.log("---settings exist--- dispatched 'FETCH_LINK_FOR_PERMALINK' with payload 'linkData' from getLinkDataFromSettings function ", { linkData });
 				return false;
 			}
 			//👇 if settings data doesn't exist in the store
@@ -133,7 +127,6 @@ export const fetch_link_for_permalink = async () => {
 						type: FETCH_LINK_FOR_PERMALINK,
 						payload: linkData,
 					});
-					console.log("^^^^^settings don't exist^^^^^^ dispatched 'FETCH_LINK_FOR_PERMALINK' with payload 'linkData' from getLinkDataFromSettings function ", { linkData });
 				})
 				.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
 		},

@@ -38,7 +38,6 @@ function links(state = {}, action) {
 			};
 		}
 		case FETCH_WITHOUT_CATEGORY_INITIAL_DATA: {
-			console.log('----FETCH_WITHOUT_CATEGORY_INITIAL_DATA', { payload });
 			return {
 				...state,
 				links: Object.values(payload?.data || [])

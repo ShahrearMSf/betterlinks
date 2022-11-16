@@ -11,8 +11,6 @@ import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
 
-//
-import { LoadingSpinner } from 'gutenberg/components';
 
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
@@ -20,13 +18,10 @@ const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
-console.log('sidebar/index.js file load hoiseeeeeeeeee');
 
 const CustomSidebarComponent = (props) => {
-	console.log('=====**======CustomSidebarComponent', { props });
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [linkData, setLinkData] = useState(false);
-	const [isDeletingInstantGutenbergRedirect, setIsDeletingInstantGutenbergRedirect] = useState(false);
 
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [ID, setID] = useState(null);
@@ -48,18 +43,15 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	useEffect(() => {
-		// terms
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
-			console.log('-----betterlinksGutenStore?.getState()?.terms?.terms ', { storeTerms });
 			if (storeTerms) {
 				setTerms(storeTerms);
 			} else {
 				fetch_terms_data()(betterlinksGutenStore.dispatch)
 					.then(() => {
 						const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
-						console.log('----- !storeTerms =-= betterlinksGutenStore?.getState()?.terms?.terms', { storeTerms });
 						setTerms(storeTerms);
 					})
 					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
@@ -96,9 +88,6 @@ const CustomSidebarComponent = (props) => {
 
 			setTimeout(() => {
 				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
-				console.log(
-					'---removed loader----===================---removed loader----===================---removed loader----===================---removed loader----===================---removed loader----'
-				);
 			}, 100);
 		};
 
@@ -117,11 +106,8 @@ const CustomSidebarComponent = (props) => {
 
 		const linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
 		if (linkData) {
-			console.log('----fetch_link_for_permalink inside useEffect[] found linkData in store', { linkData });
 			setAllStatesForLinkData(linkData);
 		} else {
-			console.log("---wp.data.select('core/editor').getPermalink()---", wp.data.select('core/editor').getPermalink());
-
 			fetch_link_for_permalink()
 				.then(() => {
 					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
@@ -131,7 +117,6 @@ const CustomSidebarComponent = (props) => {
 							expire: getJsonString(linkData.expire),
 						};
 					}
-					console.log('----fetch_link_for_permalink inside useEffect[] had to be fetched', { linkData });
 					setAllStatesForLinkData(linkData);
 				})
 				.catch((error) => console.log(error));
@@ -245,8 +230,6 @@ const CustomSidebarComponent = (props) => {
 	};
 
 	const deleteInstantRedirect = () => {
-		console.log('deleteInstantRedirect function runned');
-
 		const ID = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.ID;
 		const short_url = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.short_url;
 		const cat_id = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.cat_id;
@@ -261,9 +244,7 @@ const CustomSidebarComponent = (props) => {
 			cat_id,
 		})
 			.then((response) => {
-				console.log('----deleting instant gutenberg redirect link done---', { response });
 				const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-
 				const linkData = {
 					ID: '',
 					cat_id: '',
@@ -310,8 +291,6 @@ const CustomSidebarComponent = (props) => {
 				onSetTrackMe(settings.track_me);
 
 				document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
-
-				// props.showSaveButton();
 			})
 			.catch((error) => {
 				console.log(error);
@@ -325,25 +304,6 @@ const CustomSidebarComponent = (props) => {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
-
-	console.log({
-		linkData,
-		ID,
-		catId,
-		isNofollow,
-		isParamForwarding,
-		redirectMode,
-		isSponsored,
-		targetUrl,
-		isTrackMe,
-		linkStatus,
-		isExpire,
-		expireType,
-		expireClicks,
-		expireRedirect,
-		expireRedirectUrl,
-	});
-
 	return (
 		<Fragment>
 			{isAllowInstantRedirect && (
@@ -602,11 +562,8 @@ const CustomSidebarComponent = (props) => {
 		) {
 			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
 			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			console.log('---lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp---::', isSameInstantGutenbergData);
 			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
 			if (isSameInstantGutenbergData) return false;
-
-			console.log('----betterlinks subscribe passed the if check. actual code started running.');
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -621,8 +578,6 @@ const CustomSidebarComponent = (props) => {
 			const short_url = permalinkToShortUrl(permalink);
 			const link_title = currentPost.title;
 			const link_slug = currentPost.slug;
-
-			console.log('----permalink & shortUrl---', { permalink, short_url, currentPost, link_title, link_slug });
 
 			const params = {
 				...freeParams,
@@ -657,8 +612,6 @@ const CustomSidebarComponent = (props) => {
 				};
 			}
 
-			console.log('---freeParams & values---', { freeParams, values });
-
 			if (!params.cat_id) {
 				const { ID } = terms.filter((item) => item.term_slug == 'uncategorized')[0];
 				params.cat_id = ID;
@@ -677,9 +630,7 @@ const CustomSidebarComponent = (props) => {
 							params,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((response) => {
-								console.log('--------edit_link---- complete', { response });
-							})
+							.then((response) => {})
 							.catch((error) => console.error(error));
 					} else {
 						add_new_link(
@@ -687,9 +638,7 @@ const CustomSidebarComponent = (props) => {
 							true,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((response) => {
-								console.log('--------add_new_link---- complete', { response });
-							})
+							.then((response) => {})
 							.catch((error) => console.error(error));
 					}
 				}
