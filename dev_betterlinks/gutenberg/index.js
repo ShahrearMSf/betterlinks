@@ -7,7 +7,6 @@ import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
-import { fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
 
 // local imports
 import { CustomSidebar } from 'gutenberg/components';

@@ -5,12 +5,11 @@ import { redirectType } from 'utils/data';
 import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl } from 'utils/helper';
 
 import { edit_gutenberg_link, edit_link_expire_option, fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
-import { add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
-
 
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
@@ -18,13 +17,9 @@ const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
-
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
-	const [linkData, setLinkData] = useState(false);
-
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [ID, setID] = useState(null);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState('');
 	const [redirectMode, setRedirectMode] = useState(null);
@@ -60,11 +55,9 @@ const CustomSidebarComponent = (props) => {
 
 		const setAllStatesForLinkData = (linkData) => {
 			if (!linkData) return false;
-			setLinkData(linkData);
 			if (linkData.ID || linkData.ID === 0) {
 				setIsAllowInstantRedirect(true);
 			}
-			setID(linkData.ID);
 			setTargetUrl(linkData.target_url);
 			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
 				edit_gutenberg_link({ redirect_type: '307' });
@@ -275,7 +268,6 @@ const CustomSidebarComponent = (props) => {
 					payload: linkData,
 				});
 
-				setID('');
 				onSetTargetUrl('');
 				onSetCatId('');
 				onSetLinkStatus('');
