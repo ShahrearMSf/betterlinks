@@ -298,8 +298,9 @@
 	}
 }
 
-.btl-googleanalytics-container {
-	input.btl-form-control {
+.btl-external-analytics-container {
+	margin-bottom: 20px;
+	.btl-form-control {
 		background: #fafafa;
 		border: 1px solid #ebebeb;
 		&:disabled {
@@ -307,6 +308,18 @@
 			cursor: initial;
 		}
 	}
+}
+
+.btl-external-analytics-container .btl-role-item.btl-form-group:last-child {
+	margin-bottom: 40px;
+}
+
+.btl-external-analytics-container .btl-role-item.btl-form-group:first-child {
+	margin-bottom: 0px;
+}
+
+.externalAnalyticsForm .btn-save-settings {
+	margin-top: 40px;
 }
 
 span.pro-badge {

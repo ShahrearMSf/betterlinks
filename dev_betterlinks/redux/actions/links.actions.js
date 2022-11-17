@@ -1,4 +1,5 @@
-import { API, namespace, makeRequest } from 'utils/helper';
+import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
+import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -9,7 +10,7 @@ export const ADD_NEW_LINK = 'ADD_NEW_LINK';
 export const ADD_NEW_LINK_FOR_GUTEN_STORE = 'ADD_NEW_LINK_FOR_GUTEN_STORE';
 export const DELETE_LINK = 'DELETE_LINK';
 export const EDIT_LINK = 'EDIT_LINK';
-export const EDIT_LINK_FORGUTENBERG = 'EDIT_LINK_FORGUTENBERG';
+export const EDIT_LINK_FOR_GUTENBERG = 'EDIT_LINK_FOR_GUTENBERG';
 export const HANDLE_LINK_FAVORITE = 'HANDLE_LINK_FAVORITE';
 
 export const onDragEnd = (result) => async (dispatch) => {
@@ -148,7 +149,7 @@ export const delete_cat = (params) => async (dispatch) => {
 };
 
 export const add_new_link =
-	(formData, forGutenbergStore = false) =>
+	(formData, forGutenbergStore = false, isThisInstantGutenbergRedirectLink = false) =>
 	async (dispatch) => {
 		try {
 			const res = await API.post(namespace + 'links', {
@@ -159,18 +160,67 @@ export const add_new_link =
 					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
 					payload: res.data,
 				});
+				if (isThisInstantGutenbergRedirectLink) {
+					const originalResponseData = res.data?.data;
+					const clonedResponseData = {
+						...(originalResponseData || {}),
+					};
+
+					delete clonedResponseData.expire;
+					delete clonedResponseData.link_status;
+					delete clonedResponseData.dynamic_redirect;
+
+					dispatch({
+						type: EDIT_GUTENBERG_LINK,
+						payload: clonedResponseData,
+					});
+
+					dispatch({
+						type: EDIT_LINK_EXPIRE_OPTION,
+						payload:
+							typeof originalResponseData?.expire === 'object'
+								? originalResponseData.expire
+								: typeof originalResponseData?.expire === 'string'
+								? getJsonString(originalResponseData.expire)
+								: {},
+					});
+				}
 			}
 			return res;
 		} catch (e) {
 			return makeRequest({
 				action: 'betterlinks/admin/create_link',
 				...formData,
-			}).then((response) => {
-				if (response.data) {
+			}).then((res) => {
+				if (res.data) {
 					dispatch({
 						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
-						payload: response.data,
+						payload: res.data,
 					});
+					if (isThisInstantGutenbergRedirectLink) {
+						const originalResponseData = res.data?.data;
+						const clonedResponseData = {
+							...(originalResponseData || {}),
+						};
+						delete clonedResponseData.expire;
+						delete clonedResponseData.link_status;
+						delete clonedResponseData.dynamic_redirect;
+
+						dispatch({
+							type: EDIT_GUTENBERG_LINK,
+							payload: clonedResponseData,
+						});
+
+						dispatch({
+							type: EDIT_LINK_EXPIRE_OPTION,
+							payload:
+								typeof originalResponseData?.expire === 'object'
+									? originalResponseData.expire
+									: typeof originalResponseData?.expire === 'string'
+									? getJsonString(originalResponseData.expire)
+									: {},
+						});
+					}
 				}
 			});
 		}
@@ -183,7 +233,7 @@ export const edit_link =
 				params: item,
 			});
 			dispatch({
-				type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
+				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 				payload: item,
 			});
 			return res;
@@ -194,7 +244,7 @@ export const edit_link =
 			}).then((response) => {
 				if (response.data) {
 					dispatch({
-						type: forGutenbergStore ? EDIT_LINK_FORGUTENBERG : EDIT_LINK,
+						type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 						payload: response.data.data,
 					});
 				}

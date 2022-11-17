@@ -1,6 +1,6 @@
 const { useEffect } = wp.element;
 
-export const LoadingSpinner = () => {
+const LoadingSpinner = () => {
 	useEffect(() => {
 		document?.body?.classList?.add('betterlinks-loading-spinner-mounted');
 		return () => {
@@ -13,3 +13,5 @@ export const LoadingSpinner = () => {
 		</div>
 	);
 };
+
+export default LoadingSpinner;

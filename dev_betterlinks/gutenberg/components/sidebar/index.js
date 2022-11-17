@@ -1,172 +1,190 @@
-import axios from 'axios';
-import { redirectType } from 'utils/data';
-import { makeRequest, betterlinks_nonce, site_url, getJsonString, formatDate, is_pro_enabled } from 'utils/helper';
-import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-const { registerPlugin } = wp.plugins;
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { redirectType } from 'utils/data';
+import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl } from 'utils/helper';
+
+import { edit_gutenberg_link, edit_link_expire_option, fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
+import { add_new_link, edit_link } from 'redux/actions/links.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
+import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
+
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
-const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
+const { PluginDocumentSettingPanel } = wp.editPost;
 
-var BetterLinksID;
-var target_url;
-var redirect_type;
-var cat_id;
-var nofollow;
-var sponsored;
-var param_forwarding;
-var track_me;
-
-var link_status;
-var expire;
-var expire_type;
-var currentDate = new Date();
-var expire_date = currentDate;
-var expire_clicks;
-var expire_redirect;
-var expire_redirect_url;
-
-var isSavingPost = true; // flag for multiple request break
-
-const permalinkToShortUrl = (permalink) => {
-	if (!permalink) return permalink;
-	const short_url = permalink.replace(site_url + '/', '');
-	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
-};
-
-const CustomSidebarMetaComponent = (props) => {
+const CustomSidebarComponent = (props) => {
+	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [ID, setID] = useState(BetterLinksID);
 	const [terms, setTerms] = useState(false);
-	const [targetUrl, setTargetUrl] = useState(target_url);
-	const [redirectMode, setRedirectMode] = useState(redirect_type);
-	const [catId, setCatId] = useState(cat_id);
-	const [isNofollow, setIsNoFollow] = useState(nofollow);
-	const [isSponsored, setSponsored] = useState(sponsored);
-	const [isParamForwarding, setIsParamForwarding] = useState(param_forwarding);
-	const [isTrackMe, setIsTrackMe] = useState(track_me);
+	const [targetUrl, setTargetUrl] = useState('');
+	const [redirectMode, setRedirectMode] = useState(null);
+	const [catId, setCatId] = useState(null);
+	const [isNofollow, setIsNoFollow] = useState(null);
+	const [isSponsored, setSponsored] = useState(null);
+	const [isParamForwarding, setIsParamForwarding] = useState(null);
+	const [isTrackMe, setIsTrackMe] = useState(null);
 
-	const [linkStatus, setLinkStatus] = useState(link_status);
-	const [isExpire, setIsExpire] = useState(expire);
-	const [expireType, setExpireType] = useState(expire_type);
-	const [expireDate, setExpireDate] = useState(expire_date);
-	const [expireClicks, setExpireClicks] = useState(expire_clicks);
-	const [expireRedirect, setExpireRedirect] = useState(expire_redirect);
-	const [expireRedirectUrl, setExpireRedirectUrl] = useState(expire_redirect_url);
+	const [linkStatus, setLinkStatus] = useState(null);
+	const [isExpire, setIsExpire] = useState();
+	const [expireType, setExpireType] = useState(null);
+	const [expireDate, setExpireDate] = useState(new Date());
+	const [expireClicks, setExpireClicks] = useState(null);
+	const [expireRedirect, setExpireRedirect] = useState(null);
+	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
-			makeRequest({
-				action: 'betterlinks/admin/get_terms',
-			}).then((response) => {
-				if (response.data.data) {
-					setTerms(response.data.data);
-				}
-			});
-		}
-
-		if (props.data) {
-			BetterLinksID = props.data.ID;
-			setID(props.data.ID);
-			onSetTargetUrl(props.data.target_url);
-			onSetRedirectType(props.data.redirect_type);
-			onSetCatId(props.data.term_id);
-			onSetNoFollow(!!props.data.nofollow);
-			onSetSponsored(!!props.data.sponsored);
-			onSetParamForwarding(!!props.data.param_forwarding);
-			onSetTrackMe(!!props.data.track_me);
-
-			if (is_pro_enabled) {
-				const expire = getJsonString(props.data.expire);
-				if (expire) {
-					onSetLinkStatus(props.data.link_status);
-					onSetExpire(expire.status);
-					onSetExpireType(expire.type);
-					onSetExpireDate(expire.date);
-					onSetExpireClicks(expire.clicks);
-					onSetExpireRedirect(expire.redirect_status);
-					onSetExpireRedirectUrl(expire.redirect_url);
-				}
+			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+			if (storeTerms) {
+				setTerms(storeTerms);
+			} else {
+				fetch_terms_data()(betterlinksGutenStore.dispatch)
+					.then(() => {
+						const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+						setTerms(storeTerms);
+					})
+					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 			}
-		} else {
-			onSetNoFollow(!!props.settings.nofollow);
-			onSetSponsored(!!props.settings.sponsored);
-			onSetParamForwarding(!!props.settings.param_forwarding);
-			onSetTrackMe(!!props.settings.track_me);
 		}
-	}, [ID, props.data]);
+
+		const setAllStatesForLinkData = (linkData) => {
+			if (!linkData) return false;
+			if (linkData.ID || linkData.ID === 0) {
+				setIsAllowInstantRedirect(true);
+			}
+			setTargetUrl(linkData.target_url);
+			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
+				edit_gutenberg_link({ redirect_type: '307' });
+				setRedirectMode('307');
+			} else {
+				setRedirectMode(linkData.redirect_type);
+			}
+			setCatId(linkData.cat_id);
+			setIsNoFollow(linkData.nofollow);
+			setSponsored(linkData.sponsored);
+			setIsParamForwarding(linkData.param_forwarding);
+			setIsTrackMe(linkData.track_me);
+			setLinkStatus(linkData.link_status);
+
+			setIsExpire(linkData.expire?.status);
+			setExpireType(linkData.expire?.type);
+			setExpireDate(linkData.expire?.date);
+			setExpireClicks(linkData.expire?.clicks);
+			setExpireRedirect(linkData.expire?.redirect_status);
+			setExpireRedirectUrl(linkData.expire?.redirect_url);
+
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+			}, 100);
+		};
+
+		// Settings
+		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+		if (settings) {
+			setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+		} else {
+			fetch_settings_data()(betterlinksGutenStore.dispatch)
+				.then(() => {
+					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+					setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+				})
+				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
+		}
+
+		const linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+		if (linkData) {
+			setAllStatesForLinkData(linkData);
+		} else {
+			fetch_link_for_permalink()
+				.then(() => {
+					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+					if (typeof linkData?.expire === 'string') {
+						linkData = {
+							...linkData,
+							expire: getJsonString(linkData.expire),
+						};
+					}
+					setAllStatesForLinkData(linkData);
+				})
+				.catch((error) => console.log(error));
+		}
+	}, []);
 
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
-		target_url = url;
+		edit_gutenberg_link({ target_url: url });
 	};
+
 	const onSetRedirectType = (type) => {
 		setRedirectMode(type);
-		redirect_type = type;
+		edit_gutenberg_link({ redirect_type: type });
 	};
 
 	const onSetCatId = (catid) => {
 		setCatId(catid);
-		cat_id = catid;
+		edit_gutenberg_link({ cat_id: catid });
 	};
 
 	const onSetNoFollow = (isnofollow) => {
 		setIsNoFollow(isnofollow);
-		nofollow = isnofollow;
+		edit_gutenberg_link({ nofollow: isnofollow });
 	};
 
 	const onSetSponsored = (issponsored) => {
 		setSponsored(issponsored);
-		sponsored = issponsored;
+		edit_gutenberg_link({ sponsored: issponsored });
 	};
 
 	const onSetParamForwarding = (isparamforwarding) => {
 		setIsParamForwarding(isparamforwarding);
-		param_forwarding = isparamforwarding;
+		edit_gutenberg_link({ param_forwarding: isparamforwarding });
 	};
 
 	const onSetTrackMe = (istrackme) => {
 		setIsTrackMe(istrackme);
-		track_me = istrackme;
+		edit_gutenberg_link({ track_me: istrackme });
 	};
 
 	const onSetLinkStatus = (status) => {
 		setLinkStatus(status);
-		link_status = status;
+		edit_gutenberg_link({ link_status: status });
 	};
 
 	const onSetExpire = (value) => {
 		setIsExpire(value);
-		expire = value;
+		edit_link_expire_option({ status: value });
 	};
 
 	const onSetExpireType = (value) => {
 		setExpireType(value);
-		expire_type = value;
+		edit_link_expire_option({ type: value });
 	};
 
 	const onSetExpireDate = (value) => {
-		setExpireDate(value);
-		expire_date = value;
+		const newDateValue = formatDate(value, 'yyyy-mm-dd h:m:s');
+		setExpireDate(newDateValue);
+		edit_link_expire_option({ date: newDateValue });
 	};
 
 	const onSetExpireClicks = (value) => {
 		setExpireClicks(value);
-		expire_clicks = value;
+		edit_link_expire_option({ clicks: value });
 	};
 
 	const onSetExpireRedirect = (value) => {
 		setExpireRedirect(value);
-		expire_redirect = value;
+		edit_link_expire_option({ redirect_status: value });
 	};
 
 	const onSetExpireRedirectUrl = (value) => {
 		setExpireRedirectUrl(value);
-		expire_redirect_url = value;
+		edit_link_expire_option({ redirect_url: value });
 	};
 
 	const getDefaultCatID = (savedCatID, terms) => {
@@ -195,6 +213,7 @@ const CustomSidebarMetaComponent = (props) => {
 		onSetLinkStatus('publish');
 		return 'publish';
 	};
+
 	const getDefaultExpireType = (type) => {
 		if (type && type != '') {
 			return type;
@@ -202,32 +221,74 @@ const CustomSidebarMetaComponent = (props) => {
 		onSetExpireType('date');
 		return 'date';
 	};
+
 	const deleteInstantRedirect = () => {
-		if (ID && confirm(__('Are you sure you want to delete your Instant Redirect Rule?', 'betterlinks'))) {
-			makeRequest({
-				action: 'betterlinks/admin/delete_link',
-				ID,
-				short_url: permalinkToShortUrl(wp.data.select('core/editor').getPermalink()),
-			}).then((response) => {
-				BetterLinksID = '';
-				setID('');
+		const ID = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.ID;
+		const short_url = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.short_url;
+		const cat_id = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.cat_id;
+
+		if (!ID) return false;
+
+		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+		makeRequest({
+			action: 'betterlinks/admin/delete_link',
+			ID,
+			short_url,
+			cat_id,
+		})
+			.then((response) => {
+				const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+				const linkData = {
+					ID: '',
+					cat_id: '',
+					target_url: '',
+					link_title: '',
+					link_slug: '',
+					expire: {
+						status: false,
+					},
+					link_status: 'publish',
+					redirect_type: settings.redirect_type,
+					nofollow: settings.nofollow,
+					sponsored: settings.sponsored,
+					param_forwarding: settings.param_forwarding,
+					track_me: settings.track_me,
+				};
+
+				betterlinksGutenStore.dispatch({
+					type: DELETE_GUTENBERG_LINK,
+					payload: {
+						...response?.data?.data,
+						cat_id,
+					},
+				});
+
+				betterlinksGutenStore.dispatch({
+					type: RESET_GUTENBERG_INSTANT_REDIRECT,
+					payload: linkData,
+				});
+
 				onSetTargetUrl('');
-				onSetRedirectType('');
 				onSetCatId('');
-				onSetNoFollow(false);
-				onSetSponsored(false);
-				onSetParamForwarding(false);
-				onSetTrackMe(false);
 				onSetLinkStatus('');
-				onSetExpire(false);
 				onSetExpireType('');
-				onSetExpireDate('');
 				onSetExpireClicks('');
+				onSetExpire(false);
 				onSetExpireRedirect(false);
 				onSetExpireRedirectUrl('');
+				onSetRedirectType(settings.redirect_type);
+				onSetNoFollow(settings.nofollow);
+				onSetSponsored(settings.sponsored);
+				onSetParamForwarding(settings.param_forwarding);
+				onSetTrackMe(settings.track_me);
+
+				document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+			})
+			.catch((error) => {
+				console.log(error);
 			});
-		}
 	};
+
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
 	};
@@ -235,337 +296,355 @@ const CustomSidebarMetaComponent = (props) => {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
-
-	subscribe(() => {
-		if (wp.data.select('core/editor').isSavingPost()) {
-			isSavingPost = false;
-		} else {
-			if (!isSavingPost && wp.data.select('core/editor').getPermalink()) {
-				if (target_url && target_url.trim() != '') {
-					var permalink = wp.data.select('core/editor').getPermalink();
-					var currentPost = wp.data.select('core/editor').getCurrentPost();
-					const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
-					var params = {
-						ID: BetterLinksID,
-						cat_id: cat_id,
-						link_title: currentPost.title,
-						link_slug: currentPost.slug,
-						nofollow: nofollow,
-						param_forwarding: param_forwarding,
-						redirect_type: redirect_type,
-						short_url: permalinkToShortUrl(permalink),
-						sponsored: sponsored,
-						target_url: target_url,
-						track_me: track_me,
-						link_modified: currentDate,
-						link_modified_gmt: currentDate,
-					};
-					if (is_pro_enabled) {
-						params.link_status = link_status;
-						params.expire = {
-							status: expire,
-							type: expire_type,
-							clicks: expire_clicks,
-							date: expire_date,
-							redirect_status: expire_redirect,
-							redirect_url: expire_redirect_url,
-						};
-					}
-					if (BetterLinksID) {
-						makeRequest({
-							action: 'betterlinks/admin/update_link',
-							ID: BetterLinksID,
-							...params,
-						}).then((response) => {
-							if (response.data.data) {
-								BetterLinksID = response.data.data.ID;
-								setID(response.data.data.ID);
-							}
-						});
-					} else {
-						params.link_date = currentDate;
-						params.link_date_gmt = currentDate;
-						makeRequest({
-							action: 'betterlinks/admin/create_link',
-							...params,
-						}).then((response) => {
-							if (response.data.data) {
-								BetterLinksID = response.data.data.ID;
-								setID(response.data.data.ID);
-							}
-						});
-					}
-				}
-				isSavingPost = true;
-			}
-		}
-	});
-
-	return (
-		<div className="betterlinks-instant-redirect">
-			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-
-			{ID && (
-				<Button
-					isDestructive={true}
-					onClick={() => {
-						deleteInstantRedirect();
-						props.showSaveButton();
-					}}
-					style={{ marginBottom: '10px' }}
-				>
-					Delete Instant Redirect
-				</Button>
-			)}
-
-			<TextControl
-				label={__('Target URL', 'betterlinks')}
-				value={targetUrl}
-				onChange={(value) => {
-					onSetTargetUrl(value);
-					props.showSaveButton();
-				}}
-			/>
-			<SelectControl
-				label={__('Redirect Type', 'betterlinks')}
-				options={
-					is_pro_enabled
-						? [
-								...redirectType,
-								{
-									value: 'cloak',
-									label: __('Cloaked', 'betterlinks'),
-								},
-						  ]
-						: redirectType
-				}
-				value={getDefaultRedirectType(redirectMode)}
-				onChange={(mode) => {
-					onSetRedirectType(mode);
-					props.showSaveButton();
-				}}
-			/>
-			{terms && (
-				<SelectControl
-					label={__('Choose Category', 'betterlinks')}
-					value={getDefaultCatID(catId, terms)}
-					options={terms
-						.filter((item) => item.term_type == 'category')
-						.map((item) => ({
-							value: item.ID,
-							label: item.term_name,
-						}))}
-					onChange={(catID) => {
-						onSetCatId(catID);
-						props.showSaveButton();
-					}}
-				/>
-			)}
-			<h3 className="btl-link-generator">
-				<strong>{__('Link Options', 'betterlinks')}</strong>
-			</h3>
-			<ToggleControl
-				label={__('No Follow', 'betterlinks')}
-				checked={isNofollow}
-				onChange={(value) => {
-					onSetNoFollow(value);
-					props.showSaveButton();
-				}}
-			/>
-			<ToggleControl
-				label={__('Sponsored', 'betterlinks')}
-				checked={isSponsored}
-				onChange={(value) => {
-					onSetSponsored(value);
-					props.showSaveButton();
-				}}
-			/>
-			<ToggleControl
-				label={__('Parameter Forwarding', 'betterlinks')}
-				checked={isParamForwarding}
-				onChange={(value) => {
-					onSetParamForwarding(value);
-					props.showSaveButton();
-				}}
-			/>
-			<ToggleControl
-				label={__('Tracking', 'betterlinks')}
-				checked={isTrackMe}
-				onChange={(value) => {
-					onSetTrackMe(value);
-					props.showSaveButton();
-				}}
-			/>
-			<div className="betterlinks-instant-redirect betterlinks-instant-redirect--teasers">
-				<div className="betterlinks-instant-redirect__head">
-					<h4 className="betterlinks-instant-redirect__head--title">
-						<strong>{__('Advanced', 'betterlinks')}</strong>
-					</h4>
-				</div>
-				{!is_pro_enabled ? (
-					<>
-						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
-							<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
-								{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-							</label>
-							<select id="status" disabled>
-								<option value="publish">{__('Active', 'betterlinks')}</option>
-								<option value="expired">{__('Expired', 'betterlinks')}</option>
-								<option value="draft">{__('Draft', 'betterlinks')}</option>
-							</select>
-						</div>
-						<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
-							<label className="betterlinks-instant-redirect-form-label" htmlFor="expire">
-								{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-							</label>
-							<input id="expire" type="checkbox" disabled />
-						</div>
-					</>
-				) : (
-					<>
-						<SelectControl
-							label="Link Status"
-							options={[
-								{
-									value: 'publish',
-									label: __('Active', 'betterlinks'),
-								},
-								{
-									value: 'expired',
-									label: __('Expired', 'betterlinks'),
-								},
-								{
-									value: 'draft',
-									label: __('Draft', 'betterlinks'),
-								},
-							]}
-							value={getDefaultLinkStatus(linkStatus)}
-							onChange={(status) => {
-								onSetLinkStatus(status);
-								props.showSaveButton();
-							}}
-						/>
-
-						<ToggleControl
-							label={__('Expire', 'betterlinks')}
-							checked={isExpire}
-							onChange={(value) => {
-								onSetExpire(value);
-								props.showSaveButton();
-							}}
-						/>
-						{isExpire && (
-							<>
-								<SelectControl
-									label={__('Expire After', 'betterlinks')}
-									options={[
-										{
-											value: 'date',
-											label: __('Date', 'betterlinks'),
-										},
-										{
-											value: 'clicks',
-											label: __('Clicks', 'betterlinks'),
-										},
-									]}
-									value={getDefaultExpireType(expireType)}
-									onChange={(value) => {
-										onSetExpireType(value);
-										props.showSaveButton();
-									}}
-								/>
-								{expireType == 'date' && (
-									<p>
-										<MuiPickersUtilsProvider utils={DateFnsUtils}>
-											<DateTimePicker disablePast={true} label="" inputVariant="outlined" value={expireDate ? expireDate : new Date()} onChange={(date) => onSetExpireDate(date)} />
-										</MuiPickersUtilsProvider>
-									</p>
-								)}
-								{expireType == 'clicks' && (
-									<TextControl
-										label={__('Clicks', 'betterlinks')}
-										value={expireClicks}
-										onChange={(value) => {
-											onSetExpireClicks(value);
-											props.showSaveButton();
-										}}
-									/>
-								)}
-								<ToggleControl
-									label={__('Redirect URL after Expiration', 'betterlinks')}
-									checked={expireRedirect}
-									onChange={(value) => {
-										onSetExpireRedirect(value);
-										props.showSaveButton();
-									}}
-								/>
-								{expireRedirect && (
-									<TextControl
-										label={__('Redirect URL', 'betterlinks')}
-										value={expireRedirectUrl}
-										onChange={(value) => {
-											onSetExpireRedirectUrl(value);
-											props.showSaveButton();
-										}}
-									/>
-								)}
-							</>
-						)}
-					</>
-				)}
-			</div>
-		</div>
-	);
-};
-
-const CustomSidebarMeta = withDispatch((dispatch) => ({
-	showSaveButton: (value) => dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } }),
-}))(CustomSidebarMetaComponent);
-
-const CustomSidebarComponent = () => {
-	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
-	const [data, setData] = useState(false);
-	const [settings, setSettings] = useState({});
-	useEffect(() => {
-		// Settings
-		makeRequest({
-			action: 'betterlinks/admin/get_settings',
-		}).then((response) => {
-			if (response.data.data) {
-				const settings = getJsonString(response.data.data);
-				setSettings(settings);
-				setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
-			}
-		});
-		// get links
-		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		if (short_url) {
-			let form_data = new FormData();
-			form_data.append('action', 'betterlinks/admin/get_links_by_short_url');
-			form_data.append('security', betterlinks_nonce);
-			form_data.append('short_url', short_url);
-			axios.post(ajaxurl, form_data).then(
-				(response) => {
-					if (response.data.data) {
-						setIsAllowInstantRedirect(true);
-						setData(response.data.data);
-					}
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
-		}
-	}, []);
 	return (
 		<Fragment>
 			{isAllowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
-					<CustomSidebarMeta settings={settings} data={data} />
+					{/* CustomSidebarMeta start  */}
+
+					<div className="betterlinks-loader-sidebar-wrapper">
+						<div className="betterlinks-loader-for-sidebar">
+							<div className="betterlinks-round-loader"></div>
+						</div>
+					</div>
+
+					<div className="betterlinks-instant-redirect">
+						<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+
+						<div className="betterlinks-instant-gutenberg-redirect-delete-button-wrapper">
+							<Button
+								isDestructive={true}
+								onClick={() => {
+									if (confirm(__('Are you sure you want to delete your Instant Redirect Rule?', 'betterlinks'))) {
+										deleteInstantRedirect();
+									}
+								}}
+								style={{ marginBottom: '10px' }}
+							>
+								Delete Instant Redirect
+							</Button>
+						</div>
+
+						<TextControl
+							label={__('Target URL', 'betterlinks')}
+							value={targetUrl}
+							onChange={(value) => {
+								onSetTargetUrl(value);
+								props.showSaveButton();
+							}}
+						/>
+						<SelectControl
+							label={__('Redirect Type', 'betterlinks')}
+							options={
+								is_pro_enabled
+									? [
+											...redirectType,
+											{
+												value: 'cloak',
+												label: __('Cloaked', 'betterlinks'),
+											},
+									  ]
+									: redirectType
+							}
+							value={getDefaultRedirectType(redirectMode)}
+							onChange={(mode) => {
+								onSetRedirectType(mode);
+								props.showSaveButton();
+							}}
+						/>
+						{terms && (
+							<SelectControl
+								label={__('Choose Category', 'betterlinks')}
+								value={getDefaultCatID(catId, terms)}
+								options={terms
+									.filter((item) => item.term_type == 'category')
+									.map((item) => ({
+										value: item.ID,
+										label: item.term_name,
+									}))}
+								onChange={(catID) => {
+									onSetCatId(catID);
+									props.showSaveButton();
+								}}
+							/>
+						)}
+						<h3 className="btl-link-generator">
+							<strong>{__('Link Options', 'betterlinks')}</strong>
+						</h3>
+						<ToggleControl
+							label={__('No Follow', 'betterlinks')}
+							checked={isNofollow}
+							onChange={(value) => {
+								onSetNoFollow(value);
+								props.showSaveButton();
+							}}
+						/>
+						<ToggleControl
+							label={__('Sponsored', 'betterlinks')}
+							checked={isSponsored}
+							onChange={(value) => {
+								onSetSponsored(value);
+								props.showSaveButton();
+							}}
+						/>
+						<ToggleControl
+							label={__('Parameter Forwarding', 'betterlinks')}
+							checked={isParamForwarding}
+							onChange={(value) => {
+								onSetParamForwarding(value);
+								props.showSaveButton();
+							}}
+						/>
+						<ToggleControl
+							label={__('Tracking', 'betterlinks')}
+							checked={isTrackMe}
+							onChange={(value) => {
+								onSetTrackMe(value);
+								props.showSaveButton();
+							}}
+						/>
+						<div className="betterlinks-instant-redirect betterlinks-instant-redirect--teasers">
+							<div className="betterlinks-instant-redirect__head">
+								<h4 className="betterlinks-instant-redirect__head--title">
+									<strong>{__('Advanced', 'betterlinks')}</strong>
+								</h4>
+							</div>
+							{!is_pro_enabled ? (
+								<>
+									<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
+										<label className="betterlinks-instant-redirect-form-label" htmlFor="status">
+											{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<select id="status" disabled>
+											<option value="publish">{__('Active', 'betterlinks')}</option>
+											<option value="expired">{__('Expired', 'betterlinks')}</option>
+											<option value="draft">{__('Draft', 'betterlinks')}</option>
+										</select>
+									</div>
+									<div className="betterlinks-instant-redirect-form-group" onClick={() => openUpgradeToProModal()}>
+										<label className="betterlinks-instant-redirect-form-label" htmlFor="expire">
+											{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<input id="expire" type="checkbox" disabled />
+									</div>
+								</>
+							) : (
+								<>
+									<SelectControl
+										label="Link Status"
+										options={[
+											{
+												value: 'publish',
+												label: __('Active', 'betterlinks'),
+											},
+											{
+												value: 'expired',
+												label: __('Expired', 'betterlinks'),
+											},
+											{
+												value: 'draft',
+												label: __('Draft', 'betterlinks'),
+											},
+										]}
+										value={getDefaultLinkStatus(linkStatus)}
+										onChange={(status) => {
+											onSetLinkStatus(status);
+											props.showSaveButton();
+										}}
+									/>
+
+									<ToggleControl
+										label={__('Expire', 'betterlinks')}
+										checked={isExpire}
+										onChange={(value) => {
+											onSetExpire(value);
+											props.showSaveButton();
+										}}
+									/>
+									{isExpire && (
+										<>
+											<SelectControl
+												label={__('Expire After', 'betterlinks')}
+												options={[
+													{
+														value: 'date',
+														label: __('Date', 'betterlinks'),
+													},
+													{
+														value: 'clicks',
+														label: __('Clicks', 'betterlinks'),
+													},
+												]}
+												value={getDefaultExpireType(expireType)}
+												onChange={(value) => {
+													onSetExpireType(value);
+													props.showSaveButton();
+												}}
+											/>
+											{expireType == 'date' && (
+												<p>
+													<MuiPickersUtilsProvider utils={DateFnsUtils}>
+														<DateTimePicker
+															disablePast={true}
+															label=""
+															inputVariant="outlined"
+															value={expireDate ? expireDate : new Date()}
+															onChange={(date) => {
+																onSetExpireDate(date);
+																props.showSaveButton();
+															}}
+														/>
+													</MuiPickersUtilsProvider>
+												</p>
+											)}
+											{expireType == 'clicks' && (
+												<TextControl
+													label={__('Clicks', 'betterlinks')}
+													value={expireClicks}
+													onChange={(value) => {
+														onSetExpireClicks(value);
+														props.showSaveButton();
+													}}
+												/>
+											)}
+											<ToggleControl
+												label={__('Redirect URL after Expiration', 'betterlinks')}
+												checked={expireRedirect}
+												onChange={(value) => {
+													onSetExpireRedirect(value);
+													props.showSaveButton();
+												}}
+											/>
+											{expireRedirect && (
+												<TextControl
+													label={__('Redirect URL', 'betterlinks')}
+													value={expireRedirectUrl}
+													onChange={(value) => {
+														onSetExpireRedirectUrl(value);
+														props.showSaveButton();
+													}}
+												/>
+											)}
+										</>
+									)}
+								</>
+							)}
+						</div>
+					</div>
+
+					{/* CustomSidebarMeta end  */}
 				</PluginDocumentSettingPanel>
 			)}
 		</Fragment>
 	);
 };
 
-export default CustomSidebarComponent;
+(() => {
+	//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
+	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+
+	subscribe(() => {
+		if (
+			wp.data.select('core/editor')?.isSavingPost() &&
+			!wp.data.select('core/editor')?.isAutosavingPost() &&
+			wp.data.select('core/editor')?.isCurrentPostPublished() &&
+			wp.data.select('core/editor')?.getPermalink() &&
+			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
+			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
+		) {
+			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
+			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+			if (isSameInstantGutenbergData) return false;
+			const permalink = wp.data.select('core/editor').getPermalink();
+			const currentPost = wp.data.select('core/editor').getCurrentPost();
+			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+
+			const terms = betterlinksGutenStore?.getState()?.terms?.terms || [];
+			const values = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {};
+			const freeParams = { ...(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {}) };
+			delete freeParams.expire;
+			delete freeParams.link_status;
+			delete freeParams.dynamic_redirect;
+
+			const short_url = permalinkToShortUrl(permalink);
+			const link_title = currentPost.title;
+			const link_slug = currentPost.slug;
+
+			const params = {
+				...freeParams,
+				short_url,
+				link_title,
+				link_slug,
+				link_modified: currentDate,
+				link_modified_gmt: currentDate,
+			};
+
+			if (is_pro_enabled) {
+				params.link_status = values?.link_status;
+				params.dynamic_redirect = {
+					type: '',
+					value: [],
+					...(values?.dynamic_redirect || {}),
+					extra: {
+						rotation_mode: 'weighted',
+						split_test: false,
+						goal_link: '',
+						...(values?.dynamic_redirect?.extra || {}),
+					},
+				};
+				params.expire = {
+					status: false,
+					type: 'date',
+					clicks: '',
+					date: '',
+					redirect_status: false,
+					redirect_url: '',
+					...(values?.expire || {}),
+				};
+			}
+
+			if (!params.cat_id) {
+				const { ID } = terms.filter((item) => item.term_slug == 'uncategorized')[0];
+				params.cat_id = ID;
+			}
+			if (!params.link_slug) {
+				params.link_slug = generateSlug(params.link_title);
+			}
+			params.wildcards = Number(params.short_url.includes('*'));
+			if (params.cat_id) {
+				const link_title = params.link_title.trim();
+				if (link_title) {
+					params.link_title = link_title;
+
+					if (params.ID) {
+						edit_link(
+							params,
+							true
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {})
+							.catch((error) => console.error(error));
+					} else {
+						add_new_link(
+							params,
+							true,
+							true
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {})
+							.catch((error) => console.error(error));
+					}
+				}
+			}
+		}
+	});
+})();
+const CustomSidebarMeta = withDispatch((dispatch) => ({
+	showSaveButton: (value) => {
+		window.betterlinksInstantGutenbergChangeTimeStamp = Date.now();
+		return dispatch('core/editor').editPost({ meta: { betterlinks_show_saved_button: value } });
+	},
+}))(CustomSidebarComponent);
+
+const CustomBetterlinksSidebar = () => <CustomSidebarMeta />;
+
+export default CustomBetterlinksSidebar;

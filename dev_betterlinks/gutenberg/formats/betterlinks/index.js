@@ -11,14 +11,14 @@ const { getRectangleFromRange } = wp.dom;
 import reactStringReplace from 'react-string-replace';
 
 // redux imports
-import { betterlinksGutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_links_data, add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
+import { LoadingSpinner } from 'gutenberg/components';
 import { betterlinksIcon } from './icon';
-import { LoadingSpinner } from './LoadingSpinner';
 import { makeLinkFormat } from 'utils/helper';
 import { LinkPreview } from './linkPreview';
 import { Link } from 'containers/Link';
@@ -410,7 +410,6 @@ export const betterlinksFormat = {
 													reset();
 													setIsSubmittingForGutenberg(false);
 													setShowLinkModal(false);
-													console.log('----edit_link---', { res });
 													return res;
 												})
 												.catch((error) => {

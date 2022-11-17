@@ -23,9 +23,14 @@ export const API = axios.create({
 	},
 });
 export const reorder = (list, startIndex, endIndex) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
+	let result = [];
+	if (startIndex == endIndex) {
+		result = list;
+	} else {
+		result = Array.from(list);
+		const [removed] = result.splice(startIndex, 1);
+		result.splice(endIndex, 0, removed);
+	}
 
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/links_reorder');
@@ -202,7 +207,7 @@ export const getBrowser = (agent) => {
 	return browser;
 };
 
-export const formatDate = (date, format) => {
+export const formatDate = (date = new Date(), format) => {
 	const map = {
 		mm: date.getMonth() + 1,
 		dd: date.getDate(),
@@ -397,6 +402,38 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 		attributes,
 	};
 	return result;
+};
+
+export const permalinkToShortUrl = (permalink) => {
+	if (!permalink) return permalink;
+	const short_url = permalink.replace(site_url + '/', '');
+	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
+};
+
+export const getLinkDataFromSettings = ({ settings, currentPost, short_url }) => {
+	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+	const params = {
+		ID: '',
+		cat_id: '',
+		target_url: '',
+		link_title: currentPost.title,
+		link_slug: currentPost.slug,
+		link_modified: currentDate,
+		link_modified_gmt: currentDate,
+		short_url: short_url,
+		redirect_type: settings.redirect_type,
+		nofollow: !!settings.nofollow,
+		param_forwarding: !!settings.param_forwarding,
+		sponsored: !!settings.sponsored,
+		track_me: !!settings.track_me,
+	};
+	if (is_pro_enabled) {
+		params.link_status = 'publish';
+		params.expire = {
+			status: false,
+		};
+	}
+	return params;
 };
 
 export const add_top_loader = (document) => {
