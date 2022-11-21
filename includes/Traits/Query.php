@@ -386,8 +386,12 @@ trait Query
             foreach ($newTermList as $item) {
                 $term_id = \BetterLinks\Helper::insert_term($item);
                 $term_data[] = [
-                    'term_id' => $term_id,
                     'link_id' => $link_id,
+                    'term_id' => $term_id,
+                    'term_type' => $item['term_type'],
+                    'term_name' => $item['term_name'],
+                    'term_slug' => $item['term_slug'],
+                    'is_newly_created' => true,
                 ];
             }
         }
