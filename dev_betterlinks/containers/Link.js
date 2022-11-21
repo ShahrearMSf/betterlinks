@@ -128,10 +128,15 @@ export const Link = (props) => {
 		//👇 this line added because for gutenberg implementaton 'fetch_terms_data' function call isn't needed
 		if (betterlinksGutenStore) return false;
 
-		fetch_terms_data().then(() => {
+		if (terms?.terms) {
 			setModalIsOpen(true);
 			setIsFetchTerms(false);
-		});
+		} else {
+			fetch_terms_data().then(() => {
+				setModalIsOpen(true);
+				setIsFetchTerms(false);
+			});
+		}
 	}
 
 	function closeModal() {
