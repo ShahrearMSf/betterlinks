@@ -398,7 +398,7 @@ trait Query
         // make term and link relation
         if (count($term_data) > 0) {
             $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array('link_id' => $link_id), array('%d'));
-            if ($is_delete) {
+            if ($is_delete || $is_delete === 0) {
                 foreach ($term_data as $term) {
                     \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
                 }
