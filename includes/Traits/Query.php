@@ -320,7 +320,7 @@ trait Query
         return $is_delete;
     }
 
-    public static function insert_terms_and_terms_relationship($link_id, $request, $is_update = false)
+    public static function insert_terms_and_terms_relationship($link_id, $request)
     {
         global $wpdb;
         $term_data = [];
@@ -396,17 +396,12 @@ trait Query
             }
         }
         // make term and link relation
-        // delete term relation
-        if ($is_update && count($term_data) > 0) {
+        if (count($term_data) > 0) {
             $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array('link_id' => $link_id), array('%d'));
             if ($is_delete) {
                 foreach ($term_data as $term) {
                     \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
                 }
-            }
-        } else {
-            foreach ($term_data as $term) {
-                \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
             }
         }
         return $term_data;

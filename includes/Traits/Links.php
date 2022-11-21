@@ -100,7 +100,7 @@ trait Links
         }
         // update link
         $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params), true);
-        \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg, true);
+        $term_data = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
         $wpdb->query("COMMIT");
     }
     public function update_link_favorite($args)
