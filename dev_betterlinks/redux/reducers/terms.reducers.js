@@ -1,4 +1,4 @@
-import { FETCH_TERMS_DATA, ADD_TERM } from 'redux/actions/actionstrings';
+import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM } from 'redux/actions/actionstrings';
 function terms(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
@@ -19,6 +19,21 @@ function terms(state = {}, action) {
 			return {
 				...state,
 				terms: [...(state.terms || []), newTerm],
+			};
+		}
+		case UPDATE_TERM: {
+			const ID = payload.ID;
+			const newTerms = state.terms.map((item) =>
+				`${item.ID}` === `${ID}`
+					? {
+							...item,
+							...payload,
+					  }
+					: item
+			);
+			return {
+				...state,
+				terms: newTerms,
 			};
 		}
 		default:
