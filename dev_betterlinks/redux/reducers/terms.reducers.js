@@ -8,7 +8,6 @@ function terms(state = {}, action) {
 				terms: payload.data,
 			};
 		case ADD_TERM: {
-			console.log({ state, payload });
 			const newTerm = {
 				ID: `${payload?.term_id || payload?.ID}`,
 				term_name: payload?.term_name || payload?.term_slug,
