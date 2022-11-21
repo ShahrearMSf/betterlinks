@@ -1,4 +1,4 @@
-import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM } from 'redux/actions/actionstrings';
+import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 function terms(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
@@ -31,6 +31,14 @@ function terms(state = {}, action) {
 					  }
 					: item
 			);
+			return {
+				...state,
+				terms: newTerms,
+			};
+		}
+		case DELETE_TERM: {
+			const ID = payload?.cat_id;
+			const newTerms = state.terms.filter((item) => `${item.ID}` !== `${ID}`);
 			return {
 				...state,
 				terms: newTerms,
