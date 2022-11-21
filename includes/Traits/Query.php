@@ -227,7 +227,7 @@ trait Query
             );
             return  $item['ID'];
         } else {
-            $terms = self::get_term_by_slug($item['term_slug']);
+            $terms = self::get_term_by_slug($item['term_slug'], $item['term_type']);
             if (count($terms) === 0) {
                 $wpdb->query(
                     $wpdb->prepare(
@@ -407,14 +407,14 @@ trait Query
         return $term_data;
     }
 
-    public static function get_term_by_slug($slug)
+    public static function get_term_by_slug($slug, $type = "category")
     {
         global $wpdb;
-        $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $slug),
+        $result = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s AND term_type=%s", $slug, $type),
             ARRAY_A
         );
-        return $link;
+        return $result;
     }
 
     public static function get_terms_by_link_ID_and_term_type($link_ID, $term_type = 'categroy')
