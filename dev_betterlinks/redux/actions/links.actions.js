@@ -1,5 +1,5 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
-import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM } from 'redux/actions/actionstrings';
+import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -146,6 +146,10 @@ export const delete_cat = (params) => async (dispatch) => {
 			params: params,
 		});
 		dispatch({
+			type: DELETE_TERM,
+			payload: res.data?.data,
+		});
+		dispatch({
 			type: DELETE_CAT,
 			payload: res.data,
 		});
@@ -153,11 +157,15 @@ export const delete_cat = (params) => async (dispatch) => {
 		makeRequest({
 			action: 'betterlinks/admin/delete_term',
 			cat_id: params.cat_id,
-		}).then((response) => {
-			if (response.data) {
+		}).then((res) => {
+			if (res.data) {
+				dispatch({
+					type: DELETE_TERM,
+					payload: res.data?.data,
+				});
 				dispatch({
 					type: DELETE_CAT,
-					payload: response.data,
+					payload: res.data,
 				});
 			}
 		});
