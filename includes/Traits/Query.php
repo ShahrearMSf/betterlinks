@@ -354,12 +354,24 @@ trait Query
         }
         if (isset($request['tags_id']) && is_array($request['tags_id'])) {
             foreach ($request['tags_id'] as $key => $value) {
+                $is_new_tag = true;
                 if (is_numeric($value)) {
-                    $term_data[] = [
-                        'term_id' => $value,
-                        'link_id' => $link_id,
-                    ];
-                } else {
+                    $query = $wpdb->prepare(
+                        "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE id = %d ",
+                        $value
+                    );
+                    $result = $wpdb->get_row($query, "ARRAY_A");
+                if (isset($result["term_slug"])) {
+                        $term_data[] = [
+                            'link_id' => $link_id,
+                            'term_id' => $value,
+                            'term_slug' => $result["term_slug"],
+                            'term_type' => 'tags',
+                        ];
+                        $is_new_tag = false;
+                    }
+                }
+                if ($is_new_tag) {
                     $newTermList[] = [
                         'term_name' => $value,
                         'term_slug' => $value,
