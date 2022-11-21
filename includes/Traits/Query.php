@@ -347,7 +347,7 @@ trait Query
             if ($is_new_cat) {
                 $newTermList[] = [
                     'term_name' => $request['cat_id'],
-                    'term_slug' => $request['cat_id'],
+                    'term_slug' => isset($request['cat_slug']) ? $request['cat_slug'] : $request['cat_id'],
                     'term_type' => 'category',
                 ];
             }
