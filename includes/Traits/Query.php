@@ -327,12 +327,24 @@ trait Query
         $newTermList = [];
         // store tags relation data
         if (!empty($request['cat_id'])) {
+            $is_new_cat = true;
             if (is_numeric($request['cat_id'])) {
-                $term_data[] = [
-                    'term_id' => $request['cat_id'],
-                    'link_id' => $link_id,
-                ];
-            } else {
+                $query = $wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE id = %d ",
+                    $request['cat_id']
+                );
+                $result = $wpdb->get_row($query, "ARRAY_A");
+                if (isset($result["term_slug"])) {
+                    $is_new_cat = false;
+                    $term_data[] = [
+                        'term_id' => $request['cat_id'],
+                        'link_id' => $link_id,
+                        'term_slug' => $result["term_slug"],
+                        'term_type' => 'category',
+                    ];
+                }
+            }
+            if ($is_new_cat) {
                 $newTermList[] = [
                     'term_name' => $request['cat_id'],
                     'term_slug' => $request['cat_id'],
