@@ -110,6 +110,20 @@ trait Links
         $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params), true);
         $term_data = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
         $wpdb->query("COMMIT");
+        foreach ($term_data as $key => $value) {
+            if(empty($value["term_type"])){
+                continue;
+            }
+            if($value["term_type"] === "tags"){
+                $arg['tags_data'][] = $value;
+            }
+            if($value["term_type"] === "category"){
+                $arg['old_cat_id'] = $arg['cat_id'];
+                $arg['cat_id'] = $value["term_id"];
+                $arg['cat_data'] = $value;
+            }
+        }
+        return $arg;
     }
     public function update_link_favorite($args)
     {
