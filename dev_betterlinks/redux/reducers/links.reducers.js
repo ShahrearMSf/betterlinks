@@ -134,19 +134,35 @@ function links(state = {}, action) {
 					},
 				},
 			};
-		case ADD_NEW_LINK:
-			if (state.links[payload.data.cat_id] && state.links[payload.data.cat_id].lists) {
+		case ADD_NEW_LINK: {
+			let newState = state;
+			const newPayload = payload?.data;
+			if (newPayload?.cat_data?.is_newly_created) {
+				newState = {
+					...newState,
+					links: {
+						...newState.links,
+						[newPayload.cat_data.term_id]: {
+							lists: [],
+							term_name: newPayload.cat_data.term_name || newPayload.cat_data.term_slug,
+							term_slug: newPayload.cat_data.term_slug,
+							term_type: newPayload.cat_data.term_type,
+						},
+					},
+				};
+			}
+			if (newState.links[newPayload.cat_id] && newState.links[newPayload.cat_id].lists) {
 				setTimeout(() => {
 					// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
-					reorder([payload.data, ...state.links[payload.data.cat_id].lists], 0, 0);
+					reorder([newPayload, ...newState.links[newPayload.cat_id].lists], 0, 0);
 				}, 0);
 				return {
 					...state,
 					links: {
-						...state.links,
-						[payload.data.cat_id]: {
-							...state.links[payload.data.cat_id],
-							lists: [payload.data, ...state.links[payload.data.cat_id].lists],
+						...newState.links,
+						[newPayload.cat_id]: {
+							...newState.links[newPayload.cat_id],
+							lists: [newPayload, ...newState.links[newPayload.cat_id].lists],
 						},
 					},
 				};
@@ -154,15 +170,16 @@ function links(state = {}, action) {
 			return {
 				...state,
 				links: {
-					...state.links,
-					[payload.data.cat_id]: {
-						term_name: payload.data.cat_slug,
-						term_slug: payload.data.cat_slug,
+					...newState.links,
+					[newPayload.cat_id]: {
+						term_name: newPayload.cat_slug,
+						term_slug: newPayload.cat_slug,
 						term_type: 'category',
-						lists: [payload.data],
+						lists: [newPayload],
 					},
 				},
 			};
+		}
 		case ADD_NEW_LINK_FOR_GUTEN_STORE: {
 			//👇 trimmed off any forward slashes in the short url
 			const newData = { ...payload.data, short_url: payload.data.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
