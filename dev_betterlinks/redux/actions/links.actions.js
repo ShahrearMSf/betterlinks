@@ -163,6 +163,21 @@ export const add_new_link =
 			const res = await API.post(namespace + 'links', {
 				params: formData,
 			});
+			const { cat_data, tags_data = [] } = res?.data?.data;
+			if (cat_data?.is_newly_created) {
+				dispatch({
+					type: ADD_TERM,
+					payload: cat_data,
+				});
+			}
+			for (const tagItem of tags_data) {
+				if (tagItem?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: tagItem,
+					});
+				}
+			}
 			if (res.data.success) {
 				dispatch({
 					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
@@ -200,6 +215,21 @@ export const add_new_link =
 				action: 'betterlinks/admin/create_link',
 				...formData,
 			}).then((res) => {
+				const { cat_data, tags_data = [] } = res?.data?.data;
+				if (cat_data?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: cat_data,
+					});
+				}
+				for (const tagItem of tags_data) {
+					if (tagItem?.is_newly_created) {
+						dispatch({
+							type: ADD_TERM,
+							payload: tagItem,
+						});
+					}
+				}
 				if (res.data) {
 					dispatch({
 						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
@@ -240,9 +270,24 @@ export const edit_link =
 			const res = await API.put(namespace + 'links/' + item.ID, {
 				params: item,
 			});
+			const { cat_data, tags_data = [] } = res?.data?.data;
+			if (cat_data?.is_newly_created) {
+				dispatch({
+					type: ADD_TERM,
+					payload: cat_data,
+				});
+			}
+			for (const tagItem of tags_data) {
+				if (tagItem?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: tagItem,
+					});
+				}
+			}
 			dispatch({
 				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
-				payload: item,
+				payload: res?.data?.data,
 			});
 			return res;
 		} catch (e) {
@@ -251,6 +296,21 @@ export const edit_link =
 				...item,
 			}).then((response) => {
 				if (response.data) {
+					const { cat_data, tags_data = [] } = res?.data?.data;
+					if (cat_data?.is_newly_created) {
+						dispatch({
+							type: ADD_TERM,
+							payload: cat_data,
+						});
+					}
+					for (const tagItem of tags_data) {
+						if (tagItem?.is_newly_created) {
+							dispatch({
+								type: ADD_TERM,
+								payload: tagItem,
+							});
+						}
+					}
 					dispatch({
 						type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 						payload: response.data.data,
