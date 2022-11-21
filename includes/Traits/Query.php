@@ -326,7 +326,7 @@ trait Query
         $term_data = [];
         $newTermList = [];
         // store tags relation data
-        if (isset($request['cat_id']) && !empty($request['cat_id'])) {
+        if (!empty($request['cat_id'])) {
             if (is_numeric($request['cat_id'])) {
                 $term_data[] = [
                     'term_id' => $request['cat_id'],
