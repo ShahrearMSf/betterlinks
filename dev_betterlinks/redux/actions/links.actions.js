@@ -1,5 +1,5 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
-import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
+import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM } from 'redux/actions/actionstrings';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -75,6 +75,10 @@ export const add_new_cat = (data) => async (dispatch) => {
 		});
 		if (res.data.success) {
 			dispatch({
+				type: ADD_TERM,
+				payload: res.data?.data,
+			});
+			dispatch({
 				type: ADD_NEW_CAT,
 				payload: res.data,
 			});
@@ -86,11 +90,15 @@ export const add_new_cat = (data) => async (dispatch) => {
 			term_name: data.term_name,
 			term_slug: data.term_slug,
 			term_type: data.term_type,
-		}).then((response) => {
-			if (response.data) {
+		}).then((res) => {
+			if (res.data) {
+				dispatch({
+					type: ADD_TERM,
+					payload: res.data?.data,
+				});
 				dispatch({
 					type: ADD_NEW_CAT,
-					payload: response.data,
+					payload: res.data,
 				});
 			}
 		});
