@@ -9,6 +9,7 @@ import LinksFilter from 'components/LinksFilter';
 import { linksFilterData, formatDate, route_path, insertOverlayElement } from 'utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
 import LinkQuickAction from 'components/LinkQuickAction';
 import FavoriteIcon from 'components/FavoriteIcon';
 import TableLoader from 'components/Loader/TableLoader';
@@ -107,7 +108,9 @@ const getLinksListViewColumnData = (props) => {
 };
 
 const ListCanvas = (props) => {
-	const { links, settings } = props.links;
+	const { links } = props.links;
+	const { settings } = props.settings;
+	const { terms } = props.terms;
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -129,6 +132,9 @@ const ListCanvas = (props) => {
 		}
 		if (!settings) {
 			props.fetch_settings_data();
+		}
+		if (!terms) {
+			props.fetch_terms_data();
 		}
 	}, []);
 
@@ -240,6 +246,7 @@ const ListCanvas = (props) => {
 const mapStateToProps = (state) => ({
 	links: state.links,
 	settings: state.settings,
+	terms: state.terms,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -250,6 +257,7 @@ const mapDispatchToProps = (dispatch) => {
 		add_new_link: bindActionCreators(add_new_link, dispatch),
 		edit_link: bindActionCreators(edit_link, dispatch),
 		delete_link: bindActionCreators(delete_link, dispatch),
+		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };
 

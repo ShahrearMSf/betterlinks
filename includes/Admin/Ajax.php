@@ -446,7 +446,7 @@ class Ajax
         $results = $this->update_link($args);
         if ($results) {
             wp_send_json_success(
-                $args,
+                $results,
                 200
             );
             wp_die();

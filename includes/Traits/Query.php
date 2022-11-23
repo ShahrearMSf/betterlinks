@@ -227,7 +227,7 @@ trait Query
             );
             return  $item['ID'];
         } else {
-            $terms = self::get_term_by_slug($item['term_slug']);
+            $terms = self::get_term_by_slug($item['term_slug'], $item['term_type']);
             if (count($terms) === 0) {
                 $wpdb->query(
                     $wpdb->prepare(
@@ -320,34 +320,58 @@ trait Query
         return $is_delete;
     }
 
-    public static function insert_terms_and_terms_relationship($link_id, $request, $is_update = false)
+    public static function insert_terms_and_terms_relationship($link_id, $request)
     {
         global $wpdb;
         $term_data = [];
         $newTermList = [];
         // store tags relation data
-        if (isset($request['cat_id']) && !empty($request['cat_id'])) {
+        if (!empty($request['cat_id'])) {
+            $is_new_cat = true;
             if (is_numeric($request['cat_id'])) {
-                $term_data[] = [
-                    'term_id' => $request['cat_id'],
-                    'link_id' => $link_id,
-                ];
-            } else {
+                $query = $wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE id = %d ",
+                    $request['cat_id']
+                );
+                $result = $wpdb->get_row($query, "ARRAY_A");
+                if (isset($result["term_slug"])) {
+                    $is_new_cat = false;
+                    $term_data[] = [
+                        'term_id' => $request['cat_id'],
+                        'link_id' => $link_id,
+                        'term_slug' => $result["term_slug"],
+                        'term_type' => 'category',
+                    ];
+                }
+            }
+            if ($is_new_cat) {
                 $newTermList[] = [
                     'term_name' => $request['cat_id'],
-                    'term_slug' => $request['cat_id'],
+                    'term_slug' => isset($request['cat_slug']) ? $request['cat_slug'] : $request['cat_id'],
                     'term_type' => 'category',
                 ];
             }
         }
         if (isset($request['tags_id']) && is_array($request['tags_id'])) {
             foreach ($request['tags_id'] as $key => $value) {
+                $is_new_tag = true;
                 if (is_numeric($value)) {
-                    $term_data[] = [
-                        'term_id' => $value,
-                        'link_id' => $link_id,
-                    ];
-                } else {
+                    $query = $wpdb->prepare(
+                        "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE id = %d ",
+                        $value
+                    );
+                    $result = $wpdb->get_row($query, "ARRAY_A");
+                if (isset($result["term_slug"])) {
+                        $term_data[] = [
+                            'link_id' => $link_id,
+                            'term_id' => $value,
+                            'term_slug' => $result["term_slug"],
+                            'term_type' => 'tags',
+                        ];
+                        $is_new_tag = false;
+                    }
+                }
+                if ($is_new_tag) {
                     $newTermList[] = [
                         'term_name' => $value,
                         'term_slug' => $value,
@@ -362,36 +386,35 @@ trait Query
             foreach ($newTermList as $item) {
                 $term_id = \BetterLinks\Helper::insert_term($item);
                 $term_data[] = [
-                    'term_id' => $term_id,
                     'link_id' => $link_id,
+                    'term_id' => $term_id,
+                    'term_type' => $item['term_type'],
+                    'term_name' => $item['term_name'],
+                    'term_slug' => $item['term_slug'],
+                    'is_newly_created' => true,
                 ];
             }
         }
         // make term and link relation
-        // delete term relation
-        if ($is_update && count($term_data) > 0) {
+        if (count($term_data) > 0) {
             $is_delete = $wpdb->delete($wpdb->prefix . 'betterlinks_terms_relationships', array('link_id' => $link_id), array('%d'));
-            if ($is_delete) {
+            if ($is_delete || $is_delete === 0) {
                 foreach ($term_data as $term) {
                     \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
                 }
-            }
-        } else {
-            foreach ($term_data as $term) {
-                \BetterLinks\Helper::insert_terms_relationships($term['term_id'], $term['link_id']);
             }
         }
         return $term_data;
     }
 
-    public static function get_term_by_slug($slug)
+    public static function get_term_by_slug($slug, $type = "category")
     {
         global $wpdb;
-        $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s", $slug),
+        $result = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_slug=%s AND term_type=%s", $slug, $type),
             ARRAY_A
         );
-        return $link;
+        return $result;
     }
 
     public static function get_terms_by_link_ID_and_term_type($link_ID, $term_type = 'categroy')

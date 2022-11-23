@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import Loader from 'components/Loader';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CreateCategory from 'components/CreateCategory';
 import Link from 'containers/Link';
@@ -102,24 +103,23 @@ class CatWrap extends React.PureComponent {
 function DndCanvas(props) {
 	const { links } = props.links;
 	const { settings } = props.settings;
+	const { terms } = props.terms;
 
 	useEffect(() => {
 		if (!settings) {
-			props.fetch_settings_data().then(() => {
-				if (!links) {
-					props.fetch_links_data();
-				}
-			});
-		} else {
-			if (!links) {
-				props.fetch_links_data();
-			}
+			props.fetch_settings_data();
+		}
+		if (!links) {
+			props.fetch_links_data();
+		}
+		if (!terms) {
+			props.fetch_terms_data();
 		}
 	}, []);
 
 	return (
 		<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
-			{links ? (
+			{links && settings && terms ? (
 				<DragDropContext onDragEnd={props.onDragEnd}>
 					{links &&
 						Object.entries(links)
@@ -146,6 +146,7 @@ function DndCanvas(props) {
 const mapStateToProps = (state) => ({
 	links: state.links,
 	settings: state.settings,
+	terms: state.terms,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -157,6 +158,7 @@ const mapDispatchToProps = (dispatch) => {
 		add_new_link: bindActionCreators(add_new_link, dispatch),
 		edit_link: bindActionCreators(edit_link, dispatch),
 		delete_link: bindActionCreators(delete_link, dispatch),
+		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };
 

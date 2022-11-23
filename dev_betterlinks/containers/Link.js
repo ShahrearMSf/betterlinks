@@ -128,10 +128,15 @@ export const Link = (props) => {
 		//👇 this line added because for gutenberg implementaton 'fetch_terms_data' function call isn't needed
 		if (betterlinksGutenStore) return false;
 
-		fetch_terms_data().then(() => {
+		if (terms?.terms) {
 			setModalIsOpen(true);
 			setIsFetchTerms(false);
-		});
+		} else {
+			fetch_terms_data().then(() => {
+				setModalIsOpen(true);
+				setIsFetchTerms(false);
+			});
+		}
 	}
 
 	function closeModal() {
@@ -200,7 +205,9 @@ export const Link = (props) => {
 				if (!values.link_slug) {
 					values.link_slug = generateSlug(values.link_title);
 				}
-
+				if (isNaN(values?.cat_id)) {
+					values.cat_slug = generateSlug(values.cat_id);
+				}
 				values.wildcards = Number(values.short_url.includes('*'));
 				if (values.cat_id) {
 					const link_title = values.link_title.trim();

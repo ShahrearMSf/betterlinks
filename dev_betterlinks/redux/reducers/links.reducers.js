@@ -134,19 +134,35 @@ function links(state = {}, action) {
 					},
 				},
 			};
-		case ADD_NEW_LINK:
-			if (state.links[payload.data.cat_id] && state.links[payload.data.cat_id].lists) {
+		case ADD_NEW_LINK: {
+			let newState = state;
+			const newPayload = payload?.data;
+			if (newPayload?.cat_data?.is_newly_created) {
+				newState = {
+					...newState,
+					links: {
+						...newState.links,
+						[newPayload.cat_data.term_id]: {
+							lists: [],
+							term_name: newPayload.cat_data.term_name || newPayload.cat_data.term_slug,
+							term_slug: newPayload.cat_data.term_slug,
+							term_type: newPayload.cat_data.term_type,
+						},
+					},
+				};
+			}
+			if (newState.links[newPayload.cat_id] && newState.links[newPayload.cat_id].lists) {
 				setTimeout(() => {
 					// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
-					reorder([payload.data, ...state.links[payload.data.cat_id].lists], 0, 0);
+					reorder([newPayload, ...newState.links[newPayload.cat_id].lists], 0, 0);
 				}, 0);
 				return {
 					...state,
 					links: {
-						...state.links,
-						[payload.data.cat_id]: {
-							...state.links[payload.data.cat_id],
-							lists: [payload.data, ...state.links[payload.data.cat_id].lists],
+						...newState.links,
+						[newPayload.cat_id]: {
+							...newState.links[newPayload.cat_id],
+							lists: [newPayload, ...newState.links[newPayload.cat_id].lists],
 						},
 					},
 				};
@@ -154,54 +170,70 @@ function links(state = {}, action) {
 			return {
 				...state,
 				links: {
-					...state.links,
-					[payload.data.cat_id]: {
-						term_name: payload.data.cat_slug,
-						term_slug: payload.data.cat_slug,
+					...newState.links,
+					[newPayload.cat_id]: {
+						term_name: newPayload.cat_slug,
+						term_slug: newPayload.cat_slug,
 						term_type: 'category',
-						lists: [payload.data],
+						lists: [newPayload],
 					},
 				},
 			};
+		}
 		case ADD_NEW_LINK_FOR_GUTEN_STORE: {
 			//👇 trimmed off any forward slashes in the short url
 			const newData = { ...payload.data, short_url: payload.data.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
-
 			return {
 				...state,
 				links: [...state.links, newData],
 			};
 		}
 		case EDIT_LINK: {
-			if (state.links[payload.cat_id] && state.links[payload.cat_id].lists) {
-				const linksAtPayloadCat = state.links[payload.cat_id].lists;
-				const itemIndexInTheCat = linksAtPayloadCat.findIndex((item) => item.ID == payload.ID);
+			let newState = state;
+			const newPayload = payload;
+			if (newPayload?.cat_data?.is_newly_created) {
+				newState = {
+					...newState,
+					links: {
+						...newState.links,
+						[newPayload.cat_data.term_id]: {
+							lists: [],
+							term_name: newPayload.cat_data.term_name || newPayload.cat_data.term_slug,
+							term_slug: newPayload.cat_data.term_slug,
+							term_type: newPayload.cat_data.term_type,
+						},
+					},
+				};
+			}
+			if (newState.links[newPayload.cat_id] && newState.links[newPayload.cat_id].lists) {
+				const linksAtPayloadCat = newState.links[newPayload.cat_id].lists;
+				const itemIndexInTheCat = linksAtPayloadCat.findIndex((item) => item.ID == newPayload.ID);
 				const isCategoryChanged = itemIndexInTheCat === -1;
 				if (isCategoryChanged) {
 					const newStateLinks = {
-						...state.links,
+						...newState.links,
 					};
-					delete newStateLinks[payload.cat_id];
+					delete newStateLinks[newPayload.cat_id];
 					for (const property in newStateLinks) {
-						if (state.links[property] && state.links[property].lists) {
-							const linksOnTheOldCat = state.links[property].lists;
-							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
+						if (newState.links[property] && newState.links[property].lists) {
+							const linksOnTheOldCat = newState.links[property].lists;
+							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => `${item.ID}` === `${newPayload.ID}`);
 							if (indexInOldCatList !== -1) {
 								setTimeout(() => {
 									// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
-									reorder([payload, ...linksAtPayloadCat], 0, 0);
+									reorder([newPayload, ...linksAtPayloadCat], 0, 0);
 								}, 0);
 								return {
 									...state,
 									links: {
-										...state.links,
+										...newState.links,
 										[property]: {
-											...state.links[property],
+											...newState.links[property],
 											lists: [...linksOnTheOldCat.slice(0, indexInOldCatList), ...linksOnTheOldCat.slice(indexInOldCatList + 1)],
 										},
-										[payload.cat_id]: {
-											...state.links[payload.cat_id],
-											lists: [payload, ...linksAtPayloadCat],
+										[newPayload.cat_id]: {
+											...newState.links[newPayload.cat_id],
+											lists: [newPayload, ...linksAtPayloadCat],
 										},
 									},
 								};
@@ -212,10 +244,10 @@ function links(state = {}, action) {
 				return {
 					...state,
 					links: {
-						...state.links,
-						[payload.cat_id]: {
-							...state.links[payload.cat_id],
-							lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), payload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
+						...newState.links,
+						[newPayload.cat_id]: {
+							...newState.links[newPayload.cat_id],
+							lists: [...linksAtPayloadCat.slice(0, itemIndexInTheCat), newPayload, ...linksAtPayloadCat.slice(itemIndexInTheCat + 1)],
 						},
 					},
 				};
@@ -223,12 +255,12 @@ function links(state = {}, action) {
 			return {
 				...state,
 				links: {
-					...state.links,
-					[payload.cat_id]: {
-						term_name: payload.cat_id,
-						term_slug: payload.cat_id,
+					...newState.links,
+					[newPayload.cat_id]: {
+						term_name: newPayload.cat_id,
+						term_slug: newPayload.cat_id,
 						term_type: 'category',
-						lists: [payload],
+						lists: [newPayload],
 					},
 				},
 			};
