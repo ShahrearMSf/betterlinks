@@ -16,7 +16,8 @@ class TAOneClick extends BaseCSV implements ImportOneClickInterface
                         if (!empty($item['keywords'])) {
                             $this->insert_keywords($link_id, $item['keywords'], ['limit' => $item['limit']]);
                         }
-                        $terms_ids = \BetterLinks\Helper::insert_category_terms($item['terms']);
+                        $terms = empty($item['terms']) ? ['uncategorized'] : $item['terms'];
+                        $terms_ids = \BetterLinks\Helper::insert_category_terms($terms);
                         if (count($terms_ids) > 0) {
                             foreach ($terms_ids as $term_id) {
                                 \BetterLinks\Helper::insert_terms_relationships($term_id, $link_id);
