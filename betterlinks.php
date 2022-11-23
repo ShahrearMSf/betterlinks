@@ -148,6 +148,10 @@ if (!class_exists('BetterLinks')) {
             $should_insert = $btl_version===false;
             if ($btl_version != BETTERLINKS_VERSION && BetterLinks\Helper::btl_update_option('betterlinks_version', BETTERLINKS_VERSION, $should_insert, !$should_insert)) {
                 $this->Installer->data($this->Installer->migration)->save()->dispatch();
+                BetterLinks\Helper::btl_update_option('betterlinks_activation_flag', [
+                    "last_activation_timestamp" => time(),
+                    "last_activation_background_processes_firing_timestamp" => false,
+                ]);
             }
         }
 
