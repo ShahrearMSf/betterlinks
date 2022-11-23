@@ -75,6 +75,9 @@ class Assets
      */
     public function block_editor_assets()
     {
+        if (has_blocks()) {
+            error_log("--btl has_blocks fired");
+        }
         wp_enqueue_style(
             'betterlinks-gutenberg',
             BETTERLINKS_ASSETS_URI . 'css/betterlinks-gutenberg.css',

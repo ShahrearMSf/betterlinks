@@ -18,6 +18,7 @@ const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
 const CustomSidebarComponent = (props) => {
+	console.log('---btl sidebar loaded');
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
