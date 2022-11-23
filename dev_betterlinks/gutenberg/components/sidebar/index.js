@@ -18,7 +18,7 @@ const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
 const CustomSidebarComponent = (props) => {
-	console.log('---btl sidebar loaded');
+
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
@@ -39,6 +39,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	useEffect(() => {
+		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
