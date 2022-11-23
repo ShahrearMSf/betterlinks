@@ -248,8 +248,49 @@ class Installer extends \WP_Background_Process
             }
         }
         if(!$is_fixed_missing_terms_relation_for_links){
-            // make the missing terms relation here
-            // and then make 'fixed_missing_terms_relation_after_ta_one_click_migration' it true
+            delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+            $betterlinks_table = $wpdb->prefix . 'betterlinks';
+            $betterlinks_terms_table = $wpdb->prefix . 'betterlinks_terms';
+            $betterlinks_terms_relations_table = $wpdb->prefix . 'betterlinks_terms_relationships';
+            $link_ids = $wpdb->get_col(
+                "SELECT ID FROM {$betterlinks_table}",
+                0
+            );
+            $categories = $wpdb->get_results( 
+                $wpdb->prepare( "SELECT ID,term_slug FROM {$betterlinks_terms_table} WHERE term_type = %s", "category" ) ,
+                'ARRAY_A'
+            );
+            $uncategorized_id = false;
+            $cat_ids = [];
+            foreach ($categories as $key => $value) {
+                $cat_ids[] = $value["ID"];
+                if ($value["term_slug"] === "uncategorized") {
+                    $uncategorized_id = $value["ID"];
+                }
+            }
+            if(!$uncategorized_id){
+                return false;
+            }
+            foreach ($link_ids as $key => $link_id) {
+                $cat_relation_exist_for_link = false;
+                $matched_terms_for_link = $wpdb->get_col(
+                    $wpdb->prepare("SELECT term_id FROM {$betterlinks_terms_relations_table} WHERE link_id = %s", $link_id),
+                    0
+                );
+                foreach ($matched_terms_for_link as $key => $term_id) {
+                    if (in_array($term_id, $cat_ids)) {
+                        $cat_relation_exist_for_link = true;
+                    }
+                }
+                if(!$cat_relation_exist_for_link){
+                    $result = Helper::insert_terms_relationships($uncategorized_id, $link_id);
+                }
+            }
+            $new_data = array_merge(
+                ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                [ "fixed_missing_terms_relation_after_ta_one_click_migration" => true ]
+            );
+            Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
         }
     }
 }
