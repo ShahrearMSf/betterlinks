@@ -217,9 +217,9 @@ class Installer extends \WP_Background_Process
         $btl_db_alter_options = Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS);
         $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
         $is_fixed_missing_terms_relation_for_links = isset($btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"]) ? $btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"] : false;
+        global $wpdb;
         if (!$is_favorite_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-            global $wpdb;
             $table          = $wpdb->prefix . 'betterlinks';
             $results        = $wpdb->get_col("DESC $table", 0);
             if (in_array("favorite", $results)) {
