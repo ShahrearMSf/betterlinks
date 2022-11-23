@@ -43,16 +43,14 @@ if (!class_exists('BetterLinks')) {
 
         public function do_the_works_if_failed_during_activation()
         {
-            global $wpdb;
-            $prefix = $wpdb->prefix;
-            $btl_links_table_name = "{$prefix}betterlinks";
-            $btl_clicks_table_name = "{$prefix}betterlinks_clicks";
-            if($wpdb->get_var("SHOW TABLES LIKE '$btl_links_table_name'") != $btl_links_table_name && $wpdb->get_var("SHOW TABLES LIKE '$btl_clicks_table_name'") != $btl_clicks_table_name) {
-                $betterlinks_activation_flag = BetterLinks\Helper::btl_get_option("betterlinks_activation_flag");
+            $betterlinks_activation_flag = BetterLinks\Helper::btl_get_option("betterlinks_activation_flag");
+            if(isset($betterlinks_activation_flag["last_activation_background_processes_firing_timestamp"]) && isset($betterlinks_activation_flag["last_activation_timestamp"])) {
+                if($betterlinks_activation_flag["last_activation_background_processes_firing_timestamp"]){
+                    return false;
+                }
                 $waiting_time_in_seconds = 5;
-                if(empty($betterlinks_activation_flag["timestamp"]) || (absInt($betterlinks_activation_flag["timestamp"]) + $waiting_time_in_seconds) > time()){
+                if((absInt($betterlinks_activation_flag["last_activation_timestamp"]) + $waiting_time_in_seconds) > time()){
                     // don't go any further and return false here if, 
-                    // activation flag didn't get setted yet or 
                     // $waiting_time_in_seconds (in this case 5 seconds) haven't passed yet since the activation flag was setted
                     return false;
                 }
@@ -157,7 +155,8 @@ if (!class_exists('BetterLinks')) {
         {
             $this->Installer->data($this->Installer->activation)->save()->dispatch();
             BetterLinks\Helper::btl_update_option('betterlinks_activation_flag', [
-                "timestamp" => time(),
+                "last_activation_timestamp" => time(),
+                "last_activation_background_processes_firing_timestamp" => false,
             ]);
         }
 

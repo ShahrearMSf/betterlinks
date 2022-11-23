@@ -18,7 +18,7 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
+        $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
         $this->migration = ['db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
         $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
@@ -88,6 +88,15 @@ class Installer extends \WP_Background_Process
         Helper::clear_query_cache();
     }
 
+    public function set_activation_flag()
+    {
+        $activation_flag = Helper::btl_get_option('betterlinks_activation_flag');
+        $new_flag_data = array_merge(
+            (is_array($activation_flag) ? $activation_flag : []),
+            ["last_activation_background_processes_firing_timestamp" => time()]
+        );
+        Helper::btl_update_option('betterlinks_activation_flag', $new_flag_data, !$activation_flag, !!$activation_flag);
+    }
     public function create_db_tables()
     {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
