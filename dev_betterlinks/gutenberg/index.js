@@ -33,7 +33,6 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 			clearInterval(intervalId);
 		}
 		if (
-			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData &&
 			betterlinksGutenStore?.getState()?.links?.links &&
 			betterlinksGutenStore?.getState()?.terms?.terms &&
 			betterlinksGutenStore?.getState()?.settings?.settings
@@ -42,7 +41,6 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 			clearInterval(intervalId);
 		} else {
 			document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
-			document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		}
 	}, 100);
 })();
