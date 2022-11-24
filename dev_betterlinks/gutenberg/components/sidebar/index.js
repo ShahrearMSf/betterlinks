@@ -18,7 +18,6 @@ const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
 const CustomSidebarComponent = (props) => {
-
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
@@ -56,6 +55,9 @@ const CustomSidebarComponent = (props) => {
 		}
 
 		const setAllStatesForLinkData = (linkData) => {
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+			}, 500);
 			if (!linkData) return false;
 			if (linkData.ID || linkData.ID === 0) {
 				setIsAllowInstantRedirect(true);
@@ -80,10 +82,6 @@ const CustomSidebarComponent = (props) => {
 			setExpireClicks(linkData.expire?.clicks);
 			setExpireRedirect(linkData.expire?.redirect_status);
 			setExpireRedirectUrl(linkData.expire?.redirect_url);
-
-			setTimeout(() => {
-				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
-			}, 100);
 		};
 
 		// Settings
