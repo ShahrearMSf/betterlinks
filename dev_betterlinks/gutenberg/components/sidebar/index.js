@@ -101,23 +101,18 @@ const CustomSidebarComponent = (props) => {
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
 
-		const linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-		if (linkData) {
-			setAllStatesForLinkData(linkData);
-		} else {
-			fetch_link_for_permalink()
-				.then(() => {
-					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-					if (typeof linkData?.expire === 'string') {
-						linkData = {
-							...linkData,
-							expire: getJsonString(linkData.expire),
-						};
-					}
-					setAllStatesForLinkData(linkData);
-				})
-				.catch((error) => console.log(error));
-		}
+		fetch_link_for_permalink()
+			.then(() => {
+				let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+				if (typeof linkData?.expire === 'string') {
+					linkData = {
+						...linkData,
+						expire: getJsonString(linkData.expire),
+					};
+				}
+				setAllStatesForLinkData(linkData);
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	const onSetTargetUrl = (url) => {
