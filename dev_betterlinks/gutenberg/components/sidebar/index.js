@@ -19,7 +19,7 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
-	const [isLinkDataFound, setIsLinkDataFound] = useState(true);
+	const [isShowInstantRedirect, setIsShowInstantRedirect] = useState(true);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState('');
@@ -60,7 +60,7 @@ const CustomSidebarComponent = (props) => {
 				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
 			}, 500);
 			if (!linkData) {
-				setIsLinkDataFound(false);
+				setIsShowInstantRedirect(false);
 				return false;
 			}
 			if (linkData.ID || linkData.ID === 0) {
@@ -302,7 +302,7 @@ const CustomSidebarComponent = (props) => {
 	};
 	return (
 		<Fragment>
-			{isAllowInstantRedirect && isLinkDataFound && (
+			{isAllowInstantRedirect && isShowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
 
