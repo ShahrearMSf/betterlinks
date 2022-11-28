@@ -330,7 +330,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
-							{!betterLinksHooks.applyFilters('isActivePro', false) && (
+							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
 										<label className="btl-form-label">
