@@ -91,12 +91,12 @@ const CustomSidebarComponent = (props) => {
 		// Settings
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 		if (settings) {
-			setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
 		} else {
 			fetch_settings_data()(betterlinksGutenStore.dispatch)
 				.then(() => {
 					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-					setIsAllowInstantRedirect(!!settings.is_allow_gutenberg);
+					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
 				})
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
@@ -247,11 +247,11 @@ const CustomSidebarComponent = (props) => {
 						status: false,
 					},
 					link_status: 'publish',
-					redirect_type: settings.redirect_type,
-					nofollow: settings.nofollow,
-					sponsored: settings.sponsored,
-					param_forwarding: settings.param_forwarding,
-					track_me: settings.track_me,
+					redirect_type: settings?.redirect_type,
+					nofollow: settings?.nofollow,
+					sponsored: settings?.sponsored,
+					param_forwarding: settings?.param_forwarding,
+					track_me: settings?.track_me,
 				};
 
 				betterlinksGutenStore.dispatch({
@@ -275,11 +275,11 @@ const CustomSidebarComponent = (props) => {
 				onSetExpire(false);
 				onSetExpireRedirect(false);
 				onSetExpireRedirectUrl('');
-				onSetRedirectType(settings.redirect_type);
-				onSetNoFollow(settings.nofollow);
-				onSetSponsored(settings.sponsored);
-				onSetParamForwarding(settings.param_forwarding);
-				onSetTrackMe(settings.track_me);
+				onSetRedirectType(settings?.redirect_type);
+				onSetNoFollow(settings?.nofollow);
+				onSetSponsored(settings?.sponsored);
+				onSetParamForwarding(settings?.param_forwarding);
+				onSetTrackMe(settings?.track_me);
 
 				document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
 			})
