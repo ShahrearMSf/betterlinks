@@ -12,18 +12,14 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { CustomSidebar } from 'gutenberg/components';
 import { betterlinksFormat } from 'gutenberg/formats';
 
-// Redux Works
-fetch_links_data(true)(betterlinksGutenStore.dispatch)
-	.then(() => {})
-	.catch((err) => console.log('Error! fetch_links_data failed', { err }));
-
-fetch_terms_data()(betterlinksGutenStore.dispatch)
-	.then(() => {})
-	.catch((err) => console.log('Error! fetch_terms_data failed', { err }));
-
-fetch_settings_data()(betterlinksGutenStore.dispatch)
-	.then(() => {})
-	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
+Promise.all([fetch_links_data(true)(betterlinksGutenStore.dispatch), fetch_terms_data()(betterlinksGutenStore.dispatch), fetch_settings_data()(betterlinksGutenStore.dispatch)])
+	.then(() => {
+		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+	})
+	.catch((err) => {
+		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+		console.log('---error while fetching betterlinks gutenberg store datas', { err });
+	});
 
 (() => {
 	if (betterlinksGutenStore?.getState()?.links?.links && betterlinksGutenStore?.getState()?.terms?.terms && betterlinksGutenStore?.getState()?.settings?.settings) {
