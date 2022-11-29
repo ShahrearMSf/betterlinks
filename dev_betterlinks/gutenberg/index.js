@@ -26,23 +26,11 @@ fetch_settings_data()(betterlinksGutenStore.dispatch)
 	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
 
 (() => {
-	let x = 1;
-	const intervalId = setInterval(() => {
-		x++;
-		if (x > 60000) {
-			clearInterval(intervalId);
-		}
-		if (
-			betterlinksGutenStore?.getState()?.links?.links &&
-			betterlinksGutenStore?.getState()?.terms?.terms &&
-			betterlinksGutenStore?.getState()?.settings?.settings
-		) {
-			document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
-			clearInterval(intervalId);
-		} else {
-			document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
-		}
-	}, 100);
+	if (betterlinksGutenStore?.getState()?.links?.links && betterlinksGutenStore?.getState()?.terms?.terms && betterlinksGutenStore?.getState()?.settings?.settings) {
+		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+	} else {
+		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+	}
 })();
 
 betterlinksGutenStore.subscribe(() => {
