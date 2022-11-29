@@ -19,6 +19,7 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
+	const [isShowInstantRedirect, setIsShowInstantRedirect] = useState(true);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [targetUrl, setTargetUrl] = useState('');
@@ -38,6 +39,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	useEffect(() => {
+		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		if (short_url) {
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
@@ -54,7 +56,13 @@ const CustomSidebarComponent = (props) => {
 		}
 
 		const setAllStatesForLinkData = (linkData) => {
-			if (!linkData) return false;
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+			}, 500);
+			if (!linkData || !wp.data.select('core/editor')?.getPermalink()) {
+				setIsShowInstantRedirect(false);
+				return false;
+			}
 			if (linkData.ID || linkData.ID === 0) {
 				setIsAllowInstantRedirect(true);
 			}
@@ -78,10 +86,6 @@ const CustomSidebarComponent = (props) => {
 			setExpireClicks(linkData.expire?.clicks);
 			setExpireRedirect(linkData.expire?.redirect_status);
 			setExpireRedirectUrl(linkData.expire?.redirect_url);
-
-			setTimeout(() => {
-				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
-			}, 100);
 		};
 
 		// Settings
@@ -97,23 +101,18 @@ const CustomSidebarComponent = (props) => {
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
 
-		const linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-		if (linkData) {
-			setAllStatesForLinkData(linkData);
-		} else {
-			fetch_link_for_permalink()
-				.then(() => {
-					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-					if (typeof linkData?.expire === 'string') {
-						linkData = {
-							...linkData,
-							expire: getJsonString(linkData.expire),
-						};
-					}
-					setAllStatesForLinkData(linkData);
-				})
-				.catch((error) => console.log(error));
-		}
+		fetch_link_for_permalink()
+			.then(() => {
+				let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+				if (typeof linkData?.expire === 'string') {
+					linkData = {
+						...linkData,
+						expire: getJsonString(linkData.expire),
+					};
+				}
+				setAllStatesForLinkData(linkData);
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	const onSetTargetUrl = (url) => {
@@ -298,7 +297,7 @@ const CustomSidebarComponent = (props) => {
 	};
 	return (
 		<Fragment>
-			{isAllowInstantRedirect && (
+			{isAllowInstantRedirect && isShowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
 

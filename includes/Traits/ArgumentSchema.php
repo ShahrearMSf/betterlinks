@@ -192,6 +192,10 @@ trait ArgumentSchema
                     'type' => 'string',
                     'sanitize_callback' => 'sanitize_text_field',
                 ],
+                'cat_slug' => [
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
                 'tags_id' => [
                     'type' => 'array'
                 ],

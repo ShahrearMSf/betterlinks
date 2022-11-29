@@ -18,8 +18,8 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->activation = ['create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
-        $this->migration = ['db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
+        $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
+        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
         $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
 
@@ -88,6 +88,15 @@ class Installer extends \WP_Background_Process
         Helper::clear_query_cache();
     }
 
+    public function set_activation_flag()
+    {
+        $activation_flag = Helper::btl_get_option('betterlinks_activation_flag');
+        $new_flag_data = array_merge(
+            (is_array($activation_flag) ? $activation_flag : []),
+            ["last_activation_background_processes_firing_timestamp" => time()]
+        );
+        Helper::btl_update_option('betterlinks_activation_flag', $new_flag_data, !$activation_flag, !!$activation_flag);
+    }
     public function create_db_tables()
     {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -216,21 +225,72 @@ class Installer extends \WP_Background_Process
     {
         $btl_db_alter_options = Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS);
         $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
+        $is_fixed_missing_terms_relation_for_links = isset($btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"]) ? $btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"] : false;
+        $is_db_alter_option_exist_array = is_array($btl_db_alter_options);
+        global $wpdb;
         if (!$is_favorite_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-            global $wpdb;
             $table          = $wpdb->prefix . 'betterlinks';
             $results        = $wpdb->get_col("DESC $table", 0);
             if (in_array("favorite", $results)) {
-                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
-                    "added_favorite_column" => true,
-                ]);
+                $new_data = array_merge(
+                    ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                    [ "added_favorite_column" => true ]
+                );
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
             } else {
                 $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
-                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, [
-                    "added_favorite_column" => $query_result,
-                ]);
+                $new_data = array_merge(
+                    ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                    [ "added_favorite_column" => $query_result ]
+                );
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
             }
+        }
+        if(!$is_fixed_missing_terms_relation_for_links){
+            delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+            $betterlinks_table = $wpdb->prefix . 'betterlinks';
+            $betterlinks_terms_table = $wpdb->prefix . 'betterlinks_terms';
+            $betterlinks_terms_relations_table = $wpdb->prefix . 'betterlinks_terms_relationships';
+            $link_ids = $wpdb->get_col(
+                "SELECT ID FROM {$betterlinks_table}",
+                0
+            );
+            $categories = $wpdb->get_results( 
+                $wpdb->prepare( "SELECT ID,term_slug FROM {$betterlinks_terms_table} WHERE term_type = %s", "category" ) ,
+                'ARRAY_A'
+            );
+            $uncategorized_id = false;
+            $cat_ids = [];
+            foreach ($categories as $key => $value) {
+                $cat_ids[] = $value["ID"];
+                if ($value["term_slug"] === "uncategorized") {
+                    $uncategorized_id = $value["ID"];
+                }
+            }
+            if(!$uncategorized_id){
+                return false;
+            }
+            foreach ($link_ids as $key => $link_id) {
+                $cat_relation_exist_for_link = false;
+                $matched_terms_for_link = $wpdb->get_col(
+                    $wpdb->prepare("SELECT term_id FROM {$betterlinks_terms_relations_table} WHERE link_id = %s", $link_id),
+                    0
+                );
+                foreach ($matched_terms_for_link as $key => $term_id) {
+                    if (in_array($term_id, $cat_ids)) {
+                        $cat_relation_exist_for_link = true;
+                    }
+                }
+                if(!$cat_relation_exist_for_link){
+                    $result = Helper::insert_terms_relationships($uncategorized_id, $link_id);
+                }
+            }
+            $new_data = array_merge(
+                ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                [ "fixed_missing_terms_relation_after_ta_one_click_migration" => true ]
+            );
+            Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
         }
     }
 }

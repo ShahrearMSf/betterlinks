@@ -190,11 +190,11 @@ class Links extends Controller
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($request['params']);
-        $this->update_link($args);
+        $response = $this->update_link($args);
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => $request['params'],
+                'data' => $response,
             ],
             200
         );

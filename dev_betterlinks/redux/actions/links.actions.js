@@ -1,5 +1,5 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
-import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
+import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -75,6 +75,10 @@ export const add_new_cat = (data) => async (dispatch) => {
 		});
 		if (res.data.success) {
 			dispatch({
+				type: ADD_TERM,
+				payload: res.data?.data,
+			});
+			dispatch({
 				type: ADD_NEW_CAT,
 				payload: res.data,
 			});
@@ -86,11 +90,15 @@ export const add_new_cat = (data) => async (dispatch) => {
 			term_name: data.term_name,
 			term_slug: data.term_slug,
 			term_type: data.term_type,
-		}).then((response) => {
-			if (response.data) {
+		}).then((res) => {
+			if (res.data) {
+				dispatch({
+					type: ADD_TERM,
+					payload: res.data?.data,
+				});
 				dispatch({
 					type: ADD_NEW_CAT,
-					payload: response.data,
+					payload: res.data,
 				});
 			}
 		});
@@ -101,6 +109,10 @@ export const update_cat = (params) => async (dispatch) => {
 	try {
 		const res = await API.put(namespace + 'terms', {
 			params: params,
+		});
+		dispatch({
+			type: UPDATE_TERM,
+			payload: res.data?.data,
 		});
 		dispatch({
 			type: UPDATE_CAT,
@@ -116,6 +128,10 @@ export const update_cat = (params) => async (dispatch) => {
 		}).then((response) => {
 			if (response.data) {
 				dispatch({
+					type: UPDATE_TERM,
+					payload: res.data?.data,
+				});
+				dispatch({
 					type: UPDATE_CAT,
 					payload: response.data,
 				});
@@ -130,6 +146,10 @@ export const delete_cat = (params) => async (dispatch) => {
 			params: params,
 		});
 		dispatch({
+			type: DELETE_TERM,
+			payload: res.data?.data,
+		});
+		dispatch({
 			type: DELETE_CAT,
 			payload: res.data,
 		});
@@ -137,11 +157,15 @@ export const delete_cat = (params) => async (dispatch) => {
 		makeRequest({
 			action: 'betterlinks/admin/delete_term',
 			cat_id: params.cat_id,
-		}).then((response) => {
-			if (response.data) {
+		}).then((res) => {
+			if (res.data) {
+				dispatch({
+					type: DELETE_TERM,
+					payload: res.data?.data,
+				});
 				dispatch({
 					type: DELETE_CAT,
-					payload: response.data,
+					payload: res.data,
 				});
 			}
 		});
@@ -155,6 +179,21 @@ export const add_new_link =
 			const res = await API.post(namespace + 'links', {
 				params: formData,
 			});
+			const { cat_data, tags_data = [] } = res?.data?.data;
+			if (cat_data?.is_newly_created) {
+				dispatch({
+					type: ADD_TERM,
+					payload: cat_data,
+				});
+			}
+			for (const tagItem of tags_data) {
+				if (tagItem?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: tagItem,
+					});
+				}
+			}
 			if (res.data.success) {
 				dispatch({
 					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
@@ -192,6 +231,21 @@ export const add_new_link =
 				action: 'betterlinks/admin/create_link',
 				...formData,
 			}).then((res) => {
+				const { cat_data, tags_data = [] } = res?.data?.data;
+				if (cat_data?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: cat_data,
+					});
+				}
+				for (const tagItem of tags_data) {
+					if (tagItem?.is_newly_created) {
+						dispatch({
+							type: ADD_TERM,
+							payload: tagItem,
+						});
+					}
+				}
 				if (res.data) {
 					dispatch({
 						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
@@ -232,9 +286,24 @@ export const edit_link =
 			const res = await API.put(namespace + 'links/' + item.ID, {
 				params: item,
 			});
+			const { cat_data, tags_data = [] } = res?.data?.data;
+			if (cat_data?.is_newly_created) {
+				dispatch({
+					type: ADD_TERM,
+					payload: cat_data,
+				});
+			}
+			for (const tagItem of tags_data) {
+				if (tagItem?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: tagItem,
+					});
+				}
+			}
 			dispatch({
 				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
-				payload: item,
+				payload: res?.data?.data,
 			});
 			return res;
 		} catch (e) {
@@ -243,6 +312,21 @@ export const edit_link =
 				...item,
 			}).then((response) => {
 				if (response.data) {
+					const { cat_data, tags_data = [] } = res?.data?.data;
+					if (cat_data?.is_newly_created) {
+						dispatch({
+							type: ADD_TERM,
+							payload: cat_data,
+						});
+					}
+					for (const tagItem of tags_data) {
+						if (tagItem?.is_newly_created) {
+							dispatch({
+								type: ADD_TERM,
+								payload: tagItem,
+							});
+						}
+					}
 					dispatch({
 						type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 						payload: response.data.data,
