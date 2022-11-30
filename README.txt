@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -135,6 +135,16 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.5.4 - 30/11/2022 =
+
+- Fixed: ThirstyAffiliates links not migrating properly
+- Fixed: Link Expiration Date Schedule not working
+- Improved: Optimized requests when opening Link Editor modal
+- Fixed: Duplicate category being created when createing through link editor modal
+- Fixed: Some links being missing in the Manage links screen
+- Fixed: Conflict with Presto Player
+- Few minor bug fixes & improvements
 
 = 1.5.3 - 23/11/2022 =
 
