@@ -141,7 +141,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 - Fixed: ThirstyAffiliates links not migrating properly
 - Fixed: Link Expiration Date Schedule not working
 - Improved: Optimized requests when opening Link Editor modal
-- Fixed: Duplicate category being created when createing through link editor modal
+- Fixed: Duplicate category being created when creating through link editor modal
 - Fixed: Some links being missing in the Manage links screen
 - Fixed: Conflict with Presto Player
 - Few minor bug fixes & improvements
