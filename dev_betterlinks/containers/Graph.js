@@ -11,8 +11,9 @@ import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayEleme
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
+	const labels = Object.keys(props.data);
 	const data = {
-		labels: Object.keys(props.data),
+		labels,
 		datasets: [
 			{
 				label: __('Clicks', 'betterlinks'),
