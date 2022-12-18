@@ -11,7 +11,10 @@ import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayEleme
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
-	const labels = Object.keys(props.data);
+	const labels = Object.keys(props.data).map((item) => {
+		const splitted = item.split('-');
+		return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
+	});
 	const data = {
 		labels,
 		datasets: [
