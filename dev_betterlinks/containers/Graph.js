@@ -12,8 +12,8 @@ import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
 	const labels = Object.keys(props.data)
-		.reverse()
-		.map((item) => {
+		?.reverse?.()
+		?.map?.((item) => {
 			const splitted = item.split('-');
 			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
 		});
@@ -36,7 +36,7 @@ const Graph = (props) => {
 				pointHoverBorderWidth: 2,
 				pointRadius: 5,
 				pointHitRadius: 5,
-				data: Object.values(props.data).reverse(),
+				data: Object.values(props.data)?.reverse?.(),
 			},
 		],
 	};
