@@ -86,7 +86,8 @@ class Assets
             'betterlinks-gutenberg',
             BETTERLINKS_ASSETS_URI . 'js/betterlinks-gutenberg.core.min.js',
             ['wp-edit-post', 'wp-plugins', 'wp-core-data', 'wp-data', 'wp-block-editor', 'wp-editor', 'wp-components', 'wp-blocks', 'wp-keycodes', 'wp-dom', 'wp-i18n', 'wp-hooks', 'react', 'react-dom'],
-            filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js')
+            filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js'),
+            true
         );
         wp_localize_script('betterlinks-gutenberg', 'betterLinksGlobal', [
             'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),

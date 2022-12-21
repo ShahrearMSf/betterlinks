@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
-export const FETCH_TERMS_DATA = 'FETCH_TERMS_DATA';
+import { FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
 export const fetch_terms_data = (params) => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'terms', {

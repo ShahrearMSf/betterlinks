@@ -1,5 +1,5 @@
 .ReactModal__Overlay {
-	z-index: 9999999;
+	z-index: 99999;
 	overflow: auto;
 }
 .ReactModal__Content {
@@ -711,6 +711,7 @@
 }
 .MuiDialog-root {
 	z-index: 999999 !important;
+	// 2
 }
 
 .btl-regenerate-modal {

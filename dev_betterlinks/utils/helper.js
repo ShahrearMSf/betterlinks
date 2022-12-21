@@ -102,6 +102,7 @@ export const move = (source, destination, droppableSource, droppableDestination)
 
 export const generateSlug = (value) => {
 	return value
+		.trim()
 		.toLowerCase()
 		.replace(/-+/g, '')
 		.replace(/\s+/g, '-')
@@ -110,6 +111,7 @@ export const generateSlug = (value) => {
 
 export const generateTitleToSlug = (value) => {
 	return value
+		.trim()
 		.toLowerCase()
 		.replace(/\s+/g, '-')
 		.replace(/[^a-z0-9-/-]/g, '');
