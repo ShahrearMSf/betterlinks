@@ -37,8 +37,9 @@ class Import
             $PrettyLinks = new Migration\PTLImportCSV();
             $results = $PrettyLinks->start_importing($fileContent);
         } elseif ($type == 'thirstyaffiliates') {
+            $ta_link_prefix = isset($_POST["ta_prefix"]) ? sanitize_text_field($_POST["ta_prefix"]) : "";
             $ThirstyAffiliates = new Migration\TAImportCSV();
-            $results = $ThirstyAffiliates->start_importing($fileContent);
+            $results = $ThirstyAffiliates->start_importing($fileContent, $ta_link_prefix);
         } elseif ($type == 'simple301redirects') {
             $migrator = new Migration\S30RImportCSV();
             $results = $migrator->start_importing($fileContent);
