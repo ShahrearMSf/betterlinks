@@ -3,7 +3,7 @@ const { registerFormatType } = wp.richText;
 const { registerPlugin } = wp.plugins;
 
 // redux imports
-import { betterlinksGutenStore } from 'redux/store';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_links_data } from 'redux/actions/links.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
@@ -24,6 +24,36 @@ fetch_terms_data()(betterlinksGutenStore.dispatch)
 fetch_settings_data()(betterlinksGutenStore.dispatch)
 	.then(() => {})
 	.catch((err) => console.log('Error! fetch_settings_data failed', { err }));
+
+(() => {
+	let x = 1;
+	const intervalId = setInterval(() => {
+		x++;
+		if (x > 60000) {
+			clearInterval(intervalId);
+		}
+		if (
+			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData &&
+			betterlinksGutenStore?.getState()?.links?.links &&
+			betterlinksGutenStore?.getState()?.terms?.terms &&
+			betterlinksGutenStore?.getState()?.settings?.settings
+		) {
+			document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+			clearInterval(intervalId);
+		} else {
+			document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+			document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
+		}
+	}, 100);
+})();
+
+betterlinksGutenStore.subscribe(() => {
+	if (betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.ID) {
+		document?.body?.classList?.add('betterlinks-guten-instant-redirect-has-link');
+	} else {
+		document?.body?.classList?.remove('betterlinks-guten-instant-redirect-has-link');
+	}
+});
 
 // Sidebar Panel in Gutenberg Edit 'page/post'
 registerPlugin('betterlinks-sidebar', {

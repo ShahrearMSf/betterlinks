@@ -9,8 +9,8 @@ import Topbar from 'containers/TopBar';
 import TabsGeneral from 'containers/TabsGeneral';
 import TabsTools from 'containers/TabsTools';
 import Migration from 'containers/Migration';
-import GoogleAnalytics from 'components/Teasers/GoogleAnalytics';
 import RoleManagement from 'components/Teasers/RoleManagement';
+import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import BrokenLinks from 'components/Teasers/BrokenLinks';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
@@ -28,7 +28,7 @@ const Settings = (props) => {
 		__('General', 'betterlinks'),
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
-		__('Google Analytics', 'betterlinks'),
+		__('Tracking', 'betterlinks'),
 		__('Broken Link Checker', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
@@ -36,7 +36,7 @@ const Settings = (props) => {
 		<TabsGeneral settings={settings} />,
 		<TabsTools query={query} />,
 		<RoleManagement />,
-		<GoogleAnalytics />,
+		<ExternalAnalytics />,
 		<BrokenLinks />,
 		<GoPremium />,
 	]);

@@ -8,10 +8,12 @@ import {
 	ADD_NEW_LINK,
 	ADD_NEW_LINK_FOR_GUTEN_STORE,
 	EDIT_LINK,
-	EDIT_LINK_FORGUTENBERG,
+	EDIT_LINK_FOR_GUTENBERG,
 	DELETE_LINK,
 	HANDLE_LINK_FAVORITE,
 } from 'redux/actions/links.actions';
+import { DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
+
 import { move, reorder } from 'utils/helper';
 function links(state = {}, action) {
 	const payload = action.payload;
@@ -134,6 +136,10 @@ function links(state = {}, action) {
 			};
 		case ADD_NEW_LINK:
 			if (state.links[payload.data.cat_id] && state.links[payload.data.cat_id].lists) {
+				setTimeout(() => {
+					// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
+					reorder([payload.data, ...state.links[payload.data.cat_id].lists], 0, 0);
+				}, 0);
 				return {
 					...state,
 					links: {
@@ -181,6 +187,10 @@ function links(state = {}, action) {
 							const linksOnTheOldCat = state.links[property].lists;
 							const indexInOldCatList = linksOnTheOldCat.findIndex((item) => item.ID === payload.ID);
 							if (indexInOldCatList !== -1) {
+								setTimeout(() => {
+									// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
+									reorder([payload, ...linksAtPayloadCat], 0, 0);
+								}, 0);
 								return {
 									...state,
 									links: {
@@ -191,8 +201,7 @@ function links(state = {}, action) {
 										},
 										[payload.cat_id]: {
 											...state.links[payload.cat_id],
-											// the 'reorder' is used here cause it sends data using post request to the server & this way the 'position/index/serial' of the link in the category stay saved (in 'DND view') when someone change a link's category using 'edit_link'
-											lists: reorder([payload, ...linksAtPayloadCat], 0, 0),
+											lists: [payload, ...linksAtPayloadCat],
 										},
 									},
 								};
@@ -225,7 +234,7 @@ function links(state = {}, action) {
 			};
 		}
 
-		case EDIT_LINK_FORGUTENBERG: {
+		case EDIT_LINK_FOR_GUTENBERG: {
 			const allLinks = state.links;
 			const itemIndexInLinks = allLinks.findIndex((item) => item.ID == payload.ID);
 			const newData = { ...payload, short_url: payload.short_url.replace(/\/+$/, '').replace(/^\/+/, '') };
@@ -274,6 +283,15 @@ function links(state = {}, action) {
 						lists: state.links[payload.data.term_id] ? state.links[payload.data.term_id].lists.filter((item, index) => item.ID != payload.data.ID) : [],
 					},
 				},
+			};
+		case DELETE_GUTENBERG_LINK:
+			const allLinks = state.links;
+			const itemIndexInLinks = allLinks.findIndex((item) => item.ID == payload.ID);
+			const newLinks = [...allLinks.slice(0, itemIndexInLinks), ...allLinks.slice(itemIndexInLinks + 1)];
+
+			return {
+				...state,
+				links: newLinks,
 			};
 		default:
 			return state;

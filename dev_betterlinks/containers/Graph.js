@@ -11,8 +11,14 @@ import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayEleme
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
+	const labels = Object.keys(props.data)
+		?.reverse?.()
+		?.map?.((item) => {
+			const splitted = item.split('-');
+			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
+		});
 	const data = {
-		labels: Object.keys(props.data),
+		labels,
 		datasets: [
 			{
 				label: __('Clicks', 'betterlinks'),
@@ -30,7 +36,7 @@ const Graph = (props) => {
 				pointHoverBorderWidth: 2,
 				pointRadius: 5,
 				pointHitRadius: 5,
-				data: Object.values(props.data),
+				data: Object.values(props.data)?.reverse?.(),
 			},
 		],
 	};
@@ -131,6 +137,8 @@ const Graph = (props) => {
 		removeOverlayElement();
 		setOPenCustomDateFilter(false);
 	};
+
+	console.log({ data });
 
 	return (
 		<React.Fragment>

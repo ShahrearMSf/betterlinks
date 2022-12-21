@@ -56,7 +56,6 @@ export const Link = (props) => {
 		setShowLinkModal = () => {},
 		searchFieldRef,
 		linkNewTab,
-		setIsSubmittingForGutenberg = () => {},
 	} = props;
 
 	//👇 slight tweaks to use <Link /> component inside gutenberg start
