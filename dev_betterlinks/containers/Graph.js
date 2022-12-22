@@ -154,7 +154,6 @@ const Graph = (props) => {
 									<span className="dashicons dashicons-no-alt"></span>
 								</button>
 								<DateRangePicker
-								// 
 									onChange={(item) => dateRangePickerOnChangeHandler(item)}
 									showSelectionPreview={true}
 									moveRangeOnFirstSelection={false}
@@ -171,9 +170,7 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				{/*  */}
 				<Line data={data} options={options} />
-				{/* <h3>Hey there</h3> */}
 			</div>
 		</React.Fragment>
 	);
