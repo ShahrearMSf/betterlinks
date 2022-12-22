@@ -157,7 +157,7 @@ const Graph = (props) => {
 									onChange={(item) => dateRangePickerOnChangeHandler(item)}
 									showSelectionPreview={true}
 									moveRangeOnFirstSelection={false}
-									months={4}
+									months={2}
 									ranges={customDateFilter}
 									direction="horizontal"
 								/>
