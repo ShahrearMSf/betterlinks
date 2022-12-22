@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { nonce } from 'utils/helper';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
+	const [taPrefix, setTaPrefix] = useState('');
 	const [exportMode, setExportMode] = useState('links');
 	const [importResponse, setImportResponse] = useState({});
 	const importerModeHandler = (changeEvent) => {
@@ -25,6 +26,8 @@ const TabsTools = ({ query }) => {
 			);
 		}
 	}, []);
+
+	const result = 'admin.php?page=' + query.get('page') + '&import=true';
 
 	return (
 		<React.Fragment>
@@ -85,6 +88,11 @@ const TabsTools = ({ query }) => {
 									<span>{__('ThirstyAffiliates', 'betterlinks')}</span>
 								</label>
 							</div>
+							{importerMode === 'thirstyaffiliates' && (
+								<>
+									<input name="ta_prefix" id="ta_prefix" type="text" placeholder="Link Prefix" value={taPrefix} onChange={(e) => setTaPrefix(e.target.value)} />
+								</>
+							)}
 							<p className="btl-file-chooser">
 								<label htmlFor="upload">{__('Choose the File You Want to Import', 'betterlinks')}</label>
 								<input type="file" id="upload_file" name="upload_file" size="25" />
