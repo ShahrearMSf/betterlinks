@@ -28,7 +28,6 @@ const TabsTools = ({ query }) => {
 	}, []);
 
 	const result = 'admin.php?page=' + query.get('page') + '&import=true';
-	console.log({ result });
 
 	return (
 		<React.Fragment>

@@ -138,8 +138,6 @@ const Graph = (props) => {
 		setOPenCustomDateFilter(false);
 	};
 
-	console.log({ data });
-
 	return (
 		<React.Fragment>
 			<div className="btl-analytics-filter">
