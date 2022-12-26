@@ -7,7 +7,7 @@ class BLImportCSV extends BaseCSV implements ImportCsvInterface
 {
     private $link_header = [];
 
-    public function start_importing($csv)
+    public function start_importing($csv, $optional_param_1 = "")
     {
         $link_message = [];
         $click_message = [];
