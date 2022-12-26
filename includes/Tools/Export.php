@@ -117,7 +117,6 @@ class Export
             {$wpdb->prefix}betterlinks_clicks.referer, 
             {$wpdb->prefix}betterlinks_clicks.host, 
             {$wpdb->prefix}betterlinks_clicks.uri, 
-            {$wpdb->prefix}betterlinks_clicks.click_count, 
             {$wpdb->prefix}betterlinks_clicks.visitor_id, 
             {$wpdb->prefix}betterlinks_clicks.click_order, 
             {$wpdb->prefix}betterlinks_clicks.created_at, 

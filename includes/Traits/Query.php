@@ -460,10 +460,32 @@ trait Query
             $wpdb->query(
                 $wpdb->prepare(
                     "INSERT INTO {$wpdb->prefix}betterlinks_clicks (
-                        link_id, ip, browser, os, referer, host, uri, click_count, visitor_id, click_order, created_at, created_at_gmt
+                        link_id,
+                        ip,
+                        browser,
+                        os,
+                        referer,
+                        host,
+                        uri,
+                        click_count,
+                        visitor_id,
+                        click_order,
+                        created_at,
+                        created_at_gmt
                     ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
                     array(
-                        current($betterlinks)['ID'], $item['ip'], $item['browser'], $item['os'], $item['referer'], $item['host'], $item['uri'], $item['click_count'], $item['visitor_id'], $item['click_order'], $item['created_at'], $item['created_at_gmt']
+                        current($betterlinks)['ID'],
+                        $item['ip'],
+                        $item['browser'],
+                        $item['os'],
+                        $item['referer'],
+                        $item['host'],
+                        $item['uri'],
+                        isset($item['click_count']) ? $item['click_count'] : 0,
+                        $item['visitor_id'],
+                        $item['click_order'],
+                        $item['created_at'],
+                        $item['created_at_gmt']
                     )
                 )
             );
