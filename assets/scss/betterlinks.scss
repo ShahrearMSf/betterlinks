@@ -227,8 +227,14 @@ label.extra_info_keywords > input#keywords {
 
 //
 // react select design break fix: Disable Auto-link keywords for Post Types start
-.betterlinks-body .btl-form-group.btl-general-tab-settings-react-select .btl-modal-select--full .btl-react-select__control {
-	height: auto;
+.betterlinks-body .btl-form-group.btl-general-tab-settings-react-select {
+	.btl-modal-select--full .btl-react-select__control {
+		height: auto;
+	}
+	.btl-form-field label.btl-checkbox-field {
+		display: flex;
+	}
 }
+
 // react select design break fix: Disable Auto-link keywords for Post Types end
 //
