@@ -61,7 +61,7 @@ const CustomSidebarComponent = (props) => {
 			setTimeout(() => {
 				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
 			}, 500);
-			if (!linkData || !wp.data.select('core/editor')?.getPermalink()) {
+			if (!linkData) {
 				setIsShowInstantRedirect(false);
 				return false;
 			}
