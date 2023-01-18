@@ -53,6 +53,20 @@ export const reorder = (list, startIndex, endIndex) => {
 
 	return result;
 };
+export const deleteClicks = () => {
+	const form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/reset_analytics');
+	form_data.append('security', betterlinks_nonce);
+
+	return axios.post(ajaxurl, form_data).then(
+		(response) => {
+			console.log({ response });
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+};
 export const move = (source, destination, droppableSource, droppableDestination) => {
 	const sourceClone = Array.from(source);
 	const destClone = Array.from(destination);
