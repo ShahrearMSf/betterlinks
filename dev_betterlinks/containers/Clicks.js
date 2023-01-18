@@ -147,31 +147,29 @@ const Clicks = (props) => {
 	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
 	return (
-		<React.Fragment>
-			<div className="btl-analytic">
-				{clicks ? (
-					<React.Fragment>
-						<DeleteAnalytics />
-						<Graph data={analyticsData(clicks)} />
-						<div className="btl-analytic-table-wrapper">
-							<DataTable
-								className="btl-analytic-table"
-								title={__('All Clicks', 'betterlinks')}
-								columns={columns}
-								data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
-								pagination
-								paginationResetDefaultPage={resetPaginationToggle}
-								subHeader
-								subHeaderComponent={subHeaderComponentMemo}
-								persistTableHead
-							/>
-						</div>
-					</React.Fragment>
-				) : (
-					<TableLoader />
-				)}
-			</div>
-		</React.Fragment>
+		<div className="btl-analytic">
+			{clicks ? (
+				<>
+					<DeleteClicks />
+					<Graph data={analyticsData(clicks)} />
+					<div className="btl-analytic-table-wrapper">
+						<DataTable
+							className="btl-analytic-table"
+							title={__('All Clicks', 'betterlinks')}
+							columns={columns}
+							data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+							pagination
+							paginationResetDefaultPage={resetPaginationToggle}
+							subHeader
+							subHeaderComponent={subHeaderComponentMemo}
+							persistTableHead
+						/>
+					</div>
+				</>
+			) : (
+				<TableLoader />
+			)}
+		</div>
 	);
 };
 
