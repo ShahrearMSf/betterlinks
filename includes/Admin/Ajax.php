@@ -22,6 +22,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
         add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
         add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
+        add_action('wp_ajax_betterlinks/admin/reset_analytics', [$this, 'reset_analytics']);
         // prettylinks
         add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
         add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
@@ -667,6 +668,21 @@ class Ajax
         }
         wp_send_json_success(
             $results,
+            200
+        );
+        wp_die();
+    }
+    public function reset_analytics()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        
+        error_log("---btl reset_analytics method fired");
+        
+        wp_send_json_success(
+            ["result"=> "initial"],
             200
         );
         wp_die();
