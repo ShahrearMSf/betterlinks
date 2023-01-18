@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
-import DeleteAnalytics from 'containers/DeleteAnalytics';
+import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';

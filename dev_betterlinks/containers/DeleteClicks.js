@@ -1,4 +1,4 @@
-const DeleteAnalytics = (props) => {
+const DeleteClicks = (props) => {
 	const handleDeleteClicksOlderThan30days = () => {
 		//
 	};
@@ -19,4 +19,4 @@ const DeleteAnalytics = (props) => {
 	);
 };
 
-export default DeleteAnalytics;
+export default DeleteClicks;
