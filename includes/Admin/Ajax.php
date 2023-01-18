@@ -679,8 +679,11 @@ class Ajax
             wp_die();
         }
         
-        error_log("---btl reset_analytics method fired");
-        
+        $days_older_than = isset($_REQUEST['days_older_than']) ? sanitize_text_field($_REQUEST['days_older_than']) : false;
+        error_log("---btl reset_analytics method runned and the logs : " . json_encode([
+            "days_older_than" => $days_older_than,
+        ]));
+
         wp_send_json_success(
             ["result"=> "initial"],
             200
