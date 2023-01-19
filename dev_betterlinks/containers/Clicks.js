@@ -8,7 +8,7 @@ import Graph from 'containers/Graph';
 import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
-import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
+import { fetch_clicks_data, searchClicksData, fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const columns = [
 	{
@@ -99,6 +99,13 @@ const Clicks = (props) => {
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
+	const [customDateFilter, setCustomDateFilter] = useState([
+		{
+			startDate: betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30)),
+			endDate: new Date(),
+			key: 'selection',
+		},
+	]);
 	useEffect(() => {
 		const currentDate = new Date();
 		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
@@ -150,8 +157,8 @@ const Clicks = (props) => {
 		<div className="btl-analytic">
 			{clicks ? (
 				<>
-					<DeleteClicks />
-					<Graph data={analyticsData(clicks)} />
+					<DeleteClicks fetchCustomClicksData={props?.fetchCustomClicksData} customDateFilter={customDateFilter} />
+					<Graph data={analyticsData(clicks)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
 							className="btl-analytic-table"
@@ -180,6 +187,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
+		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
 		searchClicksData: bindActionCreators(searchClicksData, dispatch),
 	};
 };

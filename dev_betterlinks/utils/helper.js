@@ -53,13 +53,15 @@ export const reorder = (list, startIndex, endIndex) => {
 
 	return result;
 };
-export const deleteClicks = (daysOlderThan = false) => {
+export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(new Date(), 30), 'yyyy-mm-dd'), to = formatDate(new Date(), 'yyyy-mm-dd')) => {
 	const form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/reset_analytics');
 	form_data.append('security', betterlinks_nonce);
 	if (daysOlderThan) {
 		form_data.append('days_older_than', daysOlderThan);
 	}
+	form_data.append('from', from);
+	form_data.append('to', to);
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
 			console.log({ response });
