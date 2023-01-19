@@ -678,17 +678,24 @@ class Ajax
         if (!apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
             wp_die();
         }
-        
+        global $wpdb;
+        $prefix = $wpdb->prefix;
         $days_older_than = isset($_REQUEST['days_older_than']) ? sanitize_text_field($_REQUEST['days_older_than']) : false;
-        error_log("---btl reset_analytics method runned and the logs : " . json_encode([
-            "days_older_than" => $days_older_than,
-        ]));
-
-        wp_send_json_success(
-            ["result"=> "initial"],
-            200
-        );
-        wp_die();
+        $query = "";
+        if($days_older_than){
+            $range_days_in_seconds = $days_older_than * 24 * 60 * 60;
+            $gmt_timestamp_of_the_range_time = current_time('timestamp', 1) - $range_days_in_seconds;
+            $query = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d";
+            $query = $wpdb->prepare( $query, $gmt_timestamp_of_the_range_time );
+        }else{
+            $query = "DELETE FROM {$prefix}betterlinks_clicks";
+        }
+        $count = $wpdb->query($query);
+        if($count === false){
+            wp_send_json_error( $count );
+        }else{
+            wp_send_json_success( ["count" => $count], 200 );
+        }
     }
     public function get_post_types()
     {
