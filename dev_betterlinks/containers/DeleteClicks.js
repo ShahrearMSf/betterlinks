@@ -3,6 +3,7 @@ import { deleteClicks } from 'utils/helper';
 import Modal from 'react-modal';
 
 const DeleteClicks = (props) => {
+	const [timeOutIdToClear, setTimeOutIdToClear] = useState(0);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [successfulDeletedItemsCount, setSuccessfulDeletedItemsCount] = useState(0);
 	const [deleteStatus, setDeleteStatus] = useState('idle');
@@ -18,10 +19,11 @@ const DeleteClicks = (props) => {
 		console.log({ currentDaysOlderThan });
 		deleteClicks(currentDaysOlderThan)
 			.then((res) => {
-				setTimeout(() => {
+				const timeoutId = setTimeout(() => {
 					setModalIsOpen(false);
 					setDeleteStatus('idle');
 				}, 3000);
+				setTimeOutIdToClear(timeoutId);
 				setCurrentDaysOlderThan(false);
 				if (res?.data?.success) {
 					setSuccessfulDeletedItemsCount(res?.data?.data?.count);
@@ -32,10 +34,11 @@ const DeleteClicks = (props) => {
 			})
 			.catch((err) => {
 				console.log('---caught error on DeleteClicks', { err });
-				setTimeout(() => {
+				const timeoutId = setTimeout(() => {
 					setModalIsOpen(false);
 					setDeleteStatus('idle');
 				}, 3000);
+				setTimeOutIdToClear(timeoutId);
 			});
 	};
 
@@ -70,6 +73,8 @@ const DeleteClicks = (props) => {
 				<Modal
 					isOpen={modalIsOpen}
 					onRequestClose={() => {
+						clearTimeout(timeOutIdToClear);
+						setDeleteStatus('idle');
 						setModalIsOpen(false);
 						setCurrentDaysOlderThan(false);
 					}}
