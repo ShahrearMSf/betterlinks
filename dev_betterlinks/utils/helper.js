@@ -63,9 +63,11 @@ export const deleteClicks = (daysOlderThan = false) => {
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
 			console.log({ response });
+			return response;
 		},
 		(error) => {
 			console.log(error);
+			return error;
 		}
 	);
 };
