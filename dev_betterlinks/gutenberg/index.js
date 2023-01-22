@@ -12,6 +12,9 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { CustomSidebar } from 'gutenberg/components';
 import { betterlinksFormat } from 'gutenberg/formats';
 
+// helpers
+import { post_type } from 'utils/helper';
+
 Promise.all([fetch_links_data(true)(betterlinksGutenStore.dispatch), fetch_terms_data()(betterlinksGutenStore.dispatch), fetch_settings_data()(betterlinksGutenStore.dispatch)])
 	.then(() => {
 		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
@@ -38,10 +41,13 @@ betterlinksGutenStore.subscribe(() => {
 });
 
 // Sidebar Panel in Gutenberg Edit 'page/post'
-registerPlugin('betterlinks-sidebar', {
-	render: CustomSidebar,
-	icon: '',
-});
+
+if (['post', 'page'].includes(post_type)) {
+	registerPlugin('betterlinks-sidebar', {
+		render: CustomSidebar,
+		icon: '',
+	});
+}
 
 // Betterlinks Formatting option for rich text. This option wil show up in the formats options when selecting some text from rich-text
 const { name, ...settings } = betterlinksFormat;
