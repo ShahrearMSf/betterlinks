@@ -109,7 +109,7 @@ const CustomSidebarComponent = (props) => {
 				const intervalId = setInterval(() => {
 					x++;
 					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-					if (!linkData && x < 600) {
+					if (!linkData?.dispatched_successfully && x < 600) {
 						return false;
 					}
 					if (typeof linkData?.expire === 'string') {
@@ -577,6 +577,9 @@ const CustomSidebarComponent = (props) => {
 			delete freeParams.expire;
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
+
+			// remove unnecessary param/property
+			delete freeParams.dispatched_successfully;
 
 			const short_url = permalinkToShortUrl(permalink);
 			const link_title = currentPost.title;
