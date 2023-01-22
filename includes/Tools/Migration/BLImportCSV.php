@@ -23,8 +23,7 @@ class BLImportCSV extends BaseCSV implements ImportCsvInterface
                 $item['short_url'] = rtrim($item['short_url'], '/');
             }
             $item = \BetterLinks\Helper::sanitize_text_or_array_field($item);
-            // clicks data import
-            if (is_array($item) && count($item) === 12) {
+            if (is_array($item) && ((isset($item["click_count"]) && count($item) === 12) || (!isset($item["click_count"]) && count($item) === 11))){
                 $is_insert = $this->insert_click_data($item);
                 if ($is_insert) {
                     $click_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
