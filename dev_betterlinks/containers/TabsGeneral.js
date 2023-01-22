@@ -5,12 +5,13 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
+import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled } from 'utils/helper';
-const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
+const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -330,7 +331,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</label>
 								</div>
 							</span>
-							{!betterLinksHooks.applyFilters('isActivePro', false) && (
+							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
 										<label className="btl-form-label">
@@ -369,7 +370,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 									</span>
 								</>
 							)}
-							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, props)}
+							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, { ...props, postdatas })}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
@@ -383,12 +384,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option }) => {
 
 const mapStateToProps = (state) => ({
 	clicks: state.clicks,
+	postdatas: state.postdatas,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		update_option: bindActionCreators(update_option, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
+		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
 	};
 };
 

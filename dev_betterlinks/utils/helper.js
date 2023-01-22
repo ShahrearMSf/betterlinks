@@ -13,6 +13,7 @@ export const {
 	exists_clicks_json,
 	page,
 	is_pro_enabled,
+	post_type,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
