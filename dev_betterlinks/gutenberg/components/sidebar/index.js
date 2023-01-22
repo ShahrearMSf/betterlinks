@@ -105,14 +105,22 @@ const CustomSidebarComponent = (props) => {
 
 		fetch_link_for_permalink()
 			.then(() => {
-				let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-				if (typeof linkData?.expire === 'string') {
-					linkData = {
-						...linkData,
-						expire: getJsonString(linkData.expire),
-					};
-				}
-				setAllStatesForLinkData(linkData);
+				let x = 0;
+				const intervalId = setInterval(() => {
+					x++;
+					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+					if (!linkData && x < 600) {
+						return false;
+					}
+					if (typeof linkData?.expire === 'string') {
+						linkData = {
+							...linkData,
+							expire: getJsonString(linkData.expire),
+						};
+					}
+					setAllStatesForLinkData(linkData);
+					clearInterval(intervalId);
+				}, 500);
 			})
 			.catch((error) => console.log(error));
 	}, []);
