@@ -64,7 +64,6 @@ export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(ne
 	form_data.append('to', to);
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
-			console.log({ response });
 			return response;
 		},
 		(error) => {

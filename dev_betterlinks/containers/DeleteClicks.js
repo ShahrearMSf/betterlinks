@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { deleteClicks, formatDate } from 'utils/helper';
 import Modal from 'react-modal';
 
-const DeleteClicks = ({ fetchCustomClicksData, customDateFilter }) => {
+const DeleteClicks = ({ fetchCustomClicksData, customDateFilter, dispatch_new_links_data }) => {
 	const [timeOutIdToClear, setTimeOutIdToClear] = useState(0);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [successfulDeletedItemsCount, setSuccessfulDeletedItemsCount] = useState(0);
@@ -15,7 +15,6 @@ const DeleteClicks = ({ fetchCustomClicksData, customDateFilter }) => {
 	};
 
 	const handleConfirmDelete = () => {
-		console.log({ currentDaysOlderThan, customDateFilter });
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
 		deleteClicks(currentDaysOlderThan, from, to)
@@ -29,6 +28,7 @@ const DeleteClicks = ({ fetchCustomClicksData, customDateFilter }) => {
 				if (res?.data?.success) {
 					setSuccessfulDeletedItemsCount(res?.data?.data?.count);
 					fetchCustomClicksData({ data: res?.data?.data?.new_clicks_data });
+					dispatch_new_links_data({ data: res?.data?.data?.new_links_data });
 					setDeleteStatus('success');
 				} else {
 					setDeleteStatus('failed');

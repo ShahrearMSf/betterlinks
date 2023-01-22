@@ -693,16 +693,19 @@ class Ajax
             $query = "DELETE FROM {$prefix}betterlinks_clicks";
         }
         $count = $wpdb->query($query);
-        $new_clicks_data = \BetterLinks\Helper::get_clicks_by_date($from, $to);
-
         if ($count === false) {
             wp_send_json_error($count);
-        } else {
-            wp_send_json_success([
-                "count" => $count,
-                "new_clicks_data" => $new_clicks_data,
-            ], 200);
         }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        \BetterLinks\Helper::update_links_analytics();
+        $new_clicks_data = \BetterLinks\Helper::get_clicks_by_date($from, $to);
+        $new_links_data = \BetterLinks\Helper::get_prepare_all_links();
+        set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($new_links_data));
+        wp_send_json_success([
+            "count" => $count,
+            "new_clicks_data" => $new_clicks_data,
+            "new_links_data" => $new_links_data,
+        ], 200);
     }
     public function get_post_types()
     {

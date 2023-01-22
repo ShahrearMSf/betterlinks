@@ -68,6 +68,13 @@ export const fetch_links_data =
 		}
 	};
 
+export const dispatch_new_links_data = (payload) => async (dispatch) => {
+	dispatch({
+		type: FETCH_INITIAL_DATA,
+		payload,
+	});
+};
+
 export const add_new_cat = (data) => async (dispatch) => {
 	try {
 		const res = await API.post(namespace + 'terms', {

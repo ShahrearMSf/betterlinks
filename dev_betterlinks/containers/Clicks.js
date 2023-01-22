@@ -9,6 +9,7 @@ import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData, fetchCustomClicksData } from 'redux/actions/clicks.actions';
+import { dispatch_new_links_data } from 'redux/actions/links.actions';
 
 const columns = [
 	{
@@ -157,7 +158,7 @@ const Clicks = (props) => {
 		<div className="btl-analytic">
 			{clicks ? (
 				<>
-					<DeleteClicks fetchCustomClicksData={props?.fetchCustomClicksData} customDateFilter={customDateFilter} />
+					<DeleteClicks fetchCustomClicksData={props?.fetchCustomClicksData} dispatch_new_links_data={props?.dispatch_new_links_data} customDateFilter={customDateFilter} />
 					<Graph data={analyticsData(clicks)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
@@ -189,6 +190,7 @@ const mapDispatchToProps = (dispatch) => {
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
 		searchClicksData: bindActionCreators(searchClicksData, dispatch),
+		dispatch_new_links_data: bindActionCreators(dispatch_new_links_data, dispatch),
 	};
 };
 
