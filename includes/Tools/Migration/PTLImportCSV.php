@@ -7,7 +7,7 @@ use Error;
 class PTLImportCSV extends BaseCSV implements ImportCsvInterface
 {
     private $link_header = [];
-    public function start_importing($csv)
+    public function start_importing($csv, $optional_param_1 = "")
     {
         $count = 0;
         $link_message = [];

@@ -24,7 +24,7 @@ const { withDispatch, subscribe } = wp.data;
 // export const EDIT_LINK_EXPIRE_OPTION = 'EDIT_LINK_EXPIRE_OPTION';
 import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION } from 'redux/actions/actionstrings';
 
-export const fetch_link_for_permalink = async () => {
+export const fetch_link_for_permalink = () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 	if (!short_url) return false;
 	let form_data = new FormData();

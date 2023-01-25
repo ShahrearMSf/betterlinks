@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import Topbar from 'containers/TopBar';
 import TabsGeneral from 'containers/TabsGeneral';
 import TabsTools from 'containers/TabsTools';
@@ -44,6 +45,9 @@ const Settings = (props) => {
 		if (!settings) {
 			props.fetch_settings_data();
 		}
+		if (!props.postdatas.fetchedAll) {
+			props.fetch_post_types_data();
+		}
 	}, []);
 
 	return (
@@ -67,11 +71,13 @@ const Settings = (props) => {
 
 const mapStateToProps = (state) => ({
 	settings: state.settings,
+	postdatas: state.postdatas,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
 	};
 };
 

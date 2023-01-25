@@ -46,7 +46,7 @@ export default function Docs(props) {
 					<p className="btl-doc__content">
 						{__('Join the Facebook community and discuss with fellow developers and users. Best way to connect with people and get feedback on your projects.', 'betterlinks')}
 					</p>
-					<a href="https://www.facebook.com/groups/wpdeveloper.com/" className="btl-doc__url" target="_blank">
+					<a href="https://www.facebook.com/groups/wpdeveloper.net/" className="btl-doc__url" target="_blank">
 						{__('Join the Community', 'betterlinks')}
 						<img src={plugin_root_url + 'assets/images/arrow-right.svg'} alt="" />
 					</a>

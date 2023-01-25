@@ -220,7 +220,21 @@ label.extra_info_keywords > input#keywords {
 //
 
 // external analytics teaser UI css start
-.btl-external-analytics-container.teaser > form.form > .btl-role-item > label.btl-form-label{
+.btl-external-analytics-container.teaser > form.form > .btl-role-item > label.btl-form-label {
 	width: 45%;
 }
 // external analytics teaser UI css end
+
+//
+// react select design break fix: Disable Auto-link keywords for Post Types start
+.betterlinks-body .btl-form-group.btl-general-tab-settings-react-select {
+	.btl-modal-select--full .btl-react-select__control {
+		height: auto;
+	}
+	.btl-form-field label.btl-checkbox-field {
+		display: flex;
+	}
+}
+
+// react select design break fix: Disable Auto-link keywords for Post Types end
+//

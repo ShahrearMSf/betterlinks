@@ -90,6 +90,7 @@ class Assets
             true
         );
         wp_localize_script('betterlinks-gutenberg', 'betterLinksGlobal', [
+            'post_type' => get_post_type(),
             'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
             'nonce' => wp_create_nonce('wp_rest'),
             'rest_url' => rest_url(),
