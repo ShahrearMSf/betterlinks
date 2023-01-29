@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -136,12 +136,16 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 1.5.7 - 29/01/2023 =
+
+- Fixed: Betterlinks sidebar not rendering inside Gutenberg Editor
+- Few minor bug fixes & improvements
+
 = 1.5.6 - 25/01/2023 =
 
 - Fixed: Throwing fatal error while importing links from CSV file
-- Fixed: Not able to select or schedule any date from Expire option when creating new links
 - Fixed: Too many redirects when shortened url and target url are same
-- Removed: Click data after exporting BetterLinks Analytics
+- Removed: Click data column from exported BetterLinks Analytics csv
 - Fixed: Gutenberg instant redirect option not showing sometimes
 - Few minor bug fixes & improvements
 
