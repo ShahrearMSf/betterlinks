@@ -101,7 +101,14 @@ const CustomSidebarComponent = (props) => {
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
 
-		fetch_link_for_permalink()
+		const resultOfFetchPermalink = fetch_link_for_permalink();
+		if (!resultOfFetchPermalink) {
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+			}, 500);
+			return () => {};
+		}
+		resultOfFetchPermalink
 			.then(() => {
 				let x = 0;
 				const intervalId = setInterval(() => {
