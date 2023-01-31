@@ -33,6 +33,13 @@ export const fetch_link_for_permalink = () => {
 	form_data.append('short_url', short_url);
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
+			if (!response?.data) {
+				betterlinksGutenStore.dispatch({
+					type: FETCH_LINK_FOR_PERMALINK,
+					payload: {},
+				});
+				return false;
+			}
 			let linkData = response?.data?.data;
 			//👇 if link found for the post/page
 			if (linkData) {

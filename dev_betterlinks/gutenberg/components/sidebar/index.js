@@ -65,6 +65,8 @@ const CustomSidebarComponent = (props) => {
 			}
 			if (linkData.ID || linkData.ID === 0) {
 				setIsAllowInstantRedirect(true);
+			} else {
+				return false;
 			}
 			setTargetUrl(linkData.target_url);
 			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
