@@ -51,6 +51,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 			});
 	};
 
+	const handleInitialResetButtonClick = () => {
+		console.log('----clicked reset button');
+	};
+
 	return (
 		<>
 			<style>{`
@@ -77,6 +81,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					font-size: 90px;
 				}
 
+				button.btl-reset-analytics{
+					margin-right: 20px !important;
+    				padding: 5px 30px !important;
+				}
 			`}</style>
 			<div className="btl-analytic-reset-wrapeer">
 				<Modal
@@ -121,10 +129,14 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					{deleteStatus == 'failed' && <h2>Failed!!</h2>}
 				</Modal>
 
-				<h3>delete analytics</h3>
+				<button className="button-primary btl-reset-analytics" onClick={handleInitialResetButtonClick}>
+					Reset
+				</button>
+
+				{/* <h3>delete analytics</h3>
 				<button onClick={() => deleteClicksConfirm(30)}>Delete Analytics Older than 30 days</button>
 				<button onClick={() => deleteClicksConfirm(90)}>Delete Analytics Older than 90 days</button>
-				<button onClick={() => deleteClicksConfirm()}>Delete All Analytics</button>
+				<button onClick={() => deleteClicksConfirm()}>Delete All Analytics</button> */}
 			</div>
 		</>
 	);
