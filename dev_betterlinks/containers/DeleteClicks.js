@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import { __ } from '@wordpress/i18n';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { deleteClicks, formatDate } from 'utils/helper';
+import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
+import { dispatch_new_links_data } from 'redux/actions/links.actions';
 import Modal from 'react-modal';
 
-const DeleteClicks = ({ fetchCustomClicksData, customDateFilter, dispatch_new_links_data }) => {
+const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsForAnalytics }) => {
+	const { customDateFilter } = propsForAnalytics || {};
 	const [timeOutIdToClear, setTimeOutIdToClear] = useState(0);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [successfulDeletedItemsCount, setSuccessfulDeletedItemsCount] = useState(0);
@@ -15,6 +21,7 @@ const DeleteClicks = ({ fetchCustomClicksData, customDateFilter, dispatch_new_li
 	};
 
 	const handleConfirmDelete = () => {
+		if (!customDateFilter) return;
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
 		deleteClicks(currentDaysOlderThan, from, to)
@@ -123,4 +130,12 @@ const DeleteClicks = ({ fetchCustomClicksData, customDateFilter, dispatch_new_li
 	);
 };
 
-export default DeleteClicks;
+const mapStateToProps = () => ({});
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
+		dispatch_new_links_data: bindActionCreators(dispatch_new_links_data, dispatch),
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteClicks);
