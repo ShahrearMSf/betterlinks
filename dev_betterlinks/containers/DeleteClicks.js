@@ -53,20 +53,19 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 
 	const close = () => {
 		clearTimeout(timeOutIdToClear);
-		setDeleteStatus('initial_modal_open');
+		setDeleteStatus('reset_modal_step_1');
 		setModalIsOpen(false);
 		setCurrentDaysOlderThan(false);
 	};
 
 	const handleInitialResetButtonClick = () => {
 		setModalIsOpen(true);
-		setDeleteStatus('initial_modal_open');
+		setDeleteStatus('reset_modal_step_1');
 	};
 
 	return (
 		<>
 			<style>{`
-			
 				.btl-analytic-reset-wrapeer button{
 					display:block;
 					border: 1px solid #0afa;
@@ -78,10 +77,8 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					border-radius: 5px;
 				}
 
-
 				.btl-analytic-reset-wrapeer button:hover{
 					background: #09e;
-					
 				}
 
 				h2 span.success_delete_count{
@@ -101,7 +98,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					// style={modalCustomStyles}
 					ariaHideApp={false}
 				>
-					{deleteStatus == 'initial_modal_open' && <h1>Delete step 1</h1>}
+					{deleteStatus == 'reset_modal_step_1' && <h1>Delete step 1</h1>}
 					{deleteStatus == 'deleting' && <h2>Deleting...</h2>}
 					{deleteStatus == 'idle' && (
 						<>
