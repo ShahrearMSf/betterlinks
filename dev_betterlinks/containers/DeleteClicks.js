@@ -98,9 +98,9 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					// style={modalCustomStyles}
 					ariaHideApp={false}
 				>
-					{deleteStatus == 'reset_modal_step_1' && <h1>Delete step 1</h1>}
-					{deleteStatus == 'deleting' && <h2>Deleting...</h2>}
-					{deleteStatus == 'idle' && (
+					{deleteStatus === 'reset_modal_step_1' && <h1>Delete step 1</h1>}
+					{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
+					{deleteStatus === 'idle' && (
 						<>
 							<h4>Are You Sure?</h4>
 							<button
@@ -114,12 +114,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 							<button onClick={close}>No</button>
 						</>
 					)}
-					{deleteStatus == 'success' && (
+					{deleteStatus === 'success' && (
 						<h2>
 							Success!!! <span class="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
 						</h2>
 					)}
-					{deleteStatus == 'failed' && <h2>Failed!!</h2>}
+					{deleteStatus === 'failed' && <h2>Failed!!</h2>}
 				</Modal>
 
 				<button className="button-primary btl-reset-analytics" onClick={handleInitialResetButtonClick}>
