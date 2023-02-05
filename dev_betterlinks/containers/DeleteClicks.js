@@ -51,8 +51,16 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 			});
 	};
 
+	const close = () => {
+		clearTimeout(timeOutIdToClear);
+		setDeleteStatus('initial_modal_open');
+		setModalIsOpen(false);
+		setCurrentDaysOlderThan(false);
+	};
+
 	const handleInitialResetButtonClick = () => {
-		console.log('----clicked reset button');
+		setModalIsOpen(true);
+		setDeleteStatus('initial_modal_open');
 	};
 
 	return (
@@ -89,15 +97,11 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 			<div className="btl-analytic-reset-wrapeer">
 				<Modal
 					isOpen={modalIsOpen}
-					onRequestClose={() => {
-						clearTimeout(timeOutIdToClear);
-						setDeleteStatus('idle');
-						setModalIsOpen(false);
-						setCurrentDaysOlderThan(false);
-					}}
+					onRequestClose={close}
 					// style={modalCustomStyles}
 					ariaHideApp={false}
 				>
+					{deleteStatus == 'initial_modal_open' && <h1>Delete step 1</h1>}
 					{deleteStatus == 'deleting' && <h2>Deleting...</h2>}
 					{deleteStatus == 'idle' && (
 						<>
@@ -110,15 +114,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 							>
 								Yes
 							</button>
-							<button
-								onClick={() => {
-									setDeleteStatus('idle');
-									setCurrentDaysOlderThan(false);
-									setModalIsOpen(false);
-								}}
-							>
-								No
-							</button>
+							<button onClick={close}>No</button>
 						</>
 					)}
 					{deleteStatus == 'success' && (
