@@ -145,6 +145,13 @@ const Clicks = (props) => {
 		);
 	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
+	const newColumns = columns.filter((item) => {
+		if (item.selector === 'ip') {
+			return false;
+		}
+		return true;
+	});
+
 	return (
 		<React.Fragment>
 			<div className="btl-analytic">
@@ -155,7 +162,7 @@ const Clicks = (props) => {
 							<DataTable
 								className="btl-analytic-table"
 								title={__('All Clicks', 'betterlinks')}
-								columns={columns}
+								columns={newColumns}
 								data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
 								pagination
 								paginationResetDefaultPage={resetPaginationToggle}
