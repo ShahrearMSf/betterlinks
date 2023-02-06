@@ -331,6 +331,26 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 									</label>
 								</div>
 							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Disable Clicks IP', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="disable_analytics_ip"
+											type="checkbox"
+											onChange={() => props.setFieldValue('disable_analytics_ip', !props?.values?.disable_analytics_ip)}
+										/>
+										<span className="text">
+											{__('Disable IP Addresses for Analytics', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__("If checked, user's ip addresses won't be saved & won't be shown in analytics section", 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
 							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
