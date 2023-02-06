@@ -119,7 +119,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					font-size: 90px;
 				}
 
-				button.btl-reset-analytics{
+				button.btl-reset-analytics-initial-button{
 					margin-right: 20px !important;
     				padding: 5px 30px !important;
 				}
@@ -190,6 +190,9 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 				}
 			`}</style>
 			<div className="btl-analytic-reset-wrapeer betterlinks">
+				<button className="button-primary btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
+					Reset
+				</button>
 				<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
 					<div className="btl-reset-modal-popup-wrapper ">
 						{deleteStatus === 'reset_modal_step_1' && (
@@ -233,10 +236,6 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 						{deleteStatus === 'failed' && <h2>Failed!!</h2>}
 					</div>
 				</Modal>
-
-				<button className="button-primary btl-reset-analytics" onClick={handleResetButtonClick1}>
-					Reset
-				</button>
 			</div>
 		</>
 	);
