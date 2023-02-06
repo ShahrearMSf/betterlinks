@@ -238,7 +238,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 									<button className="button-primary btl-btn-reset-apply-2" onClick={handleConfirmDelete}>
 										Reset Clicks
 									</button>
-									<button className="button-primary btl-btn-reset-cancel" onClick={close}>
+									<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
 										Cancel
 									</button>
 								</div>
