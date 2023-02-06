@@ -162,8 +162,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					padding-bottom: 50px;
 				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h2,
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4,
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 p
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4
 				{
 					line-height: 1.4;
 				}
@@ -172,6 +171,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4{
 					font-size: 18px;
+					font-weight: 300;
 				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons{
 					
