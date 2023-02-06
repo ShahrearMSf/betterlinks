@@ -135,6 +135,20 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					align-items: center;
 					height: 100%;
 				}
+				
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-wrapper span.btl-close-popup {
+					position: absolute;
+					left: 100%;
+					top: 0;
+					height: 30px;
+					width: 30px;
+					background: #fff9;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+				}
+
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup{
 					margin: 0;
 					padding: 0;
@@ -195,6 +209,9 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 				</button>
 				<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
 					<div className="btl-reset-modal-popup-wrapper ">
+						<span className="btl-close-popup" onClick={close}>
+							X
+						</span>
 						{deleteStatus === 'reset_modal_step_1' && (
 							<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
 								<Select2
