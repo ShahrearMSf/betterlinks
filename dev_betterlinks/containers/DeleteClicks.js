@@ -28,7 +28,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 	const [timeOutIdToClear, setTimeOutIdToClear] = useState(0);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [successfulDeletedItemsCount, setSuccessfulDeletedItemsCount] = useState(0);
-	const [deleteStatus, setDeleteStatus] = useState('idle');
+	const [deleteStatus, setDeleteStatus] = useState('reset_modal_step_1');
 	const [currentDaysOlderThan, setCurrentDaysOlderThan] = useState(deleteClicksOptions[0]);
 
 	useEffect(() => {
@@ -42,20 +42,23 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 		};
 	}, [modalIsOpen]);
 
-	const deleteClicksConfirm = (daysOlderThan = false) => {
-		setModalIsOpen(true);
-		setCurrentDaysOlderThan(daysOlderThan);
+	const close = () => {
+		clearTimeout(timeOutIdToClear);
+		setDeleteStatus('reset_modal_step_1');
+		setModalIsOpen(false);
+		setCurrentDaysOlderThan(deleteClicksOptions[0]);
 	};
 
 	const handleConfirmDelete = () => {
 		if (!customDateFilter) return;
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
-		deleteClicks(currentDaysOlderThan, from, to)
+		setDeleteStatus('deleting');
+		const daysOlderThan = currentDaysOlderThan?.value || false;
+		deleteClicks(daysOlderThan, from, to)
 			.then((res) => {
 				const timeoutId = setTimeout(() => {
-					setModalIsOpen(false);
-					setDeleteStatus('idle');
+					close();
 				}, 3000);
 				setTimeOutIdToClear(timeoutId);
 				setCurrentDaysOlderThan(false);
@@ -71,18 +74,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 			.catch((err) => {
 				console.log('---caught error on DeleteClicks', { err });
 				const timeoutId = setTimeout(() => {
-					setModalIsOpen(false);
-					setDeleteStatus('idle');
+					close();
 				}, 3000);
 				setTimeOutIdToClear(timeoutId);
 			});
-	};
-
-	const close = () => {
-		clearTimeout(timeOutIdToClear);
-		setDeleteStatus('reset_modal_step_1');
-		setModalIsOpen(false);
-		setCurrentDaysOlderThan(false);
 	};
 
 	const handleResetButtonClick1 = () => {
@@ -94,20 +89,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 		setDeleteStatus('reset_modal_step_2');
 	};
 
-	const handleResetButtonClick3 = () => {
-		console.log('----handleResetButtonClick3 clicked');
-	};
-
 	const handleDeleteOptionsChange = (value) => {
 		console.log({ value });
 		setCurrentDaysOlderThan(value);
 	};
 
-	const handleCancelReset = () => {
-		console.log('----handleCancelReset clicked');
-	};
-
-	console.log({ deleteStatus });
+	console.log({ deleteStatus, currentDaysOlderThan });
 
 	return (
 		<>
@@ -228,30 +215,16 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 									<span style={{ display: 'Block' }}>Click 'cancel' to abort.</span>
 								</h4>
 								<div className="btl-btn-reset-popup-step-2-buttons">
-									<button className="button-primary btl-btn-reset-apply-2" onClick={handleResetButtonClick3}>
+									<button className="button-primary btl-btn-reset-apply-2" onClick={handleConfirmDelete}>
 										Reset Clicks
 									</button>
-									<button className="button-primary btl-btn-reset-cancel" onClick={handleCancelReset}>
+									<button className="button-primary btl-btn-reset-cancel" onClick={close}>
 										Cancel
 									</button>
 								</div>
 							</div>
 						)}
 						{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
-						{deleteStatus === 'idle' && (
-							<>
-								<h4>Are You Sure?</h4>
-								<button
-									onClick={() => {
-										handleConfirmDelete();
-										setDeleteStatus('deleting');
-									}}
-								>
-									Yes
-								</button>
-								<button onClick={close}>No</button>
-							</>
-						)}
 						{deleteStatus === 'success' && (
 							<h2>
 								Success!!! <span class="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
@@ -264,11 +237,6 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 				<button className="button-primary btl-reset-analytics" onClick={handleResetButtonClick1}>
 					Reset
 				</button>
-
-				{/* <h3>delete analytics</h3>
-				<button onClick={() => deleteClicksConfirm(30)}>Delete Analytics Older than 30 days</button>
-				<button onClick={() => deleteClicksConfirm(90)}>Delete Analytics Older than 90 days</button>
-				<button onClick={() => deleteClicksConfirm()}>Delete All Analytics</button> */}
 			</div>
 		</>
 	);
