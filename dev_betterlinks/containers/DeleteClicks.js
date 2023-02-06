@@ -94,9 +94,17 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 		setDeleteStatus('reset_modal_step_2');
 	};
 
+	const handleResetButtonClick3 = () => {
+		console.log('----handleResetButtonClick3 clicked');
+	};
+
 	const handleDeleteOptionsChange = (value) => {
 		console.log({ value });
 		setCurrentDaysOlderThan(value);
+	};
+
+	const handleCancelReset = () => {
+		console.log('----handleCancelReset clicked');
 	};
 
 	console.log({ deleteStatus });
@@ -140,13 +148,44 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					align-items: center;
 					height: 100%;
 				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1{
-					display: flex;
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup{
 					margin: 0;
 					padding: 0;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1{
+					display: flex;				
 					gap: 20px;
 				}
-
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2{
+					text-align: center;
+					padding-bottom: 50px;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h2,
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4,
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 p
+				{
+					line-height: 1.4;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h2{
+					font-size: 24px;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4{
+					font-size: 18px;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons{
+					
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button{
+					padding: 5px 30px;
+					margin: 0 10px;
+					font-size: 24px;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button.btl-btn-reset-apply-2{
+					
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button.btl-btn-reset-cancel{
+					
+				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-modal-select--full{
 					width: 350px !important;
 				}
@@ -179,6 +218,23 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 								<button className="button-primary btl-btn-reset-analytics btl-btn-reset-apply-1" onClick={handleResetButtonClick2}>
 									Apply
 								</button>
+							</div>
+						)}
+						{deleteStatus === 'reset_modal_step_2' && (
+							<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
+								<h2>This Action Cannot be undone. Are you sure you want to continue?</h2>
+								<h4>
+									Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete the clicks data from database and it cannot be restored again.
+									<span style={{ display: 'Block' }}>Click 'cancel' to abort.</span>
+								</h4>
+								<div className="btl-btn-reset-popup-step-2-buttons">
+									<button className="button-primary btl-btn-reset-apply-2" onClick={handleResetButtonClick3}>
+										Reset Clicks
+									</button>
+									<button className="button-primary btl-btn-reset-cancel" onClick={handleCancelReset}>
+										Cancel
+									</button>
+								</div>
 							</div>
 						)}
 						{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
