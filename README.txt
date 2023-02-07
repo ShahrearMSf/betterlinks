@@ -138,7 +138,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 = 1.5.7 - 29/01/2023 =
 
-- Fixed: Betterlinks sidebar not rendering inside Gutenberg Editor
+- Fixed: BetterLinks sidebar not rendering inside Gutenberg Editor
 - Few minor bug fixes & improvements
 
 = 1.5.6 - 25/01/2023 =
