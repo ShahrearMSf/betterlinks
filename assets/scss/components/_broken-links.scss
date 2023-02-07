@@ -562,7 +562,13 @@
 	flex-wrap: wrap;
 	justify-content: center;
 	padding-right: 15px;
+	width: 600px;
+	margin: auto;
 	margin-bottom: -10px;
+	.btl-scan-output:nth-last-child(1),
+	.btl-scan-output:nth-last-child(2) {
+		width: 215px;
+	}
 	.btl-scan-output {
 		display: flex;
 		flex-wrap: wrap;
@@ -573,6 +579,8 @@
 		margin-right: 10px;
 		margin-bottom: 10px;
 		width: 130px;
+		text-align: center;
+		justify-content: center;
 		.icon {
 			display: inline-flex;
 			margin-right: 10px;
