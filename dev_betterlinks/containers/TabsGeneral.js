@@ -345,7 +345,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 											{__('Disable IP Addresses for Analytics', 'betterlinks')}
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext">{__("If checked, user's ip addresses won't be saved & won't be shown in analytics section", 'betterlinks')}</span>
+												<span className="btl-tooltiptext">{__("If checked, users' ip addresses won't be saved & won't be shown in analytics section", 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>
