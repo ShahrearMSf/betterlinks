@@ -457,38 +457,29 @@ trait Query
         } elseif (isset($item['link_id'])) {
             $betterlinks = self::get_link_by_ID($item['link_id']);
         }
+        $is_analytics_ip_enabled = isset($item['ip']) && isset($item['host']);
+        $addedPlaceholderString = $is_analytics_ip_enabled ? " ip, host, " : "";
+        $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
+        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at, created_at_gmt, " . $addedPlaceholderString . " ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s, " . $addedDbColumnsString . " )";
+        $db_data_array = [
+            current($betterlinks)['ID'],
+            $item['browser'],
+            $item['os'],
+            $item['referer'],
+            $item['uri'],
+            isset($item['click_count']) ? $item['click_count'] : 0,
+            $item['visitor_id'],
+            $item['click_order'],
+            $item['created_at'],
+            $item['created_at_gmt']
+        ];
+        if($is_analytics_ip_enabled){
+            $db_data_array[] = $item['ip'];
+            $db_data_array[] = $item['host'];
+        }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
-                $wpdb->prepare(
-                    "INSERT INTO {$wpdb->prefix}betterlinks_clicks (
-                        link_id,
-                        ip,
-                        browser,
-                        os,
-                        referer,
-                        host,
-                        uri,
-                        click_count,
-                        visitor_id,
-                        click_order,
-                        created_at,
-                        created_at_gmt
-                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
-                    array(
-                        current($betterlinks)['ID'],
-                        $item['ip'],
-                        $item['browser'],
-                        $item['os'],
-                        $item['referer'],
-                        $item['host'],
-                        $item['uri'],
-                        isset($item['click_count']) ? $item['click_count'] : 0,
-                        $item['visitor_id'],
-                        $item['click_order'],
-                        $item['created_at'],
-                        $item['created_at_gmt']
-                    )
-                )
+                $wpdb->prepare( $query, $db_data_array )
             );
             return $wpdb->insert_id;
         }
