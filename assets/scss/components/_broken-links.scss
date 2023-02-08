@@ -265,9 +265,13 @@
 					padding-left: 15px;
 					padding-right: 15px;
 					&:nth-child(2) {
-						width: 250px;
+						max-width: 180px;
 					}
 					&:nth-child(3) {
+						min-width: 160px;
+						justify-content: center;
+					}
+					&:nth-child(4) {
 						min-width: 320px;
 						> div {
 							display: flex;
@@ -275,8 +279,9 @@
 							width: 270px;
 						}
 					}
-					&:nth-child(4) {
-						min-width: 250px;
+					&:nth-child(5) {
+						min-width: 290px;
+						padding-left: 40px;
 						> div {
 							width: 200px;
 							display: flex;
@@ -285,6 +290,8 @@
 					}
 					&:last-child {
 						max-width: 130px;
+						padding-left: 40px;
+						justify-content: center;
 					}
 					div {
 						color: #252525;
@@ -313,8 +320,11 @@
 						font-size: 14px;
 						color: $secondary;
 					}
+					.betterlinks-broken-links-status-column {
+						margin: 0;
+					}
 					&:nth-child(2) {
-						width: 250px;
+						max-width: 180px;
 						font-size: 14px;
 						font-weight: 500;
 						color: #252525;
@@ -326,21 +336,30 @@
 						}
 					}
 					&:nth-child(3) {
+						min-width: 160px;
+						justify-content: center;
+						padding: 0;
+					}
+					&:nth-child(4) {
 						min-width: 320px;
+						padding-left: 25px;
 						.btl-short-url-wrapper {
 							width: 290px;
 							.btl-short-url {
-								min-width: 230px;
+								width: 230px;
 								word-wrap: break-word;
 								line-height: 20px;
 							}
 						}
 					}
-					&:nth-child(4) {
-						min-width: 250px;
+					&:nth-child(5) {
+						min-width: 290px;
+						padding-left: 40px;
 					}
 					&:last-child {
 						max-width: 130px;
+						justify-content: center;
+						padding-left: 40px;
 					}
 					.btl-target-url {
 						display: flex;
