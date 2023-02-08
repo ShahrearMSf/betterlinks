@@ -337,9 +337,9 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 									<label className="btl-checkbox-field block">
 										<Field
 											className="btl-check"
-											name="disable_analytics_ip"
+											name="is_disable_analytics_ip"
 											type="checkbox"
-											onChange={() => props.setFieldValue('disable_analytics_ip', !props?.values?.disable_analytics_ip)}
+											onChange={() => props.setFieldValue('is_disable_analytics_ip', !props?.values?.is_disable_analytics_ip)}
 										/>
 										<span className="text">
 											{__('Disable IP Addresses for Analytics', 'betterlinks')}
