@@ -458,9 +458,9 @@ trait Query
             $betterlinks = self::get_link_by_ID($item['link_id']);
         }
         $is_analytics_ip_enabled = isset($item['ip']) && isset($item['host']);
-        $addedPlaceholderString = $is_analytics_ip_enabled ? " ip, host, " : "";
+        $addedPlaceholderString = $is_analytics_ip_enabled ? " created_at_gmt, ip, host " : " created_at_gmt ";
         $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
-        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at, created_at_gmt, " . $addedPlaceholderString . " ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s, " . $addedDbColumnsString . " )";
+        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
         $db_data_array = [
             current($betterlinks)['ID'],
             $item['browser'],
