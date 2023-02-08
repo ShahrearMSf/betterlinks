@@ -182,6 +182,7 @@ trait Query
         $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
         $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
         $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false;
+        $formattedArray['is_disable_analytics_ip'] = isset($options->is_disable_analytics_ip) ? $options->is_disable_analytics_ip : false;
         $is_links_case_sensitive = $formattedArray['is_case_sensitive'];
         if (!empty($options)) {
             $formattedArray['wildcards_is_active'] = $options->wildcards;
