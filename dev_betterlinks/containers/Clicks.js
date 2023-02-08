@@ -8,6 +8,7 @@ import Graph from 'containers/Graph';
 import TableLoader from 'components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 const columns = [
 	{
@@ -98,17 +99,21 @@ const Clicks = (props) => {
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
+	const { settings } = props.settings;
 	useEffect(() => {
-		const currentDate = new Date();
-		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
 		if (!clicks) {
+			const currentDate = new Date();
+			let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
 			props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
 		}
-	}, []);
+		if (!settings) {
+			props.fetch_settings_data();
+		}
+	}, [clicks, settings]);
 
 	const analyticsData = (data) => {
 		let results = {};
-		data.forEach((element) => {
+		data?.forEach?.((element) => {
 			let date = element.created_at.split(' ')[0];
 			if (results.hasOwnProperty(date)) {
 				results[date] = results[date] + 1;
@@ -145,12 +150,7 @@ const Clicks = (props) => {
 		);
 	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
-	const newColumns = columns.filter((item) => {
-		if (item.selector === 'ip') {
-			return false;
-		}
-		return true;
-	});
+	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
 	return (
 		<React.Fragment>
@@ -163,7 +163,7 @@ const Clicks = (props) => {
 								className="btl-analytic-table"
 								title={__('All Clicks', 'betterlinks')}
 								columns={newColumns}
-								data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+								data={clicks?.filter?.((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
 								pagination
 								paginationResetDefaultPage={resetPaginationToggle}
 								subHeader
@@ -182,10 +182,12 @@ const Clicks = (props) => {
 
 const mapStateToProps = (state) => ({
 	clicks: state.clicks,
+	settings: state.settings,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 		searchClicksData: bindActionCreators(searchClicksData, dispatch),
 	};
