@@ -111,23 +111,22 @@ class Utils
     }
     public function start_trakcing($data)
     {
+        global $betterlinks;
+        $is_disable_analytics_ip = isset($betterlinks['is_disable_analytics_ip']) ? $betterlinks['is_disable_analytics_ip'] : false;
         do_action('betterlinks/link/before_start_tracking', $data);
         $now = current_time('mysql');
         $now_gmt = current_time('mysql', 1);
-        $IP = $this->get_current_client_IP();
         $visitor_cookie = 'betterlinks_visitor';
         if (!isset($_COOKIE[$visitor_cookie])) {
             $visitor_cookie_expire_time = time() + 60 * 60 * 24 * 365; // 1 year
             $visitor_uid = uniqid('bl');
             setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
         }
-        $arg = apply_filters('betterlinks/link/insert_click_arg', [
+        $click_data = [
             'link_id' => $data['ID'],
-            'ip' => $IP,
             'browser' => $_SERVER['HTTP_USER_AGENT'],
             'os' => '',
             'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-            'host' => $IP,
             'uri' => $data['link_slug'],
             'click_count' => 0,
             'visitor_id' => isset($_COOKIE[$visitor_cookie]) ? sanitize_text_field($_COOKIE[$visitor_cookie]) : '',
@@ -136,7 +135,13 @@ class Utils
             'created_at_gmt' => $now_gmt,
             'rotation_target_url' => '',
             'target_url' => $data['target_url']
-        ]);
+        ];
+        if(!$is_disable_analytics_ip){
+            $IP = $this->get_current_client_IP();
+            $click_data['ip'] = $IP;
+            $click_data['host'] = $IP;
+        }
+        $arg = apply_filters('betterlinks/link/insert_click_arg', $click_data);
 
         if (BETTERLINKS_EXISTS_CLICKS_JSON) {
             $this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
