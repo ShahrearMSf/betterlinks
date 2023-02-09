@@ -253,27 +253,10 @@
 		.rdt_TableHead {
 			margin-bottom: 12px;
 			.rdt_TableHeadRow {
-				border: 1px solid $light-darken;
 				background: $white;
-				border-radius: 5px;
-				min-height: 65px;
 				.rdt_TableCol {
-					display: flex;
-					justify-content: flex-start;
-					align-items: center;
 					text-align: center;
-					padding-left: 15px;
-					padding-right: 15px;
-					&:nth-child(2) {
-						max-width: 180px;
-					}
-					&:nth-child(3) {
-						min-width: 160px;
-						justify-content: center;
-						padding: 0;
-					}
 					&:nth-child(4) {
-						min-width: 320px;
 						> div {
 							display: flex;
 							justify-content: center;
@@ -281,18 +264,11 @@
 						}
 					}
 					&:nth-child(5) {
-						min-width: 290px;
-						padding-left: 40px;
 						> div {
 							width: 200px;
 							display: flex;
 							justify-content: center;
 						}
-					}
-					&:last-child {
-						max-width: 130px;
-						padding-left: 40px;
-						justify-content: center;
 					}
 					div {
 						color: #252525;
@@ -305,18 +281,10 @@
 		.rdt_TableBody {
 			.rdt_TableRow {
 				margin-bottom: 12px;
-				min-height: 65px;
-				border: 1px solid $light-darken;
-				border-radius: 5px;
 				box-shadow: 0 3px 4px rgba(#00094e, 0.03);
 				.rdt_TableCell {
-					display: flex;
-					justify-content: flex-start;
-					align-items: center;
 					padding-top: 3px;
 					padding-bottom: 3px;
-					padding-left: 15px;
-					padding-right: 15px;
 					div {
 						font-size: 14px;
 						color: $secondary;
@@ -325,7 +293,6 @@
 						margin: 0;
 					}
 					&:nth-child(2) {
-						max-width: 180px;
 						font-size: 14px;
 						font-weight: 500;
 						color: #252525;
@@ -336,13 +303,7 @@
 							color: #252525;
 						}
 					}
-					&:nth-child(3) {
-						min-width: 160px;
-						justify-content: center;
-						padding: 0;
-					}
 					&:nth-child(4) {
-						min-width: 320px;
 						padding-left: 25px;
 						.btl-short-url-wrapper {
 							width: 290px;
@@ -352,15 +313,6 @@
 								line-height: 20px;
 							}
 						}
-					}
-					&:nth-child(5) {
-						min-width: 290px;
-						padding-left: 40px;
-					}
-					&:last-child {
-						max-width: 130px;
-						justify-content: center;
-						padding-left: 40px;
 					}
 					.btl-target-url {
 						display: flex;
@@ -424,6 +376,41 @@
 						}
 					}
 				}
+			}
+		}
+
+		.rdt_TableHead .rdt_TableHeadRow,
+		.rdt_TableBody .rdt_TableRow {
+			border: 1px solid $light-darken;
+			border-radius: 5px;
+			min-height: 65px;
+		}
+		.rdt_TableHead .rdt_TableHeadRow .rdt_TableCol,
+		.rdt_TableBody .rdt_TableRow .rdt_TableCell {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			padding-left: 15px;
+			padding-right: 15px;
+			&:nth-child(2) {
+				max-width: 180px;
+			}
+			&:nth-child(3) {
+				min-width: 160px;
+				justify-content: center;
+				padding: 0;
+			}
+			&:nth-child(4) {
+				min-width: 320px;
+			}
+			&:nth-child(5) {
+				min-width: 290px;
+				padding-left: 40px;
+			}
+			&:last-child {
+				max-width: 130px;
+				justify-content: center;
+				padding-left: 40px;
 			}
 		}
 	}
