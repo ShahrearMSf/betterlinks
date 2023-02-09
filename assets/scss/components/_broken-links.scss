@@ -249,136 +249,6 @@
 		}
 	}
 	.rdt_Table {
-		background-color: transparent;
-		.rdt_TableHead {
-			margin-bottom: 12px;
-			.rdt_TableHeadRow {
-				background: $white;
-				.rdt_TableCol {
-					text-align: center;
-					&:nth-child(4) {
-						> div {
-							display: flex;
-							justify-content: center;
-							width: 270px;
-						}
-					}
-					&:nth-child(5) {
-						> div {
-							width: 200px;
-							display: flex;
-							justify-content: center;
-						}
-					}
-					div {
-						color: #252525;
-						font-size: 14px;
-						font-weight: 700;
-					}
-				}
-			}
-		}
-		.rdt_TableBody {
-			.rdt_TableRow {
-				margin-bottom: 12px;
-				box-shadow: 0 3px 4px rgba(#00094e, 0.03);
-				.rdt_TableCell {
-					padding-top: 3px;
-					padding-bottom: 3px;
-					div {
-						font-size: 14px;
-						color: $secondary;
-					}
-					.betterlinks-broken-links-status-column {
-						margin: 0;
-					}
-					&:nth-child(2) {
-						font-size: 14px;
-						font-weight: 500;
-						color: #252525;
-						line-height: 1.1;
-						div {
-							font-size: 14px;
-							font-weight: 500;
-							color: #252525;
-						}
-					}
-					&:nth-child(4) {
-						padding-left: 25px;
-						.btl-short-url-wrapper {
-							width: 290px;
-							.btl-short-url {
-								width: 230px;
-								word-wrap: break-word;
-								line-height: 20px;
-							}
-						}
-					}
-					.btl-target-url {
-						display: flex;
-						align-items: center;
-						input[type='text'] {
-							height: 36px;
-							min-height: 26px;
-							padding: 1px 10px;
-							border-radius: 3px;
-							box-shadow: none;
-							margin-right: 5px;
-							font-size: 12px;
-						}
-						button {
-							height: 36px;
-							min-height: 26px;
-							padding: 1px 10px;
-							border-radius: 3px;
-							margin-right: 5px;
-							font-size: 12px;
-							display: inline-flex;
-							justify-content: center;
-							align-items: center;
-							background-color: $success;
-							border-color: $success;
-							color: $white;
-						}
-						.edit-icon {
-							margin-left: 10px;
-							color: $success;
-							cursor: pointer;
-						}
-					}
-					.btl-broken-link-table-action {
-						display: flex;
-						.btl-test-link-button {
-							padding: 0;
-							border: none;
-							background: transparent;
-							outline: none;
-							box-shadow: none;
-							font-size: 13px;
-							font-weight: 500;
-							color: $success;
-							letter-spacing: -0.65px;
-							cursor: pointer;
-							display: flex;
-							align-items: center;
-						}
-						.btl-delete-button {
-							border: none;
-							padding: 0;
-							background: transparent;
-							color: $danger;
-							box-shadow: none;
-							outline: none;
-							cursor: pointer;
-							&:not(:first-child) {
-								margin-left: 20px;
-							}
-						}
-					}
-				}
-			}
-		}
-
 		.rdt_TableHead .rdt_TableHeadRow,
 		.rdt_TableBody .rdt_TableRow {
 			border: 1px solid $light-darken;
@@ -411,6 +281,127 @@
 				max-width: 130px;
 				justify-content: center;
 				padding-left: 40px;
+			}
+		}
+		background-color: transparent;
+		.rdt_TableHead {
+			margin-bottom: 12px;
+			.rdt_TableHeadRow {
+				background: $white;
+				.rdt_TableCol {
+					text-align: center;
+					&:nth-child(4) {
+						> div {
+							display: flex;
+							justify-content: center;
+							width: 270px;
+						}
+					}
+					&:nth-child(5) {
+						> div {
+							width: 200px;
+							display: flex;
+							justify-content: center;
+						}
+					}
+					div {
+						color: #252525;
+						font-size: 14px;
+						font-weight: 700;
+					}
+				}
+			}
+		}
+		.rdt_TableBody .rdt_TableRow {
+			margin-bottom: 12px;
+			box-shadow: 0 3px 4px rgba(#00094e, 0.03);
+			.rdt_TableCell {
+				padding-top: 3px;
+				padding-bottom: 3px;
+				div {
+					font-size: 14px;
+					color: $secondary;
+				}
+				.betterlinks-broken-links-status-column {
+					margin: 0;
+				}
+				&:nth-child(2) {
+					font-size: 14px;
+					font-weight: 500;
+					color: #252525;
+					line-height: 1.1;
+					div {
+						font-size: 14px;
+						font-weight: 500;
+						color: #252525;
+					}
+				}
+				&:nth-child(4) {
+					padding-left: 25px;
+					.btl-short-url-wrapper {
+						width: 290px;
+						.btl-short-url {
+							width: 230px;
+							word-wrap: break-word;
+							line-height: 20px;
+						}
+					}
+				}
+				.btl-target-url {
+					display: flex;
+					align-items: center;
+					input[type='text'],
+					button {
+						height: 36px;
+						min-height: 26px;
+						padding: 1px 10px;
+						border-radius: 3px;
+						margin-right: 5px;
+						font-size: 12px;
+					}
+					input[type='text'] {
+						box-shadow: none;
+					}
+					button {
+						display: inline-flex;
+						justify-content: center;
+						align-items: center;
+						background-color: $success;
+						border-color: $success;
+						color: $white;
+					}
+					.edit-icon {
+						margin-left: 10px;
+						color: $success;
+						cursor: pointer;
+					}
+				}
+				.btl-broken-link-table-action {
+					display: flex;
+					.btl-test-link-button,
+					.btl-delete-button {
+						border: none;
+						padding: 0;
+						background: transparent;
+						box-shadow: none;
+						outline: none;
+						cursor: pointer;
+					}
+					.btl-test-link-button {
+						font-size: 13px;
+						font-weight: 500;
+						color: $success;
+						letter-spacing: -0.65px;
+						display: flex;
+						align-items: center;
+					}
+					.btl-delete-button {
+						color: $danger;
+						&:not(:first-child) {
+							margin-left: 20px;
+						}
+					}
+				}
 			}
 		}
 	}
