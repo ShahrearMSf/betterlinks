@@ -86,6 +86,11 @@
 					box-shadow: 0 10px 15px rgba($success, 0.25);
 				}
 			}
+			button.btl-broken-link-checker-start-button {
+				&.btl-broken-link-checker-start-button-disabled {
+					cursor: not-allowed;
+				}
+			}
 			.btl-select {
 				width: 180px;
 				.btl__input input {
