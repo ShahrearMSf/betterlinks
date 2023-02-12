@@ -80,7 +80,7 @@
 				}
 				border-radius: 5px;
 				cursor: pointer;
-				&:hover {
+				&:not(.btl-broken-link-checker-start-button-disabled):hover {
 					background: $success;
 					color: $white;
 					box-shadow: 0 10px 15px rgba($success, 0.25);
