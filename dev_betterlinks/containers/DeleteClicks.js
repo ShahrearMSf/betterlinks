@@ -206,8 +206,8 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 				</button>
 				<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
 					<div className="btl-reset-modal-popup-wrapper ">
-						<span className="btl-close-popup" onClick={close}>
-							X
+						<span className="btl-close-modal" onClick={close}>
+							<i className="btl btl-cancel"></i>
 						</span>
 						{deleteStatus === 'reset_modal_step_1' && (
 							<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
