@@ -174,12 +174,22 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					font-weight: 300;
 				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons{
-					
+					display: flex;
+					justify-content: center;
+					gap: 20px;
 				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button{
-					padding: 5px 30px;
-					margin: 0 10px;
-					font-size: 24px;
+					height: 40px;
+					padding: 0 20px;
+					background-image: linear-gradient(202deg,#2961ff 0%,#003be2 100%);
+					border: none;
+					outline: none;
+					box-shadow: none;
+					border-radius: 4px;
+					color: #fff;
+					cursor: pointer;
+					transition: background 0.3s ease-in-out;
+					font-size: 14px;
 				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button.btl-btn-reset-apply-2{
 					
