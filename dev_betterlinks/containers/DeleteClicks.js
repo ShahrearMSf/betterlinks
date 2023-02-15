@@ -93,9 +93,6 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 		console.log({ value });
 		setCurrentDaysOlderThan(value);
 	};
-
-	console.log({ deleteStatus, currentDaysOlderThan });
-
 	return (
 		<>
 			<style>{`
