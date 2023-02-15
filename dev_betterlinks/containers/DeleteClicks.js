@@ -154,6 +154,9 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					display: flex;				
 					gap: 20px;
 				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1 .btl-react-select__option{
+					padding-left: 16px !important;
+				}
 				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2{
 					text-align: center;
 					padding-bottom: 50px;
