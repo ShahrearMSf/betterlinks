@@ -61,7 +61,6 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					close();
 				}, 3000);
 				setTimeOutIdToClear(timeoutId);
-				setCurrentDaysOlderThan(false);
 				if (res?.data?.success) {
 					setSuccessfulDeletedItemsCount(res?.data?.data?.count);
 					fetchCustomClicksData({ data: res?.data?.data?.new_clicks_data });
