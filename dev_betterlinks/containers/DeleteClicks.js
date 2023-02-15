@@ -190,7 +190,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 
 				body.betterlinks-delete-clicks-modal-popup-opened .ReactModal__Content{
 					width: 500px;
-					height: 300px;
+					height: 250px;
 					margin: auto;
 					overflow: visible !important;
     				padding: 60px !important;
