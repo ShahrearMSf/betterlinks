@@ -254,9 +254,16 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 							</div>
 						)}
 						{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
-						{deleteStatus === 'success' && (
+						{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
 							<h2>
 								Success!!! <span class="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
+							</h2>
+						)}
+						{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
+							<h2>
+								{currentDaysOlderThan?.value === false && "You don't have any clicks data"}
+								{currentDaysOlderThan?.value === 30 && "You don't have clicks data older than 30 days"}
+								{currentDaysOlderThan?.value === 90 && "You don't have clicks data older than 90 days"}
 							</h2>
 						)}
 						{deleteStatus === 'failed' && <h2>Failed!!</h2>}
