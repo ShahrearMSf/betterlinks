@@ -10,6 +10,10 @@ class Import
     }
     public function import_data()
     {
+        $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
+        if(!wp_verify_nonce($nonce, 'betterlinks_admin_nonce')){
+            return false;
+        }
         $page = isset($_GET['page']) ? $_GET['page'] : '';
         $import = isset($_GET['import']) ? $_GET['import'] : false;
         if ($page === 'betterlinks-settings' && $import == true) {
