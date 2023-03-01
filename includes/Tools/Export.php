@@ -10,7 +10,7 @@ class Export
     public function export_data()
     {
         $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
-        if(!wp_verify_nonce($nonce, 'betterlinks_admin_nonce')){
+        if(!wp_verify_nonce($nonce, 'betterlinks_admin_nonce') && !is_user_logged_in()){
             return false;
         }
         $page = isset($_GET['page']) ? $_GET['page'] : '';
