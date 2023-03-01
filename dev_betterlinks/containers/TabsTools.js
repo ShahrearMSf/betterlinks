@@ -34,7 +34,7 @@ const TabsTools = ({ query }) => {
 			<div className="btl-tab-inner-divider">
 				<div className="btl-tab-panel-inner">
 					<h3 className="btl-tab-panel-header">{__('Choose an Option You want to Export', 'betterlinks')}</h3>
-					<form action={'admin.php?page=' + query.get('page') + '&export=true'} method="POST">
+					<form action={'admin.php?page=' + query.get('page') + '&export=true&nonce=' + betterlinks_nonce} method="POST">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
 								<label className="btl-radio">

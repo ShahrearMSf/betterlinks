@@ -9,6 +9,10 @@ class Export
     }
     public function export_data()
     {
+        $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
+        if(!wp_verify_nonce($nonce, 'betterlinks_admin_nonce')){
+            return false;
+        }
         $page = isset($_GET['page']) ? $_GET['page'] : '';
         $export = isset($_GET['export']) ? $_GET['export'] : false;
         if ($page === 'betterlinks-settings' && $export == true) {
