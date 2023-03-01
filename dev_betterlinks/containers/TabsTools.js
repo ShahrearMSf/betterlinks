@@ -26,9 +26,6 @@ const TabsTools = ({ query }) => {
 			);
 		}
 	}, []);
-
-	const result = 'admin.php?page=' + query.get('page') + '&import=true';
-
 	return (
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
