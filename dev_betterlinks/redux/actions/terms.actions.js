@@ -6,6 +6,9 @@ export const fetch_terms_data = (params) => async (dispatch) => {
 		const res = await API.get(namespace + 'terms', {
 			params: params,
 		});
+		if (!Array.isArray(res?.data)) {
+			throw new Error('rest api not working properly for fetch_terms_data');
+		}
 		dispatch({
 			type: FETCH_TERMS_DATA,
 			payload: res.data,
