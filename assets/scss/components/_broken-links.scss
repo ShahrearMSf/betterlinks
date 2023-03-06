@@ -80,10 +80,15 @@
 				}
 				border-radius: 5px;
 				cursor: pointer;
-				&:hover {
+				&:not(.btl-broken-link-checker-start-button-disabled):hover {
 					background: $success;
 					color: $white;
 					box-shadow: 0 10px 15px rgba($success, 0.25);
+				}
+			}
+			button.btl-broken-link-checker-start-button {
+				&.btl-broken-link-checker-start-button-disabled {
+					cursor: not-allowed;
 				}
 			}
 			.btl-select {
@@ -249,42 +254,60 @@
 		}
 	}
 	.rdt_Table {
+		.rdt_TableHead .rdt_TableHeadRow,
+		.rdt_TableBody .rdt_TableRow {
+			border: 1px solid $light-darken;
+			border-radius: 5px;
+			min-height: 65px;
+		}
+		.rdt_TableHead .rdt_TableHeadRow .rdt_TableCol,
+		.rdt_TableBody .rdt_TableRow .rdt_TableCell {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			padding-left: 15px;
+			padding-right: 15px;
+			&:nth-child(2) {
+				max-width: 180px;
+			}
+			&:nth-child(3) {
+				min-width: 160px;
+				justify-content: center;
+				padding: 0;
+			}
+			&:nth-child(4) {
+				min-width: 320px;
+			}
+			&:nth-child(5) {
+				min-width: 290px;
+				padding-left: 40px;
+			}
+			&:last-child {
+				max-width: 130px;
+				justify-content: center;
+				padding-left: 40px;
+			}
+		}
 		background-color: transparent;
 		.rdt_TableHead {
 			margin-bottom: 12px;
 			.rdt_TableHeadRow {
-				border: 1px solid $light-darken;
 				background: $white;
-				border-radius: 5px;
-				min-height: 65px;
 				.rdt_TableCol {
-					display: flex;
-					justify-content: flex-start;
-					align-items: center;
 					text-align: center;
-					padding-left: 15px;
-					padding-right: 15px;
-					&:nth-child(2) {
-						width: 250px;
-					}
-					&:nth-child(3) {
-						min-width: 320px;
+					&:nth-child(4) {
 						> div {
 							display: flex;
 							justify-content: center;
 							width: 270px;
 						}
 					}
-					&:nth-child(4) {
-						min-width: 250px;
+					&:nth-child(5) {
 						> div {
 							width: 200px;
 							display: flex;
 							justify-content: center;
 						}
-					}
-					&:last-child {
-						max-width: 130px;
 					}
 					div {
 						color: #252525;
@@ -294,113 +317,105 @@
 				}
 			}
 		}
-		.rdt_TableBody {
-			.rdt_TableRow {
-				margin-bottom: 12px;
-				min-height: 65px;
-				border: 1px solid $light-darken;
-				border-radius: 5px;
-				box-shadow: 0 3px 4px rgba(#00094e, 0.03);
-				.rdt_TableCell {
+		.rdt_TableBody .rdt_TableRow {
+			margin-bottom: 12px;
+			box-shadow: 0 3px 4px rgba(#00094e, 0.03);
+			.rdt_TableCell {
+				padding-top: 3px;
+				padding-bottom: 3px;
+				div {
+					font-size: 14px;
+					color: $secondary;
+				}
+				.betterlinks-broken-links-status-column {
 					display: flex;
-					justify-content: flex-start;
 					align-items: center;
-					padding-top: 3px;
-					padding-bottom: 3px;
-					padding-left: 15px;
-					padding-right: 15px;
-					div {
+					justify-content: center;
+					width: 100%;
+					margin: 0;
+					& > button {
+						width: 160px;
+						padding: 10px 0;
+						border-radius: 20px;
 						font-size: 14px;
-						color: $secondary;
+						font-weight: 400;
+						border-color: #0000 !important;
 					}
-					&:nth-child(2) {
-						width: 250px;
+				}
+				&:nth-child(2) {
+					font-size: 14px;
+					font-weight: 500;
+					color: #252525;
+					line-height: 1.1;
+					div {
 						font-size: 14px;
 						font-weight: 500;
 						color: #252525;
-						line-height: 1.1;
-						div {
-							font-size: 14px;
-							font-weight: 500;
-							color: #252525;
+					}
+				}
+				&:nth-child(4) {
+					padding-left: 25px;
+					.btl-short-url-wrapper {
+						width: 290px;
+						.btl-short-url {
+							width: 230px;
+							word-wrap: break-word;
+							line-height: 20px;
 						}
 					}
-					&:nth-child(3) {
-						min-width: 320px;
-						.btl-short-url-wrapper {
-							width: 290px;
-							.btl-short-url {
-								min-width: 230px;
-								word-wrap: break-word;
-								line-height: 20px;
-							}
-						}
+				}
+				.btl-target-url {
+					display: flex;
+					align-items: center;
+					input[type='text'],
+					button {
+						height: 36px;
+						min-height: 26px;
+						padding: 1px 10px;
+						border-radius: 3px;
+						margin-right: 5px;
+						font-size: 12px;
 					}
-					&:nth-child(4) {
-						min-width: 250px;
+					input[type='text'] {
+						box-shadow: none;
 					}
-					&:last-child {
-						max-width: 130px;
+					button {
+						display: inline-flex;
+						justify-content: center;
+						align-items: center;
+						background-color: $success;
+						border-color: $success;
+						color: $white;
 					}
-					.btl-target-url {
+					.edit-icon {
+						margin-left: 10px;
+						color: $success;
+						cursor: pointer;
+					}
+				}
+				.btl-broken-link-table-action {
+					display: flex;
+					.btl-test-link-button,
+					.btl-delete-button {
+						border: none;
+						padding: 0;
+						background: transparent;
+						box-shadow: none;
+						outline: none;
+						cursor: pointer;
+					}
+					.btl-test-link-button {
+						font-size: 13px;
+						font-weight: 500;
+						color: $success;
+						letter-spacing: -0.65px;
 						display: flex;
 						align-items: center;
-						input[type='text'] {
-							height: 36px;
-							min-height: 26px;
-							padding: 1px 10px;
-							border-radius: 3px;
-							box-shadow: none;
-							margin-right: 5px;
-							font-size: 12px;
-						}
-						button {
-							height: 36px;
-							min-height: 26px;
-							padding: 1px 10px;
-							border-radius: 3px;
-							margin-right: 5px;
-							font-size: 12px;
-							display: inline-flex;
-							justify-content: center;
-							align-items: center;
-							background-color: $success;
-							border-color: $success;
-							color: $white;
-						}
-						.edit-icon {
-							margin-left: 10px;
-							color: $success;
-							cursor: pointer;
-						}
 					}
-					.btl-broken-link-table-action {
-						display: flex;
-						.btl-test-link-button {
-							padding: 0;
-							border: none;
-							background: transparent;
-							outline: none;
-							box-shadow: none;
-							font-size: 13px;
-							font-weight: 500;
-							color: $success;
-							letter-spacing: -0.65px;
-							cursor: pointer;
-							display: flex;
-							align-items: center;
-						}
-						.btl-delete-button {
-							border: none;
-							padding: 0;
-							background: transparent;
-							color: $danger;
-							box-shadow: none;
-							outline: none;
-							cursor: pointer;
-							&:not(:first-child) {
-								margin-left: 20px;
-							}
+					.btl-delete-button {
+						color: $danger;
+						&:not(:first-child) {
+							margin-left: 20px;
 						}
 					}
 				}
@@ -562,7 +577,14 @@
 	flex-wrap: wrap;
 	justify-content: center;
 	padding-right: 15px;
+	width: 600px;
+	margin: auto;
 	margin-bottom: -10px;
+	padding-top: 25px;
+	.btl-scan-output:nth-last-child(1),
+	.btl-scan-output:nth-last-child(2) {
+		width: 215px;
+	}
 	.btl-scan-output {
 		display: flex;
 		flex-wrap: wrap;
@@ -573,6 +595,8 @@
 		margin-right: 10px;
 		margin-bottom: 10px;
 		width: 130px;
+		text-align: center;
+		justify-content: center;
 		.icon {
 			display: inline-flex;
 			margin-right: 10px;

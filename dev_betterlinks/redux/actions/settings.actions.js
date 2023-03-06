@@ -6,9 +6,13 @@ export const UPDATE_OPTION = 'UPDATE_OPTION';
 export const fetch_settings_data = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'settings');
+		const payload = JSON.parse(res.data.data);
+		if (!settings?.redirect_type) {
+			throw new Error('rest api not working properly for fetch_settings_data');
+		}
 		dispatch({
 			type: FETCH_SETTINGS,
-			payload: JSON.parse(res.data.data),
+			payload,
 		});
 	} catch (e) {
 		makeRequest({

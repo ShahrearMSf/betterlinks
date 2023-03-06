@@ -97,8 +97,6 @@ const Migration = (props) => {
 		history.go(0);
 	}
 
-	console.log({ migrateRes });
-
 	return (
 		<React.Fragment>
 			<Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={false} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
