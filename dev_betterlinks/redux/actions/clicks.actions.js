@@ -8,6 +8,9 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 		const res = await API.get(endPoint, {
 			params: params,
 		});
+		if (!res?.data?.data) {
+			throw new Error('rest api not working properly for fetch_clicks_data');
+		}
 		dispatch({
 			type: FETCH_CLICKS_DATA,
 			payload: res.data,

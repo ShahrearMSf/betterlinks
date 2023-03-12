@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import { nonce } from 'utils/helper';
+import { nonce, betterlinks_nonce } from 'utils/helper';
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
 	const [taPrefix, setTaPrefix] = useState('');
@@ -26,15 +26,12 @@ const TabsTools = ({ query }) => {
 			);
 		}
 	}, []);
-
-	const result = 'admin.php?page=' + query.get('page') + '&import=true';
-
 	return (
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
 				<div className="btl-tab-panel-inner">
 					<h3 className="btl-tab-panel-header">{__('Choose an Option You want to Export', 'betterlinks')}</h3>
-					<form action={'admin.php?page=' + query.get('page') + '&export=true'} method="POST">
+					<form action={'admin.php?page=' + query.get('page') + '&export=true&nonce=' + betterlinks_nonce} method="POST">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
 								<label className="btl-radio">
@@ -62,7 +59,7 @@ const TabsTools = ({ query }) => {
 				</div>
 				<div className="btl-tab-panel-inner">
 					<h3 className="btl-tab-panel-header">{__('Choose the Plugin You Want to Import from', 'betterlinks')}</h3>
-					<form action={'admin.php?page=' + query.get('page') + '&import=true'} method="POST" encType="multipart/form-data">
+					<form action={'admin.php?page=' + query.get('page') + '&import=true&nonce=' + betterlinks_nonce} method="POST" encType="multipart/form-data">
 						<div role="group" className="btl-radio-group" aria-labelledby="my-radio-group">
 							<div>
 								<label className="btl-radio">

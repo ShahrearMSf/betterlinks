@@ -9,6 +9,11 @@ class Export
     }
     public function export_data()
     {
+        $can_access_settings = apply_filters("betterlinks/admin/" . BETTERLINKS_PLUGIN_SLUG . "-settings_menu_capability", 'manage_options');
+        $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
+        if(!wp_verify_nonce($nonce, 'betterlinks_admin_nonce') && !is_user_logged_in() && !current_user_can($can_access_settings)){
+            return false;
+        }
         $page = isset($_GET['page']) ? $_GET['page'] : '';
         $export = isset($_GET['export']) ? $_GET['export'] : false;
         if ($page === 'betterlinks-settings' && $export == true) {
