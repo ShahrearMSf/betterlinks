@@ -5,7 +5,7 @@ use BetterLinks\Interfaces\ImportCsvInterface;
 
 class S30RImportCSV extends BaseCSV implements ImportCsvInterface
 {
-    public function start_importing($csv)
+    public function start_importing($csv, $optional_param_1 = "")
     {
         $message = [];
         $count = 0;

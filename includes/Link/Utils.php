@@ -49,7 +49,11 @@ class Utils
         global $betterlinks;
 
         $data = apply_filters('betterlinks/link/before_dispatch_redirect', $data);
-        if (!$data) {
+        $comparable_url = rtrim(preg_replace('/https?\:\/\//', '', site_url('/')), '/') . '/' . $data["short_url"];
+        $destination_url = rtrim(preg_replace('/https?\:\/\//', '', $data["target_url"]), '/');
+        $comparable_url = rtrim(preg_replace('/^www\.?/', '', $comparable_url), "/");
+        $destination_url = rtrim(preg_replace('/^www\.?/', '', $destination_url), "/");
+        if (!$data || $comparable_url == $destination_url) {
             return;
         }
         if (filter_var($data['track_me'], FILTER_VALIDATE_BOOLEAN)) {

@@ -59,12 +59,14 @@ const CustomSidebarComponent = (props) => {
 			setTimeout(() => {
 				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
 			}, 500);
-			if (!linkData || !wp.data.select('core/editor')?.getPermalink()) {
+			if (!linkData) {
 				setIsShowInstantRedirect(false);
 				return false;
 			}
 			if (linkData.ID || linkData.ID === 0) {
 				setIsAllowInstantRedirect(true);
+			} else {
+				return false;
 			}
 			setTargetUrl(linkData.target_url);
 			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
@@ -101,16 +103,31 @@ const CustomSidebarComponent = (props) => {
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
 
-		fetch_link_for_permalink()
+		const resultOfFetchPermalink = fetch_link_for_permalink();
+		if (!resultOfFetchPermalink) {
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+			}, 500);
+			return () => {};
+		}
+		resultOfFetchPermalink
 			.then(() => {
-				let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-				if (typeof linkData?.expire === 'string') {
-					linkData = {
-						...linkData,
-						expire: getJsonString(linkData.expire),
-					};
-				}
-				setAllStatesForLinkData(linkData);
+				let x = 0;
+				const intervalId = setInterval(() => {
+					x++;
+					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+					if (!linkData?.dispatched_successfully && x < 600) {
+						return false;
+					}
+					if (typeof linkData?.expire === 'string') {
+						linkData = {
+							...linkData,
+							expire: getJsonString(linkData.expire),
+						};
+					}
+					setAllStatesForLinkData(linkData);
+					clearInterval(intervalId);
+				}, 500);
 			})
 			.catch((error) => console.log(error));
 	}, []);
@@ -565,6 +582,9 @@ const CustomSidebarComponent = (props) => {
 			delete freeParams.expire;
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
+
+			// remove unnecessary param/property
+			delete freeParams.dispatched_successfully;
 
 			const short_url = permalinkToShortUrl(permalink);
 			const link_title = currentPost.title;

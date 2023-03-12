@@ -6,7 +6,10 @@ export default function gutenbergRedirectLink(state = {}, action) {
 		case FETCH_LINK_FOR_PERMALINK: {
 			return {
 				...state,
-				linkData: payload,
+				linkData: {
+					...payload,
+					dispatched_successfully: true,
+				},
 			};
 		}
 		case EDIT_GUTENBERG_LINK: {

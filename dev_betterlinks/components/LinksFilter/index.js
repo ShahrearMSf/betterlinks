@@ -41,10 +41,17 @@ const LinksFilter = (props) => {
 							className="btl-list-view-select"
 							classNamePrefix="btl-react-select"
 							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
+							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button className="btl-link-apply-button" onClick={() => rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler)}>
+						<button
+							className="btl-link-apply-button"
+							onClick={() => {
+								rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
+								setBulkAction({});
+							}}
+						>
 							{__('Apply', 'betterlinks')}
 						</button>
 					</div>
