@@ -15,6 +15,9 @@ const propTypes = {};
 const defaultProps = {};
 const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
+	const handleSearchTextChange = (e) => {
+		console.log(e.target.value)
+	};
 	useEffect(() => {
 		if (!props.postdatas.fetchedAll) {
 			props.fetch_post_types_data();
@@ -46,7 +49,7 @@ const KeywordsLinking = (props) => {
 						render={() => <AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />}
 					/>
 					<div class="btl-autolink-filter">
-						<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={() => {}} />
+						<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
 					</div>
  					<ListKeywords postTypesProps={postTypesProps} links={parseLinksForKeywordsListing(props.links)} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
 				</>
