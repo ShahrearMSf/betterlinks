@@ -78,50 +78,6 @@
 			}
 		}
 		.btl-links-filter {
-			.btl-click-filter {
-				margin-bottom: 10px;
-				width: 180px;
-				height: 36px;
-				background: $white;
-				border: 1px solid $light-darken;
-				border-radius: 5px;
-				padding-left: 25px;
-				margin-right: 12px;
-				position: relative;
-				color: $secondary;
-				input {
-					height: 100%;
-					min-height: 100%;
-					background: transparent;
-					padding: 0 15px;
-					width: 100%;
-					border: none;
-					outline: none;
-					box-shadow: none;
-					font-size: 14px;
-					&:hover,
-					&:focus {
-						border: none;
-						outline: none;
-						box-shadow: none;
-					}
-				}
-				&:before {
-					font-family: 'better-links' !important;
-					content: '\e912';
-					position: absolute;
-					top: 0;
-					bottom: 0;
-					display: inline-flex;
-					left: 0;
-					width: 40px;
-					justify-content: center;
-					align-items: center;
-					font-size: 15px;
-					color: $secondary-lighten;
-					padding-left: 3px;
-				}
-			}
 			.btl-list-view-select {
 				height: 38px;
 				min-width: 130px;
@@ -459,5 +415,51 @@
 	.dnd-link-button {
 		margin-left: 0 !important;
 		padding-left: 0 !important;
+	}
+}
+
+.btl-autolink-filter,
+.btl-list-view > header .btl-links-filter .btl-click-filter {
+	margin-bottom: 10px;
+	width: 180px;
+	height: 36px;
+	background: $white;
+	border: 1px solid $light-darken;
+	border-radius: 5px;
+	padding-left: 25px;
+	margin-right: 12px;
+	position: relative;
+	color: $secondary;
+	input {
+		height: 100%;
+		min-height: 100%;
+		background: transparent;
+		padding: 0 15px;
+		width: 100%;
+		border: none;
+		outline: none;
+		box-shadow: none;
+		font-size: 14px;
+		&:hover,
+		&:focus {
+			border: none;
+			outline: none;
+			box-shadow: none;
+		}
+	}
+	&:before {
+		font-family: 'better-links' !important;
+		content: '\e912';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		display: inline-flex;
+		left: 0;
+		width: 40px;
+		justify-content: center;
+		align-items: center;
+		font-size: 15px;
+		color: $secondary-lighten;
+		padding-left: 3px;
 	}
 }
