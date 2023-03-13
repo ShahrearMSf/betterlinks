@@ -15,8 +15,15 @@ const propTypes = {};
 const defaultProps = {};
 const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
+	const [matchedKeywordsDatas, setMatchedKeywordsDatas] = useState([]);
 	const handleSearchTextChange = (e) => {
-		console.log(e.target.value)
+		const value = (e?.target?.value || '').trim();
+		const regex = new RegExp(value, 'gi');
+		const matchedData = (props?.keywords?.data || [])?.filter((item) => {
+			return (item?.keywords || '').match(regex);
+		});
+		setSearchedText(value);
+		setMatchedKeywordsDatas(matchedData);
 	};
 	useEffect(() => {
 		if (!props.postdatas.fetchedAll) {
@@ -51,7 +58,12 @@ const KeywordsLinking = (props) => {
 					<div class="btl-autolink-filter">
 						<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
 					</div>
- 					<ListKeywords postTypesProps={postTypesProps} links={parseLinksForKeywordsListing(props.links)} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
+					<ListKeywords
+						postTypesProps={postTypesProps}
+						links={parseLinksForKeywordsListing(props.links)}
+						linksForUpdateModal={linksForUpdateModal}
+						keywords={matchedKeywordsDatas?.length > 0 ? { data: matchedKeywordsDatas } : props.keywords}
+					/>
 				</>
 			) : (
 				<TableLoader />
