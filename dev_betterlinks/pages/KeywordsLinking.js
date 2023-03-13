@@ -15,7 +15,7 @@ const propTypes = {};
 const defaultProps = {};
 const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
-	const [matchedKeywordsDatas, setMatchedKeywordsDatas] = useState([]);
+	const [matchedKeywordsDatas, setMatchedKeywordsDatas] = useState(null);
 	const handleSearchTextChange = (e) => {
 		const value = (e?.target?.value || '').trim();
 		const regex = new RegExp(value, 'gi');
@@ -62,7 +62,7 @@ const KeywordsLinking = (props) => {
 						postTypesProps={postTypesProps}
 						links={parseLinksForKeywordsListing(props.links)}
 						linksForUpdateModal={linksForUpdateModal}
-						keywords={matchedKeywordsDatas?.length > 0 ? { data: matchedKeywordsDatas } : props.keywords}
+						keywords={Array.isArray(matchedKeywordsDatas) ? { data: matchedKeywordsDatas } : props.keywords}
 					/>
 				</>
 			) : (
