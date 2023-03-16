@@ -498,6 +498,24 @@ export const Link = (props) => {
 													</div>
 												</span>
 											</label>
+											{is_pro_enabled && (
+												<label className="btl-checkbox-field">
+													<Field
+														className="btl-check"
+														name="uncloaked"
+														type="checkbox"
+														onChange={() => props.setFieldValue('uncloaked', !props.values.uncloaked)}
+														disabled={isDisableLinkFormEditView}
+													/>
+													<span className="text">
+														{__('Uncloak', 'betterlinks')}
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('This will uncloak your link', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+											)}
 										</div>
 									</div>
 
