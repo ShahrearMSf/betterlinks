@@ -244,7 +244,7 @@ class Helper
     }
     public static function json_link_formatter($data)
     {
-        return [
+        $res = [
             'ID' => $data['ID'],
             'link_slug' => $data['link_slug'],
             'link_status' => (isset($data['link_status']) ? $data['link_status'] : 'publish'),
@@ -257,8 +257,12 @@ class Helper
             'track_me' => (isset($data['track_me']) ? $data['track_me'] : false),
             'wildcards' => (isset($data['wildcards']) ? $data['wildcards'] : false),
             'expire' => (isset($data['expire']) ? $data['expire'] : null),
-            'dynamic_redirect' => (isset($data['dynamic_redirect']) ? $data['dynamic_redirect'] : null)
+            'dynamic_redirect' => (isset($data['dynamic_redirect']) ? $data['dynamic_redirect'] : null),
         ];
+        if(isset($data['uncloaked']) && $data['uncloaked']){
+            $res['uncloaked'] = $data['uncloaked'];
+        }
+        return $res;
     }
     public static function insert_json_into_file($file, $data)
     {
