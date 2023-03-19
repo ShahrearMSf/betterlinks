@@ -243,7 +243,7 @@ class Installer extends \WP_Background_Process
                 );
                 Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
             } else {
-                $query_result = $wpdb->query("ALTER TABLE $betterlinks_table ADD uncloaked varchar(10)");
+                $query_result = $wpdb->query("ALTER TABLE $betterlinks_table ADD uncloaked varchar(10) default ''");
                 $new_data = array_merge(
                     ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
                     [ "added_uncloaked_column" => $query_result ]
