@@ -70,6 +70,11 @@ trait Query
                     $column_placeholders .= ", %s";
                     $query_value_array[] = $item['favorite'];
                 }
+                if(isset($item['uncloaked'])){
+                    $column_names .= ",uncloaked";
+                    $column_placeholders .= ", %s";
+                    $query_value_array[] = $item['uncloaked'];
+                }
                 $query_string = "INSERT INTO {$wpdb->prefix}betterlinks ( {$column_names} ) VALUES ( {$column_placeholders} )";
                 $wpdb->query( $wpdb->prepare( $query_string, $query_value_array ) );
                 do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
