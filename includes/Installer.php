@@ -226,6 +226,9 @@ class Installer extends \WP_Background_Process
         $btl_db_alter_options = Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS);
         $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
         $is_fixed_missing_terms_relation_for_links = isset($btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"]) ? $btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"] : false;
+        if( $is_favorite_column_exist && $is_fixed_missing_terms_relation_for_links ){
+            return false;
+        }
         $is_db_alter_option_exist_array = is_array($btl_db_alter_options);
         global $wpdb;
         if (!$is_favorite_column_exist) {
