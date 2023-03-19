@@ -20,6 +20,10 @@ trait Query
                 $link_data_array['favorite'] = $item['favorite'];
                 $link_data_place_array[] = '%s';
             }
+            if(isset($item['uncloaked'])){
+                $link_data_array['uncloaked'] = $item['uncloaked'];
+                $link_data_place_array[] = '%s';
+            }
             $wpdb->update(
                 "{$wpdb->prefix}betterlinks",
                 $link_data_array,
