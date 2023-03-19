@@ -231,18 +231,18 @@ class Installer extends \WP_Background_Process
         }
         $is_db_alter_option_exist_array = is_array($btl_db_alter_options);
         global $wpdb;
+        $betterlinks_table          = $wpdb->prefix . 'betterlinks';
+        $betterlinks_columns        = $wpdb->get_col("DESC $betterlinks_table", 0);
         if (!$is_favorite_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-            $table          = $wpdb->prefix . 'betterlinks';
-            $results        = $wpdb->get_col("DESC $table", 0);
-            if (in_array("favorite", $results)) {
+            if (in_array("favorite", $betterlinks_columns)) {
                 $new_data = array_merge(
                     ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
                     [ "added_favorite_column" => true ]
                 );
                 Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
             } else {
-                $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
+                $query_result = $wpdb->query("ALTER TABLE $betterlinks_table ADD favorite varchar(255) NOT NULL");
                 $new_data = array_merge(
                     ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
                     [ "added_favorite_column" => $query_result ]
