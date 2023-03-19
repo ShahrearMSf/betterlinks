@@ -10,14 +10,13 @@ trait Query
         if ($is_update) {
             $defaults = self::get_link_by_ID($item['ID']);
             $item = wp_parse_args($item, current($defaults));
-            $favorite_exist = isset($item['favorite']);
             $link_data_array = array(
                 'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'], 'link_slug' => $item['link_slug'], 'link_note' => $item['link_note'], 'link_status' => $item['link_status'], 'nofollow' => $item['nofollow'], 'sponsored' => $item['sponsored'], 'track_me' => $item['track_me'], 'param_forwarding' => $item['param_forwarding'], 'param_struct' => $item['param_struct'], 'redirect_type' => $item['redirect_type'], 'target_url' => $item['target_url'], 'short_url' => $item['short_url'], 'link_order' => $item['link_order'], 'link_modified' => $item['link_modified'], 'link_modified_gmt' => $item['link_modified_gmt'], 'wildcards' => $item['wildcards'], 'expire' => $item['expire'], 'dynamic_redirect' => $item['dynamic_redirect']
             );
             $link_data_place_array = array(
                 '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
             );
-            if ($favorite_exist) {
+            if (isset($item['favorite'])) {
                 $link_data_array['favorite'] = $item['favorite'];
                 $link_data_place_array[] = '%s';
             }
@@ -33,7 +32,6 @@ trait Query
         } else {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
             if (count($betterlinks) === 0) {
-                $favorite_exist = isset($item['favorite']);
                 $initial_defaults_arr = array(
                     'link_author' => get_current_user_id(),
                     'link_date' => current_time('mysql'),
@@ -57,8 +55,8 @@ trait Query
                     'expire' => '',
                     'dynamic_redirect' => '',
                 );
-                if ($favorite_exist) {
-                    $initial_defaults_arr['favorite'] = "";
+                if (isset($item['favorite'])) {
+                    $initial_defaults_arr['favorite'] = '';
                 }
                 $defaults = apply_filters('betterlinks/insert_link_default_args', $initial_defaults_arr);
                 $item = wp_parse_args($item, $defaults);
@@ -67,7 +65,7 @@ trait Query
                 $query_value_array = array(
                     $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
                 );
-                if($favorite_exist){
+                if(isset($item['favorite'])){
                     $column_names .= ",favorite";
                     $column_placeholders .= ", %s";
                     $query_value_array[] = $item['favorite'];
