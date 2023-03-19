@@ -62,30 +62,18 @@ trait Query
                 }
                 $defaults = apply_filters('betterlinks/insert_link_default_args', $initial_defaults_arr);
                 $item = wp_parse_args($item, $defaults);
-                if ($favorite_exist) {
-                    $wpdb->query(
-                        $wpdb->prepare(
-                            "INSERT INTO {$wpdb->prefix}betterlinks (
-                            link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect,favorite
-                        ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s )",
-                            array(
-                                $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect'], $item['favorite']
-                            )
-                        )
-                    );
-                } else {
-                    $wpdb->query(
-                        $wpdb->prepare(
-                            "INSERT INTO {$wpdb->prefix}betterlinks (
-                            link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect
-                        ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
-                            array(
-                                $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
-                            )
-                        )
-                    );
+                $column_names = "link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect";
+                $column_placeholders = "%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s";
+                $query_value_array = array(
+                    $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
+                );
+                if($favorite_exist){
+                    $column_names .= ",favorite";
+                    $column_placeholders .= ", %s";
+                    $query_value_array[] = $item['favorite'];
                 }
-
+                $query_string = "INSERT INTO {$wpdb->prefix}betterlinks ( {$column_names} ) VALUES ( {$column_placeholders} )";
+                $wpdb->query( $wpdb->prepare( $query_string, $query_value_array ) );
                 do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
                 return $wpdb->insert_id;
             }
