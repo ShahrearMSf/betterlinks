@@ -174,7 +174,26 @@ trait Query
         global $wpdb;
         $prefix = $wpdb->prefix;
         $formattedArray = [];
-        $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
+        $items = $wpdb->get_results("SELECT
+            bl.ID,
+            bl.redirect_type,
+            bl.short_url,
+            bl.link_slug,
+            bl.link_status,
+            bl.target_url,
+            bl.nofollow,
+            bl.sponsored,
+            bl.param_forwarding,
+            bl.track_me,
+            bl.wildcards,
+            bl.expire,
+            bl.dynamic_redirect,
+            bl.uncloaked,
+            br.term_id as cat_id
+            FROM {$prefix}betterlinks as bl
+            INNER JOIN {$prefix}betterlinks_terms_relationships as br ON bl.ID = br.link_id
+            INNER JOIN {$prefix}betterlinks_terms as bt ON br.term_id = bt.ID AND bt.term_type = 'category'
+        ");
         $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
         $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false;
         $is_links_case_sensitive = $formattedArray['is_case_sensitive'];
