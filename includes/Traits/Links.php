@@ -69,10 +69,6 @@ trait Links
             $params = array_intersect_key($arg, $lookFor);
             // insert link
             $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params));
-            if (BETTERLINKS_EXISTS_LINKS_JSON) {
-                $params['ID'] = $id;
-                \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
-            }
             $term_data = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
             $wpdb->query("COMMIT");
             // for instant create category system
@@ -87,6 +83,11 @@ trait Links
                     $arg['cat_id'] = $value["term_id"];
                     $arg['cat_data'] = $value;
                 }
+            }
+            if (BETTERLINKS_EXISTS_LINKS_JSON) {
+                $params['ID'] = $id;
+                $params['cat_id'] = $arg['cat_id'];
+                \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
             $response = array_merge($arg, [
                 'ID' => strval($id),
