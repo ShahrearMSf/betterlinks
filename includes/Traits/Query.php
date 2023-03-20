@@ -127,7 +127,8 @@ trait Query
             bl.wildcards,
             bl.expire,
             bl.favorite,
-            bl.dynamic_redirect
+            bl.dynamic_redirect,
+            bl.uncloaked
             FROM {$prefix}betterlinks as bl
             INNER JOIN {$prefix}betterlinks_terms_relationships as btr ON bl.ID = btr.link_id
             INNER JOIN {$prefix}betterlinks_terms as bt ON bt.ID = btr.term_id AND bt.term_type = 'category'
