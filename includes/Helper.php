@@ -258,6 +258,7 @@ class Helper
             'wildcards' => (isset($data['wildcards']) ? $data['wildcards'] : false),
             'expire' => (isset($data['expire']) ? $data['expire'] : null),
             'dynamic_redirect' => (isset($data['dynamic_redirect']) ? $data['dynamic_redirect'] : null),
+            'cat_id' => isset($data['cat_id']) ? $data['cat_id'] : null,
         ];
         if(isset($data['uncloaked']) && $data['uncloaked']){
             $res['uncloaked'] = $data['uncloaked'];
