@@ -104,9 +104,6 @@ trait Links
         $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
         $params = array_intersect_key($arg, $lookFor);
         $old_short_url = isset($arg['old_short_url']) ? $arg['old_short_url'] : '';
-        if (BETTERLINKS_EXISTS_LINKS_JSON) {
-            \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
-        }
         // update link
         $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params), true);
         $term_data = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
@@ -123,6 +120,10 @@ trait Links
                 $arg['cat_id'] = $value["term_id"];
                 $arg['cat_data'] = $value;
             }
+        }
+        if (BETTERLINKS_EXISTS_LINKS_JSON) {
+            $params['cat_id'] = $arg['cat_id'];
+            \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
         }
         return $arg;
     }
