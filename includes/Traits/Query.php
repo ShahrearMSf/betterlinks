@@ -784,16 +784,4 @@ trait Query
         $results = array_column($results, 'meta_value');
         return $results;
     }
-
-    public static function get_links_by_exclude_keywords()
-    {
-        global $wpdb;
-        $results = $wpdb->get_results(
-            // following query commented and written new one because we should get all the links in autolink
-            // "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks WHERE NOT EXISTS (SELECT betterlinkmeta.link_id FROM {$wpdb->prefix}betterlinkmeta betterlinkmeta WHERE betterlinks.ID = betterlinkmeta.link_id)",
-            "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks",
-            ARRAY_A
-        );
-        return $results;
-    }
 }
