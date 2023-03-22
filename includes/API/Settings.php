@@ -85,11 +85,12 @@ class Settings extends Controller
     {
         $response = $request->get_params();
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
+        $response['uncloaked_categories'] = isset($response['uncloaked_categories']) && is_string($response['uncloaked_categories']) ? json_decode($response['uncloaked_categories']) : [];
         $autolink_options = [
             "no_autolink_post_types" => isset($response["autolink_disable_post_types"]) ? $response["autolink_disable_post_types"] : false,
             "is_show_icon" => isset($response["is_autolink_icon"]) ? $response["is_autolink_icon"] : false,
             "is_autolink_in_heading" => isset($response["is_autolink_headings"]) ? $response["is_autolink_headings"] : false,
-            "uncloaked_categories" => isset($response['uncloaked_categories']) && is_string($response['uncloaked_categories']) ? json_decode($response['uncloaked_categories']) : [],
+            "uncloaked_categories" => $response['uncloaked_categories'],
         ];
         update_option( BETTERLINKS_AUTOLINK_OPTION_NAME, $autolink_options );
         $response = json_encode($response);
