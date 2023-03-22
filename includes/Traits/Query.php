@@ -203,6 +203,7 @@ trait Query
             $formattedArray['disablebotclicks'] = $options->disablebotclicks;
             $formattedArray['force_https'] = $options->force_https;
         }
+        $formattedArray = apply_filters('betterlinks/query/get_links_for_json', $formattedArray);
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
                 $short_url = $is_links_case_sensitive ? $item->short_url : strtolower($item->short_url);
