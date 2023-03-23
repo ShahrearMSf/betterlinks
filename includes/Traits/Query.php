@@ -202,8 +202,11 @@ trait Query
             $formattedArray['wildcards_is_active'] = $options->wildcards;
             $formattedArray['disablebotclicks'] = $options->disablebotclicks;
             $formattedArray['force_https'] = $options->force_https;
+            $formattedArray['no_autolink_post_types'] = isset($options->autolink_disable_post_types) ? $options->autolink_disable_post_types : false;
+            $formattedArray['is_show_icon'] = isset($options->is_autolink_icon) ? $options->is_autolink_icon : false;
+            $formattedArray['is_autolink_in_heading'] = isset($options->is_autolink_headings) ? $options->is_autolink_headings : false;
+            $formattedArray['uncloaked_categories'] = isset($options->uncloaked_categories) ? $options->uncloaked_categories : [];
         }
-        $formattedArray = apply_filters('betterlinks/query/get_links_for_json', $formattedArray);
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
                 $short_url = $is_links_case_sensitive ? $item->short_url : strtolower($item->short_url);
