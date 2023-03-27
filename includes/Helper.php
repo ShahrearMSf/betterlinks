@@ -17,23 +17,21 @@ class Helper
             return $data;
         }
         $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
-        if (is_array($options)) {
-            return [
-                'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
-                'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
-                'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
-                'autolink_disable_post_types' => isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : false,
-                'is_autolink_icon' => isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false,
-                'is_autolink_headings' => isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false,
-                'uncloaked_categories' => isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [],
-            ];
-        }else{
-            return [
-                'wildcards_is_active' => false,
-                'disablebotclicks' => false,
-                'force_https' => false,
-            ];
-        }
+        return is_array($options)
+                ? [
+                    'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
+                    'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
+                    'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
+                    'autolink_disable_post_types' => isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : false,
+                    'is_autolink_icon' => isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false,
+                    'is_autolink_headings' => isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false,
+                    'uncloaked_categories' => isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [],
+                ]
+                : [
+                    'wildcards_is_active' => false,
+                    'disablebotclicks' => false,
+                    'force_https' => false,
+                ];
     }
 
     public static function get_link_from_json_file($short_url)
