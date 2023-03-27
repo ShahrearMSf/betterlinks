@@ -492,6 +492,23 @@ class Helper
             return $result !== false;
         }
     }
+    public static function btl_update_autoload_option($option_name, $autoload = false)
+    {
+        global $wpdb;
+        $result = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+            ARRAY_A
+        );
+
+        if( !empty( $result["option_id"] ) && !empty( $result["option_value"] ) ){
+            if($autoload === false){
+                $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $result["option_value"], 'autoload' => 'no'], ["option_name" => $option_name]);
+            }elseif($autoload === true){
+                $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $result["option_value"], 'autoload' => 'yes'], ["option_name" => $option_name]);
+            }
+            return $result !== false;
+        }
+    }
     public static function run_migration_for_ptrl_links_in_background($installer, $links_count)
     {
         global $wpdb;
