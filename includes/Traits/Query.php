@@ -195,17 +195,17 @@ trait Query
             INNER JOIN {$prefix}betterlinks_terms_relationships as br ON bl.ID = br.link_id
             INNER JOIN {$prefix}betterlinks_terms as bt ON br.term_id = bt.ID AND bt.term_type = 'category'
         ");
-        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
-        $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false;
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+        $formattedArray['is_case_sensitive'] = isset($options['is_case_sensitive']) ? $options['is_case_sensitive'] : false;
         $is_links_case_sensitive = $formattedArray['is_case_sensitive'];
         if (!empty($options)) {
-            $formattedArray['wildcards_is_active'] = $options->wildcards;
-            $formattedArray['disablebotclicks'] = $options->disablebotclicks;
-            $formattedArray['force_https'] = $options->force_https;
-            $formattedArray['no_autolink_post_types'] = isset($options->autolink_disable_post_types) ? $options->autolink_disable_post_types : false;
-            $formattedArray['is_show_icon'] = isset($options->is_autolink_icon) ? $options->is_autolink_icon : false;
-            $formattedArray['is_autolink_in_heading'] = isset($options->is_autolink_headings) ? $options->is_autolink_headings : false;
-            $formattedArray['uncloaked_categories'] = isset($options->uncloaked_categories) ? $options->uncloaked_categories : [];
+            $formattedArray['wildcards_is_active'] = $options['wildcards'];
+            $formattedArray['disablebotclicks'] = $options['disablebotclicks'];
+            $formattedArray['force_https'] = $options['force_https'];
+            $formattedArray['no_autolink_post_types'] = isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : false;
+            $formattedArray['is_show_icon'] = isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false;
+            $formattedArray['is_autolink_in_heading'] = isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false;
+            $formattedArray['uncloaked_categories'] = isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [];
         }
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
