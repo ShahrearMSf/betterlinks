@@ -434,7 +434,7 @@ class Helper
                 }
             }
         }
-        return update_option('betterlinks_analytics_data', json_encode($results));
+        return update_option('betterlinks_analytics_data', json_encode($results), false);
     }
 
     public static function maybe_json($data)
