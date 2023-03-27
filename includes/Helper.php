@@ -488,7 +488,7 @@ class Helper
             return $result;
         }
         if( $careless_update || !empty( $result["option_id"] ) ){
-            $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
+            $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value, 'autoload' => 'no'], ["option_name" => $option_name]);
             return $result !== false;
         }
     }
