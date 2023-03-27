@@ -22,7 +22,7 @@ class Helper
                     'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
                     'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
                     'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
-                    'autolink_disable_post_types' => isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : false,
+                    'autolink_disable_post_types' => isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : [],
                     'is_autolink_icon' => isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false,
                     'is_autolink_headings' => isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false,
                     'uncloaked_categories' => isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [],
