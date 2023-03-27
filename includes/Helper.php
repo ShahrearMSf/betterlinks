@@ -17,9 +17,8 @@ class Helper
             return $data;
         }
         $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
-        $args = [];
         if (is_array($options)) {
-            $args = [
+            return [
                 'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
                 'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
                 'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
@@ -28,12 +27,13 @@ class Helper
                 'is_autolink_headings' => isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false,
                 'uncloaked_categories' => isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [],
             ];
+        }else{
+            return [
+                'wildcards_is_active' => false,
+                'disablebotclicks' => false,
+                'force_https' => false,
+            ];
         }
-        return wp_parse_args($args, [
-            'wildcards_is_active' => false,
-            'disablebotclicks' => false,
-            'force_https' => false,
-        ]);
     }
 
     public static function get_link_from_json_file($short_url)
