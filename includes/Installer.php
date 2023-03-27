@@ -230,10 +230,7 @@ class Installer extends \WP_Background_Process
         if(get_option('betterlinks_autolink_options')){
             delete_option('betterlinks_autolink_options');
         }
-        $analytics_data = get_option('betterlinks_analytics_data');
-        if( !empty($analytics_data) ){
-            update_option('betterlinks_analytics_data', $analytics_data, false);
-        }
+        \BetterLinks\Helper::btl_update_autoload_option('betterlinks_analytics_data');
         if( $is_favorite_column_exist && $is_fixed_missing_terms_relation_for_links && $is_uncloaked_column_exist){
             return false;
         }
