@@ -164,6 +164,24 @@ trait Query
         );
         return $link;
     }
+    public static function get_link_data_with_cat_id_by_link_id($ID)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT 
+            bt.ID as cat_id,
+            bl.ID,
+            bl.target_url,
+            bl.short_url,
+            bl.uncloaked
+            FROM {$wpdb->prefix}betterlinks as bl
+            INNER JOIN {$wpdb->prefix}betterlinks_terms_relationships as btr ON bl.ID = btr.link_id AND bl.ID=%d
+            INNER JOIN {$wpdb->prefix}betterlinks_terms as bt ON bt.ID = btr.term_id AND bt.term_type = 'category'
+            ", $ID),
+            ARRAY_A
+        );
+        return $link;
+    }
 
     /**
      * Get All BetterLinks Uploads Links JSON File
