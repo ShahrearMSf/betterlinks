@@ -238,3 +238,10 @@ label.extra_info_keywords > input#keywords {
 
 // react select design break fix: Disable Auto-link keywords for Post Types end
 //
+
+// autolink keyword search cancel (x) icon style start
+input#search_autolink::-webkit-search-decoration:hover,
+input#search_autolink::-webkit-search-cancel-button:hover {
+	cursor: pointer;
+}
+// autolink keyword search cancel (x) icon style end
