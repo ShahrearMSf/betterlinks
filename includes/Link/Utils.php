@@ -88,7 +88,11 @@ class Utils
 
         $target_url = $this->addScheme($data['target_url']);
         if (filter_var($data['param_forwarding'], FILTER_VALIDATE_BOOLEAN) && !empty($param)) {
-            $target_url = $target_url . '?' . $param;
+            // $target_url = $target_url . '?' . $param;
+            $_target_url = wp_parse_url( $target_url );
+            $_query_params = [];
+            wp_parse_str( $param, $_query_params );
+            $target_url .= (isset( $_target_url['query'] ) ? '&' : '?') . build_query( $_query_params );
         }
 
         switch ($data['redirect_type']) {
