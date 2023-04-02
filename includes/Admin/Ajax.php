@@ -49,7 +49,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
         add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
         add_action('wp_ajax_betterlinks/admin/fetch_analytics', [$this, 'fetch_analytics']);
-        add_action('wp_ajax_betterlinks/admin/get_all_keywords', [$this, 'get_all_keywords']);
+        
 
         // post type, tags, categories
         add_action('wp_ajax_betterlinks/admin/get_post_types', [$this, 'get_post_types']);
@@ -699,19 +699,6 @@ class Ajax
         $categories = wp_list_pluck($categories, 'name', 'slug');
         wp_send_json_success(
             $categories,
-            200
-        );
-        wp_die();
-    }
-    public function get_all_keywords()
-    {
-        check_ajax_referer('betterlinks_admin_nonce', 'security');
-        if (!apply_filters('betterlinks/api/keywords_get_items_permission_check', current_user_can('manage_options'))) {
-            wp_die();
-        }
-        $results = \BetterLinks\Helper::get_keywords();
-        wp_send_json_success(
-            $results,
             200
         );
         wp_die();
