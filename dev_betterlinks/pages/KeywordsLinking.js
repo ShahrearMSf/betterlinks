@@ -34,7 +34,7 @@ const KeywordsLinking = (props) => {
 		postCategories: props.postdatas.postCategories || [],
 	};
 
-	const loadedAll = props.links.links && props.postdatas.fetchedAll && props.keywords.data;
+	const loadedAll = props.postdatas.fetchedAll && props.keywords.data;
 
 	return (
 		<React.Fragment>
