@@ -380,6 +380,23 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 											</label>
 										</div>
 									</span>
+									<span className="btl-form-group btl-form-group--teaser btl-form-group-uncloaked-categories">
+										<label className="btl-form-label">
+											{__('Uncloak Categories', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable uncloaking categories', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will allow you to uncloak categories', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
+										</div>
+									</span>
 								</>
 							)}
 							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, { ...props, postdatas, terms })}
