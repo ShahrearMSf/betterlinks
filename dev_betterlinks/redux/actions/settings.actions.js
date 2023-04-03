@@ -15,7 +15,7 @@ export const fetch_settings_data = () => async (dispatch) => {
 			payload,
 		});
 	} catch (e) {
-		makeRequest({
+		return makeRequest({
 			action: 'betterlinks/admin/get_settings',
 		}).then((response) => {
 			if (response.data) {
