@@ -232,7 +232,7 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 		const linkTitle = (item?.link_title || '').toLowerCase();
 		const targetUrl = (item?.target_url || '').replace(/https?\:\/\//gi, '').toLowerCase();
 		const shortUrl = `${site_url}/${item?.short_url || ''}`.replace(/https?\:\/\//gi, '').toLowerCase();
-		return linkTitle.includes(newFilterText) || shortUrl.includes(newFilterText) || targetUrl.includes(newFilterText);
+		return [linkTitle, shortUrl, targetUrl].some((item) => item.includes(newFilterText));
 	});
 	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
