@@ -224,7 +224,16 @@ export const formatDate = (date = new Date(), format) => {
 
 export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
 	let results = stored;
-	results = stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+	results = stored.filter((item) => {
+		const newFilterText = filterText
+			.replace(/https?\:\/\//gi, '')
+			.replace(/^[\/\\]+|[\/\\]+$/gi, '')
+			.toLowerCase();
+		const linkTitle = (item?.link_title || '').toLowerCase();
+		const targetUrl = (item?.target_url || '').replace(/https?\:\/\//gi, '').toLowerCase();
+		const shortUrl = `${site_url}/${item?.short_url || ''}`.replace(/https?\:\/\//gi, '').toLowerCase();
+		return linkTitle.includes(newFilterText) || shortUrl.includes(newFilterText) || targetUrl.includes(newFilterText);
+	});
 	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
 		results = results.filter((item) => item.cat_id == selectedCategory.value);
