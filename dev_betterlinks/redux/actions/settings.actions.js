@@ -7,7 +7,7 @@ export const fetch_settings_data = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'settings');
 		const payload = JSON.parse(res.data.data);
-		if (!settings?.redirect_type) {
+		if (!payload?.redirect_type) {
 			throw new Error('rest api not working properly for fetch_settings_data');
 		}
 		dispatch({
