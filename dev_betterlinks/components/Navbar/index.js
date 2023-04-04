@@ -26,7 +26,7 @@ const Navbar = () => {
 				</div>
 				<div className="wp-menu-name">{__('BetterLinks', 'betterlinks')}</div>
 			</Link>
-			{(betterLinksHooks.applyFilters('isShowSettingsMenu', true) || betterLinksHooks.applyFilters('isShowAnalyticsMenu', true)) && (
+			{(betterLinksHooks.applyFilters('isShowSettingsMenu', true) || betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) || betterLinksHooks.applyFilters('isShowKeywordsLinkingMenu', false)) && (
 				<ul className="wp-submenu wp-submenu-wrap">
 					<li className="wp-submenu-head" aria-hidden="true">
 						{__('BetterLinks', 'betterlinks')}
