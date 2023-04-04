@@ -28,9 +28,6 @@ const Navbar = () => {
 			</Link>
 			{['isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) => betterLinksHooks.applyFilters(item, i !== 2)) && (
 				<ul className="wp-submenu wp-submenu-wrap">
-					<li className="wp-submenu-head" aria-hidden="true">
-						{__('BetterLinks', 'betterlinks')}
-					</li>
 					{betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks'}>{__('Manage Links', 'betterlinks')}</Link>
