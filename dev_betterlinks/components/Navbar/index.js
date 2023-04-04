@@ -6,10 +6,7 @@ const Navbar = () => {
 	const currentPage = betterLinksQuery.get('page');
 	const shouldShowSubmenu = ['isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) => betterLinksHooks.applyFilters(item, i !== 2));
 	let rootLinks = 'betterlinks';
-	if (
-		!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) &&
-		(betterLinksHooks.applyFilters('isShowSettingsMenu', true) || betterLinksHooks.applyFilters('isShowAnalyticsMenu', true))
-	) {
+	if (!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && shouldShowSubmenu) {
 		rootLinks = currentPage;
 	}
 	return (
