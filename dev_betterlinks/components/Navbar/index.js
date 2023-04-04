@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { route_path, plugin_root_url } from 'utils/helper';
 const Navbar = () => {
 	const currentPage = betterLinksQuery.get('page');
+	const shouldShowSubmenu = ['isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) => betterLinksHooks.applyFilters(item, i !== 2));
 	let rootLinks = 'betterlinks';
 	if (
 		!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) &&
@@ -26,7 +27,7 @@ const Navbar = () => {
 				</div>
 				<div className="wp-menu-name">{__('BetterLinks', 'betterlinks')}</div>
 			</Link>
-			{['isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) => betterLinksHooks.applyFilters(item, i !== 2)) && (
+			{shouldShowSubmenu && (
 				<ul className="wp-submenu wp-submenu-wrap">
 					{betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`}>
