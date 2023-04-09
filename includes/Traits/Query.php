@@ -129,9 +129,10 @@ trait Query
             bl.favorite,
             bl.dynamic_redirect,
             bl.uncloaked
-            FROM {$prefix}betterlinks as bl
-            INNER JOIN {$prefix}betterlinks_terms_relationships as btr ON bl.ID = btr.link_id
-            INNER JOIN {$prefix}betterlinks_terms as bt ON bt.ID = btr.term_id AND bt.term_type = 'category'
+            FROM {$prefix}betterlinks_terms as bt
+            LEFT JOIN  {$prefix}betterlinks_terms_relationships as btr ON bt.ID = btr.term_id
+            LEFT JOIN  {$prefix}betterlinks as bl ON bl.ID = btr.link_id
+            WHERE bt.term_type = 'category'
             ORDER BY bl.link_order ASC;", OBJECT);
         $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
         return $results;
