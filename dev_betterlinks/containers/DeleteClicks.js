@@ -93,198 +93,67 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 		setCurrentDaysOlderThan(value);
 	};
 	return (
-		<>
-			<style>{`
-				.btl-analytic-reset-wrapeer button{
-					display:block;
-					border: 1px solid #0afa;
-					background: #0af;
-					color: #fff;
-					padding: 10px;
-					cursor: pointer;
-					margin: 10px 0;
-					border-radius: 5px;
-				}
-
-				.btl-analytic-reset-wrapeer button:hover{
-					background: #09e;
-				}
-
-				h2 span.success_delete_count{
-					color: red;
-					font-size: 90px;
-				}
-
-				button.btl-reset-analytics-initial-button{
-					margin-right: 20px !important;
-    				padding: 5px 30px !important;
-				}
-
-				body.betterlinks-delete-clicks-modal-popup-opened button.btl-btn-reset-apply-1{
-					margin: 0 !important;
-					width: 100px;
-				}
-
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-wrapper {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					height: 100%;
-				}
-				
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-wrapper span.btl-close-popup {
-					position: absolute;
-					left: 100%;
-					top: 0;
-					height: 30px;
-					width: 30px;
-					background: #fff9;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					cursor: pointer;
-				}
-
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup{
-					margin: 0;
-					padding: 0;
-				}
-
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1 > h2{
-					display: block;
-					text-align: center;
-					width: 430px;
-					margin: auto;
-					margin-top: -70px;
-					margin-bottom: 30px;
-					font-size: 24px;
-					line-height: 32px;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1 .select_apply{
-					display: flex;				
-					gap: 20px;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1 .btl-react-select__option{
-					padding-left: 16px !important;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2{
-					text-align: center;
-					padding-bottom: 50px;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h2,
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4
-				{
-					line-height: 1.4;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h2{
-					font-size: 24px;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 h4{
-					font-size: 18px;
-					font-weight: 300;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons{
-					display: flex;
-					justify-content: center;
-					gap: 20px;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button{
-					height: 40px;
-					padding: 0 20px;
-					background-image: linear-gradient(202deg,#2961ff 0%,#003be2 100%);
-					border: none;
-					outline: none;
-					box-shadow: none;
-					border-radius: 4px;
-					color: #fff;
-					cursor: pointer;
-					transition: background 0.3s ease-in-out;
-					font-size: 14px;
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button.btl-btn-reset-apply-2{
-					
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-2 .btl-btn-reset-popup-step-2-buttons button.btl-btn-reset-cancel{
-					
-				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-modal-select--full{
-					width: 350px !important;
-				}
-
-				body.betterlinks-delete-clicks-modal-popup-opened .ReactModal__Content{
-					width: 500px;
-					height: 250px;
-					margin: auto;
-					overflow: visible !important;
-    				padding: 60px !important;
-				}
-
-				body.betterlinks-delete-clicks-modal-popup-opened .ReactModal__Overlay {
-					background-color: rgba(0,0,0, 0.5) !important;
-				}
-			`}</style>
-			<div className="btl-analytic-reset-wrapeer betterlinks">
-				<button className="button-primary btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
-					Reset
-				</button>
-				<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
-					<div className="btl-reset-modal-popup-wrapper ">
-						<span className="btl-close-modal" onClick={close}>
-							<i className="btl btl-cancel"></i>
-						</span>
-						{deleteStatus === 'reset_modal_step_1' && (
-							<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
-								<h2>Pick the range of BetterLinks Analytics that you want to reset.</h2>
-								<div className="select_apply">
-									<Select2
-										className={`btl-modal-select--full `}
-										classNamePrefix="btl-react-select"
-										onChange={handleDeleteOptionsChange}
-										options={deleteClicksOptions}
-										value={currentDaysOlderThan}
-										isMulti={false}
-									/>
-									<button className="button-primary btl-btn-reset-analytics btl-btn-reset-apply-1" onClick={handleResetButtonClick2}>
-										Apply
-									</button>
-								</div>
+		<div className="btl-analytic-reset-wrapeer betterlinks">
+			<button className="button-primary btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
+				Reset
+			</button>
+			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
+				<div className="btl-reset-modal-popup-wrapper ">
+					<span className="btl-close-modal" onClick={close}>
+						<i className="btl btl-cancel"></i>
+					</span>
+					{deleteStatus === 'reset_modal_step_1' && (
+						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
+							<h2>Pick the range of BetterLinks Analytics that you want to reset.</h2>
+							<div className="select_apply">
+								<Select2
+									className={`btl-modal-select--full `}
+									classNamePrefix="btl-react-select"
+									onChange={handleDeleteOptionsChange}
+									options={deleteClicksOptions}
+									value={currentDaysOlderThan}
+									isMulti={false}
+								/>
+								<button className="button-primary btl-btn-reset-analytics btl-btn-reset-apply-1" onClick={handleResetButtonClick2}>
+									Apply
+								</button>
 							</div>
-						)}
-						{deleteStatus === 'reset_modal_step_2' && (
-							<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
-								<h2>This Action Cannot be undone. Are you sure you want to continue?</h2>
-								<h4>
-									Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete the clicks data from database and it cannot be restored again.
-									<span style={{ display: 'Block' }}>Click 'cancel' to abort.</span>
-								</h4>
-								<div className="btl-btn-reset-popup-step-2-buttons">
-									<button className="button-primary btl-btn-reset-apply-2" onClick={handleConfirmDelete}>
-										Reset Clicks
-									</button>
-									<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
-										Cancel
-									</button>
-								</div>
+						</div>
+					)}
+					{deleteStatus === 'reset_modal_step_2' && (
+						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
+							<h2>This Action Cannot be undone. Are you sure you want to continue?</h2>
+							<h4>
+								Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete the clicks data from database and it cannot be restored again.
+								<span style={{ display: 'Block' }}>Click 'cancel' to abort.</span>
+							</h4>
+							<div className="btl-btn-reset-popup-step-2-buttons">
+								<button className="button-primary btl-btn-reset-apply-2" onClick={handleConfirmDelete}>
+									Reset Clicks
+								</button>
+								<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
+									Cancel
+								</button>
 							</div>
-						)}
-						{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
-						{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
-							<h2>
-								Success!!! <span class="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
-							</h2>
-						)}
-						{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
-							<h2>
-								{currentDaysOlderThan?.value === false && "You don't have any clicks data"}
-								{currentDaysOlderThan?.value === 30 && "You don't have clicks data older than 30 days"}
-								{currentDaysOlderThan?.value === 90 && "You don't have clicks data older than 90 days"}
-							</h2>
-						)}
-						{deleteStatus === 'failed' && <h2>Failed!!</h2>}
-					</div>
-				</Modal>
-			</div>
-		</>
+						</div>
+					)}
+					{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
+					{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
+						<h2>
+							Success!!! <span class="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
+						</h2>
+					)}
+					{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
+						<h2>
+							{currentDaysOlderThan?.value === false && "You don't have any clicks data"}
+							{currentDaysOlderThan?.value === 30 && "You don't have clicks data older than 30 days"}
+							{currentDaysOlderThan?.value === 90 && "You don't have clicks data older than 90 days"}
+						</h2>
+					)}
+					{deleteStatus === 'failed' && <h2>Failed!!</h2>}
+				</div>
+			</Modal>
+		</div>
 	);
 };
 
