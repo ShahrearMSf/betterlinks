@@ -149,7 +149,18 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					margin: 0;
 					padding: 0;
 				}
-				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1{
+
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1 > h2{
+					display: block;
+					text-align: center;
+					width: 430px;
+					margin: auto;
+					margin-top: -70px;
+					margin-bottom: 30px;
+					font-size: 24px;
+					line-height: 32px;
+				}
+				body.betterlinks-delete-clicks-modal-popup-opened .btl-reset-modal-popup-step-1 .select_apply{
 					display: flex;				
 					gap: 20px;
 				}
@@ -223,17 +234,20 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 						</span>
 						{deleteStatus === 'reset_modal_step_1' && (
 							<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
-								<Select2
-									className={`btl-modal-select--full `}
-									classNamePrefix="btl-react-select"
-									onChange={handleDeleteOptionsChange}
-									options={deleteClicksOptions}
-									value={currentDaysOlderThan}
-									isMulti={false}
-								/>
-								<button className="button-primary btl-btn-reset-analytics btl-btn-reset-apply-1" onClick={handleResetButtonClick2}>
-									Apply
-								</button>
+								<h2>Pick the range of BetterLinks Analytics that you want to reset.</h2>
+								<div className="select_apply">
+									<Select2
+										className={`btl-modal-select--full `}
+										classNamePrefix="btl-react-select"
+										onChange={handleDeleteOptionsChange}
+										options={deleteClicksOptions}
+										value={currentDaysOlderThan}
+										isMulti={false}
+									/>
+									<button className="button-primary btl-btn-reset-analytics btl-btn-reset-apply-1" onClick={handleResetButtonClick2}>
+										Apply
+									</button>
+								</div>
 							</div>
 						)}
 						{deleteStatus === 'reset_modal_step_2' && (
