@@ -79,7 +79,7 @@ export const betterlinksFormat = {
 
 		useEffect(() => {
 			if ((isVisible && !isActive) || isChangeLink) {
-				searchFieldRef?.current?.focus();
+				searchFieldRef?.current?.focus({ preventScroll: true });
 			}
 			if (isVisible || isActive) {
 				document.body.classList.add('betterlinks-formatting-enabled');
@@ -180,7 +180,7 @@ export const betterlinksFormat = {
 			setMatchedLinks([]);
 			const searchFieldDomRef = searchFieldRef?.current;
 			if (!searchFieldDomRef?.focus) return false;
-			searchFieldDomRef.focus();
+			searchFieldDomRef.focus({ preventScroll: true });
 		};
 
 		const handleUrlInputChange = (e) => {
@@ -434,7 +434,7 @@ export const betterlinksFormat = {
 															searchFieldDomRef.classList.remove('temporary-focus');
 														}
 													}, 5000);
-													searchFieldDomRef.focus();
+													searchFieldDomRef.focus({ preventScroll: true });
 													return res;
 												})
 												.catch((error) => {
