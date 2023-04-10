@@ -364,3 +364,10 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 
 //
 // betterlinks reset analytics css end
+
+// autolink keyword search cancel (x) icon style start
+input#search_autolink::-webkit-search-decoration:hover,
+input#search_autolink::-webkit-search-cancel-button:hover {
+	cursor: pointer;
+}
+// autolink keyword search cancel (x) icon style end
