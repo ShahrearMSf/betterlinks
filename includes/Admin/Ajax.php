@@ -22,6 +22,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
         add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
         add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
+        add_action('wp_ajax_betterlinks/admin/reset_analytics', [$this, 'reset_analytics']);
         // prettylinks
         add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
         add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
@@ -664,6 +665,41 @@ class Ajax
             200
         );
         wp_die();
+    }
+    public function reset_analytics()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $days_older_than = isset($_REQUEST['days_older_than']) ? sanitize_text_field($_REQUEST['days_older_than']) : false;
+        $from = isset($request['from']) ? sanitize_text_field($request['from']) : date('Y-m-d', strtotime(' - 30 days'));
+        $to = isset($request['to']) ? sanitize_text_field($request['to']) : date('Y-m-d');
+        $query = "";
+        if ($days_older_than) {
+            $range_days_in_seconds = $days_older_than * 24 * 60 * 60;
+            $gmt_timestamp_of_the_range_time = current_time('timestamp', 1) - $range_days_in_seconds;
+            $query = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d";
+            $query = $wpdb->prepare($query, $gmt_timestamp_of_the_range_time);
+        } else {
+            $query = "DELETE FROM {$prefix}betterlinks_clicks";
+        }
+        $count = $wpdb->query($query);
+        if ($count === false) {
+            wp_send_json_error($count);
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        \BetterLinks\Helper::update_links_analytics();
+        $new_clicks_data = \BetterLinks\Helper::get_clicks_by_date($from, $to);
+        $new_links_data = \BetterLinks\Helper::get_prepare_all_links();
+        set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($new_links_data));
+        wp_send_json_success([
+            "count" => $count,
+            "new_clicks_data" => $new_clicks_data,
+            "new_links_data" => $new_links_data,
+        ], 200);
     }
     public function get_post_types()
     {

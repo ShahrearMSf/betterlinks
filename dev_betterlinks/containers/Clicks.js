@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
+import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
 import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
@@ -98,6 +99,8 @@ const Clicks = (props) => {
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
+	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
+
 	useEffect(() => {
 		const currentDate = new Date();
 		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
@@ -146,30 +149,28 @@ const Clicks = (props) => {
 	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
 	return (
-		<React.Fragment>
-			<div className="btl-analytic">
-				{clicks ? (
-					<React.Fragment>
-						<Graph data={analyticsData(clicks)} />
-						<div className="btl-analytic-table-wrapper">
-							<DataTable
-								className="btl-analytic-table"
-								title={__('All Clicks', 'betterlinks')}
-								columns={columns}
-								data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
-								pagination
-								paginationResetDefaultPage={resetPaginationToggle}
-								subHeader
-								subHeaderComponent={subHeaderComponentMemo}
-								persistTableHead
-							/>
-						</div>
-					</React.Fragment>
-				) : (
-					<TableLoader />
-				)}
-			</div>
-		</React.Fragment>
+		<div className="btl-analytic">
+			{clicks ? (
+				<>
+					<Graph data={analyticsData(clicks)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
+					<div className="btl-analytic-table-wrapper">
+						<DataTable
+							className="btl-analytic-table"
+							title={__('All Clicks', 'betterlinks')}
+							columns={columns}
+							data={clicks.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+							pagination
+							paginationResetDefaultPage={resetPaginationToggle}
+							subHeader
+							subHeaderComponent={subHeaderComponentMemo}
+							persistTableHead
+						/>
+					</div>
+				</>
+			) : (
+				<TableLoader />
+			)}
+		</div>
 	);
 };
 

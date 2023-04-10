@@ -11,6 +11,7 @@ import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayEleme
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
+	const { customDateFilter, setCustomDateFilter } = props;
 	const labels = Object.keys(props.data)
 		?.reverse?.()
 		?.map?.((item) => {
@@ -73,13 +74,6 @@ const Graph = (props) => {
 	};
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
-	const [customDateFilter, setCustomDateFilter] = useState([
-		{
-			startDate: betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30)),
-			endDate: new Date(),
-			key: 'selection',
-		},
-	]);
 
 	const dateRangePickerOnChangeHandler = (item) => {
 		setCustomDateFilter([item.selection]);

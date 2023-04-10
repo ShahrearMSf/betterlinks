@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
 import { plugin_root_url } from 'utils/helper';
 import { linksView } from 'redux/actions/activity.actions';
+import DeleteClicks from 'containers/DeleteClicks';
 
 import PropTypes from 'prop-types';
 
@@ -18,6 +19,7 @@ const defaultProps = {
 };
 
 const TopBar = (props) => {
+	const { propsForAnalytics } = props;
 	const mode = localStorage.getItem('betterLinksIsDarkMode');
 	const [isDarkMode, setIsDarkMode] = useState(mode ? mode : false);
 	useEffect(() => {
@@ -60,6 +62,7 @@ const TopBar = (props) => {
 						</div>
 					</React.Fragment>
 				)}
+				{propsForAnalytics?.isResetAnalytics && <DeleteClicks propsForAnalytics={propsForAnalytics} />}
 				<label className="theme-mood-button" htmlFor="theme-mood">
 					<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
 					<span className="theme-mood">
