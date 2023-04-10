@@ -388,7 +388,7 @@ export const getAutoLinksInitialValues = (data) => {
 export const trimmed = (str) => (typeof str === 'string' ? str : '').trim();
 
 export const parseLinksForKeywordsListing = (data) =>
-	data.links
+	data?.links
 		? Object.values(data.links)
 				.reduce((acc, curr) => [...acc, ...curr.lists], [])
 				.map((item) => ({ value: item.ID, label: item.short_url }))

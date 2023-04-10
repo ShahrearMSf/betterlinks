@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom';
 import { route_path, plugin_root_url } from 'utils/helper';
 const Navbar = () => {
 	const currentPage = betterLinksQuery.get('page');
+	const shouldShowSubmenu = ['isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) => betterLinksHooks.applyFilters(item, i !== 2));
 	let rootLinks = 'betterlinks';
-	if (
-		!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) &&
-		(betterLinksHooks.applyFilters('isShowSettingsMenu', true) || betterLinksHooks.applyFilters('isShowAnalyticsMenu', true))
-	) {
+	if (!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && shouldShowSubmenu) {
 		rootLinks = currentPage;
 	}
 	return (
@@ -26,11 +24,8 @@ const Navbar = () => {
 				</div>
 				<div className="wp-menu-name">{__('BetterLinks', 'betterlinks')}</div>
 			</Link>
-			{(betterLinksHooks.applyFilters('isShowSettingsMenu', true) || betterLinksHooks.applyFilters('isShowAnalyticsMenu', true)) && (
+			{shouldShowSubmenu && (
 				<ul className="wp-submenu wp-submenu-wrap">
-					<li className="wp-submenu-head" aria-hidden="true">
-						{__('BetterLinks', 'betterlinks')}
-					</li>
 					{betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks'}>{__('Manage Links', 'betterlinks')}</Link>
