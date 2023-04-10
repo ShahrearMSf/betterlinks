@@ -47,8 +47,6 @@ class Utils
     public function dispatch_redirect($data, $param)
     {
         global $betterlinks;
-
-        $data = apply_filters('betterlinks/link/before_dispatch_redirect', $data);
         $comparable_url = rtrim(preg_replace('/https?\:\/\//', '', site_url('/')), '/') . '/' . $data["short_url"];
         $destination_url = rtrim(preg_replace('/https?\:\/\//', '', $data["target_url"]), '/');
         $comparable_url = rtrim(preg_replace('/^www\.?/', '', $comparable_url), "/");
