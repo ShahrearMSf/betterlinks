@@ -27,6 +27,7 @@ const KeywordFilter = (props) => {
 						</button>
 					</div>
 				)}
+				{props.search}
 			</div>
 		</React.Fragment>
 	);
@@ -67,7 +68,7 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 	];
 };
 
-const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps }) => {
+const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	useEffect(() => {}, []);
 
@@ -82,9 +83,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 		setBulkActionData(e);
 	};
 
-	const subHeaderComponentMemo = React.useMemo(() => {
-		return <KeywordFilter deleteKeywordHandler={delete_keyword} bulkActionData={bulkActionData} />;
-	}, [delete_keyword, bulkActionData]);
+	const subHeaderComponent = <KeywordFilter deleteKeywordHandler={delete_keyword} bulkActionData={bulkActionData} search={search} />;
 
 	return (
 		<React.Fragment>
@@ -96,7 +95,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 					pagination
 					subHeader
 					highlightOnHover
-					subHeaderComponent={subHeaderComponentMemo}
+					subHeaderComponent={subHeaderComponent}
 					persistTableHead
 					selectableRows
 					selectableRowsVisibleOnly

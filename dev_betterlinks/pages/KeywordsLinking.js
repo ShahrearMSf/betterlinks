@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import TableLoader from 'components/Loader/TableLoader';
@@ -47,6 +47,12 @@ const KeywordsLinking = (props) => {
 
 	const loadedAll = props.postdatas.fetchedAll && props.keywords.data;
 
+	const search = (
+		<div class="btl-autolink-filter">
+			<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
+		</div>
+	);
+
 	return (
 		<React.Fragment>
 			{loadedAll ? (
@@ -55,10 +61,8 @@ const KeywordsLinking = (props) => {
 						label={__('Auto-Link Keywords', 'betterlinks')}
 						render={() => <AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />}
 					/>
-					<div class="btl-autolink-filter">
-						<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
-					</div>
 					<ListKeywords
+						search={search}
 						postTypesProps={postTypesProps}
 						links={parseLinksForKeywordsListing(props.links)}
 						linksForUpdateModal={linksForUpdateModal}
