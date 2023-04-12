@@ -87,7 +87,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 
 	return (
 		<React.Fragment>
-			<div className="btl-list-view">
+			<div className="btl-list-view btl-autolink-keyword">
 				<DataTable
 					className="btl-list-view-table"
 					columns={getLinksListViewColumnData({ links, delete_keyword, keywords, postTypesProps, linksForUpdateModal })}
