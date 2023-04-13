@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import TableLoader from 'components/Loader/TableLoader';
@@ -14,6 +14,17 @@ import { parseLinksForKeywordsListing, parseLinksForUpdateModal } from 'utils/he
 const propTypes = {};
 const defaultProps = {};
 const KeywordsLinking = (props) => {
+	const [searchedText, setSearchedText] = useState('');
+	const [matchedKeywordsDatas, setMatchedKeywordsDatas] = useState(null);
+	const handleSearchTextChange = (e) => {
+		const value = (e?.target?.value || '').trim();
+		const regex = new RegExp(value, 'gi');
+		const matchedData = (props?.keywords?.data || [])?.filter((item) => {
+			return (item?.keywords || '').match(regex);
+		});
+		setSearchedText(value);
+		setMatchedKeywordsDatas(matchedData);
+	};
 	useEffect(() => {
 		if (!props.postdatas.fetchedAll) {
 			props.fetch_post_types_data();
@@ -34,7 +45,13 @@ const KeywordsLinking = (props) => {
 		postCategories: props.postdatas.postCategories || [],
 	};
 
-	const loadedAll = props.links.links && props.postdatas.fetchedAll && props.keywords.data;
+	const loadedAll = props.postdatas.fetchedAll && props.keywords.data;
+
+	const search = (
+		<div class="btl-autolink-filter">
+			<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
+		</div>
+	);
 
 	return (
 		<React.Fragment>
@@ -44,7 +61,13 @@ const KeywordsLinking = (props) => {
 						label={__('Auto-Link Keywords', 'betterlinks')}
 						render={() => <AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />}
 					/>
-					<ListKeywords postTypesProps={postTypesProps} links={parseLinksForKeywordsListing(props.links)} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />
+					<ListKeywords
+						search={search}
+						postTypesProps={postTypesProps}
+						links={parseLinksForKeywordsListing(props.links)}
+						linksForUpdateModal={linksForUpdateModal}
+						keywords={Array.isArray(matchedKeywordsDatas) ? { data: matchedKeywordsDatas } : props.keywords}
+					/>
 				</>
 			) : (
 				<TableLoader />

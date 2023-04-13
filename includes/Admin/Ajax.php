@@ -22,6 +22,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
         add_action('wp_ajax_betterlinks/admin/short_url_unique_checker', [$this, 'short_url_unique_checker']);
         add_action('wp_ajax_betterlinks/admin/cat_slug_unique_checker', [$this, 'cat_slug_unique_checker']);
+        add_action('wp_ajax_betterlinks/admin/reset_analytics', [$this, 'reset_analytics']);
         // prettylinks
         add_action('wp_ajax_betterlinks/admin/get_prettylinks_data', [$this, 'get_prettylinks_data']);
         add_action('wp_ajax_betterlinks/admin/run_prettylinks_migration', [$this, 'run_prettylinks_migration']);
@@ -49,7 +50,7 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/update_term', [$this, 'update_existing_term']);
         add_action('wp_ajax_betterlinks/admin/delete_term', [$this, 'delete_existing_term']);
         add_action('wp_ajax_betterlinks/admin/fetch_analytics', [$this, 'fetch_analytics']);
-        add_action('wp_ajax_betterlinks/admin/get_all_keywords', [$this, 'get_all_keywords']);
+        
 
         // post type, tags, categories
         add_action('wp_ajax_betterlinks/admin/get_post_types', [$this, 'get_post_types']);
@@ -544,14 +545,7 @@ class Ajax
         }
         $response = \BetterLinks\Helper::fresh_ajax_request_data($_POST);
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
-        update_option(
-            BETTERLINKS_AUTOLINK_OPTION_NAME,
-            [
-                "no_autolink_post_types" => isset($response["autolink_disable_post_types"]) ? $response["autolink_disable_post_types"] : false,
-                "is_show_icon" => isset($response["is_autolink_icon"]) ? $response["is_autolink_icon"] : false,
-                "is_autolink_in_heading" => isset($response["is_autolink_headings"]) ? $response["is_autolink_headings"] : false,
-            ]
-        );
+        $response['uncloaked_categories'] = isset($response['uncloaked_categories']) && is_string($response['uncloaked_categories']) ? json_decode($response['uncloaked_categories']) : [];
         $response = json_encode($response);
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);
@@ -672,6 +666,41 @@ class Ajax
         );
         wp_die();
     }
+    public function reset_analytics()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
+            wp_die();
+        }
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $days_older_than = isset($_REQUEST['days_older_than']) ? sanitize_text_field($_REQUEST['days_older_than']) : false;
+        $from = isset($request['from']) ? sanitize_text_field($request['from']) : date('Y-m-d', strtotime(' - 30 days'));
+        $to = isset($request['to']) ? sanitize_text_field($request['to']) : date('Y-m-d');
+        $query = "";
+        if ($days_older_than) {
+            $range_days_in_seconds = $days_older_than * 24 * 60 * 60;
+            $gmt_timestamp_of_the_range_time = current_time('timestamp', 1) - $range_days_in_seconds;
+            $query = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d";
+            $query = $wpdb->prepare($query, $gmt_timestamp_of_the_range_time);
+        } else {
+            $query = "DELETE FROM {$prefix}betterlinks_clicks";
+        }
+        $count = $wpdb->query($query);
+        if ($count === false) {
+            wp_send_json_error($count);
+        }
+        delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        \BetterLinks\Helper::update_links_analytics();
+        $new_clicks_data = \BetterLinks\Helper::get_clicks_by_date($from, $to);
+        $new_links_data = \BetterLinks\Helper::get_prepare_all_links();
+        set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($new_links_data));
+        wp_send_json_success([
+            "count" => $count,
+            "new_clicks_data" => $new_clicks_data,
+            "new_links_data" => $new_links_data,
+        ], 200);
+    }
     public function get_post_types()
     {
         $post_types = get_post_types();
@@ -699,19 +728,6 @@ class Ajax
         $categories = wp_list_pluck($categories, 'name', 'slug');
         wp_send_json_success(
             $categories,
-            200
-        );
-        wp_die();
-    }
-    public function get_all_keywords()
-    {
-        check_ajax_referer('betterlinks_admin_nonce', 'security');
-        if (!apply_filters('betterlinks/api/keywords_get_items_permission_check', current_user_can('manage_options'))) {
-            wp_die();
-        }
-        $results = \BetterLinks\Helper::get_keywords();
-        wp_send_json_success(
-            $results,
             200
         );
         wp_die();

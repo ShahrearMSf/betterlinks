@@ -17,19 +17,22 @@ class Helper
             return $data;
         }
         $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
-        $args = [];
-        if (is_array($options)) {
-            $args = [
-                'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
-                'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
-                'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
-            ];
-        }
-        return wp_parse_args($args, [
-            'wildcards_is_active' => false,
-            'disablebotclicks' => false,
-            'force_https' => false,
-        ]);
+        return is_array($options)
+                ? [
+                    'wildcards_is_active' => isset($options['wildcards']) ? $options['wildcards'] : false,
+                    'disablebotclicks' => isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false,
+                    'force_https' => isset($options['force_https']) ? $options['force_https'] : false,
+                    'autolink_disable_post_types' => isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : [],
+                    'is_autolink_icon' => isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false,
+                    'is_autolink_headings' => isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false,
+                    'uncloaked_categories' => isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [],
+                    'is_disable_analytics_ip' => isset($options['is_disable_analytics_ip']) ? $options['is_disable_analytics_ip'] : false,
+                ]
+                : [
+                    'wildcards_is_active' => false,
+                    'disablebotclicks' => false,
+                    'force_https' => false,
+                ];
     }
 
     public static function get_link_from_json_file($short_url)
@@ -244,7 +247,7 @@ class Helper
     }
     public static function json_link_formatter($data)
     {
-        return [
+        $res = [
             'ID' => $data['ID'],
             'link_slug' => $data['link_slug'],
             'link_status' => (isset($data['link_status']) ? $data['link_status'] : 'publish'),
@@ -257,8 +260,13 @@ class Helper
             'track_me' => (isset($data['track_me']) ? $data['track_me'] : false),
             'wildcards' => (isset($data['wildcards']) ? $data['wildcards'] : false),
             'expire' => (isset($data['expire']) ? $data['expire'] : null),
-            'dynamic_redirect' => (isset($data['dynamic_redirect']) ? $data['dynamic_redirect'] : null)
+            'dynamic_redirect' => (isset($data['dynamic_redirect']) ? $data['dynamic_redirect'] : null),
+            'cat_id' => isset($data['cat_id']) ? $data['cat_id'] : null,
         ];
+        if(isset($data['uncloaked']) && $data['uncloaked']){
+            $res['uncloaked'] = $data['uncloaked'];
+        }
+        return $res;
     }
     public static function insert_json_into_file($file, $data)
     {
@@ -425,7 +433,7 @@ class Helper
                 }
             }
         }
-        return update_option('betterlinks_analytics_data', json_encode($results));
+        return update_option('betterlinks_analytics_data', json_encode($results), false);
     }
 
     public static function maybe_json($data)
@@ -481,7 +489,24 @@ class Helper
             return $result;
         }
         if( $careless_update || !empty( $result["option_id"] ) ){
-            $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value], ["option_name" => $option_name]);
+            $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $option_value, 'autoload' => 'no'], ["option_name" => $option_name]);
+            return $result !== false;
+        }
+    }
+    public static function btl_update_autoload_option($option_name, $autoload = false)
+    {
+        global $wpdb;
+        $result = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name),
+            ARRAY_A
+        );
+
+        if( !empty( $result["option_id"] ) && !empty( $result["option_value"] ) ){
+            if($autoload === false){
+                $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $result["option_value"], 'autoload' => 'no'], ["option_name" => $option_name]);
+            }elseif($autoload === true){
+                $result = $wpdb->update("{$wpdb->prefix}options", ["option_value" => $result["option_value"], 'autoload' => 'yes'], ["option_name" => $option_name]);
+            }
             return $result !== false;
         }
     }

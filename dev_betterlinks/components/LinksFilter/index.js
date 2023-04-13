@@ -57,7 +57,7 @@ const LinksFilter = (props) => {
 					</div>
 				)}
 				<div className="btl-click-filter">
-					<input id="search" type="text" placeholder={__('Search by Title', 'betterlinks')} value={props.filterText} onChange={props.onFilter} />
+					<input id="search" type="text" placeholder={__('Search', 'betterlinks')} value={props.filterText} onChange={props.onFilter} />
 				</div>
 				<Select
 					className="btl-list-view-select btl-category-filter"

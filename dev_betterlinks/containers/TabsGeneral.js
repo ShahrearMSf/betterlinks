@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
 import axios from 'axios';
@@ -7,11 +7,12 @@ import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
 import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled } from 'utils/helper';
-const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) => {
+const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -19,6 +20,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 	const [fastClicksButtonText, setFastClicksButtonText] = useState(__('Active Now', 'betterlinks'));
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+
+	useEffect(() => {
+		if (is_pro_enabled && !terms?.terms) {
+			fetch_terms_data();
+		}
+	}, []);
+
 	const writeLinkJSONHandler = () => {
 		setFastRedirectButtonText(__('Activating...', 'betterlinks'));
 		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_links&security=${betterlinks_nonce}`).then(
@@ -79,6 +87,10 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 				enableReinitialize
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
+					const uncloakedCatOnSubmit = values?.uncloaked_categories;
+					if (Array.isArray(uncloakedCatOnSubmit)) {
+						values.uncloaked_categories = JSON.stringify(uncloakedCatOnSubmit?.map?.((item) => parseInt(item)));
+					}
 					update_option(values);
 					delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 				}}
@@ -331,6 +343,26 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 									</label>
 								</div>
 							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Disable Clicks IP', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="is_disable_analytics_ip"
+											type="checkbox"
+											onChange={() => props.setFieldValue('is_disable_analytics_ip', !props?.values?.is_disable_analytics_ip)}
+										/>
+										<span className="text">
+											{__('Disable IP Addresses for Analytics', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__("If checked, users' ip addresses won't be saved & won't be shown in analytics section", 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
 							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
@@ -368,9 +400,26 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 											</label>
 										</div>
 									</span>
+									<span className="btl-form-group btl-form-group--teaser btl-form-group-uncloaked-categories">
+										<label className="btl-form-label">
+											{__('Uncloak Categories', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										</label>
+										<div className="link-options__body">
+											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+												<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
+												<span className="text">
+													{__('Enable uncloaking categories', 'betterlinks')}
+													<div className="btl-tooltip">
+														<span className="dashicons dashicons-info-outline"></span>
+														<span className="btl-tooltiptext">{__('This will allow you to uncloak categories', 'betterlinks')}</span>
+													</div>
+												</span>
+											</label>
+										</div>
+									</span>
 								</>
 							)}
-							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, { ...props, postdatas })}
+							{betterLinksHooks.applyFilters('BetterLinksAddOptionSettingsTabGeneral', null, { ...props, postdatas, terms })}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
@@ -385,6 +434,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, update_option, postdatas }) 
 const mapStateToProps = (state) => ({
 	clicks: state.clicks,
 	postdatas: state.postdatas,
+	terms: state.terms,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -392,6 +442,7 @@ const mapDispatchToProps = (dispatch) => {
 		update_option: bindActionCreators(update_option, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
+		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };
 

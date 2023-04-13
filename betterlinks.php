@@ -93,7 +93,6 @@ if (!class_exists('BetterLinks')) {
             define('BETTERLINKS_EXISTS_LINKS_JSON', defined('BETTERLINKS_ALLOW_JSON_REDIRECT') ? file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json') && BETTERLINKS_ALLOW_JSON_REDIRECT : file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
             define('BETTERLINKS_EXISTS_CLICKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'));
             define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
-            define('BETTERLINKS_AUTOLINK_OPTION_NAME', 'betterlinks_autolink_options');
             define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
             define('BETTERLINKS_DB_ALTER_OPTIONS', 'betterlinks_db_alter_options');
         }

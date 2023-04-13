@@ -10,15 +10,18 @@ trait Query
         if ($is_update) {
             $defaults = self::get_link_by_ID($item['ID']);
             $item = wp_parse_args($item, current($defaults));
-            $favorite_exist = isset($item['favorite']);
             $link_data_array = array(
                 'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'], 'link_slug' => $item['link_slug'], 'link_note' => $item['link_note'], 'link_status' => $item['link_status'], 'nofollow' => $item['nofollow'], 'sponsored' => $item['sponsored'], 'track_me' => $item['track_me'], 'param_forwarding' => $item['param_forwarding'], 'param_struct' => $item['param_struct'], 'redirect_type' => $item['redirect_type'], 'target_url' => $item['target_url'], 'short_url' => $item['short_url'], 'link_order' => $item['link_order'], 'link_modified' => $item['link_modified'], 'link_modified_gmt' => $item['link_modified_gmt'], 'wildcards' => $item['wildcards'], 'expire' => $item['expire'], 'dynamic_redirect' => $item['dynamic_redirect']
             );
             $link_data_place_array = array(
                 '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
             );
-            if ($favorite_exist) {
+            if (isset($item['favorite'])) {
                 $link_data_array['favorite'] = $item['favorite'];
+                $link_data_place_array[] = '%s';
+            }
+            if(isset($item['uncloaked'])){
+                $link_data_array['uncloaked'] = $item['uncloaked'];
                 $link_data_place_array[] = '%s';
             }
             $wpdb->update(
@@ -33,7 +36,6 @@ trait Query
         } else {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
             if (count($betterlinks) === 0) {
-                $favorite_exist = isset($item['favorite']);
                 $initial_defaults_arr = array(
                     'link_author' => get_current_user_id(),
                     'link_date' => current_time('mysql'),
@@ -57,35 +59,28 @@ trait Query
                     'expire' => '',
                     'dynamic_redirect' => '',
                 );
-                if ($favorite_exist) {
-                    $initial_defaults_arr['favorite'] = "";
+                if (isset($item['favorite'])) {
+                    $initial_defaults_arr['favorite'] = '';
                 }
                 $defaults = apply_filters('betterlinks/insert_link_default_args', $initial_defaults_arr);
                 $item = wp_parse_args($item, $defaults);
-                if ($favorite_exist) {
-                    $wpdb->query(
-                        $wpdb->prepare(
-                            "INSERT INTO {$wpdb->prefix}betterlinks (
-                            link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect,favorite
-                        ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s )",
-                            array(
-                                $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect'], $item['favorite']
-                            )
-                        )
-                    );
-                } else {
-                    $wpdb->query(
-                        $wpdb->prepare(
-                            "INSERT INTO {$wpdb->prefix}betterlinks (
-                            link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect
-                        ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s )",
-                            array(
-                                $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
-                            )
-                        )
-                    );
+                $column_names = "link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect";
+                $column_placeholders = "%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s";
+                $query_value_array = array(
+                    $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
+                );
+                if(isset($item['favorite'])){
+                    $column_names .= ",favorite";
+                    $column_placeholders .= ", %s";
+                    $query_value_array[] = $item['favorite'];
                 }
-
+                if(isset($item['uncloaked'])){
+                    $column_names .= ",uncloaked";
+                    $column_placeholders .= ", %s";
+                    $query_value_array[] = $item['uncloaked'];
+                }
+                $query_string = "INSERT INTO {$wpdb->prefix}betterlinks ( {$column_names} ) VALUES ( {$column_placeholders} )";
+                $wpdb->query( $wpdb->prepare( $query_string, $query_value_array ) );
                 do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
                 return $wpdb->insert_id;
             }
@@ -111,32 +106,34 @@ trait Query
         $analytic = get_option('betterlinks_analytics_data');
         $analytic = $analytic ? json_decode($analytic, true) : [];
         $results = $wpdb->get_results("SELECT
-            {$prefix}betterlinks_terms.ID as cat_id,
-            {$prefix}betterlinks_terms.term_name,
-            {$prefix}betterlinks_terms.term_slug,
-            {$prefix}betterlinks_terms.term_type,
-            {$prefix}betterlinks.ID,
-            {$prefix}betterlinks.link_title,
-            {$prefix}betterlinks.link_slug,
-            {$prefix}betterlinks.link_note,
-            {$prefix}betterlinks.link_status,
-            {$prefix}betterlinks.nofollow,
-            {$prefix}betterlinks.sponsored,
-            {$prefix}betterlinks.track_me,
-            {$prefix}betterlinks.param_forwarding,
-            {$prefix}betterlinks.param_struct,
-            {$prefix}betterlinks.redirect_type,
-            {$prefix}betterlinks.target_url,
-            {$prefix}betterlinks.short_url,
-            {$prefix}betterlinks.link_date,
-            {$prefix}betterlinks.wildcards,
-            {$prefix}betterlinks.expire,
-            {$prefix}betterlinks.favorite,
-            {$prefix}betterlinks.dynamic_redirect
-            FROM {$prefix}betterlinks_terms
-            LEFT JOIN  {$prefix}betterlinks_terms_relationships ON {$prefix}betterlinks_terms.ID = {$prefix}betterlinks_terms_relationships.term_id
-            LEFT JOIN  {$prefix}betterlinks ON {$prefix}betterlinks.ID = {$prefix}betterlinks_terms_relationships.link_id
-            WHERE {$prefix}betterlinks_terms.term_type = 'category' ORDER BY {$prefix}betterlinks.link_order ASC", OBJECT);
+            bt.ID as cat_id,
+            bt.term_name,
+            bt.term_slug,
+            bt.term_type,
+            bl.ID,
+            bl.link_title,
+            bl.link_slug,
+            bl.link_note,
+            bl.link_status,
+            bl.nofollow,
+            bl.sponsored,
+            bl.track_me,
+            bl.param_forwarding,
+            bl.param_struct,
+            bl.redirect_type,
+            bl.target_url,
+            bl.short_url,
+            bl.link_date,
+            bl.wildcards,
+            bl.expire,
+            bl.favorite,
+            bl.dynamic_redirect,
+            bl.uncloaked
+            FROM {$prefix}betterlinks_terms as bt
+            LEFT JOIN  {$prefix}betterlinks_terms_relationships as btr ON bt.ID = btr.term_id
+            LEFT JOIN  {$prefix}betterlinks as bl ON bl.ID = btr.link_id
+            WHERE bt.term_type = 'category'
+            ORDER BY bl.link_order ASC;", OBJECT);
         $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
         return $results;
     }
@@ -168,6 +165,24 @@ trait Query
         );
         return $link;
     }
+    public static function get_link_data_with_cat_id_by_link_id($ID)
+    {
+        global $wpdb;
+        $link = $wpdb->get_results(
+            $wpdb->prepare("SELECT 
+            bt.ID as cat_id,
+            bl.ID,
+            bl.target_url,
+            bl.short_url,
+            bl.uncloaked
+            FROM {$wpdb->prefix}betterlinks as bl
+            INNER JOIN {$wpdb->prefix}betterlinks_terms_relationships as btr ON bl.ID = btr.link_id AND bl.ID=%d
+            INNER JOIN {$wpdb->prefix}betterlinks_terms as bt ON bt.ID = btr.term_id AND bt.term_type = 'category'
+            ", $ID),
+            ARRAY_A
+        );
+        return $link;
+    }
 
     /**
      * Get All BetterLinks Uploads Links JSON File
@@ -179,14 +194,38 @@ trait Query
         global $wpdb;
         $prefix = $wpdb->prefix;
         $formattedArray = [];
-        $items = $wpdb->get_results("SELECT ID,redirect_type,short_url,link_slug,link_status,target_url,nofollow,sponsored,param_forwarding,track_me,wildcards,expire,dynamic_redirect FROM {$prefix}betterlinks");
-        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME));
-        $formattedArray['is_case_sensitive'] = isset($options->is_case_sensitive) ? $options->is_case_sensitive : false;
+        $items = $wpdb->get_results("SELECT
+            bl.ID,
+            bl.redirect_type,
+            bl.short_url,
+            bl.link_slug,
+            bl.link_status,
+            bl.target_url,
+            bl.nofollow,
+            bl.sponsored,
+            bl.param_forwarding,
+            bl.track_me,
+            bl.wildcards,
+            bl.expire,
+            bl.dynamic_redirect,
+            bl.uncloaked,
+            br.term_id as cat_id
+            FROM {$prefix}betterlinks as bl
+            INNER JOIN {$prefix}betterlinks_terms_relationships as br ON bl.ID = br.link_id
+            INNER JOIN {$prefix}betterlinks_terms as bt ON br.term_id = bt.ID AND bt.term_type = 'category'
+        ");
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+        $formattedArray['is_case_sensitive'] = isset($options['is_case_sensitive']) ? $options['is_case_sensitive'] : false;
+        $formattedArray['is_disable_analytics_ip'] = isset($options['is_disable_analytics_ip']) ? $options['is_disable_analytics_ip'] : false;
         $is_links_case_sensitive = $formattedArray['is_case_sensitive'];
         if (!empty($options)) {
-            $formattedArray['wildcards_is_active'] = $options->wildcards;
-            $formattedArray['disablebotclicks'] = $options->disablebotclicks;
-            $formattedArray['force_https'] = $options->force_https;
+            $formattedArray['wildcards_is_active'] = $options['wildcards'];
+            $formattedArray['disablebotclicks'] = $options['disablebotclicks'];
+            $formattedArray['force_https'] = $options['force_https'];
+            $formattedArray['autolink_disable_post_types'] = isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : [];
+            $formattedArray['is_autolink_icon'] = isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false;
+            $formattedArray['is_autolink_headings'] = isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false;
+            $formattedArray['uncloaked_categories'] = isset($options['uncloaked_categories']) ? $options['uncloaked_categories'] : [];
         }
         if (is_array($items) && count($items) > 0) {
             foreach ($items as $item) {
@@ -456,38 +495,29 @@ trait Query
         } elseif (isset($item['link_id'])) {
             $betterlinks = self::get_link_by_ID($item['link_id']);
         }
+        $is_analytics_ip_enabled = isset($item['ip']) && isset($item['host']);
+        $addedPlaceholderString = $is_analytics_ip_enabled ? " created_at_gmt, ip, host " : " created_at_gmt ";
+        $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
+        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
+        $db_data_array = [
+            current($betterlinks)['ID'],
+            $item['browser'],
+            $item['os'],
+            $item['referer'],
+            $item['uri'],
+            isset($item['click_count']) ? $item['click_count'] : 0,
+            $item['visitor_id'],
+            $item['click_order'],
+            $item['created_at'],
+            $item['created_at_gmt']
+        ];
+        if($is_analytics_ip_enabled){
+            $db_data_array[] = $item['ip'];
+            $db_data_array[] = $item['host'];
+        }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
-                $wpdb->prepare(
-                    "INSERT INTO {$wpdb->prefix}betterlinks_clicks (
-                        link_id,
-                        ip,
-                        browser,
-                        os,
-                        referer,
-                        host,
-                        uri,
-                        click_count,
-                        visitor_id,
-                        click_order,
-                        created_at,
-                        created_at_gmt
-                    ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s, %d, %s, %s )",
-                    array(
-                        current($betterlinks)['ID'],
-                        $item['ip'],
-                        $item['browser'],
-                        $item['os'],
-                        $item['referer'],
-                        $item['host'],
-                        $item['uri'],
-                        isset($item['click_count']) ? $item['click_count'] : 0,
-                        $item['visitor_id'],
-                        $item['click_order'],
-                        $item['created_at'],
-                        $item['created_at_gmt']
-                    )
-                )
+                $wpdb->prepare( $query, $db_data_array )
             );
             return $wpdb->insert_id;
         }
@@ -767,18 +797,6 @@ trait Query
             ARRAY_A
         );
         $results = array_column($results, 'meta_value');
-        return $results;
-    }
-
-    public static function get_links_by_exclude_keywords()
-    {
-        global $wpdb;
-        $results = $wpdb->get_results(
-            // following query commented and written new one because we should get all the links in autolink
-            // "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks WHERE NOT EXISTS (SELECT betterlinkmeta.link_id FROM {$wpdb->prefix}betterlinkmeta betterlinkmeta WHERE betterlinks.ID = betterlinkmeta.link_id)",
-            "SELECT betterlinks.ID, betterlinks.link_title, betterlinks.short_url FROM {$wpdb->prefix}betterlinks betterlinks",
-            ARRAY_A
-        );
         return $results;
     }
 }

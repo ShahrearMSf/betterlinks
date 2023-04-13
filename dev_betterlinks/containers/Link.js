@@ -498,9 +498,29 @@ export const Link = (props) => {
 													</div>
 												</span>
 											</label>
+											{!is_pro_enabled && (
+												<label className="btl-checkbox-field link-options--teasers" onClick={() => openUpgradeToProModal()}>
+													<Field
+														disabled={true}
+														className="btl-check"
+														// type="checkbox"
+														checked={false}
+														onChange={() => openUpgradeToProModal()}
+														onClick={() => openUpgradeToProModal()}
+													/>
+													<span className="text">
+														{__('Uncloak', 'betterlinks')}
+														<span class="pro-badge">Pro</span>
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('This will uncloak your link', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+											)}
+											{betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field })}
 										</div>
 									</div>
-
 									{!betterlinksGutenStore && (
 										<>
 											<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>

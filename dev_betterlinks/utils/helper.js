@@ -54,6 +54,25 @@ export const reorder = (list, startIndex, endIndex) => {
 
 	return result;
 };
+export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(new Date(), 30), 'yyyy-mm-dd'), to = formatDate(new Date(), 'yyyy-mm-dd')) => {
+	const form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/reset_analytics');
+	form_data.append('security', betterlinks_nonce);
+	if (daysOlderThan) {
+		form_data.append('days_older_than', daysOlderThan);
+	}
+	form_data.append('from', from);
+	form_data.append('to', to);
+	return axios.post(ajaxurl, form_data).then(
+		(response) => {
+			return response;
+		},
+		(error) => {
+			console.log(error);
+			return error;
+		}
+	);
+};
 export const move = (source, destination, droppableSource, droppableDestination) => {
 	const sourceClone = Array.from(source);
 	const destClone = Array.from(destination);
@@ -224,7 +243,16 @@ export const formatDate = (date = new Date(), format) => {
 
 export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
 	let results = stored;
-	results = stored.filter((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+	results = stored.filter((item) => {
+		const newFilterText = filterText
+			.replace(/https?\:\/\//gi, '')
+			.replace(/^[\/\\]+|[\/\\]+$/gi, '')
+			.toLowerCase();
+		const linkTitle = (item?.link_title || '').toLowerCase();
+		const targetUrl = (item?.target_url || '').replace(/https?\:\/\//gi, '').toLowerCase();
+		const shortUrl = `${site_url}/${item?.short_url || ''}`.replace(/https?\:\/\//gi, '').toLowerCase();
+		return [linkTitle, shortUrl, targetUrl].some((item) => item.includes(newFilterText));
+	});
 	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
 		results = results.filter((item) => item.cat_id == selectedCategory.value);
@@ -360,7 +388,7 @@ export const getAutoLinksInitialValues = (data) => {
 export const trimmed = (str) => (typeof str === 'string' ? str : '').trim();
 
 export const parseLinksForKeywordsListing = (data) =>
-	data.links
+	data?.links
 		? Object.values(data.links)
 				.reduce((acc, curr) => [...acc, ...curr.lists], [])
 				.map((item) => ({ value: item.ID, label: item.short_url }))

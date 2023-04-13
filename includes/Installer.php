@@ -18,7 +18,7 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links'];
+        $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links', 'clear_cache'];
         $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
         $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
@@ -226,20 +226,43 @@ class Installer extends \WP_Background_Process
         $btl_db_alter_options = Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS);
         $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
         $is_fixed_missing_terms_relation_for_links = isset($btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"]) ? $btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"] : false;
-        $is_db_alter_option_exist_array = is_array($btl_db_alter_options);
+        $is_uncloaked_column_exist = isset($btl_db_alter_options["added_uncloaked_column"]) ? $btl_db_alter_options["added_uncloaked_column"] : false;
         global $wpdb;
+        $wpdb->query("DELETE FROM {$wpdb->prefix}options WHERE option_name IN( 'betterlinks_autolink_options' )");
+        \BetterLinks\Helper::btl_update_autoload_option('betterlinks_analytics_data');
+        if( $is_favorite_column_exist && $is_fixed_missing_terms_relation_for_links && $is_uncloaked_column_exist){
+            return false;
+        }
+        $is_db_alter_option_exist_array = is_array($btl_db_alter_options);
+        $betterlinks_table          = $wpdb->prefix . 'betterlinks';
+        $betterlinks_columns        = $wpdb->get_col("DESC $betterlinks_table", 0);
+        if (!$is_uncloaked_column_exist) {
+            delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
+            if (in_array("uncloaked", $betterlinks_columns)) {
+                $new_data = array_merge(
+                    ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                    [ "added_uncloaked_column" => true ]
+                );
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
+            } else {
+                $query_result = $wpdb->query("ALTER TABLE $betterlinks_table ADD uncloaked varchar(10) default ''");
+                $new_data = array_merge(
+                    ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                    [ "added_uncloaked_column" => $query_result ]
+                );
+                Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
+            }
+        }
         if (!$is_favorite_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-            $table          = $wpdb->prefix . 'betterlinks';
-            $results        = $wpdb->get_col("DESC $table", 0);
-            if (in_array("favorite", $results)) {
+            if (in_array("favorite", $betterlinks_columns)) {
                 $new_data = array_merge(
                     ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
                     [ "added_favorite_column" => true ]
                 );
                 Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
             } else {
-                $query_result = $wpdb->query("ALTER TABLE $table ADD favorite varchar(255) NOT NULL");
+                $query_result = $wpdb->query("ALTER TABLE $betterlinks_table ADD favorite varchar(255) NOT NULL");
                 $new_data = array_merge(
                     ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
                     [ "added_favorite_column" => $query_result ]
