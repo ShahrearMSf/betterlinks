@@ -227,15 +227,32 @@ class Installer extends \WP_Background_Process
         $is_favorite_column_exist = isset($btl_db_alter_options["added_favorite_column"]) ? $btl_db_alter_options["added_favorite_column"] : false;
         $is_fixed_missing_terms_relation_for_links = isset($btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"]) ? $btl_db_alter_options["fixed_missing_terms_relation_after_ta_one_click_migration"] : false;
         $is_uncloaked_column_exist = isset($btl_db_alter_options["added_uncloaked_column"]) ? $btl_db_alter_options["added_uncloaked_column"] : false;
+        $added_index_to_created_at_column_in_clicks = isset($btl_db_alter_options["added_index_to_created_at_column"]) ? $btl_db_alter_options["added_index_to_created_at_column"] : false;
         global $wpdb;
         $wpdb->query("DELETE FROM {$wpdb->prefix}options WHERE option_name IN( 'betterlinks_autolink_options' )");
         \BetterLinks\Helper::btl_update_autoload_option('betterlinks_analytics_data');
-        if( $is_favorite_column_exist && $is_fixed_missing_terms_relation_for_links && $is_uncloaked_column_exist){
+        if( $is_favorite_column_exist && $is_fixed_missing_terms_relation_for_links && $is_uncloaked_column_exist && $added_index_to_created_at_column_in_clicks){
             return false;
         }
         $is_db_alter_option_exist_array = is_array($btl_db_alter_options);
         $betterlinks_table          = $wpdb->prefix . 'betterlinks';
+        $betterlinks_clicks_table   = $wpdb->prefix . 'betterlinks_clicks';
         $betterlinks_columns        = $wpdb->get_col("DESC $betterlinks_table", 0);
+        $created_at_column          = 'created_at';
+        if (!$added_index_to_created_at_column_in_clicks) {
+            $sql = "SHOW INDEX FROM $betterlinks_clicks_table WHERE Column_name = '$created_at_column'";
+            $query = $wpdb->get_results($sql);
+            if(empty($query)){
+                $query_result = $wpdb->query("ALTER TABLE $betterlinks_clicks_table ADD KEY created_at_idx (created_at)");
+            }else{
+                $query_result = true;
+            }
+            $new_data = array_merge(
+                ($is_db_alter_option_exist_array ? Helper::btl_get_option(BETTERLINKS_DB_ALTER_OPTIONS) : []),
+                [ "added_index_to_created_at_column" => $query_result ]
+            );
+            Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
+        }
         if (!$is_uncloaked_column_exist) {
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
             if (in_array("uncloaked", $betterlinks_columns)) {
