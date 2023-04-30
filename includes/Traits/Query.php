@@ -568,13 +568,27 @@ trait Query
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
-        $results = $wpdb->get_results(
-            $wpdb->prepare("SELECT CLICKS.ID as
-            click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
-            (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
-            from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE created_at BETWEEN  %s AND %s group by CLICKS.id ORDER BY CLICKS.created_at DESC", $from . ' 00:00:00', $to . ' 23:59:00'),
-            ARRAY_A
-        );
+        $query = $wpdb->prepare("SELECT 
+                CLICKS.ID AS click_ID, 
+                CLICKS.link_id, 
+                CLICKS.browser, 
+                CLICKS.created_at, 
+                CLICKS.referer, 
+                {$prefix}betterlinks.short_url, 
+                {$prefix}betterlinks.target_url, 
+                CLICKS.ip, 
+                {$prefix}betterlinks.link_title
+            FROM 
+                {$prefix}betterlinks_clicks AS CLICKS 
+                LEFT JOIN {$prefix}betterlinks ON {$prefix}betterlinks.id = CLICKS.link_id 
+            WHERE 
+                CLICKS.created_at BETWEEN %s AND %s 
+            GROUP BY 
+                CLICKS.id 
+            ORDER BY 
+                CLICKS.created_at DESC", 
+            $from . ' 00:00:00', $to . ' 23:59:00');
+        $results = $wpdb->get_results( $query, ARRAY_A );
         return $results;
     }
 
