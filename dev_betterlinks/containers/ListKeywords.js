@@ -22,7 +22,14 @@ const KeywordFilter = (props) => {
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button className="btl-link-apply-button" onClick={() => props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler)}>
+						<button
+							className="btl-link-apply-button"
+							onClick={() => {
+								if (bulkAction.value === 'delete') {
+									props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
+								}
+							}}
+						>
 							{__('Apply', 'betterlinks')}
 						</button>
 					</div>
