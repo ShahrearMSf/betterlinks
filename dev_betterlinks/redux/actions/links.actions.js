@@ -296,6 +296,9 @@ export const edit_link =
 			const res = await API.put(namespace + 'links/' + item.ID, {
 				params: item,
 			});
+
+			res['data']['data']['favorite'] = item.favorite || {};
+
 			const { cat_data, tags_data = [] } = res?.data?.data;
 			if (cat_data?.is_newly_created) {
 				dispatch({
