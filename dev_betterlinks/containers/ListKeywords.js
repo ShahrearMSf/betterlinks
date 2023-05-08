@@ -10,6 +10,7 @@ import { delete_keyword } from 'redux/actions/keywords.actions';
 
 const KeywordFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState([]);
+	const [warning, setWarning] = useState(false);
 	return (
 		<React.Fragment>
 			<div className="btl-links-filter">
@@ -22,16 +23,22 @@ const KeywordFilter = (props) => {
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button
-							className="btl-link-apply-button"
-							onClick={() => {
-								if (bulkAction.value === 'delete') {
-									props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
-								}
-							}}
-						>
-							{__('Apply', 'betterlinks')}
-						</button>
+						<div className="btl-tooltip">
+							<button
+								className="btl-link-apply-button"
+								onClick={() => {
+									if (bulkAction.value === 'delete') {
+										setWarning(false);
+										props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
+										return;
+									}
+									setWarning(true);
+								}}
+							>
+								{__('Apply', 'betterlinks')}
+							</button>
+							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please select keywords.</span>}
+						</div>
 					</div>
 				)}
 				{props.search}
