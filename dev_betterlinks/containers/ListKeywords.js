@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -11,6 +11,14 @@ import { delete_keyword } from 'redux/actions/keywords.actions';
 const KeywordFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState([]);
 	const [warning, setWarning] = useState(false);
+
+	const handleDeleteKeyword = (bulkActionData, bulkAction, deleteHandler) => {
+		if (bulkAction.value !== 'delete') return setWarning(true);
+		setWarning(false);
+		deleteHandler(bulkActionData.selectedRows, bulkAction);
+		return props.setBulkActionData((prev) => ({ ...prev, selectedCount: 0 }));
+	};
+
 	return (
 		<React.Fragment>
 			<div className="btl-links-filter">
@@ -24,21 +32,10 @@ const KeywordFilter = (props) => {
 							onChange={(e) => setBulkAction(e)}
 						/>
 						<div className="btl-tooltip">
-							<button
-								className="btl-link-apply-button"
-								onClick={() => {
-									if (bulkAction.value === 'delete') {
-										setWarning(false);
-										props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
-										// props.setRemovedKeywordsHandler(
-										return;
-									}
-									setWarning(true);
-								}}
-							>
+							<button className="btl-link-apply-button" onClick={() => handleDeleteKeyword(props.bulkActionData, bulkAction, props.deleteKeywordHandler)}>
 								{__('Apply', 'betterlinks')}
 							</button>
-							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please select keywords.</span>}
+							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
 						</div>
 					</div>
 				)}
@@ -70,12 +67,12 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			selector: '',
 			sortable: false,
 			cell: (row) => {
-				// const deleteKeywords = () => {
-				// 	delete_keyword([row]);
-				// };
+				const deleteKeywords = () => {
+					delete_keyword([row]);
+				};
 				return (
 					<>
-						<KeywordsQuickAction keywords={keywords} postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={row} deleteKeywordHandler={delete_keyword} />
+						<KeywordsQuickAction keywords={keywords} postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={row} deleteKeywordHandler={deleteKeywords} />
 					</>
 				);
 			},
@@ -85,33 +82,23 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 
 const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
-	const [removedKeywords, setRemovedKeywords] = useState([]);
-	useEffect(() => {
-		console.log(bulkActionData);
-	}, [bulkActionData]);
+	// const [keywordList, setKeywordList] = useState([]);
+	// useEffect(() => {
+	// 	setKeywordList(keywords.data || []);
+	// }, [keywords]);
 
 	const getData = (keywords) => {
 		if (keywords.data) {
-			console.log(keywords.data);
 			return keywords.data;
 		}
 		return [];
 	};
 
 	const onSelectedRowsChange = (e) => {
-		console.log(e);
 		setBulkActionData(e);
 	};
 
-	const subHeaderComponent = (
-		<KeywordFilter
-			deleteKeywordHandler={delete_keyword}
-			bulkActionData={bulkActionData}
-			search={search}
-			setBulkActionData={setBulkActionData}
-			setRemovedKeywords={setRemovedKeywords}
-		/>
-	);
+	const subHeaderComponent = <KeywordFilter deleteKeywordHandler={delete_keyword} bulkActionData={bulkActionData} search={search} setBulkActionData={setBulkActionData} />;
 
 	return (
 		<React.Fragment>
