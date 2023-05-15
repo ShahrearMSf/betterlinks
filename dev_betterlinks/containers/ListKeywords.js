@@ -16,6 +16,7 @@ const KeywordFilter = (props) => {
 		if (bulkAction.value !== 'delete') return setWarning(true);
 		setWarning(false);
 		deleteHandler(bulkActionData.selectedRows, bulkAction);
+		setBulkAction({});
 		return props.setBulkActionData((prev) => ({ ...prev, selectedCount: 0 }));
 	};
 
