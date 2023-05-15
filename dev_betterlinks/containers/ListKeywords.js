@@ -30,6 +30,7 @@ const KeywordFilter = (props) => {
 									if (bulkAction.value === 'delete') {
 										setWarning(false);
 										props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
+										// props.setRemovedKeywordsHandler(
 										return;
 									}
 									setWarning(true);
@@ -69,12 +70,12 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			selector: '',
 			sortable: false,
 			cell: (row) => {
-				const deleteKeywords = () => {
-					delete_keyword([row]);
-				};
+				// const deleteKeywords = () => {
+				// 	delete_keyword([row]);
+				// };
 				return (
 					<>
-						<KeywordsQuickAction keywords={keywords} postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={row} deleteKeywordHandler={deleteKeywords} />
+						<KeywordsQuickAction keywords={keywords} postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={row} deleteKeywordHandler={delete_keyword} />
 					</>
 				);
 			},
@@ -84,20 +85,33 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 
 const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
-	useEffect(() => {}, []);
+	const [removedKeywords, setRemovedKeywords] = useState([]);
+	useEffect(() => {
+		console.log(bulkActionData);
+	}, [bulkActionData]);
 
 	const getData = (keywords) => {
 		if (keywords.data) {
+			console.log(keywords.data);
 			return keywords.data;
 		}
 		return [];
 	};
 
 	const onSelectedRowsChange = (e) => {
+		console.log(e);
 		setBulkActionData(e);
 	};
 
-	const subHeaderComponent = <KeywordFilter deleteKeywordHandler={delete_keyword} bulkActionData={bulkActionData} search={search} />;
+	const subHeaderComponent = (
+		<KeywordFilter
+			deleteKeywordHandler={delete_keyword}
+			bulkActionData={bulkActionData}
+			search={search}
+			setBulkActionData={setBulkActionData}
+			setRemovedKeywords={setRemovedKeywords}
+		/>
+	);
 
 	return (
 		<React.Fragment>
