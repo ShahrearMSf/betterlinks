@@ -15,7 +15,7 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler, setWarning, s
 				short_url: item.short_url,
 			});
 		});
-		setToggledClearRows(true);
+		setToggledClearRows();
 		deleteLinkHandler(deleteItemLists);
 		return;
 	}

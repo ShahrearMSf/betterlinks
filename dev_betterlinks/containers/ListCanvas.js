@@ -177,6 +177,10 @@ const ListCanvas = (props) => {
 		setBulkActionData(e);
 	};
 
+	const handleClearRows = () => {
+		setToggledClearRows(!toggledClearRows);
+	};
+
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
 			if (filterText) {
@@ -203,7 +207,7 @@ const ListCanvas = (props) => {
 				onClear={handleClear}
 				filterText={filterText}
 				resetFilterHandler={resetFilterHandler}
-				setToggledClearRows={setToggledClearRows}
+				setToggledClearRows={handleClearRows}
 			/>
 		);
 	}, [

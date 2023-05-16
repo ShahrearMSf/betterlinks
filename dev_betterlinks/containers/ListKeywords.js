@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -17,7 +17,7 @@ const KeywordFilter = (props) => {
 		setWarning(false);
 		deleteHandler(bulkActionData.selectedRows, bulkAction);
 		setBulkAction({});
-		return props.setToggledClearRows(true);
+		return props.setToggledClearRows();
 	};
 
 	return (
@@ -85,16 +85,20 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [toggledClearRows, setToggledClearRows] = useState(false);
 
+	const handleClearRows = () => {
+		setToggledClearRows(!toggledClearRows);
+	};
+
 	const subHeaderComponent = (
 		<KeywordFilter
 			deleteKeywordHandler={delete_keyword}
 			bulkActionData={bulkActionData}
 			search={search}
 			setBulkActionData={setBulkActionData}
-			setToggledClearRows={setToggledClearRows}
+			setToggledClearRows={handleClearRows}
 		/>
 	);
-
+	console.log(bulkActionData);
 	return (
 		<React.Fragment>
 			<div className="btl-list-view btl-autolink-keyword">
