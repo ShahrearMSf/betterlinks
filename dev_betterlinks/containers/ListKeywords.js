@@ -36,7 +36,7 @@ const KeywordFilter = (props) => {
 							<button className="btl-link-apply-button" onClick={() => handleDeleteKeyword(props.bulkActionData, bulkAction, props.deleteKeywordHandler)}>
 								{__('Apply', 'betterlinks')}
 							</button>
-							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
+							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">{__('Please Select Action', 'betterlinks')}</span>}
 						</div>
 					</div>
 				)}
