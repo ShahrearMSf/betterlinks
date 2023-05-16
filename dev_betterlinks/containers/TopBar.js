@@ -21,7 +21,7 @@ const defaultProps = {
 const TopBar = (props) => {
 	const { propsForAnalytics } = props;
 	const mode = localStorage.getItem('betterLinksIsDarkMode');
-	const [isDarkMode, setIsDarkMode] = useState(mode ? mode : false);
+	const [isDarkMode, setIsDarkMode] = useState(mode);
 	useEffect(() => {
 		if (mode) {
 			document.body.classList.add('betterlinks-dark-mode');
