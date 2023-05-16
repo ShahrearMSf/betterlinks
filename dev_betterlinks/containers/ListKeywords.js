@@ -111,7 +111,6 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 					selectableRowsVisibleOnly
 					onSelectedRowsChange={(e) => setBulkActionData(e)}
 					clearSelectedRows={toggledClearRows}
-					defaultSortFieldId={1}
 				/>
 			</div>
 		</React.Fragment>
