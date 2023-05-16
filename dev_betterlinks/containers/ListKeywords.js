@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -17,7 +17,7 @@ const KeywordFilter = (props) => {
 		setWarning(false);
 		deleteHandler(bulkActionData.selectedRows, bulkAction);
 		setBulkAction({});
-		return props.setBulkActionData((prev) => ({ ...prev, selectedCount: 0 }));
+		return props.setToggledClearRows(true);
 	};
 
 	return (
@@ -83,23 +83,17 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 
 const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
-	// const [keywordList, setKeywordList] = useState([]);
-	// useEffect(() => {
-	// 	setKeywordList(keywords.data || []);
-	// }, [keywords]);
+	const [toggledClearRows, setToggledClearRows] = useState(false);
 
-	const getData = (keywords) => {
-		if (keywords.data) {
-			return keywords.data;
-		}
-		return [];
-	};
-
-	const onSelectedRowsChange = (e) => {
-		setBulkActionData(e);
-	};
-
-	const subHeaderComponent = <KeywordFilter deleteKeywordHandler={delete_keyword} bulkActionData={bulkActionData} search={search} setBulkActionData={setBulkActionData} />;
+	const subHeaderComponent = (
+		<KeywordFilter
+			deleteKeywordHandler={delete_keyword}
+			bulkActionData={bulkActionData}
+			search={search}
+			setBulkActionData={setBulkActionData}
+			setToggledClearRows={setToggledClearRows}
+		/>
+	);
 
 	return (
 		<React.Fragment>
@@ -107,7 +101,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 				<DataTable
 					className="btl-list-view-table"
 					columns={getLinksListViewColumnData({ links, delete_keyword, keywords, postTypesProps, linksForUpdateModal })}
-					data={getData(keywords)}
+					data={keywords.data || []}
 					pagination
 					subHeader
 					highlightOnHover
@@ -115,7 +109,9 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 					persistTableHead
 					selectableRows
 					selectableRowsVisibleOnly
-					onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
+					onSelectedRowsChange={(e) => setBulkActionData(e)}
+					clearSelectedRows={toggledClearRows}
+					defaultSortFieldId={1}
 				/>
 			</div>
 		</React.Fragment>

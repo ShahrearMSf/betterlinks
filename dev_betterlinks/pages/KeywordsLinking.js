@@ -67,7 +67,6 @@ const KeywordsLinking = (props) => {
 						links={parseLinksForKeywordsListing(props.links)}
 						linksForUpdateModal={linksForUpdateModal}
 						keywords={Array.isArray(matchedKeywordsDatas) ? { data: matchedKeywordsDatas } : props.keywords}
-						// keywords={props.keywords}
 					/>
 				</>
 			) : (

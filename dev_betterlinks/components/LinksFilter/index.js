@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { DateRangePicker } from 'react-date-range';
 import { removeOverlayElement } from 'utils/helper';
 
-const rowDeleteHandler = (selectedRows, action, deleteLinkHandler, setWarning) => {
+const rowDeleteHandler = (selectedRows, action, deleteLinkHandler, setWarning, setToggledClearRows) => {
 	if (action.value === 'delete') {
 		setWarning(false);
 		const deleteItemLists = [];
@@ -15,6 +15,7 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler, setWarning) =
 				short_url: item.short_url,
 			});
 		});
+		setToggledClearRows(true);
 		deleteLinkHandler(deleteItemLists);
 		return;
 	}
@@ -53,7 +54,7 @@ const LinksFilter = (props) => {
 							<button
 								className="btl-link-apply-button"
 								onClick={() => {
-									rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler, setWarning);
+									rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler, setWarning, props.setToggledClearRows);
 									setBulkAction({});
 								}}
 							>
