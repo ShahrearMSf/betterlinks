@@ -29,6 +29,7 @@ const KeywordFilter = (props) => {
 							className="btl-list-view-select"
 							classNamePrefix="btl-react-select"
 							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
+							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
@@ -98,7 +99,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 			setToggledClearRows={handleClearRows}
 		/>
 	);
-	console.log(bulkActionData);
+
 	return (
 		<React.Fragment>
 			<div className="btl-list-view btl-autolink-keyword">
