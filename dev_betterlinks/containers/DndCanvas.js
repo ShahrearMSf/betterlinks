@@ -92,7 +92,8 @@ class CatWrap extends React.PureComponent {
 				: lists;
 		};
 		const lists = getFavSortedList(el.lists);
-		if (lists.length <= 0) return <div ref={provided.innerRef} />;
+
+		if (lists.length <= 0 && sortByFav) return <div ref={provided.innerRef} />;
 		return (
 			<div className="dnd-category">
 				<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
