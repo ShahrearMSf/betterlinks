@@ -83,12 +83,22 @@ class InnerList extends React.Component {
 class CatWrap extends React.PureComponent {
 	render() {
 		const { ind, el, provided, props } = this.props;
+		const { sortByFav } = props.favouriteSort;
+		const getFavSortedList = (lists) => {
+			return sortByFav
+				? lists.filter((list) => {
+						if (list.favorite.favForAll) return true;
+				  })
+				: lists;
+		};
+		const lists = getFavSortedList(el.lists);
+		if (lists.length <= 0) return <div ref={provided.innerRef} />;
 		return (
 			<div className="dnd-category">
 				<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
 				<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
 					<div className="category-body">
-						<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={el.lists} />
+						<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={lists} />
 						{provided.placeholder}
 					</div>
 					<div className="category-footer">
@@ -104,7 +114,6 @@ function DndCanvas(props) {
 	const { links } = props.links;
 	const { settings } = props.settings;
 	const { terms } = props.terms;
-	const { sortByFav } = props.favouriteSort;
 
 	useEffect(() => {
 		if (!settings) {
@@ -128,10 +137,7 @@ function DndCanvas(props) {
 								if (items[1].lists.length === 0 && items[1].term_slug === 'uncategorized') {
 									return false;
 								}
-								if (sortByFav && items[1].lists[0]?.favorite?.favForAll) {
-									return true;
-								}
-								if (!sortByFav) return true;
+								return true;
 							})
 							.map(([ind, el]) => (
 								<Droppable key={ind} droppableId={ind}>
