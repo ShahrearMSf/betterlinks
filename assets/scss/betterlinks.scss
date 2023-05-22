@@ -362,6 +362,27 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 	}
 }
 
+.btl-view-control {
+	display: flex;
+
+	.btl-link-view-toggler {
+		svg.favorite-svg .fav-icon-svg-path {
+			fill: #a1a2ad !important;
+
+			&:hover {
+				fill: #faba59 !important;
+			}
+		}
+	}
+	.btl-link-view-toggler.active {
+		svg.favorite-svg .fav-icon-svg-path {
+			fill: #faba59 !important;
+		}
+	}
+	.btl-sortby-fav {
+		padding: 10px;
+	}
+}
 //
 // betterlinks reset analytics css end
 

@@ -104,6 +104,7 @@ function DndCanvas(props) {
 	const { links } = props.links;
 	const { settings } = props.settings;
 	const { terms } = props.terms;
+	const { sortByFav } = props.favouriteSort;
 
 	useEffect(() => {
 		if (!settings) {
@@ -127,7 +128,10 @@ function DndCanvas(props) {
 								if (items[1].lists.length === 0 && items[1].term_slug === 'uncategorized') {
 									return false;
 								}
-								return true;
+								if (sortByFav && items[1].lists[0]?.favorite?.favForAll) {
+									return true;
+								}
+								if (!sortByFav) return true;
 							})
 							.map(([ind, el]) => (
 								<Droppable key={ind} droppableId={ind}>
@@ -147,6 +151,7 @@ const mapStateToProps = (state) => ({
 	links: state.links,
 	settings: state.settings,
 	terms: state.terms,
+	favouriteSort: state.favouriteSort,
 });
 
 const mapDispatchToProps = (dispatch) => {
