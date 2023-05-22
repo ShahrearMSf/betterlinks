@@ -87,7 +87,7 @@ class CatWrap extends React.PureComponent {
 		const getFavSortedList = (lists) => {
 			return sortByFav
 				? lists.filter((list) => {
-						if (list.favorite.favForAll) return true;
+						if (list?.favorite?.favForAll) return true;
 				  })
 				: lists;
 		};
