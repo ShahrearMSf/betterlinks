@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
@@ -64,14 +64,13 @@ const LinkQuickAction = ({
 		}, 3000);
 	};
 	const analytic = (analytic) => {
-		if (!analytic.link_count || !analytic.ip) return;
 		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 		if (isLinkAble) {
 			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + data.ID}>{analytic.link_count + '/' + analytic.ip.length}</a>;
 		}
 		return analytic.link_count + '/' + analytic.ip.length;
 	};
-	console.log(data.analytic);
+
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
