@@ -64,20 +64,21 @@ const LinkQuickAction = ({
 		}, 3000);
 	};
 	const analytic = (analytic) => {
+		if (!analytic.link_count || !analytic.ip) return;
 		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 		if (isLinkAble) {
-			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + data.ID}>{analytic.link_count + '/' + analytic.ip.length}</a>;
+			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + data.ID}>{analytic.link_count + '/' + analytic?.ip?.length}</a>;
 		}
-		return analytic.link_count + '/' + analytic.ip.length;
+		return analytic.link_count + '/' + analytic?.ip?.length;
 	};
-
+	console.log(data.analytic);
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
-			{isShowAnalytics && data.analytic && (
+			{isShowAnalytics && data.analytic?.link_count && data.analytic?.ip && (
 				<button className="dnd-link-button btl-tooltip">
 					<span className="btl-tooltiptext">
-						{__('Clicks: ', 'betterlinks') + data.analytic.link_count + ' / ' + __('Unique Clicks: ', 'betterlinks') + data.analytic.ip.length}
+						{__('Clicks: ', 'betterlinks') + data.analytic.link_count + ' / ' + __('Unique Clicks: ', 'betterlinks') + data.analytic?.ip?.length}
 					</span>
 					<span className="icon">{analytic(data.analytic)}</span>
 				</button>
