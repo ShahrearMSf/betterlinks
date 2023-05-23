@@ -63,7 +63,7 @@ const getLinksListViewColumnData = (props) => {
 			sortable: false,
 			cell: (row) => (
 				<div>
-					{row.analytic && row.analytic?.link_count && row.analytic?.ip ? (
+					{row.analytic ? (
 						<button className="dnd-link-button btl-tooltip">
 							<span className="btl-tooltiptext">
 								{__('Clicks: ', 'betterlinks') + row.analytic.link_count + ' / ' + __('Unique Clicks: ', 'betterlinks') + row.analytic.ip.length}

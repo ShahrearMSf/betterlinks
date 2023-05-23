@@ -297,8 +297,8 @@ export const edit_link =
 				params: item,
 			});
 
-			res['data']['data']['favorite'] = item.favorite || {};
-			res['data']['data']['analytic'] = item.analytic || {};
+			res['data']['data']['favorite'] = item.favorite;
+			res['data']['data']['analytic'] = item.analytic;
 
 			const { cat_data, tags_data = [] } = res?.data?.data;
 			if (cat_data?.is_newly_created) {
