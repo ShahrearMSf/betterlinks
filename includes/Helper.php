@@ -218,13 +218,17 @@ class Helper
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
     }
 
-    public static function parse_link_response($items, $analytic)
+    public static function parse_link_response($items, $analytic, $broken_links)
     {
         $results = [];
         foreach ($items as $item) {
             //insert analytic data
             if (isset($analytic[$item->ID])) {
                 $item->analytic = $analytic[$item->ID];
+            }
+
+            if( isset( $broken_links[$item->ID] )  && $broken_links[$item->ID]['status']['status_code'] === 404 && empty( $broken_links[$item->ID]['is_log_removed'] )) {
+                $item->link_status = 'broken';
             }
 
             // formatting response

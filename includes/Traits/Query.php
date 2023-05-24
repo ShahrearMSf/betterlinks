@@ -105,6 +105,11 @@ trait Query
         $prefix = $wpdb->prefix;
         $analytic = get_option('betterlinks_analytics_data');
         $analytic = $analytic ? json_decode($analytic, true) : [];
+
+        // pull all broken links logs 
+        $broken_links = get_option( 'betterlinkspro_broken_links_logs' );
+        $broken_links = $broken_links ? json_decode( $broken_links, true ) : [];
+
         $results = $wpdb->get_results("SELECT
             bt.ID as cat_id,
             bt.term_name,
@@ -134,7 +139,7 @@ trait Query
             LEFT JOIN  {$prefix}betterlinks as bl ON bl.ID = btr.link_id
             WHERE bt.term_type = 'category'
             ORDER BY bl.link_order ASC;", OBJECT);
-        $results = \BetterLinks\Helper::parse_link_response($results, $analytic);
+        $results = \BetterLinks\Helper::parse_link_response($results, $analytic, $broken_links);
         return $results;
     }
     public static function get_link_by_short_url($short_url, $is_case_sensitive = false)
