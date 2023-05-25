@@ -23,10 +23,14 @@ function keywords(state = {}, action) {
 			};
 		}
 		case DELETE_KEYWORD: {
-			const indexOfPayload = state.data.findIndex((item) => item.link_id == payload.link_id && item.keywords == payload.keywords);
+			// Not sure if this is necessary or not, So I kept this as a previous code reference
+			// const indexOfPayload = state.data.findIndex((item) => item.link_id == payload.link_id && item.keywords == payload.keywords);
+			const filter = state.data.filter((item) => item.keywords !== payload.keywords);
+
 			return {
 				...state,
-				data: [...state.data.slice(0, indexOfPayload), ...state.data.slice(indexOfPayload + 1)],
+				// data: [...state.data.slice(0, indexOfPayload), ...state.data.slice(indexOfPayload + 1)],
+				data: [...filter],
 			};
 		}
 		default:
