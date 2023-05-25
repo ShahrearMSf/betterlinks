@@ -60,7 +60,7 @@ const LinksFilter = (props) => {
 							>
 								{__('Apply', 'betterlinks')}
 							</button>
-							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please select keywords.</span>}
+							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
 						</div>
 					</div>
 				)}
