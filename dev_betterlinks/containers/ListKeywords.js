@@ -87,7 +87,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 	const [toggledClearRows, setToggledClearRows] = useState(false);
 
 	const handleClearRows = () => {
-		setMatchedKeywordsDatas([]);
+		setMatchedKeywordsDatas(null);
 		setToggledClearRows(!toggledClearRows);
 	};
 
