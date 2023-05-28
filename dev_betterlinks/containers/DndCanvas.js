@@ -91,9 +91,10 @@ class CatWrap extends React.PureComponent {
 				  })
 				: lists;
 		};
-		const lists = getFavSortedList(el.lists);
 
+		const lists = getFavSortedList(el.lists);
 		if (lists.length <= 0 && sortByFav) return <div ref={provided.innerRef} />;
+
 		return (
 			<div className="dnd-category">
 				<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
@@ -103,7 +104,9 @@ class CatWrap extends React.PureComponent {
 						{provided.placeholder}
 					</div>
 					<div className="category-footer">
-						{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && <Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />}
+						{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && !sortByFav && (
+							<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
+						)}
 					</div>
 				</div>
 			</div>
@@ -115,6 +118,7 @@ function DndCanvas(props) {
 	const { links } = props.links;
 	const { settings } = props.settings;
 	const { terms } = props.terms;
+	const { sortByFav } = props.favouriteSort;
 
 	useEffect(() => {
 		if (!settings) {
@@ -127,6 +131,24 @@ function DndCanvas(props) {
 			props.fetch_terms_data();
 		}
 	}, []);
+
+	const getFavoriteLinkCount = () => {
+		return (
+			links &&
+			Object.values(links).reduce((total, item) => {
+				const count = item.lists.filter((list) => !!list.favorite.favForAll).length;
+				return (total += count);
+			}, 0)
+		);
+	};
+
+	// if sort by favorite is selected and there is no favorite link
+	if (getFavoriteLinkCount() === 0 && sortByFav)
+		return (
+			<div className="dnd-not-found">
+				<div style={{ padding: 24 }}>There are no records to display</div>
+			</div>
+		);
 
 	return (
 		<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
@@ -145,7 +167,7 @@ function DndCanvas(props) {
 									{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
 								</Droppable>
 							))}
-					{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && <CreateCategory createCatHandler={props.add_new_cat} />}
+					{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && !sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
 				</DragDropContext>
 			) : (
 				<Loader />
