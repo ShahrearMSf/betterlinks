@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n';
 
 export const useBtlExpireStatusDot = ({ data = {}, view = 'dnd' }) => {
-	console.log(data);
 	return (
 		<>
 			{!!betterLinksHooks.applyFilters('isActivePro', false) && (

@@ -221,13 +221,14 @@ class Helper
     public static function parse_link_response($items, $analytic, $broken_links)
     {
         $results = [];
+        $broken_link_status_codes = [401, 403, 404];
         foreach ($items as $item) {
             //insert analytic data
             if (isset($analytic[$item->ID])) {
                 $item->analytic = $analytic[$item->ID];
             }
 
-            if( isset( $broken_links[$item->ID] )  && $broken_links[$item->ID]['status']['status_code'] === 404 && empty( $broken_links[$item->ID]['is_log_removed'] )) {
+            if( isset( $broken_links[$item->ID] )  && in_array($broken_links[$item->ID]['status']['status_code'], $broken_link_status_codes) && empty( $broken_links[$item->ID]['is_log_removed'] )) {
                 $item->link_status = 'broken';
             }
 
