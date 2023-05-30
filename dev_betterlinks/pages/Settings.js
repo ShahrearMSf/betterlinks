@@ -15,6 +15,7 @@ import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import BrokenLinks from 'components/Teasers/BrokenLinks';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
+import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -31,6 +32,7 @@ const Settings = (props) => {
 		__('Role Management', 'betterlinks'),
 		__('Tracking', 'betterlinks'),
 		__('Broken Link Checker', 'betterlinks'),
+		__('Auto Link Create', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
@@ -39,6 +41,7 @@ const Settings = (props) => {
 		<RoleManagement />,
 		<ExternalAnalytics />,
 		<BrokenLinks />,
+		<AutoLinkCreate />,
 		<GoPremium />,
 	]);
 	useEffect(() => {
