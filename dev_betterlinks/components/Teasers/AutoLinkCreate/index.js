@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import CheckList from './CheckList';
 import UpgradeToPro from '../UpgradeToPro';
 
-export default function AutoLinkCreate(props) {
+export default function AutoLinkCreate() {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
@@ -20,8 +20,8 @@ export default function AutoLinkCreate(props) {
 			<div className="btl-tab-panel-inner">
 				<Formik>
 					<Form>
-						<CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={() => openUpgradeToProModal()} />
-						<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={() => openUpgradeToProModal()} />
+						<CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+						<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
 					</Form>
 				</Formik>
 			</div>
