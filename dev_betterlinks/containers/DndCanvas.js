@@ -136,7 +136,7 @@ function DndCanvas(props) {
 		return (
 			links &&
 			Object.values(links).reduce((total, item) => {
-				const count = item.lists.filter((list) => !!list.favorite.favForAll).length;
+				const count = item.lists.filter((list) => !!list?.favorite?.favForAll).length;
 				return (total += count);
 			}, 0)
 		);
