@@ -14,6 +14,8 @@ import { betterlinksFormat } from 'gutenberg/formats';
 
 // helpers
 import { post_type } from 'utils/helper';
+import { Provider } from 'react-redux';
+import store from 'redux/store';
 
 Promise.all([fetch_links_data(true)(betterlinksGutenStore.dispatch), fetch_terms_data()(betterlinksGutenStore.dispatch), fetch_settings_data()(betterlinksGutenStore.dispatch)])
 	.then(() => {
@@ -41,7 +43,6 @@ betterlinksGutenStore.subscribe(() => {
 });
 
 // Sidebar Panel in Gutenberg Edit 'page/post'
-
 if (['post', 'page'].includes(post_type)) {
 	registerPlugin('betterlinks-sidebar', {
 		render: CustomSidebar,

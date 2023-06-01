@@ -39,6 +39,7 @@ if (!class_exists('BetterLinks')) {
             add_action('admin_init', [$this, 'run_migrator']);
             add_action('admin_init', [$this, 'do_the_works_if_failed_during_activation'], 100);
             $this->dispatch_hook();
+            
         }
 
         public function do_the_works_if_failed_during_activation()
@@ -179,6 +180,7 @@ if (!function_exists('BetterLinks_Start')) {
     function BetterLinks_Start()
     {
         return BetterLinks::init();
+        
     }
 }
 
