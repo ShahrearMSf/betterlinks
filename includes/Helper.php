@@ -230,6 +230,9 @@ class Helper
 
             if( isset( $broken_links[$item->ID] )  && in_array($broken_links[$item->ID]['status']['status_code'], $broken_link_status_codes) && empty( $broken_links[$item->ID]['is_log_removed'] )) {
                 $item->link_status = 'broken';
+            }else if($item->link_status == 'broken'){ 
+                // if the link is fixed, but db is not updated it to fixed link immediately then it will be marked as a published link
+                $item->link_status = 'publish';
             }
 
             // formatting response
