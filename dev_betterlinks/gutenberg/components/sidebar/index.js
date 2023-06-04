@@ -5,7 +5,7 @@ import { redirectType } from 'utils/data';
 import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl } from 'utils/helper';
 
 import { edit_gutenberg_link, edit_link_expire_option, fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
-import { add_new_link, edit_link } from 'redux/actions/links.actions';
+import { EDIT_LINK_FOR_GUTENBERG, add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
@@ -259,64 +259,72 @@ const CustomSidebarComponent = (props) => {
 		console.log({ ID, short_url, target_url, cat_id });
 		if (!ID) return false;
 
-		// document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
-		// makeRequest({
-		// 	action: 'betterlinks/admin/update_link',
-		// 	ID,
-		// 	short_url,
-		// 	cat_id,
-		// })
-		// 	.then((response) => {
-		// 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-		// 		const linkData = {
-		// 			ID: '',
-		// 			cat_id: '',
-		// 			target_url: '',
-		// 			link_title: '',
-		// 			link_slug: '',
-		// 			expire: {
-		// 				status: false,
-		// 			},
-		// 			link_status: 'publish',
-		// 			redirect_type: settings?.redirect_type,
-		// 			nofollow: settings?.nofollow,
-		// 			sponsored: settings?.sponsored,
-		// 			param_forwarding: settings?.param_forwarding,
-		// 			track_me: settings?.track_me,
-		// 		};
+		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
+		makeRequest({
+			action: 'betterlinks/admin/update_link',
+			ID,
+			short_url,
+			cat_id,
+		})
+			.then((response) => {
+				console.log(response);
+				// const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+				// const linkData = {
+				// 	ID: '',
+				// 	cat_id: '',
+				// 	target_url: '',
+				// 	link_title: '',
+				// 	link_slug: '',
+				// 	expire: {
+				// 		status: false,
+				// 	},
+				// 	link_status: 'publish',
+				// 	redirect_type: settings?.redirect_type,
+				// 	nofollow: settings?.nofollow,
+				// 	sponsored: settings?.sponsored,
+				// 	param_forwarding: settings?.param_forwarding,
+				// 	track_me: settings?.track_me,
+				// };
 
-		// 		betterlinksGutenStore.dispatch({
-		// 			type: DELETE_GUTENBERG_LINK,
-		// 			payload: {
-		// 				...response?.data?.data,
-		// 				cat_id,
-		// 			},
-		// 		});
+				// betterlinksGutenStore.dispatch({
+				// 	type: EDIT_LINK_FOR_GUTENBERG,
+				// 	payload: {
 
-		// 		betterlinksGutenStore.dispatch({
-		// 			type: RESET_GUTENBERG_INSTANT_REDIRECT,
-		// 			payload: linkData,
-		// 		});
+				// 	}
+				// })
 
-		// 		onSetTargetUrl('');
-		// 		onSetCatId('');
-		// 		onSetLinkStatus('');
-		// 		onSetExpireType('');
-		// 		onSetExpireClicks('');
-		// 		onSetExpire(false);
-		// 		onSetExpireRedirect(false);
-		// 		onSetExpireRedirectUrl('');
-		// 		onSetRedirectType(settings?.redirect_type);
-		// 		onSetNoFollow(settings?.nofollow);
-		// 		onSetSponsored(settings?.sponsored);
-		// 		onSetParamForwarding(settings?.param_forwarding);
-		// 		onSetTrackMe(settings?.track_me);
+				// betterlinksGutenStore.dispatch({
+				// 	type: DELETE_GUTENBERG_LINK,
+				// 	payload: {
+				// 		...response?.data?.data,
+				// 		cat_id,
+				// 	},
+				// });
 
-		// 		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error);
-		// 	});
+				// betterlinksGutenStore.dispatch({
+				// 	type: RESET_GUTENBERG_INSTANT_REDIRECT,
+				// 	payload: linkData,
+				// });
+
+				// onSetTargetUrl('');
+				// onSetCatId('');
+				// onSetLinkStatus('');
+				// onSetExpireType('');
+				// onSetExpireClicks('');
+				// onSetExpire(false);
+				// onSetExpireRedirect(false);
+				// onSetExpireRedirectUrl('');
+				// onSetRedirectType(settings?.redirect_type);
+				// onSetNoFollow(settings?.nofollow);
+				// onSetSponsored(settings?.sponsored);
+				// onSetParamForwarding(settings?.param_forwarding);
+				// onSetTrackMe(settings?.track_me);
+
+				// document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	const openUpgradeToProModal = () => {
