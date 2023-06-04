@@ -17,7 +17,8 @@ const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
 	const [matchedKeywordsDatas, setMatchedKeywordsDatas] = useState(null);
 	const handleSearchTextChange = (e) => {
-		const value = (e?.target?.value || '').trim();
+		// const value = (e?.target?.value || '').trim();
+		const value = e.target.value; // Accepting space in the search field.
 		const regex = new RegExp(value, 'gi');
 		const matchedData = (props?.keywords?.data || [])?.filter((item) => {
 			return (item?.keywords || '').match(regex);
