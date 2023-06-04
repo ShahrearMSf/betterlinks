@@ -15,17 +15,21 @@ const propTypes = {};
 const defaultProps = {};
 const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
-	const [matchedKeywordsDatas, setMatchedKeywordsDatas] = useState(null);
+
 	const handleSearchTextChange = (e) => {
 		// const value = (e?.target?.value || '').trim();
 		const value = e.target.value; // Accepting space in the search field.
-		const regex = new RegExp(value, 'gi');
-		const matchedData = (props?.keywords?.data || [])?.filter((item) => {
+		setSearchedText(value);
+	};
+
+	const getFilteredKeywords = () => {
+		const regex = new RegExp(searchedText, 'gi');
+		const matchedKeywords = (props?.keywords?.data || [])?.filter((item) => {
 			return (item?.keywords || '').match(regex);
 		});
-		setSearchedText(value);
-		setMatchedKeywordsDatas(matchedData);
+		return Array.isArray(matchedKeywords) ? { data: matchedKeywords } : props.keywords;
 	};
+
 	useEffect(() => {
 		if (!props.postdatas.fetchedAll) {
 			props.fetch_post_types_data();
@@ -67,8 +71,7 @@ const KeywordsLinking = (props) => {
 						postTypesProps={postTypesProps}
 						links={parseLinksForKeywordsListing(props.links)}
 						linksForUpdateModal={linksForUpdateModal}
-						keywords={Array.isArray(matchedKeywordsDatas) ? { data: matchedKeywordsDatas } : props.keywords}
-						setMatchedKeywordsDatas={setMatchedKeywordsDatas}
+						keywords={getFilteredKeywords()}
 					/>
 				</>
 			) : (
