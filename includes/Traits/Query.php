@@ -147,16 +147,6 @@ trait Query
         if (isset($link[0]['short_url']) && $is_case_sensitive && $link[0]['short_url'] != $short_url) return [];
         return $link;
     }
-    public static function get_link_by_target_url($target_url)
-    {
-        global $wpdb;
-        $link = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks WHERE target_url=%s", $target_url),
-            ARRAY_A
-        );
-        // if (isset($link[0]['target_url']) && $link[0]['target_url'] != $target_url) return [];
-        return $link;
-    }
     public static function get_link_by_wildcards($wildcards)
     {
         global $wpdb;

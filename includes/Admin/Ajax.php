@@ -17,7 +17,6 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/links_reorder', [$this, 'links_reorder']);
         add_action('wp_ajax_betterlinks/admin/links_move_reorder', [$this, 'links_move_reorder']);
         add_action('wp_ajax_betterlinks/admin/get_links_by_short_url', [$this, 'get_links_by_short_url']);
-        add_action('wp_ajax_betterlinks/admin/get_links_by_target_url', [$this, 'get_links_by_target_url']);
         add_action('wp_ajax_betterlinks/admin/write_json_links', [$this, 'write_json_links']);
         add_action('wp_ajax_betterlinks/admin/write_json_clicks', [$this, 'write_json_clicks']);
         add_action('wp_ajax_betterlinks/admin/analytics', [$this, 'analytics']);
@@ -382,17 +381,6 @@ class Ajax
         $short_url = (isset($_POST['short_url']) ? sanitize_text_field($_POST['short_url']) : '');
         $results = \BetterLinks\Helper::get_link_by_short_url($short_url);
         wp_send_json_success(is_array($results) ? current($results) : false);
-        wp_die();
-    }
-    public function get_links_by_target_url()
-    {
-        check_ajax_referer('betterlinks_admin_nonce', 'security');
-        if (!current_user_can('manage_options')) {
-            wp_die();
-        }
-        $target_url = (isset($_POST['target_url']) ? sanitize_text_field($_POST['target_url']) : '');
-        $results = \BetterLinks\Helper::get_link_by_target_url($target_url);
-        wp_send_json_success($results);
         wp_die();
     }
 
