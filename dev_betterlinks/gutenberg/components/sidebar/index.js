@@ -18,6 +18,7 @@ const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
 import AutoLinkCreateSidebar from './AutoCreateLink';
+import { fetch_link_by_target_url_for_permalink } from 'redux/actions/gutenbergAutoCreateLink.actions';
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
@@ -45,98 +46,102 @@ const CustomSidebarComponent = (props) => {
 
 	useEffect(() => {
 		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
-		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		console.log(wp.data.select('core/editor'));
-		if (short_url) {
-			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
-			if (storeTerms) {
-				setTerms(storeTerms);
-			} else {
-				fetch_terms_data()(betterlinksGutenStore.dispatch)
-					.then(() => {
-						const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
-						setTerms(storeTerms);
-					})
-					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
-			}
-		}
+		// const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 
-		const setAllStatesForLinkData = (linkData) => {
-			setTimeout(() => {
-				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
-			}, 500);
-			if (!linkData) {
-				setIsShowInstantRedirect(false);
-				return false;
-			}
-			if (linkData.ID || linkData.ID === 0) {
-				setIsAllowInstantRedirect(true);
-			} else {
-				return false;
-			}
-			setTargetUrl(linkData.target_url);
-			setShortUrl(linkData.short_url);
-			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
-				edit_gutenberg_link({ redirect_type: '307' });
-				setRedirectMode('307');
-			} else {
-				setRedirectMode(linkData.redirect_type);
-			}
-			setCatId(linkData.cat_id);
-			setIsNoFollow(linkData.nofollow);
-			setSponsored(linkData.sponsored);
-			setIsParamForwarding(linkData.param_forwarding);
-			setIsTrackMe(linkData.track_me);
-			setLinkStatus(linkData.link_status);
+		// const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
+		const isLinkAlreadyExists = fetch_link_by_target_url_for_permalink();
+		isLinkAlreadyExists.then((data) => console.log(data));
+		// const short_url = undefined;
+		// if (short_url) {
+		// 	const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+		// 	if (storeTerms) {
+		// 		setTerms(storeTerms);
+		// 	} else {
+		// 		fetch_terms_data()(betterlinksGutenStore.dispatch)
+		// 			.then(() => {
+		// 				const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
+		// 				setTerms(storeTerms);
+		// 			})
+		// 			.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
+		// 	}
+		// }
 
-			setIsExpire(linkData.expire?.status);
-			setExpireType(linkData.expire?.type);
-			setExpireDate(linkData.expire?.date);
-			setExpireClicks(linkData.expire?.clicks);
-			setExpireRedirect(linkData.expire?.redirect_status);
-			setExpireRedirectUrl(linkData.expire?.redirect_url);
-		};
+		// const setAllStatesForLinkData = (linkData) => {
+		// 	setTimeout(() => {
+		// 		document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+		// 	}, 500);
+		// 	if (!linkData) {
+		// 		setIsShowInstantRedirect(false);
+		// 		return false;
+		// 	}
+		// 	if (linkData.ID || linkData.ID === 0) {
+		// 		setIsAllowInstantRedirect(true);
+		// 	} else {
+		// 		return false;
+		// 	}
+		// 	setTargetUrl(linkData.target_url);
+		// 	setShortUrl(linkData.short_url);
+		// 	if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
+		// 		edit_gutenberg_link({ redirect_type: '307' });
+		// 		setRedirectMode('307');
+		// 	} else {
+		// 		setRedirectMode(linkData.redirect_type);
+		// 	}
+		// 	setCatId(linkData.cat_id);
+		// 	setIsNoFollow(linkData.nofollow);
+		// 	setSponsored(linkData.sponsored);
+		// 	setIsParamForwarding(linkData.param_forwarding);
+		// 	setIsTrackMe(linkData.track_me);
+		// 	setLinkStatus(linkData.link_status);
 
-		// Settings
-		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-		if (settings) {
-			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-		} else {
-			fetch_settings_data()(betterlinksGutenStore.dispatch)
-				.then(() => {
-					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-				})
-				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
-		}
+		// 	setIsExpire(linkData.expire?.status);
+		// 	setExpireType(linkData.expire?.type);
+		// 	setExpireDate(linkData.expire?.date);
+		// 	setExpireClicks(linkData.expire?.clicks);
+		// 	setExpireRedirect(linkData.expire?.redirect_status);
+		// 	setExpireRedirectUrl(linkData.expire?.redirect_url);
+		// };
 
-		const resultOfFetchPermalink = fetch_link_for_permalink();
-		if (!resultOfFetchPermalink) {
-			setTimeout(() => {
-				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
-			}, 500);
-			return () => {};
-		}
-		resultOfFetchPermalink
-			.then(() => {
-				let x = 0;
-				const intervalId = setInterval(() => {
-					x++;
-					let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
-					if (!linkData?.dispatched_successfully && x < 600) {
-						return false;
-					}
-					if (typeof linkData?.expire === 'string') {
-						linkData = {
-							...linkData,
-							expire: getJsonString(linkData.expire),
-						};
-					}
-					setAllStatesForLinkData(linkData);
-					clearInterval(intervalId);
-				}, 500);
-			})
-			.catch((error) => console.log(error));
+		// // Settings
+		// const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+		// if (settings) {
+		// 	setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+		// } else {
+		// 	fetch_settings_data()(betterlinksGutenStore.dispatch)
+		// 		.then(() => {
+		// 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+		// 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+		// 		})
+		// 		.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
+		// }
+
+		// const resultOfFetchPermalink = fetch_link_for_permalink();
+		// if (!resultOfFetchPermalink) {
+		// 	setTimeout(() => {
+		// 		document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+		// 	}, 500);
+		// 	return () => {};
+		// }
+		// resultOfFetchPermalink
+		// 	.then(() => {
+		// 		let x = 0;
+		// 		const intervalId = setInterval(() => {
+		// 			x++;
+		// 			let linkData = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData;
+		// 			if (!linkData?.dispatched_successfully && x < 600) {
+		// 				return false;
+		// 			}
+		// 			if (typeof linkData?.expire === 'string') {
+		// 				linkData = {
+		// 					...linkData,
+		// 					expire: getJsonString(linkData.expire),
+		// 				};
+		// 			}
+		// 			setAllStatesForLinkData(linkData);
+		// 			clearInterval(intervalId);
+		// 		}, 500);
+		// 	})
+		// 	.catch((error) => console.log(error));
 	}, []);
 
 	const onSetTargetUrl = (url) => {
@@ -334,6 +339,9 @@ const CustomSidebarComponent = (props) => {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
+
+	// console.table(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData);
+	// console.log(shortUrl);
 
 	return (
 		<Fragment>
@@ -588,14 +596,18 @@ const CustomSidebarComponent = (props) => {
 			wp.data.select('core/editor')?.isSavingPost() &&
 			!wp.data.select('core/editor')?.isAutosavingPost() &&
 			wp.data.select('core/editor')?.isCurrentPostPublished() &&
-			wp.data.select('core/editor')?.getPermalink() &&
-			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
-			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
+			wp.data.select('core/editor')?.getPermalink()
+			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
+			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
 			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
 			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			if (isSameInstantGutenbergData) return false;
+
+			// if (isSameInstantGutenbergData) return false;
+
+			// is short link already exists ???
+
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -604,7 +616,7 @@ const CustomSidebarComponent = (props) => {
 			const terms = betterlinksGutenStore?.getState()?.terms?.terms || [];
 			const values = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {};
 			const freeParams = { ...(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {}) };
-			console.log({ freeParams });
+			// console.log({ freeParams });
 			delete freeParams.expire;
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
@@ -612,7 +624,8 @@ const CustomSidebarComponent = (props) => {
 			// remove unnecessary param/property
 			delete freeParams.dispatched_successfully;
 
-			const short_url = permalinkToShortUrl(permalink);
+			// const short_url = permalinkToShortUrl(permalink);
+			const short_url = values.short_url || permalinkToShortUrl(permalink);
 			const link_title = currentPost.title;
 			const link_slug = currentPost.slug;
 
@@ -657,29 +670,30 @@ const CustomSidebarComponent = (props) => {
 				params.link_slug = generateSlug(params.link_title);
 			}
 			params.wildcards = Number(params.short_url.includes('*'));
-			if (params.cat_id) {
-				const link_title = params.link_title.trim();
-				if (link_title) {
-					params.link_title = link_title;
+			console.log(freeParams);
+			// if (params.cat_id) {
+			// 	const link_title = params.link_title.trim();
+			// 	if (link_title) {
+			// 		params.link_title = link_title;
 
-					if (params.ID) {
-						edit_link(
-							params,
-							true
-						)(betterlinksGutenStore.dispatch)
-							.then((response) => {})
-							.catch((error) => console.error(error));
-					} else {
-						add_new_link(
-							params,
-							true,
-							true
-						)(betterlinksGutenStore.dispatch)
-							.then((response) => {})
-							.catch((error) => console.error(error));
-					}
-				}
-			}
+			// 		if (params.ID) {
+			// 			edit_link(
+			// 				params,
+			// 				true
+			// 			)(betterlinksGutenStore.dispatch)
+			// 				.then((response) => {})
+			// 				.catch((error) => console.error(error));
+			// 		} else {
+			// 			add_new_link(
+			// 				params,
+			// 				true,
+			// 				true
+			// 			)(betterlinksGutenStore.dispatch)
+			// 				.then((response) => {})
+			// 				.catch((error) => console.error(error));
+			// 		}
+			// 	}
+			// }
 		}
 	});
 })();
