@@ -1,9 +1,7 @@
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
-const { useState } = wp.element;
 const { TextControl } = wp.components;
-import { edit_gutenberg_link } from 'redux/actions/gutenbergredirectlink.actions';
-import { is_pro_enabled, site_url, generateRandomSlug } from 'utils/helper';
+import { is_pro_enabled, site_url } from 'utils/helper';
 
 const AutoLinkCreateTitle = ({ is_pro_enabled }) => {
 	return (
@@ -13,26 +11,27 @@ const AutoLinkCreateTitle = ({ is_pro_enabled }) => {
 		</>
 	);
 };
-const randomSlug = generateRandomSlug();
 
 const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
 	const { prefix } = window.betterLinksGlobal;
 	const link = `${site_url}/${prefix}${!!prefix && '/'}`;
 
 	return (
-		<PluginDocumentSettingPanel name="betterlinks-auto-create-link" title={<AutoLinkCreateTitle is_pro_enabled={is_pro_enabled} />} className="custom-panel" isOpen={false}>
-			<div className="betterlinks-auto-create-link">
-				<p>A Better short url for this post will be created on publish</p>
-				<p>
-					<strong>{link}</strong>
-					<TextControl
-						value={autoShortLink}
-						onChange={(value) => {
-							onSetAutoShortLink(value);
-						}}
-					/>
-				</p>
-			</div>
+		<PluginDocumentSettingPanel name="betterlinks-auto-create-link" title={<AutoLinkCreateTitle is_pro_enabled={is_pro_enabled} />} className="custom-panel" isOpen={true}>
+			{is_pro_enabled && (
+				<div className="betterlinks-auto-create-link">
+					<p>A Better short url for this post will be created on publish</p>
+					<p>
+						<strong>{link}</strong>
+						<TextControl
+							value={autoShortLink}
+							onChange={(value) => {
+								onSetAutoShortLink(value);
+							}}
+						/>
+					</p>
+				</div>
+			)}
 		</PluginDocumentSettingPanel>
 	);
 };

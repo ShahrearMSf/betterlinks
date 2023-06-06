@@ -290,6 +290,7 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 			});
 		}
 	}
+	results = results.filter((item) => item.ID);
 	return results;
 };
 

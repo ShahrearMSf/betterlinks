@@ -7,14 +7,14 @@ export const fetch_settings_data = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'settings');
 		const payload = JSON.parse(res.data.data);
-		console.log(payload);
+		const auto_link_options = JSON.parse(res.data.auto_link);
 		if (!payload?.redirect_type) {
 			throw new Error('rest api not working properly for fetch_settings_data');
 		}
 		window.betterLinksGlobal.prefix = payload.prefix;
 		dispatch({
 			type: FETCH_SETTINGS,
-			payload,
+			payload: { ...payload, ...auto_link_options },
 		});
 	} catch (e) {
 		return makeRequest({
