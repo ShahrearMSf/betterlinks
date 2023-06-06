@@ -15,7 +15,7 @@ const AutoLinkCreateTitle = ({ is_pro_enabled }) => {
 };
 const randomSlug = generateRandomSlug();
 
-const AutoLinkCreateSidebar = ({ shortUrl, onSetShortUrl }) => {
+const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
 	const { prefix } = window.betterLinksGlobal;
 	const link = `${site_url}/${prefix}${!!prefix && '/'}`;
 
@@ -26,9 +26,9 @@ const AutoLinkCreateSidebar = ({ shortUrl, onSetShortUrl }) => {
 				<p>
 					<strong>{link}</strong>
 					<TextControl
-						value={shortUrl}
+						value={autoShortLink}
 						onChange={(value) => {
-							onSetShortUrl(value);
+							onSetAutoShortLink(value);
 						}}
 					/>
 				</p>

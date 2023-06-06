@@ -43,6 +43,8 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirect, setExpireRedirect] = useState(null);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
+	const [autoShortLink, setAutoShortLink] = useState('');
+
 	useEffect(() => {
 		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
@@ -144,9 +146,9 @@ const CustomSidebarComponent = (props) => {
 		edit_gutenberg_link({ target_url: url });
 	};
 
-	const onSetShortUrl = (url) => {
-		setShortUrl(url);
-		edit_gutenberg_link({ short_url: url });
+	const onSetAutoShortLink = (url) => {
+		setAutoShortLink(url);
+		edit_gutenberg_link({ auto_short_link: url });
 	};
 
 	const onSetRedirectType = (type) => {
@@ -566,7 +568,7 @@ const CustomSidebarComponent = (props) => {
 					{/* CustomSidebarMeta end  */}
 				</PluginDocumentSettingPanel>
 			)}
-			<AutoLinkCreateSidebar shortUrl={shortUrl} onSetShortUrl={onSetShortUrl} />
+			<AutoLinkCreateSidebar autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />
 		</Fragment>
 	);
 };
@@ -580,14 +582,14 @@ const CustomSidebarComponent = (props) => {
 			wp.data.select('core/editor')?.isSavingPost() &&
 			!wp.data.select('core/editor')?.isAutosavingPost() &&
 			wp.data.select('core/editor')?.isCurrentPostPublished() &&
-			wp.data.select('core/editor')?.getPermalink() &&
-			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
-			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
+			wp.data.select('core/editor')?.getPermalink()
+			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
+			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
 			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
 			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
 			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			if (isSameInstantGutenbergData) return false;
+			// if (isSameInstantGutenbergData) return false;
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
