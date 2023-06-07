@@ -489,11 +489,7 @@ export const remove_top_loader = (document) => {
 };
 
 export const isListEmpty = (lists, sortByFav) => {
-	return sortByFav
-		? !lists.filter((list) => {
-				if (list?.favorite?.favForAll) return true;
-		  }).length
-		: !lists.length;
+	return sortByFav ? !lists.filter((list) => list?.favorite?.favForAll).length : !lists.length;
 };
 
 export const getFavoriteLinkCount = (links) => {

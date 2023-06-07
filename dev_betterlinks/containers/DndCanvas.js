@@ -5,7 +5,7 @@ import Loader from 'components/Loader';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import CreateCategory from 'components/CreateCategory';
 import Link from 'containers/Link';
 import CatHeader from 'containers/CatHeader';
@@ -13,18 +13,19 @@ import List from 'components/List';
 import { isListEmpty, getFavoriteLinkCount } from 'utils/helper';
 class InnerList extends React.Component {
 	shouldComponentUpdate(nextProps) {
-		return JSON.stringify(nextProps.lists) === JSON.stringify(this.props.lists);
+		return nextProps.lists !== this.props.lists;
 	}
 	render() {
-		return this.props.lists.map(
+		const { lists, settings, edit_link, delete_link, catId } = this.props;
+		return lists.map(
 			(list, index) =>
 				!!list.link_title && (
 					<List
-						is_allow_qr={this.props.settings && this.props.settings.is_allow_qr}
-						edit_link={this.props.edit_link}
-						delete_link={this.props.delete_link}
-						catId={this.props.catId}
-						key={`cat-${this.props.catId}-item-${index}`}
+						is_allow_qr={settings && settings.is_allow_qr}
+						edit_link={edit_link}
+						delete_link={delete_link}
+						catId={catId}
+						key={`cat-${catId}-item-${index}`}
 						item={list}
 						index={index}
 					/>
