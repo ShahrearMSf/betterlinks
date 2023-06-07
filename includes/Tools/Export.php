@@ -114,9 +114,11 @@ class Export
     public function get_clicks()
     {
         global $wpdb;
+        $options = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+        $ip_tracking = (isset( $options['is_disable_analytics_ip'] ) && !$options['is_disable_analytics_ip'])? "{$wpdb->prefix}betterlinks_clicks.ip," : '';
         $clicks = $wpdb->get_results("SELECT 
             {$wpdb->prefix}betterlinks.short_url,
-            {$wpdb->prefix}betterlinks_clicks.ip, 
+            {$ip_tracking}
             {$wpdb->prefix}betterlinks_clicks.browser, 
             {$wpdb->prefix}betterlinks_clicks.os, 
             {$wpdb->prefix}betterlinks_clicks.referer, 
