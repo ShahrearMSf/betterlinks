@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from 'react';
+import { useEffect, memo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loader from 'components/Loader';
@@ -36,8 +36,8 @@ class InnerList extends React.Component {
 
 const CatWrap = memo(({ ind, el, provided, props }) => {
 	const { sortByFav } = props.favouriteSort;
-	const isEmpty = isListEmpty(el.lists, sortByFav);
-	const lists = el.lists;
+	const { lists } = el;
+	const isEmpty = isListEmpty(lists, sortByFav);
 
 	if (isEmpty)
 		return (
@@ -96,12 +96,7 @@ function DndCanvas(props) {
 				<DragDropContext onDragEnd={props.onDragEnd}>
 					{links &&
 						Object.entries(links)
-							.filter((items) => {
-								if (items[1].lists.length === 0 && items[1].term_slug === 'uncategorized') {
-									return false;
-								}
-								return true;
-							})
+							.filter((items) => !(items[1].lists.length === 0 && items[1].term_slug === 'uncategorized'))
 							.map(([ind, el]) => (
 								<Droppable key={ind} droppableId={ind}>
 									{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
