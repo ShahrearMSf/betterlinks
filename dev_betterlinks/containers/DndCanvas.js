@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loader from 'components/Loader';
@@ -9,58 +9,11 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CreateCategory from 'components/CreateCategory';
 import Link from 'containers/Link';
 import CatHeader from 'containers/CatHeader';
-import LinkQuickAction from 'components/LinkQuickAction';
-import FavoriteIcon from 'components/FavoriteIcon';
-import { plugin_root_url } from 'utils/helper';
-import { useBtlExpireStatusDot } from 'utils/customHooks';
-
-export class List extends React.Component {
-	render() {
-		const { catId, item, index, is_allow_qr, term_name, edit_link, delete_link } = this.props;
-
-		const expireStatusDot = useBtlExpireStatusDot({ data: item, view: 'dnd' });
-
-		return (
-			<Draggable key={`cat-${catId}-item_${item.ID}`} draggableId={`cat-${catId}-item_${item.ID}`} index={index}>
-				{(provided, snapshot) => (
-					<div className={`btl-dnd-link ${snapshot.isDragging ? 'btl-dnd-link-dragging' : ''}`} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-						<div className="btl-dnd-link-body">
-							<h3 className="dnd-link-title">
-								<span className="icon">
-									<img src={plugin_root_url + 'assets/images/move-icon.svg'} alt="icon" />
-								</span>
-								<FavoriteIcon data={item} />
-								{expireStatusDot}
-								<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }}></span>
-							</h3>
-
-							<div className="btl-dnd-link-button-group">
-								<LinkQuickAction
-									isAlowQr={is_allow_qr}
-									isShowAnalytics={true}
-									catId={parseInt(catId)}
-									catName={term_name}
-									submitLinkHandler={edit_link}
-									deleteLinkHandler={delete_link}
-									data={item}
-									isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowViewLink', true)}
-									isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}
-								/>
-							</div>
-						</div>
-					</div>
-				)}
-			</Draggable>
-		);
-	}
-}
-
+import List from 'components/List';
+import { isListEmpty, getFavoriteLinkCount } from 'utils/helper';
 class InnerList extends React.Component {
 	shouldComponentUpdate(nextProps) {
-		if (nextProps.lists === this.props.lists) {
-			return false;
-		}
-		return true;
+		return JSON.stringify(nextProps.lists) === JSON.stringify(this.props.lists);
 	}
 	render() {
 		return this.props.lists.map(
@@ -80,39 +33,35 @@ class InnerList extends React.Component {
 	}
 }
 
-class CatWrap extends React.PureComponent {
-	render() {
-		const { ind, el, provided, props } = this.props;
-		const { sortByFav } = props.favouriteSort;
-		const getFavSortedList = (lists) => {
-			return sortByFav
-				? lists.filter((list) => {
-						if (list?.favorite?.favForAll) return true;
-				  })
-				: lists;
-		};
+const CatWrap = memo(({ ind, el, provided, props }) => {
+	const { sortByFav } = props.favouriteSort;
+	const isEmpty = isListEmpty(el.lists, sortByFav);
+	const lists = el.lists;
 
-		const lists = getFavSortedList(el.lists);
-		if (lists.length <= 0 && sortByFav) return <div ref={provided.innerRef} />;
-
+	if (isEmpty)
 		return (
-			<div className="dnd-category">
-				<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
-				<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
-					<div className="category-body">
-						<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={lists} />
-						{provided.placeholder}
-					</div>
-					<div className="category-footer">
-						{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && !sortByFav && (
-							<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
-						)}
-					</div>
-				</div>
+			<div className="dnd-category" style={{ display: 'none' }}>
+				<div ref={provided.innerRef} />
 			</div>
 		);
-	}
-}
+
+	return (
+		<div className="dnd-category">
+			<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
+			<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
+				<div className="category-body">
+					<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={lists} />
+					{provided.placeholder}
+				</div>
+				<div className="category-footer">
+					{betterLinksHooks.applyFilters('betterLinksIsShowWriteLink', true) && !sortByFav && (
+						<Link catId={parseInt(ind)} catName={el.term_name} submitHandler={props.add_new_link} />
+					)}
+				</div>
+			</div>
+		</div>
+	);
+});
 
 function DndCanvas(props) {
 	const { links } = props.links;
@@ -132,18 +81,8 @@ function DndCanvas(props) {
 		}
 	}, []);
 
-	const getFavoriteLinkCount = () => {
-		return (
-			links &&
-			Object.values(links).reduce((total, item) => {
-				const count = item.lists.filter((list) => !!list?.favorite?.favForAll).length;
-				return (total += count);
-			}, 0)
-		);
-	};
-
 	// if sort by favorite is selected and there is no favorite link
-	if (getFavoriteLinkCount() === 0 && sortByFav)
+	if (getFavoriteLinkCount(links) === 0 && sortByFav)
 		return (
 			<div className="dnd-not-found">
 				<div style={{ padding: 24 }}>There are no records to display</div>

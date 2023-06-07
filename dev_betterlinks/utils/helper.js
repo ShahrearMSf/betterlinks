@@ -487,3 +487,21 @@ export const remove_top_loader = (document) => {
 		item?.remove();
 	});
 };
+
+export const isListEmpty = (lists, sortByFav) => {
+	return sortByFav
+		? !lists.filter((list) => {
+				if (list?.favorite?.favForAll) return true;
+		  }).length
+		: !lists.length;
+};
+
+export const getFavoriteLinkCount = (links) => {
+	return (
+		links &&
+		Object.values(links).reduce((total, item) => {
+			const count = item.lists.filter((list) => !!list?.favorite?.favForAll).length;
+			return (total += count);
+		}, 0)
+	);
+};
