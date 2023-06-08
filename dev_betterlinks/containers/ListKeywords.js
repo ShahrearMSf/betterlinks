@@ -82,12 +82,11 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 	];
 };
 
-const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search, setMatchedKeywordsDatas }) => {
+const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [toggledClearRows, setToggledClearRows] = useState(false);
 
 	const handleClearRows = () => {
-		setMatchedKeywordsDatas([]);
 		setToggledClearRows(!toggledClearRows);
 	};
 
