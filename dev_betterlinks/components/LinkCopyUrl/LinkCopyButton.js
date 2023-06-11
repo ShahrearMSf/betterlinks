@@ -14,7 +14,7 @@ export default function LinkCopyButton({ shortUrl }) {
 	return (
 		<button className="btl-short-url-copy-button btl-tooltip" onClick={() => copyShortUrlHandler(shortUrl)}>
 			<span className="icon">
-				{isCopyUrl ? <span className="dashicons dashicons-yes"></span> : <img width="25" src={plugin_root_url + '/assets/images/copy-icon.svg'} alt="icon" />}
+				{isCopyUrl ? <span className="dashicons dashicons-yes" /> : <img width="25" src={plugin_root_url + '/assets/images/copy-icon.svg'} alt="icon" />}
 			</span>
 			<span className="btl-tooltiptext">{__('Copy Link', 'betterlinks')}</span>
 		</button>

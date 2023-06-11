@@ -2,7 +2,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
-import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug } from 'utils/helper';
+import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, plugin_root_url } from 'utils/helper';
 
 import {
 	edit_gutenberg_link,
@@ -24,6 +24,7 @@ const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
 import AutoLinkCreateSidebar from './AutoCreateLink';
+import ToggleTitle from '../ToggleTitle';
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
@@ -54,6 +55,7 @@ const CustomSidebarComponent = (props) => {
 		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 		const postType = wp.data.select('core/editor').getCurrentPostType();
+		const { prefix } = window.betterLinksGlobal;
 
 		if (short_url) {
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
@@ -130,14 +132,15 @@ const CustomSidebarComponent = (props) => {
 		get_link_by_permalink.then((data) => {
 			// storing fetched autolink data for gutenberg subscribe
 			if (data.short_url) {
-				const short_url = data.short_url?.split('/')[0] === settings.prefix ? data.short_url.split('/')[1] : data.short_url;
+				// const short_url = data.short_url?.split('/')[0] === settings.prefix ? data.short_url.split('/')[1] : data.short_url;
+				const short_url = data.short_url;
 				betterlinksGutenStore.dispatch({
 					type: SAVE_GUTENBERG_AUTO_LINK,
 					payload: data,
 				});
 				setAutoShortLink(short_url);
 			} else {
-				const short_url = generateRandomSlug();
+				const short_url = `${prefix}/${generateRandomSlug()}`;
 				betterlinksGutenStore.dispatch({
 					type: SAVE_GUTENBERG_AUTO_LINK,
 					payload: {
@@ -367,7 +370,7 @@ const CustomSidebarComponent = (props) => {
 	return (
 		<Fragment>
 			{isAllowInstantRedirect && isShowInstantRedirect && (
-				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
+				<PluginDocumentSettingPanel name="betterlinks-redirect" title={<ToggleTitle title={__('Instant Redirect', 'betterlinks')} />} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
 
 					<div className="betterlinks-loader-sidebar-wrapper">
@@ -734,7 +737,8 @@ const CustomSidebarComponent = (props) => {
 					)(betterlinksGutenStore.dispatch)
 						.then((response) => {
 							const data = response?.data?.data;
-							const short_url = data.short_url?.split('/')[0] === prefix ? data.short_url : link + data.short_url;
+							// const short_url = data.short_url?.split('/')[0] === prefix ? data.short_url : link + data.short_url;
+							const short_url = data.short_url;
 							if (data) {
 								betterlinksGutenStore.dispatch({
 									type: SAVE_GUTENBERG_AUTO_LINK,
@@ -759,7 +763,7 @@ const CustomSidebarComponent = (props) => {
 									type: SAVE_GUTENBERG_AUTO_LINK,
 									payload: {
 										...data,
-										short_url: link + data.short_url,
+										short_url: data.short_url,
 									},
 								});
 							}
