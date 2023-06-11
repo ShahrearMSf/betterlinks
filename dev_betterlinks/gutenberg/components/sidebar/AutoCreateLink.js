@@ -1,12 +1,13 @@
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
-import { is_pro_enabled, site_url } from 'utils/helper';
+import { is_pro_enabled, site_url, plugin_root_url } from 'utils/helper';
 
 const AutoLinkCreateTitle = ({ is_pro_enabled }) => {
 	return (
 		<>
-			{__('Betterlinks Auto Create Link', 'betterlinks')}
+			<img width="15" src={plugin_root_url + '/assets/images/logo-large.svg'} style={{ marginRight: '5px' }} />
+			{__('Auto Create Link', 'betterlinks')}
 			{!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
 		</>
 	);
