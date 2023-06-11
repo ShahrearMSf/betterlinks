@@ -1,6 +1,7 @@
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
 const { TextControl } = wp.components;
+import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
 import { is_pro_enabled, site_url } from 'utils/helper';
 
 const AutoLinkCreateTitle = ({ is_pro_enabled }) => {
@@ -29,6 +30,7 @@ const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
 								onSetAutoShortLink(value);
 							}}
 						/>
+						<LinkCopyButton shortUrl={autoShortLink} />
 					</p>
 				</div>
 			)}

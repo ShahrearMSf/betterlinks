@@ -630,7 +630,7 @@ const CustomSidebarComponent = (props) => {
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 			const { prefix } = window.betterLinksGlobal;
 			const link = `${prefix}${!!prefix && '/'}`;
-			// console.log(betterlinksGutenStore?.getState());
+
 			const terms = betterlinksGutenStore?.getState()?.terms?.terms || [];
 			const values = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {};
 			const freeParams = { ...(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {}) };
@@ -639,8 +639,7 @@ const CustomSidebarComponent = (props) => {
 			delete freeParams.expire;
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
-			// console.log(wp.data.select('core/editor'));
-			// console.log(settings);
+
 			// remove unnecessary param/property
 			delete freeParams.dispatched_successfully;
 
@@ -701,9 +700,7 @@ const CustomSidebarComponent = (props) => {
 							params,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((response) => {
-								// console.log({ autoLinkParams });
-							})
+							.then(() => {})
 							.catch((error) => console.error(error));
 					} else {
 						add_new_link(
@@ -711,7 +708,7 @@ const CustomSidebarComponent = (props) => {
 							true,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((response) => {})
+							.then(() => {})
 							.catch((error) => console.error(error));
 					}
 				}
@@ -719,6 +716,8 @@ const CustomSidebarComponent = (props) => {
 
 			if (is_pro_enabled && settings?.hasOwnProperty(`${postType}_shortlinks`) && settings[`${postType}_shortlinks`]) {
 				let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
+				const cat_id = settings?.[`${postType}_default_cat`] || params.cat_id;
+
 				if (!autoLinkStoreData.hasOwnProperty('ID')) {
 					autoLinkStoreData = {
 						...params,
@@ -726,7 +725,7 @@ const CustomSidebarComponent = (props) => {
 						target_url: permalink,
 					};
 				}
-				// console.log(autoLinkStoreData);
+				autoLinkStoreData['cat_id'] = cat_id;
 
 				if (autoLinkStoreData.ID) {
 					edit_link(
