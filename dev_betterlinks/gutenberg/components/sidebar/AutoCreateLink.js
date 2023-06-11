@@ -1,6 +1,5 @@
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
-const { TextControl } = wp.components;
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
 import { is_pro_enabled, site_url } from 'utils/helper';
 
@@ -24,13 +23,20 @@ const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
 					<p>A Better short url for this post will be created on publish</p>
 					<p>
 						<strong>{link}</strong>
-						<TextControl
-							value={autoShortLink}
-							onChange={(value) => {
-								onSetAutoShortLink(value);
+						<div
+							style={{
+								display: 'flex',
 							}}
-						/>
-						<LinkCopyButton shortUrl={autoShortLink} />
+						>
+							<input
+								type="text"
+								value={autoShortLink}
+								onChange={(e) => {
+									onSetAutoShortLink(e.target.value);
+								}}
+							/>
+							<LinkCopyButton shortUrl={autoShortLink} />
+						</div>
 					</p>
 				</div>
 			)}
