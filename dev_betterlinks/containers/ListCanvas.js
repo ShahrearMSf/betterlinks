@@ -129,6 +129,8 @@ const ListCanvas = (props) => {
 	]);
 	const [toggledClearRows, setToggledClearRows] = useState(false);
 
+	const { sortByFav } = props.favouriteSort;
+
 	useEffect(() => {
 		if (!links) {
 			props.fetch_links_data();
@@ -230,7 +232,7 @@ const ListCanvas = (props) => {
 					<DataTable
 						className="btl-list-view-table"
 						columns={getLinksListViewColumnData(props)}
-						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter)}
+						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
@@ -256,6 +258,7 @@ const mapStateToProps = (state) => ({
 	links: state.links,
 	settings: state.settings,
 	terms: state.terms,
+	favouriteSort: state.favouriteSort,
 });
 
 const mapDispatchToProps = (dispatch) => {

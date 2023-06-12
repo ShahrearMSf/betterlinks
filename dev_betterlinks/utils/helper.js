@@ -241,7 +241,7 @@ export const formatDate = (date = new Date(), format) => {
 	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };
 
-export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav) => {
 	let results = stored;
 	results = stored.filter((item) => {
 		const newFilterText = filterText
@@ -288,6 +288,9 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 				return new Date(item.link_date).getTime() >= customDateFilter[0].startDate.getTime() && new Date(item.link_date).getTime() <= customDateFilter[0].endDate.getTime();
 			});
 		}
+	}
+	if (sortByFav) {
+		results = results.filter((item) => item.favorite?.favForAll);
 	}
 	return results;
 };
@@ -483,4 +486,18 @@ export const remove_top_loader = (document) => {
 	document?.querySelectorAll('.betterlinks-top-loader-wrap')?.forEach((item) => {
 		item?.remove();
 	});
+};
+
+export const isListEmpty = (lists, sortByFav) => {
+	return sortByFav ? !lists.filter((list) => list?.favorite?.favForAll).length : !lists.length;
+};
+
+export const getFavoriteLinkCount = (links) => {
+	return (
+		links &&
+		Object.values(links).reduce((total, item) => {
+			const count = item.lists.filter((list) => !!list?.favorite?.favForAll).length;
+			return (total += count);
+		}, 0)
+	);
 };
