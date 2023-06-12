@@ -21,6 +21,8 @@ class Link extends Utils
             return false;
         }
         $data = apply_filters('betterlinks/link/before_dispatch_redirect', $data);
+        if( empty( $data ) ) return false;
+        
         do_action('betterlinks/before_redirect', $data);
         $this->dispatch_redirect($data, next($param));
     }

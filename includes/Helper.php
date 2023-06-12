@@ -392,7 +392,7 @@ class Helper
             foreach( $data as &$analytic ) {
                 $_link_id = $analytic['link_id'];
                 $_link_count = $analytic['lidc'];
-                $_ip = isset( $analytic['ip'] ) && trim( $analytic['ip'] );
+                $_ip = isset( $analytic['ip'] ) ? trim( $analytic['ip'] ) : '';
                 $_ip_count = $analytic['ipc'];
 
                 if( ! isset( $_results[ $_link_id ] ) ) {
