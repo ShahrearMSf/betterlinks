@@ -243,7 +243,6 @@ export const formatDate = (date = new Date(), format) => {
 
 export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav) => {
 	let results = stored;
-	results = results.filter((item) => item.ID);
 	results = stored.filter((item) => {
 		const newFilterText = filterText
 			.replace(/https?\:\/\//gi, '')
@@ -293,6 +292,7 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 	if (sortByFav) {
 		results = results.filter((item) => item.favorite?.favForAll);
 	}
+	results = results.filter((item) => item.ID);
 	return results;
 };
 
