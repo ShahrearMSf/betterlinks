@@ -502,3 +502,11 @@ export const getFavoriteLinkCount = (links) => {
 		}, 0)
 	);
 };
+
+export const analytic = (analytic, ID) => {
+	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
+	if (isLinkAble) {
+		return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
+	}
+	return +analytic.link_count + '/' + analytic.ip.length;
+};

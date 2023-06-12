@@ -6,7 +6,7 @@ import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
 import LinkCopyUrl from 'components/LinkCopyUrl';
 import LinksFilter from 'components/LinksFilter';
-import { linksFilterData, formatDate, route_path, insertOverlayElement } from 'utils/helper';
+import { linksFilterData, formatDate, insertOverlayElement, analytic } from 'utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
@@ -16,13 +16,6 @@ import TableLoader from 'components/Loader/TableLoader';
 import { useBtlExpireStatusDot } from 'utils/customHooks';
 
 const getLinksListViewColumnData = (props) => {
-	const analytic = (analytic, ID) => {
-		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
-		if (isLinkAble) {
-			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
-		}
-		return +analytic.link_count + '/' + analytic.ip.length;
-	};
 	const is_allow_qr = props?.settings?.settings?.is_allow_qr;
 
 	return [
