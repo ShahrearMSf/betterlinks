@@ -19,9 +19,9 @@ const getLinksListViewColumnData = (props) => {
 	const analytic = (analytic, ID) => {
 		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 		if (isLinkAble) {
-			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{analytic.link_count + '/' + analytic.ip.length}</a>;
+			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
 		}
-		return analytic.link_count + '/' + analytic.ip.length;
+		return +analytic.link_count + '/' + analytic.ip.length;
 	};
 	const is_allow_qr = props?.settings?.settings?.is_allow_qr;
 
