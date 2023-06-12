@@ -66,9 +66,9 @@ const LinkQuickAction = ({
 	const analytic = (analytic) => {
 		let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 		if (isLinkAble) {
-			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + data.ID}>{analytic.link_count + '/' + analytic.ip.length}</a>;
+			return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + data.ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
 		}
-		return analytic.link_count + '/' + analytic.ip.length;
+		return +analytic.link_count + '/' + analytic.ip.length;
 	};
 
 	return (
