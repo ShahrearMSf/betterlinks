@@ -39,7 +39,7 @@ const CatWrap = memo(({ ind, el, provided, props }) => {
 	const { lists } = el;
 	const isEmpty = isListEmpty(lists, sortByFav);
 
-	if (isEmpty)
+	if (isEmpty && sortByFav)
 		return (
 			<div className="dnd-category" style={{ display: 'none' }}>
 				<div ref={provided.innerRef} />
