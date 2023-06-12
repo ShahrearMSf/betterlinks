@@ -4,8 +4,9 @@ import Select from 'react-select';
 import { DateRangePicker } from 'react-date-range';
 import { removeOverlayElement } from 'utils/helper';
 
-const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
+const rowDeleteHandler = (selectedRows, action, deleteLinkHandler, setWarning, setToggledClearRows) => {
 	if (action.value === 'delete') {
+		setWarning(false);
 		const deleteItemLists = [];
 		selectedRows.map((item) => {
 			deleteItemLists.push({
@@ -14,12 +15,16 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler) => {
 				short_url: item.short_url,
 			});
 		});
+		setToggledClearRows();
 		deleteLinkHandler(deleteItemLists);
+		return;
 	}
+	setWarning(true);
 };
 
 const LinksFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState({});
+	const [warning, setWarning] = useState(false);
 	const dateRangePickerOnChangeHandler = (item) => {
 		props.setCustomDateFilter([item.selection]);
 		if (item.selection.endDate != item.selection.startDate) {
@@ -45,15 +50,18 @@ const LinksFilter = (props) => {
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button
-							className="btl-link-apply-button"
-							onClick={() => {
-								rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler);
-								setBulkAction({});
-							}}
-						>
-							{__('Apply', 'betterlinks')}
-						</button>
+						<div className="btl-tooltip">
+							<button
+								className="btl-link-apply-button"
+								onClick={() => {
+									rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler, setWarning, props.setToggledClearRows);
+									setBulkAction({});
+								}}
+							>
+								{__('Apply', 'betterlinks')}
+							</button>
+							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
+						</div>
 					</div>
 				)}
 				<div className="btl-click-filter">

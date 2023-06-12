@@ -127,6 +127,9 @@ const ListCanvas = (props) => {
 			key: 'selection',
 		},
 	]);
+	const [toggledClearRows, setToggledClearRows] = useState(false);
+
+	const { sortByFav } = props.favouriteSort;
 
 	useEffect(() => {
 		if (!links) {
@@ -176,6 +179,10 @@ const ListCanvas = (props) => {
 		setBulkActionData(e);
 	};
 
+	const handleClearRows = () => {
+		setToggledClearRows(!toggledClearRows);
+	};
+
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
 			if (filterText) {
@@ -202,6 +209,7 @@ const ListCanvas = (props) => {
 				onClear={handleClear}
 				filterText={filterText}
 				resetFilterHandler={resetFilterHandler}
+				setToggledClearRows={handleClearRows}
 			/>
 		);
 	}, [
@@ -224,7 +232,7 @@ const ListCanvas = (props) => {
 					<DataTable
 						className="btl-list-view-table"
 						columns={getLinksListViewColumnData(props)}
-						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter)}
+						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
@@ -236,6 +244,7 @@ const ListCanvas = (props) => {
 						selectableRows
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
+						clearSelectedRows={toggledClearRows}
 					/>
 				) : (
 					<TableLoader />
@@ -249,6 +258,7 @@ const mapStateToProps = (state) => ({
 	links: state.links,
 	settings: state.settings,
 	terms: state.terms,
+	favouriteSort: state.favouriteSort,
 });
 
 const mapDispatchToProps = (dispatch) => {

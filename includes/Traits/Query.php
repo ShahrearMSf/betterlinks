@@ -534,7 +534,7 @@ trait Query
         global $wpdb;
 
         $query = "select link_id, ip, ipc, t2.lidc from ( select ip, link_id, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip, link_id ) as t1
-        left join ( select link_id as lid, sum(ipc) as lidc from ( select ip, link_id, count(ip) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip, link_id ) as t3 group by link_id ) as t2
+        left join ( select link_id as lid, sum(ipc) as lidc from ( select ip, link_id, count(uri) as ipc from {$wpdb->prefix}betterlinks_clicks group by ip,uri, link_id ) as t3 group by link_id ) as t2
         on t1.link_id = t2.lid";
 
         $results = $wpdb->get_results($query, ARRAY_A);

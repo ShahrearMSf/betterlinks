@@ -362,6 +362,27 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 	}
 }
 
+.btl-view-control {
+	display: flex;
+
+	.btl-link-view-toggler {
+		svg.favorite-svg .fav-icon-svg-path {
+			fill: #a1a2ad !important;
+
+			&:hover {
+				fill: #faba59 !important;
+			}
+		}
+	}
+	.btl-link-view-toggler.active {
+		svg.favorite-svg .fav-icon-svg-path {
+			fill: #faba59 !important;
+		}
+	}
+	.btl-sortby-fav {
+		padding: 10px;
+	}
+}
 //
 // betterlinks reset analytics css end
 
@@ -371,3 +392,17 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	cursor: pointer;
 }
 // autolink keyword search cancel (x) icon style end
+
+// No Favourite links found
+.dnd-not-found {
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	justify-content: center;
+	color: rgba(0, 0, 0, 0.87);
+	background-color: rgb(255, 255, 255);
+}
