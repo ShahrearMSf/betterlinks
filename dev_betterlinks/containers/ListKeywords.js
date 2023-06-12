@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import { connect } from 'react-redux';
@@ -10,6 +10,16 @@ import { delete_keyword } from 'redux/actions/keywords.actions';
 
 const KeywordFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState([]);
+	const [warning, setWarning] = useState(false);
+
+	const handleDeleteKeyword = (bulkActionData, bulkAction, deleteHandler) => {
+		if (bulkAction.value !== 'delete') return setWarning(true);
+		setWarning(false);
+		deleteHandler(bulkActionData.selectedRows, bulkAction);
+		setBulkAction({});
+		return props.setToggledClearRows();
+	};
+
 	return (
 		<React.Fragment>
 			<div className="btl-links-filter">
@@ -19,12 +29,16 @@ const KeywordFilter = (props) => {
 							className="btl-list-view-select"
 							classNamePrefix="btl-react-select"
 							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
+							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
 						/>
-						<button className="btl-link-apply-button" onClick={() => props.deleteKeywordHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler)}>
-							{__('Apply', 'betterlinks')}
-						</button>
+						<div className="btl-tooltip">
+							<button className="btl-link-apply-button" onClick={() => handleDeleteKeyword(props.bulkActionData, bulkAction, props.deleteKeywordHandler)}>
+								{__('Apply', 'betterlinks')}
+							</button>
+							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">{__('Please Select Action', 'betterlinks')}</span>}
+						</div>
 					</div>
 				)}
 				{props.search}
@@ -70,20 +84,21 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 
 const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
-	useEffect(() => {}, []);
+	const [toggledClearRows, setToggledClearRows] = useState(false);
 
-	const getData = (keywords) => {
-		if (keywords.data) {
-			return keywords.data;
-		}
-		return [];
+	const handleClearRows = () => {
+		setToggledClearRows(!toggledClearRows);
 	};
 
-	const onSelectedRowsChange = (e) => {
-		setBulkActionData(e);
-	};
-
-	const subHeaderComponent = <KeywordFilter deleteKeywordHandler={delete_keyword} bulkActionData={bulkActionData} search={search} />;
+	const subHeaderComponent = (
+		<KeywordFilter
+			deleteKeywordHandler={delete_keyword}
+			bulkActionData={bulkActionData}
+			search={search}
+			setBulkActionData={setBulkActionData}
+			setToggledClearRows={handleClearRows}
+		/>
+	);
 
 	return (
 		<React.Fragment>
@@ -91,7 +106,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 				<DataTable
 					className="btl-list-view-table"
 					columns={getLinksListViewColumnData({ links, delete_keyword, keywords, postTypesProps, linksForUpdateModal })}
-					data={getData(keywords)}
+					data={keywords.data || []}
 					pagination
 					subHeader
 					highlightOnHover
@@ -99,7 +114,8 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 					persistTableHead
 					selectableRows
 					selectableRowsVisibleOnly
-					onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
+					onSelectedRowsChange={(e) => setBulkActionData(e)}
+					clearSelectedRows={toggledClearRows}
 				/>
 			</div>
 		</React.Fragment>

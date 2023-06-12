@@ -127,6 +127,7 @@ const ListCanvas = (props) => {
 			key: 'selection',
 		},
 	]);
+	const [toggledClearRows, setToggledClearRows] = useState(false);
 
 	useEffect(() => {
 		if (!links) {
@@ -176,6 +177,10 @@ const ListCanvas = (props) => {
 		setBulkActionData(e);
 	};
 
+	const handleClearRows = () => {
+		setToggledClearRows(!toggledClearRows);
+	};
+
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
 			if (filterText) {
@@ -202,6 +207,7 @@ const ListCanvas = (props) => {
 				onClear={handleClear}
 				filterText={filterText}
 				resetFilterHandler={resetFilterHandler}
+				setToggledClearRows={handleClearRows}
 			/>
 		);
 	}, [
@@ -236,6 +242,7 @@ const ListCanvas = (props) => {
 						selectableRows
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
+						clearSelectedRows={toggledClearRows}
 					/>
 				) : (
 					<TableLoader />
