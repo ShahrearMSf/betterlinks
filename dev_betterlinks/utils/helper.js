@@ -292,6 +292,7 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 	if (sortByFav) {
 		results = results.filter((item) => item.favorite?.favForAll);
 	}
+	results = results.filter((item) => item.ID);
 	return results;
 };
 
