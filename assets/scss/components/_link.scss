@@ -26,6 +26,9 @@
 				img {
 					width: 8px;
 				}
+				&.error {
+					color: $danger;
+				}
 			}
 		}
 		.btl-dnd-link-button-group {
