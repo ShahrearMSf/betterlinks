@@ -51,9 +51,9 @@ trait Links
                         }
                     }
                     $data[$key] = $tempSanitizeData;
-                } elseif ($key === 'tags_id') {
-                    $tags = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
-                    $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($tags);
+                } elseif ( in_array( $key, ['tags_id', 'favorite', 'analytic'] ) ) {
+                    $result = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
+                    $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($result);
                 }
             }
         }
