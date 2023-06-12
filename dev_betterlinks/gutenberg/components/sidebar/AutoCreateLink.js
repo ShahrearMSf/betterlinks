@@ -1,15 +1,23 @@
 const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
-import { is_pro_enabled, site_url } from 'utils/helper';
+import { debounce, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url } from 'utils/helper';
 import ToggleTitle from '../ToggleTitle';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
+import { EDIT_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
 
 const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
 	const [isInputField, setInputField] = useState(false);
-	const { prefix } = window.betterLinksGlobal;
+	const [isExists, setExists] = useState(false);
+	// const { prefix } = window.betterLinksGlobal;
 	// const link = `${site_url}/${prefix}${!!prefix && '/'}`;
+	const { ID } = betterlinksGutenStore?.getState()?.gutenbergAutoLink;
 	const link = `${site_url}/`;
+
+	useEffect(() => {
+		console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
+	}, []);
 
 	return (
 		<PluginDocumentSettingPanel
@@ -46,6 +54,7 @@ const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
 							)}
 							<LinkCopyButton shortUrl={autoShortLink} />
 						</div>
+						{isExists && <p style={{ color: 'red' }}>Link Already Exists</p>}
 					</div>
 				</div>
 			)}

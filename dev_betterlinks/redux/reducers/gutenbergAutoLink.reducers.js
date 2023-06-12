@@ -6,6 +6,7 @@ export default function gutenbergAutoLink(state = {}, action) {
 	switch (action.type) {
 		case SAVE_GUTENBERG_AUTO_LINK: {
 			return {
+				...state,
 				...payload,
 			};
 		}

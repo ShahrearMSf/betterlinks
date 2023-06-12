@@ -486,3 +486,52 @@ export const remove_top_loader = (document) => {
 		item?.remove();
 	});
 };
+
+export const shortURLUniqueCheck = (slug, ID, setSlugIsExists) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', ID);
+	form_data.append('slug', slug);
+	return axios.post(ajaxurl, form_data).then(
+		(response) => {
+			if (response.data) {
+				setSlugIsExists(response.data.data);
+				return response.data.data;
+			}
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+};
+
+export const shortURLUniqueCheckGutenberg = (slug, ID) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', ID);
+	form_data.append('slug', slug);
+	return axios.post(ajaxurl, form_data).then(
+		(response) => {
+			if (response.data) {
+				return response.data.data;
+			}
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+};
+
+export const debounce = (func, delay) => {
+	let timerId;
+
+	return function (...args) {
+		clearTimeout(timerId);
+
+		timerId = setTimeout(() => {
+			func.apply(this, args);
+		}, delay);
+	};
+};

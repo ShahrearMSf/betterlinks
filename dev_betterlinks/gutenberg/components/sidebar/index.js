@@ -2,7 +2,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
-import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, plugin_root_url } from 'utils/helper';
+import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug } from 'utils/helper';
 
 import {
 	edit_gutenberg_link,
@@ -620,10 +620,11 @@ const CustomSidebarComponent = (props) => {
 			wp.data.select('core/editor')?.isSavingPost() &&
 			!wp.data.select('core/editor')?.isAutosavingPost() &&
 			wp.data.select('core/editor')?.isCurrentPostPublished() &&
-			wp.data.select('core/editor')?.getPermalink()
-			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
+			wp.data.select('core/editor')?.getPermalink() &&
+			!betterlinksGutenStore?.getState()?.gutenbergAutoLink?.linkExists
 			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
+			console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
 			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
 			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
 			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
