@@ -4,21 +4,31 @@ import { useState, useEffect } from 'react';
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
 import { debounce, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url } from 'utils/helper';
 import ToggleTitle from '../ToggleTitle';
-import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { EDIT_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
+import { betterlinksGutenStore } from 'redux/gutenbergStore';
 
-const AutoLinkCreateSidebar = ({ autoShortLink, onSetAutoShortLink }) => {
+const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 	const [isInputField, setInputField] = useState(false);
 	const [isExists, setExists] = useState(false);
-	// const { prefix } = window.betterLinksGlobal;
-	// const link = `${site_url}/${prefix}${!!prefix && '/'}`;
-	const { ID } = betterlinksGutenStore?.getState()?.gutenbergAutoLink;
 	const link = `${site_url}/`;
 
-	useEffect(() => {
-		console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
-	}, []);
-
+	useEffect(
+		debounce(() => {
+			shortURLUniqueCheckGutenberg(autoShortLink, ID).then((res) => {
+				setExists(res);
+				// if( res ) {
+				// }
+				betterlinksGutenStore.dispatch({
+					type: EDIT_GUTENBERG_AUTO_LINK,
+					payload: {
+						link_exists: res,
+					},
+				});
+			});
+		}, 500),
+		[autoShortLink]
+	);
+	// console.log(ID);
 	return (
 		<PluginDocumentSettingPanel
 			name="betterlinks-auto-create-link"
