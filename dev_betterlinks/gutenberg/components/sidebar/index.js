@@ -23,7 +23,7 @@ const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
-import AutoLinkCreateSidebar from './AutoCreateLink';
+import AutoLinkCreateSidebar from './AutoLink/AutoCreateLink';
 import ToggleTitle from '../ToggleTitle';
 
 const CustomSidebarComponent = (props) => {
