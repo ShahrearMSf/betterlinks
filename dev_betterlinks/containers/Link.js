@@ -500,7 +500,7 @@ export const Link = (props) => {
 													</span>
 												</label>
 											)}
-											{betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field })}
+											{betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field, ...settings })}
 										</div>
 									</div>
 									{!betterlinksGutenStore && (

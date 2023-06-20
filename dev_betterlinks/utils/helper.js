@@ -242,7 +242,7 @@ export const formatDate = (date = new Date(), format) => {
 	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };
 
-export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter) => {
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav) => {
 	let results = stored;
 	results = stored.filter((item) => {
 		const newFilterText = filterText
@@ -289,6 +289,9 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 				return new Date(item.link_date).getTime() >= customDateFilter[0].startDate.getTime() && new Date(item.link_date).getTime() <= customDateFilter[0].endDate.getTime();
 			});
 		}
+	}
+	if (sortByFav) {
+		results = results.filter((item) => item.favorite?.favForAll);
 	}
 	results = results.filter((item) => item.ID);
 	return results;
@@ -534,4 +537,25 @@ export const debounce = (func, delay) => {
 			func.apply(this, args);
 		}, delay);
 	};
+}
+export const isListEmpty = (lists, sortByFav) => {
+	return sortByFav ? !lists.filter((list) => list?.favorite?.favForAll).length : !lists.length;
+};
+
+export const getFavoriteLinkCount = (links) => {
+	return (
+		links &&
+		Object.values(links).reduce((total, item) => {
+			const count = item.lists.filter((list) => !!list?.favorite?.favForAll).length;
+			return (total += count);
+		}, 0)
+	);
+};
+
+export const analytic = (analytic, ID) => {
+	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
+	if (isLinkAble) {
+		return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
+	}
+	return +analytic.link_count + '/' + analytic.ip.length;
 };

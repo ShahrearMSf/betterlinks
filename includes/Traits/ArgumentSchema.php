@@ -199,6 +199,12 @@ trait ArgumentSchema
                 'tags_id' => [
                     'type' => 'array'
                 ],
+                'favorite' => [
+                    'type' => 'array'
+                ],
+                'analytic' => [
+                    'type' => 'array'
+                ]
             ],
             $this->terms_schema()
         );
