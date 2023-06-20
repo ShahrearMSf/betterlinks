@@ -2,7 +2,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
-import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug } from 'utils/helper';
+import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, prefix } from 'utils/helper';
 
 import {
 	edit_gutenberg_link,
@@ -23,7 +23,7 @@ const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
 
-import AutoLinkCreateSidebar from './AutoLink/AutoCreateLink';
+import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
 import ToggleTitle from '../ToggleTitle';
 
 const CustomSidebarComponent = (props) => {
@@ -72,7 +72,7 @@ const CustomSidebarComponent = (props) => {
 	useEffect(() => {
 		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
-		const { prefix } = window.betterLinksGlobal;
+		// const { prefix } = window.betterLinksGlobal;
 
 		if (short_url) {
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
@@ -145,7 +145,8 @@ const CustomSidebarComponent = (props) => {
 				setAutoShortLink(short_url);
 				setLinkId(+data.ID);
 			} else {
-				const short_url = `${prefix}/${generateRandomSlug()}`;
+				const randomSlug = generateRandomSlug();
+				const short_url = prefix ? `${prefix}/${randomSlug}` : randomSlug;
 				betterlinksGutenStore.dispatch({
 					type: SAVE_GUTENBERG_AUTO_LINK,
 					payload: {
@@ -374,6 +375,7 @@ const CustomSidebarComponent = (props) => {
 
 	return (
 		<Fragment>
+			{autoLinkCreateEnabled && <AutoLinkCreateSidebar ID={linkId} autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />}
 			{isAllowInstantRedirect && isShowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={<ToggleTitle title={__('Instant Redirect', 'betterlinks')} />} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
@@ -611,7 +613,6 @@ const CustomSidebarComponent = (props) => {
 					{/* CustomSidebarMeta end  */}
 				</PluginDocumentSettingPanel>
 			)}
-			{autoLinkCreateEnabled && <AutoLinkCreateSidebar ID={linkId} autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />}
 		</Fragment>
 	);
 };

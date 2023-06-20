@@ -5,9 +5,7 @@ const AutoLinkInput = ({ isInputField, setInputField, autoShortLink, onSetAutoSh
 				autoFocus
 				type="text"
 				value={autoShortLink}
-				onChange={(e) => {
-					onSetAutoShortLink(e.target.value);
-				}}
+				onChange={(e) => onSetAutoShortLink(e.target.value)}
 				onBlur={() => setInputField(false)}
 				style={{ flexGrow: '1' }}
 			/>
