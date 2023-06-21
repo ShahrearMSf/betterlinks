@@ -14,7 +14,7 @@ export const {
 	page,
 	is_pro_enabled,
 	post_type,
-	prefix,
+	betterlinks_links_option,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -537,7 +537,7 @@ export const debounce = (func, delay) => {
 			func.apply(this, args);
 		}, delay);
 	};
-}
+};
 export const isListEmpty = (lists, sortByFav) => {
 	return sortByFav ? !lists.filter((list) => list?.favorite?.favForAll).length : !lists.length;
 };
