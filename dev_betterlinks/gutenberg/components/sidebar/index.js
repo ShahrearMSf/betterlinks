@@ -739,45 +739,47 @@ const CustomSidebarComponent = (props) => {
 				}
 				autoLinkStoreData['cat_id'] = cat_id;
 
-				if (autoLinkStoreData.ID) {
-					edit_link(
-						autoLinkStoreData,
-						true
-					)(betterlinksGutenStore.dispatch)
-						.then((response) => {
-							const data = response?.data?.data;
-							// const short_url = data.short_url?.split('/')[0] === prefix ? data.short_url : link + data.short_url;
-							const short_url = data.short_url;
-							if (data) {
-								betterlinksGutenStore.dispatch({
-									type: SAVE_GUTENBERG_AUTO_LINK,
-									payload: {
-										...data,
-										short_url,
-									},
-								});
-							}
-						})
-						.catch((error) => console.error(error));
-				} else {
-					add_new_link(
-						autoLinkStoreData,
-						true,
-						false
-					)(betterlinksGutenStore.dispatch)
-						.then((response) => {
-							const data = response?.data?.data;
-							if (data) {
-								betterlinksGutenStore.dispatch({
-									type: SAVE_GUTENBERG_AUTO_LINK,
-									payload: {
-										...data,
-										short_url: data.short_url,
-									},
-								});
-							}
-						})
-						.catch((error) => console.error(error));
+				if (autoLinkStoreData.short_url !== '') {
+					if (autoLinkStoreData.ID) {
+						edit_link(
+							autoLinkStoreData,
+							true
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {
+								const data = response?.data?.data;
+								// const short_url = data.short_url?.split('/')[0] === prefix ? data.short_url : link + data.short_url;
+								const short_url = data.short_url;
+								if (data) {
+									betterlinksGutenStore.dispatch({
+										type: SAVE_GUTENBERG_AUTO_LINK,
+										payload: {
+											...data,
+											short_url,
+										},
+									});
+								}
+							})
+							.catch((error) => console.error(error));
+					} else {
+						add_new_link(
+							autoLinkStoreData,
+							true,
+							false
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {
+								const data = response?.data?.data;
+								if (data) {
+									betterlinksGutenStore.dispatch({
+										type: SAVE_GUTENBERG_AUTO_LINK,
+										payload: {
+											...data,
+											short_url: data.short_url,
+										},
+									});
+								}
+							})
+							.catch((error) => console.error(error));
+					}
 				}
 			}
 		}
