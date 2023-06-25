@@ -8,6 +8,8 @@ import { EDIT_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import AutoLinkInput from './AutoLinkInput';
 import { autoLinkInputFieldWrapper } from './style';
+import DisableCheckbox from './CheckBox';
+import { __experimentalDivider as Divider } from '@wordpress/components';
 
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 	const [isInputField, setInputField] = useState(false);
@@ -38,7 +40,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 		>
 			{is_pro_enabled && (
 				<div className="betterlinks-auto-create-link">
-					<p>A Better short url for this post will be created on publish</p>
+					<p>{__('A Better short url for this post will be created on publish', 'betterlinks-pro')}</p>
 					<div>
 						<p className="components-base-control__help" style={{ marginBottom: 0 }}>
 							<strong>{link}</strong>
@@ -49,9 +51,11 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 						</div>
 						{isExists && (
 							<p className="components-base-control__help" style={{ color: 'red' }}>
-								Link already exists, try another..
+								{__('Link already exists, try another..', 'betterlinks-pro')}
 							</p>
 						)}
+						<Divider />
+						<DisableCheckbox />
 					</div>
 				</div>
 			)}
