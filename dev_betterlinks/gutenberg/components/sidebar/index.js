@@ -739,7 +739,7 @@ const CustomSidebarComponent = (props) => {
 				}
 				autoLinkStoreData['cat_id'] = cat_id;
 
-				if (autoLinkStoreData.short_url !== '') {
+				if (autoLinkStoreData.short_url !== '' && !autoLinkStoreData?.disable_short_link) {
 					if (autoLinkStoreData.ID) {
 						edit_link(
 							autoLinkStoreData,
