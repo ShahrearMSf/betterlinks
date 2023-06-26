@@ -648,6 +648,8 @@ const CustomSidebarComponent = (props) => {
 			const freeParams = { ...(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {}) };
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 
+			// console.log(betterlinksGutenStore?.getState());
+
 			delete freeParams.expire;
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
@@ -739,7 +741,7 @@ const CustomSidebarComponent = (props) => {
 				}
 				autoLinkStoreData['cat_id'] = cat_id;
 
-				if (autoLinkStoreData.short_url !== '' && !autoLinkStoreData?.disable_short_link) {
+				if (autoLinkStoreData.short_url !== '' && !autoLinkStoreData?.disable_auto_short_link) {
 					if (autoLinkStoreData.ID) {
 						edit_link(
 							autoLinkStoreData,

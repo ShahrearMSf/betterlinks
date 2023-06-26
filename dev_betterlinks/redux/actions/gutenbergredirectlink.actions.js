@@ -142,7 +142,11 @@ export const fetch_link_for_permalink = () => {
 		}
 	);
 };
-
+export const fetch_auto_short_links_disable_ids = () => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinkspro/admin/get_auto_link_disable_ids');
+	form_data.append('security', betterlinks_nonce);
+};
 export const fetch_link_by_permalink = () => {
 	const permalink = wp.data.select('core/editor').getPermalink();
 	if (!permalink) return false;
