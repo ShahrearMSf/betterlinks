@@ -142,10 +142,30 @@ export const fetch_link_for_permalink = () => {
 		}
 	);
 };
-export const fetch_auto_short_links_disable_ids = () => {
+export const fetch_auto_short_links_disable_ids = async () => {
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinkspro/admin/get_auto_link_disable_ids');
 	form_data.append('security', betterlinks_nonce);
+
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	} catch (err) {
+		console.log('Error! fetch_settings_data failed', { err });
+	}
+};
+export const set_auto_short_links_disable_ids = async (id) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinkspro/admin/set_auto_link_disable_ids');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('id', id);
+
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	} catch (err) {
+		console.log('Error! fetch_settings_data failed', { err });
+	}
 };
 export const fetch_link_by_permalink = () => {
 	const permalink = wp.data.select('core/editor').getPermalink();

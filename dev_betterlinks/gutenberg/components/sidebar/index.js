@@ -641,7 +641,6 @@ const CustomSidebarComponent = (props) => {
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 			const { prefix } = window.betterLinksGlobal;
-			const link = `${prefix}${!!prefix && '/'}`;
 
 			const terms = betterlinksGutenStore?.getState()?.terms?.terms || [];
 			const values = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {};
