@@ -461,6 +461,15 @@ trait Query
         return $term_data;
     }
 
+    public static function is_term_exists($term_id, $type = 'category') {
+        global $wpdb;
+        $result = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE ID=%s AND term_type=%s", $term_id, $type),
+            ARRAY_A
+        );
+        return count($result) === 1;
+    }
+
     public static function get_term_by_slug($slug, $type = "category")
     {
         global $wpdb;
