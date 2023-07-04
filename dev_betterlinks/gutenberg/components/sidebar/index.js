@@ -51,6 +51,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
 	const [autoShortLink, setAutoShortLink] = useState('');
+	const [autoLinkCatId, setAutoLinkCatId] = useState(false);
 
 	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
 
@@ -135,6 +136,7 @@ const CustomSidebarComponent = (props) => {
 		get_link_by_permalink.then((data) => {
 			// storing fetched autolink data for gutenberg subscribe
 			if (data.short_url) {
+				// console.log(data);
 				const short_url = data.short_url;
 				betterlinksGutenStore.dispatch({
 					type: SAVE_GUTENBERG_AUTO_LINK,
@@ -142,6 +144,7 @@ const CustomSidebarComponent = (props) => {
 				});
 				setAutoShortLink(short_url);
 				setLinkId(+data.ID);
+				setAutoLinkCatId(data.cat_id);
 			} else {
 				const randomSlug = generateRandomSlug();
 				const short_url = prefix ? `${prefix}/${randomSlug}` : randomSlug;
@@ -179,6 +182,7 @@ const CustomSidebarComponent = (props) => {
 						};
 					}
 					setAllStatesForLinkData(linkData);
+					setAutoLinkCatId(linkData.cat_id);
 					clearInterval(intervalId);
 				}, 500);
 			})
@@ -729,7 +733,7 @@ const CustomSidebarComponent = (props) => {
 
 			if (is_pro_enabled && settings?.hasOwnProperty(`${postType}_shortlinks`) && settings[`${postType}_shortlinks`]) {
 				let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
-				const cat_id = settings?.[`${postType}_default_cat`] || params.cat_id;
+				// const cat_id = settings?.[`${postType}_default_cat`] || params.cat_id;
 
 				if (!autoLinkStoreData.hasOwnProperty('ID')) {
 					autoLinkStoreData = {
@@ -738,7 +742,6 @@ const CustomSidebarComponent = (props) => {
 						target_url: permalink,
 					};
 				}
-				autoLinkStoreData['cat_id'] = cat_id;
 
 				if (autoLinkStoreData.short_url !== '' && !autoLinkStoreData?.disable_auto_short_link) {
 					if (autoLinkStoreData.ID) {

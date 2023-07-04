@@ -32,3 +32,34 @@ export const fetch_terms_data = (params) => async (dispatch) => {
 		);
 	}
 };
+
+export const fetch_terms_by_link_id = (ID) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/get_cat_by_link_id');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', ID);
+	return axios.post(ajaxurl, form_data).then(
+		(response) => {
+			if (response?.data?.length) {
+				return response.data;
+			}
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+};
+export const fetch_auto_link_create_settings = () => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/get_autolink_create_settings');
+	form_data.append('security', betterlinks_nonce);
+
+	return axios.post(ajaxurl, form_data).then(
+		(response) => {
+			if (response?.data) return response.data;
+		},
+		(error) => {
+			console.log(error);
+		}
+	);
+};

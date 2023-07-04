@@ -2,8 +2,7 @@ import { CheckboxControl } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 import { edit_gutenberg_auto_link, fetch_auto_short_links_disable_ids, set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirectlink.actions';
 
-const DisableCheckbox = ({ ID }) => {
-	const [isChecked, setChecked] = useState(false);
+const DisableCheckbox = ({ isChecked, setChecked }) => {
 	const [postId, setPostId] = useState(null);
 
 	useEffect(() => {

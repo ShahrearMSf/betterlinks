@@ -121,6 +121,16 @@ body {
 		visibility: visible;
 	}
 }
+.betterlinks-auto-create-link {
+	.btl-tooltip {
+		padding: 0;
+		.btl-tooltiptext {
+			width: 60px;
+			font-size: 8px;
+		}
+	}
+}
+
 @import './components/modal';
 @import './components/utm_builder';
 
