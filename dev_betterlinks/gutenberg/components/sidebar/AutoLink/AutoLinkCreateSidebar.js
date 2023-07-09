@@ -10,11 +10,10 @@ import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import AutoLinkInput from './AutoLinkInput';
 import { autoLinkInputFieldWrapper } from './style';
 import DisableCheckbox from './CheckBox';
-import { __experimentalDivider as Divider, SelectControl } from '@wordpress/components';
+import { SelectControl } from '@wordpress/components';
 import { fetch_auto_link_create_settings, fetch_terms_by_link_id, fetch_terms_data } from 'redux/actions/terms.actions';
 
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
-	const [isInputField, setInputField] = useState(false);
 	const [isExists, setExists] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [savedCatId, setSavedCatId] = useState(false);
@@ -123,7 +122,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 									<strong>{link}</strong>
 								</p>
 								<div style={autoLinkInputFieldWrapper}>
-									<AutoLinkInput isInputField={isInputField} setInputField={setInputField} autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />
+									<AutoLinkInput autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />
 									<LinkCopyButton shortUrl={autoShortLink} />
 								</div>
 								{isExists && (
@@ -131,7 +130,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 										{__('Link already exists, try another..', 'betterlinks-pro')}
 									</p>
 								)}
-								<Divider />
 								{terms && (
 									<SelectControl
 										label={__('Choose Category', 'betterlinks')}
