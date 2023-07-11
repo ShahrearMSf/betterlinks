@@ -114,12 +114,12 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 		>
 			{is_pro_enabled ? (
 				<div className="betterlinks-auto-create-link">
-					<p>{__('A BetterLink for this post will be generated on publish.', 'betterlinks-pro')}</p>
+					<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
 					<div>
 						{!isChecked && (
 							<>
 								<p className="components-base-control__help" style={{ marginBottom: 0 }}>
-									<strong>{link}</strong>
+									{link}
 								</p>
 								<div style={autoLinkInputFieldWrapper}>
 									<AutoLinkInput autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />
@@ -170,7 +170,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 				</div>
 			) : (
 				<div className="betterlinks-auto-create-link">
-					<p>{__('A BetterLink for this post will be generated on publish.', 'betterlinks-pro')}</p>
+					<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
 					<div>
 						<p className="components-base-control__help" style={{ marginBottom: '5px' }}>
 							{link}
