@@ -13,7 +13,7 @@ import DisableCheckbox from './CheckBox';
 import { SelectControl } from '@wordpress/components';
 import { fetch_auto_link_create_settings, fetch_terms_by_link_id, fetch_terms_data } from 'redux/actions/terms.actions';
 
-const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
+const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal }) => {
 	const [isExists, setExists] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [savedCatId, setSavedCatId] = useState(false);
@@ -112,9 +112,9 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 			className="custom-panel"
 			isOpen={true}
 		>
-			{is_pro_enabled && (
+			{is_pro_enabled ? (
 				<div className="betterlinks-auto-create-link">
-					<p>{__('A Better short url for this post will be created on publish', 'betterlinks-pro')}</p>
+					<p>{__('A BetterLink for this post will be generated on publish.', 'betterlinks-pro')}</p>
 					<div>
 						{!isChecked && (
 							<>
@@ -166,6 +166,55 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink }) => {
 							</>
 						)}
 						<DisableCheckbox isChecked={isChecked} setChecked={setChecked} />
+					</div>
+				</div>
+			) : (
+				<div className="betterlinks-auto-create-link">
+					<p>{__('A BetterLink for this post will be generated on publish.', 'betterlinks-pro')}</p>
+					<div>
+						<p className="components-base-control__help" style={{ marginBottom: '5px' }}>
+							{link}
+							<label>
+								<span className="pro-badge" onClick={openUpgradeToProModal}>
+									{__('Pro', 'betterlinks')}
+								</span>
+							</label>
+						</p>
+						<input type="text" placeholder="go/3df796" style={{ width: '100%', 'margin-bottom': '10px' }} disabled />
+						<div
+							style={{
+								display: 'flex',
+								'flex-direction': 'column',
+								'margin-bottom': '12px',
+							}}
+						>
+							<label style={{ 'margin-bottom': '5px' }}>
+								{__('Choose Category', 'betterlinks')}
+								<span className="pro-badge" onClick={openUpgradeToProModal}>
+									{__('Pro', 'betterlinks')}
+								</span>
+							</label>
+							<select disabled>
+								<option>{__('Uncategorized', 'betterlinks')}</option>
+							</select>
+						</div>
+						<div
+							style={{
+								display: 'flex',
+								'flex-direction': 'column',
+								'margin-bottom': '12px',
+							}}
+						>
+							<label style={{ 'margin-bottom': '5px' }}>
+								{__('Redirect Type', 'betterlinks')}
+								<span className="pro-badge" onClick={openUpgradeToProModal}>
+									{__('Pro', 'betterlinks')}
+								</span>
+							</label>
+							<select disabled>
+								<option>{__('307 (Temporary)', 'betterlinks')}</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			)}

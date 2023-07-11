@@ -377,7 +377,9 @@ const CustomSidebarComponent = (props) => {
 
 	return (
 		<Fragment>
-			{autoLinkCreateEnabled && <AutoLinkCreateSidebar ID={linkId} autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />}
+			{autoLinkCreateEnabled && (
+				<AutoLinkCreateSidebar ID={linkId} autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} openUpgradeToProModal={openUpgradeToProModal} />
+			)}
 			{isAllowInstantRedirect && isShowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={<ToggleTitle title={__('Instant Redirect', 'betterlinks')} />} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
