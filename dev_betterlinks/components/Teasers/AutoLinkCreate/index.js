@@ -20,8 +20,9 @@ export default function AutoLinkCreate() {
 			<div className="btl-tab-panel-inner">
 				<Formik>
 					<Form>
-						<CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
-						<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+						<CheckList title={__('Enable Auto-Create Links', 'betterlinks')} onClick={openUpgradeToProModal} />
+						{/* <CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+						<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} /> */}
 					</Form>
 				</Formik>
 			</div>

@@ -32,7 +32,7 @@ const Settings = (props) => {
 		__('Role Management', 'betterlinks'),
 		__('Tracking', 'betterlinks'),
 		__('Broken Link Checker', 'betterlinks'),
-		__('Auto Link Create', 'betterlinks'),
+		__('Auto Create Link', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [

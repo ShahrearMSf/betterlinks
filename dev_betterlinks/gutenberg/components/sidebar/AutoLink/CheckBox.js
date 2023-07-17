@@ -33,7 +33,7 @@ const DisableCheckbox = ({ isChecked, setChecked }) => {
 
 	return (
 		<>
-			<CheckboxControl label="Disable Auto Link Create on this post" help="" checked={isChecked} onChange={() => onSetDisableAutoShortLink(!isChecked)} />
+			<CheckboxControl label="Disable Auto-Create Link on this post" help="" checked={isChecked} onChange={() => onSetDisableAutoShortLink(!isChecked)} />
 		</>
 	);
 };

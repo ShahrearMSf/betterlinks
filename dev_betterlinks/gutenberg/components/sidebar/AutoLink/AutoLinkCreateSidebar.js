@@ -108,7 +108,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 	return (
 		<PluginDocumentSettingPanel
 			name="betterlinks-auto-create-link"
-			title={<ToggleTitle is_pro_feature={true} title={__('Auto Create Link', 'betterlinks')} />}
+			title={<ToggleTitle is_pro_feature={true} title={__('Auto-Create Link', 'betterlinks')} />}
 			className="custom-panel"
 			isOpen={true}
 		>
