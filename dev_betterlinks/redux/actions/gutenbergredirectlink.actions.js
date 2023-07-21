@@ -142,10 +142,11 @@ export const fetch_link_for_permalink = () => {
 		}
 	);
 };
-export const fetch_auto_short_links_disable_ids = async () => {
+export const fetch_auto_short_links_disable_ids = async (postId) => {
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinkspro/admin/get_auto_link_disable_ids');
 	form_data.append('security', betterlinks_nonce);
+	form_data.append('id', postId);
 
 	try {
 		const data = await axios.post(ajaxurl, form_data);
@@ -154,19 +155,36 @@ export const fetch_auto_short_links_disable_ids = async () => {
 		console.log('Error! fetch_settings_data failed', { err });
 	}
 };
-export const set_auto_short_links_disable_ids = async (id) => {
+export const set_auto_short_links_disable_ids = async (id, status) => {
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinkspro/admin/set_auto_link_disable_ids');
 	form_data.append('security', betterlinks_nonce);
 	form_data.append('id', id);
+	form_data.append('status', status);
 
 	try {
 		const data = await axios.post(ajaxurl, form_data);
+		console.log(data);
 		return data;
 	} catch (err) {
 		console.log('Error! fetch_settings_data failed', { err });
 	}
 };
+export const delete_disable_links = async (id) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/delete_link');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', id);
+
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		console.log(data);
+		return data;
+	} catch (err) {
+		console.log('Error! fetch_settings_data failed', { err });
+	}
+};
+
 export const fetch_link_by_permalink = () => {
 	const permalink = wp.data.select('core/editor').getPermalink();
 	if (!permalink) return false;

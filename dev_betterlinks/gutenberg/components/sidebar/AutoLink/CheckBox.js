@@ -2,7 +2,7 @@ import { CheckboxControl } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 import { edit_gutenberg_auto_link, fetch_auto_short_links_disable_ids, set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirectlink.actions';
 
-const DisableCheckbox = ({ isChecked, setChecked }) => {
+const DisableCheckbox = ({ isChecked, setChecked, ID }) => {
 	const [postId, setPostId] = useState(null);
 
 	useEffect(() => {
@@ -10,15 +10,12 @@ const DisableCheckbox = ({ isChecked, setChecked }) => {
 		if (postId) {
 			setPostId(postId);
 		}
-		fetch_auto_short_links_disable_ids().then((response) => {
-			if (Array.isArray(response?.data?.data) && postId) {
-				const ids = response.data.data;
-				if (ids.includes('' + postId)) {
-					setChecked(true);
-					edit_gutenberg_auto_link({
-						disable_auto_short_link: true,
-					});
-				}
+		fetch_auto_short_links_disable_ids(postId).then((response) => {
+			if (response?.data?.data.includes('1')) {
+				setChecked(true);
+				edit_gutenberg_auto_link({
+					disable_auto_short_link: true,
+				});
 			}
 		});
 	}, []);
@@ -28,7 +25,7 @@ const DisableCheckbox = ({ isChecked, setChecked }) => {
 		edit_gutenberg_auto_link({
 			disable_auto_short_link: bool,
 		});
-		set_auto_short_links_disable_ids(postId);
+		// set_auto_short_links_disable_ids(postId);
 	};
 
 	return (

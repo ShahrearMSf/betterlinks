@@ -2,16 +2,19 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
 import { useState, useEffect } from 'react';
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
-import { debounce, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url } from 'utils/helper';
+import { debounce, formatDate, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url } from 'utils/helper';
 import { redirectType as redirectTypeObj } from 'utils/data';
 import ToggleTitle from '../../ToggleTitle';
-import { EDIT_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
+import { EDIT_GUTENBERG_AUTO_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import AutoLinkInput from './AutoLinkInput';
 import { autoLinkInputFieldWrapper } from './style';
 import DisableCheckbox from './CheckBox';
 import { SelectControl } from '@wordpress/components';
 import { fetch_auto_link_create_settings, fetch_terms_by_link_id, fetch_terms_data } from 'redux/actions/terms.actions';
+import { add_new_link, edit_link } from 'redux/actions/links.actions';
+import { set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirectlink.actions';
+const { withDispatch, subscribe } = wp.data;
 
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal }) => {
 	const [isExists, setExists] = useState(false);
@@ -20,7 +23,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 	const [redirectType, setRedirectType] = useState(false);
 	const [isChecked, setChecked] = useState(false);
 	const link = `${site_url}/`;
-
 	useEffect(
 		debounce(() => {
 			shortURLUniqueCheckGutenberg(autoShortLink, ID).then((res) => {
@@ -132,7 +134,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 								)}
 								{terms && (
 									<SelectControl
-										label={__('Choose Category', 'betterlinks')}
+										label={__('BetterLinks Category', 'betterlinks')}
 										value={getDefaultCatID(savedCatId, terms)}
 										options={terms
 											.filter((item) => item.term_type == 'category')
@@ -165,7 +167,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 								/>
 							</>
 						)}
-						<DisableCheckbox isChecked={isChecked} setChecked={setChecked} />
+						<DisableCheckbox isChecked={isChecked} setChecked={setChecked} ID={ID} />
 					</div>
 				</div>
 			) : (
@@ -189,7 +191,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 							}}
 						>
 							<label style={{ 'margin-bottom': '5px' }}>
-								{__('Choose Category', 'betterlinks')}
+								{__('BetterLinks Category', 'betterlinks')}
 								<span className="pro-badge" onClick={openUpgradeToProModal}>
 									{__('Pro', 'betterlinks')}
 								</span>
@@ -221,5 +223,136 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 		</PluginDocumentSettingPanel>
 	);
 };
+
+(() => {
+	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+	subscribe(() => {
+		if (
+			wp.data.select('core/editor')?.isSavingPost() &&
+			// wp.data.select('core/editor')?.isPublishingPost() &&
+			!wp.data.select('core/editor')?.isAutosavingPost() &&
+			wp.data.select('core/editor')?.isCurrentPostPublished() &&
+			wp.data.select('core/editor')?.getPermalink()
+			// !betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link
+			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
+		) {
+			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+			// if (isSameInstantGutenbergData) return false;
+
+			// if(  ) {
+			// 	set_auto_short_links_disable_ids()
+			// }
+
+			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+			const permalink = wp.data.select('core/editor').getPermalink();
+			const currentPost = wp.data.select('core/editor').getCurrentPost();
+			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
+			const postId = wp.data.select('core/editor').getCurrentPostId();
+
+			const link_title = currentPost.title;
+			const link_slug = currentPost.slug;
+			const postType = currentPost.type;
+			// auto create links
+			let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
+
+			console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link);
+			if (!!autoLinkStoreData?.disable_auto_short_link) {
+				console.log(wp.data.select('core/editor'));
+				set_auto_short_links_disable_ids(postId, true);
+				return false;
+			} else {
+				set_auto_short_links_disable_ids(postId, false);
+			}
+
+			const autoLinkFreeParams = {
+				ID: '',
+				cat_id: '',
+				target_url: '',
+				link_title: '',
+				link_slug: '',
+				link_modified: '',
+				link_modified_gmt: '',
+				short_url: '',
+				redirect_type: '307',
+				nofollow: true,
+				param_forwarding: false,
+				sponsored: true,
+				track_me: true,
+			};
+
+			if (is_pro_enabled && settings?.hasOwnProperty(`${postType}_shortlinks`) && settings[`${postType}_shortlinks`]) {
+				if (!autoLinkStoreData.hasOwnProperty('ID')) {
+					// console.log({ before: autoLinkStoreData });
+					// return false;
+					autoLinkStoreData = {
+						...autoLinkFreeParams,
+						...autoLinkStoreData,
+						// ID: freeParams.ID === params.ID ? '' : params.ID,
+						// ID: '',
+						short_url: autoLinkStoreData.short_url,
+						// disable_auto_short_link: autoLinkStoreData.disable_auto_short_link,
+						link_title,
+						link_slug,
+						link_modified: currentDate,
+						link_modified_gmt: currentDate,
+						target_url: permalink,
+					};
+				}
+
+				// console.log(autoLinkStoreData.disable_auto_short_link);
+
+				console.log('auto link create block');
+				if (autoLinkStoreData?.short_url !== '') {
+					if (autoLinkStoreData.ID) {
+						console.log('updating auto');
+						edit_link(
+							autoLinkStoreData,
+							true
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {
+								const data = response?.data?.data;
+								const short_url = data.short_url;
+								if (data) {
+									betterlinksGutenStore.dispatch({
+										type: SAVE_GUTENBERG_AUTO_LINK,
+										payload: {
+											...data,
+										},
+									});
+									return;
+								}
+							})
+							.catch((error) => console.error(error));
+					} else {
+						console.log('creating');
+						add_new_link(
+							autoLinkStoreData,
+							true,
+							false
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {
+								const data = response?.data?.data;
+								if (data) {
+									// console.log(data);
+									betterlinksGutenStore.dispatch({
+										type: SAVE_GUTENBERG_AUTO_LINK,
+										payload: {
+											...data,
+											// short_url: data.short_url,
+										},
+									});
+									return;
+								}
+							})
+							.catch((error) => console.error(error));
+					}
+				} else {
+					console.log('nothing');
+				}
+			}
+		}
+	});
+})();
 
 export default AutoLinkCreateSidebar;
