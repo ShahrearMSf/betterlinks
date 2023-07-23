@@ -16,7 +16,7 @@ import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirectlink.actions';
 const { withDispatch, subscribe } = wp.data;
 
-const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal }) => {
+const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal, autoLinkCreateEnabled }) => {
 	const [isExists, setExists] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [savedCatId, setSavedCatId] = useState(false);
@@ -50,7 +50,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 				})
 				.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 		}
-	}, []);
+	}, [terms]);
 
 	useEffect(() => {
 		const postType = wp.data.select('core/editor').getCurrentPostType();
@@ -107,82 +107,34 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 		return '307';
 	};
 
-	return (
-		<PluginDocumentSettingPanel
-			name="betterlinks-auto-create-link"
-			title={<ToggleTitle is_pro_feature={true} title={__('Auto-Create Links', 'betterlinks')} />}
-			className="custom-panel"
-			isOpen={true}
-		>
-			{is_pro_enabled ? (
+	if (!is_pro_enabled) {
+		return (
+			<PluginDocumentSettingPanel
+				name="betterlinks-auto-create-link"
+				title={<ToggleTitle is_pro_feature={true} title={__('Auto-Create Links', 'betterlinks')} />}
+				className="custom-panel"
+				isOpen={true}
+			>
 				<div className="betterlinks-auto-create-link">
 					<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
 					<div>
-						{!isChecked && (
-							<>
-								<p className="components-base-control__help" style={{ marginBottom: 0 }}>
-									{link}
-								</p>
-								<div style={autoLinkInputFieldWrapper}>
-									<AutoLinkInput autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />
-									<LinkCopyButton shortUrl={autoShortLink} />
-								</div>
-								{isExists && (
-									<p className="components-base-control__help" style={{ color: 'red' }}>
-										{__('Link already exists, try another..', 'betterlinks-pro')}
-									</p>
-								)}
-								{terms && (
-									<SelectControl
-										label={__('BetterLinks Category', 'betterlinks')}
-										value={getDefaultCatID(savedCatId, terms)}
-										options={terms
-											.filter((item) => item.term_type == 'category')
-											.map((item) => ({
-												value: item.ID,
-												label: item.term_name,
-											}))}
-										onChange={(catId) => handleAutoLinkCategory(catId)}
-									/>
-								)}
-								<SelectControl
-									label={__('Redirect Type', 'betterlinks')}
-									options={[
-										...redirectTypeObj,
-										{
-											value: 'cloak',
-											label: __('Cloaked', 'betterlinks'),
-										},
-									]}
-									value={getDefaultRedirectType(redirectType)}
-									onChange={(mode) => {
-										setRedirectType(mode);
-										betterlinksGutenStore.dispatch({
-											type: EDIT_GUTENBERG_AUTO_LINK,
-											payload: {
-												redirect_type: mode,
-											},
-										});
-									}}
-								/>
-							</>
-						)}
-						<DisableCheckbox isChecked={isChecked} setChecked={setChecked} ID={ID} />
-					</div>
-				</div>
-			) : (
-				<div className="betterlinks-auto-create-link">
-					<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
-					<div>
-						<p className="components-base-control__help" style={{ marginBottom: '5px' }}>
-							{link}
-							<label>
-								<span className="pro-badge" onClick={openUpgradeToProModal}>
-									{__('Pro', 'betterlinks')}
-								</span>
-							</label>
-						</p>
-						<input type="text" placeholder="go/3df796" style={{ width: '100%', 'margin-bottom': '10px' }} disabled />
+						<div
+							style={{
+								display: 'flex',
+								'flex-direction': 'column',
+								'margin-bottom': '12px',
+							}}
+						>
+							<p className="components-base-control__help" style={{ marginBottom: '5px' }}>
+								<span style={{ display: 'inline-block', 'margin-bottom': '7px' }}>{link}</span>
+								<label>
+									<span className="pro-badge" onClick={openUpgradeToProModal}>
+										{__('Pro', 'betterlinks')}
+									</span>
+								</label>
+							</p>
+							<input type="text" placeholder="go/3df796" style={{ width: '100%' }} disabled />
+						</div>
 						<div
 							style={{
 								display: 'flex',
@@ -219,9 +171,78 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 						</div>
 					</div>
 				</div>
-			)}
-		</PluginDocumentSettingPanel>
-	);
+			</PluginDocumentSettingPanel>
+		);
+	}
+	if (is_pro_enabled && autoLinkCreateEnabled) {
+		return (
+			<PluginDocumentSettingPanel
+				name="betterlinks-auto-create-link"
+				title={<ToggleTitle is_pro_feature={true} title={__('Auto-Create Links', 'betterlinks')} />}
+				className="custom-panel"
+				isOpen={true}
+			>
+				{is_pro_enabled && (
+					<div className="betterlinks-auto-create-link">
+						<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
+						<div>
+							{!isChecked && (
+								<>
+									<p className="components-base-control__help" style={{ marginBottom: 0 }}>
+										{link}
+									</p>
+									<div style={autoLinkInputFieldWrapper}>
+										<AutoLinkInput autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} />
+										<LinkCopyButton shortUrl={autoShortLink} />
+									</div>
+									{isExists && (
+										<p className="components-base-control__help" style={{ color: 'red' }}>
+											{__('Link already exists, try another..', 'betterlinks-pro')}
+										</p>
+									)}
+									{terms && (
+										<SelectControl
+											label={__('BetterLinks Category', 'betterlinks')}
+											value={getDefaultCatID(savedCatId, terms)}
+											options={terms
+												.filter((item) => item.term_type == 'category')
+												.map((item) => ({
+													value: item.ID,
+													label: item.term_name,
+												}))}
+											onChange={(catId) => handleAutoLinkCategory(catId)}
+										/>
+									)}
+									<SelectControl
+										label={__('Redirect Type', 'betterlinks')}
+										options={[
+											...redirectTypeObj,
+											{
+												value: 'cloak',
+												label: __('Cloaked', 'betterlinks'),
+											},
+										]}
+										value={getDefaultRedirectType(redirectType)}
+										onChange={(mode) => {
+											setRedirectType(mode);
+											betterlinksGutenStore.dispatch({
+												type: EDIT_GUTENBERG_AUTO_LINK,
+												payload: {
+													redirect_type: mode,
+												},
+											});
+										}}
+									/>
+								</>
+							)}
+							<DisableCheckbox isChecked={isChecked} setChecked={setChecked} ID={ID} />
+						</div>
+					</div>
+				)}
+			</PluginDocumentSettingPanel>
+		);
+	}
+	return '';
 };
 
 (() => {
@@ -229,20 +250,15 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 	subscribe(() => {
 		if (
 			wp.data.select('core/editor')?.isSavingPost() &&
-			// wp.data.select('core/editor')?.isPublishingPost() &&
 			!wp.data.select('core/editor')?.isAutosavingPost() &&
 			wp.data.select('core/editor')?.isCurrentPostPublished() &&
-			wp.data.select('core/editor')?.getPermalink()
-			// !betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link
+			wp.data.select('core/editor')?.getPermalink() &&
+			!betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link
 			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
-			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			// if (isSameInstantGutenbergData) return false;
-
-			// if(  ) {
-			// 	set_auto_short_links_disable_ids()
-			// }
+			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+			if (isSameInstantGutenbergData) return false;
 
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			const permalink = wp.data.select('core/editor').getPermalink();
@@ -256,13 +272,9 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			// auto create links
 			let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
 
-			console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link);
-			if (!!autoLinkStoreData?.disable_auto_short_link) {
-				console.log(wp.data.select('core/editor'));
-				set_auto_short_links_disable_ids(postId, true);
+			set_auto_short_links_disable_ids(postId, autoLinkStoreData?.disable_auto_short_link ? '1' : '0');
+			if (autoLinkStoreData?.disable_auto_short_link) {
 				return false;
-			} else {
-				set_auto_short_links_disable_ids(postId, false);
 			}
 
 			const autoLinkFreeParams = {
@@ -283,15 +295,10 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 
 			if (is_pro_enabled && settings?.hasOwnProperty(`${postType}_shortlinks`) && settings[`${postType}_shortlinks`]) {
 				if (!autoLinkStoreData.hasOwnProperty('ID')) {
-					// console.log({ before: autoLinkStoreData });
-					// return false;
 					autoLinkStoreData = {
 						...autoLinkFreeParams,
 						...autoLinkStoreData,
-						// ID: freeParams.ID === params.ID ? '' : params.ID,
-						// ID: '',
 						short_url: autoLinkStoreData.short_url,
-						// disable_auto_short_link: autoLinkStoreData.disable_auto_short_link,
 						link_title,
 						link_slug,
 						link_modified: currentDate,
@@ -300,12 +307,8 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 					};
 				}
 
-				// console.log(autoLinkStoreData.disable_auto_short_link);
-
-				console.log('auto link create block');
 				if (autoLinkStoreData?.short_url !== '') {
 					if (autoLinkStoreData.ID) {
-						console.log('updating auto');
 						edit_link(
 							autoLinkStoreData,
 							true
@@ -325,7 +328,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 							})
 							.catch((error) => console.error(error));
 					} else {
-						console.log('creating');
 						add_new_link(
 							autoLinkStoreData,
 							true,
@@ -334,12 +336,10 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 							.then((response) => {
 								const data = response?.data?.data;
 								if (data) {
-									// console.log(data);
 									betterlinksGutenStore.dispatch({
 										type: SAVE_GUTENBERG_AUTO_LINK,
 										payload: {
 											...data,
-											// short_url: data.short_url,
 										},
 									});
 									return;
@@ -347,8 +347,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 							})
 							.catch((error) => console.error(error));
 					}
-				} else {
-					console.log('nothing');
 				}
 			}
 		}

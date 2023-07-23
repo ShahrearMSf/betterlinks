@@ -164,10 +164,10 @@ export const set_auto_short_links_disable_ids = async (id, status) => {
 
 	try {
 		const data = await axios.post(ajaxurl, form_data);
-		console.log(data);
 		return data;
 	} catch (err) {
-		console.log('Error! fetch_settings_data failed', { err });
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
 	}
 };
 export const delete_disable_links = async (id) => {
@@ -178,7 +178,6 @@ export const delete_disable_links = async (id) => {
 
 	try {
 		const data = await axios.post(ajaxurl, form_data);
-		console.log(data);
 		return data;
 	} catch (err) {
 		console.log('Error! fetch_settings_data failed', { err });

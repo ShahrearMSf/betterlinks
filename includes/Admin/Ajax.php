@@ -538,14 +538,11 @@ class Ajax
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args  = [
             'ID' => ($_REQUEST['ID'] ? sanitize_text_field($_REQUEST['ID']) : ''),
-            'link_id' => ($_REQUEST['short_url'] ? sanitize_text_field($_REQUEST['short_url']) : ''),
+            'short_url' => ($_REQUEST['short_url'] ? sanitize_text_field($_REQUEST['short_url']) : ''),
             'term_id' => ($_REQUEST['term_id'] ? sanitize_text_field($_REQUEST['term_id']) : ''),
         ];
         $this->delete_link($args);
-        // the folowing commented because it shouldn't happen after deleting a link
-        // if (!empty($args['ID'])) {
-        //     \BetterLinks\Helper::delete_link_meta($args['ID'], 'keywords');
-        // }
+    
         wp_send_json_success(
             $args,
             200

@@ -13,6 +13,7 @@ export const fetch_terms_data = (params) => async (dispatch) => {
 			type: FETCH_TERMS_DATA,
 			payload: res.data,
 		});
+		return res.data;
 	} catch (e) {
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/get_terms');
@@ -24,6 +25,7 @@ export const fetch_terms_data = (params) => async (dispatch) => {
 						type: FETCH_TERMS_DATA,
 						payload: response.data,
 					});
+					return response.data;
 				}
 			},
 			(error) => {

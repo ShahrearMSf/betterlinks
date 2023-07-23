@@ -73,8 +73,8 @@ const CustomSidebarComponent = (props) => {
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
 	}, []);
+
 	useEffect(() => {
-		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
 
 		if (short_url) {
@@ -90,6 +90,10 @@ const CustomSidebarComponent = (props) => {
 					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 			}
 		}
+	}, [terms]);
+
+	useEffect(() => {
+		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 
 		const setAllStatesForLinkData = (linkData) => {
 			setTimeout(() => {
@@ -305,10 +309,10 @@ const CustomSidebarComponent = (props) => {
 
 	const deleteInstantRedirect = () => {
 		const ID = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.ID;
-		if (!ID) return false;
-
 		const short_url = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.short_url;
 		const cat_id = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.cat_id;
+
+		if (!ID) return false;
 
 		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
 		makeRequest({
@@ -380,9 +384,13 @@ const CustomSidebarComponent = (props) => {
 
 	return (
 		<Fragment>
-			{autoLinkCreateEnabled && (
-				<AutoLinkCreateSidebar ID={linkId} autoShortLink={autoShortLink} onSetAutoShortLink={onSetAutoShortLink} openUpgradeToProModal={openUpgradeToProModal} />
-			)}
+			<AutoLinkCreateSidebar
+				ID={linkId}
+				autoShortLink={autoShortLink}
+				onSetAutoShortLink={onSetAutoShortLink}
+				openUpgradeToProModal={openUpgradeToProModal}
+				autoLinkCreateEnabled={autoLinkCreateEnabled}
+			/>
 			{isAllowInstantRedirect && isShowInstantRedirect && (
 				<PluginDocumentSettingPanel name="betterlinks-redirect" title={<ToggleTitle title={__('Instant Redirect', 'betterlinks')} />} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}

@@ -337,17 +337,18 @@ class Helper
                 $existingData['wildcards'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
-        } elseif (isset($existingData['links'][$short_url]) || isset($existingData['links'][strToLower($short_url)])) {
+        } elseif (isset($existingData['links'][$short_url]) || isset($existingData['links'][strtolower($short_url)])) {
             $tempArray = $existingData['links'];
             if (is_array($tempArray)) {
                 unset($tempArray[$short_url]);
-                unset($tempArray[strToLower($short_url)]);
+                unset($tempArray[strtolower($short_url)]);
                 $existingData['links'] = $tempArray;
                 return file_put_contents($file, json_encode($existingData));
             }
         }
         return;
     }
+    
     public static function is_exists_short_url($short_url)
     {
         $resutls = self::get_link_by_short_url($short_url);
