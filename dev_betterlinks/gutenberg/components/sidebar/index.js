@@ -648,9 +648,9 @@ const CustomSidebarComponent = (props) => {
 			// return false;
 			// console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
 			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			if (isSameInstantGutenbergData) return false;
+			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+			// if (isSameInstantGutenbergData) return false;
 
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();

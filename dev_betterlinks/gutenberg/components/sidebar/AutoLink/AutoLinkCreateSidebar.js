@@ -14,9 +14,11 @@ import { SelectControl } from '@wordpress/components';
 import { fetch_auto_link_create_settings, fetch_terms_by_link_id, fetch_terms_data } from 'redux/actions/terms.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirectlink.actions';
-const { withDispatch, subscribe } = wp.data;
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+const { subscribe } = wp.data;
 
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal, autoLinkCreateEnabled }) => {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isExists, setExists] = useState(false);
 	const [terms, setTerms] = useState(false);
 	const [savedCatId, setSavedCatId] = useState(false);
@@ -106,6 +108,9 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 		setRedirectType('307');
 		return '307';
 	};
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
 
 	if (!is_pro_enabled) {
 		return (
@@ -115,6 +120,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 				className="custom-panel"
 				isOpen={true}
 			>
+				<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 				<div className="betterlinks-auto-create-link">
 					<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
 					<div>
@@ -242,7 +248,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			</PluginDocumentSettingPanel>
 		);
 	}
-	return '';
 };
 
 (() => {
@@ -256,9 +261,9 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			!betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link
 			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
-			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			if (isSameInstantGutenbergData) return false;
+			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+			// if (isSameInstantGutenbergData) return false;
 
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			const permalink = wp.data.select('core/editor').getPermalink();
