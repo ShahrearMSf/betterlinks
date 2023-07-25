@@ -257,8 +257,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			wp.data.select('core/editor')?.isSavingPost() &&
 			!wp.data.select('core/editor')?.isAutosavingPost() &&
 			wp.data.select('core/editor')?.isCurrentPostPublished() &&
-			wp.data.select('core/editor')?.getPermalink() &&
-			!betterlinksGutenStore?.getState()?.gutenbergAutoLink?.disable_auto_short_link
+			wp.data.select('core/editor')?.getPermalink()
 			// betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
 			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
