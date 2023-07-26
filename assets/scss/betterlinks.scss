@@ -121,6 +121,26 @@ body {
 		visibility: visible;
 	}
 }
+.betterlinks-auto-create-link {
+	.btl-tooltip {
+		padding: 0;
+		background-color: transparent;
+		border: none;
+		margin: 0;
+		padding: 0;
+		text-align: inherit;
+		border-radius: 0;
+		appearance: none; // Just in case we missed anything.
+		margin-left: 3px;
+		cursor: pointer;
+
+		.btl-tooltiptext {
+			width: 60px;
+			font-size: 8px;
+		}
+	}
+}
+
 @import './components/modal';
 @import './components/utm_builder';
 

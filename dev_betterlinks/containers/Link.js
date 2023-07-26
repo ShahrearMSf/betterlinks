@@ -23,6 +23,7 @@ import {
 	is_pro_enabled,
 	add_top_loader,
 	remove_top_loader,
+	shortURLUniqueCheck,
 } from 'utils/helper';
 import { redirectType } from 'utils/data';
 import Category from 'components/Terms/Category';
@@ -167,25 +168,6 @@ export const Link = (props) => {
 		setModalUTMIsOpen(false);
 	};
 
-	const shortURLUniqueCheck = (slug, ID) => {
-		let form_data = new FormData();
-		form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
-		form_data.append('security', betterlinks_nonce);
-		form_data.append('ID', ID);
-		form_data.append('slug', slug);
-		return axios.post(ajaxurl, form_data).then(
-			(response) => {
-				if (response.data) {
-					setSlugIsExists(response.data.data);
-					return response.data.data;
-				}
-			},
-			(error) => {
-				console.log(error);
-			}
-		);
-	};
-
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
 	};
@@ -196,7 +178,7 @@ export const Link = (props) => {
 	const onSubmit = (values) => {
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
-		shortURLUniqueCheck(values.short_url, values.ID).then((isDuplicate) => {
+		shortURLUniqueCheck(values.short_url, values.ID, setSlugIsExists).then((isDuplicate) => {
 			if (!isDuplicate) {
 				if (!values.cat_id) {
 					const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];

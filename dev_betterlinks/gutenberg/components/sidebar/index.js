@@ -2,20 +2,31 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
-import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl } from 'utils/helper';
+import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, betterlinks_links_option } from 'utils/helper';
 
-import { edit_gutenberg_link, edit_link_expire_option, fetch_link_for_permalink } from 'redux/actions/gutenbergredirectlink.actions';
+import {
+	edit_gutenberg_link,
+	edit_gutenberg_auto_link,
+	edit_link_expire_option,
+	fetch_link_by_permalink,
+	fetch_link_for_permalink,
+	set_auto_short_links_disable_ids,
+	delete_disable_links,
+} from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
-import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
+import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
 
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
+
+import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
+import ToggleTitle from '../ToggleTitle';
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
@@ -29,6 +40,9 @@ const CustomSidebarComponent = (props) => {
 	const [isSponsored, setSponsored] = useState(null);
 	const [isParamForwarding, setIsParamForwarding] = useState(null);
 	const [isTrackMe, setIsTrackMe] = useState(null);
+	const [linkId, setLinkId] = useState(null);
+
+	const [autoLinkCreateEnabled, setAutoLinkCreateEnabled] = useState(false);
 
 	const [linkStatus, setLinkStatus] = useState(null);
 	const [isExpire, setIsExpire] = useState();
@@ -38,9 +52,31 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirect, setExpireRedirect] = useState(null);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 
+	const [autoShortLink, setAutoShortLink] = useState('');
+	const [autoLinkCatId, setAutoLinkCatId] = useState(false);
+
+	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
+
 	useEffect(() => {
-		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
+		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+		const postType = wp.data.select('core/editor').getCurrentPostType();
+		if (settings) {
+			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+			setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
+		} else {
+			fetch_settings_data()(betterlinksGutenStore.dispatch)
+				.then(() => {
+					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+					setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
+				})
+				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
+		}
+	}, []);
+
+	useEffect(() => {
 		const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
+
 		if (short_url) {
 			const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
 			if (storeTerms) {
@@ -54,6 +90,10 @@ const CustomSidebarComponent = (props) => {
 					.catch((err) => console.log('error!! failed fetching betterlinks terms data', err));
 			}
 		}
+	}, [terms]);
+
+	useEffect(() => {
+		document?.body?.classList?.add('betterlinks-guten-link-data-not-rendered-in-sidebar');
 
 		const setAllStatesForLinkData = (linkData) => {
 			setTimeout(() => {
@@ -69,6 +109,7 @@ const CustomSidebarComponent = (props) => {
 				return false;
 			}
 			setTargetUrl(linkData.target_url);
+
 			if (!is_pro_enabled && linkData.redirect_type === 'cloak') {
 				edit_gutenberg_link({ redirect_type: '307' });
 				setRedirectMode('307');
@@ -90,18 +131,40 @@ const CustomSidebarComponent = (props) => {
 			setExpireRedirectUrl(linkData.expire?.redirect_url);
 		};
 
-		// Settings
-		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-		if (settings) {
-			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-		} else {
-			fetch_settings_data()(betterlinksGutenStore.dispatch)
-				.then(() => {
-					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-				})
-				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
+		// fetching auto short link by permalink;
+		const get_link_by_permalink = fetch_link_by_permalink();
+		if (!get_link_by_permalink) {
+			setTimeout(() => {
+				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
+			}, 500);
+			return () => {};
 		}
+		get_link_by_permalink.then((data) => {
+			// storing fetched autolink data for gutenberg subscribe
+			setLinkId(+data.ID);
+			if (data.short_url) {
+				// console.log(data);
+				const short_url = data.short_url;
+				betterlinksGutenStore.dispatch({
+					type: SAVE_GUTENBERG_AUTO_LINK,
+					payload: data,
+				});
+				setAutoShortLink(short_url);
+
+				setAutoLinkCatId(data.cat_id);
+			} else {
+				const randomSlug = generateRandomSlug();
+				const short_url = prefix ? `${prefix}/${randomSlug}` : randomSlug;
+
+				betterlinksGutenStore.dispatch({
+					type: SAVE_GUTENBERG_AUTO_LINK,
+					payload: {
+						short_url,
+					},
+				});
+				setAutoShortLink(short_url);
+			}
+		});
 
 		const resultOfFetchPermalink = fetch_link_for_permalink();
 		if (!resultOfFetchPermalink) {
@@ -126,6 +189,7 @@ const CustomSidebarComponent = (props) => {
 						};
 					}
 					setAllStatesForLinkData(linkData);
+					setAutoLinkCatId(linkData.cat_id);
 					clearInterval(intervalId);
 				}, 500);
 			})
@@ -135,6 +199,11 @@ const CustomSidebarComponent = (props) => {
 	const onSetTargetUrl = (url) => {
 		setTargetUrl(url);
 		edit_gutenberg_link({ target_url: url });
+	};
+
+	const onSetAutoShortLink = (url) => {
+		setAutoShortLink(url);
+		edit_gutenberg_auto_link({ short_url: url });
 	};
 
 	const onSetRedirectType = (type) => {
@@ -312,10 +381,18 @@ const CustomSidebarComponent = (props) => {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
+
 	return (
 		<Fragment>
+			<AutoLinkCreateSidebar
+				ID={linkId}
+				autoShortLink={autoShortLink}
+				onSetAutoShortLink={onSetAutoShortLink}
+				openUpgradeToProModal={openUpgradeToProModal}
+				autoLinkCreateEnabled={autoLinkCreateEnabled}
+			/>
 			{isAllowInstantRedirect && isShowInstantRedirect && (
-				<PluginDocumentSettingPanel name="betterlinks-redirect" title={__('BetterLinks Instant Redirect', 'betterlinks')} className="custom-panel" isOpen={false}>
+				<PluginDocumentSettingPanel name="betterlinks-redirect" title={<ToggleTitle title={__('Instant Redirect', 'betterlinks')} />} className="custom-panel" isOpen={false}>
 					{/* CustomSidebarMeta start  */}
 
 					<div className="betterlinks-loader-sidebar-wrapper">
@@ -558,7 +635,7 @@ const CustomSidebarComponent = (props) => {
 (() => {
 	//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
 	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-
+	// console.log(wp.data.select('core/editor'));
 	subscribe(() => {
 		if (
 			wp.data.select('core/editor')?.isSavingPost() &&
@@ -568,10 +645,13 @@ const CustomSidebarComponent = (props) => {
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
+			// return false;
+			// console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
 			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-			const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			if (isSameInstantGutenbergData) return false;
+			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
+			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+			// if (isSameInstantGutenbergData) return false;
+
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
@@ -579,6 +659,7 @@ const CustomSidebarComponent = (props) => {
 			const terms = betterlinksGutenStore?.getState()?.terms?.terms || [];
 			const values = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {};
 			const freeParams = { ...(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {}) };
+
 			delete freeParams.expire;
 			delete freeParams.link_status;
 			delete freeParams.dynamic_redirect;
@@ -590,6 +671,7 @@ const CustomSidebarComponent = (props) => {
 			const link_title = currentPost.title;
 			const link_slug = currentPost.slug;
 
+			// redirect
 			const params = {
 				...freeParams,
 				short_url,
@@ -631,25 +713,28 @@ const CustomSidebarComponent = (props) => {
 				params.link_slug = generateSlug(params.link_title);
 			}
 			params.wildcards = Number(params.short_url.includes('*'));
-			if (params.cat_id) {
+
+			if (params.cat_id && params.target_url !== '') {
 				const link_title = params.link_title.trim();
 				if (link_title) {
 					params.link_title = link_title;
 
 					if (params.ID) {
+						console.log('updaete redirect');
 						edit_link(
 							params,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((response) => {})
+							.then(() => {})
 							.catch((error) => console.error(error));
 					} else {
+						console.log('create redirect');
 						add_new_link(
 							params,
 							true,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((response) => {})
+							.then((data) => {})
 							.catch((error) => console.error(error));
 					}
 				}
@@ -657,6 +742,7 @@ const CustomSidebarComponent = (props) => {
 		}
 	});
 })();
+
 const CustomSidebarMeta = withDispatch((dispatch) => ({
 	showSaveButton: (value) => {
 		window.betterlinksInstantGutenbergChangeTimeStamp = Date.now();

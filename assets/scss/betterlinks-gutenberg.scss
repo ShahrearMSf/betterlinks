@@ -2,6 +2,21 @@
 	margin-top: 12px !important;
 	margin-bottom: 10px !important;
 }
+.components-button span.pro-badge,
+.betterlinks-auto-create-link span.pro-badge {
+	background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+	color: #fff;
+	border-radius: 2px;
+	padding: 3px 6px;
+	font-size: 10px;
+	margin-left: 3px;
+	line-height: 1;
+	text-transform: uppercase;
+	display: inline-flex;
+	align-items: center;
+	border-radius: 2px;
+	transform: translateY(-10px);
+}
 .betterlinks-instant-redirect {
 	.betterlinks-instant-redirect-form-group {
 		display: flex;
