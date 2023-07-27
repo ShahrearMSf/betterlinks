@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.5.14
+Stable tag: 1.5.15
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -136,6 +136,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.5.15 - 27/07/2023 =
+
+- Fixed: Manage Links not working when REST API is disabled
+- Few minor bug fixes & improvements
 
 = 1.5.14 - 26/07/2023 =
 
