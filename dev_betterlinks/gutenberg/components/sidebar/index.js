@@ -15,7 +15,7 @@ import {
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_auto_link_create_settings, fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
 
@@ -51,24 +51,30 @@ const CustomSidebarComponent = (props) => {
 	const [expireClicks, setExpireClicks] = useState(null);
 	const [expireRedirect, setExpireRedirect] = useState(null);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
-
 	const [autoShortLink, setAutoShortLink] = useState('');
-	const [autoLinkCatId, setAutoLinkCatId] = useState(false);
 
 	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 		const postType = wp.data.select('core/editor').getCurrentPostType();
+		fetch_auto_link_create_settings()
+			.then((response) => {
+				if (response.data) {
+					const autoLinkSettings = response.data;
+					setAutoLinkCreateEnabled(autoLinkSettings?.hasOwnProperty(`${postType}_shortlinks`) && !!autoLinkSettings[`${postType}_shortlinks`]);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 		if (settings) {
 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-			setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
 		} else {
 			fetch_settings_data()(betterlinksGutenStore.dispatch)
 				.then(() => {
 					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-					setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
 				})
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
@@ -143,15 +149,12 @@ const CustomSidebarComponent = (props) => {
 			// storing fetched autolink data for gutenberg subscribe
 			setLinkId(+data.ID);
 			if (data.short_url) {
-				// console.log(data);
 				const short_url = data.short_url;
 				betterlinksGutenStore.dispatch({
 					type: SAVE_GUTENBERG_AUTO_LINK,
 					payload: data,
 				});
 				setAutoShortLink(short_url);
-
-				setAutoLinkCatId(data.cat_id);
 			} else {
 				const randomSlug = generateRandomSlug();
 				const short_url = prefix ? `${prefix}/${randomSlug}` : randomSlug;
@@ -189,7 +192,6 @@ const CustomSidebarComponent = (props) => {
 						};
 					}
 					setAllStatesForLinkData(linkData);
-					setAutoLinkCatId(linkData.cat_id);
 					clearInterval(intervalId);
 				}, 500);
 			})
@@ -635,7 +637,6 @@ const CustomSidebarComponent = (props) => {
 (() => {
 	//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
 	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-	// console.log(wp.data.select('core/editor'));
 	subscribe(() => {
 		if (
 			wp.data.select('core/editor')?.isSavingPost() &&
@@ -720,7 +721,6 @@ const CustomSidebarComponent = (props) => {
 					params.link_title = link_title;
 
 					if (params.ID) {
-						console.log('updaete redirect');
 						edit_link(
 							params,
 							true
@@ -728,7 +728,6 @@ const CustomSidebarComponent = (props) => {
 							.then(() => {})
 							.catch((error) => console.error(error));
 					} else {
-						console.log('create redirect');
 						add_new_link(
 							params,
 							true,

@@ -49,12 +49,12 @@ class Settings extends Controller
     public function get_items($request)
     {
         $response =  get_option(BETTERLINKS_LINKS_OPTION_NAME, '[]');
-        $auto_links_option = get_option('betterlinkspro_auto_link_create') ;
+        // $auto_links_option = get_option('betterlinkspro_auto_link_create') ;
         return new \WP_REST_Response(
             [
                 'success' => true,
                 'data' => $response,
-                'auto_link' => $auto_links_option
+                // 'auto_link' => $auto_links_option
             ],
             200
         );

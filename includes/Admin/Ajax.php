@@ -555,11 +555,10 @@ class Ajax
         if (!apply_filters('betterlinks/api/settings_get_items_permissions_check', current_user_can('manage_options'))) {
             wp_die();
         }
-        $links_option = get_option(BETTERLINKS_LINKS_OPTION_NAME);
-        $auto_link_create_option = get_option('betterlinkspro_auto_link_create');
+        $results = get_option(BETTERLINKS_LINKS_OPTION_NAME);
         if ($results) {
             wp_send_json_success(
-                array_merge($links_option, $auto_link_create_option),
+                $results,
                 200
             );
             wp_die();

@@ -323,7 +323,7 @@ export const edit_link =
 				...item,
 			}).then((response) => {
 				if (response.data) {
-					const { cat_data, tags_data = [] } = res?.data?.data;
+					const { cat_data, tags_data = [] } = response?.data?.data;
 					if (cat_data?.is_newly_created) {
 						dispatch({
 							type: ADD_TERM,
