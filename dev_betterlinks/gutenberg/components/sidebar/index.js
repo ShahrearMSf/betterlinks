@@ -158,8 +158,6 @@ const CustomSidebarComponent = (props) => {
 					payload: data,
 				});
 				setAutoShortLink(short_url);
-
-				setAutoLinkCatId(data.cat_id);
 			} else {
 				const randomSlug = generateRandomSlug();
 				const short_url = prefix ? `${prefix}/${randomSlug}` : randomSlug;
@@ -197,7 +195,6 @@ const CustomSidebarComponent = (props) => {
 						};
 					}
 					setAllStatesForLinkData(linkData);
-					setAutoLinkCatId(linkData.cat_id);
 					clearInterval(intervalId);
 				}, 500);
 			})
