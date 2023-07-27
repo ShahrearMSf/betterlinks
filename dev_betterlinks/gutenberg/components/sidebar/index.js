@@ -15,7 +15,7 @@ import {
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_auto_link_create_settings, fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
 
@@ -51,24 +51,32 @@ const CustomSidebarComponent = (props) => {
 	const [expireClicks, setExpireClicks] = useState(null);
 	const [expireRedirect, setExpireRedirect] = useState(null);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
-
 	const [autoShortLink, setAutoShortLink] = useState('');
-	const [autoLinkCatId, setAutoLinkCatId] = useState(false);
 
 	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 		const postType = wp.data.select('core/editor').getCurrentPostType();
+		fetch_auto_link_create_settings()
+			.then((response) => {
+				if (response.data) {
+					const autoLinkSettings = response.data;
+					setAutoLinkCreateEnabled(autoLinkSettings?.hasOwnProperty(`${postType}_shortlinks`) && !!autoLinkSettings[`${postType}_shortlinks`]);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 		if (settings) {
 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-			setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
+			// setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
 		} else {
 			fetch_settings_data()(betterlinksGutenStore.dispatch)
 				.then(() => {
 					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+					console.log(settings);
 					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-					setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
 				})
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}

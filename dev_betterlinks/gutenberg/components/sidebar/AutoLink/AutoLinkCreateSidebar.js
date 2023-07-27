@@ -58,6 +58,8 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 		const postType = wp.data.select('core/editor').getCurrentPostType();
 		let autoLinkStoreData = betterlinksGutenStore?.getState()?.gutenbergAutoLink;
 
+		console.log(postType);
+
 		if (Object.keys(autoLinkStoreData).length > 0 && autoLinkStoreData.redirect_type) {
 			setRedirectType(autoLinkStoreData.redirect_type || '307');
 		}
