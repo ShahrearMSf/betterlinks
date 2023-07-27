@@ -58,8 +58,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 		const postType = wp.data.select('core/editor').getCurrentPostType();
 		let autoLinkStoreData = betterlinksGutenStore?.getState()?.gutenbergAutoLink;
 
-		console.log(postType);
-
 		if (Object.keys(autoLinkStoreData).length > 0 && autoLinkStoreData.redirect_type) {
 			setRedirectType(autoLinkStoreData.redirect_type || '307');
 		}
@@ -69,7 +67,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 				const values = await AllTermsPromise;
 				if (Array.isArray(values)) {
 					const catId = values?.[0]?.[0]?.term_id || values?.[1]?.data?.[`${postType}_default_cat`];
-					console.log(catId);
 					setSavedCatId(catId);
 					betterlinksGutenStore.dispatch({
 						type: EDIT_GUTENBERG_AUTO_LINK,
@@ -305,7 +302,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 						const autoLinkSettings = response.data;
 						if (is_pro_enabled && autoLinkSettings?.hasOwnProperty(`${postType}_shortlinks`) && autoLinkSettings[`${postType}_shortlinks`]) {
 							if (!autoLinkStoreData.hasOwnProperty('ID')) {
-								console.log(autoLinkStoreData);
 								autoLinkStoreData = {
 									...autoLinkFreeParams,
 									...autoLinkStoreData,
@@ -339,7 +335,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 										})
 										.catch((error) => console.error(error));
 								} else {
-									console.log('creating auto');
 									add_new_link(
 										autoLinkStoreData,
 										true,

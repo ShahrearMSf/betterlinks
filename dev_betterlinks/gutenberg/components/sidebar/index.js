@@ -70,12 +70,10 @@ const CustomSidebarComponent = (props) => {
 			});
 		if (settings) {
 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
-			// setAutoLinkCreateEnabled(settings?.hasOwnProperty(`${postType}_shortlinks`) && !!settings[`${postType}_shortlinks`]);
 		} else {
 			fetch_settings_data()(betterlinksGutenStore.dispatch)
 				.then(() => {
 					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
-					console.log(settings);
 					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
 				})
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
@@ -151,7 +149,6 @@ const CustomSidebarComponent = (props) => {
 			// storing fetched autolink data for gutenberg subscribe
 			setLinkId(+data.ID);
 			if (data.short_url) {
-				// console.log(data);
 				const short_url = data.short_url;
 				betterlinksGutenStore.dispatch({
 					type: SAVE_GUTENBERG_AUTO_LINK,
@@ -640,7 +637,6 @@ const CustomSidebarComponent = (props) => {
 (() => {
 	//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
 	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-	// console.log(wp.data.select('core/editor'));
 	subscribe(() => {
 		if (
 			wp.data.select('core/editor')?.isSavingPost() &&
@@ -725,7 +721,6 @@ const CustomSidebarComponent = (props) => {
 					params.link_title = link_title;
 
 					if (params.ID) {
-						console.log('updaete redirect');
 						edit_link(
 							params,
 							true
@@ -733,7 +728,6 @@ const CustomSidebarComponent = (props) => {
 							.then(() => {})
 							.catch((error) => console.error(error));
 					} else {
-						console.log('create redirect');
 						add_new_link(
 							params,
 							true,

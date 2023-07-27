@@ -241,7 +241,6 @@ export const add_new_link =
 				action: 'betterlinks/admin/create_link',
 				...formData,
 			}).then((res) => {
-				console.log(res);
 				const { cat_data, tags_data = [] } = res?.data?.data;
 				if (cat_data?.is_newly_created) {
 					dispatch({
