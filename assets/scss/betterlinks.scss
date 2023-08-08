@@ -426,3 +426,12 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	color: rgba(0, 0, 0, 0.87);
 	background-color: rgb(255, 255, 255);
 }
+.betterlinks-options-tabs-wrapper div.react-tabs {
+	display: flex;
+}
+.betterlinks-options-tabs-wrapper div.react-tabs ul {
+	display: flex;
+	flex-direction: column;
+	margin-top: 0;
+	margin-right: 20px;
+}

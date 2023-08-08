@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 
 export const useBtlExpireStatusDot = ({ data = {}, view = 'dnd' }) => {
 	return (
@@ -20,3 +21,13 @@ export const useBtlExpireStatusDot = ({ data = {}, view = 'dnd' }) => {
 		</>
 	);
 };
+
+export const useUpgradeProModal = () => {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const openUpgradeToProModal = () => setUpgradeToProModal(true);
+	const closeUpgradeToProModal = () => setUpgradeToProModal(false);
+
+	return [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal];
+};
+// usage
+// const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();

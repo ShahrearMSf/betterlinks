@@ -16,6 +16,7 @@ import BrokenLinks from 'components/Teasers/BrokenLinks';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
 import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
+import TabsOptions from 'containers/TabsOptions';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -28,6 +29,7 @@ const Settings = (props) => {
 	const { settings } = props.settings;
 	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
 		__('General', 'betterlinks'),
+		__('Options', 'betterlinks'),
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
 		__('Tracking', 'betterlinks'),
@@ -37,6 +39,7 @@ const Settings = (props) => {
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
 		<TabsGeneral settings={settings} />,
+		<TabsOptions />,
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<ExternalAnalytics />,
