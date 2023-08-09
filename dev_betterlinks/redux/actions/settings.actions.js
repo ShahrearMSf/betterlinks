@@ -32,6 +32,7 @@ export const fetch_settings_data = () => async (dispatch) => {
 
 export const update_option = (item) => async (dispatch) => {
 	try {
+		console.log(item);
 		const res = await API.put(namespace + 'settings', item);
 		dispatch({
 			type: UPDATE_OPTION,

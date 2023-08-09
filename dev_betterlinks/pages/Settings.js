@@ -39,7 +39,7 @@ const Settings = (props) => {
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
 		<TabsGeneral settings={settings} />,
-		<TabsOptions />,
+		<TabsOptions settings={settings} />,
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<ExternalAnalytics />,

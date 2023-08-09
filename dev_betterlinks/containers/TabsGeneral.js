@@ -83,18 +83,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 	return (
 		<React.Fragment>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<Formik
-				enableReinitialize
-				initialValues={{ ...settings }}
-				onSubmit={(values) => {
-					const uncloakedCatOnSubmit = values?.uncloaked_categories;
-					if (Array.isArray(uncloakedCatOnSubmit)) {
-						values.uncloaked_categories = JSON.stringify(uncloakedCatOnSubmit?.map?.((item) => parseInt(item)));
-					}
-					update_option(values);
-					delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
-				}}
-			>
+			<Formik enableReinitialize initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
 				{(props) => (
 					<Form>
 						<div className="btl-tab-panel-inner">
