@@ -27,6 +27,7 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 
 import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
 import ToggleTitle from '../ToggleTitle';
+import AffiliateLinkDisclosure from './AffiliateLinkDisclosure';
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
@@ -52,6 +53,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirect, setExpireRedirect] = useState(null);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 	const [autoShortLink, setAutoShortLink] = useState('');
+	const [enableAffiliateDisclosure, setEnableAffiliateDisclosure] = useState(false);
 
 	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
 
@@ -70,11 +72,13 @@ const CustomSidebarComponent = (props) => {
 			});
 		if (settings) {
 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+			setEnableAffiliateDisclosure(!!settings?.affiliate_link_disclosure);
 		} else {
 			fetch_settings_data()(betterlinksGutenStore.dispatch)
 				.then(() => {
 					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+					setEnableAffiliateDisclosure(!!settings?.affiliate_link_disclosure);
 				})
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
@@ -386,6 +390,7 @@ const CustomSidebarComponent = (props) => {
 
 	return (
 		<Fragment>
+			<AffiliateLinkDisclosure enableAffiliateDisclosure={enableAffiliateDisclosure} />
 			<AutoLinkCreateSidebar
 				ID={linkId}
 				autoShortLink={autoShortLink}

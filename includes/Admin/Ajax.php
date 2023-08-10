@@ -59,6 +59,12 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_post_types', [$this, 'get_post_types']);
         add_action('wp_ajax_betterlinks/admin/get_post_tags', [$this, 'get_post_tags']);
         add_action('wp_ajax_betterlinks/admin/get_post_categories', [$this, 'get_post_categories']);
+
+        // Affiliate Disclosure Text
+        add_action('wp_ajax_betterlinks/admin/set_affiliate_link_disclosure_post', [$this, 'set_affiliate_link_disclosure_post']);
+        add_action('wp_ajax_betterlinks/admin/get_affiliate_link_disclosure_post', [$this, 'get_affiliate_link_disclosure_post']);
+        add_action('wp_ajax_betterlinks/admin/set_affiliate_link_disclosure_text', [$this, 'set_affiliate_link_disclosure_text']);
+        add_action('wp_ajax_betterlinks/admin/get_affiliate_link_disclosure_text', [$this, 'get_affiliate_link_disclosure_text']);
     }
 
     public function get_prettylinks_data()
@@ -766,5 +772,73 @@ class Ajax
             200
         );
         wp_die();
+    }
+
+    public function set_affiliate_link_disclosure_post() {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!current_user_can('manage_options')) {
+            wp_die('hello');
+        }
+
+        $ID = (isset($_POST['ID']) ? intval($_POST['ID']) : '');
+        $value = (isset($_POST['value']) ? sanitize_text_field($_POST['value']) : '');
+
+        update_post_meta( $ID, 'betterlinks_enable_affiliate_link_disclosure', $value );
+
+        wp_send_json( ['ID' => $ID, 'value' => $value] );
+    }
+
+    public function get_affiliate_link_disclosure_post() {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!current_user_can('manage_options')) {
+            wp_die();
+        }
+        $ID = (isset($_POST['ID']) ? intval(sanitize_text_field($_POST['ID'])) : '');
+        $post_meta = get_post_meta($ID, 'betterlinks_enable_affiliate_link_disclosure');
+        wp_send_json($post_meta);
+    }
+    public function set_affiliate_link_disclosure_text() {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!current_user_can('manage_options')) {
+            wp_die();
+        }
+
+        $ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
+        $value = isset( $_POST['value'] ) ? $_POST['value'] : '';
+
+        $meta_key = 'betterlinks_enable_affiliate_link_disclosure_text';
+
+        if( !empty(get_post_meta($ID, $meta_key)) ) {
+            update_post_meta( $ID, $meta_key, $value );
+        }else {
+            add_post_meta( $ID, $meta_key, $value );
+        }
+
+        wp_send_json( $value );
+    }
+
+    public function get_affiliate_link_disclosure_text() {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (!current_user_can('manage_options')) {
+            wp_die();
+        }
+
+        $ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
+        $meta_key = 'betterlinks_enable_affiliate_link_disclosure_text';
+
+        $data = [];
+        $affiliate_text = get_post_meta( $ID, $meta_key );
+        if( count($affiliate_text) > 0 ) {
+            $data = json_decode(html_entity_decode($affiliate_text[0]), true);    
+        }
+        
+        $settings = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
+        $affiliate_disclosure_text = !empty($settings['affiliate_disclosure_text']) ? $settings['affiliate_disclosure_text'] : '';
+        $affiliate_link_position = !empty($settings['affiliate_link_position']) ? sanitize_text_field($settings['affiliate_link_position']['value']) : '';
+
+        wp_send_json([
+            'affiliate_disclosure_text' => empty($data['affiliate_disclosure_text']) ? $affiliate_disclosure_text : $data['affiliate_disclosure_text'],
+            'affiliate_link_position' => empty($data['affiliate_link_position']) ? $affiliate_link_position : $data['affiliate_link_position']
+        ]);
     }
 }
