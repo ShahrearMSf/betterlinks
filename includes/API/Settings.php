@@ -49,12 +49,10 @@ class Settings extends Controller
     public function get_items($request)
     {
         $response =  get_option(BETTERLINKS_LINKS_OPTION_NAME, '[]');
-        // $auto_links_option = get_option('betterlinkspro_auto_link_create') ;
         return new \WP_REST_Response(
             [
                 'success' => true,
                 'data' => $response,
-                // 'auto_link' => $auto_links_option
             ],
             200
         );
@@ -88,6 +86,8 @@ class Settings extends Controller
         $response = $request->get_params();
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
         $response['uncloaked_categories'] = isset($response['uncloaked_categories']) && is_string($response['uncloaked_categories']) ? json_decode($response['uncloaked_categories']) : [];
+        $response['affiliate_disclosure_text'] = isset($response['affiliate_disclosure_text']) && is_string($response['affiliate_disclosure_text']) ? $response['affiliate_disclosure_text'] : '';
+
         $response = json_encode($response);
         if ($response) {
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $response);

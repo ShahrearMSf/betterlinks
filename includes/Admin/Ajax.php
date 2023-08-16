@@ -65,6 +65,10 @@ class Ajax
         add_action('wp_ajax_betterlinks/admin/get_affiliate_link_disclosure_post', [$this, 'get_affiliate_link_disclosure_post']);
         add_action('wp_ajax_betterlinks/admin/set_affiliate_link_disclosure_text', [$this, 'set_affiliate_link_disclosure_text']);
         add_action('wp_ajax_betterlinks/admin/get_affiliate_link_disclosure_text', [$this, 'get_affiliate_link_disclosure_text']);
+        
+        // Auto create links settings
+        add_action('wp_ajax_betterlinks/admin/get_auto_create_links_settings', [$this, 'get_auto_create_links_settings']);
+
     }
 
     public function get_prettylinks_data()
@@ -840,5 +844,18 @@ class Ajax
             'affiliate_disclosure_text' => empty($data['affiliate_disclosure_text']) ? $affiliate_disclosure_text : $data['affiliate_disclosure_text'],
             'affiliate_link_position' => empty($data['affiliate_link_position']) ? $affiliate_link_position : $data['affiliate_link_position']
         ]);
+    }
+
+    public function get_auto_create_links_settings()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (current_user_can('manage_options')) {
+            $data = get_option(BETTERLINKS_PRO_AUTO_LINK_CREATE_OPTION_NAME, []);
+            if(is_string($data)){
+                $data = json_decode($data, true);
+            }
+            wp_send_json_success($data);
+        }
+        wp_die();
     }
 }

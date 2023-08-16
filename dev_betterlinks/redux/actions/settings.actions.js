@@ -23,7 +23,7 @@ export const fetch_settings_data = () => async (dispatch) => {
 			if (response.data) {
 				dispatch({
 					type: FETCH_SETTINGS,
-					payload: JSON.parse(response.data.data),
+					payload: 'object' === typeof response.data.data ? JSON.parse(response.data.data.data) : JSON.parse(response.data.data),
 				});
 			}
 		});
@@ -32,7 +32,6 @@ export const fetch_settings_data = () => async (dispatch) => {
 
 export const update_option = (item) => async (dispatch) => {
 	try {
-		console.log(item);
 		const res = await API.put(namespace + 'settings', item);
 		dispatch({
 			type: UPDATE_OPTION,
@@ -46,7 +45,7 @@ export const update_option = (item) => async (dispatch) => {
 			if (response.data) {
 				dispatch({
 					type: UPDATE_OPTION,
-					payload: JSON.parse(response.data.data),
+					payload: JSON.parse(response.data.data || '{}'),
 				});
 			}
 		});

@@ -1,12 +1,13 @@
 import UpgradeToPro from '../UpgradeToPro';
 import { __ } from '@wordpress/i18n';
 import { useUpgradeProModal } from 'utils/customHooks';
-import { delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
-import { Formik, Field, Form } from 'formik';
+import { is_pro_enabled, saveSettingsHandler } from 'utils/helper';
+import { Formik, Form } from 'formik';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
+import ReactQuill from 'react-quill';
 
 const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -26,26 +27,17 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
 										<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
-										<span className="text">
-											{__('Enable affiliate link disclosure', 'betterlinks')}
-											<div className="btl-tooltip">
-												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
-													{__('When enabled, this will allow you to add an Affiliate Link Disclosure to your desired page & post. For more info, ', 'betterlinks-pro')}
-													<a target="_blank" style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}>
-														Click Here
-													</a>
-												</span>
-											</div>
-										</span>
+										<span className="text" />
 									</label>
 								</div>
 							</span>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksOptionsTabSettings', null, { ...props, Field })}
-						<button className="button-primary btn-save-settings" type="submit">
-							{formSubmitText}
-						</button>
+						{betterLinksHooks.applyFilters('BetterLinksOptionsTabSettings', null, { ...props, ReactQuill })}
+						{is_pro_enabled && (
+							<button className="button-primary btn-save-settings" type="submit">
+								{formSubmitText}
+							</button>
+						)}
 					</Form>
 				)}
 			</Formik>

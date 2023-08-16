@@ -3,8 +3,9 @@ import { Form, Formik } from 'formik';
 import { __ } from '@wordpress/i18n';
 import CheckList from './CheckList';
 import UpgradeToPro from '../UpgradeToPro';
+import { is_pro_enabled } from 'utils/helper';
 
-export default function AutoLinkCreate() {
+export default function AutoLinkCreate({ autoCreateLinkSettings, terms }) {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const openUpgradeToProModal = () => {
 		setUpgradeToProModal(true);
@@ -16,16 +17,18 @@ export default function AutoLinkCreate() {
 
 	return (
 		<>
-			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<div className="btl-tab-panel-inner">
-				<Formik>
-					<Form>
-						<CheckList title={__('Enable Auto-Create Links', 'betterlinks')} onClick={openUpgradeToProModal} />
-						{/* <CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
-						<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} /> */}
-					</Form>
-				</Formik>
-			</div>
+			{!is_pro_enabled ? (
+				<>
+					<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+					<Formik>
+						<Form>
+							<CheckList title={__('Enable Auto-Create Links', 'betterlinks')} onClick={openUpgradeToProModal} />
+						</Form>
+					</Formik>
+				</>
+			) : (
+				betterLinksHooks.applyFilters('BetterLinksAutoCreateLinksPro', null, { autoCreateLinkSettings: autoCreateLinkSettings, terms: terms })
+			)}
 		</>
 	);
 }

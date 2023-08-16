@@ -1,6 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { is_pro_enabled } from 'utils/helper';
 export default class ExternalAnalytics extends React.Component {
 	constructor(props) {
 		super(props);
@@ -17,11 +18,14 @@ export default class ExternalAnalytics extends React.Component {
 		this.setState({ isOpenModal: false });
 	}
 	render() {
+		if (is_pro_enabled) {
+			return betterLinksHooks.applyFilters('BetterLinksTrackingPro', null);
+		}
 		return (
 			<React.Fragment>
 				<UpgradeToPro isOpenModal={this.state.isOpenModal} closeModal={this.closeModal} />
 				<div className="btl-tab-inner-divider">
-					<div className="btl-tab-panel-inner">
+					<div>
 						<div className="btl-external-analytics-container btl-googleanalytics-container teaser">
 							<form
 								className="form"

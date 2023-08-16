@@ -570,6 +570,9 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	if (is_pro_enabled && !affiliatePosition) {
 		values.affiliate_link_position = { label: __('Top', 'betterlinks'), value: 'top' };
 	}
+	if (is_pro_enabled && values?.affiliate_disclosure_text) {
+		values.affiliate_disclosure_text = values.affiliate_disclosure_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
+	}
 	update_option(values);
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 };
