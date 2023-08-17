@@ -11,11 +11,9 @@ import TabsGeneral from 'containers/TabsGeneral';
 import TabsTools from 'containers/TabsTools';
 import Migration from 'containers/Migration';
 import RoleManagement from 'components/Teasers/RoleManagement';
-import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import BrokenLinks from 'components/Teasers/BrokenLinks';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
-import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import TabsOptions from 'containers/TabsOptions';
 import { is_pro_enabled, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
@@ -26,6 +24,7 @@ function useQuery() {
 
 const Settings = (props) => {
 	const [autoCreateLinkSettings, setAutoCreateLinkSettings] = useState({});
+	const [trackingSettings, setTrackingSettings] = useState({});
 	const query = useQuery();
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
@@ -41,7 +40,7 @@ const Settings = (props) => {
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
 		<TabsGeneral settings={settings} />,
-		<TabsOptions settings={settings} autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} />,
+		<TabsOptions settings={settings} autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} trackingSettings={trackingSettings} />,
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<BrokenLinks />,
@@ -73,6 +72,16 @@ const Settings = (props) => {
 			if (!props.terms) {
 				props.fetch_terms_data();
 			}
+
+			// External Analytics settings
+			makeRequest({
+				action: 'betterlinks/admin/get_external_analytics',
+			}).then((response) => {
+				if (response.data) {
+					console.log(response.data.data);
+					setTrackingSettings({ ...response.data.data });
+				}
+			});
 		}
 	}, []);
 

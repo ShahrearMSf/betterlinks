@@ -19,8 +19,9 @@ export default class ExternalAnalytics extends React.Component {
 	}
 	render() {
 		if (is_pro_enabled) {
-			return betterLinksHooks.applyFilters('BetterLinksTrackingPro', null);
+			return betterLinksHooks.applyFilters('BetterLinksTrackingPro', null, this.props.trackingSettings);
 		}
+
 		return (
 			<React.Fragment>
 				<UpgradeToPro isOpenModal={this.state.isOpenModal} closeModal={this.closeModal} />

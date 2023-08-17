@@ -68,7 +68,8 @@ class Ajax
         
         // Auto create links settings
         add_action('wp_ajax_betterlinks/admin/get_auto_create_links_settings', [$this, 'get_auto_create_links_settings']);
-
+        // External Analytics settings
+        add_action('wp_ajax_betterlinks/admin/get_external_analytics', [$this, 'get_external_analytics']);
     }
 
     public function get_prettylinks_data()
@@ -849,8 +850,20 @@ class Ajax
     public function get_auto_create_links_settings()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
-        if (current_user_can('manage_options')) {
+        if (apply_filters('betterlinkspro/admin/current_user_can_edit_settings', current_user_can('manage_options'))) {
             $data = get_option(BETTERLINKS_PRO_AUTO_LINK_CREATE_OPTION_NAME, []);
+            if(is_string($data)){
+                $data = json_decode($data, true);
+            }
+            wp_send_json_success($data);
+        }
+        wp_die();
+    }
+    public function get_external_analytics()
+    {
+        check_ajax_referer('betterlinks_admin_nonce', 'security');
+        if (apply_filters('betterlinkspro/admin/current_user_can_edit_settings', current_user_can('manage_options'))) {
+            $data = get_option(BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME, []);
             if(is_string($data)){
                 $data = json_decode($data, true);
             }
