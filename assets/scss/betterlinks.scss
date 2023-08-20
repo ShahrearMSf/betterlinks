@@ -1355,3 +1355,15 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	border: 1px solid #ccc;
 }
 // quill-editor-css end
+
+.ql-tooltip {
+	left: -16px !important;
+	font-size: 12px;
+	padding: 5px 3px;
+}
+.ql-snow .ql-tooltip input[type='text'] {
+	width: 150px;
+}
+.ql-picker-options {
+	right: 0;
+}
