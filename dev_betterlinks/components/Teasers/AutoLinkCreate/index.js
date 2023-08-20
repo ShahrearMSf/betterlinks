@@ -4,16 +4,10 @@ import { __ } from '@wordpress/i18n';
 import CheckList from './CheckList';
 import UpgradeToPro from '../UpgradeToPro';
 import { is_pro_enabled } from 'utils/helper';
+import { useUpgradeProModal } from 'utils/customHooks';
 
-export default function AutoLinkCreate({ autoCreateLinkSettings, terms }) {
-	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const openUpgradeToProModal = () => {
-		setUpgradeToProModal(true);
-	};
-
-	const closeUpgradeToProModal = () => {
-		setUpgradeToProModal(false);
-	};
+export default function AutoLinkCreate({ autoCreateLinkSettings, terms, setAutoCreateLinkSettings }) {
+	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
 	return (
 		<>
@@ -27,7 +21,11 @@ export default function AutoLinkCreate({ autoCreateLinkSettings, terms }) {
 					</Formik>
 				</>
 			) : (
-				betterLinksHooks.applyFilters('BetterLinksAutoCreateLinksPro', null, { autoCreateLinkSettings: autoCreateLinkSettings, terms: terms })
+				betterLinksHooks.applyFilters('BetterLinksAutoCreateLinksPro', null, {
+					autoCreateLinkSettings: autoCreateLinkSettings,
+					terms: terms,
+					setAutoCreateLinkSettings: setAutoCreateLinkSettings,
+				})
 			)}
 		</>
 	);

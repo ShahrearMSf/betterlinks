@@ -14,24 +14,10 @@ import {
 	set_affiliate_link_disclosure_text,
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
+import { affiliateLinkPosition } from 'utils/data';
 const { subscribe } = wp.data;
 
 const { PluginDocumentSettingPanel, store: editStore } = wp.editPost;
-
-const affiliateLinkPosition = [
-	{
-		label: __('Top', 'betterlinks-pro'),
-		value: 'top',
-	},
-	{
-		label: __('Bottom', 'betterlinks-pro'),
-		value: 'bottom',
-	},
-	{
-		label: __('Top & Bottom', 'betterlinks-pro'),
-		value: 'top-bottom',
-	},
-];
 
 const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 	const [isChecked, setChecked] = useState(true);
@@ -185,7 +171,6 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 			if (!gutenbergAffiliate?.enable_affiliate_disclosure) return false;
 
 			if (is_pro_enabled && postId && settings.affiliate_link_disclosure) {
-				console.log(gutenbergAffiliate);
 				set_affiliate_link_disclosure_text(postId, gutenbergAffiliate);
 				return false;
 			}

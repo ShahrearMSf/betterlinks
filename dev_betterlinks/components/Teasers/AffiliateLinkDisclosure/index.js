@@ -20,12 +20,12 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 				{(props) => (
 					<Form>
 						{!is_pro_enabled && (
-							<span className="btl-form-group btl-form-group--teaser btl-form-group-affiliate-link-disclosure">
+							<span className="btl-form-group btl-form-group--teaser btl-form-group-affiliate-link-disclosure" onClick={openUpgradeToProModal}>
 								<label className="btl-form-label">
 									{__('Affiliate Link Disclosure', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 								</label>
 								<div className="link-options__body">
-									<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+									<label className="btl-checkbox-field block">
 										<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
 										<span className="text" />
 									</label>

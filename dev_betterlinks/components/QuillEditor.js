@@ -13,7 +13,7 @@ const modules = {
 		['clean'],
 	],
 };
-// const formats = ['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'video'];
+
 const QuillEditor = ({ html, setHtml }) => {
 	const theme = 'snow';
 	const handleChange = (html) => {
@@ -40,10 +40,6 @@ const QuillEditor = ({ html, setHtml }) => {
 					<div className="btl-affiliate-disclosure-editor">
 						<ReactQuill theme={theme} onChange={handleChange} value={html} modules={modules} placeholder={'Type here...'} />
 					</div>
-					{/* <div className="btl-tooltip">
-						<span className="dashicons dashicons-info-outline" />
-						<span className="btl-tooltiptext">{__('Select the position where you want to set the Affiliate Disclosure', 'betterlinks-pro')}</span>
-					</div> */}
 				</label>
 			</div>
 		</span>

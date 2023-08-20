@@ -40,7 +40,15 @@ const Settings = (props) => {
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
 		<TabsGeneral settings={settings} />,
-		<TabsOptions settings={settings} autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} trackingSettings={trackingSettings} />,
+		<TabsOptions
+			settings={settings}
+			autoCreateLinkSettings={autoCreateLinkSettings}
+			terms={terms}
+			trackingSettings={trackingSettings}
+			fetch_settings_data={fetch_settings_data}
+			setTrackingSettings={setTrackingSettings}
+			setAutoCreateLinkSettings={setAutoCreateLinkSettings}
+		/>,
 		<TabsTools query={query} />,
 		<RoleManagement />,
 		<BrokenLinks />,
@@ -78,7 +86,6 @@ const Settings = (props) => {
 				action: 'betterlinks/admin/get_external_analytics',
 			}).then((response) => {
 				if (response.data) {
-					console.log(response.data.data);
 					setTrackingSettings({ ...response.data.data });
 				}
 			});
