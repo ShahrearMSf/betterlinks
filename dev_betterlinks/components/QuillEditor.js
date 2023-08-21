@@ -4,14 +4,7 @@ import { edit_gutenberg_affiliate } from 'redux/actions/gutenbergredirectlink.ac
 import { useEffect } from 'react';
 
 const modules = {
-	toolbar: [
-		['bold', 'italic', 'underline', 'strike', 'blockquote'],
-		[{ color: [] }, { background: [] }],
-		[{ header: '1' }, { header: '2' }],
-		[{ list: 'ordered' }, { list: 'bullet' }],
-		['link', 'image'],
-		['clean'],
-	],
+	toolbar: [['bold', 'italic', 'underline', 'strike', 'blockquote'], [{ color: [] }, { background: [] }], [{ list: 'ordered' }, { list: 'bullet' }], ['link', 'image'], ['clean']],
 };
 
 const QuillEditor = ({ html, setHtml }) => {
