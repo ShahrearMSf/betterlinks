@@ -4,7 +4,7 @@ import { edit_gutenberg_affiliate } from 'redux/actions/gutenbergredirectlink.ac
 import { useEffect } from 'react';
 
 const modules = {
-	toolbar: [['bold', 'italic', 'underline', 'strike', 'blockquote'], [{ color: [] }, { background: [] }], [{ list: 'ordered' }, { list: 'bullet' }], ['link', 'image'], ['clean']],
+	toolbar: [['bold', 'italic', 'underline', 'blockquote', { color: [] }, { background: [] }, { list: 'ordered' }, { list: 'bullet' }, 'link', { align: [] }, 'clean']],
 };
 
 const QuillEditor = ({ html, setHtml }) => {
@@ -27,7 +27,16 @@ const QuillEditor = ({ html, setHtml }) => {
 
 	return (
 		<span className="btl-form-group btl-general-tab-settings-react-select">
-			<label className="btl-form-label">{__('AFFILIATE LINK TEXT', 'betterlinks-pro')}</label>
+			{/* <label className="btl-form-label">{__('AFFILIATE LINK TEXT', 'betterlinks-pro')}</label> */}
+			<label
+				data-wp-c16t="true"
+				data-wp-component="Text"
+				// for="inspector-select-control-0"
+				class="components-truncate components-text components-input-control__label em5sgkm4 css-1imalal e19lxcc00"
+				style={{ marginBottom: '7px' }}
+			>
+				{__('Disclosure Content')}
+			</label>
 			<div className="btl-form-field">
 				<label className="btl-checkbox-field block">
 					<div className="btl-affiliate-disclosure-editor">

@@ -128,7 +128,7 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 				<div className="betterlinks-affiliate-link-disclosure">
 					<p>{__(`This will allow you to add an Affiliate Link Disclosure in this ${postType}`, 'betterlinks-pro')}</p>
 					<CheckboxControl
-						label={__('Enable Affiliate disclosure on this post', 'betterlinks')}
+						label={__('Enable Affiliate Disclosure on this post', 'betterlinks')}
 						help=""
 						checked={isChecked}
 						onChange={() => {
@@ -139,7 +139,7 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 						<>
 							{affiliateLinkOptions?.affiliate_link_position && (
 								<SelectControl
-									label={__('Choose Affiliate Disclosure Position', 'betterlinks')}
+									label={__('Disclosure Position', 'betterlinks')}
 									defaultValue={getAffiliatePosition(affiliateLinkOptions?.affiliate_link_position)}
 									options={affiliateLinkPosition}
 									onChange={(position) => {
