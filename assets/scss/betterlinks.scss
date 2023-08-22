@@ -26,6 +26,7 @@
 	@import './components/tab';
 	@import './components/doc';
 	@import './components/broken-links';
+	@import './components/modal';
 }
 body {
 	&.betterlinks-dark-mode {
@@ -1366,4 +1367,29 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 }
 .ql-picker-options {
 	right: 0;
+}
+
+.ql-align-center {
+	text-align: center;
+	align-self: center;
+}
+.ql-align-left {
+	text-align: left;
+	align-self: flex-start;
+}
+.ql-align-right {
+	text-align: right;
+	align-self: flex-end;
+}
+
+//Affiliate disclosure preview
+.betterlinks_affiliate_disclosure_post {
+	display: flex;
+	flex-direction: column;
+	line-height: 18px;
+	margin: 0;
+}
+.betterlinks_affiliate_disclosure_post p {
+	padding: 0;
+	margin: 0;
 }
