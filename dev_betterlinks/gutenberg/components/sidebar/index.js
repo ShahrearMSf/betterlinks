@@ -10,8 +10,6 @@ import {
 	edit_link_expire_option,
 	fetch_link_by_permalink,
 	fetch_link_for_permalink,
-	set_auto_short_links_disable_ids,
-	delete_disable_links,
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';

@@ -8,21 +8,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
 import ReactQuill from 'react-quill';
-import AffiliateDisclosurePreview from 'components/Modal/AffiliateDisclosurePreview';
 
 const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
-	const [isOpenPreviewModal, openPreviewModal, closePreviewModal] = useUpgradeProModal();
 
-	const handlePreview = (e) => {
-		e.preventDefault();
-		openPreviewModal(true);
-	};
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			{is_pro_enabled && <AffiliateDisclosurePreview isOpenModal={isOpenPreviewModal} closeModal={closePreviewModal} settings={settings} />}
 			<Formik enableReinitialize initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
 				{(props) => (
 					<Form>
@@ -45,9 +38,6 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 								<button className="button-primary btn-save-settings" type="submit">
 									{formSubmitText}
 								</button>
-								<a href="#" className="button-primary btn-save-settings" style={{ marginLeft: '5px' }} onClick={handlePreview}>
-									{__('Preview', 'betterlinks')}
-								</a>
 							</>
 						)}
 					</Form>
