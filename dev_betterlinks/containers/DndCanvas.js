@@ -91,23 +91,25 @@ function DndCanvas(props) {
 		);
 
 	return (
-		<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
+		<>
 			{links && settings && terms ? (
-				<DragDropContext onDragEnd={props.onDragEnd}>
-					{links &&
-						Object.entries(links)
-							.filter((items) => !(items[1].lists.length === 0 && items[1].term_slug === 'uncategorized'))
-							.map(([ind, el]) => (
-								<Droppable key={ind} droppableId={ind}>
-									{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
-								</Droppable>
-							))}
-					{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && !sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
-				</DragDropContext>
+				<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
+					<DragDropContext onDragEnd={props.onDragEnd}>
+						{links &&
+							Object.entries(links)
+								.filter((items) => !(items[1].lists.length === 0 && items[1].term_slug === 'uncategorized'))
+								.map(([ind, el]) => (
+									<Droppable key={ind} droppableId={ind}>
+										{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
+									</Droppable>
+								))}
+						{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && !sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
+					</DragDropContext>
+				</div>
 			) : (
 				<Loader />
 			)}
-		</div>
+		</>
 	);
 }
 
