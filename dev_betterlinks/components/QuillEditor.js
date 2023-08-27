@@ -27,7 +27,6 @@ const QuillEditor = ({ html, setHtml }) => {
 
 	return (
 		<span className="btl-form-group btl-general-tab-settings-react-select">
-			{/* <label className="btl-form-label">{__('AFFILIATE LINK TEXT', 'betterlinks-pro')}</label> */}
 			<label
 				data-wp-c16t="true"
 				data-wp-component="Text"
@@ -39,7 +38,7 @@ const QuillEditor = ({ html, setHtml }) => {
 			</label>
 			<div className="btl-form-field">
 				<label className="btl-checkbox-field block">
-					<div className="btl-affiliate-disclosure-editor">
+					<div className="btl-affiliate-disclosure-editor btl-affiliate-disclosure-block-editor">
 						<ReactQuill theme={theme} onChange={handleChange} value={html} modules={modules} placeholder={'Type here...'} />
 					</div>
 				</label>

@@ -839,7 +839,7 @@ class Ajax
         
         $settings = json_decode(get_option(BETTERLINKS_LINKS_OPTION_NAME), true);
         $affiliate_disclosure_text = !empty($settings['affiliate_disclosure_text']) ? $settings['affiliate_disclosure_text'] : '';
-        $affiliate_link_position = !empty($settings['affiliate_link_position']) ? sanitize_text_field($settings['affiliate_link_position']['value']) : '';
+        $affiliate_link_position = !empty($settings['affiliate_link_position']['value']) ? sanitize_text_field($settings['affiliate_link_position']['value']) : '';
 
         wp_send_json([
             'affiliate_disclosure_text' => empty($data['affiliate_disclosure_text']) ? $affiliate_disclosure_text : $data['affiliate_disclosure_text'],

@@ -46,7 +46,6 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 		const postId = wp.data.select('core/editor').getCurrentPostId();
 		const handleAffiliateText = async () => {
 			const { data } = await get_affiliate_link_disclosure_text(postId);
-			console.log(data);
 			setAffiliateLinkOptions(data);
 			edit_gutenberg_affiliate(data);
 		};

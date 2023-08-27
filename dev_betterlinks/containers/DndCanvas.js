@@ -86,7 +86,7 @@ function DndCanvas(props) {
 	if (getFavoriteLinkCount(links) === 0 && sortByFav)
 		return (
 			<div className="dnd-not-found">
-				<div style={{ padding: 24 }}>There are no records to display</div>
+				<div style={{ padding: 24 }}>{__('There are no records to display', 'betterlinks')}</div>
 			</div>
 		);
 

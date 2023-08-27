@@ -192,9 +192,10 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 					<div className="betterlinks-auto-create-link">
 						<p>{__('A BetterLink for this post will be generated on publish', 'betterlinks-pro')}</p>
 						<div>
+							<DisableCheckbox isChecked={isChecked} setChecked={setChecked} ID={ID} />
 							{!isChecked && (
 								<>
-									<p className="components-base-control__help" style={{ marginBottom: 0 }}>
+									<p className="components-base-control__help" style={{ marginBottom: '5px' }}>
 										{link}
 									</p>
 									<div style={autoLinkInputFieldWrapper}>
@@ -241,7 +242,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 									/>
 								</>
 							)}
-							<DisableCheckbox isChecked={isChecked} setChecked={setChecked} ID={ID} />
 						</div>
 					</div>
 				)}
