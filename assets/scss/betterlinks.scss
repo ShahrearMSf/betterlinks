@@ -1358,9 +1358,15 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 // quill-editor-css end
 
 .ql-tooltip {
-	left: -16px !important;
 	font-size: 12px;
 	padding: 5px 3px;
+	top: 0px !important;
+}
+.btl-affiliate-disclosure-editor-dashboard .ql-tooltip {
+	left: 0px !important;
+}
+.btl-affiliate-disclosure-block-editor .ql-tooltip {
+	left: -15px !important;
 }
 .ql-snow .ql-tooltip input[type='text'] {
 	width: 150px;
@@ -1394,18 +1400,20 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	padding: 5px;
 	width: 90%;
 	min-height: 50px;
-	background-color: #faebd7;
+	background-color: #f2f2f2;
+	max-height: 300px;
+	overflow: hidden;
 }
 .btl-disclosure-preview {
 	background: linear-gradient(202deg, rgb(41, 97, 255) 0%, rgb(0, 59, 226) 100%);
 	padding: 5px;
-	font-size: 15px;
+	font-size: 16px;
 	border-radius: 2px;
 	display: inline-block;
 	color: white;
 
 	.btl-backward-hand {
-		font-size: 15px;
+		font-size: 16px;
 	}
 }
 
