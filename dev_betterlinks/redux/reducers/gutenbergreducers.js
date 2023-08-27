@@ -4,6 +4,7 @@ import links from 'redux/reducers/links.reducers';
 import gutenbergredirectlink from 'redux/reducers/gutenbergredirectlink.reducers';
 import terms from 'redux/reducers/terms.reducers';
 import gutenbergAutoLink from './gutenbergAutoLink.reducers';
+import autoLinkSettings from './autolinksettings.reducers';
 
 export const gutenbergReducers = combineReducers({
 	links,
@@ -11,4 +12,5 @@ export const gutenbergReducers = combineReducers({
 	terms,
 	gutenbergredirectlink,
 	gutenbergAutoLink,
+	autoLinkSettings,
 });

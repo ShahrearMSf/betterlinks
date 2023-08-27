@@ -57,17 +57,23 @@ const CustomSidebarComponent = (props) => {
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+		const autoLinkSettings = betterlinksGutenStore?.getState()?.autoLinkSettings?.autoLinkSettings?.data;
 		const postType = wp.data.select('core/editor').getCurrentPostType();
-		fetch_auto_link_create_settings()
-			.then((response) => {
-				if (response.data) {
-					const autoLinkSettings = response.data;
-					setAutoLinkCreateEnabled(autoLinkSettings?.hasOwnProperty(`${postType}_shortlinks`) && !!autoLinkSettings[`${postType}_shortlinks`]);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+
+		if (autoLinkSettings) {
+			setAutoLinkCreateEnabled(!!autoLinkSettings?.[`${postType}_shortlinks`]);
+		} else {
+			fetch_auto_link_create_settings()(betterlinksGutenStore.dispatch)
+				.then((response) => {
+					if (response.data) {
+						const autoLinkSettings = response.data;
+						setAutoLinkCreateEnabled(!!autoLinkSettings?.[`${postType}_shortlinks`]);
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
 		if (settings) {
 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
 		} else {

@@ -62,7 +62,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			setRedirectType(autoLinkStoreData.redirect_type || '307');
 		}
 		const getTermById = async () => {
-			const AllTermsPromise = Promise.all([fetch_terms_by_link_id(ID), fetch_auto_link_create_settings()]);
+			const AllTermsPromise = Promise.all([fetch_terms_by_link_id(ID), fetch_auto_link_create_settings()(betterlinksGutenStore.dispatch)]);
 			try {
 				const values = await AllTermsPromise;
 				if (Array.isArray(values)) {
@@ -263,12 +263,13 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
 			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
 			// if (isSameInstantGutenbergData) return false;
-
+			console.log(betterlinksGutenStore?.getState());
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 			const postId = wp.data.select('core/editor').getCurrentPostId();
+			const autoLinkSettings = betterlinksGutenStore?.getState()?.autoLinkSettings?.autoLinkSettings?.data || {};
 
 			const link_title = currentPost.title;
 			const link_slug = currentPost.slug;
@@ -296,71 +297,63 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 				sponsored: true,
 				track_me: true,
 			};
-			fetch_auto_link_create_settings()
-				.then((response) => {
-					if (response.data) {
-						const autoLinkSettings = response.data;
-						if (is_pro_enabled && autoLinkSettings?.hasOwnProperty(`${postType}_shortlinks`) && autoLinkSettings[`${postType}_shortlinks`]) {
-							if (!autoLinkStoreData.hasOwnProperty('ID')) {
-								autoLinkStoreData = {
-									...autoLinkFreeParams,
-									...autoLinkStoreData,
-									short_url: autoLinkStoreData.short_url,
-									link_title,
-									link_slug,
-									link_modified: currentDate,
-									link_modified_gmt: currentDate,
-									target_url: permalink,
-								};
-							}
 
-							if (autoLinkStoreData?.short_url !== '') {
-								if (autoLinkStoreData.ID) {
-									edit_link(
-										autoLinkStoreData,
-										true
-									)(betterlinksGutenStore.dispatch)
-										.then((response) => {
-											const data = response?.data?.data;
-											const short_url = data.short_url;
-											if (data) {
-												betterlinksGutenStore.dispatch({
-													type: SAVE_GUTENBERG_AUTO_LINK,
-													payload: {
-														...data,
-													},
-												});
-												return;
-											}
-										})
-										.catch((error) => console.error(error));
-								} else {
-									add_new_link(
-										autoLinkStoreData,
-										true,
-										false
-									)(betterlinksGutenStore.dispatch)
-										.then((response) => {
-											const data = response?.data?.data;
-											if (data) {
-												betterlinksGutenStore.dispatch({
-													type: SAVE_GUTENBERG_AUTO_LINK,
-													payload: {
-														...data,
-													},
-												});
-												return;
-											}
-										})
-										.catch((error) => console.error(error));
+			if (is_pro_enabled && autoLinkSettings?.[`${postType}_shortlinks`]) {
+				if (!autoLinkStoreData.hasOwnProperty('ID')) {
+					autoLinkStoreData = {
+						...autoLinkFreeParams,
+						...autoLinkStoreData,
+						short_url: autoLinkStoreData.short_url,
+						link_title,
+						link_slug,
+						link_modified: currentDate,
+						link_modified_gmt: currentDate,
+						target_url: permalink,
+					};
+				}
+
+				if (autoLinkStoreData?.short_url !== '') {
+					if (autoLinkStoreData.ID) {
+						edit_link(
+							autoLinkStoreData,
+							true
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {
+								const data = response?.data?.data;
+								const short_url = data.short_url;
+								if (data) {
+									betterlinksGutenStore.dispatch({
+										type: SAVE_GUTENBERG_AUTO_LINK,
+										payload: {
+											...data,
+										},
+									});
+									return;
 								}
-							}
-						}
+							})
+							.catch((error) => console.error(error));
+					} else {
+						add_new_link(
+							autoLinkStoreData,
+							true,
+							false
+						)(betterlinksGutenStore.dispatch)
+							.then((response) => {
+								const data = response?.data?.data;
+								if (data) {
+									betterlinksGutenStore.dispatch({
+										type: SAVE_GUTENBERG_AUTO_LINK,
+										payload: {
+											...data,
+										},
+									});
+									return;
+								}
+							})
+							.catch((error) => console.error(error));
 					}
-				})
-				.catch((err) => {
-					console.log(err);
-				});
+				}
+			}
 		}
 	});
 })();
