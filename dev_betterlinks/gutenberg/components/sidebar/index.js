@@ -42,7 +42,6 @@ const CustomSidebarComponent = (props) => {
 	const [linkId, setLinkId] = useState(null);
 
 	const [autoLinkCreateEnabled, setAutoLinkCreateEnabled] = useState(false);
-
 	const [linkStatus, setLinkStatus] = useState(null);
 	const [isExpire, setIsExpire] = useState();
 	const [expireType, setExpireType] = useState(null);
@@ -52,7 +51,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 	const [autoShortLink, setAutoShortLink] = useState('');
 	const [enableAffiliateDisclosure, setEnableAffiliateDisclosure] = useState(false);
-	const prefix = JSON.parse(betterlinks_links_option || '[]')?.['prefix'] || '';
+	const prefix = betterlinks_links_option?.prefix || '';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;

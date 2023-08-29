@@ -2,7 +2,9 @@ import { API, namespace, makeRequest } from 'utils/helper';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
 export const UPDATE_OPTION = 'UPDATE_OPTION';
-
+function isString(x) {
+	return Object.prototype.toString.call(x) === '[object String]';
+}
 export const fetch_settings_data = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'settings');
@@ -21,9 +23,14 @@ export const fetch_settings_data = () => async (dispatch) => {
 			action: 'betterlinks/admin/get_settings',
 		}).then((response) => {
 			if (response.data) {
+				const payload = 'object' === typeof response.data.data ? JSON.parse(response.data.data.data) : JSON.parse(response.data.data);
+				const autolink_disable_post_types = isString(payload?.['autolink_disable_post_types'])
+					? (payload?.['autolink_disable_post_types'] || '')?.replaceAll('\\', '')
+					: payload?.['autolink_disable_post_types'];
+				payload['autolink_disable_post_types'] = isString(autolink_disable_post_types) ? JSON.parse(autolink_disable_post_types) : autolink_disable_post_types;
 				dispatch({
 					type: FETCH_SETTINGS,
-					payload: 'object' === typeof response.data.data ? JSON.parse(response.data.data.data) : JSON.parse(response.data.data),
+					payload,
 				});
 			}
 		});
@@ -43,9 +50,15 @@ export const update_option = (item) => async (dispatch) => {
 			...item,
 		}).then((response) => {
 			if (response.data) {
+				const payload = JSON.parse(response.data.data || '{}');
+				const autolink_disable_post_types = isString(payload?.['autolink_disable_post_types'])
+					? (payload?.['autolink_disable_post_types'] || '')?.replaceAll('\\', '')
+					: payload?.['autolink_disable_post_types'];
+				payload['autolink_disable_post_types'] = isString(autolink_disable_post_types) ? JSON.parse(autolink_disable_post_types) : autolink_disable_post_types;
+
 				dispatch({
 					type: UPDATE_OPTION,
-					payload: JSON.parse(response.data.data || '{}'),
+					payload,
 				});
 			}
 		});
