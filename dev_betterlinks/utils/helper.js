@@ -568,7 +568,7 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	}
 	const affiliatePosition = values?.affiliate_link_position;
 	if (is_pro_enabled && !affiliatePosition) {
-		values.affiliate_link_position = { label: __('Top', 'betterlinks'), value: 'top' };
+		values.affiliate_link_position = 'top';
 	}
 	if (is_pro_enabled && values?.affiliate_disclosure_text) {
 		values.affiliate_disclosure_text = values.affiliate_disclosure_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');

@@ -11,6 +11,7 @@ import Link from 'containers/Link';
 import CatHeader from 'containers/CatHeader';
 import List from 'components/List';
 import { isListEmpty, getFavoriteLinkCount } from 'utils/helper';
+import { __ } from '@wordpress/i18n';
 class InnerList extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		return nextProps.lists !== this.props.lists;

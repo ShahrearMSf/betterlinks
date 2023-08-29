@@ -23,6 +23,7 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 	const [isChecked, setChecked] = useState(true);
 	const [postId, setPostId] = useState(null);
 	const [affiliateLinkOptions, setAffiliateLinkOptions] = useState({});
+	const [affiliatePosition, setAffiliatePosition] = useState(affiliateLinkOptions?.affiliate_link_position);
 	const [html, setHtml] = useState('');
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const postType = wp.data.select('core/editor').getCurrentPostType();
@@ -47,6 +48,7 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 		const handleAffiliateText = async () => {
 			const { data } = await get_affiliate_link_disclosure_text(postId);
 			setAffiliateLinkOptions(data);
+			setAffiliatePosition(data?.affiliate_link_position);
 			edit_gutenberg_affiliate(data);
 		};
 		handleAffiliateText();
@@ -100,7 +102,7 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 
 	const getAffiliatePosition = (position) => {
 		// if (!position) return affiliateLinkPosition[0]['value'];
-		return affiliateLinkPosition.find((item) => item.value === position)['value'];
+		return affiliateLinkPosition.find((item) => item.value === affiliatePosition);
 	};
 	const onSetAffiliateDisclosure = (bool) => {
 		setChecked(bool);
@@ -115,7 +117,6 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 			affiliate_link_position: position,
 		});
 	};
-
 	if (is_pro_enabled && enableAffiliateDisclosure) {
 		return (
 			<PluginDocumentSettingPanel
@@ -139,9 +140,10 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 							{affiliateLinkOptions?.affiliate_link_position && (
 								<SelectControl
 									label={__('Disclosure Position', 'betterlinks')}
-									defaultValue={getAffiliatePosition(affiliateLinkOptions?.affiliate_link_position)}
 									options={affiliateLinkPosition}
+									value={affiliatePosition}
 									onChange={(position) => {
+										setAffiliatePosition(position);
 										onSetAffiliateDisclosurePosition(position);
 									}}
 								/>

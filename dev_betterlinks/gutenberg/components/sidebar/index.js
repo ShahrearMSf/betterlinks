@@ -52,8 +52,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 	const [autoShortLink, setAutoShortLink] = useState('');
 	const [enableAffiliateDisclosure, setEnableAffiliateDisclosure] = useState(false);
-
-	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
+	const prefix = JSON.parse(betterlinks_links_option || '[]')?.['prefix'] || '';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
