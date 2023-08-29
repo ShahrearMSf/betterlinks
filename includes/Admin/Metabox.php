@@ -21,7 +21,7 @@ class Metabox {
     public function affiliate_disclosure_teaser($post) {
         ?>
          <div>
-            <p><?php esc_html_e('This will allow you to add an Affiliate Link Disclosure in this '. $post->post_type, 'betterlinks-pro'); ?></p>
+            <p><?php esc_html_e('This will allow you to add an Affiliate Link Disclosure in this '. $post->post_type, 'betterlinks'); ?></p>
             <div class="betterlinks-affiliate-link-disclosure">
             <div class="betterlinks-form-group betterlinks-form-flex">
                 <label>
@@ -86,7 +86,7 @@ class Metabox {
     public function auto_create_shortlink_teaser() {
         ?>  
         <div>
-            <p><?php esc_html_e( 'A BetterLink for this post will be generated on publish', 'betterlinks-pro' ) ?></p>
+            <p><?php esc_html_e( 'A BetterLink for this post will be generated on publish', 'betterlinks' ) ?></p>
             <div class="betterlinks_auto_create_link_form">
                 <div class="betterlinks-form-group">
                     <label>
@@ -106,7 +106,7 @@ class Metabox {
                 </div>
                 <div class="betterlinks-form-group betterlinks-form-flex">
                     <label>
-                        <?php esc_html_e('BetterLinks Category', 'betterlinks-pro') ?>
+                        <?php esc_html_e('BetterLinks Category', 'betterlinks') ?>
                         <span class="pro-badge">
                             <?php esc_html_e('Pro', 'betterlinks') ?>
                         </span>
@@ -117,7 +117,7 @@ class Metabox {
                 </div>
                 <div class="betterlinks-form-group betterlinks-form-flex">
                     <label>
-                        <?php esc_html_e('Redirect Type', 'betterlinks-pro') ?>
+                        <?php esc_html_e('Redirect Type', 'betterlinks') ?>
                         <span class="pro-badge">
                             <?php esc_html_e('Pro', 'betterlinks') ?>
                         </span>
