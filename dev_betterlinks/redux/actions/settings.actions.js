@@ -24,10 +24,11 @@ export const fetch_settings_data = () => async (dispatch) => {
 		}).then((response) => {
 			if (response.data) {
 				const payload = 'object' === typeof response.data.data ? JSON.parse(response.data.data.data) : JSON.parse(response.data.data);
-				const autolink_disable_post_types = isString(payload?.['autolink_disable_post_types'])
-					? (payload?.['autolink_disable_post_types'] || '')?.replaceAll('\\', '')
-					: payload?.['autolink_disable_post_types'];
-				payload['autolink_disable_post_types'] = isString(autolink_disable_post_types) ? JSON.parse(autolink_disable_post_types) : autolink_disable_post_types;
+				const autolink_disable_post_types = isString(payload?.autolink_disable_post_types)
+					? (payload?.autolink_disable_post_types || '')?.replaceAll('\\', '')
+					: payload?.autolink_disable_post_types;
+				payload['autolink_disable_post_types'] =
+					'undefined' != autolink_disable_post_types && isString(autolink_disable_post_types) ? JSON.parse(autolink_disable_post_types) : autolink_disable_post_types;
 				dispatch({
 					type: FETCH_SETTINGS,
 					payload,
@@ -51,10 +52,11 @@ export const update_option = (item) => async (dispatch) => {
 		}).then((response) => {
 			if (response.data) {
 				const payload = JSON.parse(response.data.data || '{}');
-				const autolink_disable_post_types = isString(payload?.['autolink_disable_post_types'])
-					? (payload?.['autolink_disable_post_types'] || '')?.replaceAll('\\', '')
-					: payload?.['autolink_disable_post_types'];
-				payload['autolink_disable_post_types'] = isString(autolink_disable_post_types) ? JSON.parse(autolink_disable_post_types) : autolink_disable_post_types;
+				const autolink_disable_post_types = isString(payload?.autolink_disable_post_types)
+					? (payload?.autolink_disable_post_types || '')?.replaceAll('\\', '')
+					: payload?.autolink_disable_post_types;
+				payload['autolink_disable_post_types'] =
+					'undefined' != autolink_disable_post_types && isString(autolink_disable_post_types) ? JSON.parse(autolink_disable_post_types) : autolink_disable_post_types;
 
 				dispatch({
 					type: UPDATE_OPTION,
