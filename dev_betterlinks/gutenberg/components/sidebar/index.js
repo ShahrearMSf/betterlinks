@@ -3,28 +3,23 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
 import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, betterlinks_links_option } from 'utils/helper';
-
 import {
 	edit_gutenberg_link,
 	edit_gutenberg_auto_link,
 	edit_link_expire_option,
 	fetch_link_by_permalink,
 	fetch_link_for_permalink,
-	set_auto_short_links_disable_ids,
-	delete_disable_links,
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_auto_link_create_settings, fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
-
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
-
 import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
 import ToggleTitle from '../ToggleTitle';
 
@@ -53,7 +48,8 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 	const [autoShortLink, setAutoShortLink] = useState('');
 
-	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
+	// const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
+	const prefix = betterlinks_links_option?.prefix || '';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;

@@ -92,7 +92,7 @@ class Assets
             filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js'),
             true
         );
-        $betterlinks_links_option =  get_option('betterlinks_links');
+        $betterlinks_links_option =  json_decode(get_option('betterlinks_links'), true);
         // $prefix = isset($betterlinks_links_option) ? $betterlinks_links_option : '';
         wp_localize_script('betterlinks-gutenberg', 'betterLinksGlobal', [
             'post_type' => get_post_type(),
