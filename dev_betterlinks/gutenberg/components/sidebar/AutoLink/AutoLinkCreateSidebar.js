@@ -263,7 +263,6 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
 			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
 			// if (isSameInstantGutenbergData) return false;
-			console.log(betterlinksGutenStore?.getState());
 			const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
