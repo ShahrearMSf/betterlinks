@@ -448,10 +448,10 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	z-index: 1;
 }
 .betterlinks-preview-modal {
-	padding: 5px;
+	padding: 1px;
 	width: 90%;
-	min-height: 50px;
-	background-color: #f2f2f2;
+	// min-height: 50px;
+	// background-color: #f2f2f2;
 	max-height: 300px;
 	overflow: scroll;
 	display: grid;
@@ -476,6 +476,29 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 
 	.btl-backward-hand {
 		font-size: 16px;
+	}
+}
+
+.betterlinks-body .btl-tab-panel-inner .betterlinks-multi-input .btl-modal-select--full,
+.betterlinks-body .btl-tab-panel-inner .betterlinks-input-select-fields .btl-modal-select--full {
+	width: 100px !important;
+	margin-left: 10px;
+}
+.betterlinks-multi-input {
+	display: flex;
+	.betterlinks-single-input {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.btl-text-field {
+			width: 60px !important;
+			text-align: center;
+		}
+		span {
+			font-size: 10px;
+			font-style: italic;
+		}
 	}
 }
 
