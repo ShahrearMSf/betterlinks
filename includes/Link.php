@@ -17,13 +17,18 @@ class Link extends Utils
         $request_uri = substr($request_uri, strlen(parse_url(site_url('/'), PHP_URL_PATH)));
         $param = explode('?', $request_uri, 2);
         $data = $this->get_slug_raw(rtrim(current($param), '/'));
+        
         if (empty($data['target_url']) || !apply_filters('betterlinks/pre_before_redirect', $data)) {
             return false;
         }
         $data = apply_filters('betterlinks/link/before_dispatch_redirect', $data);
         if( empty( $data ) ) return false;
         
+        // set dummy status
+        $data['is_protected'] = true;
+
         do_action('betterlinks/before_redirect', $data);
+        // do_action_ref_array('betterlinks/dispatch_redirect', [&$data, &$param, &$this]);
         $this->dispatch_redirect($data, next($param));
     }
 }
