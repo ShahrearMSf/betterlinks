@@ -483,6 +483,7 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 .betterlinks-body .btl-tab-panel-inner .betterlinks-input-select-fields .btl-modal-select--full {
 	width: 100px !important;
 	margin-left: 10px;
+	align-self: flex-start;
 }
 .betterlinks-multi-input {
 	display: flex;
