@@ -58,7 +58,6 @@ export const fetch_auto_link_create_settings = () => async (dispatch) => {
 
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
-			console.log('special reposne', response);
 			if (response?.data) {
 				dispatch({
 					type: FETCH_AUTOLINK_SETTINGS,
