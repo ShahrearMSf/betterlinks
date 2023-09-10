@@ -300,7 +300,8 @@
 
 // form data
 .btl-form-group {
-	.btl-form-label {
+	.btl-form-label,
+	.link-options__body span {
 		color: $light-darken;
 	}
 	.active-status {

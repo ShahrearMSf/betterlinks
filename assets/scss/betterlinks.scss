@@ -26,6 +26,7 @@
 	@import './components/tab';
 	@import './components/doc';
 	@import './components/broken-links';
+	@import './components/modal';
 }
 body {
 	&.betterlinks-dark-mode {
@@ -241,7 +242,8 @@ label.extra_info_keywords > input#keywords {
 
 // external analytics teaser UI css start
 .btl-external-analytics-container.teaser > form.form > .btl-role-item > label.btl-form-label {
-	width: 45%;
+	width: 72%;
+	padding-right: 15px;
 }
 // external analytics teaser UI css end
 
@@ -425,4 +427,90 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	justify-content: center;
 	color: rgba(0, 0, 0, 0.87);
 	background-color: rgb(255, 255, 255);
+}
+.betterlinks-options-tabs-wrapper div.react-tabs {
+	display: flex;
+}
+.betterlinks-options-tabs-wrapper div.react-tabs ul {
+	display: flex;
+	flex-direction: column;
+	margin-top: 0;
+	margin-right: 20px;
+}
+
+// quill-editor-css start
+@import './ql-editor.scss';
+
+//Affiliate disclosure preview
+.btl-preview-modal-wrapper {
+	position: sticky;
+	top: 35px;
+	z-index: 1;
+}
+.betterlinks-preview-modal {
+	padding: 1px;
+	width: 90%;
+	// min-height: 50px;
+	// background-color: #f2f2f2;
+	max-height: 300px;
+	overflow: scroll;
+	display: grid;
+	align-items: center;
+
+	ul {
+		padding: revert;
+		list-style: unset;
+		margin-top: revert !important;
+	}
+	img {
+		width: 100%;
+	}
+}
+.btl-disclosure-preview {
+	background: linear-gradient(202deg, rgb(41, 97, 255) 0%, rgb(0, 59, 226) 100%);
+	padding: 5px;
+	font-size: 16px;
+	border-radius: 2px;
+	display: inline-block;
+	color: white;
+
+	.btl-backward-hand {
+		font-size: 16px;
+	}
+}
+
+.betterlinks-body .btl-tab-panel-inner .betterlinks-multi-input .btl-modal-select--full,
+.betterlinks-body .btl-tab-panel-inner .betterlinks-input-select-fields .btl-modal-select--full {
+	width: 100px !important;
+	margin-left: 10px;
+	align-self: flex-start;
+}
+.betterlinks-multi-input {
+	display: flex;
+	.betterlinks-single-input {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.btl-text-field {
+			width: 60px !important;
+			text-align: center;
+		}
+		span {
+			font-size: 10px;
+			font-style: italic;
+		}
+	}
+}
+
+.betterlinks_affiliate_disclosure_post {
+	display: flex;
+	flex-direction: column;
+	line-height: 18px;
+	margin: 0;
+}
+.betterlinks_affiliate_disclosure_post p {
+	padding: 0;
+	margin: 0;
+	font-size: inherit;
 }

@@ -234,9 +234,9 @@ trait Query
         $formattedArray['is_disable_analytics_ip'] = isset($options['is_disable_analytics_ip']) ? $options['is_disable_analytics_ip'] : false;
         $is_links_case_sensitive = $formattedArray['is_case_sensitive'];
         if (!empty($options)) {
-            $formattedArray['wildcards_is_active'] = $options['wildcards'];
-            $formattedArray['disablebotclicks'] = $options['disablebotclicks'];
-            $formattedArray['force_https'] = $options['force_https'];
+            $formattedArray['wildcards_is_active'] = isset($options['wildcards']) ? $options['wildcards'] : false;
+            $formattedArray['disablebotclicks'] = isset($options['disablebotclicks']) ? $options['disablebotclicks'] : false;
+            $formattedArray['force_https'] = isset($options['force_https']) ? $options['force_https'] : false;
             $formattedArray['autolink_disable_post_types'] = isset($options['autolink_disable_post_types']) ? $options['autolink_disable_post_types'] : [];
             $formattedArray['is_autolink_icon'] = isset($options['is_autolink_icon']) ? $options['is_autolink_icon'] : false;
             $formattedArray['is_autolink_headings'] = isset($options['is_autolink_headings']) ? $options['is_autolink_headings'] : false;

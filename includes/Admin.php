@@ -22,6 +22,7 @@ class Admin
     {
         new Admin\Ajax();
         new Admin\Notice();
+        Admin\Metabox::init();
         add_filter('BetterLinks/Admin/skip_no_conflict', [$this, 'skip_no_conflict']);
         add_filter('plugin_action_links_' . BETTERLINKS_PLUGIN_BASENAME, array($this, 'insert_plugin_links'));
         add_action('admin_head-toplevel_page_betterlinks', array($this, 'append_no_cache_meta'));

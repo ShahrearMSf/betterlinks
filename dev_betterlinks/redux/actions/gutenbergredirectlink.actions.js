@@ -22,7 +22,14 @@ const { withDispatch, subscribe } = wp.data;
 // export const FETCH_LINK_FOR_PERMALINK = 'FETCH_LINK_FOR_PERMALINK';
 // export const EDIT_GUTENBERG_LINK = 'EDIT_GUTENBERG_LINK';
 // export const EDIT_LINK_EXPIRE_OPTION = 'EDIT_LINK_EXPIRE_OPTION';
-import { FETCH_LINK_FOR_PERMALINK, EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, FETCH_LINK_BY_PERMALINK, EDIT_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
+import {
+	FETCH_LINK_FOR_PERMALINK,
+	EDIT_GUTENBERG_LINK,
+	EDIT_LINK_EXPIRE_OPTION,
+	FETCH_LINK_BY_PERMALINK,
+	EDIT_GUTENBERG_AUTO_LINK,
+	EDIT_GUTENBERG_AFFILIATE_DISCLOSURE,
+} from 'redux/actions/actionstrings';
 
 export const fetch_link_for_permalink = () => {
 	const short_url = permalinkToShortUrl(wp.data.select('core/editor').getPermalink());
@@ -322,4 +329,71 @@ export const edit_link_expire_option = (payload) => {
 		type: EDIT_LINK_EXPIRE_OPTION,
 		payload,
 	});
+};
+
+// Affiliate disclosure
+export const edit_gutenberg_affiliate = (payload) => {
+	betterlinksGutenStore.dispatch({
+		type: EDIT_GUTENBERG_AFFILIATE_DISCLOSURE,
+		payload,
+	});
+};
+export const get_affiliate_link_disclosure_post = async (id) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/get_affiliate_link_disclosure_post');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', id);
+
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	} catch {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	}
+};
+export const set_affiliate_link_disclosure_post = async (id, value) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/set_affiliate_link_disclosure_post');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', id);
+	form_data.append('value', value);
+
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	} catch {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	}
+};
+
+export const get_affiliate_link_disclosure_text = async (id) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/get_affiliate_link_disclosure_text');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', id);
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	} catch {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	}
+};
+
+export const set_affiliate_link_disclosure_text = async (id, value) => {
+	let form_data = new FormData();
+	form_data.append('action', 'betterlinks/admin/set_affiliate_link_disclosure_text');
+	form_data.append('security', betterlinks_nonce);
+	form_data.append('ID', id);
+	form_data.append('value', JSON.stringify(value));
+	
+	try {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	} catch {
+		const data = await axios.post(ajaxurl, form_data);
+		return data;
+	}
 };

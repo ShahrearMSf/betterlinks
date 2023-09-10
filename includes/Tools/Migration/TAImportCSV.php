@@ -74,15 +74,20 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
             if (isset($item[5]) && !empty($item[5])) {
                 $dynamic_redirect = $this->prepare_dynamic_redirect_by_string($item[5]);
             }
+            $nofollow = isset($betterlinks_links['nofollow']) ? $betterlinks_links['nofollow'] : false;
+            $sponsored = isset($betterlinks_links['sponsored']) ? $betterlinks_links['sponsored'] : false;
+            $track_me = isset($betterlinks_links['track_me']) ? $betterlinks_links['track_me'] : false;
+            $param_forwarding = isset($betterlinks_links['param_forwarding']) ? $betterlinks_links['param_forwarding'] : false;
+            $redirect_type = isset($betterlinks_links['redirect_type']) ? $betterlinks_links['redirect_type'] : false;
             $results[] = [
                 'link_title'    =>  $item[0],
                 'link_slug'     =>  $item[2],
                 'link_status'   => $link_status,
-                'nofollow'  => ($item[16] == 'global' ? $betterlinks_links['nofollow'] : $item[16]),
-                'sponsored'  => $betterlinks_links['sponsored'],
-                'track_me'  => $betterlinks_links['track_me'],
-                'param_forwarding'  => ($item[17] == 'global' ? $betterlinks_links['param_forwarding'] : $item[17]),
-                'redirect_type'  => ($item[18] == 'global' ? $betterlinks_links['redirect_type'] : $item[18]),
+                'nofollow'  => ($item[16] == 'global' ? $nofollow : $item[16]),
+                'sponsored'  => $sponsored,
+                'track_me'  => $track_me,
+                'param_forwarding'  => ($item[17] == 'global' ?$param_forwarding : $item[17]),
+                'redirect_type'  => ($item[18] == 'global' ? $redirect_type : $item[18]),
                 'target_url'  => $item[1],
                 'short_url'  => trim((isset($betterlinks_link['prefix']) && !empty($betterlinks_link['prefix']) ? $betterlinks_link['prefix'] . '/' . $item[2] : $item[2]), '/'),
                 'expire'  => json_encode($expire),

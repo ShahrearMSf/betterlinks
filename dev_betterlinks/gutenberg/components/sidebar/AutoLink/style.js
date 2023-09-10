@@ -1,4 +1,4 @@
 export const autoLinkInputFieldWrapper = {
 	display: 'flex',
-	marginBottom: '3px',
+	marginBottom: '8px',
 };
