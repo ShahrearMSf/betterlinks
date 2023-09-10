@@ -640,7 +640,7 @@ const CustomSidebarComponent = (props) => {
 
 (() => {
 	//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+	// let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
 	subscribe(() => {
 		if (
 			wp.data.select('core/editor')?.isSavingPost() &&
@@ -650,13 +650,6 @@ const CustomSidebarComponent = (props) => {
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
-			// return false;
-			// console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
-			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			// if (isSameInstantGutenbergData) return false;
-
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');

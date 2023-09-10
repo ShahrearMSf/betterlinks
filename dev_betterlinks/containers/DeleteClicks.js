@@ -89,7 +89,6 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 	};
 
 	const handleDeleteOptionsChange = (value) => {
-		console.log({ value });
 		setCurrentDaysOlderThan(value);
 	};
 	return (
