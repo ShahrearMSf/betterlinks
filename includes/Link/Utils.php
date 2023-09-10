@@ -55,7 +55,7 @@ class Utils
             return;
         }
         if (filter_var($data['track_me'], FILTER_VALIDATE_BOOLEAN)) {
-            if ($betterlinks['disablebotclicks'] && class_exists('CrawlerDetect')) {
+            if (isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] && class_exists('CrawlerDetect')) {
                 $CrawlerDetect = new CrawlerDetect;
                 if (! $CrawlerDetect->isCrawler()) {
                     $this->start_trakcing($data);
