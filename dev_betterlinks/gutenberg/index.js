@@ -5,7 +5,7 @@ const { registerPlugin } = wp.plugins;
 // redux imports
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { fetch_links_data } from 'redux/actions/links.actions';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { fetch_auto_link_create_settings, fetch_terms_data } from 'redux/actions/terms.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 // local imports
@@ -17,7 +17,12 @@ import { post_type } from 'utils/helper';
 import { Provider } from 'react-redux';
 import store from 'redux/store';
 
-Promise.all([fetch_links_data(true)(betterlinksGutenStore.dispatch), fetch_terms_data()(betterlinksGutenStore.dispatch), fetch_settings_data()(betterlinksGutenStore.dispatch)])
+Promise.all([
+	fetch_links_data(true)(betterlinksGutenStore.dispatch),
+	fetch_terms_data()(betterlinksGutenStore.dispatch),
+	fetch_settings_data()(betterlinksGutenStore.dispatch),
+	fetch_auto_link_create_settings()(betterlinksGutenStore.dispatch),
+])
 	.then(() => {
 		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
 	})
@@ -27,7 +32,12 @@ Promise.all([fetch_links_data(true)(betterlinksGutenStore.dispatch), fetch_terms
 	});
 
 (() => {
-	if (betterlinksGutenStore?.getState()?.links?.links && betterlinksGutenStore?.getState()?.terms?.terms && betterlinksGutenStore?.getState()?.settings?.settings) {
+	if (
+		betterlinksGutenStore?.getState()?.links?.links &&
+		betterlinksGutenStore?.getState()?.terms?.terms &&
+		betterlinksGutenStore?.getState()?.settings?.settings &&
+		betterlinksGutenStore?.getState()?.autoLinkSettings?.autoLinkSettings
+	) {
 		document?.body?.classList?.remove('betterlinks-guten-store-initial-data-still-fetching');
 	} else {
 		document?.body?.classList?.add('betterlinks-guten-store-initial-data-still-fetching');
