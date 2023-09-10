@@ -53,7 +53,9 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			name: __('Keywords', 'betterlinks'),
 			selector: 'keywords',
 			sortable: false,
-			cell: (row) => <div>{row.keywords.toString()}</div>,
+			cell: (row) => {
+				return <div>{row?.keywords?.toString()}</div>;
+			},
 		},
 		{
 			name: __('Shortened URL', 'betterlinks'),
