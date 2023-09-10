@@ -76,7 +76,7 @@ class Ajax
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $links_count = \BetterLinks\Helper::get_prettylinks_links_count();
         $clicks_count = \BetterLinks\Helper::get_prettylinks_clicks_count();
@@ -88,7 +88,7 @@ class Ajax
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         // give betterlinks a lot of time to properly set the migration work for background
         if(function_exists("ini_set")){
@@ -139,7 +139,7 @@ class Ajax
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
         if ($type == 'deactive') {
@@ -147,17 +147,16 @@ class Ajax
         } elseif ($type == 'migrate') {
             update_option('betterlinks_hide_notice_ptl_migrate', true);
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
     public function deactive_prettylinks()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $deactivate = deactivate_plugins('pretty-link/pretty-link.php');
         wp_send_json_success($deactivate);
-        wp_die();
     }
     public function write_json_links()
     {
@@ -166,9 +165,8 @@ class Ajax
             $Cron = new Cron();
             $resutls = $Cron->write_json_links();
             wp_send_json_success($resutls);
-            wp_die();
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
     public function write_json_clicks()
     {
@@ -181,10 +179,8 @@ class Ajax
                 fclose($file_handle);
             }
             wp_send_json_success(true);
-            wp_die();
         }
         wp_send_json_error(false);
-        wp_die();
     }
     public function analytics()
     {
@@ -193,9 +189,8 @@ class Ajax
             $Cron = new Cron();
             $resutls = $Cron->analytics();
             wp_send_json_success($resutls);
-            wp_die();
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
     public function short_url_unique_checker()
     {
@@ -216,15 +211,14 @@ class Ajax
                 }
             }
             wp_send_json_success($alreadyExists);
-            wp_die();
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
     public function cat_slug_unique_checker()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
         $slug = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
@@ -241,23 +235,21 @@ class Ajax
             }
         }
         wp_send_json_success($alreadyExists);
-        wp_die();
     }
     public function get_simple301redirects_data()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $links = get_option('301_redirects');
         wp_send_json_success($links);
-        wp_die();
     }
     public function run_simple301redirects_migration()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         try {
             $simple_301_redirects = get_option('301_redirects');
@@ -266,17 +258,15 @@ class Ajax
             do_action('betterlinks/admin/after_import_data');
             update_option('betterlinks_notice_s301r_migrate', true);
             wp_send_json_success($resutls);
-            wp_die();
         } catch (\Throwable $th) {
             wp_send_json_error($th->getMessage());
-            wp_die();
         }
     }
     public function migration_simple301redirects_notice_hide()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
         if ($type == 'deactive') {
@@ -284,34 +274,32 @@ class Ajax
         } elseif ($type == 'migrate') {
             update_option('betterlinks_notice_s301r_migrate', true);
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
     public function deactive_simple301redirects()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $deactivate = deactivate_plugins('simple-301-redirects/wp-simple-301-redirects.php');
         wp_send_json_success($deactivate);
-        wp_die();
     }
     public function search_clicks_data()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $title = isset($_GET['title']) ? sanitize_text_field($_GET['title']) : '';
         $results = \BetterLinks\Helper::search_clicks_data($title);
         wp_send_json_success($results);
-        wp_die();
     }
     public function links_reorder()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $links = (isset($_POST['links']) ? explode(',', sanitize_text_field($_POST['links'])) : []);
         if (count($links) > 0) {
@@ -320,13 +308,12 @@ class Ajax
             }
         }
         wp_send_json_success([]);
-        wp_die();
     }
     public function links_move_reorder()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $source = (isset($_POST['source']) ? explode(',', sanitize_text_field($_POST['source'])) : []);
         $destination = (isset($_POST['destination']) ? explode(',', sanitize_text_field($_POST['destination'])) : []);
@@ -341,25 +328,23 @@ class Ajax
             }
         }
         wp_send_json_success([]);
-        wp_die();
     }
 
     public function get_thirstyaffiliates_data()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $response = \BetterLinks\Helper::get_thirstyaffiliates_links();
         wp_send_json_success($response);
-        wp_die();
     }
 
     public function run_thirstyaffiliates_migration()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         try {
             $links = \BetterLinks\Helper::get_thirstyaffiliates_links();
@@ -368,10 +353,8 @@ class Ajax
             do_action('betterlinks/admin/after_import_data');
             update_option('betterlinks_notice_ta_migrate', true);
             wp_send_json_success($resutls);
-            wp_die();
         } catch (\Throwable $th) {
             wp_send_json_error($th->getMessage());
-            wp_die();
         }
     }
 
@@ -379,40 +362,37 @@ class Ajax
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $deactivate = deactivate_plugins('thirstyaffiliates/thirstyaffiliates.php');
         wp_send_json_success($deactivate);
-        wp_die();
     }
 
     public function get_links_by_short_url()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $short_url = (isset($_POST['short_url']) ? sanitize_text_field($_POST['short_url']) : '');
         $results = \BetterLinks\Helper::get_link_by_short_url($short_url);
         wp_send_json_success(is_array($results) ? current($results) : false);
-        wp_die();
     }
     public function get_links_by_permalink()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $short_url = (isset($_POST['target_url']) ? sanitize_text_field($_POST['target_url']) : '');
         $results = \BetterLinks\Helper::get_link_by_permalink($short_url);
         wp_send_json_success(is_array($results) ? current($results) : false);
-        wp_die();
     }
 
     public function get_category_by_link_id() {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $ID = (isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '');
         $results = \BetterLinks\Helper::get_terms_by_link_ID_and_term_type($ID, 'category');
@@ -423,21 +403,20 @@ class Ajax
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $data = get_option('betterlinkspro_auto_link_create', []);
         if(is_string($data)){
             $data = json_decode($data, true);
         }
         wp_send_json_success($data);
-        wp_die();
     }
 
     public function get_all_links()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/links_get_items_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
         if (empty($cache_data) || !json_decode($cache_data, true)) {
@@ -451,7 +430,6 @@ class Ajax
                 ],
                 200
             );
-            wp_die();
         }
         wp_send_json_success(
             [
@@ -461,13 +439,12 @@ class Ajax
             ],
             200
         );
-        wp_die();
     }
     public function create_new_link()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/links_create_item_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($_POST);
@@ -477,19 +454,17 @@ class Ajax
                 $results,
                 200
             );
-            wp_die();
         }
         wp_send_json_error(
             $results,
             200
         );
-        wp_die();
     }
     public function update_existing_link()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/links_update_item_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($_POST);
@@ -499,20 +474,18 @@ class Ajax
                 $results,
                 200
             );
-            wp_die();
         }
         wp_send_json_error(
             $args,
             200
         );
-        wp_die();
     }
     public function handle_links_favorite_option()
     {
         if (isset($_POST["favForAll"]) && isset($_POST["ID"])) {
             check_ajax_referer('betterlinks_admin_nonce', 'security');
             if (!apply_filters('betterlinks/api/links_update_favorite_permissions_check', current_user_can('manage_options'))) {
-                wp_die();
+                wp_die("You don't have permission to do this.");
             }
             delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
             $params = [
@@ -531,20 +504,18 @@ class Ajax
                     $response,
                     200
                 );
-                wp_die();
             }
             wp_send_json_error(
                 $response,
                 200
             );
-            wp_die();
         }
     }
     public function delete_existing_link()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args  = [
@@ -558,13 +529,12 @@ class Ajax
             $args,
             200
         );
-        wp_die();
     }
     public function get_settings()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/settings_get_items_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $results = get_option(BETTERLINKS_LINKS_OPTION_NAME, '[]');
         if ($results) {
@@ -572,7 +542,6 @@ class Ajax
                 $results,
                 200
             );
-            wp_die();
         }
         wp_send_json_success(
             [
@@ -581,13 +550,12 @@ class Ajax
             ],
             200
         );
-        wp_die();
     }
     public function update_settings()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/settings_update_items_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $response = \BetterLinks\Helper::fresh_ajax_request_data($_POST);
         $response = \BetterLinks\Helper::sanitize_text_or_array_field($response);
@@ -602,13 +570,12 @@ class Ajax
             $response,
             200
         );
-        wp_die();
     }
     public function get_terms()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/settings_get_items_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $args = [];
         if (isset($_REQUEST['ID'])) {
@@ -624,19 +591,17 @@ class Ajax
                 $results,
                 200
             );
-            wp_die();
         }
         wp_send_json_error(
             [],
             200
         );
-        wp_die();
     }
     public function create_new_term()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = [
@@ -650,13 +615,12 @@ class Ajax
             $results,
             200
         );
-        wp_die();
     }
     public function update_existing_term()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = [
@@ -673,13 +637,12 @@ class Ajax
             ],
             200
         );
-        wp_die();
     }
     public function delete_existing_term()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = [
@@ -690,13 +653,12 @@ class Ajax
             $args,
             200
         );
-        wp_die();
     }
     public function fetch_analytics()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $from = isset($_REQUEST['from']) ? sanitize_text_field($_REQUEST['from']) : date('Y-m-d', strtotime(' - 30 days'));
         $to = isset($_REQUEST['to']) ? sanitize_text_field($_REQUEST['to']) : date('Y-m-d');
@@ -710,13 +672,12 @@ class Ajax
             $results,
             200
         );
-        wp_die();
     }
     public function reset_analytics()
     {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!apply_filters('betterlinks/api/analytics_items_permissions_check', current_user_can('manage_options'))) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         global $wpdb;
         $prefix = $wpdb->prefix;
@@ -754,7 +715,6 @@ class Ajax
             $post_types,
             200
         );
-        wp_die();
     }
     public function get_post_tags()
     {
@@ -764,7 +724,6 @@ class Ajax
             $tags,
             200
         );
-        wp_die();
     }
     public function get_post_categories()
     {
@@ -776,13 +735,12 @@ class Ajax
             $categories,
             200
         );
-        wp_die();
     }
 
     public function set_affiliate_link_disclosure_post() {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die('hello');
+            wp_die("You don't have permission to do this.");
         }
 
         $ID = (isset($_POST['ID']) ? intval($_POST['ID']) : '');
@@ -796,7 +754,7 @@ class Ajax
     public function get_affiliate_link_disclosure_post() {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
         $ID = (isset($_POST['ID']) ? intval(sanitize_text_field($_POST['ID'])) : '');
         $post_meta = get_post_meta($ID, 'betterlinks_enable_affiliate_link_disclosure');
@@ -805,7 +763,7 @@ class Ajax
     public function set_affiliate_link_disclosure_text() {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
 
         $ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
@@ -825,7 +783,7 @@ class Ajax
     public function get_affiliate_link_disclosure_text() {
         check_ajax_referer('betterlinks_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_die();
+            wp_die("You don't have permission to do this.");
         }
 
         $ID = isset($_POST['ID']) ? sanitize_text_field($_POST['ID']) : '';
@@ -857,7 +815,7 @@ class Ajax
             }
             wp_send_json_success($data);
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
     public function get_external_analytics()
     {
@@ -869,6 +827,6 @@ class Ajax
             }
             wp_send_json_success($data);
         }
-        wp_die();
+        wp_die("You don't have permission to do this.");
     }
 }
