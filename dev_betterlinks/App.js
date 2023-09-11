@@ -23,21 +23,18 @@ const App = (props) => {
 	const getResponse = async () => {
 		try {
 			const res = await API.get(namespace);
-			// const response = await fetch(rest_url + namespace);
-			console.log({ free: res });
+
 			if (res?.status !== 200) {
 				setNotice(true);
 			}
 			if (is_pro_enabled) {
 				const proResponse = await API.get('betterlinks-pro/v1/');
 
-				console.log({ pro: proResponse });
 				if (proResponse?.status !== 200) {
 					setNotice(true);
 				}
 			}
 		} catch (error) {
-			// console.log(error);
 			setNotice(true);
 		}
 	};
