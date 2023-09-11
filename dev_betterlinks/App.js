@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import Dashboard from 'pages/Dashboard';
 import Navbar from 'components/Navbar';
-import { is_pro_enabled, namespace, rest_url } from 'utils/helper';
+import { API, is_pro_enabled, namespace, rest_url } from 'utils/helper';
 
 // Let’s clear the current menu content
 const menuPage = document.getElementById('toplevel_page_betterlinks');
@@ -22,20 +22,22 @@ const App = (props) => {
 
 	const getResponse = async () => {
 		try {
-			const response = await fetch(rest_url + namespace);
-			const data = await response.json();
-
-			if (!data?.namespace) {
+			const res = await API.get(namespace);
+			// const response = await fetch(rest_url + namespace);
+			console.log({ free: res });
+			if (res?.status !== 200) {
 				setNotice(true);
 			}
 			if (is_pro_enabled) {
-				const proResponse = await fetch(rest_url + 'betterlinks-pro/v1');
-				const proData = await proResponse.json();
-				if (!proData?.namespace) {
+				const proResponse = await API.get('betterlinks-pro/v1/');
+
+				console.log({ pro: proResponse });
+				if (proResponse?.status !== 200) {
 					setNotice(true);
 				}
 			}
 		} catch (error) {
+			// console.log(error);
 			setNotice(true);
 		}
 	};
