@@ -3,9 +3,9 @@ Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hrr
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, shortlinks, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
 Requires at least: 5.0
-Tested up to: 6.1
+Tested up to: 6.3
 Requires PHP: 5.6
-Stable tag: 1.5.15
+Stable tag: 1.5.16
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -68,6 +68,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Broken Link Checker with Email Notification [PRO]
 - Auto-Link Keywords [PRO]
 - Auto-Create Links [PRO]
+- Affiliate Link Disclosure [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
@@ -137,6 +138,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 1.5.16 - 11/09/2023 =
+
+- Fixed: PHP Warning generated for 'Undefined array key' in "REQUEST_METHOD"
+- Few minor bug fixes & improvements
+
 = 1.5.15 - 27/07/2023 =
 
 - Fixed: Manage Links not working when REST API is disabled
@@ -168,7 +174,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 - Added: Option to Reset Clicks data
 - Added: Option to disable 'logging of IP addresses data' from analytics
 - Fixed: Page scrolling to bottom when using BetterLinks format in Gutenberg
-- Fixed: Gutenberg instant redirect sidebar not appearing sometimes 
+- Fixed: Gutenberg instant redirect sidebar not appearing sometimes
 - Few minor bug fixes & improvements
 
 = 1.5.10 - 06/03/2023 =
