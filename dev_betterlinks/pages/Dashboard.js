@@ -3,6 +3,7 @@ import ManageLinks from 'pages/ManageLinks';
 import Analytics from 'pages/Analytics';
 import Settings from 'pages/Settings';
 import KeywordsLinking from 'pages/KeywordsLinking';
+import { __ } from '@wordpress/i18n';
 
 const renderSwitch = (param) => {
 	switch (param) {
@@ -19,9 +20,17 @@ const renderSwitch = (param) => {
 	}
 };
 
-const Dashboard = () => {
+const Dashboard = ({ notice }) => {
 	return (
 		<React.Fragment>
+			{notice && (
+				<div className="notice notice-warning" style={{ marginBottom: '10px' }}>
+					<p>
+						<b>{__('Caution!', 'betterlinks')}</b> {__('To ensure proper functionality, Please activate BetterLinks REST API endpoints.', 'betterlinks')}
+					</p>
+				</div>
+			)}
+
 			<Suspense fallback="">{renderSwitch(betterLinksQuery.get('page'))}</Suspense>
 		</React.Fragment>
 	);
