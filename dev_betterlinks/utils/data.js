@@ -13,3 +13,18 @@ export const redirectType = [
 		label: __('301 (Permanent)', 'betterlinks'),
 	},
 ];
+
+export const affiliateLinkPosition = [
+	{
+		label: __('Top', 'betterlinks-pro'),
+		value: 'top',
+	},
+	{
+		label: __('Bottom', 'betterlinks-pro'),
+		value: 'bottom',
+	},
+	{
+		label: __('Top & Bottom', 'betterlinks-pro'),
+		value: 'top-bottom',
+	},
+];

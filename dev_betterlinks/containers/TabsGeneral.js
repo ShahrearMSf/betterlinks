@@ -11,7 +11,7 @@ import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled } from 'utils/helper';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
 const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
@@ -83,18 +83,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 	return (
 		<React.Fragment>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<Formik
-				enableReinitialize
-				initialValues={{ ...settings }}
-				onSubmit={(values) => {
-					const uncloakedCatOnSubmit = values?.uncloaked_categories;
-					if (Array.isArray(uncloakedCatOnSubmit)) {
-						values.uncloaked_categories = JSON.stringify(uncloakedCatOnSubmit?.map?.((item) => parseInt(item)));
-					}
-					update_option(values);
-					delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
-				}}
-			>
+			<Formik enableReinitialize initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
 				{(props) => (
 					<Form>
 						<div className="btl-tab-panel-inner">

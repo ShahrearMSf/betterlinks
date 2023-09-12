@@ -3,30 +3,26 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
 import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, betterlinks_links_option } from 'utils/helper';
-
 import {
 	edit_gutenberg_link,
 	edit_gutenberg_auto_link,
 	edit_link_expire_option,
 	fetch_link_by_permalink,
 	fetch_link_for_permalink,
-	set_auto_short_links_disable_ids,
-	delete_disable_links,
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_auto_link_create_settings, fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { RESET_GUTENBERG_INSTANT_REDIRECT, DELETE_GUTENBERG_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
-
 const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
 const { PluginDocumentSettingPanel } = wp.editPost;
-
 import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
 import ToggleTitle from '../ToggleTitle';
+import AffiliateLinkDisclosure from './AffiliateLinkDisclosure';
 
 const CustomSidebarComponent = (props) => {
 	const [isAllowInstantRedirect, setIsAllowInstantRedirect] = useState(false);
@@ -43,7 +39,6 @@ const CustomSidebarComponent = (props) => {
 	const [linkId, setLinkId] = useState(null);
 
 	const [autoLinkCreateEnabled, setAutoLinkCreateEnabled] = useState(false);
-
 	const [linkStatus, setLinkStatus] = useState(null);
 	const [isExpire, setIsExpire] = useState();
 	const [expireType, setExpireType] = useState(null);
@@ -52,29 +47,37 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirect, setExpireRedirect] = useState(null);
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 	const [autoShortLink, setAutoShortLink] = useState('');
-
-	const prefix = JSON.parse(betterlinks_links_option)?.['prefix'] || '';
+	const [enableAffiliateDisclosure, setEnableAffiliateDisclosure] = useState(false);
+	const prefix = betterlinks_links_option?.prefix || '';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;
+		const autoLinkSettings = betterlinksGutenStore?.getState()?.autoLinkSettings?.autoLinkSettings?.data;
 		const postType = wp.data.select('core/editor').getCurrentPostType();
-		fetch_auto_link_create_settings()
-			.then((response) => {
-				if (response.data) {
-					const autoLinkSettings = response.data;
-					setAutoLinkCreateEnabled(autoLinkSettings?.hasOwnProperty(`${postType}_shortlinks`) && !!autoLinkSettings[`${postType}_shortlinks`]);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+
+		if (autoLinkSettings) {
+			setAutoLinkCreateEnabled(!!autoLinkSettings?.[`${postType}_shortlinks`]);
+		} else {
+			fetch_auto_link_create_settings()(betterlinksGutenStore.dispatch)
+				.then((response) => {
+					if (response.data) {
+						const autoLinkSettings = response.data;
+						setAutoLinkCreateEnabled(!!autoLinkSettings?.[`${postType}_shortlinks`]);
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
 		if (settings) {
 			setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+			setEnableAffiliateDisclosure(!!settings?.affiliate_link_disclosure);
 		} else {
 			fetch_settings_data()(betterlinksGutenStore.dispatch)
 				.then(() => {
 					const settings = betterlinksGutenStore?.getState()?.settings?.settings;
 					setIsAllowInstantRedirect(!!settings?.is_allow_gutenberg);
+					setEnableAffiliateDisclosure(!!settings?.affiliate_link_disclosure);
 				})
 				.catch((err) => console.log('error!! failed in sidebar fetching betterlinks Settings data', err));
 		}
@@ -386,6 +389,7 @@ const CustomSidebarComponent = (props) => {
 
 	return (
 		<Fragment>
+			<AffiliateLinkDisclosure enableAffiliateDisclosure={enableAffiliateDisclosure} />
 			<AutoLinkCreateSidebar
 				ID={linkId}
 				autoShortLink={autoShortLink}
@@ -636,7 +640,7 @@ const CustomSidebarComponent = (props) => {
 
 (() => {
 	//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-	let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
+	// let lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
 	subscribe(() => {
 		if (
 			wp.data.select('core/editor')?.isSavingPost() &&
@@ -646,13 +650,6 @@ const CustomSidebarComponent = (props) => {
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url &&
 			betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData?.target_url.trim() != ''
 		) {
-			// return false;
-			// console.log(betterlinksGutenStore?.getState()?.gutenbergAutoLink);
-			//👇 this is used to stop unnecessary request for betterlinks instant gutenberg link
-			// const isSameInstantGutenbergData = lastChangedTimeStamp === window.betterlinksInstantGutenbergChangeTimeStamp;
-			// lastChangedTimeStamp = window.betterlinksInstantGutenbergChangeTimeStamp;
-			// if (isSameInstantGutenbergData) return false;
-
 			const permalink = wp.data.select('core/editor').getPermalink();
 			const currentPost = wp.data.select('core/editor').getCurrentPost();
 			const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');

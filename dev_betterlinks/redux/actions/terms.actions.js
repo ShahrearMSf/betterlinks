@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
-import { FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+import { FETCH_AUTOLINK_SETTINGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
 export const fetch_terms_data = (params) => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'terms', {
@@ -51,14 +51,20 @@ export const fetch_terms_by_link_id = (ID) => {
 		}
 	);
 };
-export const fetch_auto_link_create_settings = () => {
+export const fetch_auto_link_create_settings = () => async (dispatch) => {
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/get_autolink_create_settings');
 	form_data.append('security', betterlinks_nonce);
 
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
-			if (response?.data) return response.data;
+			if (response?.data) {
+				dispatch({
+					type: FETCH_AUTOLINK_SETTINGS,
+					payload: response.data,
+				});
+				return response.data;
+			}
 		},
 		(error) => {
 			console.log(error);

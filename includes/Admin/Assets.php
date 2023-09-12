@@ -92,8 +92,8 @@ class Assets
             filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js'),
             true
         );
-        $betterlinks_links_option =  get_option('betterlinks_links');
-        // $prefix = isset($betterlinks_links_option) ? $betterlinks_links_option : '';
+        $betterlinks_links_option =  json_decode(get_option('betterlinks_links'), true);
+        // $prefix = isset($betterlinks_links_option['prefix']) ? $betterlinks_links_option['prefix'] : '';
         wp_localize_script('betterlinks-gutenberg', 'betterLinksGlobal', [
             'post_type' => get_post_type(),
             'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
@@ -105,7 +105,8 @@ class Assets
             'site_url' => site_url(),
             'route_path' => parse_url(admin_url(), PHP_URL_PATH),
             'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
-            'betterlinks_links_option' => $betterlinks_links_option
+            'betterlinks_links_option' => $betterlinks_links_option,
+            // 'prefix' => $prefix
         ]);
         wp_set_script_translations('betterlinks-gutenberg', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
     }

@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 
 export const {
@@ -558,4 +559,20 @@ export const analytic = (analytic, ID) => {
 		return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
 	}
 	return +analytic.link_count + '/' + analytic.ip.length;
+};
+
+export const saveSettingsHandler = (values, update_option, setFormSubmitText) => {
+	const uncloakedCatOnSubmit = values?.uncloaked_categories;
+	if (Array.isArray(uncloakedCatOnSubmit)) {
+		values.uncloaked_categories = JSON.stringify(uncloakedCatOnSubmit?.map?.((item) => parseInt(item)));
+	}
+	const affiliatePosition = values?.affiliate_link_position;
+	if (is_pro_enabled && !affiliatePosition) {
+		values.affiliate_link_position = 'top';
+	}
+	if (is_pro_enabled && values?.affiliate_disclosure_text) {
+		values.affiliate_disclosure_text = values.affiliate_disclosure_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
+	}
+	update_option(values);
+	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 };

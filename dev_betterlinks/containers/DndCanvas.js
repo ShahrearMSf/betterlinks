@@ -11,6 +11,7 @@ import Link from 'containers/Link';
 import CatHeader from 'containers/CatHeader';
 import List from 'components/List';
 import { isListEmpty, getFavoriteLinkCount } from 'utils/helper';
+import { __ } from '@wordpress/i18n';
 class InnerList extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		return nextProps.lists !== this.props.lists;
@@ -86,28 +87,30 @@ function DndCanvas(props) {
 	if (getFavoriteLinkCount(links) === 0 && sortByFav)
 		return (
 			<div className="dnd-not-found">
-				<div style={{ padding: 24 }}>There are no records to display</div>
+				<div style={{ padding: 24 }}>{__('There are no records to display', 'betterlinks')}</div>
 			</div>
 		);
 
 	return (
-		<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
+		<>
 			{links && settings && terms ? (
-				<DragDropContext onDragEnd={props.onDragEnd}>
-					{links &&
-						Object.entries(links)
-							.filter((items) => !(items[1].lists.length === 0 && items[1].term_slug === 'uncategorized'))
-							.map(([ind, el]) => (
-								<Droppable key={ind} droppableId={ind}>
-									{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
-								</Droppable>
-							))}
-					{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && !sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
-				</DragDropContext>
+				<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
+					<DragDropContext onDragEnd={props.onDragEnd}>
+						{links &&
+							Object.entries(links)
+								.filter((items) => !(items[1].lists.length === 0 && items[1].term_slug === 'uncategorized'))
+								.map(([ind, el]) => (
+									<Droppable key={ind} droppableId={ind}>
+										{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
+									</Droppable>
+								))}
+						{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && !sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
+					</DragDropContext>
+				</div>
 			) : (
 				<Loader />
 			)}
-		</div>
+		</>
 	);
 }
 

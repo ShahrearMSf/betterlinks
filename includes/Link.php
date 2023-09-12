@@ -7,7 +7,7 @@ class Link extends Utils
 {
     public function __construct()
     {
-        if (!is_admin() && $_SERVER['REQUEST_METHOD'] == 'GET') {
+        if (!is_admin() && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
             add_action('init', [$this, 'run_redirect'], 0);
         }
     }
