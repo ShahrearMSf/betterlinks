@@ -6,7 +6,7 @@ namespace BetterLinks\Admin\WPDev;
  * This class is responsible for data sending to insights.
  * @version 3.0.0
  */
-
+#[\AllowDynamicProperties]
 class PluginUsageTracker {
     /**
      * WP Insights Version
