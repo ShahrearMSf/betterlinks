@@ -5,7 +5,7 @@ import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import PasswordProtection from 'components/Teasers/PasswordProtection';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, fetch_settings_data, setTrackingSettings, setAutoCreateLinkSettings }) => {
+const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
 	const tabList = [__('Tracking', 'betterlinks'), __('Auto-Create Links', 'betterlinks'), __('Affiliate Link Disclosure', 'betterlinks'), __('Password Protection', 'betterlinks')];
 	const panelList = [
 		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,

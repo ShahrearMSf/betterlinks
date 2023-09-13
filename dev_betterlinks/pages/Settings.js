@@ -45,7 +45,6 @@ const Settings = (props) => {
 			autoCreateLinkSettings={autoCreateLinkSettings}
 			terms={terms}
 			trackingSettings={trackingSettings}
-			fetch_settings_data={fetch_settings_data}
 			setTrackingSettings={setTrackingSettings}
 			setAutoCreateLinkSettings={setAutoCreateLinkSettings}
 		/>,
