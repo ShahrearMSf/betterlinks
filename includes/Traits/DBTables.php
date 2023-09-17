@@ -110,4 +110,19 @@ trait DBTables
         ) $this->charset_collate;";
         dbDelta($sql);
     }
+
+    public function createBetterLinkPasswordTable() {
+        $table_name = $this->wpdb->prefix . 'betterlink_password';
+        $ref_table_name = $this->wpdb->prefix . 'betterlinks';
+        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+            `id` INT NOT NULL AUTO_INCREMENT,
+            `link_id` bigint(20) unsigned NOT NULL,
+            `password` VARCHAR(255),
+            `status` BOOLEAN,
+            PRIMARY KEY (`id`),
+            FOREIGN KEY (`link_id`) REFERENCES $ref_table_name (`ID`)
+                ON DELETE CASCADE
+        ) $this->charset_collate;";
+        dbDelta($sql);
+    }
 }

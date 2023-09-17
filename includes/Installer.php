@@ -105,6 +105,7 @@ class Installer extends \WP_Background_Process
         $this->createBetterTermsRelationshipsTable();
         $this->createBetterClicksTable();
         $this->createBetterLinkMetaTable();
+        $this->createBetterLinkPasswordTable();
         // set plugin version in 'option table' if not already setted 
         // (i.e. when this plugin gets installed on a site for the very first time)
         if (!Helper::btl_get_option('betterlinks_version')) {
