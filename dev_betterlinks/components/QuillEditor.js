@@ -31,7 +31,7 @@ const QuillEditor = ({ html, setHtml }) => {
 				data-wp-c16t="true"
 				data-wp-component="Text"
 				// for="inspector-select-control-0"
-				class="components-truncate components-text components-input-control__label em5sgkm4 css-1imalal e19lxcc00"
+				className="components-truncate components-text components-input-control__label em5sgkm4 css-1imalal e19lxcc00"
 				style={{ marginBottom: '7px' }}
 			>
 				{__('Disclosure Content')}

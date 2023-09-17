@@ -492,7 +492,7 @@ export const Link = (props) => {
 													/>
 													<span className="text">
 														{__('Uncloak', 'betterlinks')}
-														<span class="pro-badge">Pro</span>
+														<span className="pro-badge">Pro</span>
 														<div className="btl-tooltip">
 															<span className="dashicons dashicons-info-outline"></span>
 															<span className="btl-tooltiptext">{__('This will uncloak your link', 'betterlinks')}</span>
