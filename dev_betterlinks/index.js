@@ -8,12 +8,12 @@ import { createHooks } from '@wordpress/hooks';
 window.betterLinksHooks = createHooks();
 
 document.addEventListener('DOMContentLoaded', function () {
-	const betterlinksbody = ReactDOM.createRoot(document.getElementById('betterlinksbody'));
-	betterlinksbody.render(
+	ReactDOM.render(
 		<Provider store={store}>
 			<Router>
 				<App />
 			</Router>
-		</Provider>
+		</Provider>,
+		document.getElementById('betterlinksbody')
 	);
 });
