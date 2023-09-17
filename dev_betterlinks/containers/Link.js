@@ -529,9 +529,15 @@ export const Link = (props) => {
 																</label>
 																<input id="expire" type="checkbox" disabled />
 															</div>
+															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																<label className="btl-modal-form-label" htmlFor="expire">
+																	{__('Password Protection', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																</label>
+																<input id="enable_password" type="checkbox" disabled />
+															</div>
 														</div>
 													)}
-													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
+													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings })}
 												</div>
 											</div>
 											<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>

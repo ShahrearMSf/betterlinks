@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
 
-const PasswordProtection = ({ settings }) => {
+const PasswordProtection = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 

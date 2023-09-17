@@ -276,6 +276,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			// auto create links
 			let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
 
+			console.log(settings);
 			set_auto_short_links_disable_ids(postId, autoLinkStoreData?.disable_auto_short_link ? '1' : '0');
 			if (autoLinkStoreData?.disable_auto_short_link) {
 				return false;

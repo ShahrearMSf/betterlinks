@@ -101,7 +101,7 @@ class Utils
                 wp_redirect(esc_url_raw($target_url), 302);
                 exit();
             case '307':
-                wp_redirect(esc_url_raw($target_url), 307);
+                wp_redirect(esc_url_raw($target_url), 303);
                 exit();
             case 'cloak':
                 do_action('betterlinks/make_cloaked_redirect', $target_url, $data);
