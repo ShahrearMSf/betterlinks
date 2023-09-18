@@ -1,5 +1,6 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
 import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
+import { add_new_password } from './password.actions';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -189,7 +190,16 @@ export const add_new_link =
 			const res = await API.post(namespace + 'links', {
 				params: formData,
 			});
-			const { cat_data, tags_data = [] } = res?.data?.data;
+			const { cat_data, tags_data = [], ID } = res?.data?.data;
+
+			if (formData?.enable_password && '' !== formData?.password) {
+				add_new_password({
+					link_id: ID,
+					password: formData.password,
+					status: formData.enable_password,
+				});
+			}
+
 			if (cat_data?.is_newly_created) {
 				dispatch({
 					type: ADD_TERM,
