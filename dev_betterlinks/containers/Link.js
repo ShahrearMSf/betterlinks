@@ -49,8 +49,9 @@ export const Link = (props) => {
 		isShowIcon,
 		catId,
 		data,
-		submitHandler,
+		submitHandler, // this is add_new_link function
 		fetch_terms_data,
+		add_new_password,
 
 		//👇 these flowwowing props will be passed from the component's gutenberg call
 		betterlinksGutenStore,
@@ -176,7 +177,7 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
-		const { short_url } = values;
+		const { short_url, enable_password, password } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID, setSlugIsExists).then((isDuplicate) => {
 			if (!isDuplicate) {
