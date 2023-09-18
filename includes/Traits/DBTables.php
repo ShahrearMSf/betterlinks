@@ -112,7 +112,7 @@ trait DBTables
     }
 
     public function createBetterLinkPasswordTable() {
-        $table_name = $this->wpdb->prefix . 'betterlink_password';
+        $table_name = $this->wpdb->prefix . 'betterlinks_password';
         $ref_table_name = $this->wpdb->prefix . 'betterlinks';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             `id` INT NOT NULL AUTO_INCREMENT,
