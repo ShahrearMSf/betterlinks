@@ -800,7 +800,7 @@ class Ajax
         $affiliate_link_position = !empty($settings['affiliate_link_position']) ? sanitize_text_field($settings['affiliate_link_position']) : '';
 
         wp_send_json([
-            'affiliate_disclosure_text' => empty($data['affiliate_disclosure_text']) ? $affiliate_disclosure_text : $data['affiliate_disclosure_text'],
+            'affiliate_disclosure_text' => empty($data['affiliate_disclosure_text']) ? $affiliate_disclosure_text : str_replace(' rn ', '', $data['affiliate_disclosure_text']),
             'affiliate_link_position' => empty($data['affiliate_link_position']) ? $affiliate_link_position : $data['affiliate_link_position']
         ]);
     }
