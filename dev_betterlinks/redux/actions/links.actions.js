@@ -190,6 +190,7 @@ export const add_new_link =
 			const res = await API.post(namespace + 'links', {
 				params: formData,
 			});
+			console.log(res);
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
 			if (formData?.enable_password && '' !== formData?.password) {
@@ -197,7 +198,7 @@ export const add_new_link =
 					link_id: ID,
 					password: formData.password,
 					status: formData.enable_password,
-				});
+				})(dispatch);
 			}
 
 			if (cat_data?.is_newly_created) {
