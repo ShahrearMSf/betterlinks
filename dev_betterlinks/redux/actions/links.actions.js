@@ -190,7 +190,6 @@ export const add_new_link =
 			const res = await API.post(namespace + 'links', {
 				params: formData,
 			});
-			console.log(res);
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
 			if (formData?.enable_password && '' !== formData?.password) {
@@ -308,7 +307,17 @@ export const edit_link =
 				params: item,
 			});
 
-			const { cat_data, tags_data = [] } = res?.data?.data;
+			const { cat_data, tags_data = [], ID } = res?.data?.data;
+
+			// if (res?.data?.data?.enable_password != item?.enable_password) {
+			// if (item?.enable_password && '' !== item?.password) {
+			add_new_password({
+				link_id: ID,
+				password: item.password,
+				status: item.enable_password,
+			})(dispatch);
+			// }
+
 			if (cat_data?.is_newly_created) {
 				dispatch({
 					type: ADD_TERM,
@@ -327,6 +336,7 @@ export const edit_link =
 				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 				payload: res?.data?.data,
 			});
+			fetch_links_password()(dispatch);
 			return res;
 		} catch (e) {
 			return makeRequest({

@@ -63,7 +63,6 @@ const LinkQuickAction = ({
 			setCopyUrl(false);
 		}, 3000);
 	};
-
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}

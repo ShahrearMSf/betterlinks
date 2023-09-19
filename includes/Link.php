@@ -25,8 +25,6 @@ class Link extends Utils
         if( empty( $data ) ) return false;
         
         // set dummy status
-        $data['is_protected'] = true;
-
         do_action('betterlinks/before_redirect', $data);
         // do_action_ref_array('betterlinks/dispatch_redirect', [&$data, &$param, &$this]);
         $this->dispatch_redirect($data, next($param));

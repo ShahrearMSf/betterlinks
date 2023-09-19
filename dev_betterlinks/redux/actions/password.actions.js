@@ -1,11 +1,29 @@
 import { is_pro_enabled, makeRequest } from 'utils/helper';
 import { ADD_NEW_PASSWORD, FETCH_LINKS_PASSWORD } from './actionstrings';
 
-export const fetch_links_password = () => async ( dispatch ) => {
-	if( is_pro_enabled ) {
-		
+export const fetch_links_password = () => async (dispatch) => {
+	if (is_pro_enabled) {
+		const form_data = new FormData();
+		form_data.append('action', 'betterlinkspro/admin/fetch_links_password');
+		form_data.append('security', window?.betterLinksProGlobal?.betterlinkspro_nonce);
+
+		try {
+			const response = await fetch(ajaxurl, {
+				method: 'POST',
+				body: form_data,
+			});
+			const result = await response.json();
+			if (result?.data?.links) {
+				dispatch({
+					type: FETCH_LINKS_PASSWORD,
+					payload: result.data.links,
+				});
+			}
+		} catch (error) {
+			console.log('--error', error);
+		}
 	}
-}
+};
 
 export const add_new_password = (data) => async (dispatch) => {
 	if (is_pro_enabled) {
@@ -22,8 +40,15 @@ export const add_new_password = (data) => async (dispatch) => {
 				body: form_data,
 			});
 
-			const data = await response.json();
-			// console.log(data);
+			const result = await response.json();
+
+			if (result?.data?.data?.id) {
+				dispatch({
+					type: ADD_NEW_PASSWORD,
+					payload: { ...result.data.data, password: data.password },
+				});
+			}
+			fetch_links_password()(dispatch);
 		} catch (error) {
 			console.log('--error', error);
 		}

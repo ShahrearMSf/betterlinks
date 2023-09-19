@@ -51,7 +51,6 @@ export const Link = (props) => {
 		data,
 		submitHandler, // this is add_new_link function
 		fetch_terms_data,
-		add_new_password,
 
 		//👇 these flowwowing props will be passed from the component's gutenberg call
 		betterlinksGutenStore,
@@ -66,6 +65,10 @@ export const Link = (props) => {
 	window.betterLinksHooks = betterlinksGutenStore ? { applyFilters: (handle, defaultVal) => defaultVal } : window.betterLinksHooks;
 	//👆 slight tweaks to use <Link /> component inside gutenberg end
 
+	// 👇 password protection
+	const passwords = props.password;
+	// const password = bett
+
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
@@ -79,7 +82,14 @@ export const Link = (props) => {
 		advanced: false,
 		dynamicRedirect: false,
 	});
+	const [password, setPassword] = useState(null);
 
+	useEffect(() => {
+		if (data?.ID && passwords?.password && Object.values(passwords.password).length > 0) {
+			const password = Object.values(passwords.password).find((item) => item.link_id == data.ID);
+			setPassword(password);
+		}
+	}, [passwords]);
 	//👇 this useEffect is only for this 'Link' component's gutenberg implementation start
 	useEffect(() => {
 		if (betterlinksGutenStore) {
@@ -90,7 +100,7 @@ export const Link = (props) => {
 				searchFieldRef?.current?.focus();
 			}
 		};
-	}, [betterlinksGutenStore]);
+	}, [betterlinksGutenStore, password]);
 	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation end
 
 	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
@@ -114,7 +124,7 @@ export const Link = (props) => {
 		...settings.settings,
 		...objForGutenTargetBlank,
 	};
-
+	console.log(password);
 	const initialUpdateValues = {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
@@ -122,6 +132,8 @@ export const Link = (props) => {
 		old_short_url: data ? data.short_url : '',
 		...data,
 		...objForGutenTargetBlank,
+		enable_password: password && '1' === password.status,
+		password: password && password?.password,
 	};
 
 	function openModal() {
@@ -177,7 +189,7 @@ export const Link = (props) => {
 	};
 
 	const onSubmit = (values) => {
-		const { short_url, enable_password, password } = values;
+		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 		shortURLUniqueCheck(values.short_url, values.ID, setSlugIsExists).then((isDuplicate) => {
 			if (!isDuplicate) {
@@ -538,7 +550,7 @@ export const Link = (props) => {
 															</div>
 														</div>
 													)}
-													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings })}
+													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords })}
 												</div>
 											</div>
 											<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
@@ -617,6 +629,7 @@ export const Link = (props) => {
 const mapStateToProps = (state) => ({
 	settings: state.settings,
 	terms: state.terms,
+	password: state.password,
 });
 
 const mapDispatchToProps = (dispatch) => {
