@@ -69,7 +69,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 					}}
 					ref={btnRef}
 				>
-					<span class="dashicons dashicons-admin-generic"></span>
+					<span className="dashicons dashicons-admin-generic"></span>
 					<span className="btl-tooltiptext">Edit Link</span>
 				</button>
 

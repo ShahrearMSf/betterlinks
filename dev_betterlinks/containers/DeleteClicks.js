@@ -139,7 +139,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
 					{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
 						<h2>
-							Success!!! <span class="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
+							Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
 						</h2>
 					)}
 					{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
