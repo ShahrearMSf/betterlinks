@@ -96,7 +96,7 @@ function DndCanvas(props) {
 		);
 	return (
 		<>
-			{links && settings && terms && password ? (
+			{links && settings && terms ? (
 				<div className={`dnd-category-wrapper ${links ? '' : 'd-flex'}`}>
 					<DragDropContext onDragEnd={props.onDragEnd}>
 						{links &&

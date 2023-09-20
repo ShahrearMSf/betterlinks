@@ -192,6 +192,7 @@ export const add_new_link =
 			});
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
+			// Adding new password for the link
 			if (formData?.enable_password && '' !== formData?.password) {
 				add_new_password({
 					link_id: ID,
@@ -251,7 +252,17 @@ export const add_new_link =
 				action: 'betterlinks/admin/create_link',
 				...formData,
 			}).then((res) => {
-				const { cat_data, tags_data = [] } = res?.data?.data;
+				const { cat_data, tags_data = [], ID } = res?.data?.data;
+
+				// Adding new password for the link
+				if (formData?.enable_password && '' !== formData?.password) {
+					add_new_password({
+						link_id: ID,
+						password: formData.password,
+						status: formData.enable_password,
+					})(dispatch);
+				}
+
 				if (cat_data?.is_newly_created) {
 					dispatch({
 						type: ADD_TERM,
@@ -310,13 +321,13 @@ export const edit_link =
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
 			// if (res?.data?.data?.enable_password != item?.enable_password) {
-			// if (item?.enable_password && '' !== item?.password) {
-			add_new_password({
-				link_id: ID,
-				password: item.password,
-				status: item.enable_password,
-			})(dispatch);
-			// }
+			if (item?.old_enable_password !== item?.enable_password || item?.password) {
+				add_new_password({
+					link_id: ID,
+					password: item.password,
+					status: item.enable_password,
+				})(dispatch);
+			}
 
 			if (cat_data?.is_newly_created) {
 				dispatch({
@@ -344,7 +355,17 @@ export const edit_link =
 				...item,
 			}).then((response) => {
 				if (response.data) {
-					const { cat_data, tags_data = [] } = response?.data?.data;
+					const { cat_data, tags_data = [], ID } = response?.data?.data;
+
+					// if (res?.data?.data?.enable_password != item?.enable_password) {
+					if (item?.old_enable_password !== item?.enable_password || item?.password) {
+						add_new_password({
+							link_id: ID,
+							password: item.password,
+							status: item.enable_password,
+						})(dispatch);
+					}
+
 					if (cat_data?.is_newly_created) {
 						dispatch({
 							type: ADD_TERM,
