@@ -85,7 +85,7 @@ class Utils
         header('X-Redirect-Powered-By:  https://www.betterlinks.io/');
 
         $target_url = $this->addScheme($data['target_url']);
-        if (filter_var($data['param_forwarding'], FILTER_VALIDATE_BOOLEAN) && !empty($param)) {
+        if (filter_var($data['param_forwarding'], FILTER_VALIDATE_BOOLEAN) && !empty($param) && $param !== $data['link_slug']) {
             // $target_url = $target_url . '?' . $param;
             $_target_url = wp_parse_url( $target_url );
             $_query_params = [];
