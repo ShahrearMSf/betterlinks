@@ -16,6 +16,9 @@ class Link extends Utils
         $request_uri = stripslashes(rawurldecode($_SERVER['REQUEST_URI']));
         $request_uri = substr($request_uri, strlen(parse_url(site_url('/'), PHP_URL_PATH)));
         $param = explode('?', $request_uri, 2);
+        // echo '<pre>';
+        // var_dump($param);
+        // die();
         $data = $this->get_slug_raw(rtrim(current($param), '/'));
         
         if (empty($data['target_url']) || !apply_filters('betterlinks/pre_before_redirect', $data)) {

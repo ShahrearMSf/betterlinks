@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
+import ReactQuill from 'react-quill';
 
 const PasswordProtection = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -31,7 +32,7 @@ const PasswordProtection = ({ settings, update_option }) => {
 								</div>
 							</span>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksPasswordProtection', null, props)}
+						{betterLinksHooks.applyFilters('BetterLinksPasswordProtection', null, { ...props, ReactQuill })}
 						{is_pro_enabled && (
 							<>
 								<button className="button-primary btn-save-settings" type="submit">

@@ -1,6 +1,6 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
 import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
-import { add_new_password } from './password.actions';
+import { add_new_password, fetch_links_password } from './password.actions';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -198,6 +198,7 @@ export const add_new_link =
 					link_id: ID,
 					password: formData.password,
 					status: formData.enable_password,
+					allow_contact: formData.allow_visitor_contact,
 				})(dispatch);
 			}
 
@@ -321,11 +322,12 @@ export const edit_link =
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
 			// if (res?.data?.data?.enable_password != item?.enable_password) {
-			if (item?.old_enable_password !== item?.enable_password || item?.password) {
+			if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
 				add_new_password({
 					link_id: ID,
 					password: item.password,
 					status: item.enable_password,
+					allow_contact: item.allow_visitor_contact,
 				})(dispatch);
 			}
 
@@ -358,11 +360,12 @@ export const edit_link =
 					const { cat_data, tags_data = [], ID } = response?.data?.data;
 
 					// if (res?.data?.data?.enable_password != item?.enable_password) {
-					if (item?.old_enable_password !== item?.enable_password || item?.password) {
+					if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
 						add_new_password({
 							link_id: ID,
 							password: item.password,
 							status: item.enable_password,
+							allow_contact: item.allow_visitor_contact,
 						})(dispatch);
 					}
 
@@ -384,6 +387,7 @@ export const edit_link =
 						type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 						payload: response.data.data,
 					});
+					fetch_links_password()(dispatch);
 				}
 			});
 		}

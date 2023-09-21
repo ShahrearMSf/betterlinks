@@ -34,6 +34,7 @@ export const add_new_password = (data) => async (dispatch) => {
 	form_data.append('link_id', data.link_id);
 	form_data.append('password', data.password);
 	form_data.append('status', data.status);
+	form_data.append('allow_contact', data.allow_contact);
 
 	try {
 		const response = await fetch(ajaxurl, {

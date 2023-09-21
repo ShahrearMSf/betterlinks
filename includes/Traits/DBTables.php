@@ -119,6 +119,7 @@ trait DBTables
             `link_id` bigint(20) unsigned NOT NULL,
             `password` VARCHAR(255),
             `status` BOOLEAN,
+            `allow_contact` BOOLEAN default false,
             PRIMARY KEY (`id`),
             FOREIGN KEY (`link_id`) REFERENCES $ref_table_name (`ID`)
                 ON DELETE CASCADE

@@ -134,6 +134,8 @@ export const Link = (props) => {
 		enable_password: password && '1' === password.status,
 		old_enable_password: password && '1' === password.status,
 		password: password && password?.password,
+		old_allow_visitor_contact: password && '1' === password?.allow_contact,
+		allow_visitor_contact: password && '1' === password?.allow_contact,
 	};
 
 	function openModal() {
