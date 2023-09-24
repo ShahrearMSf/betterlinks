@@ -53,7 +53,7 @@ const KeywordsLinking = (props) => {
 	const loadedAll = props.postdatas.fetchedAll && props.keywords.data;
 
 	const search = (
-		<div class="btl-autolink-filter">
+		<div className="btl-autolink-filter">
 			<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
 		</div>
 	);
