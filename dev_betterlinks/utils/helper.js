@@ -16,6 +16,7 @@ export const {
 	is_pro_enabled,
 	post_type,
 	betterlinks_links_option,
+	betterlinkspro_version
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
