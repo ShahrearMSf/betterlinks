@@ -20,7 +20,7 @@ const PasswordProtection = ({ settings, update_option }) => {
 			<div className="btl-form-group">
 				<div className="short-description">
 					<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-					{__('To use Password Protection Feature, Please update your Betterlinks Pro to the latest version available', 'betterlinks')}
+					{__('To Utilize the Password Protection Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
 				</div>
 			</div>
 		);
