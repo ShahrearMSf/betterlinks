@@ -16,7 +16,9 @@
 		"packages-update": "wp-scripts packages-update",
 		"start": "wp-scripts start --mode=development",
 		"test:e2e": "wp-scripts test-e2e",
-		"test:unit": "wp-scripts test-unit-js"
+		"test:unit": "wp-scripts test-unit-js",
+		"zip": "rm -rf betterlinks betterlinks.zip && gulp zip",
+		"build-style": "gulp build-style"
 	},
 	"author": "wpdevteam",
 	"dependencies": {
@@ -67,10 +69,16 @@
 		"eslint-plugin-prettier": "^3.4.0",
 		"eslint-plugin-react": "^7.24.0",
 		"file-loader": "^6.2.0",
+		"gulp": "^4.0.2",
+		"gulp-csso": "^4.0.1",
+		"gulp-rename": "^2.0.0",
+		"gulp-sass": "^5.1.0",
+		"gulp-zip": "^5.1.0",
 		"mini-css-extract-plugin": "^1.6.1",
 		"node-sass": "^6.0.1",
 		"prettier": "^2.3.2",
 		"redux-logger": "^3.0.6",
+		"sass": "^1.68.0",
 		"sass-loader": "^12.1.0",
 		"style-loader": "^3.0.0",
 		"webpack-cli": "^4.7.2"
