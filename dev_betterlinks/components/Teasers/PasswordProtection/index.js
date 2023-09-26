@@ -20,7 +20,7 @@ const PasswordProtection = ({ settings, update_option }) => {
 			<div className="btl-form-group">
 				<div className="short-description">
 					<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-					{__('To Utilize the Password Protection Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
+					{__('To Utilize the Password Protected Redirect Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
 				</div>
 			</div>
 		);
@@ -34,7 +34,7 @@ const PasswordProtection = ({ settings, update_option }) => {
 						{!is_pro_enabled && (
 							<span className="btl-form-group btl-form-group--teaser btl-form-group-password-protection" onClick={openUpgradeToProModal}>
 								<label className="btl-form-label">
-									{__('Enable Password Protection', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+									{__('Enable Password Protected Redirect', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 								</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
