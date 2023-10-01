@@ -41,6 +41,9 @@ body {
 				color: $success-lighten;
 			}
 		}
+		.btl-modal-utm-builder .btl-modal-utm-builder__body .btl-modal-utm-builder__form-group button[type='button'] {
+			color: $white;
+		}
 	}
 	> .btl-overlay {
 		position: fixed;
