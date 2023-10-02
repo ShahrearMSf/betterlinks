@@ -18,7 +18,8 @@
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js",
 		"zip": "rm -rf betterlinks betterlinks.zip && gulp zip",
-		"build-style": "gulp build-style"
+		"build-style": "gulp build-style",
+		"make-pot": "cp languages/betterlinks.pot languages/betterlinks.pot~~ && wp i18n make-pot . languages/betterlinks.pot"
 	},
 	"author": "wpdevteam",
 	"dependencies": {
