@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { __ } from '@wordpress/i18n';
 import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
@@ -7,85 +7,87 @@ import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
 import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
-import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce } from 'utils/helper';
+import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce, route_path } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
-const columns = [
-	{
-		name: __('Browser', 'betterlinks'),
-		selector: 'browser',
-		sortable: false,
-		cell: (row) => {
-			const browser = getBrowser(row.browser);
-			return (
-				<div>
-					<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}.svg`} alt="icon" />
-				</div>
-			);
+const getColumns = (id) => {
+	return [
+		{
+			name: __('Browser', 'betterlinks'),
+			selector: 'browser',
+			sortable: false,
+			cell: (row) => {
+				const browser = getBrowser(row.browser);
+				return (
+					<div>
+						<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}.svg`} alt="icon" />
+					</div>
+				);
+			},
 		},
-	},
-	{
-		name: __('Link Name', 'betterlinks'),
-		selector: 'name',
-		sortable: false,
-		cell: (row) => <div>{row.link_title}</div>,
-	},
-	{
-		name: __('IP', 'betterlinks'),
-		selector: 'ip',
-		sortable: false,
-		cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
-	},
-	{
-		name: __('Timestamp', 'betterlinks'),
-		selector: 'created_at',
-		sortable: false,
-	},
-	{
-		name: __('Shortened URL', 'betterlinks'),
-		selector: 'short_url',
-		sortable: false,
-		cell: (row) => (
-			<div>
-				<div style={{ fontWeight: 700 }}>
-					<a href={site_url + '/' + row.short_url} target="_blank">
-						{site_url + '/' + row.short_url}
-					</a>
+		{
+			name: __('Link Name', 'betterlinks'),
+			selector: 'name',
+			sortable: false,
+			cell: (row) => <div>{!id ? <Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`}>{row.link_title}</Link> : row.link_title}</div>,
+		},
+		{
+			name: __('IP', 'betterlinks'),
+			selector: 'ip',
+			sortable: false,
+			cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+		},
+		{
+			name: __('Timestamp', 'betterlinks'),
+			selector: 'created_at',
+			sortable: false,
+		},
+		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={site_url + '/' + row.short_url} target="_blank">
+							{site_url + '/' + row.short_url}
+						</a>
+					</div>
 				</div>
-			</div>
-		),
-	},
-	{
-		name: __('Referrer', 'betterlinks'),
-		selector: 'referer',
-		sortable: false,
-		cell: (row) => (
-			<div>
-				<div style={{ fontWeight: 700 }}>
-					<a href={row.referer} target="_blank">
-						{row.referer}
-					</a>
+			),
+		},
+		{
+			name: __('Referrer', 'betterlinks'),
+			selector: 'referer',
+			sortable: false,
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={row.referer} target="_blank">
+							{row.referer}
+						</a>
+					</div>
 				</div>
-			</div>
-		),
-	},
-	{
-		name: __('Target URL', 'betterlinks'),
-		selector: 'target_url',
-		cell: (row) => (
-			<div>
-				<div style={{ fontWeight: 700 }}>
-					<a href={row.target_url} target="_blank">
-						{row.target_url}
-					</a>
+			),
+		},
+		{
+			name: __('Target URL', 'betterlinks'),
+			selector: 'target_url',
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={row.target_url} target="_blank">
+							{row.target_url}
+						</a>
+					</div>
 				</div>
-			</div>
-		),
-		sortable: false,
-	},
-];
-
+			),
+			sortable: false,
+		},
+	];
+};
 const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText }) => (
 	<div className="btl-click-filter">
 		<input id="search" type="text" placeholder={__('Filter By Name', 'betterlinks')} value={filterText} onChange={onFilter} />
@@ -102,6 +104,7 @@ const Clicks = (props) => {
 	const { clicks } = props.clicks;
 	const { settings } = props.settings;
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
+	const id = betterLinksQuery.get('id');
 
 	useEffect(() => {
 		if (!clicks) {
@@ -153,19 +156,46 @@ const Clicks = (props) => {
 		);
 	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
+	const columns = getColumns(id);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
+	const getData = useCallback(
+		(id, clicks) => {
+			if (id) {
+				return clicks?.filter?.((item) => item.link_id == id && item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+			}
+			let find = [];
+			for (let index = 0; index < clicks.length; index++) {
+				const element = clicks[index];
+				if (!find.find((item) => item.link_id == element.link_id)) {
+					if (element.link_title) {
+						element.link_title.toLowerCase().includes(filterText.toLowerCase());
+					}
+					find.push(element);
+				}
+			}
+			return find;
+		},
+		[id]
+	);
+	const getGraphData = useCallback(
+		(id, clicks) => {
+			if (!id) return clicks;
+			return clicks?.filter?.((item) => item.link_id == id);
+		},
+		[id]
+	);
 	return (
 		<div className="btl-analytic">
 			{clicks ? (
 				<>
-					<Graph data={analyticsData(clicks)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
+					<Graph data={analyticsData(getGraphData(id, clicks))} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
 							className="btl-analytic-table"
 							title={__('All Clicks', 'betterlinks')}
 							columns={newColumns}
-							data={clicks?.filter?.((item) => item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()))}
+							data={getData(id, clicks)}
 							pagination
 							paginationResetDefaultPage={resetPaginationToggle}
 							subHeader

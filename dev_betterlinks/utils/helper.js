@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 export const {
 	betterlinks_nonce,
@@ -556,7 +557,7 @@ export const getFavoriteLinkCount = (links) => {
 export const analytic = (analytic, ID) => {
 	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 	if (isLinkAble) {
-		return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
+		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</Link>;
 	}
 	return +analytic.link_count + '/' + analytic.ip.length;
 };
