@@ -55,8 +55,6 @@ const CustomSidebarComponent = (props) => {
 		const autoLinkSettings = betterlinksGutenStore?.getState()?.autoLinkSettings?.autoLinkSettings?.data;
 		const postType = wp.data.select('core/editor').getCurrentPostType();
 
-		// console.log(settings);
-
 		if (autoLinkSettings) {
 			setAutoLinkCreateEnabled(!!autoLinkSettings?.[`${postType}_shortlinks`]);
 		} else {
@@ -388,7 +386,6 @@ const CustomSidebarComponent = (props) => {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
-	// console.log('hello');
 	return (
 		<Fragment>
 			<AffiliateLinkDisclosure enableAffiliateDisclosure={enableAffiliateDisclosure} />
