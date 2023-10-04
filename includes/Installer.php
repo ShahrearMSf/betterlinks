@@ -216,9 +216,9 @@ class Installer extends \WP_Background_Process
                 $this->db_migration_1_2();
             }
 
-            // if( version_compare(BETTERLINKS_DB_VERSION, '1.6', '==') ) {
-            //     $this->createBetterLinkPasswordTable();
-            // }
+            if( version_compare(BETTERLINKS_DB_VERSION, '1.6', '>=') ) {
+                $this->createBetterLinkPasswordTable();
+            }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }
