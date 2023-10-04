@@ -16,6 +16,7 @@ export const {
 	is_pro_enabled,
 	post_type,
 	betterlinks_links_option,
+	betterlinkspro_version
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -572,6 +573,9 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	}
 	if (is_pro_enabled && values?.affiliate_disclosure_text) {
 		values.affiliate_disclosure_text = values.affiliate_disclosure_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
+	}
+	if (is_pro_enabled && values?.password?.allow_contact_text) {
+		values.password.allow_contact_text = values.password?.allow_contact_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
 	}
 	update_option(values);
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);

@@ -66,7 +66,8 @@ class Assets
                 'exists_clicks_json' => BETTERLINKS_EXISTS_CLICKS_JSON,
                 'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '',
                 'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
-                'prefix' => $prefix
+                'prefix' => $prefix,
+                'betterlinkspro_version' => defined('BETTERLINKS_PRO_VERSION') ? BETTERLINKS_PRO_VERSION : null
             ]);
         }
         wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');

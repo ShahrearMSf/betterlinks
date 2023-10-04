@@ -2,14 +2,21 @@ import { __ } from '@wordpress/i18n';
 import AffiliateLinkDisclosure from 'components/Teasers/AffiliateLinkDisclosure';
 import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
+import PasswordProtection from 'components/Teasers/PasswordProtection';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, fetch_settings_data, setTrackingSettings, setAutoCreateLinkSettings }) => {
-	const tabList = [__('Tracking', 'betterlinks'), __('Auto-Create Links', 'betterlinks'), __('Affiliate Link Disclosure', 'betterlinks')];
+const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
+	const tabList = [
+		__('Tracking', 'betterlinks'),
+		__('Auto-Create Links', 'betterlinks'),
+		__('Affiliate Link Disclosure', 'betterlinks'),
+		__('Password Protected Redirect', 'betterlinks'),
+	];
 	const panelList = [
 		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
 		<AffiliateLinkDisclosure settings={settings} />,
+		<PasswordProtection settings={settings} />,
 	];
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);

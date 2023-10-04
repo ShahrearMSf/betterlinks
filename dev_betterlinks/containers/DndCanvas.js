@@ -12,6 +12,7 @@ import CatHeader from 'containers/CatHeader';
 import List from 'components/List';
 import { isListEmpty, getFavoriteLinkCount } from 'utils/helper';
 import { __ } from '@wordpress/i18n';
+import { fetch_links_password } from 'redux/actions/password.actions';
 class InnerList extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		return nextProps.lists !== this.props.lists;
@@ -46,7 +47,6 @@ const CatWrap = memo(({ ind, el, provided, props }) => {
 				<div ref={provided.innerRef} />
 			</div>
 		);
-
 	return (
 		<div className="dnd-category">
 			<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
@@ -70,6 +70,7 @@ function DndCanvas(props) {
 	const { settings } = props.settings;
 	const { terms } = props.terms;
 	const { sortByFav } = props.favouriteSort;
+	const { password } = props.password;
 
 	useEffect(() => {
 		if (!settings) {
@@ -81,6 +82,9 @@ function DndCanvas(props) {
 		if (!terms) {
 			props.fetch_terms_data();
 		}
+		if (!password) {
+			props.fetch_links_password();
+		}
 	}, []);
 
 	// if sort by favorite is selected and there is no favorite link
@@ -90,7 +94,6 @@ function DndCanvas(props) {
 				<div style={{ padding: 24 }}>{__('There are no records to display', 'betterlinks')}</div>
 			</div>
 		);
-
 	return (
 		<>
 			{links && settings && terms ? (
@@ -119,6 +122,7 @@ const mapStateToProps = (state) => ({
 	settings: state.settings,
 	terms: state.terms,
 	favouriteSort: state.favouriteSort,
+	password: state.password,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -131,6 +135,7 @@ const mapDispatchToProps = (dispatch) => {
 		edit_link: bindActionCreators(edit_link, dispatch),
 		delete_link: bindActionCreators(delete_link, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
+		fetch_links_password: bindActionCreators(fetch_links_password, dispatch),
 	};
 };
 
