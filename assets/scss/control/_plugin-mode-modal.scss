@@ -47,6 +47,7 @@
 						color: #b2b3bd;
 					}
 					input[type='number'],
+					input[type='password'],
 					input[type='text'] {
 						background: #36405a;
 						color: #fff;
@@ -213,8 +214,11 @@
 		color: $white !important;
 		border-color: $white !important;
 	}
-	.link-options--dynamic-redirect .link-options-info .btl-block-code {
+	.link-options .link-options-info .btl-block-code {
 		background: #36405a;
+		color: #fff;
+	}
+	.link-options--advanced .link-options__body .btl-block-code {
 		color: #fff;
 	}
 	.btl-entry-content .btl-entry-content-right .link-options__body {
