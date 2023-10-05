@@ -93,7 +93,8 @@
 					.link-options__head i {
 						transform: rotate(0);
 					}
-					.link-options__body {
+					.link-options__body,
+					.link-options-info {
 						display: block;
 					}
 				}
@@ -125,6 +126,9 @@
 						cursor: pointer;
 						padding-right: 0;
 					}
+				}
+				&-info {
+					display: none;
 				}
 				&__body {
 					display: none;

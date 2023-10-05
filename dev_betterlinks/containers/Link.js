@@ -505,7 +505,7 @@ export const Link = (props) => {
 														<Field
 															disabled={true}
 															className="btl-check"
-															// type="checkbox"
+															type="checkbox"
 															checked={false}
 															onChange={() => openUpgradeToProModal()}
 															onClick={() => openUpgradeToProModal()}
@@ -530,8 +530,8 @@ export const Link = (props) => {
 														<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
 														<i className="btl btl-angle-arrow-down"></i>
 													</button>
-													<div className="link-options__body">
-														{!is_pro_enabled && (
+													{!is_pro_enabled && (
+														<div className="link-options__body">
 															<div className="link-options--teasers">
 																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
 																	<label className="btl-modal-form-label" htmlFor="status">
@@ -556,9 +556,9 @@ export const Link = (props) => {
 																	<input id="enable_password" type="checkbox" disabled />
 																</div>
 															</div>
-														)}
-														{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords })}
-													</div>
+														</div>
+													)}
+													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords })}</>
 												</div>
 												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
