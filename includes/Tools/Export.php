@@ -118,6 +118,7 @@ class Export
         $ip_tracking = (isset( $options['is_disable_analytics_ip'] ) && !$options['is_disable_analytics_ip'])? "{$wpdb->prefix}betterlinks_clicks.ip," : '';
         $clicks = $wpdb->get_results("SELECT 
             {$wpdb->prefix}betterlinks.short_url,
+            {$wpdb->prefix}betterlinks.target_url,
             {$ip_tracking}
             {$wpdb->prefix}betterlinks_clicks.browser, 
             {$wpdb->prefix}betterlinks_clicks.os, 
