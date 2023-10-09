@@ -420,6 +420,7 @@ trait Query
                             'link_id' => $link_id,
                             'term_id' => $value,
                             'term_slug' => $result["term_slug"],
+                            'term_name' => $result["term_name"],
                             'term_type' => 'tags',
                         ];
                         $is_new_tag = false;
