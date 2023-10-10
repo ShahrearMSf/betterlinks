@@ -54,6 +54,8 @@ trait Links
                 } elseif ( in_array( $key, ['tags_id', 'favorite', 'analytic'] ) ) {
                     $result = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
                     $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($result);
+                }elseif( in_array( $key, ['enable_password', 'password'] ) ) { // password protected parameters
+                    $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($POST[$key]);
                 }
             }
         }

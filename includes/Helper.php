@@ -361,7 +361,7 @@ class Helper
     public static function sanitize_text_or_array_field($array_or_string)
     {
         $boolean = ["true", "false", "1", "0"];
-        $skip = ['affiliate_disclosure_text'];
+        $skip = ['affiliate_disclosure_text', 'allow_contact_text', 'form_title'];
         if (is_string($array_or_string)) {
             $array_or_string = in_array($array_or_string, $boolean) || is_bool($array_or_string) ? rest_sanitize_boolean($array_or_string) : sanitize_text_field($array_or_string);
         } elseif (is_array($array_or_string)) {

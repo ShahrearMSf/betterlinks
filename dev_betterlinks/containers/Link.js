@@ -25,7 +25,7 @@ import {
 	remove_top_loader,
 	shortURLUniqueCheck,
 } from 'utils/helper';
-import { redirectType } from 'utils/data';
+import { redirectType, redirectTypeForPasswordProtection } from 'utils/data';
 import Category from 'components/Terms/Category';
 import Tags from 'components/Terms/Tags';
 import Copy from 'components/Copy';
@@ -49,7 +49,7 @@ export const Link = (props) => {
 		isShowIcon,
 		catId,
 		data,
-		submitHandler,
+		submitHandler, // this is add_new_link function
 		fetch_terms_data,
 
 		//👇 these flowwowing props will be passed from the component's gutenberg call
@@ -65,6 +65,10 @@ export const Link = (props) => {
 	window.betterLinksHooks = betterlinksGutenStore ? { applyFilters: (handle, defaultVal) => defaultVal } : window.betterLinksHooks;
 	//👆 slight tweaks to use <Link /> component inside gutenberg end
 
+	// 👇 password protection
+	const passwords = props.password;
+	// const password = bett
+
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
@@ -78,7 +82,14 @@ export const Link = (props) => {
 		advanced: false,
 		dynamicRedirect: false,
 	});
+	const [password, setPassword] = useState(null);
 
+	useEffect(() => {
+		if (data?.ID && passwords?.password && Object.values(passwords.password).length > 0) {
+			const password = Object.values(passwords.password).find((item) => item.link_id == data.ID);
+			setPassword(password);
+		}
+	}, [passwords]);
 	//👇 this useEffect is only for this 'Link' component's gutenberg implementation start
 	useEffect(() => {
 		if (betterlinksGutenStore) {
@@ -89,7 +100,7 @@ export const Link = (props) => {
 				searchFieldRef?.current?.focus();
 			}
 		};
-	}, [betterlinksGutenStore]);
+	}, [betterlinksGutenStore, password]);
 	// 👆 this useEffect is only for this 'Link' component's gutenberg implementation end
 
 	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
@@ -113,7 +124,6 @@ export const Link = (props) => {
 		...settings.settings,
 		...objForGutenTargetBlank,
 	};
-
 	const initialUpdateValues = {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
@@ -121,6 +131,11 @@ export const Link = (props) => {
 		old_short_url: data ? data.short_url : '',
 		...data,
 		...objForGutenTargetBlank,
+		enable_password: password && '1' === password.status,
+		old_enable_password: password && '1' === password.status,
+		password: password && password?.password,
+		old_allow_visitor_contact: password && '1' === password?.allow_contact,
+		allow_visitor_contact: password && '1' === password?.allow_contact,
 	};
 
 	function openModal() {
@@ -247,361 +262,373 @@ export const Link = (props) => {
 						onSubmit(values);
 					}}
 				>
-					{(props) => (
-						<Form className="w-100">
-							<div className="btl-entry-content">
-								<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-								<Modal isOpen={modalUTMIsOpen} onRequestClose={closeUTMModal} style={modalCustomSmallStyles} ariaHideApp={false}>
-									<span className="btl-close-modal" onClick={closeUTMModal}>
-										<i className="btl btl-cancel"></i>
-									</span>
-									{isShowCustomUTMModalContent ? (
-										<React.Fragment>
-											{betterLinksHooks.applyFilters(
-												'linksUTMBuilderField',
-												<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
-												props.values.target_url,
-												props.setFieldValue,
-												closeUTMModal
-											)}
-										</React.Fragment>
-									) : (
-										<React.Fragment>{betterLinksHooks.applyFilters('linksBuiltInUTMBuilderField', '', props.values.target_url, props.setFieldValue, closeUTMModal)}</React.Fragment>
-									)}
-								</Modal>
-								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
-											{__('Title', 'betterlinks')}
-										</label>
-										<Field
-											className="btl-modal-form-control"
-											id="link_title"
-											name="link_title"
-											disabled={isDisableLinkFormEditView}
-											onChange={(e) => {
-												props.setFieldValue('link_title', e.target.value);
-												if (!data) {
-													const shortURL = generateShortURL(settings.settings, e.target.value);
-													if (shortURL.length > 0) {
-														props.setFieldValue('short_url', shortURL);
-														setSlugIsExists(false);
-													}
-												}
-											}}
-											required
-										/>
-									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="link_note">
-											{__('Description', 'betterlinks')}
-										</label>
-										<Field className="btl-modal-form-control" component="textarea" id="link_note" name="link_note" disabled={isDisableLinkFormEditView} />
-									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
-											{__('Redirect Type', 'betterlinks')}
-										</label>
-										<Select
-											id="redirect_type"
-											name="redirect_type"
-											value={[
-												...redirectType,
-												{
-													value: is_pro_enabled ? 'cloak' : 'pro',
-													label: __('Cloaked', 'betterlinks'),
-												},
-											]}
-											setUpgradeToProModal={setUpgradeToProModal}
-											setFieldValue={props.setFieldValue}
-											disabled={isDisableLinkFormEditView}
-											isMulti={false}
-										/>
-									</div>
-									<div className="btl-modal-form-group btl-has-utm-button">
-										<label className="btl-modal-form-label btl-required" htmlFor="target_url">
-											{__('Target URL', 'betterlinks')}
-										</label>
-										<Field
-											className="btl-modal-form-control"
-											id="target_url"
-											name="target_url"
-											onChange={(e) => props.setFieldValue('target_url', e.target.value.replace(/\s+/g, ''))}
-											placeholder=""
-											disabled={isDisableLinkFormEditView}
-											required
-										/>
-										<div className="btl-utm-button-group">
-											<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
-												{__('UTM', 'betterlinks')}
-											</button>
-											{!is_pro_enabled ? (
-												<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
-													<i className="btl btl-share"></i>
-													<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
-												</button>
-											) : (
-												<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
-													<i className="btl btl-share"></i>
-												</button>
-											)}
-										</div>
-									</div>
-									<div className="btl-modal-shorturl-wrap">
-										<div className="btl-modal-form-group shorturl">
-											<label className="btl-modal-form-label" htmlFor="short_url">
-												{__('Shortened URL', 'betterlinks')}
+					{(props) => {
+						const redirectionTypes = props.values?.enable_password ? redirectTypeForPasswordProtection : redirectType;
+						return (
+							<Form className="w-100">
+								<div className="btl-entry-content">
+									<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+									<Modal isOpen={modalUTMIsOpen} onRequestClose={closeUTMModal} style={modalCustomSmallStyles} ariaHideApp={false}>
+										<span className="btl-close-modal" onClick={closeUTMModal}>
+											<i className="btl btl-cancel"></i>
+										</span>
+										{isShowCustomUTMModalContent ? (
+											<React.Fragment>
+												{betterLinksHooks.applyFilters(
+													'linksUTMBuilderField',
+													<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
+													props.values.target_url,
+													props.setFieldValue,
+													closeUTMModal
+												)}
+											</React.Fragment>
+										) : (
+											<React.Fragment>
+												{betterLinksHooks.applyFilters('linksBuiltInUTMBuilderField', '', props.values.target_url, props.setFieldValue, closeUTMModal)}
+											</React.Fragment>
+										)}
+									</Modal>
+									<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label btl-required" htmlFor="link_title">
+												{__('Title', 'betterlinks')}
 											</label>
-											<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
-												<span className="btl-static-link">{site_url + '/'}</span>
-												<Field
-													className="btl-dynamic-link"
-													id="short_url"
-													name="short_url"
-													onChange={(e) => {
-														props.setFieldValue('short_url', e.target.value.replace(/\s+/g, '-'));
-														setSlugIsExists(false);
-													}}
-													disabled={isDisableLinkFormEditView}
-													required
-												/>
-												<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
+											<Field
+												className="btl-modal-form-control"
+												id="link_title"
+												name="link_title"
+												disabled={isDisableLinkFormEditView}
+												onChange={(e) => {
+													props.setFieldValue('link_title', e.target.value);
+													if (!data) {
+														const shortURL = generateShortURL(settings.settings, e.target.value);
+														if (shortURL.length > 0) {
+															props.setFieldValue('short_url', shortURL);
+															setSlugIsExists(false);
+														}
+													}
+												}}
+												required
+											/>
+										</div>
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label" htmlFor="link_note">
+												{__('Description', 'betterlinks')}
+											</label>
+											<Field className="btl-modal-form-control" component="textarea" id="link_note" name="link_note" disabled={isDisableLinkFormEditView} />
+										</div>
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
+												{__('Redirect Type', 'betterlinks')}
+											</label>
+											<Select
+												id="redirect_type"
+												name="redirect_type"
+												value={[
+													...redirectionTypes,
+													{
+														value: is_pro_enabled ? 'cloak' : 'pro',
+														label: __('Cloaked', 'betterlinks'),
+													},
+												]}
+												setUpgradeToProModal={setUpgradeToProModal}
+												setFieldValue={props.setFieldValue}
+												disabled={isDisableLinkFormEditView}
+												isMulti={false}
+												enable_password={props.values?.enable_password}
+											/>
+										</div>
+										<div className="btl-modal-form-group btl-has-utm-button">
+											<label className="btl-modal-form-label btl-required" htmlFor="target_url">
+												{__('Target URL', 'betterlinks')}
+											</label>
+											<Field
+												className="btl-modal-form-control"
+												id="target_url"
+												name="target_url"
+												onChange={(e) => props.setFieldValue('target_url', e.target.value.replace(/\s+/g, ''))}
+												placeholder=""
+												disabled={isDisableLinkFormEditView}
+												required
+											/>
+											<div className="btl-utm-button-group">
+												<button type="button" className="btl-utm-button" onClick={openUTMModal} disabled={isDisableLinkFormEditView}>
+													{__('UTM', 'betterlinks')}
+												</button>
+												{!is_pro_enabled ? (
+													<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
+														<i className="btl btl-share"></i>
+														<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
+													</button>
+												) : (
+													<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
+														<i className="btl btl-share"></i>
+													</button>
+												)}
 											</div>
 										</div>
-										{slugIsExists == true && <div className="errorlog">Already Exists</div>}
-									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="catId">
-											{__('Category', 'betterlinks')}
-										</label>
-										<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
-									</div>
-									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label" htmlFor="tags">
-											{__('Tags', 'betterlinks')}
-										</label>
-										<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
-									</div>
-									{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
-										<div className="btl-modal-form-group">
-											<label className="btl-modal-form-label"></label>
-											<button type="submit" className="btl-modal-submit-button">
-												{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
-											</button>
+										<div className="btl-modal-shorturl-wrap">
+											<div className="btl-modal-form-group shorturl">
+												<label className="btl-modal-form-label" htmlFor="short_url">
+													{__('Shortened URL', 'betterlinks')}
+												</label>
+												<div className={slugIsExists ? 'btl-link-field-copyable is-invalid' : 'btl-link-field-copyable'}>
+													<span className="btl-static-link">{site_url + '/'}</span>
+													<Field
+														className="btl-dynamic-link"
+														id="short_url"
+														name="short_url"
+														onChange={(e) => {
+															props.setFieldValue('short_url', e.target.value.replace(/\s+/g, '-'));
+															setSlugIsExists(false);
+														}}
+														disabled={isDisableLinkFormEditView}
+														required
+													/>
+													<Copy siteUrl={site_url} shortUrl={props.values.short_url} />
+												</div>
+											</div>
+											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 										</div>
-									)}
-								</div>
-								<div className="btl-entry-content-right">
-									<div className={`link-options ${isOpenLinkPanel.options ? 'link-options--open' : ''}`}>
-										<button className="link-options__head" type="button" onClick={() => togglePanel('options')}>
-											<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
-										</button>
-										<div className="link-options__body">
-											{betterlinksGutenStore && (
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label" htmlFor="catId">
+												{__('Category', 'betterlinks')}
+											</label>
+											<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
+										</div>
+										<div className="btl-modal-form-group">
+											<label className="btl-modal-form-label" htmlFor="tags">
+												{__('Tags', 'betterlinks')}
+											</label>
+											<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
+										</div>
+										{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
+											<div className="btl-modal-form-group">
+												<label className="btl-modal-form-label"></label>
+												<button type="submit" className="btl-modal-submit-button">
+													{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+												</button>
+											</div>
+										)}
+									</div>
+									<div className="btl-entry-content-right">
+										<div className={`link-options ${isOpenLinkPanel.options ? 'link-options--open' : ''}`}>
+											<button className="link-options__head" type="button" onClick={() => togglePanel('options')}>
+												<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+											</button>
+											<div className="link-options__body">
+												{betterlinksGutenStore && (
+													<label className="btl-checkbox-field">
+														<Field
+															className="btl-check"
+															name="openInNewTab"
+															type="checkbox"
+															onChange={() => props.setFieldValue('openInNewTab', !props.values.openInNewTab)}
+															disabled={false}
+														/>
+														<span className="text">
+															{__('Open In New Tab', 'betterlinks')}
+															<div className="btl-tooltip">
+																<span className="dashicons dashicons-info-outline"></span>
+																<span className="btl-tooltiptext">{__('This will open your link in a new tab when clicked', 'betterlinks')}</span>
+															</div>
+														</span>
+													</label>
+												)}
+
 												<label className="btl-checkbox-field">
 													<Field
 														className="btl-check"
-														name="openInNewTab"
+														name="nofollow"
 														type="checkbox"
-														onChange={() => props.setFieldValue('openInNewTab', !props.values.openInNewTab)}
-														disabled={false}
+														onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)}
+														disabled={isDisableLinkFormEditView}
 													/>
 													<span className="text">
-														{__('Open In New Tab', 'betterlinks')}
+														{__('No Follow', 'betterlinks')}
 														<div className="btl-tooltip">
 															<span className="dashicons dashicons-info-outline"></span>
-															<span className="btl-tooltiptext">{__('This will open your link in a new tab when clicked', 'betterlinks')}</span>
+															<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
 														</div>
 													</span>
 												</label>
-											)}
-
-											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="nofollow"
-													type="checkbox"
-													onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)}
-													disabled={isDisableLinkFormEditView}
-												/>
-												<span className="text">
-													{__('No Follow', 'betterlinks')}
-													<div className="btl-tooltip">
-														<span className="dashicons dashicons-info-outline"></span>
-														<span className="btl-tooltiptext">{__('This will add nofollow attribute to your link. (Recommended)', 'betterlinks')}</span>
-													</div>
-												</span>
-											</label>
-											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="sponsored"
-													type="checkbox"
-													onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)}
-													disabled={isDisableLinkFormEditView}
-												/>
-												<span className="text">
-													{__('Sponsored', 'betterlinks')}
-													<div className="btl-tooltip">
-														<span className="dashicons dashicons-info-outline"></span>
-														<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
-													</div>
-												</span>
-											</label>
-											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="param_forwarding"
-													type="checkbox"
-													onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
-													disabled={isDisableLinkFormEditView}
-												/>
-												<span className="text">
-													{__('Parameter Forwarding', 'betterlinks')}
-													<div className="btl-tooltip">
-														<span className="dashicons dashicons-info-outline"></span>
-														<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
-													</div>
-												</span>
-											</label>
-											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="track_me"
-													type="checkbox"
-													onChange={() => props.setFieldValue('track_me', !props.values.track_me)}
-													disabled={isDisableLinkFormEditView}
-												/>
-												<span className="text">
-													{__('Tracking', 'betterlinks')}
-													<div className="btl-tooltip">
-														<span className="dashicons dashicons-info-outline"></span>
-														<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
-													</div>
-												</span>
-											</label>
-											{!is_pro_enabled && (
-												<label className="btl-checkbox-field link-options--teasers" onClick={() => openUpgradeToProModal()}>
+												<label className="btl-checkbox-field">
 													<Field
-														disabled={true}
 														className="btl-check"
-														// type="checkbox"
-														checked={false}
-														onChange={() => openUpgradeToProModal()}
-														onClick={() => openUpgradeToProModal()}
+														name="sponsored"
+														type="checkbox"
+														onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)}
+														disabled={isDisableLinkFormEditView}
 													/>
 													<span className="text">
-														{__('Uncloak', 'betterlinks')}
-														<span className="pro-badge">Pro</span>
+														{__('Sponsored', 'betterlinks')}
 														<div className="btl-tooltip">
 															<span className="dashicons dashicons-info-outline"></span>
-															<span className="btl-tooltiptext">{__('This will uncloak your link', 'betterlinks')}</span>
+															<span className="btl-tooltiptext">{__('This will add sponsored attribute to your link. (Recommended for Affiliate links)', 'betterlinks')}</span>
 														</div>
 													</span>
 												</label>
-											)}
-											{betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field, ...settings })}
+												<label className="btl-checkbox-field">
+													<Field
+														className="btl-check"
+														name="param_forwarding"
+														type="checkbox"
+														onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
+														disabled={isDisableLinkFormEditView}
+													/>
+													<span className="text">
+														{__('Parameter Forwarding', 'betterlinks')}
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('This will pass the parameters you have set in the target URL', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+												<label className="btl-checkbox-field">
+													<Field
+														className="btl-check"
+														name="track_me"
+														type="checkbox"
+														onChange={() => props.setFieldValue('track_me', !props.values.track_me)}
+														disabled={isDisableLinkFormEditView}
+													/>
+													<span className="text">
+														{__('Tracking', 'betterlinks')}
+														<div className="btl-tooltip">
+															<span className="dashicons dashicons-info-outline"></span>
+															<span className="btl-tooltiptext">{__('This will let you check Analytics report of your links', 'betterlinks')}</span>
+														</div>
+													</span>
+												</label>
+												{!is_pro_enabled && (
+													<label className="btl-checkbox-field link-options--teasers" onClick={() => openUpgradeToProModal()}>
+														<Field
+															disabled={true}
+															className="btl-check"
+															type="checkbox"
+															checked={false}
+															onChange={() => openUpgradeToProModal()}
+															onClick={() => openUpgradeToProModal()}
+														/>
+														<span className="text">
+															{__('Uncloak', 'betterlinks')}
+															<span class="pro-badge">Pro</span>
+															<div className="btl-tooltip">
+																<span className="dashicons dashicons-info-outline"></span>
+																<span className="btl-tooltiptext">{__('This will uncloak your link', 'betterlinks')}</span>
+															</div>
+														</span>
+													</label>
+												)}
+												{betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field, ...settings })}
+											</div>
 										</div>
-									</div>
-									{!betterlinksGutenStore && (
-										<>
-											<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
-												<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
-													<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-													<i className="btl btl-angle-arrow-down"></i>
-												</button>
-												<div className="link-options__body">
+										{!betterlinksGutenStore && (
+											<>
+												<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
+													<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
+														<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
+														<i className="btl btl-angle-arrow-down"></i>
+													</button>
 													{!is_pro_enabled && (
-														<div className="link-options--teasers">
-															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																<label className="btl-modal-form-label" htmlFor="status">
-																	{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																</label>
-																<select id="status" disabled>
-																	<option value="publish">{__('Active', 'betterlinks')}</option>
-																	<option value="expired">{__('Expired', 'betterlinks')}</option>
-																	<option value="draft">{__('Draft', 'betterlinks')}</option>
-																</select>
-															</div>
-															<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																<label className="btl-modal-form-label" htmlFor="expire">
-																	{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																</label>
-																<input id="expire" type="checkbox" disabled />
+														<div className="link-options__body">
+															<div className="link-options--teasers">
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label" htmlFor="status">
+																		{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																	</label>
+																	<select id="status" disabled>
+																		<option value="publish">{__('Active', 'betterlinks')}</option>
+																		<option value="expired">{__('Expired', 'betterlinks')}</option>
+																		<option value="draft">{__('Draft', 'betterlinks')}</option>
+																	</select>
+																</div>
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label" htmlFor="expire">
+																		{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																	</label>
+																	<input id="expire" type="checkbox" disabled />
+																</div>
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label" htmlFor="expire">
+																		{__('Password Protection', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																	</label>
+																	<input id="enable_password" type="checkbox" disabled />
+																</div>
 															</div>
 														</div>
 													)}
-													{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, props)}
+													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords })}</>
 												</div>
-											</div>
-											<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
-												<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
-													<h4 className="link-options__head--title">
-														{__('Dynamic Redirects', 'betterlinks')}{' '}
-														{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
-															<span className="status">{__('ON', 'betterlinks')}</span>
-														) : (
-															''
+												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
+													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
+														<h4 className="link-options__head--title">
+															{__('Dynamic Redirects', 'betterlinks')}{' '}
+															{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
+																<span className="status">{__('ON', 'betterlinks')}</span>
+															) : (
+																''
+															)}
+														</h4>{' '}
+														<i className="btl btl-angle-arrow-down"></i>
+													</button>
+													<div className="link-options__body">
+														{!is_pro_enabled && (
+															<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
+																<div className="link-options-info">
+																	<ul>
+																		<li>
+																			<label>
+																				{__('Redirection Type:', 'betterlinks')}
+																				<span className="pro-badge">Pro</span>
+																			</label>
+																		</li>
+																		<li>
+																			<label>
+																				{__('Target URL 1:', 'betterlinks')}
+																				<span className="pro-badge">Pro</span>
+																			</label>
+																			<input type="text" value="example-1.com" disabled />
+																		</li>
+																		<li>
+																			<label>
+																				{__('Target URL 2:', 'betterlinks')}
+																				<span className="pro-badge">Pro</span>
+																			</label>
+																			<input type="text" value="example-2.com" disabled />
+																		</li>
+																		<li>
+																			<label>
+																				{__('Split Test:', 'betterlinks')}
+																				<span className="pro-badge">Pro</span>
+																			</label>
+																			<input id="splittest" type="checkbox" disabled />
+																		</li>
+																	</ul>
+																</div>
+															</div>
 														)}
-													</h4>{' '}
-													<i className="btl btl-angle-arrow-down"></i>
-												</button>
-												<div className="link-options__body">
-													{!is_pro_enabled && (
-														<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
-															<div className="link-options-info">
-																<ul>
-																	<li>
-																		<label>
-																			{__('Redirection Type:', 'betterlinks')}
-																			<span className="pro-badge">Pro</span>
-																		</label>
-																	</li>
-																	<li>
-																		<label>
-																			{__('Target URL 1:', 'betterlinks')}
-																			<span className="pro-badge">Pro</span>
-																		</label>
-																		<input type="text" value="example-1.com" disabled />
-																	</li>
-																	<li>
-																		<label>
-																			{__('Target URL 2:', 'betterlinks')}
-																			<span className="pro-badge">Pro</span>
-																		</label>
-																		<input type="text" value="example-2.com" disabled />
-																	</li>
-																	<li>
-																		<label>
-																			{__('Split Test:', 'betterlinks')}
-																			<span className="pro-badge">Pro</span>
-																		</label>
-																		<input id="splittest" type="checkbox" disabled />
-																	</li>
-																</ul>
-															</div>
-														</div>
-													)}
-													{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
-												</div>
-											</div>
-											{!is_pro_enabled && (
-												<div>
-													<div className={`link-options link-options--auto-link-keywords`}>
-														<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
-															<h4 className="link-options__head--title">
-																{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-															</h4>
-														</button>
+														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 													</div>
 												</div>
-											)}
-										</>
-									)}
+												{!is_pro_enabled && (
+													<div>
+														<div className={`link-options link-options--auto-link-keywords`}>
+															<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
+																<h4 className="link-options__head--title">
+																	{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																</h4>
+															</button>
+														</div>
+													</div>
+												)}
+											</>
+										)}
+									</div>
 								</div>
-							</div>
-						</Form>
-					)}
+							</Form>
+						);
+					}}
 				</Formik>
 			</Modal>
 		</>
@@ -610,6 +637,7 @@ export const Link = (props) => {
 const mapStateToProps = (state) => ({
 	settings: state.settings,
 	terms: state.terms,
+	password: state.password,
 });
 
 const mapDispatchToProps = (dispatch) => {

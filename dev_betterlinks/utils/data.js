@@ -14,6 +14,17 @@ export const redirectType = [
 	},
 ];
 
+export const redirectTypeForPasswordProtection = [
+	{
+		value: '302',
+		label: __('302 (Temporary)', 'betterlinks'),
+	},
+	{
+		value: '301',
+		label: __('301 (Permanent)', 'betterlinks'),
+	},
+];
+
 export const affiliateLinkPosition = [
 	{
 		label: __('Top', 'betterlinks-pro'),

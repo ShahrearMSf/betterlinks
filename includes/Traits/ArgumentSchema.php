@@ -204,6 +204,12 @@ trait ArgumentSchema
                 ],
                 'analytic' => [
                     'type' => 'array'
+                ],
+                'enable_password' => [
+                    'type' => 'boolean'
+                ],
+                'password' => [
+                    'type' => 'string'
                 ]
             ],
             $this->terms_schema()

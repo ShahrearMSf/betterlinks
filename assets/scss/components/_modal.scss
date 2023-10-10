@@ -93,7 +93,8 @@
 					.link-options__head i {
 						transform: rotate(0);
 					}
-					.link-options__body {
+					.link-options__body,
+					.link-options-info {
 						display: block;
 					}
 				}
@@ -126,6 +127,9 @@
 						padding-right: 0;
 					}
 				}
+				&-info {
+					display: none;
+				}
 				&__body {
 					display: none;
 					padding: 35px 0 15px 20px;
@@ -146,6 +150,46 @@
 					.link-options__body {
 						padding: 20px !important;
 					}
+					.btl-modal-form-group-password {
+						position: relative;
+
+						button.dashicons {
+							position: absolute;
+							right: 5px;
+							font-size: 15px;
+						}
+						// Thanks to https://gist.github.com/MoOx/9137295 for button style reset css;
+						button {
+							// resetting button style
+							border: none;
+							margin: 0;
+							padding: 0;
+							width: auto;
+							overflow: visible;
+
+							background: transparent;
+
+							/* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
+							line-height: normal;
+
+							/* Corrects font smoothing for webkit */
+							-webkit-font-smoothing: inherit;
+							-moz-osx-font-smoothing: inherit;
+
+							/* Corrects inability to style clickable `input` types in iOS */
+							-webkit-appearance: none;
+
+							&:hover {
+								cursor: pointer;
+							}
+
+							/* Remove excess padding and border in Firefox 4+ */
+							&::-moz-focus-inner {
+								border: 0;
+								padding: 0;
+							}
+						}
+					}
 					.btl-modal-form-group {
 						align-items: center !important;
 						.btl-modal-form-label {
@@ -161,6 +205,7 @@
 							margin-left: 3px;
 						}
 						input[type='number'],
+						input[type='password'],
 						input[type='text'] {
 							background: #fff;
 							border-color: #ebebeb;

@@ -386,7 +386,6 @@ const CustomSidebarComponent = (props) => {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
-
 	return (
 		<Fragment>
 			<AffiliateLinkDisclosure enableAffiliateDisclosure={enableAffiliateDisclosure} />
