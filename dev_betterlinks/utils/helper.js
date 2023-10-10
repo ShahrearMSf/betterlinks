@@ -246,7 +246,6 @@ export const formatDate = (date = new Date(), format) => {
 
 export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav) => {
 	let results = stored;
-	// console.log(results);
 	results = stored.filter((item) => {
 		const newFilterText = filterText
 			.replace(/https?\:\/\//gi, '')
