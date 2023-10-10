@@ -1,10 +1,16 @@
 <?php
 namespace BetterLinks\Link;
 
-use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\Device\AbstractDeviceParser;
+use DeviceDetector\Parser\OperatingSystem;
+use DeviceDetector\Parser\Client\Browser;
 
 class Utils
 {
+    public function __construct() {
+        AbstractDeviceParser::setVersionTruncation(AbstractDeviceParser::VERSION_TRUNCATION_NONE);
+    }
     public function get_slug_raw($slug)
     {
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
@@ -55,12 +61,15 @@ class Utils
             return;
         }
         if (filter_var($data['track_me'], FILTER_VALIDATE_BOOLEAN)) {
-            if (isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] && class_exists('CrawlerDetect')) {
-                $CrawlerDetect = new CrawlerDetect;
-                if (! $CrawlerDetect->isCrawler()) {
-                    $this->start_trakcing($data);
-                }
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $dd = new DeviceDetector($user_agent);
+            $dd->parse();
+
+            if ( isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] && ! $dd->isBot()) {
+                $this->start_trakcing($data);
             } else {
+                $data['os'] = OperatingSystem::getOsFamily( $dd->getOs('name') );
+                $data['browser'] = Browser::getBrowserFamily( $dd->getClient('name') );
                 $this->start_trakcing($data);
             }
         }
@@ -126,8 +135,8 @@ class Utils
         }
         $click_data = [
             'link_id' => $data['ID'],
-            'browser' => $_SERVER['HTTP_USER_AGENT'],
-            'os' => '',
+            'browser' => isset($data['browser']) ? $data['browser'] : '',
+            'os' => isset($data['os']) ? $data['os'] : '',
             'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
             'uri' => $data['link_slug'],
             'click_count' => 0,
