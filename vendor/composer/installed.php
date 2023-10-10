@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'wpdevteam/betterlinks',
-        'pretty_version' => 'dev-latest',
-        'version' => 'dev-latest',
-        'reference' => 'a9b843f4c5e476093a90f03dbbf6e3eaa05a2625',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '0e1c4f0808d712a288aa5273b7fe2f636eb02373',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -28,6 +28,30 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'matomo/device-detector' => array(
+            'pretty_version' => '6.1.6',
+            'version' => '6.1.6.0',
+            'reference' => '5cbea85106e561c7138d03603eb6e05128480409',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../matomo/device-detector',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'mustangostang/spyc' => array(
+            'pretty_version' => '0.6.3',
+            'version' => '0.6.3.0',
+            'reference' => '4627c838b16550b666d15aeae1e5289dd5b77da0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mustangostang/spyc',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'piwik/device-detector' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '6.1.6',
+            ),
+        ),
         'priyomukul/wp-notice' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
@@ -40,9 +64,9 @@
             'dev_requirement' => false,
         ),
         'wpdevteam/betterlinks' => array(
-            'pretty_version' => 'dev-latest',
-            'version' => 'dev-latest',
-            'reference' => 'a9b843f4c5e476093a90f03dbbf6e3eaa05a2625',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '0e1c4f0808d712a288aa5273b7fe2f636eb02373',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

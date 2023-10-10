@@ -15,7 +15,8 @@
 	"require": {
 		"a5hleyrich/wp-background-processing": "^1.0",
 		"jaybizzle/crawler-detect": "^1.2",
-		"priyomukul/wp-notice": "dev-main"
+		"priyomukul/wp-notice": "dev-main",
+		"matomo/device-detector": "^6.1"
 	},
 	"autoload": {
 		"psr-4": {

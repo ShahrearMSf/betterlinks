@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
 {
+    public static $files = array (
+        '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
@@ -14,6 +18,10 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
         'J' => 
         array (
             'Jaybizzle\\CrawlerDetect\\' => 24,
+        ),
+        'D' => 
+        array (
+            'DeviceDetector\\' => 15,
         ),
         'B' => 
         array (
@@ -29,6 +37,10 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
         'Jaybizzle\\CrawlerDetect\\' => 
         array (
             0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
+        ),
+        'DeviceDetector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/matomo/device-detector',
         ),
         'BetterLinks\\' => 
         array (
