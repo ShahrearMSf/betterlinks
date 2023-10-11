@@ -12,12 +12,13 @@ import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
 	const { customDateFilter, setCustomDateFilter } = props;
-	const labels = Object.keys(props.data)
+	const labels = Object.keys(props.data.clicks)
 		?.reverse?.()
 		?.map?.((item) => {
 			const splitted = item.split('-');
 			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
 		});
+
 	const data = {
 		labels,
 		datasets: [
@@ -37,7 +38,27 @@ const Graph = (props) => {
 				pointHoverBorderWidth: 2,
 				pointRadius: 5,
 				pointHitRadius: 5,
-				data: Object.values(props.data)?.reverse?.(),
+				data: Object.values(props.data.clicks)?.reverse?.(),
+			},
+			{
+				label: __('Unique Clicks', 'betterlinks'),
+				fill: true,
+				backgroundColor: 'rgba(129, 162, 255,0.4)',
+				defaultFontColor: '#000',
+				borderColor: '#05143e',
+				borderCapStyle: 'butt',
+				pointBorderColor: 'rgba(129, 162, 255,1)',
+				pointBackgroundColor: '#fff',
+				pointBorderWidth: 1,
+				pointHoverRadius: 5,
+				pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
+				pointHoverBorderColor: 'rgba(129, 162, 255,1)',
+				pointHoverBorderWidth: 2,
+				pointRadius: 5,
+				pointHitRadius: 5,
+				data: Object.values(props.data.unique_clicks)
+					.map((item) => item.length)
+					?.reverse?.(),
 			},
 		],
 	};

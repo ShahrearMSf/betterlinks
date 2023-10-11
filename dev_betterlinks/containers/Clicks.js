@@ -118,13 +118,23 @@ const Clicks = (props) => {
 	}, [clicks, settings]);
 
 	const analyticsData = (data) => {
-		let results = {};
+		let results = {
+			clicks: {},
+			unique_clicks: {},
+		};
+
 		data?.forEach?.((element) => {
 			let date = element.created_at.split(' ')[0];
-			if (results.hasOwnProperty(date)) {
-				results[date] = results[date] + 1;
+			if (results.clicks.hasOwnProperty(date)) {
+				results.clicks[date] += 1;
 			} else {
-				results[date] = 1;
+				results.clicks[date] = 1;
+			}
+
+			// Unique clicks
+			results.unique_clicks[date] = [];
+			if (!results.unique_clicks[date].includes(element.ip)) {
+				results.unique_clicks[date].push(element.ip);
 			}
 		});
 		return results;
