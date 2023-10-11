@@ -65,8 +65,12 @@ class Utils
             $dd = new DeviceDetector($user_agent);
             $dd->parse();
 
-            if ( isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] && ! $dd->isBot()) {
-                $this->start_trakcing($data);
+            $data = $this->device_data_collect($data, $dd);
+            
+            if ( isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] ) {
+                if( ! $dd->isBot() ) {
+                    $this->start_trakcing($data);
+                }
             } else {
                 $data['os'] = OperatingSystem::getOsFamily( $dd->getOs('name') );
                 $data['browser'] = Browser::getBrowserFamily( $dd->getClient('name') );
@@ -120,6 +124,24 @@ class Utils
                 exit();
         }
     }
+    public function device_data_collect($data, $dd) {
+        if( !apply_filters('betterlinks/is_extra_data_tracking_compatible', false) ) return $data;
+        
+        $client_info = $dd->getClient();
+        $os_details = $dd->getOs();
+
+        $client_information_arr = [
+            'device'    => $dd->getDeviceName(),
+            'brand_name' => $dd->getBrandName(),
+            'model' => $dd->getModel(),
+            'bot_name' => $dd->isBot() ? $dd->getBot()['name'] : null,
+            'browser_type' => isset($client_info['type']) ? $client_info['type'] : null,
+            'browser_version' => isset($client_info['version']) ? $client_info['version'] : null,
+            'os_version'    => isset($os_details['version']) ? $os_details['version'] : null
+        ];
+
+        return array_merge($data, $client_information_arr);
+    }
     public function start_trakcing($data)
     {
         global $betterlinks;
@@ -152,8 +174,18 @@ class Utils
             $click_data['ip'] = $IP;
             $click_data['host'] = $IP;
         }
+        if( apply_filters('betterlinks/is_extra_data_tracking_compatible', false) ) {
+            $click_data['device'] = $data['device'];
+            $click_data['brand_name'] = $data['brand_name'];
+            $click_data['model'] = $data['model'];
+            $click_data['bot_name'] = $data['bot_name'];
+            $click_data['browser_type'] = $data['browser_type'];
+            $click_data['browser_version'] = $data['browser_version'];
+            $click_data['os_version'] = $data['os_version'];
+        }
+        
         $arg = apply_filters('betterlinks/link/insert_click_arg', $click_data);
-
+        
         if (BETTERLINKS_EXISTS_CLICKS_JSON) {
             $this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
         } else {

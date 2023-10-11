@@ -514,6 +514,7 @@ trait Query
     {
         global $wpdb;
         $betterlinks = [];
+        $is_extra_data_tracking_compatible = apply_filters('betterlinks/is_extra_data_tracking_compatible', false);
         if (isset($item['short_url'])) {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
         } elseif (isset($item['link_id'])) {
@@ -522,6 +523,12 @@ trait Query
         $is_analytics_ip_enabled = isset($item['ip']) && isset($item['host']);
         $addedPlaceholderString = $is_analytics_ip_enabled ? " created_at_gmt, ip, host " : " created_at_gmt ";
         $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
+
+        if( $is_extra_data_tracking_compatible ) {
+            $addedPlaceholderString .= ", device, brand_name, model, bot_name, browser_type, os_version, browser_version";
+            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s";
+        }
+
         $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
         $db_data_array = [
             current($betterlinks)['ID'],
@@ -538,6 +545,15 @@ trait Query
         if($is_analytics_ip_enabled){
             $db_data_array[] = $item['ip'];
             $db_data_array[] = $item['host'];
+        }
+        if( $is_extra_data_tracking_compatible ) {
+            $db_data_array[] = $item['device'];
+            $db_data_array[] = $item['brand_name'];
+            $db_data_array[] = $item['model'];
+            $db_data_array[] = $item['bot_name'];
+            $db_data_array[] = $item['browser_type'];
+            $db_data_array[] = $item['os_version'];
+            $db_data_array[] = $item['browser_version'];
         }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
