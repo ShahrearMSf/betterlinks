@@ -18,7 +18,6 @@ const Graph = (props) => {
 			const splitted = item.split('-');
 			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
 		});
-
 	const data = {
 		labels,
 		datasets: [

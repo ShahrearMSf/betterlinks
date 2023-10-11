@@ -122,7 +122,6 @@ const Clicks = (props) => {
 			clicks: {},
 			unique_clicks: {},
 		};
-
 		data?.forEach?.((element) => {
 			let date = element.created_at.split(' ')[0];
 			if (results.clicks.hasOwnProperty(date)) {
@@ -132,9 +131,12 @@ const Clicks = (props) => {
 			}
 
 			// Unique clicks
-			results.unique_clicks[date] = [];
-			if (!results.unique_clicks[date].includes(element.ip)) {
-				results.unique_clicks[date].push(element.ip);
+			if (results.unique_clicks.hasOwnProperty(date)) {
+				if (!results.unique_clicks[date].includes(element.ip)) {
+					results.unique_clicks[date].push(element.ip);
+				}
+			} else {
+				results.unique_clicks[date] = [element.ip];
 			}
 		});
 		return results;
