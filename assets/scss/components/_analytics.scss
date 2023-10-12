@@ -18,7 +18,7 @@
 	.btl-analytics-filter__control {
 		display: flex;
 		margin-left: auto;
-		.btl-list-view-calendar{
+		.btl-list-view-calendar {
 			height: 40px;
 			padding: 0 12px;
 			border: 1px solid $light-darken;
@@ -29,13 +29,13 @@
 			cursor: pointer;
 			display: inline-flex;
 			align-items: center;
-			.dashicons{
+			.dashicons {
 				font-size: 15px;
 				margin-right: 2px;
 				display: inline-flex;
 				align-items: center;
 			}
-			&:focus{
+			&:focus {
 				border: 1px solid $light-darken;
 				outline: none;
 			}
@@ -125,13 +125,17 @@
 			color: #fff;
 			cursor: pointer;
 			transition: background 0.3s ease-in-out;
+			margin-right: 5px;
 			&:hover {
 				background: #0338c9;
 			}
 		}
+		.btl-search-button:nth-child(3) {
+			border-radius: 4px;
+		}
 	}
-	.rdt_Table{
-		.rdt_TableCell{
+	.rdt_Table {
+		.rdt_TableCell {
 			padding-top: 5px;
 			padding-bottom: 5px;
 		}
@@ -153,41 +157,52 @@
 			}
 		}
 	}
-    .rdt_Pagination{
+	.rdt_Pagination {
 		.sc-cxFLnm {
 			svg {
 				display: none;
 			}
 		}
-        > div:last-child {
-            button {
-                padding: 0px;
-                border-radius: 4px;
-                height: 24px;
-                width: 24px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin: 2px;
-                svg {
-                    height: 20px;
-                    width: 20px;
-                    fill: $dark;
-                }
-                &:disabled{
-                    svg{
-                        fill: $secondary;
-                    }
-                }
-                &:hover {
-                    background: #0742e7;
-                    svg {
-                        fill: #fff;
-                    }
-                }
-            }
-        }
-    }
+		> div:last-child {
+			button {
+				padding: 0px;
+				border-radius: 4px;
+				height: 24px;
+				width: 24px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 2px;
+				svg {
+					height: 20px;
+					width: 20px;
+					fill: $dark;
+				}
+				&:disabled {
+					svg {
+						fill: $secondary;
+					}
+				}
+				&:hover {
+					background: #0742e7;
+					svg {
+						fill: #fff;
+					}
+				}
+			}
+		}
+	}
+	.btl-analytic-link-name {
+		display: flex;
+		gap: 3px;
+		text-decoration: underline;
+		// border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+		cursor: pointer;
+
+		img {
+			width: 15px;
+		}
+	}
 }
 .react-calendar {
 	border-color: #ebebeb;
