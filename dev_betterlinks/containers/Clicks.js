@@ -7,12 +7,36 @@ import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
 import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
-import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce, route_path } from 'utils/helper';
+import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce, route_path, is_pro_enabled } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
-const getColumns = (id) => {
+const AnalyticLink = ({ id, row, setUpgradeToProModal }) => {
+	if (is_pro_enabled) {
+		if (!id) {
+			return (
+				<Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`} className="btl-analytic-link-name">
+					{row.link_title}
+					<i className="btl btl-analytics" />
+				</Link>
+			);
+		}
+	}
+	if (!id) {
+		return (
+			<div onClick={setUpgradeToProModal} className="btl-analytic-link-name">
+				{row.link_title}
+				<i className="btl btl-analytics" />
+			</div>
+		);
+	}
+	return row.link_title;
+};
+
+const getColumns = (id, setUpgradeToProModal) => {
+	// console.log(setUpgradeToProModal);
 	return [
 		{
 			name: __('Browser', 'betterlinks'),
@@ -31,7 +55,11 @@ const getColumns = (id) => {
 			name: __('Link Name', 'betterlinks'),
 			selector: 'name',
 			sortable: false,
-			cell: (row) => <div>{!id ? <Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`}>{row.link_title}</Link> : row.link_title}</div>,
+			cell: (row) => (
+				<div>
+					<AnalyticLink id={id} row={row} setUpgradeToProModal={setUpgradeToProModal} />
+				</div>
+			),
 		},
 		{
 			name: __('IP', 'betterlinks'),
@@ -90,14 +118,18 @@ const getColumns = (id) => {
 };
 const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText }) => (
 	<div className="btl-click-filter">
-		<input id="search" type="text" placeholder={__('Filter By Name', 'betterlinks')} value={filterText} onChange={onFilter} />
+		<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
 		<button className="btl-search-button" onClick={searchClickHandler}>
 			{serachBtnText}
+		</button>
+		<button className="btl-search-button" onClick={() => {}}>
+			{__('Advanced Search', 'betterlinks')}
 		</button>
 	</div>
 );
 
 const Clicks = (props) => {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [serachBtnText, setSearchBtnText] = useState(__('Search Click', 'betterlinks'));
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -158,17 +190,19 @@ const Clicks = (props) => {
 			}
 		};
 		return (
-			<FilterComponent
-				onFilter={(e) => setFilterText(e.target.value)}
-				onClear={handleClear}
-				filterText={filterText}
-				searchClickHandler={searchClickHandler}
-				serachBtnText={serachBtnText}
-			/>
+			<>
+				<FilterComponent
+					onFilter={(e) => setFilterText(e.target.value)}
+					onClear={handleClear}
+					filterText={filterText}
+					searchClickHandler={searchClickHandler}
+					serachBtnText={serachBtnText}
+				/>
+			</>
 		);
 	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
 
-	const columns = getColumns(id);
+	const columns = getColumns(id, setUpgradeToProModal);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
 	const getData = useCallback(
@@ -197,10 +231,15 @@ const Clicks = (props) => {
 		},
 		[id]
 	);
+	const closeUpgradeToProModal = () => {
+		setUpgradeToProModal(false);
+	};
+
 	return (
 		<div className="btl-analytic">
 			{clicks ? (
 				<>
+					<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 					<Graph data={analyticsData(getGraphData(id, clicks))} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
