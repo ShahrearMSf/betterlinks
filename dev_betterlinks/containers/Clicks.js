@@ -7,115 +7,12 @@ import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
 import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
-import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce, route_path, is_pro_enabled } from 'utils/helper';
+import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce, route_path, is_pro_enabled, getColumns } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
-const AnalyticLink = ({ id, row, setUpgradeToProModal }) => {
-	if (is_pro_enabled) {
-		if (!id) {
-			return (
-				<Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`} className="btl-analytic-link-name">
-					{row.link_title}
-					<i className="btl btl-analytics" />
-				</Link>
-			);
-		}
-	}
-	if (!id) {
-		return (
-			<div onClick={setUpgradeToProModal} className="btl-analytic-link-name">
-				{row.link_title}
-				<i className="btl btl-analytics" />
-			</div>
-		);
-	}
-	return row.link_title;
-};
-
-const getColumns = (id, setUpgradeToProModal) => {
-	// console.log(setUpgradeToProModal);
-	return [
-		{
-			name: __('Browser', 'betterlinks'),
-			selector: 'browser',
-			sortable: false,
-			cell: (row) => {
-				const browser = getBrowser(row.browser);
-				return (
-					<div>
-						<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}.svg`} alt="icon" />
-					</div>
-				);
-			},
-		},
-		{
-			name: __('Link Name', 'betterlinks'),
-			selector: 'name',
-			sortable: false,
-			cell: (row) => (
-				<div>
-					<AnalyticLink id={id} row={row} setUpgradeToProModal={setUpgradeToProModal} />
-				</div>
-			),
-		},
-		{
-			name: __('IP', 'betterlinks'),
-			selector: 'ip',
-			sortable: false,
-			cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
-		},
-		{
-			name: __('Timestamp', 'betterlinks'),
-			selector: 'created_at',
-			sortable: false,
-		},
-		{
-			name: __('Shortened URL', 'betterlinks'),
-			selector: 'short_url',
-			sortable: false,
-			cell: (row) => (
-				<div>
-					<div style={{ fontWeight: 700 }}>
-						<a href={site_url + '/' + row.short_url} target="_blank">
-							{site_url + '/' + row.short_url}
-						</a>
-					</div>
-				</div>
-			),
-		},
-		{
-			name: __('Referrer', 'betterlinks'),
-			selector: 'referer',
-			sortable: false,
-			cell: (row) => (
-				<div>
-					<div style={{ fontWeight: 700 }}>
-						<a href={row.referer} target="_blank">
-							{row.referer}
-						</a>
-					</div>
-				</div>
-			),
-		},
-		{
-			name: __('Target URL', 'betterlinks'),
-			selector: 'target_url',
-			cell: (row) => (
-				<div>
-					<div style={{ fontWeight: 700 }}>
-						<a href={row.target_url} target="_blank">
-							{row.target_url}
-						</a>
-					</div>
-				</div>
-			),
-			sortable: false,
-		},
-	];
-};
 const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText }) => (
 	<div className="btl-click-filter">
 		<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
@@ -152,8 +49,9 @@ const Clicks = (props) => {
 	const analyticsData = (data) => {
 		let results = {
 			clicks: {},
-			unique_clicks: {},
 		};
+		if (is_pro_enabled) results['unique_clicks'] = {};
+
 		data?.forEach?.((element) => {
 			let date = element.created_at.split(' ')[0];
 			if (results.clicks.hasOwnProperty(date)) {
@@ -162,13 +60,15 @@ const Clicks = (props) => {
 				results.clicks[date] = 1;
 			}
 
-			// Unique clicks
-			if (results.unique_clicks.hasOwnProperty(date)) {
-				if (!results.unique_clicks[date].includes(element.ip)) {
-					results.unique_clicks[date].push(element.ip);
+			if (is_pro_enabled) {
+				// Unique clicks
+				if (results.unique_clicks.hasOwnProperty(date)) {
+					if (!results.unique_clicks[date].includes(element.ip)) {
+						results.unique_clicks[date].push(element.ip);
+					}
+				} else {
+					results.unique_clicks[date] = [element.ip];
 				}
-			} else {
-				results.unique_clicks[date] = [element.ip];
 			}
 		});
 		return results;

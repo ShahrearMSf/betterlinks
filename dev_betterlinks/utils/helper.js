@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
+import AnalyticLink from 'components/Analytics/AnalyticLink';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 export const {
@@ -17,7 +18,7 @@ export const {
 	is_pro_enabled,
 	post_type,
 	betterlinks_links_option,
-	betterlinkspro_version
+	betterlinkspro_version,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -580,4 +581,131 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	}
 	update_option(values);
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
+};
+
+export const getDataset = (is_pro_enabled, data) => {
+	const dataset = [
+		{
+			label: __('Clicks', 'betterlinks'),
+			fill: true,
+			backgroundColor: 'rgba(129, 162, 255,0.4)',
+			defaultFontColor: '#000',
+			borderColor: '#2a62ff',
+			borderCapStyle: 'butt',
+			pointBorderColor: 'rgba(129, 162, 255,1)',
+			pointBackgroundColor: '#fff',
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
+			pointHoverBorderColor: 'rgba(129, 162, 255,1)',
+			pointHoverBorderWidth: 2,
+			pointRadius: 5,
+			pointHitRadius: 5,
+			data: Object.values(data.clicks)?.reverse?.(),
+		},
+	];
+	if (is_pro_enabled) {
+		dataset.push({
+			label: __('Unique Clicks', 'betterlinks'),
+			fill: true,
+			backgroundColor: 'rgba(129, 162, 255,0.4)',
+			defaultFontColor: '#000',
+			borderColor: '#05143e',
+			borderCapStyle: 'butt',
+			pointBorderColor: 'rgba(129, 162, 255,1)',
+			pointBackgroundColor: '#fff',
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
+			pointHoverBorderColor: 'rgba(129, 162, 255,1)',
+			pointHoverBorderWidth: 2,
+			pointRadius: 5,
+			pointHitRadius: 5,
+			data: Object.values(data.unique_clicks)
+				.map((item) => item.length)
+				?.reverse?.(),
+		});
+	}
+	return dataset;
+};
+
+export const getColumns = (id, setUpgradeToProModal) => {
+	return [
+		{
+			name: __('Browser', 'betterlinks'),
+			selector: 'browser',
+			sortable: false,
+			cell: (row) => {
+				const browser = getBrowser(row.browser);
+				return (
+					<div>
+						<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}.svg`} alt="icon" />
+					</div>
+				);
+			},
+		},
+		{
+			name: __('Link Name', 'betterlinks'),
+			selector: 'name',
+			sortable: false,
+			cell: (row) => (
+				<div>
+					<AnalyticLink id={id} row={row} setUpgradeToProModal={setUpgradeToProModal} />
+				</div>
+			),
+		},
+		{
+			name: __('IP', 'betterlinks'),
+			selector: 'ip',
+			sortable: false,
+			cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+		},
+		{
+			name: __('Timestamp', 'betterlinks'),
+			selector: 'created_at',
+			sortable: false,
+		},
+		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={site_url + '/' + row.short_url} target="_blank">
+							{site_url + '/' + row.short_url}
+						</a>
+					</div>
+				</div>
+			),
+		},
+		{
+			name: __('Referrer', 'betterlinks'),
+			selector: 'referer',
+			sortable: false,
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={row.referer} target="_blank">
+							{row.referer}
+						</a>
+					</div>
+				</div>
+			),
+		},
+		{
+			name: __('Target URL', 'betterlinks'),
+			selector: 'target_url',
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={row.target_url} target="_blank">
+							{row.target_url}
+						</a>
+					</div>
+				</div>
+			),
+			sortable: false,
+		},
+	];
 };

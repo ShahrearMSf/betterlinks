@@ -6,7 +6,7 @@ import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
-import { API, namespace } from 'utils/helper';
+import { API, getDataset, is_pro_enabled, namespace } from 'utils/helper';
 import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from 'utils/helper';
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
@@ -20,46 +20,7 @@ const Graph = (props) => {
 		});
 	const data = {
 		labels,
-		datasets: [
-			{
-				label: __('Clicks', 'betterlinks'),
-				fill: true,
-				backgroundColor: 'rgba(129, 162, 255,0.4)',
-				defaultFontColor: '#000',
-				borderColor: '#2a62ff',
-				borderCapStyle: 'butt',
-				pointBorderColor: 'rgba(129, 162, 255,1)',
-				pointBackgroundColor: '#fff',
-				pointBorderWidth: 1,
-				pointHoverRadius: 5,
-				pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
-				pointHoverBorderColor: 'rgba(129, 162, 255,1)',
-				pointHoverBorderWidth: 2,
-				pointRadius: 5,
-				pointHitRadius: 5,
-				data: Object.values(props.data.clicks)?.reverse?.(),
-			},
-			{
-				label: __('Unique Clicks', 'betterlinks'),
-				fill: true,
-				backgroundColor: 'rgba(129, 162, 255,0.4)',
-				defaultFontColor: '#000',
-				borderColor: '#05143e',
-				borderCapStyle: 'butt',
-				pointBorderColor: 'rgba(129, 162, 255,1)',
-				pointBackgroundColor: '#fff',
-				pointBorderWidth: 1,
-				pointHoverRadius: 5,
-				pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
-				pointHoverBorderColor: 'rgba(129, 162, 255,1)',
-				pointHoverBorderWidth: 2,
-				pointRadius: 5,
-				pointHitRadius: 5,
-				data: Object.values(props.data.unique_clicks)
-					.map((item) => item.length)
-					?.reverse?.(),
-			},
-		],
+		datasets: getDataset(is_pro_enabled, props.data),
 	};
 	const options = {
 		maintainAspectRatio: false,
