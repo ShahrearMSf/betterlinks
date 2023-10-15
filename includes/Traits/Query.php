@@ -137,7 +137,7 @@ trait Query
             FROM {$prefix}betterlinks_terms as bt
             LEFT JOIN  {$prefix}betterlinks_terms_relationships as btr ON bt.ID = btr.term_id
             LEFT JOIN  {$prefix}betterlinks as bl ON bl.ID = btr.link_id
-            WHERE bt.term_type = 'category'
+            -- WHERE bt.term_type = 'category'
             ORDER BY bl.link_order ASC;", OBJECT);
         $results = \BetterLinks\Helper::parse_link_response($results, $analytic, $broken_links);
         return $results;
@@ -420,6 +420,7 @@ trait Query
                             'link_id' => $link_id,
                             'term_id' => $value,
                             'term_slug' => $result["term_slug"],
+                            'term_name' => $result["term_name"],
                             'term_type' => 'tags',
                         ];
                         $is_new_tag = false;

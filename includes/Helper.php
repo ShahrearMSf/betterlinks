@@ -222,9 +222,19 @@ class Helper
     {
         $results = [];
         $broken_link_status_codes = [401, 403, 404];
+
+        $tags_list = [];
+
         foreach ($items as $item) {
-            //insert analytic data
-            if (isset($analytic[$item->ID])) {
+            if( $item->ID != null && $item->term_type == 'tags' ) {
+                array_push($tags_list, $item);
+            }
+        }
+
+        foreach ($items as $item) {
+           if( $item->term_type == 'category' ) {
+             //insert analytic data
+             if (isset($analytic[$item->ID])) {
                 $item->analytic = $analytic[$item->ID];
             }
             
@@ -234,6 +244,17 @@ class Helper
             }else if($item->link_status == 'broken' && $broken_links[$item->ID]['old_link_status'] != 'broken'){ 
                 // if the link is fixed, but if db is not updated it to fixed link immediately then it will be marked as old status code. 
                 $item->link_status = $broken_links[$item->ID]['old_link_status'];
+            }
+            $item->tags_data = [];
+
+            foreach ($tags_list as $tag) {
+                if( $tag->ID == $item->ID ) {
+                    array_push($item->tags_data, [
+                        'term_id' => $tag->cat_id,
+                        'term_name' => $tag->term_name,
+                        'term_slug' => $tag->term_slug
+                    ]);
+                }
             }
             
             // formatting response
@@ -251,6 +272,7 @@ class Helper
             } else {
                 $results[$item->cat_id]['lists'][] = $item;
             }
+           }
         }
         return $results;
     }

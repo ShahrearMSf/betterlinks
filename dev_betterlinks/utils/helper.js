@@ -16,7 +16,7 @@ export const {
 	is_pro_enabled,
 	post_type,
 	betterlinks_links_option,
-	betterlinkspro_version
+	betterlinkspro_version,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -252,9 +252,16 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 			.replace(/^[\/\\]+|[\/\\]+$/gi, '')
 			.toLowerCase();
 		const linkTitle = (item?.link_title || '').toLowerCase();
+		const linkNote = (item?.link_note || '').toLowerCase();
 		const targetUrl = (item?.target_url || '').replace(/https?\:\/\//gi, '').toLowerCase();
 		const shortUrl = `${site_url}/${item?.short_url || ''}`.replace(/https?\:\/\//gi, '').toLowerCase();
-		return [linkTitle, shortUrl, targetUrl].some((item) => item.includes(newFilterText));
+		const tags_data = item.tags_data || [];
+		return [linkTitle, linkNote, shortUrl, targetUrl, tags_data].some((item) => {
+			if (Array.isArray(item)) {
+				return item.some((tag) => tag?.term_name?.includes(newFilterText));
+			}
+			return item.includes(newFilterText);
+		});
 	});
 	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
