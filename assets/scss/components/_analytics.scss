@@ -101,7 +101,8 @@
 	}
 	.btl-click-filter {
 		margin-bottom: 20px;
-		input {
+		display: flex;
+		input[type='text'] {
 			border-color: #ebebeb;
 			height: 40px;
 			border-radius: 4px 0 0 4px;

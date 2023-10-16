@@ -43,11 +43,17 @@ body {
 		}
 		.btl-modal-utm-builder .btl-modal-utm-builder__body .btl-modal-utm-builder__form-group button[type='button'],
 		.btl-modal-utm-builder__title,
+		.btl-analytic-advanced-search h3,
 		.btl-confirmation-alert .btl-confirmation-buttons button:nth-child(2) {
 			color: $white;
 		}
 		.btl-analytic-table-wrapper .btl-analytic-link-name i.btl-analytics {
 			border: 1px solid $white;
+		}
+		.rmsc.multi-select * {
+			background: #252f47;
+			border-color: #36405a;
+			color: #fff;
 		}
 	}
 	> .btl-overlay {
@@ -521,4 +527,32 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	padding: 0;
 	margin: 0;
 	font-size: inherit;
+}
+.rmsc.multi-select {
+	max-width: 150px;
+	min-width: 150px;
+}
+.rmsc {
+	* {
+		transition: unset !important;
+	}
+	.dropdown-container {
+		.dropdown-heading .clear-selected-button {
+			display: none;
+		}
+	}
+	.dropdown-content {
+		position: absolute;
+		z-index: 1;
+		top: 100%;
+		width: 100%;
+		padding-top: 8px;
+
+		.panel-content input[type='checkbox'] {
+			overflow: hidden;
+			border-radius: var(--rmsc-radius);
+			background: var(--rmsc-bg);
+			box-shadow: 0 0 0 1px #0000001a, 0 4px 11px #0000001a;
+		}
+	}
 }

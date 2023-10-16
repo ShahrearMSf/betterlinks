@@ -764,6 +764,21 @@
 			z-index: 9999;
 		}
 	}
+	.btl-analytic-advanced-search {
+		
+		h3{
+			color: $white;
+		}
+
+		.link-options__body {
+			display: flex;
+
+			.btl-checkbox-field .text {
+				padding-left: 30px;
+				margin-right: 10px;
+			}
+		}
+	}
 }
 .MuiDialog-root {
 	z-index: 999999 !important;
