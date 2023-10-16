@@ -137,7 +137,13 @@ const Clicks = (props) => {
 	const getData = useCallback(
 		(id, clicks) => {
 			if (id) {
-				return clicks?.filter?.((item) => item.link_id == id && item.link_title && item.link_title.toLowerCase().includes(filterText.toLowerCase()));
+				return clicks?.filter?.((item) => {
+					if (item.link_id != id) return;
+					if (item.ip && item.ip.toLowerCase().includes(filterText.toLowerCase())) return item;
+					if (item.browser && item.browser.toLowerCase().includes(filterText.toLowerCase())) return item;
+					if (item.short_url && item.short_url.toLowerCase().includes(filterText.toLowerCase())) return item;
+					if (item.target_url && item.target_url.toLowerCase().includes(filterText.toLowerCase())) return item;
+				});
 			}
 			let find = [];
 			for (let index = 0; index < clicks.length; index++) {
