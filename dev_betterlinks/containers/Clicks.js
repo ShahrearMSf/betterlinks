@@ -5,25 +5,48 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
-import DeleteClicks from 'containers/DeleteClicks';
 import TableLoader from 'components/Loader/TableLoader';
-import { site_url, plugin_root_url, getBrowser, formatDate, betterlinks_nonce, route_path, is_pro_enabled, getColumns } from 'utils/helper';
+import { formatDate, betterlinks_nonce, is_pro_enabled, getColumns } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
+import { MultiSelect } from 'react-multi-select-component';
 
-const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText }) => (
-	<div className="btl-click-filter">
-		<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
-		<button className="btl-search-button" onClick={searchClickHandler}>
-			{serachBtnText}
-		</button>
-		<button className="btl-search-button" onClick={() => {}}>
-			{__('Advanced Search', 'betterlinks')}
-		</button>
-	</div>
-);
+const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText, analytics, update_analytics_settings }) => {
+	const [selectedValues, setSelectedValues] = useState(Object.values(analytics));
+	const options = [
+		{ label: 'Browser', value: 'browser' },
+		{ label: 'IP', value: 'ip' },
+		{ label: 'Timestamp', value: 'created_at' },
+		{ label: 'Shortened URL', value: 'short_url' },
+		{ label: 'Referer', value: 'referer' },
+		{ label: 'Target URL', value: 'target_url' },
+	];
+
+	return (
+		<>
+			<div className="btl-click-filter">
+				<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
+				<button className="btl-search-button" onClick={searchClickHandler}>
+					{serachBtnText}
+				</button>
+				<MultiSelect
+					options={options}
+					value={selectedValues}
+					onChange={(options) => {
+						setSelectedValues(options);
+						update_analytics_settings(options);
+					}}
+					labelledBy="Select"
+					disableSearch={true}
+					hasSelectAll={false}
+					ClearIcon={() => <span></span>}
+				/>
+			</div>
+		</>
+	);
+};
 
 const Clicks = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
@@ -32,6 +55,7 @@ const Clicks = (props) => {
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks } = props.clicks;
 	const { settings } = props.settings;
+	const { analytics } = props.analytics;
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const id = betterLinksQuery.get('id');
 
@@ -44,7 +68,10 @@ const Clicks = (props) => {
 		if (!settings) {
 			props.fetch_settings_data();
 		}
-	}, [clicks, settings]);
+		if (!analytics) {
+			props.fetch_analytics_settings();
+		}
+	}, [clicks, settings, analytics]);
 
 	const analyticsData = (data) => {
 		let results = {
@@ -97,12 +124,14 @@ const Clicks = (props) => {
 					filterText={filterText}
 					searchClickHandler={searchClickHandler}
 					serachBtnText={serachBtnText}
+					analytics={analytics}
+					update_analytics_settings={props.update_analytics_settings}
 				/>
 			</>
 		);
-	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText]);
+	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText, analytics]);
 
-	const columns = getColumns(id, setUpgradeToProModal);
+	const columns = useCallback(getColumns(id, setUpgradeToProModal, analytics), [id, analytics]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
 	const getData = useCallback(
@@ -165,6 +194,7 @@ const Clicks = (props) => {
 const mapStateToProps = (state) => ({
 	clicks: state.clicks,
 	settings: state.settings,
+	analytics: state.analytics,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -172,6 +202,8 @@ const mapDispatchToProps = (dispatch) => {
 		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 		searchClicksData: bindActionCreators(searchClicksData, dispatch),
+		fetch_analytics_settings: bindActionCreators(fetch_analytics_settings, dispatch),
+		update_analytics_settings: bindActionCreators(update_analytics_settings, dispatch),
 	};
 };
 

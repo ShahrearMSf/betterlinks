@@ -629,8 +629,8 @@ export const getDataset = (is_pro_enabled, data) => {
 	return dataset;
 };
 
-export const getColumns = (id, setUpgradeToProModal) => {
-	return [
+export const getColumns = (id, setUpgradeToProModal, analytics) => {
+	const columns = [
 		{
 			name: __('Browser', 'betterlinks'),
 			selector: 'browser',
@@ -708,4 +708,40 @@ export const getColumns = (id, setUpgradeToProModal) => {
 			sortable: false,
 		},
 	];
+	if (analytics) {
+		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value)];
+		return columns.filter((item) => analyticsArr.includes(item.selector) && item);
+	}
+	return columns;
 };
+
+export const analyticsColumnData = [
+	{
+		name: __('Browser', 'betterlinks'),
+		selector: 'browser',
+	},
+	{
+		name: __('Link Name', 'betterlinks'),
+		selector: 'name',
+	},
+	{
+		name: __('IP', 'betterlinks'),
+		selector: 'ip',
+	},
+	{
+		name: __('Timestamp', 'betterlinks'),
+		selector: 'created_at',
+	},
+	{
+		name: __('Shortened URL', 'betterlinks'),
+		selector: 'short_url',
+	},
+	{
+		name: __('Referer', 'betterlinks'),
+		selector: 'referer',
+	},
+	{
+		name: __('Target URL', 'betterlinks'),
+		selector: 'target_url',
+	},
+];
