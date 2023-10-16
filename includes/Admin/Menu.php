@@ -21,7 +21,7 @@ class Menu
 	public function admin_menu()
 	{
 		add_menu_page(
-			__('BetterLinks', 'betterlinks'),
+			'BetterLinks',
 			'BetterLinks',
 			apply_filters('betterlinks/admin/menu_capability', 'manage_options'),
 			BETTERLINKS_PLUGIN_SLUG,
