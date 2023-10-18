@@ -67,7 +67,8 @@ class Assets
                 'page' => isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '',
                 'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
                 'prefix' => $prefix,
-                'betterlinkspro_version' => defined('BETTERLINKS_PRO_VERSION') ? BETTERLINKS_PRO_VERSION : null
+                'betterlinkspro_version' => defined('BETTERLINKS_PRO_VERSION') ? BETTERLINKS_PRO_VERSION : null,
+                'is_extra_data_tracking_compatible' => apply_filters('betterlinks/is_extra_data_tracking_compatible', false)
             ]);
         }
         wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
@@ -107,7 +108,6 @@ class Assets
             'route_path' => parse_url(admin_url(), PHP_URL_PATH),
             'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
             'betterlinks_links_option' => $betterlinks_links_option,
-            // 'prefix' => $prefix
         ]);
         wp_set_script_translations('betterlinks-gutenberg', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
     }
