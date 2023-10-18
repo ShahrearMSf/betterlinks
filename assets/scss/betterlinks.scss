@@ -47,8 +47,10 @@ body {
 		.btl-confirmation-alert .btl-confirmation-buttons button:nth-child(2) {
 			color: $white;
 		}
-		.btl-analytic-table-wrapper .btl-analytic-link-name i.btl-analytics {
-			border: 1px solid $white;
+		.btl-analytic-table-wrapper {
+			.btl-analytic-link-name i.btl-analytics {
+				border: 1px solid $white;
+			}
 		}
 		.rmsc.multi-select * {
 			background: #252f47;

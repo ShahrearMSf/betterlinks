@@ -205,6 +205,14 @@
 					color: $light-darken;
 				}
 			}
+			a.btl-go-back-btn {
+				color: $white;
+				border-color: #36405a;
+
+				&:hover {
+					border-color: transparent;
+				}
+			}
 		}
 	}
 	.sc-bBXqnf {
