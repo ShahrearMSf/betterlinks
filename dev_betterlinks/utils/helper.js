@@ -19,6 +19,7 @@ export const {
 	post_type,
 	betterlinks_links_option,
 	betterlinkspro_version,
+	is_extra_data_tracking_compatible,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -213,23 +214,23 @@ export const makeShortUrl = (shortUrl) => {
 export const getBrowser = (agent) => {
 	var browser = '';
 	if (/Opera[\/\s](\d+\.\d+)/.test(agent) || 'Opera' == agent) {
-		browser = 'opera-browser';
+		browser = 'opera';
 	} else if (/IE (\d+\.\d+);/.test(agent) || 'IE' == agent) {
-		browser = 'internet-explorer-browser';
+		browser = 'internet-explorer';
 	} else if (/Navigator[\/\s](\d+\.\d+)/.test(agent) || 'Navigator' == agent) {
-		browser = 'netscape-browser';
+		browser = 'netscape';
 	} else if (/Chrome[\/\s](\d+\.\d+)/.test(agent) || 'Chrome' == agent) {
-		browser = 'chrome-browser';
+		browser = 'chrome';
 	} else if (/Safari[\/\s](\d+\.\d+)/.test(agent) || 'Safari' == agent) {
-		browser = 'safari-browser';
+		browser = 'safari';
 	} else if (/Firefox[\/\s](\d+\.\d+)/.test(agent) || 'Firefox' == agent) {
-		browser = 'firefox-browser';
+		browser = 'firefox';
 	} else if (/Yandex[\/\s](\d+\.\d+)/.test(agent) || 'Yandex' == agent) {
-		browser = 'yandex-browser';
+		browser = 'yandex';
 	} else if (/Facebook[\/\s](\d+\.\d+)/.test(agent) || 'Facebook' == agent) {
-		browser = 'facebook-browser';
+		browser = 'facebook';
 	} else {
-		browser = 'web-browser';
+		browser = 'web';
 	}
 	return browser;
 };
@@ -628,18 +629,30 @@ export const getDataset = (is_pro_enabled, data) => {
 	}
 	return dataset;
 };
-
+const getDevice = (device) => {
+	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
+	return device;
+};
+const sortFunction = (title) => (rowA, rowB) => {
+	const a = rowA[title]?.toLowerCase() || '';
+	const b = rowB[title]?.toLowerCase() || '';
+	if (a > b) return 1;
+	else if (b > a) return -1;
+	return 0;
+};
 export const getColumns = (id, setUpgradeToProModal, analytics) => {
 	const columns = [
 		{
 			name: __('Browser', 'betterlinks'),
 			selector: 'browser',
 			sortable: false,
+			sortFunction: sortFunction('browser'),
+			width: '80px',
 			cell: (row) => {
 				const browser = getBrowser(row.browser);
 				return (
 					<div>
-						<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}.svg`} alt="icon" />
+						<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={browser.charAt(0).toUpperCase() + browser.slice(1)} />
 					</div>
 				);
 			},
@@ -647,7 +660,9 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 		{
 			name: __('Link Name', 'betterlinks'),
 			selector: 'name',
-			sortable: false,
+			id: 'name',
+			sortable: true,
+			sortFunction: sortFunction('link_title'),
 			cell: (row) => (
 				<div>
 					<AnalyticLink id={id} row={row} setUpgradeToProModal={setUpgradeToProModal} />
@@ -657,6 +672,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 		{
 			name: __('IP', 'betterlinks'),
 			selector: 'ip',
+			width: '100px',
 			sortable: false,
 			cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 		},
@@ -707,10 +723,63 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			),
 			sortable: false,
 		},
+		{
+			name: (
+				<span style={{ display: 'flex' }}>
+					{__('OS', 'betterlinks')}
+					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+				</span>
+			),
+			selector: 'os',
+			width: '80px',
+			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : <span style={{ filter: 'blur(2px)' }}>XXX</span>}</div>,
+			sortable: false,
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+		},
+		{
+			name: (
+				<span style={{ display: 'flex' }}>
+					{__('Device', 'betterlinks')}
+					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+				</span>
+			),
+			selector: 'device',
+			width: '80px',
+			cell: (row) => (
+				<div>
+					{is_extra_data_tracking_compatible ? (
+						row.device && (
+							<img
+								width="25"
+								src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
+								alt="icon"
+								title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
+							/>
+						)
+					) : (
+						<span style={{ filter: 'blur(2px)' }}>XXX</span>
+					)}
+				</div>
+			),
+			sortable: false,
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+		},
+		{
+			name: (
+				<span style={{ display: 'flex' }}>
+					{__('Brand', 'betterlinks')}
+					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+				</span>
+			),
+			selector: 'brand_name',
+			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : <span style={{ filter: 'blur(2px)' }}>XXX</span>}</div>,
+			sortable: false,
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+		},
 	];
 	if (analytics) {
 		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value)];
-		return columns.filter((item) => analyticsArr.includes(item.selector) && item);
+		return columns.filter((item) => analyticsArr.includes(item.selector));
 	}
 	return columns;
 };

@@ -6,14 +6,16 @@ import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
 import TableLoader from 'components/Loader/TableLoader';
-import { formatDate, betterlinks_nonce, is_pro_enabled, getColumns } from 'utils/helper';
+import { formatDate, betterlinks_nonce, is_pro_enabled, getColumns, is_extra_data_tracking_compatible, route_path } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
 import { MultiSelect } from 'react-multi-select-component';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
-const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnText, analytics, update_analytics_settings }) => {
+const FilterComponent = (props) => {
+	const { filterText, onFilter, searchClickHandler, serachBtnText, analytics, update_analytics_settings, id } = props;
 	const [selectedValues, setSelectedValues] = useState(Object.values(analytics));
 	const options = [
 		{ label: 'Browser', value: 'browser' },
@@ -22,11 +24,46 @@ const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnTe
 		{ label: 'Shortened URL', value: 'short_url' },
 		{ label: 'Referer', value: 'referer' },
 		{ label: 'Target URL', value: 'target_url' },
+		{ label: 'Target URL', value: 'target_url' },
+		{
+			label: (
+				<span>
+					{__('OS', 'betterlinks')}
+					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+				</span>
+			),
+			value: 'os',
+		},
+		{
+			label: (
+				<span>
+					{__('Device', 'betterlinks')}
+					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+				</span>
+			),
+			value: 'device',
+		},
+		{
+			label: (
+				<span>
+					{__('Brand', 'betterlinks')}
+					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+				</span>
+			),
+			value: 'brand_name',
+		},
 	];
 
 	return (
 		<>
 			<div className="btl-click-filter">
+				{id && (
+					<Link
+						className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
+						to={`${route_path}admin.php?page=betterlinks-analytics`}
+						title={__('Go back to Analytics', 'betterlinks')}
+					/>
+				)}
 				<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
 				<button className="btl-search-button" onClick={searchClickHandler}>
 					{serachBtnText}
@@ -41,7 +78,6 @@ const FilterComponent = ({ filterText, onFilter, searchClickHandler, serachBtnTe
 					labelledBy="Select"
 					disableSearch={true}
 					hasSelectAll={false}
-					ClearIcon={() => <span></span>}
 				/>
 			</div>
 		</>
@@ -126,10 +162,11 @@ const Clicks = (props) => {
 					serachBtnText={serachBtnText}
 					analytics={analytics}
 					update_analytics_settings={props.update_analytics_settings}
+					id={id}
 				/>
 			</>
 		);
-	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText, analytics]);
+	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText, analytics, id]);
 
 	const columns = useCallback(getColumns(id, setUpgradeToProModal, analytics), [id, analytics]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
@@ -187,6 +224,8 @@ const Clicks = (props) => {
 							subHeader
 							subHeaderComponent={subHeaderComponentMemo}
 							persistTableHead
+							defaultSortFieldId="name"
+							striped
 						/>
 					</div>
 				</>
