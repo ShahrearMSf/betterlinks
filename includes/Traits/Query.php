@@ -525,8 +525,8 @@ trait Query
         $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
 
         if( $is_extra_data_tracking_compatible ) {
-            $addedPlaceholderString .= ", device, brand_name, model, bot_name, browser_type, os_version, browser_version";
-            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s";
+            $addedPlaceholderString .= ", device, brand_name, model, bot_name, browser_type, os_version, browser_version, language";
+            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s, %s";
         }
 
         $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
@@ -554,6 +554,7 @@ trait Query
             $db_data_array[] = $item['browser_type'];
             $db_data_array[] = $item['os_version'];
             $db_data_array[] = $item['browser_version'];
+            $db_data_array[] = $item['language'];
         }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
@@ -594,10 +595,11 @@ trait Query
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
-        
+        $is_extra_data_tracking_compatible = apply_filters('betterlinks/is_extra_data_tracking_compatible', false);
+        $extra_data_tracking_columns = $is_extra_data_tracking_compatible ? 'os, device, brand_name, ' : '';
         $results = $wpdb->get_results(
             $wpdb->prepare("SELECT CLICKS.ID as
-            click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
+            click_ID, link_id, browser, {$extra_data_tracking_columns} created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
             (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
             from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s
             or {$prefix}betterlinks.short_url like %s
@@ -615,10 +617,13 @@ trait Query
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
+        $is_extra_data_tracking_compatible = apply_filters('betterlinks/is_extra_data_tracking_compatible', false);
+        $extra_data_tracking_columns = $is_extra_data_tracking_compatible ? 'CLICKS.os, CLICKS.device, CLICKS.brand_name, ' : '';
         $query = $wpdb->prepare("SELECT 
                 CLICKS.ID AS click_ID, 
                 CLICKS.link_id, 
                 CLICKS.browser, 
+                {$extra_data_tracking_columns}
                 CLICKS.created_at, 
                 CLICKS.referer, 
                 {$prefix}betterlinks.short_url, 

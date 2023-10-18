@@ -129,6 +129,9 @@ class Utils
         
         $client_info = $dd->getClient();
         $os_details = $dd->getOs();
+        
+        $language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en-US,en;q=0.5';
+        $language = explode(',', $language)[0];
 
         $client_information_arr = [
             'device'    => $dd->getDeviceName(),
@@ -137,7 +140,8 @@ class Utils
             'bot_name' => $dd->isBot() ? $dd->getBot()['name'] : null,
             'browser_type' => isset($client_info['type']) ? $client_info['type'] : null,
             'browser_version' => isset($client_info['version']) ? $client_info['version'] : null,
-            'os_version'    => isset($os_details['version']) ? $os_details['version'] : null
+            'os_version'    => isset($os_details['version']) ? $os_details['version'] : null,
+            'language' => !empty($language) ? $language : 'en-US'
         ];
 
         return array_merge($data, $client_information_arr);
@@ -182,6 +186,7 @@ class Utils
             $click_data['browser_type'] = $data['browser_type'];
             $click_data['browser_version'] = $data['browser_version'];
             $click_data['os_version'] = $data['os_version'];
+            $click_data['language'] = $data['language'];
         }
         
         $arg = apply_filters('betterlinks/link/insert_click_arg', $click_data);
