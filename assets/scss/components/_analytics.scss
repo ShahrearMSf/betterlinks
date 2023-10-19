@@ -10,6 +10,17 @@
 	.btl-analytics-chart {
 		margin-bottom: 50px;
 	}
+	.btl-top-charts {
+		display: flex;
+		gap: 10px;
+		margin-bottom: 10px;
+
+		> div {
+			width: 27%;
+			align-self: flex-start;
+			margin-top: 0;
+		}
+	}
 }
 .btl-analytics-filter {
 	position: relative;
@@ -114,6 +125,9 @@
 			min-width: 240px;
 			padding-left: 15px;
 		}
+		form {
+			display: flex;
+		}
 		.btl-search-button {
 			height: 40px;
 			display: inline-flex;
@@ -131,6 +145,10 @@
 			margin-right: 5px;
 			&:hover {
 				background: #0338c9;
+			}
+
+			img {
+				width: 25px;
 			}
 		}
 		.btl-search-button:nth-child(3) {
@@ -232,11 +250,6 @@
 		padding: 0 2px;
 		font-size: 6px;
 	}
-	// .btl-analytic-table {
-	// 	div[id^='column'] span {
-	// 		opacity: 1 !important;
-	// 	}
-	// }
 }
 .react-calendar {
 	border-color: #ebebeb;
