@@ -10,8 +10,15 @@
 	.btl-analytics-chart {
 		margin-bottom: 50px;
 	}
+	.btl-top-charts.btl-top-charts-teaser {
+		.MuiAccordionDetails-root img {
+			width: 100%;
+			filter: blur(3px);
+		}
+	}
 	.btl-top-charts {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 10px;
 		margin-bottom: 10px;
 
