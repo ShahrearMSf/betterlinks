@@ -11,21 +11,36 @@
 		margin-bottom: 50px;
 	}
 	.btl-top-charts.btl-top-charts-teaser {
-		.MuiAccordionDetails-root img {
-			width: 100%;
-			filter: blur(3px);
+		.MuiAccordionDetails-root {
+			aspect-ratio: 1;
+			justify-content: center;
+
+			img {
+				filter: blur(3px);
+			}
 		}
 	}
 	.btl-top-charts {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-bottom: 10px;
-
 		> div {
-			width: 27%;
-			align-self: flex-start;
-			margin-top: 0;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+
+		.btl-top-charts-1 {
+			> div {
+				align-self: flex-start;
+				margin-top: 0;
+				width: 27%;
+			}
+		}
+		.btl-top-charts-2 {
+			> div {
+				width: 48%;
+				align-self: flex-start;
+				margin-top: 0;
+			}
 		}
 	}
 }
