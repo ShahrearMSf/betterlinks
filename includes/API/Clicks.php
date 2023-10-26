@@ -64,7 +64,7 @@ class Clicks extends Controller
      * Get betterlinks
      *
      * @param WP_REST_Request $request Full data about the request.
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|WP_REST_Response
      */
     public function get_items($request)
     {
@@ -72,10 +72,25 @@ class Clicks extends Controller
         $from = isset($request['from']) ? $request['from'] : date('Y-m-d', strtotime(' - 30 days'));
         $to = isset($request['to']) ? $request['to'] : date('Y-m-d');
         $results = $this->get_clicks_data($from, $to);
+        
+        $top_referer = $device_stats = $top_os = $top_browser = [];
+        if( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
+            $top_referer = \BetterLinksPro\Helper::get_top_referer($from, $to);
+            $device_stats = \BetterLinksPro\Helper::get_device_click_stats($from, $to);
+            $top_os = \BetterLinksPro\Helper::get_top_os($from, $to);
+            $top_browser = \BetterLinksPro\Helper::get_top_browser($from, $to);
+        }
+
         return new \WP_REST_Response(
             [
                 'success' => true,
-                'data' => $results,
+                'data' => [
+                    'clicks' => $results,
+                    'referer' => $top_referer,
+                    'devices' => $device_stats,
+                    'os' => $top_os,
+                    'browser' => $top_browser,
+                ],
             ],
             200
         );

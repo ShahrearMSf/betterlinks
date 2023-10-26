@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
+import { Doughnut, Bar } from 'react-chartjs-2';
 import TableLoader from 'components/Loader/TableLoader';
 import { formatDate, betterlinks_nonce, is_pro_enabled, getColumns, is_extra_data_tracking_compatible, route_path } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
@@ -13,9 +14,11 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
 import { MultiSelect } from 'react-multi-select-component';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import SearchLoader from 'components/SearchLoader';
+import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 
 const FilterComponent = (props) => {
-	const { filterText, onFilter, searchClickHandler, serachBtnText, analytics, update_analytics_settings, id } = props;
+	const { filterText, onFilter, searchClickHandler, searchStatus, analytics, update_analytics_settings, id } = props;
 	const [selectedValues, setSelectedValues] = useState(Object.values(analytics));
 	const options = [
 		{ label: 'Browser', value: 'browser' },
@@ -64,10 +67,12 @@ const FilterComponent = (props) => {
 						title={__('Go back to Analytics', 'betterlinks')}
 					/>
 				)}
-				<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
-				<button className="btl-search-button" onClick={searchClickHandler}>
-					{serachBtnText}
-				</button>
+				<form onSubmit={searchClickHandler}>
+					<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} autoFocus />
+					<button className="btl-search-button" type="submit" title="Searching">
+						<SearchLoader searchStatus={searchStatus} />
+					</button>
+				</form>
 				<MultiSelect
 					options={options}
 					value={selectedValues}
@@ -86,15 +91,17 @@ const FilterComponent = (props) => {
 
 const Clicks = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const [serachBtnText, setSearchBtnText] = useState(__('Search Click', 'betterlinks'));
+	const [searchStatus, setSearchStatus] = useState(false);
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	const { clicks } = props.clicks;
+	const { clicks, referer: top_referer, devices, os, browser } = props.clicks;
 	const { settings } = props.settings;
 	const { analytics } = props.analytics;
+	const { darkMode } = props.activity;
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const id = betterLinksQuery.get('id');
 
+	// console.log(clicks);
 	useEffect(() => {
 		if (!clicks) {
 			const currentDate = new Date();
@@ -144,11 +151,12 @@ const Clicks = (props) => {
 				setFilterText('');
 			}
 		};
-		const searchClickHandler = () => {
+		const searchClickHandler = (e) => {
+			e.preventDefault();
 			if (filterText) {
-				setSearchBtnText(__('Searching...', 'betterlinks'));
+				setSearchStatus(true);
 				props.searchClicksData(betterlinks_nonce, filterText).then(() => {
-					setSearchBtnText(__('Search Click', 'betterlinks'));
+					setSearchStatus(false);
 				});
 			}
 		};
@@ -159,14 +167,14 @@ const Clicks = (props) => {
 					onClear={handleClear}
 					filterText={filterText}
 					searchClickHandler={searchClickHandler}
-					serachBtnText={serachBtnText}
+					searchStatus={searchStatus}
 					analytics={analytics}
 					update_analytics_settings={props.update_analytics_settings}
 					id={id}
 				/>
 			</>
 		);
-	}, [filterText, resetPaginationToggle, serachBtnText, setSearchBtnText, analytics, id]);
+	}, [filterText, resetPaginationToggle, searchStatus, setSearchStatus, analytics, id]);
 
 	const columns = useCallback(getColumns(id, setUpgradeToProModal, analytics), [id, analytics]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
@@ -176,10 +184,8 @@ const Clicks = (props) => {
 			if (id) {
 				return clicks?.filter?.((item) => {
 					if (item.link_id != id) return;
-					if (item.ip && item.ip.toLowerCase().includes(filterText.toLowerCase())) return item;
-					if (item.browser && item.browser.toLowerCase().includes(filterText.toLowerCase())) return item;
-					if (item.short_url && item.short_url.toLowerCase().includes(filterText.toLowerCase())) return item;
-					if (item.target_url && item.target_url.toLowerCase().includes(filterText.toLowerCase())) return item;
+					const json = JSON.stringify(item);
+					return json.toLowerCase().includes(filterText.toLowerCase());
 				});
 			}
 			let find = [];
@@ -213,6 +219,16 @@ const Clicks = (props) => {
 				<>
 					<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 					<Graph data={analyticsData(getGraphData(id, clicks))} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
+					{!id &&
+						betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, {
+							top_referer,
+							devices,
+							os,
+							browser,
+							Doughnut,
+							Bar,
+							darkMode,
+						})}
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
 							className="btl-analytic-table"
@@ -240,6 +256,7 @@ const mapStateToProps = (state) => ({
 	clicks: state.clicks,
 	settings: state.settings,
 	analytics: state.analytics,
+	activity: state.activity,
 });
 
 const mapDispatchToProps = (dispatch) => {

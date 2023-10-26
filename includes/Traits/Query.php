@@ -599,7 +599,7 @@ trait Query
         $extra_data_tracking_columns = $is_extra_data_tracking_compatible ? 'os, device, brand_name, ' : '';
         $results = $wpdb->get_results(
             $wpdb->prepare("SELECT CLICKS.ID as
-            click_ID, link_id, browser, {$extra_data_tracking_columns} created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
+            click_ID, link_id, browser, {$extra_data_tracking_columns} created_at, referer, SUBSTRING_INDEX(SUBSTRING_INDEX(referer, '/', 3), '/', -1) AS domain, short_url, target_url, ip, {$prefix}betterlinks.link_title,
             (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
             from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s
             or {$prefix}betterlinks.short_url like %s
@@ -625,7 +625,8 @@ trait Query
                 CLICKS.browser, 
                 {$extra_data_tracking_columns}
                 CLICKS.created_at, 
-                CLICKS.referer, 
+                CLICKS.referer,
+                SUBSTRING_INDEX(SUBSTRING_INDEX(CLICKS.referer, '/', 3), '/', -1) AS domain,
                 {$prefix}betterlinks.short_url, 
                 {$prefix}betterlinks.target_url, 
                 CLICKS.ip, 
