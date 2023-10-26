@@ -12,6 +12,7 @@ import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 const Graph = (props) => {
 	const { customDateFilter, setCustomDateFilter } = props;
+	const { darkMode } = props.activity;
 	const labels = Object.keys(props.data.clicks)
 		?.reverse?.()
 		?.map?.((item) => {
@@ -23,6 +24,13 @@ const Graph = (props) => {
 		datasets: getDataset(is_pro_enabled, props.data),
 	};
 	const options = {
+		plugins: {
+			legend: {
+				labels: {
+					color: darkMode ? '#fff' : '#252525',
+				},
+			},
+		},
 		maintainAspectRatio: false,
 		responsive: true,
 		aspectRatio: 2,
@@ -153,6 +161,7 @@ const Graph = (props) => {
 
 const mapStateToProps = (state) => ({
 	clicks: state.clicks,
+	activity: state.activity,
 });
 
 const mapDispatchToProps = (dispatch) => {
