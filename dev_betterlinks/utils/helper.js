@@ -640,6 +640,7 @@ const sortFunction = (title) => (rowA, rowB) => {
 	else if (b > a) return -1;
 	return 0;
 };
+const BlurData = <span style={{ filter: 'blur(2px)', 'user-select': 'none' }}>XXX</span>;
 export const getColumns = (id, setUpgradeToProModal, analytics) => {
 	const columns = [
 		{
@@ -732,7 +733,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			),
 			selector: 'os',
 			width: '80px',
-			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : <span style={{ filter: 'blur(2px)' }}>XXX</span>}</div>,
+			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : BlurData}</div>,
 			sortable: false,
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 		},
@@ -747,18 +748,16 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			width: '80px',
 			cell: (row) => (
 				<div>
-					{is_extra_data_tracking_compatible ? (
-						row.device && (
-							<img
-								width="25"
-								src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
-								alt="icon"
-								title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
-							/>
-						)
-					) : (
-						<span style={{ filter: 'blur(2px)' }}>XXX</span>
-					)}
+					{is_extra_data_tracking_compatible
+						? row.device && (
+								<img
+									width="25"
+									src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
+									alt="icon"
+									title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
+								/>
+						  )
+						: BlurData}
 				</div>
 			),
 			sortable: false,
@@ -772,7 +771,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 				</span>
 			),
 			selector: 'brand_name',
-			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : <span style={{ filter: 'blur(2px)' }}>XXX</span>}</div>,
+			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
 			sortable: false,
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 		},
