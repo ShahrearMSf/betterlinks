@@ -47,6 +47,9 @@
 				margin-top: 0;
 
 				.MuiAccordionDetails-root {
+					canvas {
+						width: 500px !important;
+					}
 					justify-content: space-between;
 
 					> .dashicons {
