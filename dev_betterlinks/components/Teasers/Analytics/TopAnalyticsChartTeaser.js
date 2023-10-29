@@ -13,30 +13,50 @@ const teaserData = [
 		title: __('Top Devices - Clicks', 'betterlinks'),
 		id: 'top-devices',
 	},
+];
+const graphTeaser = [
 	{
 		title: __('Top OS - Clicks', 'betterlinks'),
 		id: 'top-os',
+		defaultExpanded: false,
 	},
 	{
 		title: __('Top Browsers - Clicks', 'betterlinks'),
 		id: 'top-browsers',
+		defaultExpanded: false,
 	},
 ];
 const TopAnalyticsChartTeaser = () => {
 	return (
 		<div className="btl-top-charts btl-top-charts-teaser">
-			{teaserData.map(({ title, id }) => (
-				<Accordion key={id} defaultExpanded={true}>
-					<AccordionSummary expandIcon={ExpandIcon} aria-controls={`${btl_prefix}content`} id={`${btl_prefix}header`}>
-						<Typography>
-							{title} <span className="pro-badge">Pro</span>{' '}
-						</Typography>
-					</AccordionSummary>
-					<AccordionDetails>
-						<img src={`${plugin_root_url}assets/images/teasers/${id}.png`} alt={title} />
-					</AccordionDetails>
-				</Accordion>
-			))}
+			<div className="btl-top-charts-1">
+				{teaserData.map(({ title, id }) => (
+					<Accordion key={id} defaultExpanded={true}>
+						<AccordionSummary expandIcon={ExpandIcon} aria-controls={`${btl_prefix}content`} id={`${btl_prefix}header`}>
+							<Typography>
+								{title} <span className="pro-badge">Pro</span>{' '}
+							</Typography>
+						</AccordionSummary>
+						<AccordionDetails>
+							<img src={`${plugin_root_url}assets/images/teasers/${id}.png`} alt={title} />
+						</AccordionDetails>
+					</Accordion>
+				))}
+			</div>
+			<div className="btl-top-charts-2">
+				{graphTeaser.map(({ title, id, defaultExpanded }) => (
+					<Accordion key={id} defaultExpanded={defaultExpanded}>
+						<AccordionSummary expandIcon={ExpandIcon} aria-controls={`${btl_prefix}content`} id={`${btl_prefix}header`}>
+							<Typography>
+								{title} <span className="pro-badge">Pro</span>{' '}
+							</Typography>
+						</AccordionSummary>
+						<AccordionDetails>
+							<img src={`${plugin_root_url}assets/images/teasers/${id}.png`} alt={title} />
+						</AccordionDetails>
+					</Accordion>
+				))}
+			</div>
 		</div>
 	);
 };
