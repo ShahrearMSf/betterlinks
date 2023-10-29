@@ -11,6 +11,11 @@
 		margin-bottom: 50px;
 	}
 	.btl-top-charts.btl-top-charts-teaser {
+		.btl-top-charts-2 {
+			.MuiAccordionDetails-root {
+				height: 200px;
+			}
+		}
 		.MuiAccordionDetails-root {
 			aspect-ratio: 1;
 			justify-content: center;
@@ -40,6 +45,18 @@
 				width: 48%;
 				align-self: flex-start;
 				margin-top: 0;
+
+				.MuiAccordionDetails-root {
+					justify-content: space-between;
+
+					> .dashicons {
+						cursor: pointer;
+
+						&:hover {
+							opacity: 0.7;
+						}
+					}
+				}
 			}
 		}
 	}
