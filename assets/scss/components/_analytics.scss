@@ -64,6 +64,19 @@
 		}
 	}
 }
+$breakpoint-tablet: 768px;
+@media (max-width: $breakpoint-tablet) {
+	.btl-analytic {
+		.btl-top-charts {
+			.btl-top-charts-1 > div {
+				width: 48%;
+			}
+			.btl-top-charts-2 > div {
+				width: 100%;
+			}
+		}
+	}
+}
 .btl-analytics-filter {
 	position: relative;
 	display: flex;
