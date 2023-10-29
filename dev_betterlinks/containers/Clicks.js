@@ -19,7 +19,7 @@ import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsCh
 
 const FilterComponent = (props) => {
 	const { filterText, onFilter, searchClickHandler, searchStatus, analytics, update_analytics_settings, id } = props;
-	const [selectedValues, setSelectedValues] = useState(Object.values(analytics));
+	const [selectedValues, setSelectedValues] = useState(analytics ? Object.values(analytics) : []);
 	const options = [
 		{ label: 'Browser', value: 'browser' },
 		{ label: 'IP', value: 'ip' },
