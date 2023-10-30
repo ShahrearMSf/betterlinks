@@ -73,12 +73,13 @@ class Clicks extends Controller
         $to = isset($request['to']) ? $request['to'] : date('Y-m-d');
         $results = $this->get_clicks_data($from, $to);
         
-        $top_referer = $device_stats = $top_os = $top_browser = [];
+        $top_referer = $device_stats = $top_os = $top_browser = $top_medium = [];
         if( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
             $top_referer = \BetterLinksPro\Helper::get_top_referer($from, $to);
             $device_stats = \BetterLinksPro\Helper::get_device_click_stats($from, $to);
             $top_os = \BetterLinksPro\Helper::get_top_os($from, $to);
             $top_browser = \BetterLinksPro\Helper::get_top_browser($from, $to);
+            $top_medium = \BetterLinksPro\Helper::get_top_medium($results);
         }
 
         return new \WP_REST_Response(
@@ -90,6 +91,7 @@ class Clicks extends Controller
                     'devices' => $device_stats,
                     'os' => $top_os,
                     'browser' => $top_browser,
+                    'top_medium' => $top_medium,
                 ],
             ],
             200

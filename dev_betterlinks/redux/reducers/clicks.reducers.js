@@ -3,7 +3,7 @@ function clicks(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_CLICKS_DATA: {
-			const { clicks: clicksReducersData, referer, devices, os, browser } = payload.data;
+			const { clicks: clicksReducersData, referer, devices, os, browser, top_medium } = payload.data;
 			const formattedData = {};
 			const newClicksData = [];
 			for (const item of clicksReducersData) {
@@ -33,6 +33,7 @@ function clicks(state = {}, action) {
 				devices,
 				os,
 				browser,
+				top_medium,
 			};
 		}
 		default:

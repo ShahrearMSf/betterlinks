@@ -94,7 +94,7 @@ const Clicks = (props) => {
 	const [searchStatus, setSearchStatus] = useState(false);
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	const { clicks, referer: top_referer, devices, os, browser } = props.clicks;
+	const { clicks, referer: top_referer, devices, os, browser, top_medium } = props.clicks;
 	const { settings } = props.settings;
 	const { analytics } = props.analytics;
 	const { darkMode } = props.activity;
@@ -225,6 +225,7 @@ const Clicks = (props) => {
 							devices,
 							os,
 							browser,
+							top_medium,
 							Doughnut,
 							Bar,
 							darkMode,
