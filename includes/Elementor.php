@@ -117,7 +117,8 @@ class Elementor {
 	 * @param Any $data - Data.
 	 */
 	public function disable_elementor_preview_redirect( $data ) {
-		$elementor_preview = isset( $_GET['elementor-preview'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['elementor-preview'] ) ), BETTERLINKS_ADMIN_NONCE );
+		$betterlinks_admin_nonce = wp_create_nonce('betterlinks_admin_nonce');
+		$elementor_preview = isset( $_GET['elementor-preview'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['elementor-preview'] ) ), $betterlinks_admin_nonce );
 
 		if ( $elementor_preview ) {
 			return false;

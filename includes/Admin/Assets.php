@@ -54,7 +54,7 @@ class Assets
             $betterlinks_links_option =  get_option('betterlinks_links');
             $prefix = !empty($betterlinks_links_option) ? $betterlinks_links_option : '';
             wp_localize_script('betterlinks-admin-core', 'betterLinksGlobal', [
-                'betterlinks_nonce' => BETTERLINKS_ADMIN_NONCE,
+                'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
                 'nonce' => wp_create_nonce('wp_rest'),
                 'rest_url' => rest_url(),
                 'namespace' => BETTERLINKS_PLUGIN_SLUG . '/v1/',
