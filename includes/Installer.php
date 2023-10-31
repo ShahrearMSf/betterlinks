@@ -18,8 +18,8 @@ class Installer extends \WP_Background_Process
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
-        $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links', 'clear_cache'];
-        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
+        $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links', 'clear_cache', 'delete_password_protected_page'];
+        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache', 'delete_password_protected_page'];
         $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
 
@@ -219,6 +219,10 @@ class Installer extends \WP_Background_Process
             if( version_compare(BETTERLINKS_DB_VERSION, '1.6', '>=') ) {
                 $this->createBetterLinkPasswordTable();
             }
+
+            if( version_compare(BETTERLINKS_DB_VERSION, '1.6.1', '>=') ) {
+                $this->delete_password_protected_page();
+            }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }
@@ -338,6 +342,16 @@ class Installer extends \WP_Background_Process
                 [ "fixed_missing_terms_relation_after_ta_one_click_migration" => true ]
             );
             Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
+        }
+    }
+    public function delete_password_protected_page() {
+        $settings = get_option('betterlinks_links');
+        $settings = is_string($settings) ? json_decode($settings, true) : $settings;
+
+        $enable_password_protection = !empty($settings['enable_password_protection']) ? sanitize_text_field($settings['enable_password_protection']) : false;
+
+        if( !$enable_password_protection && class_exists('\BetterLinksPro\Helper')) {
+            (new \BetterLinksPro\Helper)->delete_password_protect_page();
         }
     }
 }
