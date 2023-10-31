@@ -294,7 +294,7 @@ class Ajax
         $title = isset($_GET['title']) ? sanitize_text_field($_GET['title']) : '';
         $results = \BetterLinks\Helper::search_clicks_data($title);
 
-        $top_referer = $device_stats = $top_os = $top_browser = [];
+        $top_referer = $device_stats = $top_os = $top_browser = $top_medium = [];
         if( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
             $from = date('Y-m-d', strtotime(' - 30 days'));
             $to = date('Y-m-d');
@@ -302,6 +302,7 @@ class Ajax
             $device_stats = \BetterLinksPro\Helper::get_device_click_stats($from, $to);
             $top_os = \BetterLinksPro\Helper::get_top_os($from, $to);
             $top_browser = \BetterLinksPro\Helper::get_top_browser($from, $to);
+            $top_medium = \BetterLinksPro\Helper::get_top_medium($results);
         }
         
         wp_send_json_success([
@@ -310,6 +311,7 @@ class Ajax
             'devices' => $device_stats,
             'os' => $top_os,
             'browser' => $top_browser,
+            'top_medium' => $top_medium,
         ]);
     }
     public function links_reorder()
