@@ -13,6 +13,10 @@ const teaserData = [
 		title: __('Top Devices - Clicks', 'betterlinks'),
 		id: 'top-devices',
 	},
+	{
+		title: __('Top Social Media - Clicks', 'betterlinks'),
+		id: 'top-social-media',
+	},
 ];
 const graphTeaser = [
 	{
@@ -23,6 +27,11 @@ const graphTeaser = [
 	{
 		title: __('Top Browsers - Clicks', 'betterlinks'),
 		id: 'top-browsers',
+		defaultExpanded: false,
+	},
+	{
+		title: __('Top Medium - Clicks', 'betterlinks'),
+		id: 'top-medium',
 		defaultExpanded: false,
 	},
 ];
