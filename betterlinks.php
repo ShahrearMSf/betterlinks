@@ -96,6 +96,7 @@ if (!class_exists('BetterLinks')) {
             define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
             define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
             define('BETTERLINKS_DB_ALTER_OPTIONS', 'betterlinks_db_alter_options');
+            define('BETTERLINKS_ADMIN_NONCE', wp_create_nonce('betterlinks_admin_nonce'));
         }
 
         public function upload_dir_path()
