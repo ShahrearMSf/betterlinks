@@ -47,10 +47,10 @@
 				margin-top: 0;
 
 				.MuiAccordionDetails-root {
+					justify-content: space-between;
 					canvas {
 						width: 500px !important;
 					}
-					justify-content: space-between;
 
 					> .dashicons {
 						cursor: pointer;
@@ -73,6 +73,23 @@ $breakpoint-tablet: 768px;
 			}
 			.btl-top-charts-2 > div {
 				width: 100%;
+			}
+		}
+	}
+}
+$breakpoint-phone: 560px;
+@media (max-width: $breakpoint-phone) {
+	.btl-analytic {
+		.btl-top-charts {
+			.btl-top-charts-1 > div {
+				width: 100%;
+			}
+			.btl-top-charts-2 > div {
+				.MuiAccordionDetails-root {
+					canvas {
+						width: 300px !important;
+					}
+				}
 			}
 		}
 	}
