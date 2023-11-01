@@ -69,7 +69,7 @@ const FilterComponent = (props) => {
 				)}
 				<form onSubmit={searchClickHandler}>
 					<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} autoFocus />
-					<button className="btl-search-button" type="submit" title="Searching">
+					<button className="btl-search-button" type="submit" title={__('Searching', 'betterlinks')}>
 						<SearchLoader searchStatus={searchStatus} />
 					</button>
 					{isSearching && (
