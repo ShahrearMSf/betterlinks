@@ -18,7 +18,7 @@ import SearchLoader from 'components/SearchLoader';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 
 const FilterComponent = (props) => {
-	const { filterText, onFilter, searchClickHandler, searchStatus, analytics, update_analytics_settings, id } = props;
+	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id } = props;
 	const [selectedValues, setSelectedValues] = useState(analytics ? Object.values(analytics) : []);
 	const options = [
 		{ label: 'Browser', value: 'browser' },
@@ -72,6 +72,11 @@ const FilterComponent = (props) => {
 					<button className="btl-search-button" type="submit" title="Searching">
 						<SearchLoader searchStatus={searchStatus} />
 					</button>
+					{isSearching && (
+						<button className="btl-search-button" type="button" title={__('Reset Search', 'betterlinks')} onClick={resetSearch}>
+							<span class="dashicons dashicons-image-rotate" />
+						</button>
+					)}
 				</form>
 				<MultiSelect
 					options={options}
@@ -92,6 +97,7 @@ const FilterComponent = (props) => {
 const Clicks = (props) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [searchStatus, setSearchStatus] = useState(false);
+	const [isSearching, setSearching] = useState(false);
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const { clicks, referer: top_referer, devices, os, browser, top_medium } = props.clicks;
@@ -157,8 +163,16 @@ const Clicks = (props) => {
 				setSearchStatus(true);
 				props.searchClicksData(betterlinks_nonce, filterText).then(() => {
 					setSearchStatus(false);
+					setSearching(true);
 				});
 			}
+		};
+		const resetSearch = () => {
+			setSearching(false);
+			setFilterText('');
+			const currentDate = new Date();
+			let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
+			props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
 		};
 		return (
 			<>
@@ -168,13 +182,15 @@ const Clicks = (props) => {
 					filterText={filterText}
 					searchClickHandler={searchClickHandler}
 					searchStatus={searchStatus}
+					isSearching={isSearching}
+					resetSearch={resetSearch}
 					analytics={analytics}
 					update_analytics_settings={props.update_analytics_settings}
 					id={id}
 				/>
 			</>
 		);
-	}, [filterText, resetPaginationToggle, searchStatus, setSearchStatus, analytics, id]);
+	}, [filterText, resetPaginationToggle, searchStatus, setSearchStatus, isSearching, setSearching, analytics, id]);
 
 	const columns = useCallback(getColumns(id, setUpgradeToProModal, analytics), [id, analytics]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
