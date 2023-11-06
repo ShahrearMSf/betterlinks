@@ -21,7 +21,7 @@ trait DBTables
             param_forwarding varchar(10),
             param_struct varchar(255) default NULL,
             redirect_type varchar(255) default '307',
-            target_url varchar(255) default NULL,
+            target_url text default NULL,
             short_url varchar(255) default NULL,
             link_order tinyint(11) default 0,
             link_modified datetime NOT NULL default '0000-00-00 00:00:00',
@@ -125,5 +125,18 @@ trait DBTables
                 ON DELETE CASCADE
         ) $this->charset_collate;";
         dbDelta($sql);
+    }
+
+    public function modifyBetterLinksTable() {
+        $table_name = $this->wpdb->prefix . 'betterlinks';
+        error_log('here 1');
+        $sql = "ALTER TABLE {$table_name}
+            MODIFY target_url text default null,
+            MODIFY link_date datetime NOT NULL default CURRENT_TIMESTAMP,
+            MODIFY link_date_gmt datetime NOT NULL default CURRENT_TIMESTAMP,
+            MODIFY link_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+            MODIFY link_modified_gmt datetime NOT NULL default CURRENT_TIMESTAMP;";
+        $this->wpdb->query($sql);
+        error_log('here 2');
     }
 }
