@@ -9,8 +9,8 @@ trait DBTables
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             link_author bigint(20) unsigned NOT NULL default '0',
-            link_date datetime NOT NULL default '0000-00-00 00:00:00',
-            link_date_gmt datetime NOT NULL default '0000-00-00 00:00:00',
+            link_date datetime NOT NULL default CURRENT_TIMESTAMP,
+            link_date_gmt datetime NOT NULL default CURRENT_TIMESTAMP,
             link_title text NOT NULL,
             link_slug varchar(200) NOT NULL default '',
             link_note text NOT NULL,
@@ -24,8 +24,8 @@ trait DBTables
             target_url text default NULL,
             short_url varchar(255) default NULL,
             link_order tinyint(11) default 0,
-            link_modified datetime NOT NULL default '0000-00-00 00:00:00',
-            link_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
+            link_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+            link_modified_gmt datetime NOT NULL default CURRENT_TIMESTAMP,
 			wildcards boolean NOT NULL default 0,
 			expire text default NULL,
 			dynamic_redirect text default NULL,
@@ -85,8 +85,8 @@ trait DBTables
             click_count tinyint(4) NOT NULL default 0, 
             visitor_id varchar(25) NULL,
             click_order tinyint(11) default 0,
-            created_at datetime NOT NULL default '0000-00-00 00:00:00',
-            created_at_gmt datetime NOT NULL default '0000-00-00 00:00:00',
+            created_at datetime NOT NULL default CURRENT_TIMESTAMP,
+            created_at_gmt datetime NOT NULL default CURRENT_TIMESTAMP,
             rotation_target_url varchar(255) NULL,
             PRIMARY KEY  (ID),
             KEY ip (ip),
@@ -129,7 +129,6 @@ trait DBTables
 
     public function modifyBetterLinksTable() {
         $table_name = $this->wpdb->prefix . 'betterlinks';
-        error_log('here 1');
         $sql = "ALTER TABLE {$table_name}
             MODIFY target_url text default null,
             MODIFY link_date datetime NOT NULL default CURRENT_TIMESTAMP,
@@ -137,6 +136,5 @@ trait DBTables
             MODIFY link_modified datetime NOT NULL default CURRENT_TIMESTAMP,
             MODIFY link_modified_gmt datetime NOT NULL default CURRENT_TIMESTAMP;";
         $this->wpdb->query($sql);
-        error_log('here 2');
     }
 }
