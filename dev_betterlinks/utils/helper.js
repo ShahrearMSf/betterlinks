@@ -591,51 +591,24 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 };
 
-export const getDataset = (is_pro_enabled, data) => {
+export const getDataset = (data) => {
 	const dataset = [
 		{
-			label: __('Clicks', 'betterlinks'),
-			fill: true,
-			backgroundColor: 'rgba(129, 162, 255,0.4)',
-			defaultFontColor: '#000',
-			borderColor: '#2a62ff',
-			borderCapStyle: 'butt',
-			pointBorderColor: 'rgba(129, 162, 255,1)',
-			pointBackgroundColor: '#fff',
-			pointBorderWidth: 1,
-			pointHoverRadius: 5,
-			pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
-			pointHoverBorderColor: 'rgba(129, 162, 255,1)',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHitRadius: 5,
+			name: __('Clicks', 'betterlinks'),
 			data: Object.values(data.clicks)?.reverse?.(),
 		},
+		betterLinksHooks.applyFilters(
+			'betterLinksAnalyticsClicksGraph',
+			{
+				name: "<p style='color: rgb(182, 193, 197);cursor:not-allowed;'>Unique Clicks - <span class='pro-badge'>Pro</span></p>",
+				data: [0],
+			},
+			data.unique_clicks
+		),
 	];
-	if (is_pro_enabled) {
-		dataset.push({
-			label: __('Unique Clicks', 'betterlinks'),
-			fill: true,
-			backgroundColor: 'rgba(129, 162, 255,0.4)',
-			defaultFontColor: '#000',
-			borderColor: '#05143e',
-			borderCapStyle: 'butt',
-			pointBorderColor: 'rgba(129, 162, 255,1)',
-			pointBackgroundColor: '#fff',
-			pointBorderWidth: 1,
-			pointHoverRadius: 5,
-			pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
-			pointHoverBorderColor: 'rgba(129, 162, 255,1)',
-			pointHoverBorderWidth: 2,
-			pointRadius: 5,
-			pointHitRadius: 5,
-			data: Object.values(data.unique_clicks)
-				.map((item) => item.length)
-				?.reverse?.(),
-		});
-	}
 	return dataset;
 };
+
 const getDevice = (device) => {
 	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
 	return device;

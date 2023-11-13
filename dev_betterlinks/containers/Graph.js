@@ -10,6 +10,8 @@ import { API, getDataset, is_pro_enabled, namespace } from 'utils/helper';
 import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from 'utils/helper';
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
+import Chart from 'react-apexcharts';
+
 const Graph = (props) => {
 	const { customDateFilter, setCustomDateFilter } = props;
 	const { darkMode } = props.activity;
@@ -21,7 +23,7 @@ const Graph = (props) => {
 		});
 	const data = {
 		labels,
-		datasets: getDataset(is_pro_enabled, props.data),
+		datasets: getDataset(props.data),
 	};
 	const options = {
 		plugins: {
@@ -121,6 +123,28 @@ const Graph = (props) => {
 		setOPenCustomDateFilter(false);
 	};
 
+	const dataOptions = {
+		options: {
+			chart: {
+				id: 'analytics-click-count',
+			},
+			xaxis: {
+				categories: labels,
+			},
+			stroke: {
+				curve: 'smooth',
+			},
+			colors: ['#FF7818', '#6034E6'],
+			markers: {
+				// show: true,
+				size: 5,
+			},
+			legend: {
+				position: 'top',
+			},
+		},
+		series: getDataset(props.data),
+	};
 	return (
 		<React.Fragment>
 			<div className="btl-analytics-filter">
@@ -153,7 +177,7 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				<Line data={data} options={options} />
+				<Chart options={dataOptions.options} series={dataOptions.series} type="line" height="350" />
 			</div>
 		</React.Fragment>
 	);

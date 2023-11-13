@@ -27,22 +27,41 @@
 	}
 	.btl-top-charts {
 		> div {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 10px;
+			display: grid;
+			grid-auto-rows: 0fr;
+			grid-column-gap: 10px;
+			grid-row-gap: 10px;
 			margin-bottom: 10px;
 		}
 
 		.btl-top-charts-1 {
+			grid-template-columns: repeat(3, 1fr);
 			> div {
 				align-self: flex-start;
-				margin-top: 0;
-				width: 32%;
+
+				&.MuiAccordion-root.Mui-expanded {
+					margin: unset !important;
+					height: 100%;
+					&:first-child {
+						margin-top: unset !important;
+					}
+				}
+
+				.MuiAccordionDetails-root {
+					// height: 100%;
+					> div {
+						width: 100% !important;
+						height: auto !important;
+					}
+					.apexcharts-legend {
+						width: 100%;
+					}
+				}
 			}
 		}
 		.btl-top-charts-2 {
+			grid-template-columns: repeat(2, 1fr);
 			> div {
-				width: 48%;
 				align-self: flex-start;
 				margin-top: 0;
 
@@ -51,7 +70,6 @@
 					canvas {
 						width: 500px !important;
 					}
-
 					> .dashicons {
 						cursor: pointer;
 

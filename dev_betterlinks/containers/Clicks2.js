@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import Chart from 'react-apexcharts';
 import TableLoader from 'components/Loader/TableLoader';
 import { formatDate, betterlinks_nonce, is_pro_enabled, getColumns, is_extra_data_tracking_compatible, route_path } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
@@ -246,7 +245,6 @@ const Clicks = (props) => {
 							Doughnut,
 							Bar,
 							darkMode,
-							Chart
 						})}
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
