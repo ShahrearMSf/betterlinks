@@ -6,15 +6,17 @@ import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
-import { API, getDataset, is_pro_enabled, namespace } from 'utils/helper';
+import { API, getDataset, is_extra_data_tracking_compatible, is_pro_enabled, namespace } from 'utils/helper';
 import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from 'utils/helper';
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
 import Chart from 'react-apexcharts';
+import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 
 const Graph = (props) => {
-	const { customDateFilter, setCustomDateFilter } = props;
+	const { customDateFilter, setCustomDateFilter, extraAnalytics } = props;
 	const { darkMode } = props.activity;
+	const id = betterLinksQuery.get('id');
 	const labels = Object.keys(props.data.clicks)
 		?.reverse?.()
 		?.map?.((item) => {
@@ -177,7 +179,8 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				<Chart options={dataOptions.options} series={dataOptions.series} type="line" height="350" />
+				<Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
+				{!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, extraAnalytics)}
 			</div>
 		</React.Fragment>
 	);

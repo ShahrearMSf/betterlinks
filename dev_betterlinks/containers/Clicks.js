@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
@@ -16,9 +16,9 @@ import { fetch_analytics_settings, update_analytics_settings } from 'redux/actio
 import { MultiSelect } from 'react-multi-select-component';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import SearchLoader from 'components/SearchLoader';
-import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 
 const FilterComponent = (props) => {
+	const toggle = useRef();
 	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id } = props;
 	const [selectedValues, setSelectedValues] = useState(analytics ? Object.values(analytics) : []);
 	const options = [
@@ -61,35 +61,51 @@ const FilterComponent = (props) => {
 	return (
 		<>
 			<div className="btl-click-filter">
-				{id && (
-					<Link
-						className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
-						to={`${route_path}admin.php?page=betterlinks-analytics`}
-						title={__('Go back to Analytics', 'betterlinks')}
-					/>
-				)}
-				<form onSubmit={searchClickHandler}>
-					<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} autoFocus />
-					<button className="btl-search-button" type="submit" title={__('Searching', 'betterlinks')}>
-						<SearchLoader searchStatus={searchStatus} />
-					</button>
-					{isSearching && (
-						<button className="btl-search-button" type="button" title={__('Reset Search', 'betterlinks')} onClick={resetSearch}>
-							<span class="dashicons dashicons-image-rotate" />
-						</button>
+				<div className="btl-tab-toggle">
+					<input id="a" type="checkbox" ref={toggle} />
+					<label htmlFor="a">
+						<div
+							className="btl-tab-toggle__switch"
+							data-checked="Performance"
+							data-unchecked="Overview"
+							onClick={() => {
+								toggle.current.checked = !toggle.current.checked;
+							}}
+						/>
+					</label>
+				</div>
+
+				<div style={{ display: 'flex' }}>
+					{id && (
+						<Link
+							className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
+							to={`${route_path}admin.php?page=betterlinks-analytics`}
+							title={__('Go back to Analytics', 'betterlinks')}
+						/>
 					)}
-				</form>
-				<MultiSelect
-					options={options}
-					value={selectedValues}
-					onChange={(options) => {
-						setSelectedValues(options);
-						update_analytics_settings(options);
-					}}
-					labelledBy="Select"
-					disableSearch={true}
-					hasSelectAll={false}
-				/>
+					<form onSubmit={searchClickHandler}>
+						<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} autoFocus />
+						<button className="btl-search-button" type="submit" title={__('Searching', 'betterlinks')}>
+							<SearchLoader searchStatus={searchStatus} />
+						</button>
+						{isSearching && (
+							<button className="btl-search-button btl-search-reset" type="button" title={__('Reset Search', 'betterlinks')} onClick={resetSearch}>
+								<span class="dashicons dashicons-image-rotate" />
+							</button>
+						)}
+					</form>
+					<MultiSelect
+						options={options}
+						value={selectedValues}
+						onChange={(options) => {
+							setSelectedValues(options);
+							update_analytics_settings(options);
+						}}
+						labelledBy="Select"
+						disableSearch={true}
+						hasSelectAll={false}
+					/>
+				</div>
 			</div>
 		</>
 	);
@@ -108,7 +124,6 @@ const Clicks = (props) => {
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const id = betterLinksQuery.get('id');
 
-	// console.log(clicks);
 	useEffect(() => {
 		if (!clicks) {
 			const currentDate = new Date();
@@ -230,14 +245,21 @@ const Clicks = (props) => {
 		setUpgradeToProModal(false);
 	};
 
+	const graphData = getGraphData(id, clicks);
 	return (
 		<div className="btl-analytic">
 			{clicks ? (
 				<>
 					<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-					<Graph data={analyticsData(getGraphData(id, clicks))} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} />
-					{!id &&
-						betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, {
+					{id &&
+						betterLinksHooks.applyFilters('BetterlinksSingleAnalyticsInfo', null, {
+							clicks: graphData.length > 0 ? graphData[0] : null,
+						})}
+					<Graph
+						data={analyticsData(graphData)}
+						customDateFilter={customDateFilter}
+						setCustomDateFilter={setCustomDateFilter}
+						extraAnalytics={{
 							top_referer,
 							devices,
 							os,
@@ -246,8 +268,10 @@ const Clicks = (props) => {
 							Doughnut,
 							Bar,
 							darkMode,
-							Chart
-						})}
+							Chart,
+						}}
+					/>
+
 					<div className="btl-analytic-table-wrapper">
 						<DataTable
 							className="btl-analytic-table"

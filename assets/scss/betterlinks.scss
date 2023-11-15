@@ -628,7 +628,7 @@ input.ajax-search:before,
 .search__circle {
 	width: 1em;
 	height: 1em;
-	border: 0.2em solid #fff;
+	border: .2em solid #2673FF;
 	border-radius: 1em;
 	transition: 0.3s;
 }
@@ -647,7 +647,7 @@ input.ajax-search:after,
 	width: 0.6em;
 	-webkit-transform: rotate(45deg);
 	transform: rotate(45deg);
-	border: 0.2em solid #fff;
+	border: .2em solid #2673FF;
 	border-radius: 100%;
 }
 @-webkit-keyframes load8 {

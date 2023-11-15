@@ -638,7 +638,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 				);
 			},
 		},
-		{
+		!id && {
 			name: __('Link Name', 'betterlinks'),
 			selector: 'name',
 			id: 'name',
@@ -646,7 +646,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			sortFunction: sortFunction('link_title'),
 			cell: (row) => (
 				<div>
-					<AnalyticLink id={id} row={row} setUpgradeToProModal={setUpgradeToProModal} />
+					{row.link_title}
 				</div>
 			),
 		},
@@ -662,7 +662,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			selector: 'created_at',
 			sortable: false,
 		},
-		{
+		!id && {
 			name: __('Shortened URL', 'betterlinks'),
 			selector: 'short_url',
 			sortable: false,
@@ -690,7 +690,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 				</div>
 			),
 		},
-		{
+		!id && {
 			name: __('Target URL', 'betterlinks'),
 			selector: 'target_url',
 			cell: (row) => (
@@ -755,9 +755,19 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			sortable: false,
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 		},
+		!id && {
+			name: __('Action', 'betterlinks'),
+			selector: 'action',
+			sortable: false,
+			// sortFunction: sortFunction('browser'),
+			width: '100px',
+			cell: (row) => {
+				return <Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`}>Details</Link>;
+			},
+		},
 	];
 	if (analytics) {
-		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value)];
+		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'action'];
 		return columns.filter((item) => analyticsArr.includes(item.selector));
 	}
 	return columns;
