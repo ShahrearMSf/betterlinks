@@ -4,24 +4,31 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8205aadc81f8a5b2aba4fc67df07db7a",
+    "content-hash": "c13893e8b15a0398c1546d04077d8dc0",
     "packages": [
         {
             "name": "a5hleyrich/wp-background-processing",
-            "version": "1.0.2",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deliciousbrains/wp-background-processing.git",
-                "reference": "2cbee1abd1b49e1133cd8f611df4d4fc5a8b9800"
+                "reference": "ebbed762c42e70e76573ffbd36e591378ba5f2ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deliciousbrains/wp-background-processing/zipball/2cbee1abd1b49e1133cd8f611df4d4fc5a8b9800",
-                "reference": "2cbee1abd1b49e1133cd8f611df4d4fc5a8b9800",
+                "url": "https://api.github.com/repos/deliciousbrains/wp-background-processing/zipball/ebbed762c42e70e76573ffbd36e591378ba5f2ee",
+                "reference": "ebbed762c42e70e76573ffbd36e591378ba5f2ee",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "phpunit/phpunit": "^8.0",
+                "spryker/code-sniffer": "^0.17.18",
+                "wp-coding-standards/wpcs": "^2.3",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "coenjacobs/mozart": "Easily wrap this library with your own prefix, to prevent collisions when multiple plugins use this library"
@@ -45,22 +52,22 @@
             "description": "WP Background Processing can be used to fire off non-blocking asynchronous requests or as a background processing tool, allowing you to queue tasks.",
             "support": {
                 "issues": "https://github.com/deliciousbrains/wp-background-processing/issues",
-                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/1.0.2"
+                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/1.1.1"
             },
-            "time": "2020-07-31T07:00:11+00:00"
+            "time": "2023-07-18T10:22:06+00:00"
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.111",
+            "version": "v1.2.116",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab"
+                "reference": "97e9fe30219e60092e107651abb379a38b342921"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
-                "reference": "d572ed4a65a70a2d2871dc5137c9c5b7e69745ab",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/97e9fe30219e60092e107651abb379a38b342921",
+                "reference": "97e9fe30219e60092e107651abb379a38b342921",
                 "shasum": ""
             },
             "require": {
@@ -97,25 +104,24 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.111"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.116"
             },
-            "time": "2022-03-15T22:19:01+00:00"
+            "time": "2023-07-21T15:49:49+00:00"
         },
         {
             "name": "priyomukul/wp-notice",
-            "version": "dev-main",
+            "version": "v2.x-dev",
             "source": {
                 "type": "git",
                 "url": "git@github.com:priyomukul/wp-notice.git",
-                "reference": "832119aa1f4ddc32375ea88168fc84c2e58e9c29"
+                "reference": "2bc2059ba8fe532776e1bdc90d5c3c47c9f430d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/priyomukul/wp-notice/zipball/832119aa1f4ddc32375ea88168fc84c2e58e9c29",
-                "reference": "832119aa1f4ddc32375ea88168fc84c2e58e9c29",
+                "url": "https://api.github.com/repos/priyomukul/wp-notice/zipball/2bc2059ba8fe532776e1bdc90d5c3c47c9f430d1",
+                "reference": "2bc2059ba8fe532776e1bdc90d5c3c47c9f430d1",
                 "shasum": ""
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -129,10 +135,10 @@
                 }
             ],
             "support": {
-                "source": "https://github.com/priyomukul/wp-notice/tree/main",
+                "source": "https://github.com/priyomukul/wp-notice/tree/v2",
                 "issues": "https://github.com/priyomukul/wp-notice/issues"
             },
-            "time": "2022-08-01T07:22:57+00:00"
+            "time": "2023-11-19T07:19:31+00:00"
         }
     ],
     "packages-dev": [],
@@ -145,5 +151,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
