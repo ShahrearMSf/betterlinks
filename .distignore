@@ -28,3 +28,8 @@ vendor/jaybizzle/crawler-detect/composer.json
 vendor/jaybizzle/crawler-detect/README.md
 .gitattributes
 jsconfig.json
+
+vendor/priyomukul/wp-notice/composer.json
+vendor/priyomukul/wp-notice/.gitignore
+vendor/priyomukul/wp-notice/.editorconfig
+vendor/priyomukul/wp-notice/README.md
