@@ -62,6 +62,7 @@ class Notice {
 			'storage_key'    => 'notices',
 			'lifetime'       => 3,
 			'stylesheet_url' => self::ASSET_URL . 'css/betterlinks-admin-notice.css',
+			'styles' => self::ASSET_URL . 'css/betterlinks-admin-notice.css',
 			'priority'       => 5
 		] );
 
