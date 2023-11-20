@@ -3,7 +3,7 @@
         'name' => 'wpdevteam/betterlinks',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '7744d1efaa933d7b322e37c8206cbc5bca31f915',
+        'reference' => '631bea5703db611a05b67432e03f1b2c9d07666c',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'wpdevteam/betterlinks' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7744d1efaa933d7b322e37c8206cbc5bca31f915',
+            'reference' => '631bea5703db611a05b67432e03f1b2c9d07666c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
