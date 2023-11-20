@@ -3,7 +3,7 @@
         'name' => 'wpdevteam/betterlinks',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '484c308d740d45969df6e6473e2df3021cee033a',
+        'reference' => 'c93a4c7e338c5bdff29fa92907f94d8cbd172a91',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'priyomukul/wp-notice' => array(
             'pretty_version' => 'v2.x-dev',
             'version' => '2.9999999.9999999.9999999-dev',
-            'reference' => '900b707c690b44b5f799fcc11b93099851da0afa',
+            'reference' => 'f3d02f6e772cb459e9b89d77605e02646f9c5d65',
             'type' => 'library',
             'install_path' => __DIR__ . '/../priyomukul/wp-notice',
             'aliases' => array(),
@@ -40,7 +40,7 @@
         'wpdevteam/betterlinks' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '484c308d740d45969df6e6473e2df3021cee033a',
+            'reference' => 'c93a4c7e338c5bdff29fa92907f94d8cbd172a91',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
