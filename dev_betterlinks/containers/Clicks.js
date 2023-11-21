@@ -256,8 +256,6 @@ const Clicks = (props) => {
 							os,
 							browser,
 							top_medium,
-							Doughnut,
-							Bar,
 							darkMode,
 							Chart,
 						}}

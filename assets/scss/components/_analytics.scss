@@ -19,6 +19,7 @@
 		.btl-top-charts-2 {
 			.MuiAccordionDetails-root {
 				height: 200px;
+				width: 100%;
 			}
 		}
 		.MuiAccordionDetails-root {
@@ -76,7 +77,7 @@
 				.MuiAccordionDetails-root {
 					justify-content: space-between;
 					text-align: center;
-					width: 100%;
+					// width: 100%;
 
 					canvas {
 						width: 500px !important;
