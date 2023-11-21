@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { __ } from '@wordpress/i18n';
 import DataTable from 'react-data-table-component';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { subDays } from 'date-fns';
 import Graph from 'containers/Graph';
-import { Doughnut, Bar } from 'react-chartjs-2';
 import Chart from 'react-apexcharts';
 import TableLoader from 'components/Loader/TableLoader';
 import { formatDate, betterlinks_nonce, is_pro_enabled, getColumns, is_extra_data_tracking_compatible, route_path } from 'utils/helper';
@@ -61,9 +60,7 @@ const FilterComponent = (props) => {
 	return (
 		<>
 			<div className="btl-click-filter">
-				<Switch analyticsTab={analyticsTab} update_activity={update_activity} />
-
-				<div style={{ display: 'flex' }}>
+				<div style={{ display: 'flex', alignItems: 'center' }}>
 					{id && (
 						<Link
 							className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
@@ -71,6 +68,10 @@ const FilterComponent = (props) => {
 							title={__('Go back to Analytics', 'betterlinks')}
 						/>
 					)}
+					<Switch analyticsTab={analyticsTab} update_activity={update_activity} id={id && ''} />
+				</div>
+
+				<div style={{ display: 'flex' }}>
 					<form onSubmit={searchClickHandler}>
 						<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} autoFocus />
 						<button className="btl-search-button" type="submit" title={__('Searching', 'betterlinks')}>
@@ -222,7 +223,11 @@ const Clicks = (props) => {
 			}
 			if (1 == analyticsTab) {
 				if (!is_pro_enabled && !is_extra_data_tracking_compatible) return [];
-				return find.sort((a, b) => a.IPCOUNT < b.IPCOUNT).slice(0, 5);
+				console.log(find);
+				return find
+					.sort((a, b) => +a.IPCOUNT - +b.IPCOUNT)
+					.slice(0, 5)
+					.reverse();
 			}
 			return find;
 		},
