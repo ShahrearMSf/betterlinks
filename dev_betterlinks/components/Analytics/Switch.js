@@ -1,3 +1,5 @@
+import { is_extra_data_tracking_compatible, is_pro_enabled } from 'utils/helper';
+
 const Switch = ({ analyticsTab, update_activity }) => {
 	return (
 		<ul className="btl-tabs btl-tabs-with-indicator">
@@ -19,7 +21,7 @@ const Switch = ({ analyticsTab, update_activity }) => {
 					})
 				}
 			>
-				Performance
+				Performance {!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
 			</li>
 		</ul>
 	);

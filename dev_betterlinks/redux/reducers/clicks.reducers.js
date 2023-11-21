@@ -1,4 +1,5 @@
 import { FETCH_CLICKS_DATA } from 'redux/actions/clicks.actions';
+import { is_extra_data_tracking_compatible, is_pro_enabled } from 'utils/helper';
 function clicks(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
@@ -27,16 +28,19 @@ function clicks(state = {}, action) {
 					IPCOUNT: formattedData[linkId][itemIp],
 				});
 			}
-			const { top_links_clicks: top_links } = top_links_clicks;
-			for (const item of Object.values(top_links)) {
-				const linkId = `id_${item.link_id || ''}`;
-				const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
-				topClicksData.push({
-					...item,
-					IPCOUNT: formattedData[linkId][itemIp],
-				});
-			}
 
+			if (is_pro_enabled && is_extra_data_tracking_compatible) {
+				const { top_links_clicks: top_links } = top_links_clicks;
+				for (const item of Object.values(top_links)) {
+					const linkId = `id_${item.link_id || ''}`;
+					const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
+					topClicksData.push({
+						...item,
+						IPCOUNT: formattedData[linkId][itemIp],
+					});
+				}
+			}
+	
 			return {
 				...state,
 				clicks: newClicksData,

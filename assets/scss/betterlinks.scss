@@ -57,6 +57,79 @@ body {
 			border-color: #36405a;
 			color: #fff;
 		}
+
+		.btl-analytic {
+			.btl-analytics-filter {
+				border-color: #36405a;
+			}
+			.btl-analytics-chart {
+				.apexcharts-legend > div span.apexcharts-legend-text {
+					color: #fff !important;
+					&:hover {
+						opacity: 0.7;
+					}
+				}
+				.apexcharts-xaxis {
+					.apexcharts-xaxis-label {
+						fill: #fff !important;
+					}
+				}
+				.apexcharts-tooltip.apexcharts-theme-light {
+					border-color: #36405a;
+					background-color: #36405a;
+					.apexcharts-tooltip-title {
+						background-color: #36405a;
+					}
+				}
+				.apexcharts-toolbar {
+					div.apexcharts-menu-icon > svg {
+						fill: #fff;
+						&:hover {
+							opacity: 0.4;
+						}
+					}
+					div.apexcharts-menu-open {
+						background-color: #36405a;
+						> div {
+							&:hover {
+								background-color: #fff;
+								color: #36405a;
+								// opacity: 0.4;
+							}
+						}
+					}
+				}
+			}
+			.btl-analytic-table-wrapper {
+				border-color: #36405a;
+
+				.btl-analytic-table {
+					.rdt_TableRow {
+						&:hover {
+							outline: #36405a solid 1px;
+							border-bottom-color: #36405a;
+						}
+
+						.rdt_TableCell > a {
+							background-color: #36405a;
+						}
+					}
+				}
+
+				.btl-tabs {
+					background-color: #2c3650;
+				}
+				.btl-click-filter .btl-search-button {
+					border-color: #36405a;
+				}
+				.btl-single-click-info-header {
+					border-color: #36405a;
+					> div span.btl-column-name {
+						color: #fff;
+					}
+				}
+			}
+		}
 	}
 	> .btl-overlay {
 		position: fixed;
@@ -628,7 +701,7 @@ input.ajax-search:before,
 .search__circle {
 	width: 1em;
 	height: 1em;
-	border: .2em solid #2673FF;
+	border: 0.2em solid #2673ff;
 	border-radius: 1em;
 	transition: 0.3s;
 }
@@ -647,7 +720,7 @@ input.ajax-search:after,
 	width: 0.6em;
 	-webkit-transform: rotate(45deg);
 	transform: rotate(45deg);
-	border: .2em solid #2673FF;
+	border: 0.2em solid #2673ff;
 	border-radius: 100%;
 }
 @-webkit-keyframes load8 {

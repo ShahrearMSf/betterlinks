@@ -125,7 +125,6 @@ const Clicks = (props) => {
 			props.fetch_analytics_settings();
 		}
 	}, [clicks, settings, analytics]);
-
 	const analyticsData = (data) => {
 		let results = {
 			clicks: {},
@@ -222,6 +221,7 @@ const Clicks = (props) => {
 				}
 			}
 			if (1 == analyticsTab) {
+				if (!is_pro_enabled && !is_extra_data_tracking_compatible) return [];
 				return find.sort((a, b) => a.IPCOUNT < b.IPCOUNT).slice(0, 5);
 			}
 			return find;
