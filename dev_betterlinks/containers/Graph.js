@@ -147,6 +147,7 @@ const Graph = (props) => {
 		},
 		series: getDataset(props.data),
 	};
+
 	return (
 		<React.Fragment>
 			<div className="btl-analytics-filter">

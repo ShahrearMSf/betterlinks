@@ -3,9 +3,10 @@ function clicks(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_CLICKS_DATA: {
-			const { clicks: clicksReducersData, referer, devices, os, browser, top_medium } = payload.data;
+			const { clicks: clicksReducersData, referer, devices, os, browser, top_medium, top_links_clicks } = payload.data;
 			const formattedData = {};
 			const newClicksData = [];
+			const topClicksData = [];
 			for (const item of clicksReducersData) {
 				const linkId = `id_${item.link_id || ''}`;
 				const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
@@ -26,6 +27,16 @@ function clicks(state = {}, action) {
 					IPCOUNT: formattedData[linkId][itemIp],
 				});
 			}
+			const { top_links_clicks: top_links } = top_links_clicks;
+			for (const item of Object.values(top_links)) {
+				const linkId = `id_${item.link_id || ''}`;
+				const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
+				topClicksData.push({
+					...item,
+					IPCOUNT: formattedData[linkId][itemIp],
+				});
+			}
+
 			return {
 				...state,
 				clicks: newClicksData,
@@ -34,6 +45,7 @@ function clicks(state = {}, action) {
 				os,
 				browser,
 				top_medium,
+				top_links_clicks: topClicksData,
 			};
 		}
 		default:

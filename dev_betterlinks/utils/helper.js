@@ -614,6 +614,11 @@ const getDevice = (device) => {
 	return device;
 };
 const sortFunction = (title) => (rowA, rowB) => {
+	if (typeof rowA[title] === 'number') {
+		if (rowA[title] > rowB[title]) return 1;
+		else if (rowB[title] > rowA[title]) return -1;
+		return 0;
+	}
 	const a = rowA[title]?.toLowerCase() || '';
 	const b = rowB[title]?.toLowerCase() || '';
 	if (a > b) return 1;
@@ -621,7 +626,7 @@ const sortFunction = (title) => (rowA, rowB) => {
 	return 0;
 };
 const BlurData = <span style={{ filter: 'blur(2px)', 'user-select': 'none' }}>XXX</span>;
-export const getColumns = (id, setUpgradeToProModal, analytics) => {
+export const getColumns = (id, analytics, analyticsTab) => {
 	const columns = [
 		{
 			name: __('Browser', 'betterlinks'),
@@ -643,12 +648,8 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			selector: 'name',
 			id: 'name',
 			sortable: true,
-			sortFunction: sortFunction('link_title'),
-			cell: (row) => (
-				<div>
-					{row.link_title}
-				</div>
-			),
+			...(1 !== analyticsTab && { sortFunction: sortFunction('link_title') }),
+			cell: (row) => <div>{row.link_title}</div>,
 		},
 		{
 			name: __('IP', 'betterlinks'),
@@ -704,6 +705,19 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 			),
 			sortable: false,
 		},
+		!id &&
+			1 === analyticsTab && {
+				name: __('Total Clicks', 'betterlinks'),
+				selector: 'total_clicks',
+				sortFunction: sortFunction('IPCOUNT'),
+				cell: (row) => <div>{row.IPCOUNT} Clicks</div>,
+			},
+		// !id &&
+		// 	1 === analyticsTab && {
+		// 		name: __('Unique Clicks', 'betterlinks'),
+		// 		selector: 'unique_clicks',
+		// 		cell: (row) => <div>25 Clicks</div>,
+		// 	},
 		{
 			name: (
 				<span style={{ display: 'flex' }}>
@@ -767,7 +781,7 @@ export const getColumns = (id, setUpgradeToProModal, analytics) => {
 		},
 	];
 	if (analytics) {
-		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'action'];
+		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'action'];
 		return columns.filter((item) => analyticsArr.includes(item.selector));
 	}
 	return columns;

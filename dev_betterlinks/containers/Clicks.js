@@ -16,10 +16,11 @@ import { fetch_analytics_settings, update_analytics_settings } from 'redux/actio
 import { MultiSelect } from 'react-multi-select-component';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import SearchLoader from 'components/SearchLoader';
+import { update_activity } from 'redux/actions/activity.actions';
+import Switch from 'components/Analytics/Switch';
 
 const FilterComponent = (props) => {
-	const toggle = useRef();
-	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id } = props;
+	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id, analyticsTab, update_activity } = props;
 	const [selectedValues, setSelectedValues] = useState(analytics ? Object.values(analytics) : []);
 	const options = [
 		{ label: 'Browser', value: 'browser' },
@@ -27,7 +28,6 @@ const FilterComponent = (props) => {
 		{ label: 'Timestamp', value: 'created_at' },
 		{ label: 'Shortened URL', value: 'short_url' },
 		{ label: 'Referer', value: 'referer' },
-		{ label: 'Target URL', value: 'target_url' },
 		{ label: 'Target URL', value: 'target_url' },
 		{
 			label: (
@@ -61,19 +61,7 @@ const FilterComponent = (props) => {
 	return (
 		<>
 			<div className="btl-click-filter">
-				<div className="btl-tab-toggle">
-					<input id="a" type="checkbox" ref={toggle} />
-					<label htmlFor="a">
-						<div
-							className="btl-tab-toggle__switch"
-							data-checked="Performance"
-							data-unchecked="Overview"
-							onClick={() => {
-								toggle.current.checked = !toggle.current.checked;
-							}}
-						/>
-					</label>
-				</div>
+				<Switch analyticsTab={analyticsTab} update_activity={update_activity} />
 
 				<div style={{ display: 'flex' }}>
 					{id && (
@@ -117,10 +105,10 @@ const Clicks = (props) => {
 	const [isSearching, setSearching] = useState(false);
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	const { clicks, referer: top_referer, devices, os, browser, top_medium } = props.clicks;
+	const { clicks, referer: top_referer, devices, os, browser, top_medium, top_links_clicks } = props.clicks;
 	const { settings } = props.settings;
 	const { analytics } = props.analytics;
-	const { darkMode } = props.activity;
+	const { darkMode, analyticsTab } = props.activity;
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const id = betterLinksQuery.get('id');
 
@@ -203,16 +191,18 @@ const Clicks = (props) => {
 					analytics={analytics}
 					update_analytics_settings={props.update_analytics_settings}
 					id={id}
+					analyticsTab={analyticsTab}
+					update_activity={props.update_activity}
 				/>
 			</>
 		);
-	}, [filterText, resetPaginationToggle, searchStatus, setSearchStatus, isSearching, setSearching, analytics, id]);
+	}, [filterText, resetPaginationToggle, searchStatus, setSearchStatus, isSearching, setSearching, analytics, id, analyticsTab]);
 
-	const columns = useCallback(getColumns(id, setUpgradeToProModal, analytics), [id, analytics]);
+	const columns = useCallback(getColumns(id, analytics, analyticsTab), [id, analytics, analyticsTab]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
 	const getData = useCallback(
-		(id, clicks) => {
+		(id, clicks, analyticsTab) => {
 			if (id) {
 				return clicks?.filter?.((item) => {
 					if (item.link_id != id) return;
@@ -220,6 +210,7 @@ const Clicks = (props) => {
 					return json.toLowerCase().includes(filterText.toLowerCase());
 				});
 			}
+
 			let find = [];
 			for (let index = 0; index < clicks.length; index++) {
 				const element = clicks[index];
@@ -229,6 +220,9 @@ const Clicks = (props) => {
 					}
 					find.push(element);
 				}
+			}
+			if (1 == analyticsTab) {
+				return find.sort((a, b) => a.IPCOUNT < b.IPCOUNT).slice(0, 5);
 			}
 			return find;
 		},
@@ -251,10 +245,7 @@ const Clicks = (props) => {
 			{clicks ? (
 				<>
 					<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-					{id &&
-						betterLinksHooks.applyFilters('BetterlinksSingleAnalyticsInfo', null, {
-							clicks: graphData.length > 0 ? graphData[0] : null,
-						})}
+
 					<Graph
 						data={analyticsData(graphData)}
 						customDateFilter={customDateFilter}
@@ -273,11 +264,15 @@ const Clicks = (props) => {
 					/>
 
 					<div className="btl-analytic-table-wrapper">
+						{id &&
+							betterLinksHooks.applyFilters('BetterlinksSingleAnalyticsInfo', null, {
+								clicks: graphData.length > 0 ? graphData[0] : null,
+							})}
 						<DataTable
 							className="btl-analytic-table"
 							title={__('All Clicks', 'betterlinks')}
 							columns={newColumns}
-							data={getData(id, clicks)}
+							data={getData(id, clicks, analyticsTab)}
 							pagination
 							paginationResetDefaultPage={resetPaginationToggle}
 							subHeader
@@ -285,6 +280,7 @@ const Clicks = (props) => {
 							persistTableHead
 							defaultSortFieldId="name"
 							striped
+							highlightOnHover
 						/>
 					</div>
 				</>
@@ -309,6 +305,7 @@ const mapDispatchToProps = (dispatch) => {
 		searchClicksData: bindActionCreators(searchClicksData, dispatch),
 		fetch_analytics_settings: bindActionCreators(fetch_analytics_settings, dispatch),
 		update_analytics_settings: bindActionCreators(update_analytics_settings, dispatch),
+		update_activity: bindActionCreators(update_activity, dispatch),
 	};
 };
 

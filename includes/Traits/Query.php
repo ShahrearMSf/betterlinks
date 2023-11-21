@@ -646,6 +646,7 @@ trait Query
         return $results;
     }
 
+
     public static function get_thirstyaffiliates_links()
     {
         $thirstylinks = get_posts(array(

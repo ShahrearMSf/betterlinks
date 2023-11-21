@@ -46,6 +46,7 @@ export const searchClicksData = (nonce, filterText) => async (dispatch) => {
 	return axios.get(`${ajaxurl}?action=betterlinks/admin/search_clicks_data&security=${nonce}&title=${filterText}`).then(
 		(response) => {
 			if (response.data) {
+				console.info(response.data);
 				dispatch({
 					type: FETCH_CLICKS_DATA,
 					payload: response.data,

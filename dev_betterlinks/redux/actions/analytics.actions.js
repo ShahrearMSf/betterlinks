@@ -6,6 +6,8 @@ const defaultAnalyticsSettings = [
 	{ label: 'Shortened URL', value: 'short_url' },
 	{ label: 'Referer', value: 'referer' },
 	{ label: 'Target URL', value: 'target_url' },
+	// { label: 'Total Clicks', value: 'total_clicks' },
+	// { label: 'Unique Clicks', value: 'unique_clicks' },
 	{ label: 'OS', value: 'os' },
 	{ label: 'Device', value: 'device' },
 	{ label: 'Brand', value: 'brand_name' },

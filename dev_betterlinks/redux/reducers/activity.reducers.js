@@ -1,7 +1,9 @@
-import { CHANGE_LINKS_VIEW, CHANGE_THEME_MODE } from 'redux/actions/activity.actions';
+import { CHANGE_ACTIVITY, CHANGE_LINKS_VIEW, CHANGE_THEME_MODE } from 'redux/actions/activity.actions';
 const linksView = localStorage.getItem('betterLinksView');
 const darkMode = localStorage.getItem('betterLinksIsDarkMode');
-function activity(state = { linksView: linksView ? linksView : 'grid', darkMode }, { type, payload }) {
+
+const initialState = { linksView: linksView ? linksView : 'grid', darkMode, analyticsTab: 0 };
+function activity(state = initialState, { type, payload }) {
 	switch (type) {
 		case CHANGE_LINKS_VIEW:
 			return {
@@ -12,6 +14,12 @@ function activity(state = { linksView: linksView ? linksView : 'grid', darkMode 
 			return {
 				...state,
 				darkMode: payload,
+			};
+		}
+		case CHANGE_ACTIVITY: {
+			return {
+				...state,
+				...payload,
 			};
 		}
 		default:
