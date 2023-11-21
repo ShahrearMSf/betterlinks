@@ -89,27 +89,27 @@ class Clicks extends Controller {
 
 		$top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$top_referer  = \BetterLinksPro\Helper::get_top_referer( $from, $to );
-			$device_stats = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
-			$top_os       = \BetterLinksPro\Helper::get_top_os( $from, $to );
-			$top_browser  = \BetterLinksPro\Helper::get_top_browser( $from, $to );
-			$top_clicks_id   = \BetterLinksPro\Helper::get_top_links( $from, $to );
-		
-			$top_medium   = \BetterLinksPro\Helper::get_top_medium( $results, $top_clicks_id );
-            $top_links_clicks = array_splice( $top_medium, -1 );
+			$top_referer   = \BetterLinksPro\Helper::get_top_referer( $from, $to );
+			$device_stats  = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
+			$top_os        = \BetterLinksPro\Helper::get_top_os( $from, $to );
+			$top_browser   = \BetterLinksPro\Helper::get_top_browser( $from, $to );
+			$top_clicks_id = \BetterLinksPro\Helper::get_top_links( $from, $to );
+
+			$top_medium       = \BetterLinksPro\Helper::get_top_medium( $results, $top_clicks_id );
+			$top_links_clicks = array_splice( $top_medium, -1 );
 		}
 
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'clicks'     => $results,
-					'referer'    => $top_referer,
-					'devices'    => $device_stats,
-					'os'         => $top_os,
-					'browser'    => $top_browser,
-					'top_medium' => $top_medium,
-                    'top_links_clicks' => $top_links_clicks
+					'clicks'           => $results,
+					'referer'          => $top_referer,
+					'devices'          => $device_stats,
+					'os'               => $top_os,
+					'browser'          => $top_browser,
+					'top_medium'       => $top_medium,
+					'top_links_clicks' => $top_links_clicks,
 				),
 			),
 			200
