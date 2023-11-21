@@ -448,9 +448,9 @@ body.betterlinks-guten-link-data-not-rendered-in-sidebar .betterlinks-loader-sid
 
 body.betterlinks-guten-store-initial-data-still-fetching,
 body.betterlinks-guten-link-data-not-rendered-in-sidebar {
-	* {
-		z-index: 1 !important;
-	}
+	// * {
+	// 	z-index: 1 !important;
+	// }
 
 	.betterlinks-loader-sidebar-wrapper,
 	.betterlinks-loader-sidebar-wrapper * {

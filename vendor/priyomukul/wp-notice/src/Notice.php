@@ -52,9 +52,9 @@ class Notice extends Base {
 
 		$this->dismiss = new Dismiss( $this->id, $this->options, $this->app );
 
-		if( ! isset( $queue[ $id ] ) || ( ! empty( $this->options['refresh'] ) && (empty( $queue[ $id ]['refresh']) || $queue[ $id ]['refresh'] != $this->options['refresh'] ) ) ) {
+		if( ! isset( $queue[ $id ] ) ) {
 			$queue[ $id ] = [];
-			$_eligible_keys = ['start', 'expire', 'recurrence', 'refresh'];
+			$_eligible_keys = ['start', 'expire', 'recurrence'];
 			array_walk($options, function( $value, $key ) use( $id, &$queue, $_eligible_keys ) {
 				if( in_array( $key, $_eligible_keys, true ) ) {
 					$queue[ $id ][ $key ] = $value;

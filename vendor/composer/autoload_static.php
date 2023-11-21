@@ -15,10 +15,6 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
         array (
             'PriyoMukul\\WPNotice\\' => 20,
         ),
-        'J' => 
-        array (
-            'Jaybizzle\\CrawlerDetect\\' => 24,
-        ),
         'D' => 
         array (
             'DeviceDetector\\' => 15,
@@ -33,10 +29,6 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
         'PriyoMukul\\WPNotice\\' => 
         array (
             0 => __DIR__ . '/..' . '/priyomukul/wp-notice/src',
-        ),
-        'Jaybizzle\\CrawlerDetect\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
         ),
         'DeviceDetector\\' => 
         array (

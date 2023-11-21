@@ -6,7 +6,6 @@ use PriyoMukul\WPNotice\Utils\Base;
 use PriyoMukul\WPNotice\Utils\Helper;
 use PriyoMukul\WPNotice\Utils\Storage;
 
-#[\AllowDynamicProperties]
 final class Notices extends Base {
 	use Helper;
 
