@@ -709,15 +709,15 @@ export const getColumns = (id, analytics, analyticsTab) => {
 			1 === analyticsTab && {
 				name: __('Total Clicks', 'betterlinks'),
 				selector: 'total_clicks',
-				sortFunction: sortFunction('IPCOUNT'),
-				cell: (row) => <div>{row.IPCOUNT} Clicks</div>,
+				sortFunction: sortFunction('total_clicks'),
+				cell: (row) => <div>{row?.total_clicks || 1} Clicks</div>,
 			},
-		// !id &&
-		// 	1 === analyticsTab && {
-		// 		name: __('Unique Clicks', 'betterlinks'),
-		// 		selector: 'unique_clicks',
-		// 		cell: (row) => <div>25 Clicks</div>,
-		// 	},
+		!id &&
+			1 === analyticsTab && {
+				name: __('Unique Clicks', 'betterlinks'),
+				selector: 'unique_clicks',
+				cell: (row) => <div>{row?.unique_clicks || 1} Clicks</div>,
+			},
 		{
 			name: (
 				<span style={{ display: 'flex' }}>
@@ -781,7 +781,7 @@ export const getColumns = (id, analytics, analyticsTab) => {
 		},
 	];
 	if (analytics) {
-		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'action'];
+		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'unique_clicks', 'action'];
 		return columns.filter((item) => analyticsArr.includes(item.selector));
 	}
 	return columns;

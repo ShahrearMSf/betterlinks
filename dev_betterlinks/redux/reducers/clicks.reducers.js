@@ -4,10 +4,11 @@ function clicks(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_CLICKS_DATA: {
-			const { clicks: clicksReducersData, referer, devices, os, browser, top_medium, top_links_clicks } = payload.data;
+			const { clicks: clicksReducersData, referer, devices, os, browser, top_medium, top_links_clicks, analytic } = payload.data;
 			const formattedData = {};
 			const newClicksData = [];
 			const topClicksData = [];
+
 			for (const item of clicksReducersData) {
 				const linkId = `id_${item.link_id || ''}`;
 				const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
@@ -23,9 +24,14 @@ function clicks(state = {}, action) {
 			for (const item of clicksReducersData) {
 				const linkId = `id_${item.link_id || ''}`;
 				const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
+
 				newClicksData.push({
 					...item,
 					IPCOUNT: formattedData[linkId][itemIp],
+					...(analytic?.hasOwnProperty(item.link_id) && {
+						total_clicks: analytic[item.link_id]?.link_count || 1,
+						unique_clicks: analytic[item.link_id]?.ip?.length || 1,
+					}),
 				});
 			}
 
@@ -40,7 +46,7 @@ function clicks(state = {}, action) {
 					});
 				}
 			}
-	
+
 			return {
 				...state,
 				clicks: newClicksData,

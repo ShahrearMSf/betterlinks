@@ -174,9 +174,11 @@ const Clicks = (props) => {
 		const resetSearch = () => {
 			setSearching(false);
 			setFilterText('');
-			const currentDate = new Date();
-			let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
-			props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
+			// const currentDate = new Date();
+			const filterDate = { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') };
+			// let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
+			// props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
+			props.fetch_clicks_data(filterDate);
 		};
 		return (
 			<>
@@ -221,13 +223,13 @@ const Clicks = (props) => {
 					find.push(element);
 				}
 			}
+			// 1 means performance tab, when performance is selected
 			if (1 == analyticsTab) {
 				if (!is_pro_enabled && !is_extra_data_tracking_compatible) return [];
-				console.log(find);
 				return find
-					.sort((a, b) => +a.IPCOUNT - +b.IPCOUNT)
-					.slice(0, 5)
-					.reverse();
+					.sort((a, b) => +a?.total_clicks - +b?.total_clicks)
+					.reverse()
+					.slice(0, 5);
 			}
 			return find;
 		},
@@ -250,7 +252,6 @@ const Clicks = (props) => {
 			{clicks ? (
 				<>
 					<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-
 					<Graph
 						data={analyticsData(graphData)}
 						customDateFilter={customDateFilter}

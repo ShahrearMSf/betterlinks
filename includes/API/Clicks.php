@@ -87,6 +87,9 @@ class Clicks extends Controller {
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 		$results = $this->get_clicks_data( $from, $to );
 
+		$analytic = get_option('betterlinks_analytics_data');
+		$analytic = $analytic ? json_decode($analytic, true) : [];
+
 		$top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
 			$top_referer   = \BetterLinksPro\Helper::get_top_referer( $from, $to );
@@ -110,6 +113,7 @@ class Clicks extends Controller {
 					'browser'          => $top_browser,
 					'top_medium'       => $top_medium,
 					'top_links_clicks' => $top_links_clicks,
+					'analytic'			=> $analytic
 				),
 			),
 			200
