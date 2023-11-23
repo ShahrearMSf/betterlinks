@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { __ } from '@wordpress/i18n';
-import { Line } from 'react-chartjs-2';
 import { DateRangePicker } from 'react-date-range';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { subDays } from 'date-fns';
-import { API, getDataset, is_extra_data_tracking_compatible, is_pro_enabled, namespace } from 'utils/helper';
+import { API, getDataset, is_extra_data_tracking_compatible, namespace } from 'utils/helper';
 import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from 'utils/helper';
 import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
 
@@ -15,7 +13,6 @@ import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsCh
 
 const Graph = (props) => {
 	const { customDateFilter, setCustomDateFilter, extraAnalytics } = props;
-	const { darkMode } = props.activity;
 	const id = betterLinksQuery.get('id');
 	const labels = Object.keys(props.data.clicks)
 		?.reverse?.()
@@ -23,48 +20,7 @@ const Graph = (props) => {
 			const splitted = item.split('-');
 			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
 		});
-	const data = {
-		labels,
-		datasets: getDataset(props.data),
-	};
-	const options = {
-		plugins: {
-			legend: {
-				labels: {
-					color: darkMode ? '#fff' : '#252525',
-				},
-			},
-		},
-		maintainAspectRatio: false,
-		responsive: true,
-		aspectRatio: 2,
-		scales: {
-			yAxes: [
-				{
-					ticks: {
-						beginAtZero: true,
-						steps: 20,
-						stepSize: 500,
-					},
-				},
-			],
-		},
-		tooltips: {
-			backgroundColor: 'rgb(255, 255, 255)',
-			titleFontColor: '#000',
-			callbacks: {
-				labelColor: function (tooltipItem, chart) {
-					return {
-						borderColor: '#2a62ff',
-						backgroundColor: '#2a62ff',
-					};
-				},
-				labelTextColor: function (tooltipItem, chart) {
-					return '#000';
-				},
-			},
-		},
-	};
+
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
 
