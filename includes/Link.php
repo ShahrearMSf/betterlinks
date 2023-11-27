@@ -15,7 +15,8 @@ class Link extends Utils {
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
-		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		// Note: Using sanitize_text_field for $_SERVER['REQUEST_URI'] may not handle redirects properly when short URLs contain non-ASCII characters (e.g., Chinese).
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
 		$request_uri = stripslashes( rawurldecode( $request_uri ) );
 		$request_uri = substr( $request_uri, strlen( wp_parse_url( site_url( '/' ), PHP_URL_PATH ) ) );
 		$param       = explode( '?', $request_uri, 2 );
