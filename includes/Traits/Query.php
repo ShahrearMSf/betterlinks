@@ -640,7 +640,7 @@ trait Query
             GROUP BY 
                 CLICKS.id 
             ORDER BY 
-                CLICKS.created_at DESC", 
+                CLICKS.created_at DESC limit 100000", 
             $from . ' 00:00:00', $to . ' 23:59:00');
         $results = $wpdb->get_results( $query, ARRAY_A );
         return $results;
