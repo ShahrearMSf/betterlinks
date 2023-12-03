@@ -69,6 +69,25 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks/admin/get_auto_create_links_settings', array( $this, 'get_auto_create_links_settings' ) );
 		// External Analytics settings.
 		add_action( 'wp_ajax_betterlinks/admin/get_external_analytics', array( $this, 'get_external_analytics' ) );
+
+		// Analytics
+		add_action( 'wp_ajax_betterlinks__admin_fetch_analytics_graph', array( $this, 'fetch_analytics_graph' ) );
+	}
+
+	public function fetch_analytics_graph() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$from = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : '';
+		$to = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
+		global $wpdb;
+		$query =  "SELECT id,link_id,ip,created_at FROM {$wpdb->prefix}betterlinks_clicks WHERE created_at BETWEEN '{$from} 00:00:00' AND '{$to} 00:00:00'";
+		$results = $wpdb->get_results($query);
+		wp_send_json([
+			'results' => $results,
+		]);
 	}
 
 	public function get_prettylinks_data() {

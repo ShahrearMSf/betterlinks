@@ -32,6 +32,25 @@ class Clicks extends Controller {
 				),
 			)
 		);
+		// error_log($endpoint. '(?P<id>[\d]+)');
+		register_rest_route(
+			$this->namespace,
+			$endpoint . '(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+                    'id' => array(
+                        'description' => __('Unique identifier for the object.'),
+                        'type'        => 'integer',
+                    ),
+                ),
+				array(
+                    'methods'             => \WP_REST_Server::READABLE,
+                    'callback'            => array($this, 'get_item'),
+                    'permission_callback' => [$this, 'get_items_permissions_check'],
+                    'args'                => $this->get_clicks_schema(),
+                ),
+			)
+		);
 
 		register_rest_route(
 			$this->namespace,
@@ -85,8 +104,9 @@ class Clicks extends Controller {
 		$request = $request->get_params();
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
-		$results = $this->get_clicks_data( $from, $to );
-
+		// $results = $this->get_clicks_data( $from, $to );
+		$graph_data = $this->get_analytics_graph_data($from, $to);
+		$unique_list = $this->get_analytics_unique_list( $from, $to );
 		$analytic = get_option('betterlinks_analytics_data');
 		$analytic = $analytic ? json_decode($analytic, true) : [];
 
@@ -96,28 +116,50 @@ class Clicks extends Controller {
 			$device_stats  = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
 			$top_os        = \BetterLinksPro\Helper::get_top_os( $from, $to );
 			$top_browser   = \BetterLinksPro\Helper::get_top_browser( $from, $to );
-			$top_clicks_id = \BetterLinksPro\Helper::get_top_links( $from, $to );
+			// $top_clicks_id = \BetterLinksPro\Helper::get_top_links( $from, $to );
 
-			$top_medium       = \BetterLinksPro\Helper::get_top_medium( $results, $top_clicks_id );
-			$top_links_clicks = array_splice( $top_medium, -1 );
+			// $top_medium       = \BetterLinksPro\Helper::get_top_medium( $results, $top_clicks_id );
+			// $top_links_clicks = array_splice( $top_medium, -1 );
 		}
-
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'clicks'           => $results,
+					'clicks'           => $graph_data,
+					'unique_list'		=> $unique_list,
 					'referer'          => $top_referer,
 					'devices'          => $device_stats,
 					'os'               => $top_os,
 					'browser'          => $top_browser,
-					'top_medium'       => $top_medium,
-					'top_links_clicks' => $top_links_clicks,
+					// 'top_medium'       => $top_medium,
+					// 'top_links_clicks' => $top_links_clicks,
 					'analytic'			=> $analytic
 				),
 			),
 			200
 		);
+	}
+
+
+	/**
+	 * Get Individual Clicks
+	 * 
+	 * @param WP_Rest_Request $request
+	 * @return WP_Error|WP_Rest_Response
+	 */
+	public function get_item( $request ) {
+		$request = $request->get_params();
+
+		$id 	= !empty( $request['id'] ) ? sanitize_text_field( $request['id'] ) : null;
+		$from 	= !empty( $request['from'] ) ? sanitize_text_field( $request['from'] ) : '';
+		$to 	= !empty( $request['to'] ) ? sanitize_text_field( $request['to'] ) : '';
+
+		$results = $this->get_individual_analytics_clicks($id, $from, $to);
+
+		return new \WP_REST_Response([
+			'data' => $results,
+			'id'	=> $id,
+		], 200);
 	}
 
 	/**

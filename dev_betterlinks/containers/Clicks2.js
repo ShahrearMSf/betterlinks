@@ -147,6 +147,7 @@ const Clicks = (props) => {
 				}
 			}
 		});
+		console.log(results);
 		return results;
 	};
 

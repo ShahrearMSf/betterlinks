@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import AnalyticLink from 'components/Analytics/AnalyticLink';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import styled from 'styled-components';
 
 export const {
 	betterlinks_nonce,
@@ -614,9 +615,9 @@ const getDevice = (device) => {
 	return device;
 };
 const sortFunction = (title) => (rowA, rowB) => {
-	if (typeof rowA[title] === 'number') {
-		if (rowA[title] > rowB[title]) return 1;
-		else if (rowB[title] > rowA[title]) return -1;
+	if (['total_clicks', 'unique_clicks'].includes(title)) {
+		if (+rowA[title] > +rowB[title]) return 1;
+		else if (+rowB[title] > +rowA[title]) return -1;
 		return 0;
 	}
 	const a = rowA[title]?.toLowerCase() || '';
@@ -625,25 +626,110 @@ const sortFunction = (title) => (rowA, rowB) => {
 	else if (b > a) return -1;
 	return 0;
 };
-const BlurData = <span style={{ filter: 'blur(2px)', 'user-select': 'none' }}>XXX</span>;
+const Blured = styled.span`
+	filter: blur(2px);
+	user-select: none;
+`;
+const BlurData = <Blured>XXX</Blured>;
 export const getColumns = (id, analytics, analyticsTab) => {
+	if (!!id) {
+		return [
+			{
+				name: __('Browser', 'betterlinks'),
+				selector: 'browser',
+				sortable: false,
+				sortFunction: sortFunction('browser'),
+				width: '80px',
+				cell: (row) => {
+					const browser = getBrowser(row.browser);
+					return (
+						<div>
+							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={browser.charAt(0).toUpperCase() + browser.slice(1)} />
+						</div>
+					);
+				},
+			},
+			{
+				name: __('IP', 'betterlinks'),
+				selector: 'ip',
+				width: '100px',
+				sortable: false,
+				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+			},
+			{
+				name: __('Timestamp', 'betterlinks'),
+				selector: 'created_at',
+				sortable: false,
+			},
+			{
+				name: __('Referrer', 'betterlinks'),
+				selector: 'referer',
+				sortable: false,
+				cell: (row) => (
+					<div>
+						<div style={{ fontWeight: 700 }}>
+							<a href={row.referer} target="_blank">
+								{row.referer}
+							</a>
+						</div>
+					</div>
+				),
+			},
+			{
+				name: (
+					<span style={{ display: 'flex' }}>
+						{__('OS', 'betterlinks')}
+						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+					</span>
+				),
+				selector: 'os',
+				width: '80px',
+				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : BlurData}</div>,
+				sortable: false,
+				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+			},
+			{
+				name: (
+					<span style={{ display: 'flex' }}>
+						{__('Device', 'betterlinks')}
+						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+					</span>
+				),
+				selector: 'device',
+				width: '80px',
+				cell: (row) => (
+					<div>
+						{is_extra_data_tracking_compatible
+							? row.device && (
+									<img
+										width="25"
+										src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
+										alt="icon"
+										title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
+									/>
+							  )
+							: BlurData}
+					</div>
+				),
+				sortable: false,
+				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+			},
+			{
+				name: (
+					<span style={{ display: 'flex' }}>
+						{__('Brand', 'betterlinks')}
+						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+					</span>
+				),
+				selector: 'brand_name',
+				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
+				sortable: false,
+				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+			},
+		];
+	}
 	const columns = [
 		{
-			name: __('Browser', 'betterlinks'),
-			selector: 'browser',
-			sortable: false,
-			sortFunction: sortFunction('browser'),
-			width: '80px',
-			cell: (row) => {
-				const browser = getBrowser(row.browser);
-				return (
-					<div>
-						<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={browser.charAt(0).toUpperCase() + browser.slice(1)} />
-					</div>
-				);
-			},
-		},
-		!id && {
 			name: __('Link Name', 'betterlinks'),
 			selector: 'name',
 			id: 'name',
@@ -652,18 +738,6 @@ export const getColumns = (id, analytics, analyticsTab) => {
 			cell: (row) => <div>{row.link_title}</div>,
 		},
 		{
-			name: __('IP', 'betterlinks'),
-			selector: 'ip',
-			width: '100px',
-			sortable: false,
-			cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
-		},
-		{
-			name: __('Timestamp', 'betterlinks'),
-			selector: 'created_at',
-			sortable: false,
-		},
-		!id && {
 			name: __('Shortened URL', 'betterlinks'),
 			selector: 'short_url',
 			sortable: false,
@@ -678,20 +752,6 @@ export const getColumns = (id, analytics, analyticsTab) => {
 			),
 		},
 		{
-			name: __('Referrer', 'betterlinks'),
-			selector: 'referer',
-			sortable: false,
-			cell: (row) => (
-				<div>
-					<div style={{ fontWeight: 700 }}>
-						<a href={row.referer} target="_blank">
-							{row.referer}
-						</a>
-					</div>
-				</div>
-			),
-		},
-		!id && {
 			name: __('Target URL', 'betterlinks'),
 			selector: 'target_url',
 			cell: (row) => (
@@ -705,71 +765,19 @@ export const getColumns = (id, analytics, analyticsTab) => {
 			),
 			sortable: false,
 		},
-		!id &&
-			1 === analyticsTab && {
-				name: __('Total Clicks', 'betterlinks'),
-				selector: 'total_clicks',
-				sortFunction: sortFunction('total_clicks'),
-				cell: (row) => <div>{row?.total_clicks || 1} Clicks</div>,
-			},
-		!id &&
-			1 === analyticsTab && {
-				name: __('Unique Clicks', 'betterlinks'),
-				selector: 'unique_clicks',
-				cell: (row) => <div>{row?.unique_clicks || 1} Clicks</div>,
-			},
 		{
-			name: (
-				<span style={{ display: 'flex' }}>
-					{__('OS', 'betterlinks')}
-					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-				</span>
-			),
-			selector: 'os',
-			width: '80px',
-			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : BlurData}</div>,
-			sortable: false,
-			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+			name: __('Total Clicks', 'betterlinks'),
+			selector: 'total_clicks',
+			sortFunction: sortFunction('total_clicks'),
+			cell: (row) => <div>{row?.total_clicks || 1}</div>,
 		},
 		{
-			name: (
-				<span style={{ display: 'flex' }}>
-					{__('Device', 'betterlinks')}
-					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-				</span>
-			),
-			selector: 'device',
-			width: '80px',
-			cell: (row) => (
-				<div>
-					{is_extra_data_tracking_compatible
-						? row.device && (
-								<img
-									width="25"
-									src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
-									alt="icon"
-									title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
-								/>
-						  )
-						: BlurData}
-				</div>
-			),
-			sortable: false,
-			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+			name: __('Unique Clicks', 'betterlinks'),
+			selector: 'unique_clicks',
+			sortFunction: sortFunction('unique_clicks'),
+			cell: (row) => <div>{row?.unique_clicks || 1}</div>,
 		},
 		{
-			name: (
-				<span style={{ display: 'flex' }}>
-					{__('Brand', 'betterlinks')}
-					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-				</span>
-			),
-			selector: 'brand_name',
-			cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
-			sortable: false,
-			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
-		},
-		!id && {
 			name: __('Action', 'betterlinks'),
 			selector: 'action',
 			sortable: false,
@@ -780,10 +788,10 @@ export const getColumns = (id, analytics, analyticsTab) => {
 			},
 		},
 	];
-	if (analytics) {
-		const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'unique_clicks', 'action'];
-		return columns.filter((item) => analyticsArr.includes(item.selector));
-	}
+	// if (analytics) {
+	// 	const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'unique_clicks', 'action'];
+	// 	return columns.filter((item) => analyticsArr.includes(item.selector));
+	// }
 	return columns;
 };
 

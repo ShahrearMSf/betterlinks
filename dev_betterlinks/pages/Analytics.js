@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import queryString from 'query-string';
 import { __ } from '@wordpress/i18n';
 import Topbar from 'containers/TopBar';
-import Clicks from 'containers/Clicks';
+import Clicks from 'containers/Clicks3';
 import { subDays } from 'date-fns';
 
 const Analytics = () => {
@@ -22,6 +22,7 @@ const Analytics = () => {
 	return (
 		<React.Fragment>
 			<Topbar propsForAnalytics={propsForAnalytics} label={__('BetterLinks Analytics', 'betterlinks')} />
+			{/* {betterLinksHooks.applyFilters('analyticsInnerChild', <Clicks propsForAnalytics={propsForAnalytics} />, parsed)} */}
 			{betterLinksHooks.applyFilters('analyticsInnerChild', <Clicks propsForAnalytics={propsForAnalytics} />, parsed)}
 		</React.Fragment>
 	);
