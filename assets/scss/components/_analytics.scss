@@ -46,11 +46,16 @@
 			> div {
 				align-self: flex-start;
 
-				&.MuiAccordion-root.Mui-expanded {
+				&.MuiAccordion-root.Mui-expanded.Mui-disabled {
+					background-color: #ffffff !important;
 					margin: unset !important;
 					height: 100%;
 					&:first-child {
 						margin-top: unset !important;
+					}
+
+					.MuiAccordionSummary-content p {
+						color: #19285d !important;
 					}
 				}
 
