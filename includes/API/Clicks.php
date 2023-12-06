@@ -220,7 +220,8 @@ class Clicks extends Controller {
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 
-		$unique_list = $this->get_analytics_unique_list( $from, $to );
+
+		$unique_list = $this->get_analytics_unique_list();
 
 		$analytic = get_option( 'betterlinks_analytics_data' );
 		$analytic = $analytic ? json_decode( $analytic, true ) : array();

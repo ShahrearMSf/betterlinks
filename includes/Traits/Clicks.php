@@ -22,13 +22,20 @@ trait Clicks {
 			'unique_count' => $unique_counts,
 		);
 	}
-	public function get_analytics_unique_list( $from, $to ) {
+	public function get_analytics_unique_list() {
+		if( $results = get_transient('btl_analytics_unique_list') ){
+			error_log('cached');
+			return $results;
+		}
+		error_log('quering');
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$query  = "SELECT id as link_id, link_title, short_url, target_url FROM {$prefix}betterlinks l 
         RIGHT JOIN (SELECT distinct link_id from {$prefix}betterlinks_clicks) c ON c.link_id=l.id ORDER BY l.id DESC;";
 
 		$results = $wpdb->get_results( $query, ARRAY_A );
+
+		set_transient('btl_analytics_unique_list', $results, 60);
 		return $results;
 	}
 
