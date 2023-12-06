@@ -167,7 +167,7 @@ class Clicks extends Controller {
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 
-		$top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
+		$top_referer = $device_stats = $top_os = $top_browser = array();
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
 			$top_referer  = \BetterLinksPro\Helper::get_top_referer( $from, $to );
 			$device_stats = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
@@ -217,8 +217,8 @@ class Clicks extends Controller {
 	 */
 	public function get_items( $request ) {
 		$request = $request->get_params();
-		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
-		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
+		// $from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
+		// $to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 
 
 		$unique_list = $this->get_analytics_unique_list();
