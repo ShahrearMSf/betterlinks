@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
@@ -68,23 +68,23 @@ class Clicks extends Controller {
 				),
 			)
 		);
-		
+
 		register_rest_route(
 			$this->namespace,
 			$endpoint . '(?P<id>[\d]+)',
 			array(
-				'args'   => array(
-                    'id' => array(
-                        'description' => __('Unique identifier for the object.'),
-                        'type'        => 'integer',
-                    ),
-                ),
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					),
+				),
 				array(
-                    'methods'             => \WP_REST_Server::READABLE,
-                    'callback'            => array($this, 'get_item'),
-                    'permission_callback' => [$this, 'get_items_permissions_check'],
-                    'args'                => $this->get_clicks_schema(),
-                ),
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
 			)
 		);
 
@@ -130,26 +130,38 @@ class Clicks extends Controller {
 		do_action( 'betterlinks_register_clicks_routes', $this );
 	}
 
+	/**
+	 * Get Analytics Top Medium Data
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
 	public function get_medium( $request ) {
 		$request = $request->get_params();
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 
-		$top_medium = [];
+		$top_medium = array();
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$all_referer = \BetterLinksPro\Helper::get_all_referer($from, $to);
-			$top_medium = \BetterLinksPro\Helper::get_top_medium($all_referer);
+			$all_referer = \BetterLinksPro\Helper::get_all_referer( $from, $to );
+			$top_medium  = \BetterLinksPro\Helper::get_top_medium( $all_referer );
 		}
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'medium' => $top_medium
-				)
+					'medium' => $top_medium,
+				),
 			)
 		);
 	}
 
+	/**
+	 * Get Analytics Chart Data
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
 	public function get_charts( $request ) {
 		$request = $request->get_params();
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
@@ -157,44 +169,45 @@ class Clicks extends Controller {
 
 		$top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$top_referer   = \BetterLinksPro\Helper::get_top_referer( $from, $to );
-			$device_stats  = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
-			$top_os        = \BetterLinksPro\Helper::get_top_os( $from, $to );
-			$top_browser   = \BetterLinksPro\Helper::get_top_browser( $from, $to );
+			$top_referer  = \BetterLinksPro\Helper::get_top_referer( $from, $to );
+			$device_stats = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
+			$top_os       = \BetterLinksPro\Helper::get_top_os( $from, $to );
+			$top_browser  = \BetterLinksPro\Helper::get_top_browser( $from, $to );
 		}
 
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'referer'          => $top_referer,
-					'devices'          => $device_stats,
-					'os'               => $top_os,
-					'browser'          => $top_browser,
-				)
+					'referer' => $top_referer,
+					'devices' => $device_stats,
+					'os'      => $top_os,
+					'browser' => $top_browser,
+				),
 			)
 		);
 	}
 	/**
 	 * Get Analytics Graph Data
+	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
-	 public function get_graphs( $request ) {
+	public function get_graphs( $request ) {
 		$request = $request->get_params();
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 
-		$graph_data = $this->get_analytics_graph_data($from, $to);
+		$graph_data = $this->get_analytics_graph_data( $from, $to );
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'clicks' => $graph_data
-				)
+					'clicks' => $graph_data,
+				),
 			)
 		);
-	 }
+	}
 
 	/**
 	 * Get betterlinks
@@ -208,16 +221,16 @@ class Clicks extends Controller {
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
 
 		$unique_list = $this->get_analytics_unique_list( $from, $to );
-		
-		$analytic = get_option('betterlinks_analytics_data');
-		$analytic = $analytic ? json_decode($analytic, true) : [];
+
+		$analytic = get_option( 'betterlinks_analytics_data' );
+		$analytic = $analytic ? json_decode( $analytic, true ) : array();
 
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'unique_list'		=> $unique_list,
-					'analytic'			=> $analytic
+					'unique_list' => $unique_list,
+					'analytic'    => $analytic,
 				),
 			),
 			200
@@ -227,29 +240,32 @@ class Clicks extends Controller {
 
 	/**
 	 * Get Individual Clicks
-	 * 
+	 *
 	 * @param WP_Rest_Request $request
 	 * @return WP_Error|WP_Rest_Response
 	 */
 	public function get_item( $request ) {
 		$request = $request->get_params();
 
-		$id 	= !empty( $request['id'] ) ? sanitize_text_field( $request['id'] ) : null;
-		$from 	= !empty( $request['from'] ) ? sanitize_text_field( $request['from'] ) : '';
-		$to 	= !empty( $request['to'] ) ? sanitize_text_field( $request['to'] ) : '';
+		$id   = ! empty( $request['id'] ) ? sanitize_text_field( $request['id'] ) : null;
+		$from = ! empty( $request['from'] ) ? sanitize_text_field( $request['from'] ) : '';
+		$to   = ! empty( $request['to'] ) ? sanitize_text_field( $request['to'] ) : '';
 
-		$results = $this->get_individual_analytics_clicks($id, $from, $to);
-		$graph_data = $this->get_individual_graph_data($id, $from, $to);
-		$link_details = $this->get_individual_link_details($id);
+		$results      = $this->get_individual_analytics_clicks( $id, $from, $to );
+		$graph_data   = $this->get_individual_graph_data( $id, $from, $to );
+		$link_details = $this->get_individual_link_details( $id );
 
-		return new \WP_REST_Response([
-			'data' => [
-				'analytics' => $results,
-				'graph_data' => $graph_data,
-				'link_details' => $link_details
-			],
-			'id'	=> $id,
-		], 200);
+		return new \WP_REST_Response(
+			array(
+				'data' => array(
+					'analytics'    => $results,
+					'graph_data'   => $graph_data,
+					'link_details' => $link_details,
+				),
+				'id'   => $id,
+			),
+			200
+		);
 	}
 
 	/**
