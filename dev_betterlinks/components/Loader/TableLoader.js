@@ -44,4 +44,5 @@ const TableLoader = (props) => (
 		<rect x="445" y="99" rx="0" ry="0" width="54" height="3" />
 	</ContentLoader>
 );
+
 export default TableLoader;

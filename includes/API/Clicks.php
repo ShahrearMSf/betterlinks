@@ -32,7 +32,43 @@ class Clicks extends Controller {
 				),
 			)
 		);
-		// error_log($endpoint. '(?P<id>[\d]+)');
+		register_rest_route(
+			$this->namespace,
+			$endpoint . 'get_graphs/',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_graphs' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
+			)
+		);
+		register_rest_route(
+			$this->namespace,
+			$endpoint . 'get_medium/',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_medium' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
+			)
+		);
+		register_rest_route(
+			$this->namespace,
+			$endpoint . 'get_charts/',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_charts' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
+			)
+		);
+		
 		register_rest_route(
 			$this->namespace,
 			$endpoint . '(?P<id>[\d]+)',
@@ -94,6 +130,72 @@ class Clicks extends Controller {
 		do_action( 'betterlinks_register_clicks_routes', $this );
 	}
 
+	public function get_medium( $request ) {
+		$request = $request->get_params();
+		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
+		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
+
+		$top_medium = [];
+		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
+			$all_referer = \BetterLinksPro\Helper::get_all_referer($from, $to);
+			$top_medium = \BetterLinksPro\Helper::get_top_medium($all_referer);
+		}
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => array(
+					'medium' => $top_medium
+				)
+			)
+		);
+	}
+
+	public function get_charts( $request ) {
+		$request = $request->get_params();
+		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
+		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
+
+		$top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
+		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
+			$top_referer   = \BetterLinksPro\Helper::get_top_referer( $from, $to );
+			$device_stats  = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
+			$top_os        = \BetterLinksPro\Helper::get_top_os( $from, $to );
+			$top_browser   = \BetterLinksPro\Helper::get_top_browser( $from, $to );
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => array(
+					'referer'          => $top_referer,
+					'devices'          => $device_stats,
+					'os'               => $top_os,
+					'browser'          => $top_browser,
+				)
+			)
+		);
+	}
+	/**
+	 * Get Analytics Graph Data
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	 public function get_graphs( $request ) {
+		$request = $request->get_params();
+		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
+		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
+
+		$graph_data = $this->get_analytics_graph_data($from, $to);
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => array(
+					'clicks' => $graph_data
+				)
+			)
+		);
+	 }
+
 	/**
 	 * Get betterlinks
 	 *
@@ -104,35 +206,17 @@ class Clicks extends Controller {
 		$request = $request->get_params();
 		$from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
-		// $results = $this->get_clicks_data( $from, $to );
-		$graph_data = $this->get_analytics_graph_data($from, $to);
+
 		$unique_list = $this->get_analytics_unique_list( $from, $to );
+		
 		$analytic = get_option('betterlinks_analytics_data');
 		$analytic = $analytic ? json_decode($analytic, true) : [];
 
-		$top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
-		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$top_referer   = \BetterLinksPro\Helper::get_top_referer( $from, $to );
-			$device_stats  = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
-			$top_os        = \BetterLinksPro\Helper::get_top_os( $from, $to );
-			$top_browser   = \BetterLinksPro\Helper::get_top_browser( $from, $to );
-			// $top_clicks_id = \BetterLinksPro\Helper::get_top_links( $from, $to );
-
-			// $top_medium       = \BetterLinksPro\Helper::get_top_medium( $results, $top_clicks_id );
-			// $top_links_clicks = array_splice( $top_medium, -1 );
-		}
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'clicks'           => $graph_data,
 					'unique_list'		=> $unique_list,
-					'referer'          => $top_referer,
-					'devices'          => $device_stats,
-					'os'               => $top_os,
-					'browser'          => $top_browser,
-					// 'top_medium'       => $top_medium,
-					// 'top_links_clicks' => $top_links_clicks,
 					'analytic'			=> $analytic
 				),
 			),
@@ -155,9 +239,15 @@ class Clicks extends Controller {
 		$to 	= !empty( $request['to'] ) ? sanitize_text_field( $request['to'] ) : '';
 
 		$results = $this->get_individual_analytics_clicks($id, $from, $to);
+		$graph_data = $this->get_individual_graph_data($id, $from, $to);
+		$link_details = $this->get_individual_link_details($id);
 
 		return new \WP_REST_Response([
-			'data' => $results,
+			'data' => [
+				'analytics' => $results,
+				'graph_data' => $graph_data,
+				'link_details' => $link_details
+			],
 			'id'	=> $id,
 		], 200);
 	}

@@ -107,7 +107,6 @@ const Clicks = (props) => {
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const id = betterLinksQuery.get('id');
 
-	// console.log(clicks);
 	useEffect(() => {
 		if (!clicks) {
 			const currentDate = new Date();
@@ -147,7 +146,6 @@ const Clicks = (props) => {
 				}
 			}
 		});
-		console.log(results);
 		return results;
 	};
 

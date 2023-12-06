@@ -631,9 +631,9 @@ const Blured = styled.span`
 	user-select: none;
 `;
 const BlurData = <Blured>XXX</Blured>;
-export const getColumns = (id, analytics, analyticsTab) => {
+export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
-		return [
+		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
 				selector: 'browser',
@@ -727,6 +727,9 @@ export const getColumns = (id, analytics, analyticsTab) => {
 				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
 		];
+
+		const analyticsArr = [...Object.values(analytics || {}).map((item) => item.value)];
+		return singleColumn.filter((item) => analyticsArr.includes(item.selector));
 	}
 	const columns = [
 		{

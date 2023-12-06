@@ -1,7 +1,7 @@
-import { FETCH_CLICKS_DATA, FETCH_INDIVIDUAL_CLICKS } from 'redux/actions/clicks.actions';
+import { FETCH_CHART_DATA, FETCH_CLICKS_DATA, FETCH_GRAPH_DATA, FETCH_INDIVIDUAL_CLICKS, FETCH_MEDIUM_DATA } from 'redux/actions/clicks.actions';
 import { is_extra_data_tracking_compatible, is_pro_enabled } from 'utils/helper';
 
-function get_parsed_clicks_list(unique_list, analytic) {
+function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
 	const formattedData = {};
 	const newClicksData = [];
 	for (const item of unique_list) {
@@ -20,57 +20,66 @@ function get_parsed_clicks_list(unique_list, analytic) {
 		const linkId = `id_${item.link_id || ''}`;
 		const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
 
-		newClicksData.push({
-			...item,
-			IPCOUNT: formattedData[linkId][itemIp],
-			...(analytic?.hasOwnProperty(item.link_id) && {
-				total_clicks: analytic[item.link_id]?.link_count || 1,
-				unique_clicks: analytic[item.link_id]?.ip?.length || 1,
-			}),
-		});
+		if ('individual' === type) {
+			newClicksData.push({
+				...item,
+				IPCOUNT: formattedData[linkId][itemIp],
+			});
+		} else if ('all' === type) {
+			newClicksData.push({
+				...item,
+				...(analytic?.hasOwnProperty(item.link_id) && {
+					total_clicks: analytic[item.link_id]?.link_count || 1,
+					unique_clicks: analytic[item.link_id]?.ip?.length || 1,
+				}),
+			});
+		}
 	}
 	return newClicksData;
 }
 function clicks(state = { individual_clicks: {} }, action) {
 	const payload = action.payload;
 	switch (action.type) {
-		case FETCH_CLICKS_DATA: {
-			// const { clicks: clicksReducersData, referer, devices, os, browser, top_medium, top_links_clicks, analytic } = payload.data;
-			const { clicks: clicksReducersData, unique_list, referer, devices, os, browser, analytic } = payload.data;
-			const newClicksData = get_parsed_clicks_list(unique_list, analytic);
-			const topClicksData = [];
-
-			// if (is_pro_enabled && is_extra_data_tracking_compatible) {
-			// 	const { top_links_clicks: top_links } = top_links_clicks;
-			// 	for (const item of Object.values(top_links)) {
-			// 		const linkId = `id_${item.link_id || ''}`;
-			// 		const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
-			// 		topClicksData.push({
-			// 			...item,
-			// 			IPCOUNT: formattedData[linkId][itemIp],
-			// 		});
-			// 	}
-			// }
-
+		case FETCH_MEDIUM_DATA: {
+			const { medium } = payload.data;
 			return {
 				...state,
-				// clicks: newClicksData,
-				clicks: clicksReducersData,
-				unique_list: newClicksData,
+				medium,
+			};
+		}
+		case FETCH_GRAPH_DATA: {
+			const { clicks } = payload.data;
+			return {
+				...state,
+				clicks,
+			};
+		}
+		case FETCH_CHART_DATA: {
+			const { referer, devices, os, browser } = payload.data;
+			return {
+				...state,
 				referer,
 				devices,
 				os,
 				browser,
-				// top_medium,
-				// top_links_clicks: topClicksData,
+			};
+		}
+		case FETCH_CLICKS_DATA: {
+			const { unique_list, analytic } = payload.data;
+			const newClicksData = get_parsed_clicks_list(unique_list, 'all', analytic);
+
+			return {
+				...state,
+				unique_list: newClicksData,
 			};
 		}
 		case FETCH_INDIVIDUAL_CLICKS: {
 			const { data, id } = payload;
 
-			const individual_clicks = state?.individual_clicks || {};
-			individual_clicks[id] = data;
+			const newClicksData = get_parsed_clicks_list(data.analytics || [], 'individual');
 
+			const individual_clicks = state?.individual_clicks || {};
+			individual_clicks[id] = { ...data, analytics: newClicksData };
 			return {
 				...state,
 				individual_clicks,

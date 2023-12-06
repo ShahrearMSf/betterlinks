@@ -3,6 +3,77 @@ import queryString from 'query-string';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const FETCH_INDIVIDUAL_CLICKS = 'FETCH_INDIVIDUAL_CLICKS';
+export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
+export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
+export const FETCH_MEDIUM_DATA = 'FETCH_MEDIUM_DATA';
+
+export const get_medium_data = (params) => async (dispatch) => {
+	const { from, to, setLoading } = params;
+	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_medium');
+	setLoading(true);
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data?.data) {
+			throw new Error('rest api not working properly for fetch_clicks_data');
+		}
+		setLoading(false);
+		dispatch({
+			type: FETCH_MEDIUM_DATA,
+			payload: res.data,
+		});
+	} catch (error) {
+		console.log({ error: error.message });
+	}
+};
+
+export const get_chart_data = (params) => async (dispatch) => {
+	const { from, to, setLoading } = params;
+	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_charts');
+	setLoading(true);
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data?.data) {
+			throw new Error('rest api not working properly for fetch_clicks_data');
+		}
+		setLoading(false);
+		dispatch({
+			type: FETCH_CHART_DATA,
+			payload: res.data,
+		});
+	} catch (error) {}
+};
+export const get_graph_data = (params) => async (dispatch) => {
+	const { from, to, setLoading } = params;
+	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_graphs');
+
+	setLoading(true);
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data?.data) {
+			throw new Error('rest api not working properly for fetch_clicks_data');
+		}
+		setLoading(false);
+		dispatch({
+			type: FETCH_GRAPH_DATA,
+			payload: res.data,
+		});
+	} catch (error) {}
+};
 
 export const fetch_individual_clicks = (params) => async (dispatch) => {
 	const { link_id, from, to, setLoading } = params;
@@ -30,7 +101,7 @@ export const fetch_individual_clicks = (params) => async (dispatch) => {
 export const fetch_clicks_data = (params) => async (dispatch) => {
 	const { from, to, setLoading } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
-	setLoading(false);
+	setLoading(true);
 	try {
 		const res = await API.get(endPoint, {
 			params: {
@@ -47,6 +118,7 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 			payload: res.data,
 		});
 	} catch (e) {
+		console.log({ error: e });
 		const parsed = queryString.parse(location.search);
 		let form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/fetch_analytics');
@@ -79,7 +151,6 @@ export const searchClicksData = (nonce, filterText) => async (dispatch) => {
 	return axios.get(`${ajaxurl}?action=betterlinks/admin/search_clicks_data&security=${nonce}&title=${filterText}`).then(
 		(response) => {
 			if (response.data) {
-				console.info(response.data);
 				dispatch({
 					type: FETCH_CLICKS_DATA,
 					payload: response.data,

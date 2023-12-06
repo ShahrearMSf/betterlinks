@@ -64,6 +64,10 @@
 					.apexcharts-legend {
 						width: 100%;
 					}
+					img.btl-donut-no-data {
+						width: 70%;
+						margin-top: 30px;
+					}
 				}
 			}
 		}
@@ -72,7 +76,10 @@
 			> div {
 				align-self: flex-start;
 				margin: 0;
-				// height: 100%;
+
+				&.MuiAccordion-root.Mui-expanded {
+					height: 100%;
+				}
 
 				.MuiAccordionDetails-root {
 					justify-content: space-between;
@@ -88,6 +95,9 @@
 						&:hover {
 							opacity: 0.7;
 						}
+					}
+					img.btl-bar-no-data {
+						width: 100%;
 					}
 				}
 			}
@@ -286,6 +296,7 @@ $breakpoint-phone: 560px;
 
 			> a {
 				font-size: 10px;
+				color: #2673ff;
 				background-color: #e5eeff;
 				text-decoration: none;
 				padding: 5px;
