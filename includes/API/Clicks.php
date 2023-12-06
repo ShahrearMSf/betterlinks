@@ -217,9 +217,6 @@ class Clicks extends Controller {
 	 */
 	public function get_items( $request ) {
 		$request = $request->get_params();
-		// $from    = isset( $request['from'] ) ? $request['from'] : date( 'Y-m-d', strtotime( ' - 30 days' ) );
-		// $to      = isset( $request['to'] ) ? $request['to'] : date( 'Y-m-d' );
-
 
 		$unique_list = $this->get_analytics_unique_list();
 
