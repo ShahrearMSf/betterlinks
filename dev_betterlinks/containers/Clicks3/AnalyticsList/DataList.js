@@ -46,7 +46,7 @@ const DataList = (props) => {
 			const filterDate = { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') };
 			props.fetch_clicks_data(filterDate);
 		};
-		
+
 		return (
 			<FilterComponent
 				onFilter={(e) => setFilterText(e.target.value)}
@@ -79,8 +79,6 @@ const DataList = (props) => {
 			subHeaderComponent={subHeaderComponentMemo}
 			persistTableHead
 			defaultSortFieldId="name"
-			striped
-			highlightOnHover
 		/>
 	);
 };

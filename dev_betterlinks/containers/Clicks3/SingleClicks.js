@@ -7,7 +7,7 @@ import Graph from 'containers/Graph';
 import { fetch_clicks_data, fetch_individual_clicks } from 'redux/actions/clicks.actions';
 import { useUpgradeProModal } from 'utils/customHooks';
 import { formatDate, getColumns } from 'utils/helper';
-import { analyticsData, getData } from './clicks.helper';
+import { analyticsData } from './clicks.helper';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
 import { __ } from '@wordpress/i18n';
@@ -53,12 +53,12 @@ const SingleClicks = (props) => {
 			) : (
 				<LineChartLoader />
 			)}
+			{id &&
+				betterLinksHooks.applyFilters('BetterlinksSingleAnalyticsInfo', null, {
+					clicks: individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null },
+					ContentLoader,
+				})}
 			<div className="btl-analytic-table-wrapper">
-				{id &&
-					betterLinksHooks.applyFilters('BetterlinksSingleAnalyticsInfo', null, {
-						clicks: individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null },
-						ContentLoader,
-					})}
 				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} />
 			</div>
 		</div>

@@ -119,13 +119,10 @@ const Clicks = (props) => {
 			let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
 			props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
 		}
-		if (!settings) {
-			props.fetch_settings_data();
-		}
-		if (!analytics) {
-			props.fetch_analytics_settings();
-		}
+		if (!settings) props.fetch_settings_data();
+		if (!analytics) props.fetch_analytics_settings();
 	}, [clicks, settings, analytics]);
+
 	const analyticsData = (data) => {
 		let results = {
 			clicks: {},
@@ -174,10 +171,8 @@ const Clicks = (props) => {
 		const resetSearch = () => {
 			setSearching(false);
 			setFilterText('');
-			// const currentDate = new Date();
 			const filterDate = { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') };
-			// let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
-			// props.fetch_clicks_data({ from: formatDate(new Date(pastDate), 'yyyy-mm-dd'), to: formatDate(currentDate, 'yyyy-mm-dd') });
+			
 			props.fetch_clicks_data(filterDate);
 		};
 		return (

@@ -14,27 +14,6 @@ export const analyticsData = (data, id) => {
 			results.unique_clicks[element.c_date] = element.uniq_count;
 		});
 	}
-
-
-	// data?.forEach?.((element) => {
-	// 	let date = element.created_at.split(' ')[0];
-	// 	if (results.clicks.hasOwnProperty(date)) {
-	// 		results.clicks[date] += 1;
-	// 	} else {
-	// 		results.clicks[date] = 1;
-	// 	}
-
-	// 	if (is_pro_enabled) {
-	// 		// Unique clicks
-	// 		if (results.unique_clicks.hasOwnProperty(date)) {
-	// 			if (!results.unique_clicks[date].includes(element.ip)) {
-	// 				results.unique_clicks[date].push(element.ip);
-	// 			}
-	// 		} else {
-	// 			results.unique_clicks[date] = [element.ip];
-	// 		}
-	// 	}
-	// });
 	return results;
 };
 

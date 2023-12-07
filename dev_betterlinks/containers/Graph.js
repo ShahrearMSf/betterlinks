@@ -123,7 +123,7 @@ const Graph = (props) => {
 		series: getDataset(props.data),
 	};
 	return (
-		<React.Fragment>
+		<div>
 			<div className="btl-analytics-filter">
 				<h3 className="btl-analytics-filter__heading">{__('Click Analytics', 'betterlinks')}</h3>
 				<div className="btl-analytics-filter__control">
@@ -161,7 +161,7 @@ const Graph = (props) => {
 					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, extraAnalytics)
 				)}
 			</div>
-		</React.Fragment>
+		</div>
 	);
 };
 
