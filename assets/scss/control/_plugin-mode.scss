@@ -168,11 +168,23 @@
 
 // analytic
 .btl-analytic {
-	.btl-list-view-calendar {
+	.btl-list-view-calendar,
+	.btl-filter-action,
+	.btl-single-click-info-header {
 		background-color: #2c3650;
 		border-color: #2c3650;
 		color: $light;
 		margin-right: 12px;
+
+		&:hover {
+			background-color: #36405a;
+		}
+	}
+	.btl-single-click-info-header {
+		span:not(.dashicons),
+		a {
+			color: $white;
+		}
 	}
 	.btl-top-charts {
 		.MuiAccordion-root {
@@ -185,6 +197,9 @@
 			}
 		}
 	}
+	.apexcharts-yaxis .apexcharts-yaxis-texts-g text {
+		fill: $white;
+	}
 }
 .btl-analytics-heading {
 	color: $white;
@@ -193,11 +208,25 @@
 	color: $white;
 }
 .btl-analytic {
-	background: #252f47;
-	border-color: #252f47;
 	color: $white;
 	.btl-analytics-chart {
 		border-color: #252f47;
+	}
+	.btl-analytics-filter,
+	.btl-analytic-table-wrapper,
+	.btl-analytics-chart > div:first-child {
+		background-color: #252f47;
+		border: 1px solid #252f47;
+	}
+	.btl-top-charts > div .MuiAccordion-root.Mui-expanded.Mui-disabled {
+		background-color: #252f47 !important;
+
+		.MuiAccordionSummary-content p {
+			color: $white !important;
+		}
+		.apexcharts-datalabels-group text {
+			fill: $white !important;
+		}
 	}
 }
 .btl-analytic-table-wrapper {

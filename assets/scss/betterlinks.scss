@@ -108,6 +108,7 @@ body {
 						&:hover {
 							outline: #36405a solid 1px;
 							border-bottom-color: #36405a;
+							background-color: #36405a;
 						}
 
 						.rdt_TableCell > a {
@@ -121,9 +122,14 @@ body {
 				}
 				.btl-click-filter .btl-search-button {
 					border-color: #36405a;
+					background-color: #252f47;
+					color: $white;
+
+					.search.loading > div {
+						border-color: $white;
+					}
 				}
 				.btl-single-click-info-header {
-					border-color: #36405a;
 					> div span.btl-column-name {
 						color: #fff;
 					}
@@ -653,11 +659,8 @@ p {
 
 .search-wrapper {
 	position: relative;
-	height: 40px;
+	height: 32px;
 	margin: 0 auto;
-	/*  background-color: #555;
-	border-radius:5px;
-	box-shadow:0 0 3px #000 inset; */
 }
 input.ajax-search {
 	height: 30px;
@@ -676,8 +679,6 @@ input.ajax-search {
 	padding: 10px 0;
 	text-align: center;
 	font-size: 12px;
-	/* top:0;
-	margin-top:-5px; */
 }
 
 input.ajax-search:after,
@@ -687,7 +688,7 @@ input.ajax-search:before {
 	top: 0;
 	left: 50%;
 	color: #000;
-	text-index: 0;
+	text-indent: 0;
 }
 
 input.ajax-search:after,
@@ -697,32 +698,27 @@ input.ajax-search:before,
 	opacity: 1;
 }
 
-input.ajax-search:before,
-.search__circle {
-	width: 1em;
-	height: 1em;
-	border: 0.2em solid #2673ff;
-	border-radius: 1em;
+.search__circle,
+input.ajax-search:before {
+	width: 0.8em;
+	height: 0.8em;
+	border: 1px solid #2673ff;
+	border-radius: 50%;
 	transition: 0.3s;
 }
-input.ajax-search.loading:before,
-.loading .search__circle {
-	// border-left-color: #ef726c;
-	-webkit-animation: load8 1.1s infinite linear;
-	animation: load8 1.1s infinite linear;
-}
 
-input.ajax-search:after,
-.search__rectangle {
+.search__rectangle,
+input.ajax-search:after {
 	position: absolute;
-	left: 1em;
-	margin-top: -0.2em;
-	width: 0.6em;
+	left: 9px;
+	margin-top: -1px;
+	width: 4px;
 	-webkit-transform: rotate(45deg);
 	transform: rotate(45deg);
-	border: 0.2em solid #2673ff;
+	border: 1px solid #2673ff;
 	border-radius: 100%;
 }
+
 @-webkit-keyframes load8 {
 	0% {
 		-webkit-transform: rotate(0deg);
