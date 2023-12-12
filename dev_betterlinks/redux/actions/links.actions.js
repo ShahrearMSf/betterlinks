@@ -349,7 +349,7 @@ export const edit_link =
 				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 				payload: res?.data?.data,
 			});
-			fetch_links_password()(dispatch);
+			!forGutenbergStore && fetch_links_password()(dispatch);
 			return res;
 		} catch (e) {
 			return makeRequest({
