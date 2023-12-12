@@ -72,18 +72,19 @@ trait Clicks {
 	 *
 	 * @return array Array of unique analytics
 	 */
-public function get_analytics_unique_list() {
-		if ( $results = get_transient( 'btl_analytics_unique_list' ) ) {
+public function get_analytics_unique_list($from, $to) {
+	$transient_key = self::get_transient_key('btl_analytics_unique_list_', $from, $to);
+		if ( $results = get_transient( $transient_key ) ) {
 			return $results;
 		}
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 
-		$query   = "SELECT id as link_id, link_title, short_url, target_url FROM {$prefix}betterlinks l 
-        RIGHT JOIN (SELECT distinct link_id from {$prefix}betterlinks_clicks) c ON c.link_id=l.id ORDER BY l.id DESC;";
+		$query = "SELECT id as link_id, link_title, short_url, target_url from {$prefix}betterlinks as links right join (select distinct link_id from {$prefix}betterlinks_clicks where created_at between '{$from} 00:00:00' and '{$to} 23:59:59') as clicks on clicks.link_id=links.id order by links.id desc";
+
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
-		set_transient( 'btl_analytics_unique_list', $results, self::$transient_timeout );
+		set_transient( $transient_key, $results, self::$transient_timeout );
 		return $results;
 	}
 

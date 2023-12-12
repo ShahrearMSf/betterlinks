@@ -218,7 +218,10 @@ class Clicks extends Controller {
 	public function get_items( $request ) {
 		$request = $request->get_params();
 
-		$unique_list = $this->get_analytics_unique_list();
+		$from  = isset( $request['from'] ) ? $request['from'] : '';
+		$to  = isset( $request['to'] ) ? $request['to'] : '';
+
+		$unique_list = $this->get_analytics_unique_list($from, $to);
 
 		$analytic = get_option( 'betterlinks_analytics_data' );
 		$analytic = $analytic ? json_decode( $analytic, true ) : array();
