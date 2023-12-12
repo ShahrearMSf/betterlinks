@@ -26,6 +26,7 @@ const SingleClicks = (props) => {
 	const { analytics } = props.analytics;
 
 	useEffect(() => {
+		window.scrollTo(0, 0);
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
 		const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');

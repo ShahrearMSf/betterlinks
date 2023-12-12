@@ -71,27 +71,6 @@ const Graph = (props) => {
 			}, 1000);
 		} catch (e) {
 			console.log({ error: e.message });
-			// let form_data = new FormData();
-			// form_data.append('action', 'betterlinks/admin/fetch_analytics');
-			// form_data.append('security', betterlinks_nonce);
-			// form_data.append('from', formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'));
-			// form_data.append('to', formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd'));
-			// await axios.post(ajaxurl, form_data).then(
-			// 	(response) => {
-			// 		if (response.data) {
-			// 			setTimeout(function () {
-			// 				props.fetchCustomClicksData(response.data);
-			// 				setFilterButtonText(__('Done!', 'betterlinks'));
-			// 				setTimeout(function () {
-			// 					setFilterButtonText(__('Filter', 'betterlinks'));
-			// 				}, 3000);
-			// 			}, 1000);
-			// 		}
-			// 	},
-			// 	(error) => {
-			// 		console.log(error);
-			// 	}
-			// );
 		}
 	};
 
@@ -122,6 +101,7 @@ const Graph = (props) => {
 		},
 		series: getDataset(props.data),
 	};
+	
 	return (
 		<div>
 			<div className="btl-analytics-filter">
@@ -154,7 +134,8 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				{dataOptions.series[0].data.length > 0 ? <Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" /> : <LineChartLoader />}
+				<Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
+				{/* {dataOptions.series[0].data.length > 0 ? <Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" /> : <LineChartLoader />} */}
 				{chartLoading ? (
 					<ChartLoader />
 				) : (
