@@ -577,6 +577,21 @@ trait Query
         $results = $wpdb->get_results($query, ARRAY_A);
         return $results;
     }
+    
+    public static function get_clicks_count() {
+        global $wpdb;
+
+        $query = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks where ip!='' group by link_id";
+        $total_clicks = $wpdb->get_results($query, ARRAY_A);
+
+        $query = "SELECT T1.link_id, count(ip) as unique_clicks from ( SELECT ip, link_id FROM {$wpdb->prefix}betterlinks_clicks where ip!='' GROUP BY `ip`, `link_id` ) as T1 GROUP BY T1.link_id ORDER BY T1.link_id";
+        $unique_clicks = $wpdb->get_results($query, ARRAY_A);
+
+        return array(
+            'total_clicks' => $total_clicks,
+            'unique_clicks' => $unique_clicks   
+        );
+    }
 
     public static function get_links_analytics()
     {

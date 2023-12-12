@@ -4,6 +4,7 @@ import { is_extra_data_tracking_compatible, is_pro_enabled } from 'utils/helper'
 function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
 	const formattedData = {};
 	const newClicksData = [];
+	// console.log(unq)
 	for (const item of unique_list) {
 		const linkId = `id_${item.link_id || ''}`;
 		const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');
@@ -30,7 +31,7 @@ function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
 				...item,
 				...(analytic?.hasOwnProperty(item.link_id) && {
 					total_clicks: analytic[item.link_id]?.link_count || 1,
-					unique_clicks: analytic[item.link_id]?.ip?.length || 1,
+					unique_clicks: analytic[item.link_id]?.ip || 1,
 				}),
 			});
 		}

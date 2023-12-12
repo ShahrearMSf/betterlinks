@@ -72,7 +72,7 @@ trait Clicks {
 	 *
 	 * @return array Array of unique analytics
 	 */
-	public function get_analytics_unique_list() {
+public function get_analytics_unique_list() {
 		if ( $results = get_transient( 'btl_analytics_unique_list' ) ) {
 			return $results;
 		}
