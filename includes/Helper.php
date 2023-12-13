@@ -434,9 +434,7 @@ class Helper {
 
 	public static function update_links_analytics() {
 		$results   = array();
-
 		$clicks_count = self::get_clicks_count();
-		
 
 		$total_clicks = $clicks_count['total_clicks'];
 		$unique_clicks = $clicks_count['unique_clicks'];
@@ -449,29 +447,6 @@ class Helper {
 		}
 		
 		return update_option( 'betterlinks_analytics_data', json_encode( $results ), false );
-		// return $results;	
-
-		// $analytics = self::get_linksNips_count();
-		// $analytics = self::normalize_ips_data( $analytics );
-
-		// if ( ! empty( $analytics ) ) {
-		// 	foreach ( $analytics as $link_id => $item ) {
-		// 		$results[ $link_id ] = array(
-		// 			'link_count' => $item['link_count'],
-		// 			'ip'         => array(),
-		// 		);
-
-		// 		if ( ! empty( $item['ip'] ) ) {
-		// 			foreach ( $item['ip'] as $_ip => $count ) {
-		// 				$results[ $link_id ]['ip'][] = array(
-		// 					$_ip => $count,
-		// 				);
-		// 			}
-		// 		}
-		// 	}
-		// }
-
-		// return update_option( 'betterlinks_analytics_data', json_encode( $results ), false );
 	}
 
 	public static function maybe_json( $data ) {
