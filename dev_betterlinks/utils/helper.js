@@ -828,3 +828,5 @@ export const analyticsColumnData = [
 		selector: 'target_url',
 	},
 ];
+
+export const pro_version_check = () => betterlinkspro_version	 ? parseFloat(betterlinkspro_version?.slice(2)) : null;
