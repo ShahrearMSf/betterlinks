@@ -9,7 +9,6 @@ import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_
 
 import Chart from 'react-apexcharts';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
-import LineChartLoader from 'components/Loader/LineChartLoader';
 import ChartLoader from 'components/Loader/ChartLoader';
 
 const defaultFunc = () => {};

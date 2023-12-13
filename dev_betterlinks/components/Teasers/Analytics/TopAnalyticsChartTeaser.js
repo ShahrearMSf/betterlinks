@@ -10,12 +10,12 @@ const teaserData = [
 		id: 'top-referer',
 	},
 	{
-		title: __('Top Devices - Clicks', 'betterlinks'),
-		id: 'top-devices',
-	},
-	{
 		title: __('Top Social Media - Clicks', 'betterlinks'),
 		id: 'top-social-media',
+	},
+	{
+		title: __('Top Devices - Clicks', 'betterlinks'),
+		id: 'top-devices',
 	},
 ];
 const graphTeaser = [

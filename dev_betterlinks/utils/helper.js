@@ -639,7 +639,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				selector: 'browser',
 				sortable: false,
 				sortFunction: sortFunction('browser'),
-				width: '80px',
+				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
 					return (
@@ -652,7 +652,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('IP', 'betterlinks'),
 				selector: 'ip',
-				width: '100px',
+				// width: '100px',
 				sortable: false,
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
@@ -714,18 +714,18 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				sortable: false,
 				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
-			{
-				name: (
-					<span style={{ display: 'flex' }}>
-						{__('Brand', 'betterlinks')}
-						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-					</span>
-				),
-				selector: 'brand_name',
-				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
-				sortable: false,
-				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
-			},
+			// {
+			// 	name: (
+			// 		<span style={{ display: 'flex' }}>
+			// 			{__('Brand', 'betterlinks')}
+			// 			{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+			// 		</span>
+			// 	),
+			// 	selector: 'brand_name',
+			// 	cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
+			// 	sortable: false,
+			// 	...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
+			// },
 		];
 
 		const analyticsArr = [...Object.values(analytics || {}).map((item) => item.value)];

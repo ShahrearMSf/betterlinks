@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n';
 import SearchLoader from 'components/SearchLoader';
-// import Switch from 'components/Analytics/Switch';
 import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
 import { is_extra_data_tracking_compatible, route_path } from 'utils/helper';
@@ -20,31 +19,26 @@ const FilterComponent = (props) => {
 		{ label: 'Timestamp', value: 'created_at' },
 		{ label: 'Referer', value: 'referer' },
 		{
-			label: (
+			label: is_extra_data_tracking_compatible ? (
+				'OS'
+			) : (
 				<span>
 					{__('OS', 'betterlinks')}
-					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+					<span className="pro-badge">Pro</span>
 				</span>
 			),
 			value: 'os',
 		},
 		{
-			label: (
+			label: is_extra_data_tracking_compatible ? (
+				'Device'
+			) : (
 				<span>
 					{__('Device', 'betterlinks')}
-					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
+					<span className="pro-badge">Pro</span>
 				</span>
 			),
 			value: 'device',
-		},
-		{
-			label: (
-				<span>
-					{__('Brand', 'betterlinks')}
-					{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-				</span>
-			),
-			value: 'brand_name',
 		},
 	];
 	return (
