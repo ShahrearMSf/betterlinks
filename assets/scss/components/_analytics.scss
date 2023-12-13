@@ -346,6 +346,10 @@ $breakpoint-phone: 560px;
 			border-radius: 8px;
 			border: 1px solid #d9e1f4;
 			background-color: #f1f5fd;
+
+			&:focus-within {
+				box-shadow: unset;
+			}
 		}
 	}
 	.rdt_Table {
