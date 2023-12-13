@@ -2,7 +2,7 @@
 namespace BetterLinks;
 
 use BetterLinks\Link\Utils;
-// use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use DeviceDetector\DeviceDetector;
 
 class Link extends Utils {
 
@@ -25,17 +25,14 @@ class Link extends Utils {
 
 
 		$data['is_customized_meta'] = true;
-		// $CrawlerDetect = new CrawlerDetect;
-		// if ($data['is_customized_meta'] && $CrawlerDetect->isCrawler()) {
-		// 	update_option('hridoy', 'yes');
-		// 	wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
-		// 	exit();
-		// }
-        // if( $data['is_customized_meta'] ) {
-        //     wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
-        //     exit();
-        // }
-
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
+		$dd = new DeviceDetector($user_agent);
+		$dd->parse();
+		
+		if ($data['is_customized_meta'] && $dd->isBot()) {
+			wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
+			exit();
+		}
 
 		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { //phpcs:ignore. 
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
