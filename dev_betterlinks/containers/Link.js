@@ -67,7 +67,6 @@ export const Link = (props) => {
 
 	// 👇 password protection
 	const passwords = props.password;
-	// const password = bett
 
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
@@ -550,10 +549,16 @@ export const Link = (props) => {
 																	<input id="expire" type="checkbox" disabled />
 																</div>
 																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																	<label className="btl-modal-form-label" htmlFor="expire">
+																	<label className="btl-modal-form-label">
 																		{__('Password Protection', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 																	</label>
 																	<input id="enable_password" type="checkbox" disabled />
+																</div>
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label">
+																		{__('Customize Meta Tags', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																	</label>
+																	<input id="enable_meta_tags" type="checkbox" disabled />
 																</div>
 															</div>
 														</div>

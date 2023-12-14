@@ -548,14 +548,14 @@ trait Query
             $db_data_array[] = $item['host'];
         }
         if( $is_extra_data_tracking_compatible ) {
-            $db_data_array[] = $item['device'];
-            $db_data_array[] = $item['brand_name'];
-            $db_data_array[] = $item['model'];
-            $db_data_array[] = $item['bot_name'];
-            $db_data_array[] = $item['browser_type'];
-            $db_data_array[] = $item['os_version'];
-            $db_data_array[] = $item['browser_version'];
-            $db_data_array[] = $item['language'];
+            $db_data_array[] = isset( $item['device'] ) ? $item['device'] : '';
+            $db_data_array[] = isset($item['brand_name']) ? $item['brand_name'] : '';
+            $db_data_array[] = isset($item['model']) ? $item['model'] : '';
+            $db_data_array[] = isset($item['bot_name']) ? $item['bot_name'] : '';
+            $db_data_array[] = isset($item['browser_type']) ? $item['browser_type'] : '';
+            $db_data_array[] = isset($item['os_version']) ? $item['os_version'] : '';
+            $db_data_array[] = isset( $item['browser_version']) ? $item['browser_version'] : '';
+            $db_data_array[] = isset($item['language']) ? $item['language'] : '';
         }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
