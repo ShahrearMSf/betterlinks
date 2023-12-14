@@ -608,6 +608,7 @@ class Ajax {
 		$response['uncloaked_categories'] = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 
 		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
+		$enable_customize_meta_tag = !empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
 
         if( class_exists('\BetterLinksPro\Helper')) {
             if( $enable_password_protection ){
@@ -615,8 +616,14 @@ class Ajax {
             }else {
                 (new \BetterLinksPro\Helper)->delete_password_protect_page();
             }
+
+			if( $enable_customize_meta_tag ){
+				(new \BetterLinksPro\Helper)->add_customized_meta_tag_page();
+			}else {
+				(new \BetterLinksPro\Helper)->delete_custom_page('customized-meta-tags');
+			}
         }
-		
+
 		$response                         = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
