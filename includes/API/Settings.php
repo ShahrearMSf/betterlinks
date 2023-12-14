@@ -92,6 +92,16 @@ class Settings extends Controller {
 		$response['uncloaked_categories']      = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 		$response['affiliate_disclosure_text'] = isset( $response['affiliate_disclosure_text'] ) && is_string( $response['affiliate_disclosure_text'] ) ? $response['affiliate_disclosure_text'] : '';
 
+		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
+
+        if( class_exists('\BetterLinksPro\Helper')) {
+            if( $enable_password_protection ){
+                (new \BetterLinksPro\Helper)->add_password_protect_page();
+            }else {
+                (new \BetterLinksPro\Helper)->delete_password_protect_page();
+            }
+        }
+		
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );

@@ -606,6 +606,17 @@ class Ajax {
 		$response                         = \BetterLinks\Helper::fresh_ajax_request_data( $_POST );
 		$response                         = \BetterLinks\Helper::sanitize_text_or_array_field( $response );
 		$response['uncloaked_categories'] = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
+
+		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
+
+        if( class_exists('\BetterLinksPro\Helper')) {
+            if( $enable_password_protection ){
+                (new \BetterLinksPro\Helper)->add_password_protect_page();
+            }else {
+                (new \BetterLinksPro\Helper)->delete_password_protect_page();
+            }
+        }
+		
 		$response                         = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
