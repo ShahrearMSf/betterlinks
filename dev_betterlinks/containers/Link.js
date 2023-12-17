@@ -68,6 +68,9 @@ export const Link = (props) => {
 	// 👇 password protection
 	const passwords = props.password;
 
+	// 👇 Customized Meta Tags
+	const { metaTags } = props.metaTags;
+
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
 	const [slugIsExists, setSlugIsExists] = useState(false);
@@ -82,6 +85,7 @@ export const Link = (props) => {
 		dynamicRedirect: false,
 	});
 	const [password, setPassword] = useState(null);
+	const [metaTag, setMetaTag] = useState(null);
 
 	useEffect(() => {
 		if (data?.ID && passwords?.password && Object.values(passwords.password).length > 0) {
@@ -89,6 +93,13 @@ export const Link = (props) => {
 			setPassword(password);
 		}
 	}, [passwords]);
+
+	useEffect(() => {
+		if (data?.ID && metaTags && Object.values(metaTags).length > 0) {
+			const metaTag = Object.values(metaTags).find((item) => item.link_id == data.ID);
+			setMetaTag(metaTag);
+		}
+	}, [metaTags]);
 	//👇 this useEffect is only for this 'Link' component's gutenberg implementation start
 	useEffect(() => {
 		if (betterlinksGutenStore) {
@@ -563,7 +574,7 @@ export const Link = (props) => {
 															</div>
 														</div>
 													)}
-													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords })}</>
+													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords, metaTag })}</>
 												</div>
 												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
@@ -643,6 +654,7 @@ const mapStateToProps = (state) => ({
 	settings: state.settings,
 	terms: state.terms,
 	password: state.password,
+	metaTags: state.metaTags,
 });
 
 const mapDispatchToProps = (dispatch) => {

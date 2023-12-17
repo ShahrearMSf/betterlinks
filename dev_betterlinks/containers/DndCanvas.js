@@ -13,6 +13,7 @@ import List from 'components/List';
 import { isListEmpty, getFavoriteLinkCount } from 'utils/helper';
 import { __ } from '@wordpress/i18n';
 import { fetch_links_password } from 'redux/actions/password.actions';
+import { fetch_meta_tags } from 'redux/actions/metaTags.actions';
 class InnerList extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		return nextProps.lists !== this.props.lists;
@@ -71,6 +72,7 @@ function DndCanvas(props) {
 	const { terms } = props.terms;
 	const { sortByFav } = props.favouriteSort;
 	const { password } = props.password;
+	const { metaTags } = props.metaTags;
 
 	useEffect(() => {
 		if (!settings) {
@@ -84,6 +86,9 @@ function DndCanvas(props) {
 		}
 		if (!password) {
 			props.fetch_links_password();
+		}
+		if (!metaTags) {
+			props.fetch_meta_tags();
 		}
 	}, []);
 
@@ -123,6 +128,7 @@ const mapStateToProps = (state) => ({
 	terms: state.terms,
 	favouriteSort: state.favouriteSort,
 	password: state.password,
+	metaTags: state.metaTags,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -136,6 +142,7 @@ const mapDispatchToProps = (dispatch) => {
 		delete_link: bindActionCreators(delete_link, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 		fetch_links_password: bindActionCreators(fetch_links_password, dispatch),
+		fetch_meta_tags: bindActionCreators(fetch_meta_tags, dispatch),
 	};
 };
 

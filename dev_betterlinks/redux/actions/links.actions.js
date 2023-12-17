@@ -1,6 +1,7 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
 import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 import { add_new_password, fetch_links_password } from './password.actions';
+import { add_meta_tags } from './metaTags.actions';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -321,7 +322,6 @@ export const edit_link =
 
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
-			// if (res?.data?.data?.enable_password != item?.enable_password) {
 			if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
 				add_new_password({
 					link_id: ID,
@@ -330,6 +330,17 @@ export const edit_link =
 					allow_contact: item.allow_visitor_contact,
 				})(dispatch);
 			}
+
+			if (item.enable_meta_tags && '' !== item.meta_title) {
+				add_meta_tags({
+					link_id: ID,
+					meta_title: item.meta_title,
+					meta_description: item.meta_description,
+					meta_image: '',
+					status: !!item.enable_meta_tags,
+				})(dispatch);
+			}
+			console.log({ item });
 
 			if (cat_data?.is_newly_created) {
 				dispatch({

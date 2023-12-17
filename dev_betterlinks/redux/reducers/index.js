@@ -10,5 +10,6 @@ import favouriteSort from 'redux/reducers/favouritesort.reducers';
 import autoLinkSettings from './autolinksettings.reducers';
 import password from './password.reducers';
 import analytics from './analytics.reducers';
+import metaTags from './metaTags.reducers';
 
-export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas, favouriteSort, autoLinkSettings, password, analytics });
+export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas, favouriteSort, autoLinkSettings, password, analytics, metaTags });

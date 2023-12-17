@@ -15,6 +15,7 @@ import FavoriteIcon from 'components/FavoriteIcon';
 import TableLoader from 'components/Loader/TableLoader';
 import { useBtlExpireStatusDot } from 'utils/customHooks';
 import { fetch_links_password } from 'redux/actions/password.actions';
+import { fetch_meta_tags } from 'redux/actions/metaTags.actions';
 
 const getLinksListViewColumnData = (props) => {
 	const is_allow_qr = props?.settings?.settings?.is_allow_qr;
@@ -107,6 +108,7 @@ const ListCanvas = (props) => {
 	const { settings } = props.settings;
 	const { terms } = props.terms;
 	const { password } = props.password;
+	const { metaTags } = props.metaTags;
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -137,6 +139,9 @@ const ListCanvas = (props) => {
 		}
 		if (!password) {
 			props.fetch_links_password();
+		}
+		if (!metaTags) {
+			props.fetch_meta_tags();
 		}
 	}, []);
 
@@ -257,6 +262,7 @@ const mapStateToProps = (state) => ({
 	terms: state.terms,
 	favouriteSort: state.favouriteSort,
 	password: state.password,
+	metaTags: state.metaTags,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -269,6 +275,7 @@ const mapDispatchToProps = (dispatch) => {
 		delete_link: bindActionCreators(delete_link, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 		fetch_links_password: bindActionCreators(fetch_links_password, dispatch),
+		fetch_meta_tags: bindActionCreators(fetch_meta_tags, dispatch),
 	};
 };
 
