@@ -206,7 +206,8 @@
 						}
 						input[type='number'],
 						input[type='password'],
-						input[type='text'] {
+						input[type='text'],
+						textarea {
 							background: #fff;
 							border-color: #ebebeb;
 							width: 100%;
@@ -765,8 +766,7 @@
 		}
 	}
 	.btl-analytic-advanced-search {
-		
-		h3{
+		h3 {
 			color: $white;
 		}
 
