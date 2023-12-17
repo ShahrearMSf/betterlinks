@@ -581,10 +581,10 @@ trait Query
     public static function get_clicks_count() {
         global $wpdb;
 
-        $query = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks where ip!='' group by link_id";
+        $query = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks group by link_id";
         $total_clicks = $wpdb->get_results($query, ARRAY_A);
 
-        $query = "SELECT T1.link_id, count(ip) as unique_clicks from ( SELECT ip, link_id FROM {$wpdb->prefix}betterlinks_clicks where ip!='' GROUP BY `ip`, `link_id` ) as T1 GROUP BY T1.link_id ORDER BY T1.link_id";
+        $query = "SELECT T1.link_id, count(ip) as unique_clicks from ( SELECT ip, link_id FROM {$wpdb->prefix}betterlinks_clicks GROUP BY `ip`, `link_id` ) as T1 GROUP BY T1.link_id ORDER BY T1.link_id";
         $unique_clicks = $wpdb->get_results($query, ARRAY_A);
 
         return array(
