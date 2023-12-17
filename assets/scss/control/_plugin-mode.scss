@@ -201,6 +201,14 @@
 		fill: $white;
 	}
 }
+
+.apexcharts-xaxis .apexcharts-xaxis-texts-g text tspan,
+.apexcharts-yaxis .apexcharts-yaxis-texts-g text tspan {
+	fill: $white;
+}
+.apexcharts-legend .apexcharts-legend-series .apexcharts-legend-text {
+	color: $white !important;
+}
 .btl-analytics-heading {
 	color: $white;
 }
@@ -279,6 +287,10 @@
 		.rdt_TableRow {
 			background: #252f47;
 			color: $white;
+
+			&:hover {
+				background: #36405a;
+			}
 			.rdt_TableCol {
 				color: $white;
 				.rdt_TableCol_Sortable {
