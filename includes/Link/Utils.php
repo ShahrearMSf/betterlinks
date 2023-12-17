@@ -66,14 +66,13 @@ class Utils
             $dd->parse();
 
             $data = $this->device_data_collect($data, $dd);
-            
+            $data['os'] = OperatingSystem::getOsFamily( $dd->getOs('name') );
+            $data['browser'] = Browser::getBrowserFamily( $dd->getClient('name') );
             if ( isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] ) {
                 if( ! $dd->isBot() ) {
                     $this->start_trakcing($data);
                 }
             } else {
-                $data['os'] = OperatingSystem::getOsFamily( $dd->getOs('name') );
-                $data['browser'] = Browser::getBrowserFamily( $dd->getClient('name') );
                 $this->start_trakcing($data);
             }
         }
