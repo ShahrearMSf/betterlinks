@@ -568,9 +568,9 @@ export const getFavoriteLinkCount = (links) => {
 export const analytic = (analytic, ID) => {
 	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 	if (isLinkAble) {
-		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&from=manage-link&id=' + ID}>{+analytic.link_count + '/' + analytic.ip}</Link>;
+		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&from=manage-link&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
 	}
-	return +analytic.link_count + '/' + analytic.ip;
+	return +analytic.link_count + '/' + +analytic.ip;
 };
 
 export const saveSettingsHandler = (values, update_option, setFormSubmitText) => {
