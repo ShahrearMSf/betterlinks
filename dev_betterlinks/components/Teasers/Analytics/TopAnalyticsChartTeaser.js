@@ -40,7 +40,7 @@ const TopAnalyticsChartTeaser = () => {
 		<div className="btl-top-charts btl-top-charts-teaser">
 			<div className="btl-top-charts-1">
 				{teaserData.map(({ title, id }) => (
-					<Accordion key={id} defaultExpanded={true}>
+					<Accordion key={id} defaultExpanded={true} disabled={true}>
 						<AccordionSummary expandIcon={ExpandIcon} aria-controls={`${btl_prefix}content`} id={`${btl_prefix}header`}>
 							<Typography>
 								{title} <span className="pro-badge">Pro</span>{' '}
@@ -53,8 +53,8 @@ const TopAnalyticsChartTeaser = () => {
 				))}
 			</div>
 			<div className="btl-top-charts-2">
-				{graphTeaser.map(({ title, id, defaultExpanded }) => (
-					<Accordion key={id} defaultExpanded={defaultExpanded}>
+				{graphTeaser.map(({ title, id }) => (
+					<Accordion key={id} defaultExpanded={true} disabled={true}>
 						<AccordionSummary expandIcon={ExpandIcon} aria-controls={`${btl_prefix}content`} id={`${btl_prefix}header`}>
 							<Typography>
 								{title} <span className="pro-badge">Pro</span>{' '}
