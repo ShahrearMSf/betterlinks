@@ -27,7 +27,7 @@ export const add_meta_tags = (params) => async (dispatch) => {
 				payload: result.data.data,
 			});
 		}
-		// fetch_meta_tags()(dispatch);
+		fetch_meta_tags()(dispatch);
 	} catch (error) {
 		console.log('--error', error);
 	}
