@@ -146,9 +146,7 @@ const Graph = (props) => {
 				</div>
 				{chartLoading ? (
 					// {true ? (
-					<div className="btl-top-charts btl-top-charts-teaser" style={{ display: 'flex', 'justify-content': 'center' }}>
-						<img src={plugin_root_url + 'assets/images/dark-mode-loader.gif'} />
-					</div>
+					<ChartLoader />
 				) : (
 					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, extraAnalytics)
 				)}

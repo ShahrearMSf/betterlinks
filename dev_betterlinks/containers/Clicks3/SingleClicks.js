@@ -6,7 +6,7 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import Graph from 'containers/Graph';
 import { fetch_clicks_data, fetch_individual_clicks } from 'redux/actions/clicks.actions';
 import { useUpgradeProModal } from 'utils/customHooks';
-import { formatDate, getColumns } from 'utils/helper';
+import { formatDate, getColumns, is_pro_enabled } from 'utils/helper';
 import { analyticsData } from './clicks.helper';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
@@ -26,7 +26,9 @@ const SingleClicks = (props) => {
 	const { analytics } = props.analytics;
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
+		if (is_pro_enabled) {
+			window.scrollTo(0, 0);
+		}
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
 		const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');

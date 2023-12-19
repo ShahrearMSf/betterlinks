@@ -12,7 +12,7 @@ const GraphTeaser = () => {
 			<Card sx={{ minWidth: 275 }}>
 				<CardContent>
 					<Typography variant="h5" color="text.secondary" gutterBottom>
-						{__('Unlock Details Analytics With BetterLinks PRO', 'betterlinks')}
+						{__('Unlock Details Analytics With BetterLinks PRO 🔒', 'betterlinks')}
 					</Typography>
 					<List>
 						{[
