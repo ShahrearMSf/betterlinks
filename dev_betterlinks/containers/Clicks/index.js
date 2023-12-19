@@ -12,6 +12,7 @@ import { useUpgradeProModal } from 'utils/customHooks';
 import { formatDate } from 'utils/helper';
 import { fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
 import { analyticsData } from './clicks.helper';
+import BarLoader from 'components/Loader/BarLoader';
 
 const Clicks = (props) => {
 	const [loading, setLoading] = useState(false);
@@ -58,6 +59,7 @@ const Clicks = (props) => {
 					top_medium: medium || [],
 					darkMode,
 					Chart,
+					BarLoader: BarLoader
 				}}
 			/>
 			<div className="btl-analytic-table-wrapper">
