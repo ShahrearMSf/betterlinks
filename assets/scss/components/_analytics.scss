@@ -4,6 +4,60 @@
 	font-weight: 600;
 }
 .btl-analytic {
+	.btl-single-click-info-header {
+		border-radius: 8px;
+		border: 1px #e6e6e6 solid;
+		background: #fff;
+		padding: 20px;
+		margin-bottom: 10px;
+		display: flex;
+		justify-content: space-between;
+		height: 30px;
+
+		> div {
+			display: flex;
+			align-items: center;
+			font-size: 14px;
+			column-gap: 5px;
+
+			span {
+				line-height: 24px;
+			}
+			span.dashicons {
+				font-size: 15px;
+				line-height: 1.5;
+			}
+
+			span.btl-column-name {
+				color: #19285d;
+				font-weight: 500;
+				word-wrap: break-word;
+			}
+
+			span.btl-link-name {
+				color: #9b9daf;
+				font-weight: 500;
+				word-wrap: break-word;
+			}
+			.btl-link-name {
+				width: auto;
+			}
+		}
+	}
+	.btl-chart-preloader {
+		display: flex;
+		justify-content: center;
+		height: 250px;
+		align-items: center;
+		background: #fff;
+		margin-bottom: 20px;
+		border-radius: 8px;
+
+		> img {
+			width: 100px;
+			height: 100px;
+		}
+	}
 	.btl-analytics-filter,
 	.btl-analytics-chart > div:first-child {
 		background-color: #fff;
@@ -30,106 +84,109 @@
 		> div:first-child {
 			margin-bottom: 20px;
 		}
+		.btl-analytics-chart-overlay {
+			align-items: center;
+			background-color: hsla(0, 0%, 100%, 0.7);
+			display: flex;
+			height: 100%;
+			justify-content: center;
+			left: 0;
+			position: absolute;
+			top: 0;
+			width: 100%;
 
+			> div {
+				width: 50%;
+				height: 280px;
+				background: #fefefe;
+				box-shadow: -3px 8px 30px 0px rgba(0, 0, 0, 0.1);
+				overflow: visible;
+				border-radius: 20px;
+
+				h5 {
+					color: #000;
+					font-size: 24px;
+					font-style: normal;
+					font-weight: 500;
+					line-height: 28px;
+					margin-bottom: 0.5em;
+					margin-top: 1em;
+					text-align: center;
+				}
+
+				.MuiCardContent-root {
+					position: relative;
+				}
+				.analytics-upgrade-btn {
+					position: absolute;
+					align-items: center;
+					background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+					border-radius: 15px;
+					box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
+					display: flex;
+					height: 60px;
+					justify-content: center;
+					margin: auto;
+					transform: translate(4px, 43px);
+					width: 300px;
+					bottom: 6%;
+					left: 25%;
+
+					&:hover {
+						background: linear-gradient(202deg, #2058f2 0, #0238cd 100%);
+					}
+					a {
+						align-items: center;
+						color: #fff;
+						display: flex;
+						font-size: 17px;
+						font-style: normal;
+						font-weight: 500;
+						height: 72px;
+						justify-content: center;
+						line-height: 40px;
+						position: relative;
+						text-decoration: none;
+						width: 320px;
+
+						&:focus {
+							outline: 0;
+							box-shadow: unset;
+						}
+					}
+				}
+
+				.MuiList-root {
+					padding: 20px 0;
+					width: 68%;
+					margin: 0 auto;
+
+					.MuiListItem-root {
+						padding: 0 !important;
+
+						.MuiTypography-root {
+							color: #666b78;
+							font-size: 16px;
+							font-style: normal;
+							font-weight: 400;
+							line-height: 1rem;
+							margin: 0;
+							overflow: hidden;
+						}
+					}
+				}
+			}
+		}
 		.btl-analytics-chart-line {
 			position: relative;
 
 			> img {
 				width: 100%;
 			}
-			.btl-analytics-chart-overlay {
-				align-items: center;
-				background-color: hsla(0, 0%, 100%, 0.7);
-				display: flex;
-				height: 100%;
-				justify-content: center;
-				left: 0;
-				position: absolute;
-				top: 0;
-				width: 100%;
-
-				> div {
-					width: 50%;
-					height: 67%;
-					background: #fefefe;
-					box-shadow: -3px 8px 30px 0px rgba(0, 0, 0, 0.1);
-					overflow: visible;
-					border-radius: 20px;
-
-					h5 {
-						color: #000;
-						font-size: 24px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 28px;
-						margin-bottom: 0.5em;
-						margin-top: 1em;
-						text-align: center;
-					}
-
-					.MuiCardContent-root {
-						position: relative;
-					}
-					.analytics-upgrade-btn {
-						position: absolute;
-						align-items: center;
-						background-color: #36d692;
-						border-radius: 15px;
-						box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
-						display: flex;
-						height: 60px;
-						justify-content: center;
-						margin: auto;
-						transform: translate(4px, 43px);
-						width: 300px;
-						bottom: 6%;
-						left: 25%;
-
-						a {
-							align-items: center;
-							color: #fff;
-							display: flex;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 500;
-							height: 72px;
-							justify-content: center;
-							line-height: 40px;
-							position: relative;
-							text-decoration: none;
-							width: 320px;
-
-							&:focus {
-								outline: 0;
-								box-shadow: unset;
-							}
-						}
-					}
-
-					.MuiList-root {
-						padding: 20px 0;
-						width: 68%;
-						margin: 0 auto;
-
-						.MuiListItem-root {
-							padding: 0 !important;
-
-							.MuiTypography-root {
-								color: #666b78;
-								font-size: 16px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 1rem;
-								margin: 0;
-								overflow: hidden;
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 	.btl-top-charts.btl-top-charts-teaser {
+		position: relative;
 		.btl-top-charts-2 {
 			.MuiAccordionDetails-root {
 				height: 200px;

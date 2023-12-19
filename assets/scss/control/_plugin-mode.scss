@@ -217,21 +217,22 @@
 }
 .btl-analytic {
 	color: $white;
+	.btl-chart-preloader {
+		background-color: #252f47;
+	}
 	.btl-analytics-chart {
 		border-color: #252f47;
 
-		.btl-analytics-chart-line {
-			.btl-analytics-chart-overlay {
-				background-color: rgba(54, 64, 90, 0.7);
+		.btl-analytics-chart-overlay {
+			background-color: rgba(54, 64, 90, 0.7);
 
-				.MuiPaper-root {
-					background-color: #252f47;
+			.MuiPaper-root {
+				background-color: #252f47;
 
-					.MuiCardContent-root {
-						h5,
-						ul > li span {
-							color: $white;
-						}
+				.MuiCardContent-root {
+					h5,
+					ul > li span {
+						color: $white;
 					}
 				}
 			}
