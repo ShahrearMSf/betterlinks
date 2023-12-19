@@ -602,6 +602,8 @@ export const getDataset = (data) => {
 			'betterLinksAnalyticsClicksGraph',
 			{
 				name: "<p style='color: rgb(182, 193, 197);cursor:not-allowed;'>Unique Clicks - <span class='pro-badge'>Pro</span></p>",
+				// name: __('Unique Clicks', 'betterlinks'),
+				// data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
 				data: [0],
 			},
 			data.unique_clicks
@@ -630,7 +632,17 @@ const Blured = styled.span`
 	filter: blur(2px);
 	user-select: none;
 `;
-const BlurData = <Blured>XXX</Blured>;
+const osData = ['Windows', 'Linux', 'Mac', 'iOS', 'Android'];
+const deviceData = ['mobile', 'desktop', 'mobile', 'desktop'];
+const BluredData = ({ data = '' }) => {
+	if ('os' === data) {
+		const rndInt = Math.floor(Math.random() * 4) + 1;
+		return <span style={{ filter: 'blur(2px)' }}>{osData[rndInt]}</span>;
+	}
+	const rndInt = Math.floor(Math.random() * 3) + 1;
+	return <span style={{ filter: 'blur(2px)' }}>{deviceData[rndInt]}</span>;
+};
+
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
 		const singleColumn = [
@@ -684,9 +696,8 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				),
 				selector: 'os',
 				width: '80px',
-				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : BlurData}</div>,
+				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : <BluredData data="os" />}</div>,
 				sortable: false,
-				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
 			{
 				name: (
@@ -699,33 +710,23 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				width: '80px',
 				cell: (row) => (
 					<div>
-						{is_extra_data_tracking_compatible
-							? row.device && (
-									<img
-										width="25"
-										src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
-										alt="icon"
-										title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
-									/>
-							  )
-							: BlurData}
+						{is_extra_data_tracking_compatible ? (
+							row.device && (
+								<img
+									width="25"
+									src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
+									alt="icon"
+									title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
+								/>
+							)
+						) : (
+							<BluredData />
+						)}
 					</div>
 				),
 				sortable: false,
 				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
-			// {
-			// 	name: (
-			// 		<span style={{ display: 'flex' }}>
-			// 			{__('Brand', 'betterlinks')}
-			// 			{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-			// 		</span>
-			// 	),
-			// 	selector: 'brand_name',
-			// 	cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
-			// 	sortable: false,
-			// 	...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
-			// },
 		];
 
 		const analyticsArr = [...Object.values(analytics || {}).map((item) => item.value)];
@@ -784,17 +785,12 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			name: __('Action', 'betterlinks'),
 			selector: 'action',
 			sortable: false,
-			// sortFunction: sortFunction('browser'),
 			width: '100px',
 			cell: (row) => {
 				return <Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`}>Details</Link>;
 			},
 		},
 	];
-	// if (analytics) {
-	// 	const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'unique_clicks', 'action'];
-	// 	return columns.filter((item) => analyticsArr.includes(item.selector));
-	// }
 	return columns;
 };
 
@@ -828,3 +824,74 @@ export const analyticsColumnData = [
 		selector: 'target_url',
 	},
 ];
+
+export const teaserClickData = {
+	clicks: {
+		'2023-11-27': '217',
+		'2023-11-26': '179',
+		'2023-11-25': '184',
+		'2023-11-24': '237',
+		'2023-11-23': '294',
+		'2023-11-22': '342',
+		'2023-11-21': '328',
+		'2023-11-20': '332',
+		'2023-11-19': '170',
+		'2023-11-18': '186',
+		'2023-11-17': '296',
+		'2023-11-16': '356',
+		'2023-11-15': '313',
+		'2023-11-14': '348',
+		'2023-11-13': '290',
+		'2023-11-12': '184',
+		'2023-11-11': '187',
+		'2023-11-10': '263',
+		'2023-11-09': '290',
+		'2023-11-08': '344',
+		'2023-11-07': '314',
+		'2023-11-06': '328',
+		'2023-11-05': '189',
+		'2023-11-04': '205',
+		'2023-11-03': '283',
+		'2023-11-02': '323',
+		'2023-11-01': '287',
+	},
+	unique_clicks: {
+		'2023-11-27': '195',
+		'2023-11-26': '165',
+		'2023-11-25': '166',
+		'2023-11-24': '213',
+		'2023-11-23': '261',
+		'2023-11-22': '310',
+		'2023-11-21': '294',
+		'2023-11-20': '278',
+		'2023-11-19': '155',
+		'2023-11-18': '159',
+		'2023-11-17': '262',
+		'2023-11-16': '311',
+		'2023-11-15': '294',
+		'2023-11-14': '298',
+		'2023-11-13': '264',
+		'2023-11-12': '155',
+		'2023-11-11': '164',
+		'2023-11-10': '246',
+		'2023-11-09': '268',
+		'2023-11-08': '297',
+		'2023-11-07': '286',
+		'2023-11-06': '297',
+		'2023-11-05': '166',
+		'2023-11-04': '180',
+		'2023-11-03': '259',
+		'2023-11-02': '280',
+		'2023-11-01': '244',
+	},
+};
+
+export const get_labels = (clicks) => {
+	const labels = Object.keys(clicks)
+		?.reverse?.()
+		?.map?.((item) => {
+			const splitted = item.split('-');
+			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
+		});
+	return labels;
+};

@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import { DateRangePicker } from 'react-date-range';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getDataset, is_extra_data_tracking_compatible } from 'utils/helper';
-import { formatDate, insertOverlayElement, removeOverlayElement } from 'utils/helper';
-import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
-
+import { connect } from 'react-redux';
 import Chart from 'react-apexcharts';
+import { DateRangePicker } from 'react-date-range';
+import {
+	getDataset,
+	get_labels,
+	is_extra_data_tracking_compatible,
+	is_pro_enabled,
+	plugin_root_url,
+	teaserClickData,
+	formatDate,
+	insertOverlayElement,
+	removeOverlayElement,
+} from 'utils/helper';
+import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 import ChartLoader from 'components/Loader/ChartLoader';
+import GraphTeaser from './Clicks3/GrachTeaser';
 
 const defaultFunc = () => {};
 const Graph = (props) => {
@@ -24,12 +33,7 @@ const Graph = (props) => {
 		setMediumLoading = defaultFunc,
 	} = props;
 	const id = betterLinksQuery.get('id');
-	const labels = Object.keys(props.data.clicks)
-		?.reverse?.()
-		?.map?.((item) => {
-			const splitted = item.split('-');
-			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
-		});
+	const labels = get_labels(is_pro_enabled ? props.data.clicks : teaserClickData.clicks);
 
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
@@ -59,7 +63,7 @@ const Graph = (props) => {
 				props.get_chart_data({ from, to, setLoading: setChartLoading });
 				props.get_medium_data({ from, to, setLoading: setMediumLoading });
 			}
-			if (id) {
+			if (id && is_pro_enabled) {
 				props.fetch_individual_clicks({ link_id: id, from, to, setLoading });
 			}
 			setTimeout(function () {
@@ -91,7 +95,6 @@ const Graph = (props) => {
 			},
 			colors: ['#FF7818', '#6034E6'],
 			markers: {
-				// show: true,
 				size: 5,
 			},
 			legend: {
@@ -100,14 +103,14 @@ const Graph = (props) => {
 		},
 		series: getDataset(props.data),
 	};
-	
+
 	return (
 		<div>
 			<div className="btl-analytics-filter">
 				<h3 className="btl-analytics-filter__heading">{__('Click Analytics', 'betterlinks')}</h3>
 				<div className="btl-analytics-filter__control">
 					<button onClick={customCalendarToggleHandler} className="btl-list-view-calendar">
-						<span className="dashicons dashicons-calendar"></span>
+						<span className="dashicons dashicons-calendar" />
 						{String(customDateFilter[0].startDate).slice(4, 15)} - {String(customDateFilter[0].endDate).slice(4, 15)}
 					</button>
 					{isOpenCustomDateFilter && (
@@ -133,10 +136,19 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				<Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
-				{/* {dataOptions.series[0].data.length > 0 ? <Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" /> : <LineChartLoader />} */}
+				<div className="btl-analytics-chart-line">
+					{!is_pro_enabled && id ? (
+						<img className="btl-analytics-chart-image" src={plugin_root_url + 'assets/images/teasers/individual-analytics.png'} />
+					) : (
+						<Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
+					)}
+					{id && <GraphTeaser />}
+				</div>
 				{chartLoading ? (
-					<ChartLoader />
+					// {true ? (
+					<div className="btl-top-charts btl-top-charts-teaser" style={{ display: 'flex', 'justify-content': 'center' }}>
+						<img src={plugin_root_url + 'assets/images/dark-mode-loader.gif'} />
+					</div>
 				) : (
 					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, extraAnalytics)
 				)}
