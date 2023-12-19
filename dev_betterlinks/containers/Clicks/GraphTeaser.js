@@ -18,12 +18,11 @@ const GraphTeaser = () => {
 						{[
 							'👉 Top Performing Links Click Sources',
 							'👉 Get Access to Unique Click Data',
-							'👉 Get Access to Individual Click Data',
+							'👉 Get Access to Individual Click Details',
 							'👉 Identify most Clicked Links',
 							'👉 Measure Performance of your Shortened Links',
 						].map((item) => (
 							<ListItem disableGutters>
-								{/* <ListItemIcon>👉</ListItemIcon> */}
 								<ListItemText primary={item} />
 							</ListItem>
 						))}

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import queryString from 'query-string';
 import { __ } from '@wordpress/i18n';
 import Topbar from 'containers/TopBar';
-import Clicks from 'containers/Clicks3';
+import Clicks from 'containers/Clicks';
 import { subDays } from 'date-fns';
-import SingleClicks from 'containers/Clicks3/SingleClicks';
+import SingleClicks from 'containers/Clicks/SingleClicks';
 import Chart from 'react-apexcharts';
 
 const Analytics = () => {

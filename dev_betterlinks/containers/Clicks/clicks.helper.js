@@ -3,17 +3,15 @@ import { is_pro_enabled } from 'utils/helper';
 export const analyticsData = (data, id) => {
 	let results = {
 		clicks: {},
+		unique_clicks: {},
 	};
 	data.total_count.forEach((element) => {
 		results.clicks[element.c_date] = element.click_count;
 	});
 
-	if (is_pro_enabled) {
-		results['unique_clicks'] = {};
-		data.unique_count.forEach((element) => {
-			results.unique_clicks[element.c_date] = element.uniq_count;
-		});
-	}
+	data.unique_count.forEach((element) => {
+		results.unique_clicks[element.c_date] = element.uniq_count;
+	});
 	return results;
 };
 

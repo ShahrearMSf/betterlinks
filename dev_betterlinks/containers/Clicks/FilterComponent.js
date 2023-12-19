@@ -24,7 +24,9 @@ const FilterComponent = (props) => {
 			) : (
 				<span>
 					{__('OS', 'betterlinks')}
-					<span className="pro-badge">Pro</span>
+					<span className="pro-badge" style={{ padding: '2px' }}>
+						Pro
+					</span>
 				</span>
 			),
 			value: 'os',
@@ -35,7 +37,9 @@ const FilterComponent = (props) => {
 			) : (
 				<span>
 					{__('Device', 'betterlinks')}
-					<span className="pro-badge">Pro</span>
+					<span className="pro-badge" style={{ padding: '2px' }}>
+						Pro
+					</span>
 				</span>
 			),
 			value: 'device',
@@ -52,7 +56,6 @@ const FilterComponent = (props) => {
 							title={__('Go back to Analytics', 'betterlinks')}
 						/>
 					)}
-					{/* <Switch analyticsTab={analyticsTab} update_activity={update_activity} id={id && ''} /> */}
 				</div>
 
 				<div style={{ display: 'flex' }}>

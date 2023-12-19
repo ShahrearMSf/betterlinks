@@ -12,8 +12,8 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
 import { __ } from '@wordpress/i18n';
 import DataList from './AnalyticsList/DataList';
-import ContentLoader from 'react-content-loader';
-import LineChartLoader from 'components/Loader/LineChartLoader';
+import ChartLoader from './ChartLoader';
+import SingleLinkDetails from './SingleLinkDetails';
 
 const SingleClicks = (props) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
@@ -26,9 +26,7 @@ const SingleClicks = (props) => {
 	const { analytics } = props.analytics;
 
 	useEffect(() => {
-		if (is_pro_enabled) {
-			window.scrollTo(0, 0);
-		}
+		window.scrollTo(0, is_pro_enabled ? 0 : 270);
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
 		const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');
@@ -54,13 +52,9 @@ const SingleClicks = (props) => {
 			{individual_clicks?.[id] ? (
 				<Graph data={analyticsData(individual_clicks?.[id].graph_data)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} setLoading={setLoading} />
 			) : (
-				<LineChartLoader />
+				<ChartLoader />
 			)}
-			{id &&
-				betterLinksHooks.applyFilters('BetterlinksSingleAnalyticsInfo', null, {
-					clicks: individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null },
-					ContentLoader,
-				})}
+			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
 			<div className="btl-analytic-table-wrapper">
 				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} />
 			</div>

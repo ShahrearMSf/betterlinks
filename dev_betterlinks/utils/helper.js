@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
-import AnalyticLink from 'components/Analytics/AnalyticLink';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 
@@ -598,16 +597,20 @@ export const getDataset = (data) => {
 			name: __('Clicks', 'betterlinks'),
 			data: Object.values(data.clicks)?.reverse?.(),
 		},
-		betterLinksHooks.applyFilters(
-			'betterLinksAnalyticsClicksGraph',
-			{
-				name: "<p style='color: rgb(182, 193, 197);cursor:not-allowed;'>Unique Clicks - <span class='pro-badge'>Pro</span></p>",
-				// name: __('Unique Clicks', 'betterlinks'),
-				// data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
-				data: [0],
-			},
-			data.unique_clicks
-		),
+		{
+			name: __('Unique Clicks', 'betterlinks'),
+			data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
+		},
+		// betterLinksHooks.applyFilters(
+		// 	'betterLinksAnalyticsClicksGraph',
+		// 	{
+		// 		name: "<p style='color: rgb(182, 193, 197);cursor:not-allowed;'>Unique Clicks - <span class='pro-badge'>Pro</span></p>",
+		// 		// name: __('Unique Clicks', 'betterlinks'),
+		// 		// data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
+		// 		data: [0],
+		// 	},
+		// 	data.unique_clicks
+		// ),
 	];
 	return dataset;
 };
@@ -640,7 +643,11 @@ const BluredData = ({ data = '' }) => {
 		return <span style={{ filter: 'blur(2px)' }}>{osData[rndInt]}</span>;
 	}
 	const rndInt = Math.floor(Math.random() * 3) + 1;
-	return <span style={{ filter: 'blur(2px)' }}>{deviceData[rndInt]}</span>;
+	return (
+		<span style={{ filter: 'blur(2px)' }}>
+			<img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(deviceData[rndInt])}.svg`} alt="icon" />
+		</span>
+	);
 };
 
 export const getColumns = (analytics, analyticsTab, id = null) => {
@@ -650,7 +657,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				name: __('Browser', 'betterlinks'),
 				selector: 'browser',
 				sortable: false,
-				sortFunction: sortFunction('browser'),
 				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
@@ -676,6 +682,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('Referrer', 'betterlinks'),
 				selector: 'referer',
+				width: '500px',
 				sortable: false,
 				cell: (row) => (
 					<div>
@@ -695,7 +702,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					</span>
 				),
 				selector: 'os',
-				width: '80px',
+				width: '100px',
 				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : <BluredData data="os" />}</div>,
 				sortable: false,
 			},
@@ -725,7 +732,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					</div>
 				),
 				sortable: false,
-				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
 		];
 
@@ -738,7 +744,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			selector: 'name',
 			id: 'name',
 			sortable: true,
-			...(1 !== analyticsTab && { sortFunction: sortFunction('link_title') }),
+			// ...(1 !== analyticsTab && { sortFunction: sortFunction('link_title') }),
 			cell: (row) => <div>{row.link_title}</div>,
 		},
 		{
@@ -772,13 +778,15 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 		{
 			name: __('Total Clicks', 'betterlinks'),
 			selector: 'total_clicks',
-			sortFunction: sortFunction('total_clicks'),
+			width: '150px',
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('total_clicks') }),
 			cell: (row) => <div>{row?.total_clicks || 1}</div>,
 		},
 		{
 			name: __('Unique Clicks', 'betterlinks'),
 			selector: 'unique_clicks',
-			sortFunction: sortFunction('unique_clicks'),
+			width: '150px',
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('unique_clicks') }),
 			cell: (row) => <div>{row?.unique_clicks || 1}</div>,
 		},
 		{

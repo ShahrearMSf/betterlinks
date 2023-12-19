@@ -17,8 +17,8 @@ import {
 } from 'utils/helper';
 import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
-import ChartLoader from 'components/Loader/ChartLoader';
-import GraphTeaser from './Clicks3/GrachTeaser';
+import GraphTeaser from './Clicks/GraphTeaser';
+import ChartLoader from './Clicks/ChartLoader';
 
 const defaultFunc = () => {};
 const Graph = (props) => {
@@ -31,12 +31,15 @@ const Graph = (props) => {
 		setLoading = defaultFunc,
 		setGraphLoading = defaultFunc,
 		setMediumLoading = defaultFunc,
+		activity,
 	} = props;
 	const id = betterLinksQuery.get('id');
 	const labels = get_labels(is_pro_enabled ? props.data.clicks : teaserClickData.clicks);
 
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
+
+	const { darkMode } = activity;
 
 	const dateRangePickerOnChangeHandler = (item) => {
 		setCustomDateFilter([item.selection]);
@@ -144,11 +147,10 @@ const Graph = (props) => {
 					)}
 					{id && <GraphTeaser />}
 				</div>
-				{chartLoading ? (
-					// {true ? (
+				{is_pro_enabled && chartLoading ? (
 					<ChartLoader />
 				) : (
-					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser />, extraAnalytics)
+					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser darkMode={darkMode} />, extraAnalytics)
 				)}
 			</div>
 		</div>
