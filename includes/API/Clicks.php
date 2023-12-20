@@ -253,8 +253,14 @@ class Clicks extends Controller {
 		$to   = ! empty( $request['to'] ) ? sanitize_text_field( $request['to'] ) : '';
 
 		$results      = $this->get_individual_analytics_clicks( $id, $from, $to );
-		$graph_data   = $this->get_individual_graph_data( $id, $from, $to );
 		$link_details = $this->get_individual_link_details( $id );
+		$graph_data   = [
+			'total_count'  => [],
+			'unique_count' => [],
+		];
+		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
+			$graph_data = \BetterLinksPro\Helper::get_individual_graph_data( $id, $from, $to );
+		}
 
 		return new \WP_REST_Response(
 			array(
