@@ -567,7 +567,7 @@ export const getFavoriteLinkCount = (links) => {
 export const analytic = (analytic, ID) => {
 	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 	if (isLinkAble) {
-		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&from=manage-link&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
+		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
 	}
 	return +analytic.link_count + '/' + +analytic.ip;
 };
@@ -601,16 +601,6 @@ export const getDataset = (data) => {
 			name: __('Unique Clicks', 'betterlinks'),
 			data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
 		},
-		// betterLinksHooks.applyFilters(
-		// 	'betterLinksAnalyticsClicksGraph',
-		// 	{
-		// 		name: "<p style='color: rgb(182, 193, 197);cursor:not-allowed;'>Unique Clicks - <span class='pro-badge'>Pro</span></p>",
-		// 		// name: __('Unique Clicks', 'betterlinks'),
-		// 		// data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
-		// 		data: [0],
-		// 	},
-		// 	data.unique_clicks
-		// ),
 	];
 	return dataset;
 };

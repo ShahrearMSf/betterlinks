@@ -442,10 +442,10 @@ class Helper {
 		for ($i=0; $i < count($total_clicks); $i++) { 
 			$results[$total_clicks[$i]['link_id']] = array(
 				'link_count' => $total_clicks[$i]['total_clicks'],
-				'ip' => !empty($unique_clicks[$i]['unique_clicks']) ? $unique_clicks[$i]['unique_clicks'] : 1
+				'ip' => isset($unique_clicks[$i]['unique_clicks']) ? $unique_clicks[$i]['unique_clicks'] : 1
 			);
 		}
-		
+
 		return update_option( 'betterlinks_analytics_data', json_encode( $results ), false );
 	}
 
