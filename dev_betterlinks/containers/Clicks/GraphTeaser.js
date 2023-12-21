@@ -12,15 +12,19 @@ const GraphTeaser = () => {
 			<Card sx={{ minWidth: 275 }}>
 				<CardContent>
 					<Typography variant="h5" color="text.secondary" gutterBottom>
-						{__('Unlock Details Analytics With BetterLinks PRO 🔒', 'betterlinks')}
+						{/* {__('Upgrade To Betterlinks PRO & Reveal In-Depth Analytics 🔒', 'betterlinks')} */}
+						{__('Get Betterlinks PRO & Reveal In-Depth Analytics 🔒', 'betterlinks')}
+					</Typography>
+					<Typography variant="p" color="text.secondary" gutterBottom>
+						{__('Track your links with detailed analytics, dynamic infographics, insights on OS, browser,top medium - social, search platforms and more.', 'betterlinks')}
 					</Typography>
 					<List>
 						{[
-							'👉 Top Performing Links Click Sources',
-							'👉 Get Access to Unique Click Data',
-							'👉 Get Access to Individual Click Details',
-							'👉 Identify most Clicked Links',
-							'👉 Measure Performance of your Shortened Links',
+							'👉 Track your top-performing link click sources',
+							'👉 Access exclusive click data for Better Insights',
+							'👉 Measure the performance of your shortened links',
+							'👉 Identify your most-clicked links for optimal strategy',
+							'👉 Get detailed individual click stats at your fingertips',
 						].map((item) => (
 							<ListItem disableGutters>
 								<ListItemText primary={item} />

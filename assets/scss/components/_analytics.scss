@@ -97,7 +97,7 @@
 
 			> div {
 				width: 50%;
-				height: 280px;
+				height: 370px;
 				background: #fefefe;
 				box-shadow: -3px 8px 30px 0px rgba(0, 0, 0, 0.1);
 				overflow: visible;
@@ -112,6 +112,17 @@
 					margin-bottom: 0.5em;
 					margin-top: 1em;
 					text-align: center;
+				}
+				span {
+					color: #666b78;
+					font-size: 16px;
+					font-style: normal;
+					font-weight: 400;
+					line-height: 1.5rem;
+					margin: 0;
+					overflow: hidden;
+					text-align: center;
+					display: inline-block;
 				}
 
 				.MuiCardContent-root {
@@ -157,13 +168,16 @@
 				}
 
 				.MuiList-root {
-					padding: 20px 0;
-					width: 68%;
+					padding: 15px 0;
+					width: 70%;
 					margin: 0 auto;
 
 					.MuiListItem-root {
 						padding: 0 !important;
 
+						.MuiListItemText-root {
+							flex: unset;
+						}
 						.MuiTypography-root {
 							color: #666b78;
 							font-size: 16px;
@@ -178,7 +192,11 @@
 			}
 		}
 		.btl-analytics-chart-line {
-			position: relative;
+			&.btl-analytics-chart-line-teaser {
+				position: relative;
+				display: flex;
+				align-items: center;
+			}
 
 			> img {
 				width: 100%;
@@ -265,7 +283,7 @@
 						}
 					}
 					img.btl-donut-no-data {
-						width: 70%;
+						width: 85%;
 						margin-top: 30px;
 					}
 				}
@@ -297,22 +315,42 @@
 						}
 					}
 					img.btl-bar-no-data {
-						width: 100%;
+						width: auto;
 					}
 				}
 			}
 		}
 	}
 }
+@media screen and (min-width: 2560px) {
+	//For Projectors or Higher Resolution Screens (Full HD)
+	.btl-top-charts .btl-top-charts-1 > div .MuiAccordionDetails-root img.btl-donut-no-data {
+		width: 60% !important;
+	}
+}
+
 $breakpoint-tablet: 768px;
 @media (max-width: $breakpoint-tablet) {
 	.btl-analytic {
 		.btl-top-charts {
+			> div {
+				.MuiAccordion-root.Mui-expanded.Mui-disabled {
+					width: 99% !important;
+				}
+				.MuiAccordionDetails-root img.btl-donut-no-data {
+					width: 100%;
+				}
+			}
 			.btl-top-charts-1 > div {
 				width: 48%;
 			}
 			.btl-top-charts-2 > div {
 				width: 100%;
+			}
+
+			.btl-top-charts-1,
+			.btl-top-charts-2 {
+				grid-template-columns: repeat(2, 1fr);
 			}
 		}
 	}
@@ -321,6 +359,20 @@ $breakpoint-phone: 560px;
 @media (max-width: $breakpoint-phone) {
 	.btl-analytic {
 		.btl-top-charts {
+			// > div {
+			// 	.MuiAccordion-root.Mui-expanded.Mui-disabled {
+			// 		width: 99% !important;
+			// 	}
+			// 	.MuiAccordionDetails-root img.btl-donut-no-data {
+			// 		width: 100%;
+			// 	}
+			// }
+
+			.btl-top-charts-1,
+			.btl-top-charts-2 {
+				grid-template-columns: repeat(1, 1fr);
+			}
+
 			.btl-top-charts-1 > div {
 				width: 100%;
 			}

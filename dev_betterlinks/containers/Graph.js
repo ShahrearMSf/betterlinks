@@ -139,7 +139,7 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				<div className="btl-analytics-chart-line">
+				<div className={`btl-analytics-chart-line${!is_pro_enabled && id ? ' btl-analytics-chart-line-teaser' : ''}`}>
 					{!is_pro_enabled && id ? (
 						<img className="btl-analytics-chart-image" src={plugin_root_url + 'assets/images/teasers/individual-analytics.png'} />
 					) : (
