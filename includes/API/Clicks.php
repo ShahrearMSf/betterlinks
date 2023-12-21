@@ -172,7 +172,7 @@ class Clicks extends Controller {
 			$top_referer  = \BetterLinksPro\Helper::get_top_referer( $from, $to );
 			$device_stats = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
 			$top_os       = \BetterLinksPro\Helper::get_top_os( $from, $to );
-			$top_browser  = \BetterLinksPro\Helper::get_top_browser( $from, $to );
+			$top_browser  = \BetterLinksPro\Helper::prepare_browser_data( $from, $to );
 		}
 
 		return new \WP_REST_Response(

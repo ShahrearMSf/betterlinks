@@ -103,10 +103,8 @@ public function get_analytics_unique_list($from, $to) {
 			return $results;
 		}
 		global $wpdb;
-		$fields = "ID, link_id, ip, browser, referer, created_at";
-		if( apply_filters('betterlinks/is_extra_data_tracking_compatible', false) ){
-			$fields .= ", os, device";
-		}
+		$fields = "ID, link_id, ip, browser, referer, os, device, created_at";
+		
 		$query   = "SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id={$id} AND created_at BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59' ORDER BY created_at DESC";
 		$results = $wpdb->get_results( $query, ARRAY_A );
 

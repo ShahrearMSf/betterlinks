@@ -685,39 +685,25 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				),
 			},
 			{
-				name: (
-					<span style={{ display: 'flex' }}>
-						{__('OS', 'betterlinks')}
-						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-					</span>
-				),
+				name: __('OS', 'betterlinks'),
 				selector: 'os',
 				width: '100px',
-				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : <BluredData data="os" />}</div>,
+				cell: (row) => <div>{row.os}</div>,
 				sortable: false,
 			},
 			{
-				name: (
-					<span style={{ display: 'flex' }}>
-						{__('Device', 'betterlinks')}
-						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-					</span>
-				),
+				name: __('Device', 'betterlinks'),
 				selector: 'device',
 				width: '80px',
 				cell: (row) => (
 					<div>
-						{is_extra_data_tracking_compatible ? (
-							row.device && (
-								<img
-									width="25"
-									src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
-									alt="icon"
-									title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
-								/>
-							)
-						) : (
-							<BluredData />
+						{row.device && (
+							<img
+								width="25"
+								src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
+								alt="icon"
+								title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
+							/>
 						)}
 					</div>
 				),
