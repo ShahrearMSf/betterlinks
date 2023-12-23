@@ -190,6 +190,44 @@
 							}
 						}
 					}
+					.btl-link-options-customize-meta-tags {
+						.btl-modal-form-group {
+							button {
+								width: 100%;
+								height: 60px;
+								border: 1px solid #ebebeb;
+								background: #f0f0f0;
+								border-radius: 2px;
+
+								&:hover {
+									background: #ddd;
+									color: #1e1e1e;
+								}
+							}
+
+							.btl-image-container {
+								position: relative;
+								width: 100%;
+
+								img {
+									width: 100%;
+									height: 100%;
+									border-radius: 2px;
+								}
+								.btl-image-delete {
+									position: absolute;
+									right: 3px;
+									top: 3px;
+									display: block;
+									background: slateblue;
+									color: #fff;
+									padding: 2px;
+									border-radius: 3px;
+									cursor: pointer;
+								}
+							}
+						}
+					}
 					.btl-modal-form-group {
 						align-items: center !important;
 						.btl-modal-form-label {
