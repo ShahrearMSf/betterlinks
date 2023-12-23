@@ -12,7 +12,7 @@ export const add_meta_tags = (params) => async (dispatch) => {
 	form_data.append('link_id', params.link_id);
 	form_data.append('meta_title', params.meta_title);
 	form_data.append('meta_description', params.meta_description);
-	form_data.append('meta_image', '');
+	form_data.append('meta_image', params.meta_image);
 	form_data.append('status', params.status);
 
 	try {

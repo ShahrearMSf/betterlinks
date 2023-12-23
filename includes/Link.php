@@ -23,18 +23,12 @@ class Link extends Utils {
 		$param       = explode( '?', $request_uri, 2 );
 		$data        = $this->get_slug_raw( rtrim( current( $param ), '/' ) );
 
-
-		$data['is_customized_meta'] = true;
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
 		$dd = new DeviceDetector($user_agent);
 		$dd->parse();
-		
-		if ($data['is_customized_meta'] && $dd->isBot()) {
-			wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
-			exit();
-		}
 
-		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { //phpcs:ignore. 
+		$data['is_bot'] = $dd->isBot();
+		if ( empty( $data['target_url'] ) || !apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
 				$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
 				$request_uri       = site_url( '/' ) . $request_uri;

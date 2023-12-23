@@ -203,6 +203,16 @@ export const add_new_link =
 				})(dispatch);
 			}
 
+			if (formData.old_enable_meta_tags !== formData.enable_meta_tags || (formData.enable_meta_tags && '' !== formData.meta_title)) {
+				add_meta_tags({
+					link_id: ID,
+					meta_title: formData.meta_title,
+					meta_description: formData.meta_description,
+					meta_image: formData.meta_image || '',
+					status: !!formData.enable_meta_tags,
+				})(dispatch);
+			}
+
 			if (cat_data?.is_newly_created) {
 				dispatch({
 					type: ADD_TERM,
@@ -262,6 +272,16 @@ export const add_new_link =
 						link_id: ID,
 						password: formData.password,
 						status: formData.enable_password,
+					})(dispatch);
+				}
+
+				if (formData.old_enable_meta_tags !== formData.enable_meta_tags || (formData.enable_meta_tags && '' !== formData.meta_title)) {
+					add_meta_tags({
+						link_id: ID,
+						meta_title: formData.meta_title,
+						meta_description: formData.meta_description,
+						meta_image: formData.meta_image || '',
+						status: !!formData.enable_meta_tags,
 					})(dispatch);
 				}
 
@@ -331,16 +351,15 @@ export const edit_link =
 				})(dispatch);
 			}
 
-			if (item.enable_meta_tags && '' !== item.meta_title) {
+			if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
 				add_meta_tags({
 					link_id: ID,
 					meta_title: item.meta_title,
 					meta_description: item.meta_description,
-					meta_image: '',
+					meta_image: item.meta_image || '',
 					status: !!item.enable_meta_tags,
 				})(dispatch);
 			}
-			console.log({ item });
 
 			if (cat_data?.is_newly_created) {
 				dispatch({
@@ -377,6 +396,16 @@ export const edit_link =
 							password: item.password,
 							status: item.enable_password,
 							allow_contact: item.allow_visitor_contact,
+						})(dispatch);
+					}
+
+					if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
+						add_meta_tags({
+							link_id: ID,
+							meta_title: item.meta_title,
+							meta_description: item.meta_description,
+							meta_image: item.meta_image || '',
+							status: !!item.enable_meta_tags,
 						})(dispatch);
 					}
 
