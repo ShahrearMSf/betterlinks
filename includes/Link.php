@@ -24,11 +24,11 @@ class Link extends Utils {
 		$data        = $this->get_slug_raw( rtrim( current( $param ), '/' ) );
 
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
-		$dd = new DeviceDetector($user_agent);
+		$dd         = new DeviceDetector( $user_agent );
 		$dd->parse();
 
 		$data['is_bot'] = $dd->isBot();
-		if ( empty( $data['target_url'] ) || !apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
+		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
 				$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
 				$request_uri       = site_url( '/' ) . $request_uri;
