@@ -154,25 +154,19 @@
 
 				.MuiCardContent-root {
 					position: relative;
+					text-align: center;
 				}
 				.analytics-upgrade-btn {
 					position: absolute;
 					align-items: center;
-					background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
-					border-radius: 15px;
-					box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
 					display: flex;
 					height: 60px;
 					justify-content: center;
 					margin: auto;
 					transform: translate(4px, 43px);
-					width: 300px;
+					width: 100%;
 					bottom: 6%;
-					left: 25%;
 
-					&:hover {
-						background: linear-gradient(202deg, #2058f2 0, #0238cd 100%);
-					}
 					a {
 						align-items: center;
 						color: #fff;
@@ -186,6 +180,13 @@
 						position: relative;
 						text-decoration: none;
 						width: 320px;
+						background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+						border-radius: 15px;
+						box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
+
+						&:hover {
+							background: linear-gradient(202deg, #2058f2 0, #0238cd 100%);
+						}
 
 						&:focus {
 							outline: 0;
@@ -196,7 +197,7 @@
 
 				.MuiList-root {
 					padding: 15px 0;
-					width: 70%;
+					width: 400px;
 					margin: 0 auto 18px auto;
 
 					.MuiListItem-root {
@@ -378,6 +379,9 @@
 	.btl-top-charts .btl-top-charts-1 > div .MuiAccordionDetails-root img.btl-donut-no-data {
 		width: 60% !important;
 	}
+	.btl-analytics-chart .btl-analytics-chart-overlay > div {
+		width: 25% !important;
+	}
 }
 
 $breakpoint-tablet: 768px;
@@ -404,6 +408,10 @@ $breakpoint-tablet: 768px;
 				grid-template-columns: repeat(2, 1fr);
 			}
 		}
+
+		// .btl-analytics-chart .btl-analytics-chart-overlay > div {
+		// 	width: 90% !important;
+		// }
 	}
 }
 $breakpoint-phone: 560px;

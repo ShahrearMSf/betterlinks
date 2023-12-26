@@ -20,7 +20,9 @@ const GraphTeaser = () => {
 						{__('Get BetterLinks PRO & Reveal In-Depth Analytics 🔒', 'betterlinks')}
 					</Typography>
 					<Typography variant="p" color="text.secondary" gutterBottom>
-						{__('Track your links with detailed analytics, dynamic infographics, insights on OS, browser,top medium - social, search platforms and more.', 'betterlinks')}
+						{__('Track your links with detailed analytics, dynamic infographics, insights on OS,', 'betterlinks')}
+						<br />
+						{__(' browser,top medium - social, search platforms and more.', 'betterlinks')}
 					</Typography>
 					<List>
 						{[

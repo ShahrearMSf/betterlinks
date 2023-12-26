@@ -650,7 +650,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
-					const title = browser.charAt(0).toUpperCase() + browser.slice(1);
+					const title = (browser?.charAt(0) || '')?.toUpperCase() + browser?.slice(1);
 					return (
 						<div>
 							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={title} />
@@ -696,7 +696,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				selector: 'device',
 				width: '80px',
 				cell: (row) => {
-					const title = row.device === 'desktop' ? 'Computer' : row.device.charAt(0).toUpperCase() + row.device.slice(1);
+					const title = row.device === 'desktop' ? 'Computer' : row.device?.charAt(0).toUpperCase() + row.device?.slice(1);
 					return <div>{row.device && <img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`} alt="icon" title={title} />}</div>;
 				},
 				sortable: false,
