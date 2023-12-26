@@ -49,7 +49,8 @@
 					input[type='number'],
 					input[type='password'],
 					input[type='text'],
-					textarea {
+					textarea,
+					button {
 						background: #36405a;
 						color: #fff;
 						border-color: #36405a;
@@ -60,6 +61,10 @@
 						&::placeholder {
 							color: #b0b2ba;
 						}
+					}
+					button:hover {
+						background: #272f43;
+						color: $white;
 					}
 					select {
 						background-color: #36405a !important;

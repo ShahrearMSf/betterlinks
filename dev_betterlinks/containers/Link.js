@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import Select from 'components/Select';
@@ -14,7 +13,6 @@ import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/t
 import {
 	modalCustomStyles,
 	modalCustomSmallStyles,
-	betterlinks_nonce,
 	site_url,
 	generateSlug,
 	generateShortURL,
@@ -83,6 +81,7 @@ export const Link = (props) => {
 		options: true,
 		advanced: false,
 		dynamicRedirect: false,
+		optimizeMetaTags: false,
 	});
 	const [password, setPassword] = useState(null);
 	const [metaTag, setMetaTag] = useState(null);
@@ -565,12 +564,6 @@ export const Link = (props) => {
 																	</label>
 																	<input id="enable_password" type="checkbox" disabled />
 																</div>
-																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																	<label className="btl-modal-form-label">
-																		{__('Customize Meta Tags', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																	</label>
-																	<input id="enable_meta_tags" type="checkbox" disabled />
-																</div>
 															</div>
 														</div>
 													)}
@@ -626,6 +619,63 @@ export const Link = (props) => {
 														)}
 														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 													</div>
+												</div>
+												<div className={`link-options link-options--advanced ${isOpenLinkPanel.optimizeMetaTags ? 'link-options--open' : ''}`}>
+													<button
+														className="link-options__head"
+														type="button"
+														onClick={() => {
+															togglePanel('optimizeMetaTags');
+															// openUpgradeToProModal();
+														}}
+													>
+														<h4 className="link-options__head--title">
+															{__('Optimize Meta Tags', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
+														</h4>{' '}
+														<i className="btl btl-angle-arrow-down"></i>
+													</button>
+													{!is_pro_enabled && (
+														<div className="link-options__body">
+															<div className="link-options--teasers">
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label">
+																		{__('Customize Meta Tags', 'betterlinks')}
+																		{/* <span className="pro-badge">{__('Pro', 'betterlinks')}</span> */}
+																	</label>
+																	<input id="enable_meta_tags" type="checkbox" checked={true} disabled />
+																</div>
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label">
+																		{__('Title', 'betterlinks')}
+																		{/* <span className="pro-badge">{__('Pro', 'betterlinks')}</span> */}
+																	</label>
+																	<input type="text" disabled />
+																</div>
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label">
+																		{__('Content', 'betterlinks')}
+																		{/* <span className="pro-badge">{__('Pro', 'betterlinks')}</span> */}
+																	</label>
+																	<input type="text" disabled />
+																</div>
+																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
+																	<label className="btl-modal-form-label">
+																		{__('Image', 'betterlinks')}
+																		{/* <span className="pro-badge">{__('Pro', 'betterlinks')}</span> */}
+																	</label>
+																	<button
+																		className="dashicons dashicons-upload"
+																		type="submit"
+																		onClick={(e) => {
+																			e.preventDefault();
+																			openUpgradeToProModal();
+																		}}
+																	></button>
+																</div>
+															</div>
+														</div>
+													)}
+													<>{betterLinksHooks.applyFilters('linkOptionsOptimizeMetaTags', null, { ...props, ...settings, metaTag })}</>
 												</div>
 												{!is_pro_enabled && (
 													<div>
