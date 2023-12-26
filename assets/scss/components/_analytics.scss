@@ -97,12 +97,15 @@
 
 			> div {
 				width: 50%;
-				height: 370px;
+				height: 350px;
 				background: #fefefe;
 				box-shadow: -3px 8px 30px 0px rgba(0, 0, 0, 0.1);
 				overflow: visible;
 				border-radius: 20px;
 
+				ul li {
+					margin: 0 !important;
+				}
 				h5 {
 					color: #000;
 					font-size: 24px;
@@ -123,6 +126,30 @@
 					overflow: hidden;
 					text-align: center;
 					display: inline-block;
+				}
+
+				.btl-graphteaser-icon {
+					display: flex;
+					align-items: center;
+					column-gap: 10px;
+
+					p {
+						// color: #666b78;
+						font-size: 16px;
+						font-style: normal;
+						font-weight: 400;
+						line-height: 29px;
+						margin: 0;
+						overflow: hidden;
+						text-align: center;
+					}
+					svg {
+						width: 18px;
+
+						// path {
+						// 	stroke: #fff;
+						// }
+					}
 				}
 
 				.MuiCardContent-root {
@@ -170,13 +197,14 @@
 				.MuiList-root {
 					padding: 15px 0;
 					width: 70%;
-					margin: 0 auto;
+					margin: 0 auto 18px auto;
 
 					.MuiListItem-root {
 						padding: 0 !important;
 
 						.MuiListItemText-root {
 							flex: unset;
+							margin: 0 !important;
 						}
 						.MuiTypography-root {
 							color: #666b78;
@@ -233,8 +261,6 @@
 				background-color: #ffffff !important;
 				margin: unset !important;
 				height: 100%;
-				// height: auto;
-				// align-self: stretch;
 				box-shadow: none;
 				border-radius: 8px;
 				border: 1px solid #dee1ea;
@@ -255,16 +281,15 @@
 
 		.btl-top-charts-1 {
 			grid-template-columns: repeat(3, 1fr);
-			// display: flex;
+
 			> div {
 				align-self: flex-start;
-				// max-width: 33%;
-				// width: 100%;
 
 				.MuiAccordionDetails-root {
 					height: 100%;
-					width: 100%;
+					width: auto;
 					justify-content: center;
+
 					> div {
 						width: 100% !important;
 						height: auto !important;

@@ -226,6 +226,12 @@
 		.btl-analytics-chart-overlay {
 			background-color: rgba(54, 64, 90, 0.7);
 
+			.btl-graphteaser-icon {
+				svg path {
+					stroke: #fff;
+				}
+			}
+
 			.MuiPaper-root {
 				background-color: #252f47;
 

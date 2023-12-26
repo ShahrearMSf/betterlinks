@@ -650,9 +650,10 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
+					const title = browser.charAt(0).toUpperCase() + browser.slice(1);
 					return (
 						<div>
-							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={browser.charAt(0).toUpperCase() + browser.slice(1)} />
+							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={title} />
 						</div>
 					);
 				},
@@ -660,7 +661,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('IP', 'betterlinks'),
 				selector: 'ip',
-				// width: '100px',
 				sortable: false,
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
@@ -695,18 +695,10 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				name: __('Device', 'betterlinks'),
 				selector: 'device',
 				width: '80px',
-				cell: (row) => (
-					<div>
-						{row.device && (
-							<img
-								width="25"
-								src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
-								alt="icon"
-								title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
-							/>
-						)}
-					</div>
-				),
+				cell: (row) => {
+					const title = row.device === 'desktop' ? 'Computer' : row.device.charAt(0).toUpperCase() + row.device.slice(1);
+					return <div>{row.device && <img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`} alt="icon" title={title} />}</div>;
+				},
 				sortable: false,
 			},
 		];
@@ -720,7 +712,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			selector: 'name',
 			id: 'name',
 			sortable: true,
-			// ...(1 !== analyticsTab && { sortFunction: sortFunction('link_title') }),
 			cell: (row) => <div>{row.link_title}</div>,
 		},
 		{
