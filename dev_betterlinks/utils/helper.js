@@ -247,7 +247,7 @@ export const formatDate = (date = new Date(), format) => {
 	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };
 
-export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav) => {
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav, selectedTag) => {
 	let results = stored;
 	results = stored.filter((item) => {
 		const newFilterText = filterText
@@ -269,6 +269,21 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
 		results = results.filter((item) => item.cat_id == selectedCategory.value);
+	}
+	if (selectedTag && selectedTag.value) {
+		let total = [];
+		for (let index = 0; index < results.length; index++) {
+			const item = results[index];
+
+			for (let jIndex = 0; jIndex < item?.tags_data?.length; jIndex++) {
+				const element = item?.tags_data?.[jIndex];
+
+				if (element.term_name === selectedTag.label) {
+					total = [...total, item];
+				}
+			}
+		}
+		results = total;
 	}
 	if (selectedClicksType) {
 		if (selectedClicksType.value == 'mostClicks') {
@@ -869,4 +884,22 @@ export const get_labels = (clicks) => {
 			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
 		});
 	return labels;
+};
+
+export const get_tags = (links) => {
+	const tags = {};
+	links &&
+		Object.values(links)
+			.map((item) => item.lists)
+			.flat()
+			.filter((item) => item.tags_data.length)
+			.map((item) => item.tags_data)
+			.flat()
+			.map((item) => {
+				if (!tags?.[item.term_id]) {
+					tags[item.term_id] = item.term_slug;
+				}
+			});
+
+	return tags;
 };

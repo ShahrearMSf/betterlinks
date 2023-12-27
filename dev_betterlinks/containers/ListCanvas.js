@@ -6,7 +6,7 @@ import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
 import LinkCopyUrl from 'components/LinkCopyUrl';
 import LinksFilter from 'components/LinksFilter';
-import { linksFilterData, formatDate, insertOverlayElement, analytic } from 'utils/helper';
+import { linksFilterData, formatDate, insertOverlayElement, analytic, get_tags } from 'utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
@@ -109,6 +109,7 @@ const ListCanvas = (props) => {
 	const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [selectedCategory, setCategory] = useState(null);
+	const [selectedTag, setTag] = useState(null);
 	const [selectedClicksType, setClicksType] = useState(null);
 	const [selectedDateType, setDateType] = useState(null);
 	const [isOpenCustomDateFilter, setIsOpenCustomDateFilter] = useState(false);
@@ -152,6 +153,11 @@ const ListCanvas = (props) => {
 			return total;
 		}, []);
 
+	const tags = Object.entries(get_tags(links)).reduce((total, item) => {
+		total = [...total, { value: item?.[0], label: item?.[1] }];
+		return total;
+	}, []);
+
 	const dateFilterControl = (type) => {
 		setDateType(type);
 		if (type && type.value == 'custom') {
@@ -165,6 +171,7 @@ const ListCanvas = (props) => {
 	const resetFilterHandler = () => {
 		setFilterText('');
 		setCategory(null);
+		setTag(null);
 		setClicksType(null);
 		setDateType(null);
 		setIsOpenCustomDateFilter(false);
@@ -189,10 +196,13 @@ const ListCanvas = (props) => {
 			<LinksFilter
 				deleteLinkHandler={props.delete_link}
 				catItems={categories}
+				tagItems={tags}
 				bulkActionData={bulkActionData}
 				onFilter={(e) => setFilterText(e.target.value)}
 				selectedCategory={selectedCategory}
 				categorySelectHandler={setCategory}
+				selectedTag={selectedTag}
+				tagSelectHandler={setTag}
 				selectedClicksType={selectedClicksType}
 				setClicksType={setClicksType}
 				selectedDateType={selectedDateType}
@@ -227,7 +237,7 @@ const ListCanvas = (props) => {
 					<DataTable
 						className="btl-list-view-table"
 						columns={getLinksListViewColumnData(props)}
-						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav)}
+						data={linksFilterData(stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav, selectedTag)}
 						pagination
 						paginationResetDefaultPage={resetPaginationToggle}
 						subHeader
