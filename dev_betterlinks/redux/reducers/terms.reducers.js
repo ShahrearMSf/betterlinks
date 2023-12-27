@@ -1,4 +1,4 @@
-import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
+import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM, DELETE_TERM, FETCH_TAGS } from 'redux/actions/actionstrings';
 function terms(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
@@ -6,6 +6,11 @@ function terms(state = {}, action) {
 			return {
 				...state,
 				terms: payload.data,
+			};
+		case FETCH_TAGS:
+			return {
+				...state,
+				tags: payload.data,
 			};
 		case ADD_TERM: {
 			const newTerm = {

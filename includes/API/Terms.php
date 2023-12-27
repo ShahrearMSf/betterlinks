@@ -33,6 +33,18 @@ class Terms extends Controller {
 				),
 			)
 		);
+		register_rest_route(
+			$this->namespace,
+			$endpoint. 'tags',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_tags' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_terms_schema(),
+				),
+			)
+		);
 
 		register_rest_route(
 			$this->namespace,
@@ -74,6 +86,22 @@ class Terms extends Controller {
 		);
 	}
 
+	public function get_tags() {
+		global $wpdb;
+		
+		$query = "SELECT t.id, t.term_name, t.term_slug, `link_id` from {$wpdb->prefix}betterlinks_terms as t left join {$wpdb->prefix}betterlinks_terms_relationships as tr on t.id=tr.term_id where t.term_type='tags'";
+		$results = $wpdb->get_results($query, ARRAY_A);
+
+		error_log( json_encode( $results ) );
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => $results,
+			),
+			200
+		);
+	}
 	/**
 	 * Get betterlinks
 	 *

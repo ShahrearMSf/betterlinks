@@ -4,6 +4,7 @@ import Analytics from 'pages/Analytics';
 import Settings from 'pages/Settings';
 import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
+import ManageTags from './ManageTags';
 
 const renderSwitch = (param) => {
 	switch (param) {
@@ -14,7 +15,7 @@ const renderSwitch = (param) => {
 		case 'betterlinks-analytics':
 			return <Analytics />;
 		case 'betterlinks-manage-tags':
-			return <Analytics />;
+			return <ManageTags />;
 		case 'betterlinks-settings':
 			return <Settings />;
 		default:

@@ -892,7 +892,7 @@ export const get_tags = (links) => {
 		Object.values(links)
 			.map((item) => item.lists)
 			.flat()
-			.filter((item) => item.tags_data.length)
+			.filter((item) => item.tags_data?.length)
 			.map((item) => item.tags_data)
 			.flat()
 			.map((item) => {

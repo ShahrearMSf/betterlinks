@@ -1,6 +1,22 @@
 import axios from 'axios';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
-import { FETCH_AUTOLINK_SETTINGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+import { FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+
+export const fetch_all_tags = () => async (dispatch) => {
+	try {
+		const res = await API.get(namespace + 'terms/tags');
+
+		if (res?.data) {
+			dispatch({
+				type: FETCH_TAGS,
+				payload: res.data,
+			});
+		}
+	} catch (error) {
+		console.log({ error: error.message });
+	}
+};
+
 export const fetch_terms_data = (params) => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'terms', {
