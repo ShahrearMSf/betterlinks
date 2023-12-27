@@ -13,6 +13,8 @@ const renderSwitch = (param) => {
 			return <KeywordsLinking />;
 		case 'betterlinks-analytics':
 			return <Analytics />;
+		case 'betterlinks-manage-tags':
+			return <Analytics />;
 		case 'betterlinks-settings':
 			return <Settings />;
 		default:
