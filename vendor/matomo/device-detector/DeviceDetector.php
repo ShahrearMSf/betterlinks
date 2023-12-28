@@ -68,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.1.6';
+    public const VERSION = '6.2.0';
 
     /**
      * Constant used as value for unknown browser / os
@@ -1036,7 +1036,7 @@ class DeviceDetector
         /**
          * All devices that contain Andr0id in string are assumed to be a tv
          */
-        if ($this->matchUserAgent('Andr0id|Android TV|\(lite\) TV|BRAVIA')) {
+        if ($this->matchUserAgent('Andr0id|(?:Android(?: UHD)?|Google) TV|\(lite\) TV|BRAVIA')) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 
