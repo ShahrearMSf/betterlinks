@@ -6,14 +6,18 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
 {
+    public static $files = array (
+        '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
             'PriyoMukul\\WPNotice\\' => 20,
         ),
-        'J' => 
+        'D' => 
         array (
-            'Jaybizzle\\CrawlerDetect\\' => 24,
+            'DeviceDetector\\' => 15,
         ),
         'B' => 
         array (
@@ -26,9 +30,9 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
         array (
             0 => __DIR__ . '/..' . '/priyomukul/wp-notice/src',
         ),
-        'Jaybizzle\\CrawlerDetect\\' => 
+        'DeviceDetector\\' => 
         array (
-            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
+            0 => __DIR__ . '/..' . '/matomo/device-detector',
         ),
         'BetterLinks\\' => 
         array (
@@ -37,66 +41,7 @@ class ComposerStaticInit58c54c531c2090a6d8ff7f551404130c
     );
 
     public static $classMap = array (
-        'BetterLinks\\API' => __DIR__ . '/../..' . '/includes/API.php',
-        'BetterLinks\\API\\Clicks' => __DIR__ . '/../..' . '/includes/API/Clicks.php',
-        'BetterLinks\\API\\Controller' => __DIR__ . '/../..' . '/includes/API/Controller.php',
-        'BetterLinks\\API\\Links' => __DIR__ . '/../..' . '/includes/API/Links.php',
-        'BetterLinks\\API\\Settings' => __DIR__ . '/../..' . '/includes/API/Settings.php',
-        'BetterLinks\\API\\Terms' => __DIR__ . '/../..' . '/includes/API/Terms.php',
-        'BetterLinks\\Abstracts\\MigrationNotice' => __DIR__ . '/../..' . '/includes/Abstracts/MigrationNotice.php',
-        'BetterLinks\\Admin' => __DIR__ . '/../..' . '/includes/Admin.php',
-        'BetterLinks\\Admin\\Ajax' => __DIR__ . '/../..' . '/includes/Admin/Ajax.php',
-        'BetterLinks\\Admin\\Assets' => __DIR__ . '/../..' . '/includes/Admin/Assets.php',
-        'BetterLinks\\Admin\\Menu' => __DIR__ . '/../..' . '/includes/Admin/Menu.php',
-        'BetterLinks\\Admin\\Metabox' => __DIR__ . '/../..' . '/includes/Admin/Metabox.php',
-        'BetterLinks\\Admin\\Notice' => __DIR__ . '/../..' . '/includes/Admin/Notice.php',
-        'BetterLinks\\Admin\\Notice\\PrettyLinks' => __DIR__ . '/../..' . '/includes/Admin/Notice/PrettyLinks.php',
-        'BetterLinks\\Admin\\Notice\\Simple301' => __DIR__ . '/../..' . '/includes/Admin/Notice/Simple301.php',
-        'BetterLinks\\Admin\\Notice\\ThirstyAffiliates' => __DIR__ . '/../..' . '/includes/Admin/Notice/ThirstyAffiliates.php',
-        'BetterLinks\\Admin\\WPDev\\PluginUsageTracker' => __DIR__ . '/../..' . '/includes/Admin/WPDev/PluginUsageTracker.php',
-        'BetterLinks\\Admin\\WPDev\\WPDevNotice' => __DIR__ . '/../..' . '/includes/Admin/WPDev/WPDevNotice.php',
-        'BetterLinks\\Cron' => __DIR__ . '/../..' . '/includes/Cron.php',
-        'BetterLinks\\Elementor' => __DIR__ . '/../..' . '/includes/Elementor.php',
-        'BetterLinks\\Helper' => __DIR__ . '/../..' . '/includes/Helper.php',
-        'BetterLinks\\Installer' => __DIR__ . '/../..' . '/includes/Installer.php',
-        'BetterLinks\\Interfaces\\ImportCsvInterface' => __DIR__ . '/../..' . '/includes/Interfaces/ImportCsvInterface.php',
-        'BetterLinks\\Interfaces\\ImportOneClickInterface' => __DIR__ . '/../..' . '/includes/Interfaces/ImportOneClickInterface.php',
-        'BetterLinks\\Link' => __DIR__ . '/../..' . '/includes/Link.php',
-        'BetterLinks\\Link\\Utils' => __DIR__ . '/../..' . '/includes/Link/Utils.php',
-        'BetterLinks\\Tools' => __DIR__ . '/../..' . '/includes/Tools.php',
-        'BetterLinks\\Tools\\Export' => __DIR__ . '/../..' . '/includes/Tools/Export.php',
-        'BetterLinks\\Tools\\Import' => __DIR__ . '/../..' . '/includes/Tools/Import.php',
-        'BetterLinks\\Tools\\Migration\\BLImportCSV' => __DIR__ . '/../..' . '/includes/Tools/Migration/BLImportCSV.php',
-        'BetterLinks\\Tools\\Migration\\BaseCSV' => __DIR__ . '/../..' . '/includes/Tools/Migration/BaseCSV.php',
-        'BetterLinks\\Tools\\Migration\\PTLImportCSV' => __DIR__ . '/../..' . '/includes/Tools/Migration/PTLImportCSV.php',
-        'BetterLinks\\Tools\\Migration\\PTLOneClick' => __DIR__ . '/../..' . '/includes/Tools/Migration/PTLOneClick.php',
-        'BetterLinks\\Tools\\Migration\\S301ROneClick' => __DIR__ . '/../..' . '/includes/Tools/Migration/S301ROneClick.php',
-        'BetterLinks\\Tools\\Migration\\S30RBase' => __DIR__ . '/../..' . '/includes/Tools/Migration/S30RBase.php',
-        'BetterLinks\\Tools\\Migration\\S30RImportCSV' => __DIR__ . '/../..' . '/includes/Tools/Migration/S30RImportCSV.php',
-        'BetterLinks\\Tools\\Migration\\TAImportCSV' => __DIR__ . '/../..' . '/includes/Tools/Migration/TAImportCSV.php',
-        'BetterLinks\\Tools\\Migration\\TAOneClick' => __DIR__ . '/../..' . '/includes/Tools/Migration/TAOneClick.php',
-        'BetterLinks\\Traits\\ArgumentSchema' => __DIR__ . '/../..' . '/includes/Traits/ArgumentSchema.php',
-        'BetterLinks\\Traits\\Clicks' => __DIR__ . '/../..' . '/includes/Traits/Clicks.php',
-        'BetterLinks\\Traits\\DBMigrate' => __DIR__ . '/../..' . '/includes/Traits/DBMigrate.php',
-        'BetterLinks\\Traits\\DBTables' => __DIR__ . '/../..' . '/includes/Traits/DBTables.php',
-        'BetterLinks\\Traits\\Links' => __DIR__ . '/../..' . '/includes/Traits/Links.php',
-        'BetterLinks\\Traits\\Query' => __DIR__ . '/../..' . '/includes/Traits/Query.php',
-        'BetterLinks\\Traits\\Terms' => __DIR__ . '/../..' . '/includes/Traits/Terms.php',
-        'BetterLinks\\Uninstall' => __DIR__ . '/../..' . '/includes/Uninstall.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Jaybizzle\\CrawlerDetect\\CrawlerDetect' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/CrawlerDetect.php',
-        'Jaybizzle\\CrawlerDetect\\Fixtures\\AbstractProvider' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/AbstractProvider.php',
-        'Jaybizzle\\CrawlerDetect\\Fixtures\\Crawlers' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php',
-        'Jaybizzle\\CrawlerDetect\\Fixtures\\Exclusions' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Exclusions.php',
-        'Jaybizzle\\CrawlerDetect\\Fixtures\\Headers' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Headers.php',
-        'PriyoMukul\\WPNotice\\Dismiss' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Dismiss.php',
-        'PriyoMukul\\WPNotice\\Notice' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Notice.php',
-        'PriyoMukul\\WPNotice\\Notices' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Notices.php',
-        'PriyoMukul\\WPNotice\\Utils\\Base' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Utils/Base.php',
-        'PriyoMukul\\WPNotice\\Utils\\CacheBank' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Utils/CacheBank.php',
-        'PriyoMukul\\WPNotice\\Utils\\Helper' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Utils/Helper.php',
-        'PriyoMukul\\WPNotice\\Utils\\NoticeRemover' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Utils/NoticeRemover.php',
-        'PriyoMukul\\WPNotice\\Utils\\Storage' => __DIR__ . '/..' . '/priyomukul/wp-notice/src/Utils/Storage.php',
         'WP_Async_Request' => __DIR__ . '/..' . '/a5hleyrich/wp-background-processing/classes/wp-async-request.php',
         'WP_Background_Process' => __DIR__ . '/..' . '/a5hleyrich/wp-background-processing/classes/wp-background-process.php',
     );

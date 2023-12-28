@@ -168,12 +168,46 @@
 
 // analytic
 .btl-analytic {
-	.btl-list-view-calendar {
+	.btl-list-view-calendar,
+	.btl-filter-action,
+	.btl-single-click-info-header {
 		background-color: #2c3650;
 		border-color: #2c3650;
 		color: $light;
 		margin-right: 12px;
+
+		&:hover {
+			background-color: #36405a;
+		}
 	}
+	.btl-single-click-info-header {
+		span:not(.dashicons),
+		a {
+			color: $white;
+		}
+	}
+	.btl-top-charts {
+		.MuiAccordion-root {
+			background-color: #2c3650;
+			border: 1px solid #2c3650 !important;
+			color: $light;
+
+			.MuiIconButton-root {
+				color: $light;
+			}
+		}
+	}
+	.apexcharts-yaxis .apexcharts-yaxis-texts-g text {
+		fill: $white;
+	}
+}
+
+.apexcharts-xaxis .apexcharts-xaxis-texts-g text tspan,
+.apexcharts-yaxis .apexcharts-yaxis-texts-g text tspan {
+	fill: $white;
+}
+.apexcharts-legend .apexcharts-legend-series .apexcharts-legend-text {
+	color: $white !important;
 }
 .btl-analytics-heading {
 	color: $white;
@@ -182,11 +216,50 @@
 	color: $white;
 }
 .btl-analytic {
-	background: #252f47;
-	border-color: #252f47;
 	color: $white;
+	.btl-chart-preloader {
+		background-color: #252f47;
+	}
 	.btl-analytics-chart {
 		border-color: #252f47;
+
+		.btl-analytics-chart-overlay {
+			background-color: rgba(54, 64, 90, 0.7);
+
+			.btl-graphteaser-icon {
+				svg path {
+					stroke: #fff;
+				}
+			}
+
+			.MuiPaper-root {
+				background-color: #252f47;
+
+				.MuiCardContent-root {
+					h5,
+					span,
+					ul > li span {
+						color: $white;
+					}
+				}
+			}
+		}
+	}
+	.btl-analytics-filter,
+	.btl-analytic-table-wrapper,
+	.btl-analytics-chart > div:first-child {
+		background-color: #252f47;
+		border: 1px solid #252f47;
+	}
+	.btl-top-charts > div .MuiAccordion-root.Mui-expanded.Mui-disabled {
+		background-color: #252f47 !important;
+
+		.MuiAccordionSummary-content p {
+			color: $white !important;
+		}
+		.apexcharts-datalabels-group text {
+			fill: $white !important;
+		}
 	}
 }
 .btl-analytic-table-wrapper {
@@ -204,6 +277,18 @@
 				&::placeholder {
 					color: $light-darken;
 				}
+			}
+			a.btl-go-back-btn {
+				color: $white;
+				border-color: #36405a;
+
+				&:hover {
+					border-color: transparent;
+				}
+			}
+
+			.rmsc .dropdown-container {
+				border-color: #36405a;
 			}
 		}
 	}
@@ -227,6 +312,10 @@
 		.rdt_TableRow {
 			background: #252f47;
 			color: $white;
+
+			&:hover {
+				background: #36405a;
+			}
 			.rdt_TableCol {
 				color: $white;
 				.rdt_TableCol_Sortable {
@@ -247,6 +336,11 @@
 	.rdt_Pagination {
 		background-color: #252f47;
 		color: $white;
+
+		> div > svg {
+			fill: #2c3650;
+		}
+
 		> div:last-child {
 			button {
 				svg {
@@ -542,6 +636,11 @@
 	}
 	.rdt_Pagination {
 		color: $white;
+
+		> div > svg {
+			fill: #2c3650;
+		}
+
 		> div:last-child {
 			button {
 				svg {

@@ -1,5 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import styled from 'styled-components';
 
 export const {
 	betterlinks_nonce,
@@ -17,6 +19,7 @@ export const {
 	post_type,
 	betterlinks_links_option,
 	betterlinkspro_version,
+	is_extra_data_tracking_compatible,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -211,23 +214,23 @@ export const makeShortUrl = (shortUrl) => {
 export const getBrowser = (agent) => {
 	var browser = '';
 	if (/Opera[\/\s](\d+\.\d+)/.test(agent) || 'Opera' == agent) {
-		browser = 'opera-browser';
+		browser = 'opera';
 	} else if (/IE (\d+\.\d+);/.test(agent) || 'IE' == agent) {
-		browser = 'internet-explorer-browser';
+		browser = 'internet-explorer';
 	} else if (/Navigator[\/\s](\d+\.\d+)/.test(agent) || 'Navigator' == agent) {
-		browser = 'netscape-browser';
+		browser = 'netscape';
 	} else if (/Chrome[\/\s](\d+\.\d+)/.test(agent) || 'Chrome' == agent) {
-		browser = 'chrome-browser';
+		browser = 'chrome';
 	} else if (/Safari[\/\s](\d+\.\d+)/.test(agent) || 'Safari' == agent) {
-		browser = 'safari-browser';
+		browser = 'safari';
 	} else if (/Firefox[\/\s](\d+\.\d+)/.test(agent) || 'Firefox' == agent) {
-		browser = 'firefox-browser';
+		browser = 'firefox';
 	} else if (/Yandex[\/\s](\d+\.\d+)/.test(agent) || 'Yandex' == agent) {
-		browser = 'yandex-browser';
+		browser = 'yandex';
 	} else if (/Facebook[\/\s](\d+\.\d+)/.test(agent) || 'Facebook' == agent) {
-		browser = 'facebook-browser';
+		browser = 'facebook';
 	} else {
-		browser = 'web-browser';
+		browser = 'web';
 	}
 	return browser;
 };
@@ -564,9 +567,9 @@ export const getFavoriteLinkCount = (links) => {
 export const analytic = (analytic, ID) => {
 	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 	if (isLinkAble) {
-		return <a href={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip.length}</a>;
+		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
 	}
-	return +analytic.link_count + '/' + analytic.ip.length;
+	return +analytic.link_count + '/' + +analytic.ip;
 };
 
 export const saveSettingsHandler = (values, update_option, setFormSubmitText) => {
@@ -586,4 +589,284 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	}
 	update_option(values);
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
+};
+
+export const getDataset = (data) => {
+	const dataset = [
+		{
+			name: __('Clicks', 'betterlinks'),
+			data: Object.values(data.clicks)?.reverse?.(),
+		},
+		{
+			name: __('Unique Clicks', 'betterlinks'),
+			data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
+		},
+	];
+	return dataset;
+};
+
+const getDevice = (device) => {
+	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
+	return device;
+};
+const sortFunction = (title) => (rowA, rowB) => {
+	if (['total_clicks', 'unique_clicks'].includes(title)) {
+		if (+rowA[title] > +rowB[title]) return 1;
+		else if (+rowB[title] > +rowA[title]) return -1;
+		return 0;
+	}
+	const a = rowA[title]?.toLowerCase() || '';
+	const b = rowB[title]?.toLowerCase() || '';
+	if (a > b) return 1;
+	else if (b > a) return -1;
+	return 0;
+};
+const Blured = styled.span`
+	filter: blur(2px);
+	user-select: none;
+`;
+const osData = ['Windows', 'Linux', 'Mac', 'iOS', 'Android'];
+const deviceData = ['mobile', 'desktop', 'mobile', 'desktop'];
+const BluredData = ({ data = '' }) => {
+	if ('os' === data) {
+		const rndInt = Math.floor(Math.random() * 4) + 1;
+		return <span style={{ filter: 'blur(2px)' }}>{osData[rndInt]}</span>;
+	}
+	const rndInt = Math.floor(Math.random() * 3) + 1;
+	return (
+		<span style={{ filter: 'blur(2px)' }}>
+			<img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(deviceData[rndInt])}.svg`} alt="icon" />
+		</span>
+	);
+};
+
+export const getColumns = (analytics, analyticsTab, id = null) => {
+	if (!!id) {
+		const singleColumn = [
+			{
+				name: __('Browser', 'betterlinks'),
+				selector: 'browser',
+				sortable: false,
+				width: '100px',
+				cell: (row) => {
+					const browser = getBrowser(row.browser);
+					const title = (browser?.charAt(0) || '')?.toUpperCase() + browser?.slice(1);
+					return (
+						<div>
+							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={title} />
+						</div>
+					);
+				},
+			},
+			{
+				name: __('IP', 'betterlinks'),
+				selector: 'ip',
+				sortable: false,
+				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+			},
+			{
+				name: __('Timestamp', 'betterlinks'),
+				selector: 'created_at',
+				sortable: false,
+			},
+			{
+				name: __('Referrer', 'betterlinks'),
+				selector: 'referer',
+				width: '500px',
+				sortable: false,
+				cell: (row) => (
+					<div>
+						<div style={{ fontWeight: 700 }}>
+							<a href={row.referer} target="_blank">
+								{row.referer}
+							</a>
+						</div>
+					</div>
+				),
+			},
+			{
+				name: __('OS', 'betterlinks'),
+				selector: 'os',
+				width: '100px',
+				cell: (row) => <div>{row.os}</div>,
+				sortable: false,
+			},
+			{
+				name: __('Device', 'betterlinks'),
+				selector: 'device',
+				width: '80px',
+				cell: (row) => {
+					const title = row.device === 'desktop' ? 'Computer' : row.device?.charAt(0).toUpperCase() + row.device?.slice(1);
+					return <div>{row.device && <img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`} alt="icon" title={title} />}</div>;
+				},
+				sortable: false,
+			},
+		];
+
+		const analyticsArr = [...Object.values(analytics || {}).map((item) => item.value)];
+		return singleColumn.filter((item) => analyticsArr.includes(item.selector));
+	}
+	const columns = [
+		{
+			name: __('Link Name', 'betterlinks'),
+			selector: 'name',
+			id: 'name',
+			sortable: true,
+			cell: (row) => <div>{row.link_title}</div>,
+		},
+		{
+			name: __('Shortened URL', 'betterlinks'),
+			selector: 'short_url',
+			sortable: false,
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={site_url + '/' + row.short_url} target="_blank">
+							{site_url + '/' + row.short_url}
+						</a>
+					</div>
+				</div>
+			),
+		},
+		{
+			name: __('Target URL', 'betterlinks'),
+			selector: 'target_url',
+			cell: (row) => (
+				<div>
+					<div style={{ fontWeight: 700 }}>
+						<a href={row.target_url} target="_blank">
+							{row.target_url}
+						</a>
+					</div>
+				</div>
+			),
+			sortable: false,
+		},
+		{
+			name: __('Total Clicks', 'betterlinks'),
+			selector: 'total_clicks',
+			width: '150px',
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('total_clicks') }),
+			cell: (row) => <div>{row?.total_clicks || 1}</div>,
+		},
+		{
+			name: __('Unique Clicks', 'betterlinks'),
+			selector: 'unique_clicks',
+			width: '150px',
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('unique_clicks') }),
+			cell: (row) => <div>{row?.unique_clicks || 1}</div>,
+		},
+		{
+			name: __('Action', 'betterlinks'),
+			selector: 'action',
+			sortable: false,
+			width: '100px',
+			cell: (row) => {
+				return <Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`}>Details</Link>;
+			},
+		},
+	];
+	return columns;
+};
+
+export const analyticsColumnData = [
+	{
+		name: __('Browser', 'betterlinks'),
+		selector: 'browser',
+	},
+	{
+		name: __('Link Name', 'betterlinks'),
+		selector: 'name',
+	},
+	{
+		name: __('IP', 'betterlinks'),
+		selector: 'ip',
+	},
+	{
+		name: __('Timestamp', 'betterlinks'),
+		selector: 'created_at',
+	},
+	{
+		name: __('Shortened URL', 'betterlinks'),
+		selector: 'short_url',
+	},
+	{
+		name: __('Referer', 'betterlinks'),
+		selector: 'referer',
+	},
+	{
+		name: __('Target URL', 'betterlinks'),
+		selector: 'target_url',
+	},
+];
+
+export const teaserClickData = {
+	clicks: {
+		'2023-11-27': '217',
+		'2023-11-26': '179',
+		'2023-11-25': '184',
+		'2023-11-24': '237',
+		'2023-11-23': '294',
+		'2023-11-22': '342',
+		'2023-11-21': '328',
+		'2023-11-20': '332',
+		'2023-11-19': '170',
+		'2023-11-18': '186',
+		'2023-11-17': '296',
+		'2023-11-16': '356',
+		'2023-11-15': '313',
+		'2023-11-14': '348',
+		'2023-11-13': '290',
+		'2023-11-12': '184',
+		'2023-11-11': '187',
+		'2023-11-10': '263',
+		'2023-11-09': '290',
+		'2023-11-08': '344',
+		'2023-11-07': '314',
+		'2023-11-06': '328',
+		'2023-11-05': '189',
+		'2023-11-04': '205',
+		'2023-11-03': '283',
+		'2023-11-02': '323',
+		'2023-11-01': '287',
+	},
+	unique_clicks: {
+		'2023-11-27': '195',
+		'2023-11-26': '165',
+		'2023-11-25': '166',
+		'2023-11-24': '213',
+		'2023-11-23': '261',
+		'2023-11-22': '310',
+		'2023-11-21': '294',
+		'2023-11-20': '278',
+		'2023-11-19': '155',
+		'2023-11-18': '159',
+		'2023-11-17': '262',
+		'2023-11-16': '311',
+		'2023-11-15': '294',
+		'2023-11-14': '298',
+		'2023-11-13': '264',
+		'2023-11-12': '155',
+		'2023-11-11': '164',
+		'2023-11-10': '246',
+		'2023-11-09': '268',
+		'2023-11-08': '297',
+		'2023-11-07': '286',
+		'2023-11-06': '297',
+		'2023-11-05': '166',
+		'2023-11-04': '180',
+		'2023-11-03': '259',
+		'2023-11-02': '280',
+		'2023-11-01': '244',
+	},
+};
+
+export const get_labels = (clicks) => {
+	const labels = Object.keys(clicks)
+		?.reverse?.()
+		?.map?.((item) => {
+			const splitted = item.split('-');
+			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
+		});
+	return labels;
 };

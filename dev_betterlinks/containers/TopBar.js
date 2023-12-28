@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
 import { plugin_root_url } from 'utils/helper';
-import { linksView } from 'redux/actions/activity.actions';
+import { linksView, update_theme_mode } from 'redux/actions/activity.actions';
 import { sortFavourite } from 'redux/actions/favouritesort.actions';
 import DeleteClicks from 'containers/DeleteClicks';
 
@@ -21,7 +21,7 @@ const defaultProps = {
 
 const TopBar = (props) => {
 	const { propsForAnalytics } = props;
-	const mode = localStorage.getItem('betterLinksIsDarkMode');
+	const { darkMode: mode } = props.activity;
 	const [isDarkMode, setIsDarkMode] = useState(mode);
 	useEffect(() => {
 		if (mode) {
@@ -34,11 +34,10 @@ const TopBar = (props) => {
 	const darkModeHandler = (mode) => {
 		if (mode) {
 			document.body.classList.add('betterlinks-dark-mode');
-			localStorage.setItem('betterLinksIsDarkMode', mode);
 		} else {
 			document.body.classList.remove('betterlinks-dark-mode');
-			localStorage.removeItem('betterLinksIsDarkMode');
 		}
+		props.update_theme_mode(mode);
 		setIsDarkMode(mode);
 	};
 	const currentPage = betterLinksQuery.get('page');
@@ -102,6 +101,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		linksView: bindActionCreators(linksView, dispatch),
 		sortFavourite: bindActionCreators(sortFavourite, dispatch),
+		update_theme_mode: bindActionCreators(update_theme_mode, dispatch),
 	};
 };
 

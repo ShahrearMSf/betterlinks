@@ -223,6 +223,11 @@ class Installer extends \WP_Background_Process
             if( version_compare(BETTERLINKS_DB_VERSION, '1.6', '>') ) {
                 $this->modifyBetterLinksTable();
             }
+
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.1', '>' ) ) {
+                // run analytics total clicks & unique clicks data migration
+                \BetterLinks\Helper::update_links_analytics();
+            }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }

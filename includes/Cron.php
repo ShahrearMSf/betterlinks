@@ -34,6 +34,7 @@ class Cron
     public function analytics()
     {
         Helper::clear_query_cache();
+        Helper::clear_analytics_cache();    
         try {
             // insert clicks json data into db
             if (BETTERLINKS_EXISTS_CLICKS_JSON) {

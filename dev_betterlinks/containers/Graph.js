@@ -1,79 +1,45 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { __ } from '@wordpress/i18n';
-import { Line } from 'react-chartjs-2';
-import { DateRangePicker } from 'react-date-range';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { subDays } from 'date-fns';
-import { API, namespace } from 'utils/helper';
-import { formatDate, betterlinks_nonce, insertOverlayElement, removeOverlayElement } from 'utils/helper';
-import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
+import { connect } from 'react-redux';
+import Chart from 'react-apexcharts';
+import { DateRangePicker } from 'react-date-range';
+import {
+	getDataset,
+	get_labels,
+	is_extra_data_tracking_compatible,
+	is_pro_enabled,
+	plugin_root_url,
+	teaserClickData,
+	formatDate,
+	insertOverlayElement,
+	removeOverlayElement,
+} from 'utils/helper';
+import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
+import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
+import GraphTeaser from './Clicks/GraphTeaser';
+import ChartLoader from './Clicks/ChartLoader';
 
+const defaultFunc = () => {};
 const Graph = (props) => {
-	const { customDateFilter, setCustomDateFilter } = props;
-	const labels = Object.keys(props.data)
-		?.reverse?.()
-		?.map?.((item) => {
-			const splitted = item.split('-');
-			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
-		});
-	const data = {
-		labels,
-		datasets: [
-			{
-				label: __('Clicks', 'betterlinks'),
-				fill: true,
-				backgroundColor: 'rgba(129, 162, 255,0.4)',
-				defaultFontColor: '#000',
-				borderColor: '#2a62ff',
-				borderCapStyle: 'butt',
-				pointBorderColor: 'rgba(129, 162, 255,1)',
-				pointBackgroundColor: '#fff',
-				pointBorderWidth: 1,
-				pointHoverRadius: 5,
-				pointHoverBackgroundColor: 'rgba(129, 162, 255,1)',
-				pointHoverBorderColor: 'rgba(129, 162, 255,1)',
-				pointHoverBorderWidth: 2,
-				pointRadius: 5,
-				pointHitRadius: 5,
-				data: Object.values(props.data)?.reverse?.(),
-			},
-		],
-	};
-	const options = {
-		maintainAspectRatio: false,
-		responsive: true,
-		aspectRatio: 2,
-		scales: {
-			yAxes: [
-				{
-					ticks: {
-						beginAtZero: true,
-						steps: 20,
-						stepSize: 500,
-					},
-				},
-			],
-		},
-		tooltips: {
-			backgroundColor: 'rgb(255, 255, 255)',
-			titleFontColor: '#000',
-			callbacks: {
-				labelColor: function (tooltipItem, chart) {
-					return {
-						borderColor: '#2a62ff',
-						backgroundColor: '#2a62ff',
-					};
-				},
-				labelTextColor: function (tooltipItem, chart) {
-					return '#000';
-				},
-			},
-		},
-	};
+	const {
+		customDateFilter,
+		setCustomDateFilter,
+		extraAnalytics,
+		chartLoading = false,
+		setChartLoading = defaultFunc,
+		setLoading = defaultFunc,
+		setGraphLoading = defaultFunc,
+		setMediumLoading = defaultFunc,
+		activity,
+	} = props;
+	const id = betterLinksQuery.get('id');
+	const labels = get_labels(is_pro_enabled ? props.data.clicks : teaserClickData.clicks);
+
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
+
+	const { darkMode } = activity;
 
 	const dateRangePickerOnChangeHandler = (item) => {
 		setCustomDateFilter([item.selection]);
@@ -89,41 +55,28 @@ const Graph = (props) => {
 	};
 
 	const filterHandler = async () => {
-		let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
 		setFilterButtonText(__('Filtering...', 'betterlinks'));
 		try {
-			const res = await API.get(endPoint, {
-				params: { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') },
-			});
+			const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
+			const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
+
+			if (!id) {
+				props.fetch_clicks_data({ from, to, setLoading });
+				props.get_graph_data({ from, to, setLoading: setGraphLoading });
+				props.get_chart_data({ from, to, setLoading: setChartLoading });
+				props.get_medium_data({ from, to, setLoading: setMediumLoading });
+			}
+			if (id && is_pro_enabled) {
+				props.fetch_individual_clicks({ link_id: id, from, to, setLoading });
+			}
 			setTimeout(function () {
-				props.fetchCustomClicksData(res.data);
 				setFilterButtonText(__('Done!', 'betterlinks'));
 				setTimeout(function () {
 					setFilterButtonText(__('Filter', 'betterlinks'));
 				}, 3000);
 			}, 1000);
 		} catch (e) {
-			let form_data = new FormData();
-			form_data.append('action', 'betterlinks/admin/fetch_analytics');
-			form_data.append('security', betterlinks_nonce);
-			form_data.append('from', formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'));
-			form_data.append('to', formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd'));
-			await axios.post(ajaxurl, form_data).then(
-				(response) => {
-					if (response.data) {
-						setTimeout(function () {
-							props.fetchCustomClicksData(response.data);
-							setFilterButtonText(__('Done!', 'betterlinks'));
-							setTimeout(function () {
-								setFilterButtonText(__('Filter', 'betterlinks'));
-							}, 3000);
-						}, 1000);
-					}
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
+			console.log({ error: e.message });
 		}
 	};
 
@@ -132,20 +85,42 @@ const Graph = (props) => {
 		setOPenCustomDateFilter(false);
 	};
 
+	const dataOptions = {
+		options: {
+			chart: {
+				id: 'analytics-click-count',
+			},
+			xaxis: {
+				categories: labels,
+			},
+			stroke: {
+				curve: 'smooth',
+			},
+			colors: ['#FF7818', '#6034E6'],
+			markers: {
+				size: 5,
+			},
+			legend: {
+				position: 'top',
+			},
+		},
+		series: getDataset(props.data),
+	};
+
 	return (
-		<React.Fragment>
+		<div>
 			<div className="btl-analytics-filter">
 				<h3 className="btl-analytics-filter__heading">{__('Click Analytics', 'betterlinks')}</h3>
 				<div className="btl-analytics-filter__control">
 					<button onClick={customCalendarToggleHandler} className="btl-list-view-calendar">
-						<span className="dashicons dashicons-calendar"></span>
+						<span className="dashicons dashicons-calendar" />
 						{String(customDateFilter[0].startDate).slice(4, 15)} - {String(customDateFilter[0].endDate).slice(4, 15)}
 					</button>
 					{isOpenCustomDateFilter && (
 						<div className="btl-date-range-picker-wrap">
 							<div className="btl-date-range-picker">
 								<button onClick={closeDatePicker} className="btn-date-range-close">
-									<span className="dashicons dashicons-no-alt"></span>
+									<span className="dashicons dashicons-no-alt" />
 								</button>
 								<DateRangePicker
 									onChange={(item) => dateRangePickerOnChangeHandler(item)}
@@ -164,19 +139,37 @@ const Graph = (props) => {
 				</div>
 			</div>
 			<div className="btl-analytics-chart">
-				<Line data={data} options={options} />
+				<div className={`btl-analytics-chart-line${!is_pro_enabled && id ? ' btl-analytics-chart-line-teaser' : ''}`}>
+					{!is_pro_enabled && id ? (
+						<img className="btl-analytics-chart-image" src={plugin_root_url + 'assets/images/teasers/individual-analytics.png'} />
+					) : (
+						<Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
+					)}
+					{id && <GraphTeaser />}
+				</div>
+				{is_pro_enabled && chartLoading ? (
+					<ChartLoader />
+				) : (
+					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser darkMode={darkMode} />, extraAnalytics)
+				)}
 			</div>
-		</React.Fragment>
+		</div>
 	);
 };
 
 const mapStateToProps = (state) => ({
 	clicks: state.clicks,
+	activity: state.activity,
 });
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
+		get_chart_data: bindActionCreators(get_chart_data, dispatch),
+		get_graph_data: bindActionCreators(get_graph_data, dispatch),
+		get_medium_data: bindActionCreators(get_medium_data, dispatch),
+		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
+		fetch_individual_clicks: bindActionCreators(fetch_individual_clicks, dispatch),
 	};
 };
 

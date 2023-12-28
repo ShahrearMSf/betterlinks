@@ -38,9 +38,9 @@ class PTLImportCSV extends BaseCSV implements ImportCsvInterface
         $slug = \BetterLinks\Helper::make_slug($item['slug']);
         $link = apply_filters('betterlinks/tools/migration/ptl_csv_import_link_arg', [
                 'link_author' => $author_id,
-                'link_date' => $item['created_at'],
-                'link_date_gmt' => $item['created_at'],
-                'link_title' => $item['name'],
+                'link_date' => isset($item['created_at']) ? $item['created_at'] : '',
+                'link_date_gmt' => isset($item['created_at']) ? $item['created_at'] : '',
+                'link_title' => isset($item['name']) ? $item['name'] : '',
                 'link_slug' => $slug,
                 'link_note' => '',
                 'link_status' => 'publish',
@@ -55,7 +55,7 @@ class PTLImportCSV extends BaseCSV implements ImportCsvInterface
                 'link_order' => 0,
                 'link_modified' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
                 'link_modified_gmt' => isset($item['last_updated_at']) ? $item['last_updated_at'] : '',
-                'category'  => $item['link_categories'],
+                'category'  => isset($item['link_categories']) ? $item['link_categories'] : '',
             ]);
         $link_id = $this->insert_link($link);
         if ($link_id) {

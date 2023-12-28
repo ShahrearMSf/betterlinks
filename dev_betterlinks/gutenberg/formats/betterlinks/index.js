@@ -161,7 +161,8 @@ export const betterlinksFormat = {
 				setIsLinkInvalid(true);
 				return false;
 			}
-			const withHttp = /^https?\:\/\//i.test(newText) ? newText : `http://${newText}`;
+			const link = '1' === foundLink?.uncloaked ? foundLink.target_url : newText;
+			const withHttp = /^https?\:\/\//i.test(link) ? link : `http://${link}`;
 			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow });
 			if (isCollapsed(value) && !isActive) {
 				// Scenario: we don't have any selected text && even the cursor isn't on

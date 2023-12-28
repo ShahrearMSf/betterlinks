@@ -2,6 +2,7 @@
 namespace BetterLinks;
 
 use BetterLinks\Link\Utils;
+// use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
 class Link extends Utils {
 
@@ -15,11 +16,26 @@ class Link extends Utils {
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
-		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		// Note: Using sanitize_text_field for $_SERVER['REQUEST_URI'] may not handle redirects properly when short URLs contain non-ASCII characters (e.g., Chinese).
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
 		$request_uri = stripslashes( rawurldecode( $request_uri ) );
 		$request_uri = substr( $request_uri, strlen( wp_parse_url( site_url( '/' ), PHP_URL_PATH ) ) );
 		$param       = explode( '?', $request_uri, 2 );
 		$data        = $this->get_slug_raw( rtrim( current( $param ), '/' ) );
+
+
+		$data['is_customized_meta'] = true;
+		// $CrawlerDetect = new CrawlerDetect;
+		// if ($data['is_customized_meta'] && $CrawlerDetect->isCrawler()) {
+		// 	update_option('hridoy', 'yes');
+		// 	wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
+		// 	exit();
+		// }
+        // if( $data['is_customized_meta'] ) {
+        //     wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
+        //     exit();
+        // }
+
 
 		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { //phpcs:ignore. 
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.

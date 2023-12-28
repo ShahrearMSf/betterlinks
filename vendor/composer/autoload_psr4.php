@@ -7,6 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'PriyoMukul\\WPNotice\\' => array($vendorDir . '/priyomukul/wp-notice/src'),
-    'Jaybizzle\\CrawlerDetect\\' => array($vendorDir . '/jaybizzle/crawler-detect/src'),
+    'DeviceDetector\\' => array($vendorDir . '/matomo/device-detector'),
     'BetterLinks\\' => array($baseDir . '/includes'),
 );

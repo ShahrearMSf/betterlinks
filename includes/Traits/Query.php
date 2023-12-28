@@ -515,6 +515,7 @@ trait Query
     {
         global $wpdb;
         $betterlinks = [];
+        $is_extra_data_tracking_compatible = apply_filters('betterlinks/is_extra_data_tracking_compatible', false);
         if (isset($item['short_url'])) {
             $betterlinks = self::get_link_by_short_url($item['short_url']);
         } elseif (isset($item['link_id'])) {
@@ -523,6 +524,12 @@ trait Query
         $is_analytics_ip_enabled = isset($item['ip']) && isset($item['host']);
         $addedPlaceholderString = $is_analytics_ip_enabled ? " created_at_gmt, ip, host " : " created_at_gmt ";
         $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
+
+        if( $is_extra_data_tracking_compatible ) {
+            $addedPlaceholderString .= ", device, brand_name, model, bot_name, browser_type, os_version, browser_version, language";
+            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s, %s";
+        }
+
         $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
         $db_data_array = [
             current($betterlinks)['ID'],
@@ -539,6 +546,16 @@ trait Query
         if($is_analytics_ip_enabled){
             $db_data_array[] = $item['ip'];
             $db_data_array[] = $item['host'];
+        }
+        if( $is_extra_data_tracking_compatible ) {
+            $db_data_array[] = isset($item['device']) ? $item['device'] : '';
+            $db_data_array[] = isset($item['brand_name']) ? $item['brand_name'] : '';
+            $db_data_array[] = isset($item['model']) ? $item['model'] : '';
+            $db_data_array[] = isset($item['bot_name']) ? $item['bot_name'] : '';
+            $db_data_array[] = isset($item['browser_type']) ? $item['browser_type'] : '';
+            $db_data_array[] = isset($item['os_version']) ? $item['os_version'] : '';
+            $db_data_array[] = isset($item['browser_version']) ? $item['browser_version'] : '';
+            $db_data_array[] = isset($item['language']) ? $item['language'] : '';
         }
         if (isset(current($betterlinks)['ID'])) {
             $wpdb->query(
@@ -560,6 +577,21 @@ trait Query
         $results = $wpdb->get_results($query, ARRAY_A);
         return $results;
     }
+    
+    public static function get_clicks_count() {
+        global $wpdb;
+
+        $query = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks group by link_id";
+        $total_clicks = $wpdb->get_results($query, ARRAY_A);
+
+        $query = "SELECT T1.link_id, count(ip) as unique_clicks from ( SELECT ip, link_id FROM {$wpdb->prefix}betterlinks_clicks GROUP BY `ip`, `link_id` ) as T1 GROUP BY T1.link_id ORDER BY T1.link_id";
+        $unique_clicks = $wpdb->get_results($query, ARRAY_A);
+
+        return array(
+            'total_clicks' => $total_clicks,
+            'unique_clicks' => $unique_clicks   
+        );
+    }
 
     public static function get_links_analytics()
     {
@@ -575,15 +607,34 @@ trait Query
         return $results;
     }
 
+    public static function clear_analytics_cache() {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $individual_analytics_cache_keys = 'btl_individual_analytics_clicks_|btl_individual_graph_data_';
+        $all_analytics_cache_keys = 'betterlinks_analytics_data|btl_analytics_unique_list_|btl_analytics_graph_|btl_top_referer_|btl_click_stats_|btl_top_os_|btl_top_browser_|btl_all_referer_';
+        $query = "DELETE FROM {$prefix}options WHERE option_name regexp '{$individual_analytics_cache_keys}|{$all_analytics_cache_keys}'";
+
+        $result = $wpdb->query($query);
+        return $result;
+    }
+
     public static function search_clicks_data($keyword)
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
+        $is_extra_data_tracking_compatible = apply_filters('betterlinks/is_extra_data_tracking_compatible', false);
+        $extra_data_tracking_columns = $is_extra_data_tracking_compatible ? 'os, device, brand_name, ' : '';
         $results = $wpdb->get_results(
             $wpdb->prepare("SELECT CLICKS.ID as
-            click_ID, link_id, browser, created_at, referer, short_url, target_url, ip, {$prefix}betterlinks.link_title,
+            click_ID, link_id, browser, {$extra_data_tracking_columns} created_at, referer, SUBSTRING_INDEX(SUBSTRING_INDEX(referer, '/', 3), '/', -1) AS domain, short_url, target_url, ip, {$prefix}betterlinks.link_title,
             (select count(id) from {$prefix}betterlinks_clicks where CLICKS.ip = {$prefix}betterlinks_clicks.ip group by ip) as IPCOUNT
-            from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s  group by CLICKS.id ORDER BY CLICKS.created_at DESC", '%' . $keyword . '%'),
+            from {$prefix}betterlinks_clicks as CLICKS left join {$prefix}betterlinks on {$prefix}betterlinks.id = CLICKS.link_id WHERE {$prefix}betterlinks.link_title LIKE %s
+            or {$prefix}betterlinks.short_url like %s
+            or {$prefix}betterlinks.target_url like %s
+            or CLICKS.browser like %s
+            or CLICKS.ip like %s
+            or CLICKS.referer like %s
+            group by CLICKS.id ORDER BY CLICKS.created_at DESC", '%' . $keyword . '%', '%' . $keyword . '%', '%' . $keyword . '%', '%' . $keyword . '%', '%' . $keyword . '%', '%' . $keyword . '%'),
             ARRAY_A
         );
         return $results;
@@ -593,12 +644,16 @@ trait Query
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
+        $is_extra_data_tracking_compatible = apply_filters('betterlinks/is_extra_data_tracking_compatible', false);
+        $extra_data_tracking_columns = $is_extra_data_tracking_compatible ? 'CLICKS.os, CLICKS.device, CLICKS.brand_name, ' : '';
         $query = $wpdb->prepare("SELECT 
                 CLICKS.ID AS click_ID, 
                 CLICKS.link_id, 
                 CLICKS.browser, 
+                {$extra_data_tracking_columns}
                 CLICKS.created_at, 
-                CLICKS.referer, 
+                CLICKS.referer,
+                SUBSTRING_INDEX(SUBSTRING_INDEX(CLICKS.referer, '/', 3), '/', -1) AS domain,
                 {$prefix}betterlinks.short_url, 
                 {$prefix}betterlinks.target_url, 
                 CLICKS.ip, 
@@ -611,11 +666,12 @@ trait Query
             GROUP BY 
                 CLICKS.id 
             ORDER BY 
-                CLICKS.created_at DESC", 
+                CLICKS.created_at DESC limit 100000", 
             $from . ' 00:00:00', $to . ' 23:59:00');
         $results = $wpdb->get_results( $query, ARRAY_A );
         return $results;
     }
+
 
     public static function get_thirstyaffiliates_links()
     {

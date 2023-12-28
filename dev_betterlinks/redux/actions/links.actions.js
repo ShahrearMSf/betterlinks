@@ -1,6 +1,7 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
 import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 import { add_new_password, fetch_links_password } from './password.actions';
+import { edit_gutenberg_auto_link } from './gutenbergredirectlink.actions';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -349,7 +350,8 @@ export const edit_link =
 				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
 				payload: res?.data?.data,
 			});
-			fetch_links_password()(dispatch);
+			edit_gutenberg_auto_link({ link_update: null });
+			!forGutenbergStore && fetch_links_password()(dispatch);
 			return res;
 		} catch (e) {
 			return makeRequest({

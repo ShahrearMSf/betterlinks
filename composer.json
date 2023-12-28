@@ -1,25 +1,25 @@
 {
-  "name": "wpdevteam/betterlinks",
-  "description": "share your url",
-  "authors": [
-    {
-      "name": "wpdevteam"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/priyomukul/wp-notice"
-    }
-  ],
-  "require": {
-    "a5hleyrich/wp-background-processing": "^1.0",
-    "jaybizzle/crawler-detect": "^1.2",
-    "priyomukul/wp-notice": "v2.x-dev"
-  },
-  "autoload": {
-    "psr-4": {
-      "BetterLinks\\": "./includes"
-    }
-  }
+	"name": "wpdevteam/betterlinks",
+	"description": "share your url",
+	"authors": [
+		{
+			"name": "wpdevteam"
+		}
+	],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/priyomukul/wp-notice"
+		}
+	],
+	"require": {
+		"a5hleyrich/wp-background-processing": "^1.0",
+		"priyomukul/wp-notice": "v2.x-dev",
+		"matomo/device-detector": "^6.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"BetterLinks\\": "./includes"
+		}
+	}
 }

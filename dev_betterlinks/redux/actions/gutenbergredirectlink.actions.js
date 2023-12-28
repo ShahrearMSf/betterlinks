@@ -171,6 +171,9 @@ export const set_auto_short_links_disable_ids = async (id, status) => {
 
 	try {
 		const data = await axios.post(ajaxurl, form_data);
+		edit_gutenberg_auto_link({
+			old_disable_auto_short_link: null,
+		});
 		return data;
 	} catch (err) {
 		const data = await axios.post(ajaxurl, form_data);
@@ -388,7 +391,7 @@ export const set_affiliate_link_disclosure_text = async (id, value) => {
 	form_data.append('security', betterlinks_nonce);
 	form_data.append('ID', id);
 	form_data.append('value', JSON.stringify(value));
-	
+
 	try {
 		const data = await axios.post(ajaxurl, form_data);
 		return data;

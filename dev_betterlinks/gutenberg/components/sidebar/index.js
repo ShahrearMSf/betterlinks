@@ -208,7 +208,7 @@ const CustomSidebarComponent = (props) => {
 
 	const onSetAutoShortLink = (url) => {
 		setAutoShortLink(url);
-		edit_gutenberg_auto_link({ short_url: url });
+		edit_gutenberg_auto_link({ short_url: url, link_update: true });
 	};
 
 	const onSetRedirectType = (type) => {

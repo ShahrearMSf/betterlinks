@@ -1,10 +1,16 @@
 <?php
 namespace BetterLinks\Link;
 
-use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\Device\AbstractDeviceParser;
+use DeviceDetector\Parser\OperatingSystem;
+use DeviceDetector\Parser\Client\Browser;
 
 class Utils
 {
+    public function __construct() {
+        AbstractDeviceParser::setVersionTruncation(AbstractDeviceParser::VERSION_TRUNCATION_NONE);
+    }
     public function get_slug_raw($slug)
     {
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
@@ -55,9 +61,15 @@ class Utils
             return;
         }
         if (filter_var($data['track_me'], FILTER_VALIDATE_BOOLEAN)) {
-            if (isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] && class_exists('CrawlerDetect')) {
-                $CrawlerDetect = new CrawlerDetect;
-                if (! $CrawlerDetect->isCrawler()) {
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $dd = new DeviceDetector($user_agent);
+            $dd->parse();
+
+            $data = $this->device_data_collect($data, $dd);
+            $data['os'] = OperatingSystem::getOsFamily( $dd->getOs('name') );
+            $data['browser'] = Browser::getBrowserFamily( $dd->getClient('name') );
+            if ( isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] ) {
+                if( ! $dd->isBot() ) {
                     $this->start_trakcing($data);
                 }
             } else {
@@ -111,6 +123,28 @@ class Utils
                 exit();
         }
     }
+    public function device_data_collect($data, $dd) {
+        if( !apply_filters('betterlinks/is_extra_data_tracking_compatible', false) ) return $data;
+        
+        $client_info = $dd->getClient();
+        $os_details = $dd->getOs();
+        
+        $language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en-US,en;q=0.5';
+        $language = explode(',', $language)[0];
+
+        $client_information_arr = [
+            'device'    => $dd->getDeviceName(),
+            'brand_name' => $dd->getBrandName(),
+            'model' => $dd->getModel(),
+            'bot_name' => $dd->isBot() ? $dd->getBot()['name'] : null,
+            'browser_type' => isset($client_info['type']) ? $client_info['type'] : null,
+            'browser_version' => isset($client_info['version']) ? $client_info['version'] : null,
+            'os_version'    => isset($os_details['version']) ? $os_details['version'] : null,
+            'language' => !empty($language) ? $language : 'en-US'
+        ];
+
+        return array_merge($data, $client_information_arr);
+    }
     public function start_trakcing($data)
     {
         global $betterlinks;
@@ -126,8 +160,8 @@ class Utils
         }
         $click_data = [
             'link_id' => $data['ID'],
-            'browser' => $_SERVER['HTTP_USER_AGENT'],
-            'os' => '',
+            'browser' => isset($data['browser']) ? $data['browser'] : '',
+            'os' => isset($data['os']) ? $data['os'] : '',
             'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
             'uri' => $data['link_slug'],
             'click_count' => 0,
@@ -143,8 +177,19 @@ class Utils
             $click_data['ip'] = $IP;
             $click_data['host'] = $IP;
         }
+        if( apply_filters('betterlinks/is_extra_data_tracking_compatible', false) ) {
+            $click_data['device'] = $data['device'];
+            $click_data['brand_name'] = $data['brand_name'];
+            $click_data['model'] = $data['model'];
+            $click_data['bot_name'] = $data['bot_name'];
+            $click_data['browser_type'] = $data['browser_type'];
+            $click_data['browser_version'] = $data['browser_version'];
+            $click_data['os_version'] = $data['os_version'];
+            $click_data['language'] = $data['language'];
+        }
+        
         $arg = apply_filters('betterlinks/link/insert_click_arg', $click_data);
-
+        
         if (BETTERLINKS_EXISTS_CLICKS_JSON) {
             $this->insert_json_into_file(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg);
         } else {
