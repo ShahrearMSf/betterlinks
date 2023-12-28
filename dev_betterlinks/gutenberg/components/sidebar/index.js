@@ -19,7 +19,7 @@ const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
-const { PluginDocumentSettingPanel } = wp.editPost;
+import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
 import ToggleTitle from '../ToggleTitle';
 import AffiliateLinkDisclosure from './AffiliateLinkDisclosure';
