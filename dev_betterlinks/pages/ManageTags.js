@@ -2,20 +2,28 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_all_tags } from 'redux/actions/terms.actions';
 import { useEffect } from 'react';
+import TopBar from 'containers/TopBar';
+import { __ } from '@wordpress/i18n';
+import AddNewTags from 'containers/AddNewTags';
 
 const ManageTags = (props) => {
+	const { tags } = props.terms;
 	useEffect(() => {
-		props.fetch_all_tags();
+		if (!tags) props.fetch_all_tags();
 	}, []);
+
 	return (
 		<>
-			<h1>Hello from Manage Tags</h1>
+			<TopBar label={__('Manage Tags', 'betterlinks')} render={() => <AddNewTags tags={tags} />} />
 		</>
 	);
 };
 
+const mapStateToProps = (state) => ({
+	terms: state.terms,
+});
 const mapDispatchToProps = (dispatch) => ({
 	fetch_all_tags: bindActionCreators(fetch_all_tags, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(ManageTags);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTags);
