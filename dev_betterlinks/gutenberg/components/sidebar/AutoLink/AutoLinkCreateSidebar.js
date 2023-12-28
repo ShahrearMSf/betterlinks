@@ -98,6 +98,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			type: EDIT_GUTENBERG_AUTO_LINK,
 			payload: {
 				cat_id: catId,
+				link_update: true,
 			},
 		});
 	};
@@ -236,6 +237,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 												type: EDIT_GUTENBERG_AUTO_LINK,
 												payload: {
 													redirect_type: mode,
+													link_update: true,
 												},
 											});
 										}}
@@ -311,6 +313,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 					};
 				}
 
+				if (typeof autoLinkStoreData?.link_update !== 'boolean') return false;
 				if (autoLinkStoreData?.short_url !== '') {
 					if (autoLinkStoreData.ID) {
 						edit_link(
