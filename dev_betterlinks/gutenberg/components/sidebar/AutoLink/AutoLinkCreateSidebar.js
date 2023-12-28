@@ -276,8 +276,8 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			// auto create links
 			let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
 
-			set_auto_short_links_disable_ids(postId, autoLinkStoreData?.disable_auto_short_link ? '1' : '0');
-			if (autoLinkStoreData?.disable_auto_short_link) {
+			if (typeof autoLinkStoreData?.old_disable_auto_short_link === 'boolean' && autoLinkStoreData?.old_disable_auto_short_link !== autoLinkStoreData?.disable_auto_short_link) {
+				set_auto_short_links_disable_ids(postId, autoLinkStoreData?.disable_auto_short_link ? '1' : '0');
 				return false;
 			}
 
