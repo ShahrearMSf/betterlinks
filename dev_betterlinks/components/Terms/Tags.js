@@ -64,15 +64,7 @@ const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 					defaultValue={saveTags}
 					onChange={onChange}
 					classNamePrefix="btl-react-select"
-					options={
-						data.terms &&
-						data.terms
-							.filter((item) => item.term_type == 'tags')
-							.map((item) => ({
-								value: item.ID,
-								label: item.term_name,
-							}))
-					}
+					options={data}
 					isDisabled={disabled}
 					isMulti={true}
 				/>

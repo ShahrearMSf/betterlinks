@@ -89,11 +89,10 @@ class Terms extends Controller {
 	public function get_tags() {
 		global $wpdb;
 		
-		$query = "SELECT t.id, t.term_name, t.term_slug, `link_id` from {$wpdb->prefix}betterlinks_terms as t left join {$wpdb->prefix}betterlinks_terms_relationships as tr on t.id=tr.term_id where t.term_type='tags'";
+		// $query = "SELECT t.id, t.term_name, t.term_slug, `link_id` from {$wpdb->prefix}betterlinks_terms as t left join {$wpdb->prefix}betterlinks_terms_relationships as tr on t.id=tr.term_id where t.term_type='tags'";
+		$query = "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_type='tags'";
 		$results = $wpdb->get_results($query, ARRAY_A);
-
-		error_log( json_encode( $results ) );
-
+		
 		return new \WP_REST_Response(
 			array(
 				'success' => true,

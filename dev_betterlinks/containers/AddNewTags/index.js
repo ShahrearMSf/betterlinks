@@ -7,7 +7,6 @@ import Tags from 'components/Terms/Tags';
 
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
-	// const [tags, setTags] = useState([]);
 
 	const openModal = () => {
 		console.log('hello');
@@ -16,11 +15,12 @@ const AddNewTags = (props) => {
 	const closeModal = () => {
 		setOpen(false);
 	};
+
 	const tags = (props?.tags || []).map((item) => ({
-		label: item.term_name,
 		value: item.term_slug,
+		label: item.term_name,
 	}));
-	console.log(tags);
+
 	return (
 		<>
 			{/* <ActionButton type="edit" label={__('Edit Keyword', 'betterlinks')} onClickHandler={openModal} /> */}
@@ -43,7 +43,7 @@ const AddNewTags = (props) => {
 											<label className="btl-modal-form-label" htmlFor="tags">
 												{__('Tags', 'betterlinks')}
 											</label>
-											<Tags linkId={0} fieldName="tags_id" data={tags || []} setFieldValue={props.setFieldValue} disabled={false} />
+											<Tags linkId={0} fieldName="tags_id" data={tags} setFieldValue={props.setFieldValue} disabled={false} />
 										</div>
 										<div className="btl-modal-form-group">
 											<label className="btl-modal-form-label"></label>
