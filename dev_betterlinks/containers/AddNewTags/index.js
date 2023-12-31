@@ -7,19 +7,28 @@ import Tags from 'components/Terms/Tags';
 
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
+	const [errorMsg, setErrorMsg] = useState('');
 
 	const openModal = () => {
-		console.log('hello');
 		setOpen(true);
 	};
 	const closeModal = () => {
 		setOpen(false);
 	};
 
-	const tags = (props?.tags || []).map((item) => ({
-		value: item.term_slug,
-		label: item.term_name,
-	}));
+	// const tags = (props?.tags || []).map((item) => ({
+	// 	value: item.term_slug,
+	// 	label: item.term_name,
+	// }));
+
+	const __handleChange = (e) => {
+		const value = e.target.value;
+		const isExist = (props?.tags || []).filter((item) => item.term_slug === value).length;
+		if (!!isExist) {
+			return setErrorMsg(__('Tags already exist'));
+		}
+		setErrorMsg('');
+	};
 
 	return (
 		<>
@@ -43,7 +52,12 @@ const AddNewTags = (props) => {
 											<label className="btl-modal-form-label" htmlFor="tags">
 												{__('Tags', 'betterlinks')}
 											</label>
-											<Tags linkId={0} fieldName="tags_id" data={tags} setFieldValue={props.setFieldValue} disabled={false} />
+											<div style={{ width: '100%' }}>
+												<Field id="tags" className="btl-modal-form-control" type="text" name="tags" required onChange={__handleChange} />
+												<span className="btl_duplicate_tags" style={{ color: 'red', height: '5px', display: 'block' }}>
+													{errorMsg}
+												</span>
+											</div>
 										</div>
 										<div className="btl-modal-form-group">
 											<label className="btl-modal-form-label"></label>
