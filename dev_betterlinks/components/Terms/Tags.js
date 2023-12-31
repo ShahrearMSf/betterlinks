@@ -16,6 +16,7 @@ const defaultProps = {};
 
 const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 	const [saveTags, setSaveTags] = useState(null);
+
 	useEffect(() => {
 		if (linkId) {
 			let form_data = new FormData();
@@ -64,7 +65,15 @@ const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 					defaultValue={saveTags}
 					onChange={onChange}
 					classNamePrefix="btl-react-select"
-					options={data}
+					options={
+						data.terms &&
+						data.terms
+							.filter((item) => item.term_type == 'tags')
+							.map((item) => ({
+								value: item.ID,
+								label: item.term_name,
+							}))
+					}
 					isDisabled={disabled}
 					isMulti={true}
 				/>

@@ -3,11 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { modalCustomStyles } from 'utils/helper';
 import { Field, Form, Formik } from 'formik';
-import Tags from 'components/Terms/Tags';
 
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
+	const [tag, setTag] = useState('');
 
 	const openModal = () => {
 		setOpen(true);
@@ -16,12 +16,7 @@ const AddNewTags = (props) => {
 		setOpen(false);
 	};
 
-	// const tags = (props?.tags || []).map((item) => ({
-	// 	value: item.term_slug,
-	// 	label: item.term_name,
-	// }));
-
-	const __handleChange = (e) => {
+	const __handleChange = (e, setField) => {
 		const value = e.target.value;
 		const isExist = (props?.tags || []).filter((item) => item.term_slug === value).length;
 		if (!!isExist) {
@@ -53,7 +48,7 @@ const AddNewTags = (props) => {
 												{__('Tags', 'betterlinks')}
 											</label>
 											<div style={{ width: '100%' }}>
-												<Field id="tags" className="btl-modal-form-control" type="text" name="tags" required onChange={__handleChange} />
+												<Field id="tags" className="btl-modal-form-control" type="text" name="tags" required onChange={(e) => __handleChange(e, props.setFieldValue)} />
 												<span className="btl_duplicate_tags" style={{ color: 'red', height: '5px', display: 'block' }}>
 													{errorMsg}
 												</span>
