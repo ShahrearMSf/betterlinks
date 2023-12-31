@@ -139,7 +139,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 1.7.0 - 28/12/2023 =
+= 1.7.0 - 31/12/2023 =
 
 - Improved: Revamped Analytics for performance improvement
 - Added: Individual Analytics for all links
