@@ -526,15 +526,16 @@ trait Query
         $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
 
         if( $is_extra_data_tracking_compatible ) {
-            $addedPlaceholderString .= ", device, brand_name, model, bot_name, browser_type, os_version, browser_version, language";
-            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s, %s";
+            $addedPlaceholderString .= ", brand_name, model, bot_name, browser_type, os_version, browser_version, language";
+            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s";
         }
 
-        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
+        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os,device, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
         $db_data_array = [
             current($betterlinks)['ID'],
             $item['browser'],
             $item['os'],
+            $item['device'],
             $item['referer'],
             $item['uri'],
             isset($item['click_count']) ? $item['click_count'] : 0,
@@ -547,8 +548,8 @@ trait Query
             $db_data_array[] = $item['ip'];
             $db_data_array[] = $item['host'];
         }
+        // $db_data_array[] = isset($item['device']) ? $item['device'] : '';
         if( $is_extra_data_tracking_compatible ) {
-            $db_data_array[] = isset($item['device']) ? $item['device'] : '';
             $db_data_array[] = isset($item['brand_name']) ? $item['brand_name'] : '';
             $db_data_array[] = isset($item['model']) ? $item['model'] : '';
             $db_data_array[] = isset($item['bot_name']) ? $item['bot_name'] : '';

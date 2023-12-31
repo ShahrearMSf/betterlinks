@@ -68,6 +68,8 @@ class Utils
             $data = $this->device_data_collect($data, $dd);
             $data['os'] = OperatingSystem::getOsFamily( $dd->getOs('name') );
             $data['browser'] = Browser::getBrowserFamily( $dd->getClient('name') );
+            $data['device'] = $dd->getDeviceName();
+
             if ( isset($betterlinks['disablebotclicks']) && $betterlinks['disablebotclicks'] ) {
                 if( ! $dd->isBot() ) {
                     $this->start_trakcing($data);
@@ -133,7 +135,6 @@ class Utils
         $language = explode(',', $language)[0];
 
         $client_information_arr = [
-            'device'    => $dd->getDeviceName(),
             'brand_name' => $dd->getBrandName(),
             'model' => $dd->getModel(),
             'bot_name' => $dd->isBot() ? $dd->getBot()['name'] : null,
@@ -162,6 +163,7 @@ class Utils
             'link_id' => $data['ID'],
             'browser' => isset($data['browser']) ? $data['browser'] : '',
             'os' => isset($data['os']) ? $data['os'] : '',
+            'device' => isset($data['device']) ? $data['device'] : '',
             'referer' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
             'uri' => $data['link_slug'],
             'click_count' => 0,
@@ -177,8 +179,8 @@ class Utils
             $click_data['ip'] = $IP;
             $click_data['host'] = $IP;
         }
+        
         if( apply_filters('betterlinks/is_extra_data_tracking_compatible', false) ) {
-            $click_data['device'] = $data['device'];
             $click_data['brand_name'] = $data['brand_name'];
             $click_data['model'] = $data['model'];
             $click_data['bot_name'] = $data['bot_name'];
