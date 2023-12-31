@@ -313,7 +313,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 					};
 				}
 
-				if (typeof autoLinkStoreData?.link_update !== 'boolean') return false;
+				// if (typeof autoLinkStoreData?.link_update !== 'boolean') return false;
 				if (autoLinkStoreData?.short_url !== '') {
 					if (autoLinkStoreData.ID) {
 						edit_link(

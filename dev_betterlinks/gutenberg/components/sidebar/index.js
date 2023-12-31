@@ -417,7 +417,7 @@ const CustomSidebarComponent = (props) => {
 										deleteInstantRedirect();
 									}
 								}}
-								style={{ marginBottom: '10px' }}
+								style={{ marginBottom: '10px', border: '1px solid currentColor' }}
 							>
 								Delete Instant Redirect
 							</Button>
