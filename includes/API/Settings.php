@@ -104,7 +104,6 @@ class Settings extends Controller {
 		}
 		// regenerate links for wildcards option update
 		\BetterLinks\Helper::write_links_inside_json();
-		error_log(json_encode($response));  // it's better to write the links instantly here than scheduling/corning it
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
