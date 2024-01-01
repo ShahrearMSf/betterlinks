@@ -103,40 +103,11 @@ public function get_analytics_unique_list($from, $to) {
 			return $results;
 		}
 		global $wpdb;
-		$query   = "SELECT * FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id={$id} AND created_at BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59'";
+		$fields = "ID, link_id, ip, browser, referer, os, device, created_at";
+		
+		$query   = "SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id={$id} AND created_at BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59' ORDER BY created_at DESC";
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
-		set_transient( $transient_key, $results, self::$transient_timeout );
-		return $results;
-	}
-
-	/**
-	 * Returns individual analytics graph data within a time limit
-	 *
-	 * @param int|string $id Clicks id.
-	 * @param string     $from The start time.
-	 * @param string     $to The end time.
-	 *
-	 * @return array Array of individual analytics graph clicks.
-	 */
-	public function get_individual_graph_data( $id, $from, $to ) {
-		$transient_key = self::get_transient_key( 'btl_individual_graph_data_', $from, $to, $id );
-		if ( $results = get_transient( $transient_key ) ) {
-			return $results;
-		}
-		global $wpdb;
-		$query         = "SELECT count(ip) as uniq_count, T1.c_date from ( SELECT ip, DATE( created_at ) as c_date FROM {$wpdb->prefix}betterlinks_clicks 
-        WHERE link_id={$id} and created_at  BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59' GROUP BY `ip`, `c_date` ) as T1 GROUP BY T1.c_date ORDER BY T1.c_date DESC";
-		$unique_clicks = $wpdb->get_results( $query, ARRAY_A );
-
-		$query        = "SELECT count(id) as click_count, DATE(created_at) as c_date FROM {$wpdb->prefix}betterlinks_clicks 
-        WHERE link_id={$id} and created_at  BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59' GROUP BY c_date ORDER BY c_date DESC";
-		$total_clicks = $wpdb->get_results( $query, ARRAY_A );
-
-		$results = array(
-			'total_count'  => $total_clicks,
-			'unique_count' => $unique_clicks,
-		);
 		set_transient( $transient_key, $results, self::$transient_timeout );
 		return $results;
 	}

@@ -19,7 +19,7 @@ const { __ } = wp.i18n;
 const { Fragment, useState, useEffect } = wp.element;
 const { ToggleControl, TextControl, SelectControl, Button } = wp.components;
 const { withDispatch, subscribe } = wp.data;
-const { PluginDocumentSettingPanel } = wp.editPost;
+import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import AutoLinkCreateSidebar from './AutoLink/AutoLinkCreateSidebar';
 import ToggleTitle from '../ToggleTitle';
 import AffiliateLinkDisclosure from './AffiliateLinkDisclosure';
@@ -208,7 +208,7 @@ const CustomSidebarComponent = (props) => {
 
 	const onSetAutoShortLink = (url) => {
 		setAutoShortLink(url);
-		edit_gutenberg_auto_link({ short_url: url });
+		edit_gutenberg_auto_link({ short_url: url, link_update: true });
 	};
 
 	const onSetRedirectType = (type) => {
@@ -417,7 +417,7 @@ const CustomSidebarComponent = (props) => {
 										deleteInstantRedirect();
 									}
 								}}
-								style={{ marginBottom: '10px' }}
+								style={{ marginBottom: '10px', border: '1px solid currentColor' }}
 							>
 								Delete Instant Redirect
 							</Button>

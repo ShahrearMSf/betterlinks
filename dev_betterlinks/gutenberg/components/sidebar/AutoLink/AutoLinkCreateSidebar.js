@@ -98,6 +98,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			type: EDIT_GUTENBERG_AUTO_LINK,
 			payload: {
 				cat_id: catId,
+				link_update: true,
 			},
 		});
 	};
@@ -236,6 +237,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 												type: EDIT_GUTENBERG_AUTO_LINK,
 												payload: {
 													redirect_type: mode,
+													link_update: true,
 												},
 											});
 										}}
@@ -276,8 +278,8 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 			// auto create links
 			let autoLinkStoreData = { ...(betterlinksGutenStore?.getState()?.gutenbergAutoLink || {}) };
 
-			set_auto_short_links_disable_ids(postId, autoLinkStoreData?.disable_auto_short_link ? '1' : '0');
-			if (autoLinkStoreData?.disable_auto_short_link) {
+			if (typeof autoLinkStoreData?.old_disable_auto_short_link === 'boolean' && autoLinkStoreData?.old_disable_auto_short_link !== autoLinkStoreData?.disable_auto_short_link) {
+				set_auto_short_links_disable_ids(postId, autoLinkStoreData?.disable_auto_short_link ? '1' : '0');
 				return false;
 			}
 
@@ -311,6 +313,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 					};
 				}
 
+				// if (typeof autoLinkStoreData?.link_update !== 'boolean') return false;
 				if (autoLinkStoreData?.short_url !== '') {
 					if (autoLinkStoreData.ID) {
 						edit_link(

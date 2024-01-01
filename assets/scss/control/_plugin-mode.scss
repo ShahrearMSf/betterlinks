@@ -201,6 +201,14 @@
 		fill: $white;
 	}
 }
+
+.apexcharts-xaxis .apexcharts-xaxis-texts-g text tspan,
+.apexcharts-yaxis .apexcharts-yaxis-texts-g text tspan {
+	fill: $white;
+}
+.apexcharts-legend .apexcharts-legend-series .apexcharts-legend-text {
+	color: $white !important;
+}
 .btl-analytics-heading {
 	color: $white;
 }
@@ -209,8 +217,33 @@
 }
 .btl-analytic {
 	color: $white;
+	.btl-chart-preloader {
+		background-color: #252f47;
+	}
 	.btl-analytics-chart {
 		border-color: #252f47;
+
+		.btl-analytics-chart-overlay {
+			background-color: rgba(54, 64, 90, 0.7);
+
+			.btl-graphteaser-icon {
+				svg path {
+					stroke: #fff;
+				}
+			}
+
+			.MuiPaper-root {
+				background-color: #252f47;
+
+				.MuiCardContent-root {
+					h5,
+					span,
+					ul > li span {
+						color: $white;
+					}
+				}
+			}
+		}
 	}
 	.btl-analytics-filter,
 	.btl-analytic-table-wrapper,
@@ -279,6 +312,10 @@
 		.rdt_TableRow {
 			background: #252f47;
 			color: $white;
+
+			&:hover {
+				background: #36405a;
+			}
 			.rdt_TableCol {
 				color: $white;
 				.rdt_TableCol_Sortable {
@@ -299,6 +336,11 @@
 	.rdt_Pagination {
 		background-color: #252f47;
 		color: $white;
+
+		> div > svg {
+			fill: #2c3650;
+		}
+
 		> div:last-child {
 			button {
 				svg {
@@ -594,6 +636,11 @@
 	}
 	.rdt_Pagination {
 		color: $white;
+
+		> div > svg {
+			fill: #2c3650;
+		}
+
 		> div:last-child {
 			button {
 				svg {

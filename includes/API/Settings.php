@@ -92,6 +92,7 @@ class Settings extends Controller {
 		$response                              = \BetterLinks\Helper::sanitize_text_or_array_field( $response );
 		$response['uncloaked_categories']      = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 		$response['affiliate_disclosure_text'] = isset( $response['affiliate_disclosure_text'] ) && is_string( $response['affiliate_disclosure_text'] ) ? $response['affiliate_disclosure_text'] : '';
+		$enable_password_protection = isset( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
 
 		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
 		$enable_customize_meta_tag = !empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
@@ -116,7 +117,7 @@ class Settings extends Controller {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
 		}
 		// regenerate links for wildcards option update
-		\BetterLinks\Helper::write_links_inside_json(); // it's better to write the links instantly here than scheduling/corning it
+		\BetterLinks\Helper::write_links_inside_json();
 		return new \WP_REST_Response(
 			array(
 				'success' => true,

@@ -526,15 +526,16 @@ trait Query
         $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
 
         if( $is_extra_data_tracking_compatible ) {
-            $addedPlaceholderString .= ", device, brand_name, model, bot_name, browser_type, os_version, browser_version, language";
-            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s, %s";
+            $addedPlaceholderString .= ", brand_name, model, bot_name, browser_type, os_version, browser_version, language";
+            $addedDbColumnsString .= ", %s, %s, %s, %s, %s, %s, %s";
         }
 
-        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
+        $query = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os,device, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
         $db_data_array = [
             current($betterlinks)['ID'],
             $item['browser'],
             $item['os'],
+            $item['device'],
             $item['referer'],
             $item['uri'],
             isset($item['click_count']) ? $item['click_count'] : 0,
@@ -547,14 +548,14 @@ trait Query
             $db_data_array[] = $item['ip'];
             $db_data_array[] = $item['host'];
         }
+        // $db_data_array[] = isset($item['device']) ? $item['device'] : '';
         if( $is_extra_data_tracking_compatible ) {
-            $db_data_array[] = isset( $item['device'] ) ? $item['device'] : '';
             $db_data_array[] = isset($item['brand_name']) ? $item['brand_name'] : '';
             $db_data_array[] = isset($item['model']) ? $item['model'] : '';
             $db_data_array[] = isset($item['bot_name']) ? $item['bot_name'] : '';
             $db_data_array[] = isset($item['browser_type']) ? $item['browser_type'] : '';
             $db_data_array[] = isset($item['os_version']) ? $item['os_version'] : '';
-            $db_data_array[] = isset( $item['browser_version']) ? $item['browser_version'] : '';
+            $db_data_array[] = isset($item['browser_version']) ? $item['browser_version'] : '';
             $db_data_array[] = isset($item['language']) ? $item['language'] : '';
         }
         if (isset(current($betterlinks)['ID'])) {
@@ -581,10 +582,10 @@ trait Query
     public static function get_clicks_count() {
         global $wpdb;
 
-        $query = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks where ip!='' group by link_id";
+        $query = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks group by link_id";
         $total_clicks = $wpdb->get_results($query, ARRAY_A);
 
-        $query = "SELECT T1.link_id, count(ip) as unique_clicks from ( SELECT ip, link_id FROM {$wpdb->prefix}betterlinks_clicks where ip!='' GROUP BY `ip`, `link_id` ) as T1 GROUP BY T1.link_id ORDER BY T1.link_id";
+        $query = "SELECT T1.link_id, count(ip) as unique_clicks from ( SELECT ip, link_id FROM {$wpdb->prefix}betterlinks_clicks GROUP BY `ip`, `link_id` ) as T1 GROUP BY T1.link_id ORDER BY T1.link_id";
         $unique_clicks = $wpdb->get_results($query, ARRAY_A);
 
         return array(
@@ -611,7 +612,7 @@ trait Query
         global $wpdb;
         $prefix = $wpdb->prefix;
         $individual_analytics_cache_keys = 'btl_individual_analytics_clicks_|btl_individual_graph_data_';
-        $all_analytics_cache_keys = 'btl_analytics_unique_list_|btl_analytics_graph_|btl_top_referer_|btl_click_stats_|btl_top_os_|btl_top_browser_|btl_all_referer_';
+        $all_analytics_cache_keys = 'betterlinks_analytics_data|btl_analytics_unique_list_|btl_analytics_graph_|btl_top_referer_|btl_click_stats_|btl_top_os_|btl_top_browser_|btl_all_referer_';
         $query = "DELETE FROM {$prefix}options WHERE option_name regexp '{$individual_analytics_cache_keys}|{$all_analytics_cache_keys}'";
 
         $result = $wpdb->query($query);

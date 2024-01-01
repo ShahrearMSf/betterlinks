@@ -24,6 +24,7 @@ const DisableCheckbox = ({ isChecked, setChecked, ID }) => {
 		setChecked(bool);
 		edit_gutenberg_auto_link({
 			disable_auto_short_link: bool,
+			old_disable_auto_short_link: !bool,
 		});
 	};
 

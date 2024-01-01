@@ -19,25 +19,11 @@ const FilterComponent = (props) => {
 		{ label: 'Timestamp', value: 'created_at' },
 		{ label: 'Referer', value: 'referer' },
 		{
-			label: is_extra_data_tracking_compatible ? (
-				'OS'
-			) : (
-				<span>
-					{__('OS', 'betterlinks')}
-					<span className="pro-badge">Pro</span>
-				</span>
-			),
+			label: 'OS',
 			value: 'os',
 		},
 		{
-			label: is_extra_data_tracking_compatible ? (
-				'Device'
-			) : (
-				<span>
-					{__('Device', 'betterlinks')}
-					<span className="pro-badge">Pro</span>
-				</span>
-			),
+			label: 'Device',
 			value: 'device',
 		},
 	];
@@ -52,7 +38,6 @@ const FilterComponent = (props) => {
 							title={__('Go back to Analytics', 'betterlinks')}
 						/>
 					)}
-					{/* <Switch analyticsTab={analyticsTab} update_activity={update_activity} id={id && ''} /> */}
 				</div>
 
 				<div style={{ display: 'flex' }}>

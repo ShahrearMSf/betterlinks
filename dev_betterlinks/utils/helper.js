@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
-import AnalyticLink from 'components/Analytics/AnalyticLink';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 
@@ -568,9 +567,9 @@ export const getFavoriteLinkCount = (links) => {
 export const analytic = (analytic, ID) => {
 	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
 	if (isLinkAble) {
-		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + analytic.ip}</Link>;
+		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
 	}
-	return +analytic.link_count + '/' + analytic.ip.length;
+	return +analytic.link_count + '/' + +analytic.ip;
 };
 
 export const saveSettingsHandler = (values, update_option, setFormSubmitText) => {
@@ -598,14 +597,10 @@ export const getDataset = (data) => {
 			name: __('Clicks', 'betterlinks'),
 			data: Object.values(data.clicks)?.reverse?.(),
 		},
-		betterLinksHooks.applyFilters(
-			'betterLinksAnalyticsClicksGraph',
-			{
-				name: "<p style='color: rgb(182, 193, 197);cursor:not-allowed;'>Unique Clicks - <span class='pro-badge'>Pro</span></p>",
-				data: [0],
-			},
-			data.unique_clicks
-		),
+		{
+			name: __('Unique Clicks', 'betterlinks'),
+			data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
+		},
 	];
 	return dataset;
 };
@@ -630,7 +625,21 @@ const Blured = styled.span`
 	filter: blur(2px);
 	user-select: none;
 `;
-const BlurData = <Blured>XXX</Blured>;
+const osData = ['Windows', 'Linux', 'Mac', 'iOS', 'Android'];
+const deviceData = ['mobile', 'desktop', 'mobile', 'desktop'];
+const BluredData = ({ data = '' }) => {
+	if ('os' === data) {
+		const rndInt = Math.floor(Math.random() * 4) + 1;
+		return <span style={{ filter: 'blur(2px)' }}>{osData[rndInt]}</span>;
+	}
+	const rndInt = Math.floor(Math.random() * 3) + 1;
+	return (
+		<span style={{ filter: 'blur(2px)' }}>
+			<img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(deviceData[rndInt])}.svg`} alt="icon" />
+		</span>
+	);
+};
+
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
 		const singleColumn = [
@@ -638,13 +647,13 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				name: __('Browser', 'betterlinks'),
 				selector: 'browser',
 				sortable: false,
-				sortFunction: sortFunction('browser'),
 				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
+					const title = (browser?.charAt(0) || '')?.toUpperCase() + browser?.slice(1);
 					return (
 						<div>
-							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={browser.charAt(0).toUpperCase() + browser.slice(1)} />
+							<img width="25" src={`${plugin_root_url}assets/images/browser/${browser}-browser.svg`} alt="icon" title={title} />
 						</div>
 					);
 				},
@@ -652,7 +661,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('IP', 'betterlinks'),
 				selector: 'ip',
-				// width: '100px',
 				sortable: false,
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
@@ -664,6 +672,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('Referrer', 'betterlinks'),
 				selector: 'referer',
+				width: '500px',
 				sortable: false,
 				cell: (row) => (
 					<div>
@@ -676,56 +685,22 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				),
 			},
 			{
-				name: (
-					<span style={{ display: 'flex' }}>
-						{__('OS', 'betterlinks')}
-						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-					</span>
-				),
+				name: __('OS', 'betterlinks'),
 				selector: 'os',
-				width: '80px',
-				cell: (row) => <div>{is_extra_data_tracking_compatible ? row.os : BlurData}</div>,
+				width: '100px',
+				cell: (row) => <div>{row.os}</div>,
 				sortable: false,
-				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
 			{
-				name: (
-					<span style={{ display: 'flex' }}>
-						{__('Device', 'betterlinks')}
-						{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-					</span>
-				),
+				name: __('Device', 'betterlinks'),
 				selector: 'device',
 				width: '80px',
-				cell: (row) => (
-					<div>
-						{is_extra_data_tracking_compatible
-							? row.device && (
-									<img
-										width="25"
-										src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`}
-										alt="icon"
-										title={row.device.charAt(0).toUpperCase() + row.device.slice(1)}
-									/>
-							  )
-							: BlurData}
-					</div>
-				),
+				cell: (row) => {
+					const title = row.device === 'desktop' ? 'Computer' : row.device?.charAt(0).toUpperCase() + row.device?.slice(1);
+					return <div>{row.device && <img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`} alt="icon" title={title} />}</div>;
+				},
 				sortable: false,
-				...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
 			},
-			// {
-			// 	name: (
-			// 		<span style={{ display: 'flex' }}>
-			// 			{__('Brand', 'betterlinks')}
-			// 			{!is_extra_data_tracking_compatible && <span className="pro-badge">Pro</span>}
-			// 		</span>
-			// 	),
-			// 	selector: 'brand_name',
-			// 	cell: (row) => <div>{is_extra_data_tracking_compatible ? row.brand_name : BlurData}</div>,
-			// 	sortable: false,
-			// 	...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('brand_name') }),
-			// },
 		];
 
 		const analyticsArr = [...Object.values(analytics || {}).map((item) => item.value)];
@@ -737,7 +712,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			selector: 'name',
 			id: 'name',
 			sortable: true,
-			...(1 !== analyticsTab && { sortFunction: sortFunction('link_title') }),
 			cell: (row) => <div>{row.link_title}</div>,
 		},
 		{
@@ -771,30 +745,27 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 		{
 			name: __('Total Clicks', 'betterlinks'),
 			selector: 'total_clicks',
-			sortFunction: sortFunction('total_clicks'),
+			width: '150px',
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('total_clicks') }),
 			cell: (row) => <div>{row?.total_clicks || 1}</div>,
 		},
 		{
 			name: __('Unique Clicks', 'betterlinks'),
 			selector: 'unique_clicks',
-			sortFunction: sortFunction('unique_clicks'),
+			width: '150px',
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('unique_clicks') }),
 			cell: (row) => <div>{row?.unique_clicks || 1}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),
 			selector: 'action',
 			sortable: false,
-			// sortFunction: sortFunction('browser'),
 			width: '100px',
 			cell: (row) => {
 				return <Link to={`${route_path}admin.php?page=betterlinks-analytics&id=${row.link_id}`}>Details</Link>;
 			},
 		},
 	];
-	// if (analytics) {
-	// 	const analyticsArr = ['name', ...Object.values(analytics).map((item) => item.value), 'total_clicks', 'unique_clicks', 'action'];
-	// 	return columns.filter((item) => analyticsArr.includes(item.selector));
-	// }
 	return columns;
 };
 
@@ -828,5 +799,15 @@ export const analyticsColumnData = [
 		selector: 'target_url',
 	},
 ];
+
+export const get_labels = (clicks) => {
+	const labels = Object.keys(clicks)
+		?.reverse?.()
+		?.map?.((item) => {
+			const splitted = item.split('-');
+			return `${splitted[1]}-${splitted[2]}-${splitted[0]}`;
+		});
+	return labels;
+};
 
 export const pro_version_check = () => betterlinkspro_version	 ? parseFloat(betterlinkspro_version?.slice(2)) : null;
