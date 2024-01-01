@@ -24,6 +24,7 @@ function terms(state = {}, action) {
 			return {
 				...state,
 				terms: [...(state.terms || []), newTerm],
+				...(newTerm.term_type === 'tags' && { tags: [...(state.tags || []), newTerm] }),
 			};
 		}
 		case UPDATE_TERM: {

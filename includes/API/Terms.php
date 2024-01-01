@@ -90,7 +90,8 @@ class Terms extends Controller {
 		global $wpdb;
 		
 		// $query = "SELECT t.id, t.term_name, t.term_slug, `link_id` from {$wpdb->prefix}betterlinks_terms as t left join {$wpdb->prefix}betterlinks_terms_relationships as tr on t.id=tr.term_id where t.term_type='tags'";
-		$query = "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_type='tags'";
+		$query = "SELECT id, term_name, term_slug, link_count from {$wpdb->prefix}betterlinks_terms as t left join (select term_id, count(term_id) as link_count from {$wpdb->prefix}betterlinks_terms_relationships group by term_id) as tr on t.id=tr.term_id where t.term_type='tags'";
+		// $query = "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_type='tags'";
 		$results = $wpdb->get_results($query, ARRAY_A);
 		
 		return new \WP_REST_Response(

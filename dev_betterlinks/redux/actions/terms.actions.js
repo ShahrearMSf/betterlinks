@@ -1,6 +1,35 @@
 import axios from 'axios';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
-import { FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+import { ADD_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+
+export const add_new_tag = (data) => async (dispatch) => {
+	try {
+		const res = await API.post(namespace + 'terms', {
+			params: data,
+		});
+		if (res.data.success) {
+			dispatch({
+				type: ADD_TERM,
+				payload: res.data?.data,
+			});
+		}
+	} catch (e) {
+		makeRequest({
+			action: 'betterlinks/admin/create_new_term',
+			ID: data.ID,
+			term_name: data.term_name,
+			term_slug: data.term_slug,
+			term_type: data.term_type,
+		}).then((res) => {
+			if (res.data) {
+				dispatch({
+					type: ADD_TERM,
+					payload: res.data?.data,
+				});
+			}
+		});
+	}
+};
 
 export const fetch_all_tags = () => async (dispatch) => {
 	try {

@@ -3,11 +3,14 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { modalCustomStyles } from 'utils/helper';
 import { Field, Form, Formik } from 'formik';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { add_new_tag } from 'redux/actions/terms.actions';
 
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
-	const [tag, setTag] = useState('');
+	// const [tag, setTag] = useState('');
 
 	const openModal = () => {
 		setOpen(true);
@@ -16,13 +19,26 @@ const AddNewTags = (props) => {
 		setOpen(false);
 	};
 
-	const __handleChange = (e, setField) => {
+	const __handleChange = (e, setFieldValue) => {
 		const value = e.target.value;
-		const isExist = (props?.tags || []).filter((item) => item.term_slug === value).length;
+		const isExist = (props?.tags || []).some((item) => item.term_slug === value);
 		if (!!isExist) {
 			return setErrorMsg(__('Tags already exist'));
 		}
+		setFieldValue('tag', value);
 		setErrorMsg('');
+	};
+
+	const __handleSubmit = (values, actions) => {
+		const data = {
+			term_id: null,
+			term_name: values.tag,
+			term_slug: values.tag,
+			term_type: 'tags',
+		};
+		props.add_new_tag(data);
+
+		closeModal();
 	};
 
 	return (
@@ -37,10 +53,15 @@ const AddNewTags = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<span className="btl btl-cancel" />
 				</span>
-				<Formik initialValues={{}}>
+				<Formik
+					initialValues={{
+						tag: '',
+					}}
+					onSubmit={(values, actions) => __handleSubmit(values, actions)}
+				>
 					{(props) => {
 						return (
-							<Form className="w-100" onSubmit={() => {}}>
+							<Form className="w-100" onSubmit={props.handleSubmit}>
 								<div className="btl-entry-content">
 									<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 										<div className="btl-modal-form-group">
@@ -71,4 +92,7 @@ const AddNewTags = (props) => {
 	);
 };
 
-export default AddNewTags;
+const mapDispatchToProps = (dispatch) => ({
+	add_new_tag: bindActionCreators(add_new_tag, dispatch),
+});
+export default connect(null, mapDispatchToProps)(AddNewTags);
