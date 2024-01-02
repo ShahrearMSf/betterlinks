@@ -1,7 +1,27 @@
 import axios from 'axios';
-import { API, namespace, betterlinks_nonce } from 'utils/helper';
-import { ADD_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+import { API, namespace, betterlinks_nonce, makeRequest } from 'utils/helper';
+import { ADD_TERM, DELETE_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA, UPDATE_TERM } from 'redux/actions/actionstrings';
 
+export const delete_tag = (params) => async (dispatch) => {
+	// console.log(params);
+	// return;
+	params.map(async (item) => {
+		try {
+			const res = await API.delete(namespace + 'terms', {
+				params: item,
+			});
+			console.log(res.data.success);
+			if (res.data.success) {
+				dispatch({
+					type: DELETE_TERM,
+					payload: res.data?.data,
+				});
+			}
+		} catch (error) {
+			console.log('error is: ', error.message);
+		}
+	});
+};
 export const add_new_tag = (data) => async (dispatch) => {
 	try {
 		const res = await API.post(namespace + 'terms', {
@@ -9,7 +29,7 @@ export const add_new_tag = (data) => async (dispatch) => {
 		});
 		if (res.data.success) {
 			dispatch({
-				type: ADD_TERM,
+				type: res.data?.update ? UPDATE_TERM : ADD_TERM,
 				payload: res.data?.data,
 			});
 		}
@@ -23,7 +43,7 @@ export const add_new_tag = (data) => async (dispatch) => {
 		}).then((res) => {
 			if (res.data) {
 				dispatch({
-					type: ADD_TERM,
+					type: res.data?.update ? UPDATE_TERM : ADD_TERM,
 					payload: res.data?.data,
 				});
 			}

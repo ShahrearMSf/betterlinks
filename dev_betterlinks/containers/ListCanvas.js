@@ -145,7 +145,7 @@ const ListCanvas = (props) => {
 			total = [...total, ...item.lists];
 			return total;
 		}, []);
-
+	console.log(stored);
 	var categories =
 		links &&
 		Object.entries(links).reduce(function (total, [key, item]) {
@@ -153,10 +153,12 @@ const ListCanvas = (props) => {
 			return total;
 		}, []);
 
-	const tags = Object.entries(get_tags(links)).reduce((total, item) => {
-		total = [...total, { value: item?.[0], label: item?.[1] }];
-		return total;
-	}, []);
+	const tags =
+		links &&
+		Object.entries(get_tags(links)).reduce((total, item) => {
+			total = [...total, { value: item?.[0], label: item?.[1] }];
+			return total;
+		}, []);
 
 	const dateFilterControl = (type) => {
 		setDateType(type);

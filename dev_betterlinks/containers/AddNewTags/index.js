@@ -1,16 +1,15 @@
-import Modal from 'react-modal';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
-import { modalCustomStyles } from 'utils/helper';
-import { Field, Form, Formik } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { add_new_tag } from 'redux/actions/terms.actions';
+import TagModal from './TagModal';
+import ActionButton from 'components/ActionButton';
 
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
-	// const [tag, setTag] = useState('');
+	const { tags, icon = false, row = {} } = props;
 
 	const openModal = () => {
 		setOpen(true);
@@ -19,75 +18,40 @@ const AddNewTags = (props) => {
 		setOpen(false);
 	};
 
-	const __handleChange = (e, setFieldValue) => {
+	const __handleChange = (e, props, row) => {
 		const value = e.target.value;
-		const isExist = (props?.tags || []).some((item) => item.term_slug === value);
+		const isExist = (tags || []).some((item) => item.term_slug === value);
+		props.setFieldValue('term_slug', value);
 		if (!!isExist) {
 			return setErrorMsg(__('Tags already exist'));
 		}
-		setFieldValue('tag', value);
 		setErrorMsg('');
 	};
 
 	const __handleSubmit = (values, actions) => {
 		const data = {
-			term_id: null,
-			term_name: values.tag,
-			term_slug: values.tag,
+			ID: row?.ID || values.term_id,
+			term_name: values.term_slug,
+			term_slug: values.term_slug,
 			term_type: 'tags',
 		};
 		props.add_new_tag(data);
 
 		closeModal();
 	};
-
+	
 	return (
 		<>
-			{/* <ActionButton type="edit" label={__('Edit Keyword', 'betterlinks')} onClickHandler={openModal} /> */}
-			<div className="btl-create-autolinks btl-create-tags">
-				<button className="btl-create-autolink-button btl-create-tags-button" onClick={openModal}>
-					{__('Add New Tags', 'betterlinks')}
-				</button>
-			</div>
-			<Modal isOpen={open} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
-				<span className="btl-close-modal" onClick={closeModal}>
-					<span className="btl btl-cancel" />
-				</span>
-				<Formik
-					initialValues={{
-						tag: '',
-					}}
-					onSubmit={(values, actions) => __handleSubmit(values, actions)}
-				>
-					{(props) => {
-						return (
-							<Form className="w-100" onSubmit={props.handleSubmit}>
-								<div className="btl-entry-content">
-									<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
-										<div className="btl-modal-form-group">
-											<label className="btl-modal-form-label" htmlFor="tags">
-												{__('Tags', 'betterlinks')}
-											</label>
-											<div style={{ width: '100%' }}>
-												<Field id="tags" className="btl-modal-form-control" type="text" name="tags" required onChange={(e) => __handleChange(e, props.setFieldValue)} />
-												<span className="btl_duplicate_tags" style={{ color: 'red', height: '5px', display: 'block' }}>
-													{errorMsg}
-												</span>
-											</div>
-										</div>
-										<div className="btl-modal-form-group">
-											<label className="btl-modal-form-label"></label>
-											<button type="submit" className="btl-modal-submit-button">
-												{__('Publish', 'betterlinks')}
-											</button>
-										</div>
-									</div>
-								</div>
-							</Form>
-						);
-					}}
-				</Formik>
-			</Modal>
+			{(tags || []).length > 0 && icon ? (
+				<ActionButton type="edit" label={__('Edit Tags', 'betterlinks')} onClickHandler={openModal} />
+			) : (
+				<div className="btl-create-autolinks btl-create-tags">
+					<button className="btl-create-autolink-button btl-create-tags-button" onClick={openModal}>
+						{__('Add New Tags', 'betterlinks')}
+					</button>
+				</div>
+			)}
+			<TagModal open={open} errorMsg={errorMsg} closeModal={closeModal} __handleChange={__handleChange} __handleSubmit={__handleSubmit} row={row} />
 		</>
 	);
 };

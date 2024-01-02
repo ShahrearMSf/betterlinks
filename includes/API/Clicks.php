@@ -87,6 +87,24 @@ class Clicks extends Controller {
 				),
 			)
 		);
+		register_rest_route(
+			$this->namespace,
+			$endpoint . '/tags/' . '(?P<id>[\d]+)',
+			array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_tags_analytics' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
+			)
+		);
 
 		register_rest_route(
 			$this->namespace,
@@ -206,6 +224,19 @@ class Clicks extends Controller {
 					'clicks' => $graph_data,
 				),
 			)
+		);
+	}
+
+	public function get_tags_analytics( $request ) {
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => array(
+					// 'unique_list' => $unique_list,
+					// 'analytic'    => $analytic,
+				),
+			),
+			200
 		);
 	}
 

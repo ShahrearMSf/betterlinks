@@ -49,7 +49,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 		setDuplicate([]);
 		setChooseAbleSavedLink([]);
 	}
-	console.log({ allLinks });
 	return (
 		<React.Fragment>
 			{Object.keys(data).length > 0 ? (

@@ -37,17 +37,28 @@ function terms(state = {}, action) {
 					  }
 					: item
 			);
+			const newTags = state.tags.map((item) =>
+				`${item.ID}` === `${ID}` || `${item.id}` === `${ID}`
+					? {
+							...item,
+							...payload,
+					  }
+					: item
+			);
 			return {
 				...state,
 				terms: newTerms,
+				tags: newTags,
 			};
 		}
 		case DELETE_TERM: {
 			const ID = payload?.cat_id;
 			const newTerms = state.terms.filter((item) => `${item.ID}` !== `${ID}`);
+			const newTags = state.tags.filter((item) => `${item.id}` !== `${ID}` && `${item.ID}` != `${ID}`);
 			return {
 				...state,
 				terms: newTerms,
+				tags: newTags,
 			};
 		}
 		default:

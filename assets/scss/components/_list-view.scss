@@ -13,13 +13,14 @@
 		.btl-bulk-actions {
 			display: flex;
 			flex-wrap: wrap;
+			column-gap: 5px;
 		}
 		.btl-bulk-actions {
-			margin-right: 12px;
+			margin-right: 10px;
 			.btl-list-view-select {
 				height: 38px;
 				min-width: 160px;
-				margin-right: 12px;
+				margin-right: 0;
 				.btl-react-select__control {
 					min-height: 36px;
 					background: $white;
@@ -51,6 +52,9 @@
 					}
 				}
 			}
+			.btl-tooltip {
+				margin-left: 0;
+			}
 			.btl-link-apply-button {
 				cursor: pointer;
 				margin-bottom: 10px;
@@ -61,7 +65,7 @@
 				background: rgba($success, 0.05);
 				color: $success;
 				font-size: 14px;
-				padding: 0 25px;
+				padding: 0 20px;
 				border-radius: 5px;
 				display: inline-flex;
 				justify-content: center;
@@ -81,7 +85,7 @@
 			.btl-list-view-select {
 				height: 38px;
 				min-width: 130px;
-				margin-right: 12px;
+				// margin-right: 12px;
 				margin-bottom: 10px;
 				.btl-react-select__control {
 					min-height: 36px;
@@ -172,7 +176,7 @@
 				background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 				color: $white;
 				font-size: 14px;
-				padding: 0 25px;
+				padding: 0 15px;
 				border-radius: 5px;
 				display: inline-flex;
 				justify-content: center;
@@ -422,7 +426,7 @@
 }
 
 .btl-list-view > header .btl-links-filter .btl-click-filter {
-	width: 280px;
+	width: 270px;
 	height: 36px;
 }
 .btl-autolink-filter,
@@ -432,7 +436,7 @@
 	border: 1px solid $light-darken;
 	border-radius: 5px;
 	padding-left: 25px;
-	margin-right: 12px;
+	// margin-right: 12px;
 	position: relative;
 	color: $secondary;
 	input {
@@ -469,9 +473,9 @@
 	}
 }
 
-.btl-autolink-keyword.btl-list-view > header .btl-links-filter {
-	align-items: center;
-}
+// .btl-autolink-keyword.btl-list-view > header .btl-links-filter {
+// 	align-items: center;
+// }
 .btl-autolink-keyword.btl-list-view > header .btl-links-filter .btl-list-view-select,
 .btl-autolink-keyword.btl-list-view > header .btl-bulk-actions .btl-link-apply-button,
 .btl-autolink-filter {

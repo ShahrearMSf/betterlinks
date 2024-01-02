@@ -16,7 +16,7 @@ import ChartLoader from './ChartLoader';
 import SingleLinkDetails from './SingleLinkDetails';
 
 const SingleClicks = (props) => {
-	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const [isOpenUpgradeToProModal, _, closeUpgradeToProModal] = useUpgradeProModal();
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const { id, clicks } = props;
 	const { individual_clicks } = clicks;

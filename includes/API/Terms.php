@@ -87,12 +87,9 @@ class Terms extends Controller {
 	}
 
 	public function get_tags() {
-		global $wpdb;
+		$results = $this->get_all_tags();
 		
-		// $query = "SELECT t.id, t.term_name, t.term_slug, `link_id` from {$wpdb->prefix}betterlinks_terms as t left join {$wpdb->prefix}betterlinks_terms_relationships as tr on t.id=tr.term_id where t.term_type='tags'";
-		$query = "SELECT id, term_name, term_slug, link_count from {$wpdb->prefix}betterlinks_terms as t left join (select term_id, count(term_id) as link_count from {$wpdb->prefix}betterlinks_terms_relationships group by term_id) as tr on t.id=tr.term_id where t.term_type='tags'";
-		// $query = "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE term_type='tags'";
-		$results = $wpdb->get_results($query, ARRAY_A);
+		$this->prepare_all_tags($results);
 		
 		return new \WP_REST_Response(
 			array(
@@ -144,12 +141,26 @@ class Terms extends Controller {
 	public function create_item( $request ) {
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 		$request = $request->get_params();
+		
 		$args    = array(
 			'ID'        => ( isset( $request['params']['ID'] ) ? absint( sanitize_text_field( $request['params']['ID'] ) ) : 0 ),
 			'term_name' => ( isset( $request['params']['term_name'] ) ? sanitize_text_field( $request['params']['term_name'] ) : '' ),
 			'term_slug' => ( isset( $request['params']['term_slug'] ) ? sanitize_text_field( $request['params']['term_slug'] ) : '' ),
 			'term_type' => ( isset( $request['params']['term_type'] ) ? sanitize_text_field( $request['params']['term_type'] ) : '' ),
 		);
+		$is_update = \BetterLinks\Helper::is_term_exists($args['ID'], 'tags');
+		
+		if($is_update) {
+			$results = $this->update_tag( $args );
+			return new \WP_REST_Response(
+				array(
+					'success' => true,
+					'update' => true,
+					'data'    => $results,
+				),
+				200
+			);
+		}
 		$results = $this->create_term( $args );
 		return new \WP_REST_Response(
 			array(
@@ -193,12 +204,13 @@ class Terms extends Controller {
 	public function delete_item( $request ) {
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 		$request = $request->get_params();
+		
 		$this->delete_term( $request );
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					'cat_id' => $request['cat_id'],
+					'cat_id' => isset($request['cat_id']) ? $request['cat_id'] : $request['tag_id'],
 				),
 			),
 			200
