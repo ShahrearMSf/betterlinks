@@ -89,12 +89,15 @@ class Terms extends Controller {
 	public function get_tags() {
 		$results = $this->get_all_tags();
 		
-		$this->prepare_all_tags($results);
+		$analytic = $this->tags_analytic();
 		
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
-				'data'    => $results,
+				'data'    => array(
+					'results' => $results,
+					'analytic' => $analytic
+				),
 			),
 			200
 		);

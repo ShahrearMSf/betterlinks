@@ -10,7 +10,8 @@ function terms(state = {}, action) {
 		case FETCH_TAGS:
 			return {
 				...state,
-				tags: payload.data,
+				tags: payload.data?.results,
+				tag_analytics: payload.data?.analytic,
 			};
 		case ADD_TERM: {
 			const newTerm = {

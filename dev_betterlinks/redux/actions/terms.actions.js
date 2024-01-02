@@ -3,14 +3,11 @@ import { API, namespace, betterlinks_nonce, makeRequest } from 'utils/helper';
 import { ADD_TERM, DELETE_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA, UPDATE_TERM } from 'redux/actions/actionstrings';
 
 export const delete_tag = (params) => async (dispatch) => {
-	// console.log(params);
-	// return;
 	params.map(async (item) => {
 		try {
 			const res = await API.delete(namespace + 'terms', {
 				params: item,
 			});
-			console.log(res.data.success);
 			if (res.data.success) {
 				dispatch({
 					type: DELETE_TERM,
@@ -56,6 +53,7 @@ export const fetch_all_tags = () => async (dispatch) => {
 		const res = await API.get(namespace + 'terms/tags');
 
 		if (res?.data) {
+			console.log(res.data);
 			dispatch({
 				type: FETCH_TAGS,
 				payload: res.data,

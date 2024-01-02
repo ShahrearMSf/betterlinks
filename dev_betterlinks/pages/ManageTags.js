@@ -54,7 +54,7 @@ const ManageTags = (props) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [toggledClearRows, setToggleClearRows] = useState(false);
 	const [searchText, setSearchText] = useState('');
-	const { tags } = props.terms;
+	const { tags, tag_analytics } = props.terms;
 	useEffect(() => {
 		if (!tags) {
 			props.fetch_all_tags();
@@ -77,6 +77,27 @@ const ManageTags = (props) => {
 			sortable: false,
 			cell: (row) => {
 				return <div>{+(row?.link_count || 0)}</div>;
+			},
+		},
+		{
+			name: __('Analytic', 'betterlinks'),
+			selector: 'link_count',
+			sortable: false,
+			cell: (row) => {
+				const total_clicks = tag_analytics['total_clicks']?.[row.id] || 0;
+				const unique_clicks = tag_analytics['unique_clicks']?.[row.id] || 0;
+				return (
+					<div>
+						<button className="dnd-link-button btl-tooltip">
+							<span className="btl-tooltiptext">
+								Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
+							</span>
+							<span className="icon">
+								{total_clicks}/{unique_clicks}
+							</span>
+						</button>
+					</div>
+				);
 			},
 		},
 		{
