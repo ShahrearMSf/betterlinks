@@ -68,6 +68,29 @@ trait Clicks {
 	}
 
 	/**
+	 * Returns the unique analytics data by tag
+	 * 
+	 * @return array Array of unique analytics by tag
+	 */
+
+	public function get_analytics_unique_list_by_tag($from, $to, $id) {
+		$transient_key = self::get_transient_key('btl_analytics_unique_list_by_tag_', $from, $to, $id);
+		if ( $results = get_transient( $transient_key ) ) {
+			return $results;
+		}
+
+		global $wpdb;
+		$prefix = $wpdb->prefix;
+
+		$query = "SELECT id as link_id, link_title, short_url, target_url from {$prefix}betterlinks as links left join (select distinct link_id from {$prefix}betterlinks_clicks where created_at between '{$from} 00:00:00' and '{$to} 23:59:59') as clicks on clicks.link_id=links.id right join (select tr.link_id from {$prefix}betterlinks_terms t left join {$prefix}betterlinks_terms_relationships tr on t.id=tr.term_id where t.term_type='tags' and t.id='{$id}') tl on links.id=tl.link_id where id!=''";
+		
+		$results = $wpdb->get_results($query, ARRAY_A);
+		
+		set_transient( $transient_key, $results, self::$transient_timeout );
+		return $results;
+	}
+
+	/**
 	 * Returns the unique analytics clicks
 	 *
 	 * @return array Array of unique analytics

@@ -89,7 +89,7 @@ class Clicks extends Controller {
 		);
 		register_rest_route(
 			$this->namespace,
-			$endpoint . '/tags/' . '(?P<id>[\d]+)',
+			$endpoint . 'tags/' . '(?P<id>[\d]+)',
 			array(
 				'args' => array(
 					'id' => array(
@@ -228,12 +228,23 @@ class Clicks extends Controller {
 	}
 
 	public function get_tags_analytics( $request ) {
+		$request = $request->get_params();
+
+		$from  = isset( $request['from'] ) ? $request['from'] : '';
+		$to  = isset( $request['to'] ) ? $request['to'] : '';
+		$id  = isset( $request['id'] ) ? $request['id'] : '';
+
+		$results = $this->get_analytics_unique_list_by_tag($from, $to, $id);
+
+		$analytic = get_option( 'betterlinks_analytics_data' );
+		$analytic = $analytic ? json_decode( $analytic, true ) : array();
+		
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
 				'data'    => array(
-					// 'unique_list' => $unique_list,
-					// 'analytic'    => $analytic,
+					'list' => $results,
+					'analytic' => $analytic
 				),
 			),
 			200
