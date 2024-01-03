@@ -53,7 +53,6 @@ export const fetch_all_tags = () => async (dispatch) => {
 		const res = await API.get(namespace + 'terms/tags');
 
 		if (res?.data) {
-			console.log(res.data);
 			dispatch({
 				type: FETCH_TAGS,
 				payload: res.data,

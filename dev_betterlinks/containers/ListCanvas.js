@@ -145,7 +145,6 @@ const ListCanvas = (props) => {
 			total = [...total, ...item.lists];
 			return total;
 		}, []);
-	console.log(stored);
 	var categories =
 		links &&
 		Object.entries(links).reduce(function (total, [key, item]) {

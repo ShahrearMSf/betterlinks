@@ -580,11 +580,7 @@ export const getFavoriteLinkCount = (links) => {
 };
 
 export const analytic = (analytic, ID) => {
-	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
-	if (isLinkAble) {
-		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
-	}
-	return +analytic.link_count + '/' + +analytic.ip;
+	return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
 };
 
 export const saveSettingsHandler = (values, update_option, setFormSubmitText) => {
