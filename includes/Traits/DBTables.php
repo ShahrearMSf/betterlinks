@@ -79,6 +79,14 @@ trait DBTables
             ip 	varchar(255) NULL,
             browser varchar(255) NULL,
             os varchar(255) NULL,
+            device varchar(20) NULL,
+            brand_name VARCHAR(20) NULL,
+            model VARCHAR(20) NULL,
+            bot_name VARCHAR(20) NULL,
+            browser_type VARCHAR(20) NULL,
+            os_version VARCHAR(20) NULL,
+            browser_version VARCHAR(20) NULL,
+            `language` VARCHAR(10) NULL,
             referer varchar(255) NULL,
             host varchar(255) NULL,
             uri varchar(255) NULL,
@@ -137,4 +145,30 @@ trait DBTables
             MODIFY link_modified_gmt datetime NOT NULL default CURRENT_TIMESTAMP;";
         $this->wpdb->query($sql);
     }
+
+    public function modifyBetterLinksClicksTable() {
+		global $wpdb;
+
+		// todo: 👇 if `device` column exists that means we already have added device, brand_name, model, bot_name, browser_type, os_version, browser_version, language column
+		// todo: so, we need to skip the betterlinks_clicks table alterations
+		$check_column_exists_sql = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks_clicks" and column_name="device";', DB_NAME, $wpdb->prefix );
+		$result                  = $wpdb->query( $check_column_exists_sql );
+
+		if ( ! $result ) {
+			$table_name = $wpdb->prefix . 'betterlinks_clicks';
+			$sql        = "ALTER TABLE {$table_name}
+                MODIFY created_at datetime NOT NULL default CURRENT_TIMESTAMP,
+                MODIFY created_at_gmt datetime NOT NULL default CURRENT_TIMESTAMP,
+                ADD COLUMN `device` VARCHAR(20) NULL AFTER `os`,
+                ADD COLUMN `brand_name` VARCHAR(20) NULL AFTER `device`,
+                ADD COLUMN `model` VARCHAR(20) NULL AFTER `brand_name`,
+                ADD COLUMN `bot_name` VARCHAR(20) NULL AFTER `model`,
+                ADD COLUMN `browser_type` VARCHAR(20) NULL AFTER `bot_name`,
+                ADD COLUMN `os_version` VARCHAR(20) NULL AFTER `browser_type`,
+                ADD COLUMN `browser_version` VARCHAR(20) NULL AFTER `os_version`,
+                ADD COLUMN `language` VARCHAR(10) NULL AFTER `browser_version`;";
+
+			$wpdb->query( $sql );
+		}
+	}
 }

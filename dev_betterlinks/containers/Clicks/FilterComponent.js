@@ -19,29 +19,11 @@ const FilterComponent = (props) => {
 		{ label: 'Timestamp', value: 'created_at' },
 		{ label: 'Referer', value: 'referer' },
 		{
-			label: is_extra_data_tracking_compatible ? (
-				'OS'
-			) : (
-				<span>
-					{__('OS', 'betterlinks')}
-					<span className="pro-badge" style={{ padding: '2px' }}>
-						Pro
-					</span>
-				</span>
-			),
+			label: 'OS',
 			value: 'os',
 		},
 		{
-			label: is_extra_data_tracking_compatible ? (
-				'Device'
-			) : (
-				<span>
-					{__('Device', 'betterlinks')}
-					<span className="pro-badge" style={{ padding: '2px' }}>
-						Pro
-					</span>
-				</span>
-			),
+			label: 'Device',
 			value: 'device',
 		},
 	];
