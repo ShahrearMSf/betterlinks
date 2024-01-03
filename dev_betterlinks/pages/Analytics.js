@@ -6,6 +6,7 @@ import Clicks from 'containers/Clicks';
 import { subDays } from 'date-fns';
 import SingleClicks from 'containers/Clicks/SingleClicks';
 import Chart from 'react-apexcharts';
+import TagClicks from 'containers/TagClicks';
 
 const Analytics = () => {
 	const [customDateFilter, setCustomDateFilter] = useState([
@@ -22,13 +23,18 @@ const Analytics = () => {
 	};
 	const parsed = queryString.parse(location.search);
 	const id = betterLinksQuery.get('id');
+	const tag_id = betterLinksQuery.get('tag_id');
 	return (
 		<React.Fragment>
 			<Topbar propsForAnalytics={propsForAnalytics} label={__('BetterLinks Analytics', 'betterlinks')} />
-			{betterLinksHooks.applyFilters(
-				'analyticsInnerChild',
-				id ? <SingleClicks id={id} propsForAnalytics={propsForAnalytics} /> : <Clicks propsForAnalytics={propsForAnalytics} />,
-				{ ...parsed, Chart }
+			{tag_id ? (
+				<TagClicks propsForAnalytics={propsForAnalytics} tag_id={tag_id} />
+			) : (
+				betterLinksHooks.applyFilters(
+					'analyticsInnerChild',
+					id ? <SingleClicks id={id} propsForAnalytics={propsForAnalytics} /> : <Clicks propsForAnalytics={propsForAnalytics} />,
+					{ ...parsed, Chart }
+				)
 			)}
 		</React.Fragment>
 	);

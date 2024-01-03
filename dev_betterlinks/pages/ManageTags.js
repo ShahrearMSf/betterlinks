@@ -10,45 +10,8 @@ import DataTable from 'react-data-table-component';
 import TableLoader from 'components/Loader/TableLoader';
 import TagQuickAction from 'containers/AddNewTags/TagQuickAction';
 import Select from 'react-select';
-
-const TagActions = (props) => {
-	const [bulkAction, setBulkAction] = useState({});
-	const [warning, setWarning] = useState(false);
-	const handleDeleteTags = (bulkActionData) => {
-		if (bulkAction.value !== 'delete') return setWarning(true);
-		setWarning(false);
-		const selectedTags = bulkActionData.selectedRows.map((item) => ({ tag_id: item.id || item.ID }));
-		props.delete_tag(selectedTags, bulkAction);
-		setBulkAction({});
-		return props.setToggledClearRows();
-	};
-
-	return (
-		<React.Fragment>
-			<div className="btl-links-filter">
-				{props.bulkActionData && props.bulkActionData.selectedCount > 0 && (
-					<div className="btl-bulk-actions">
-						<Select
-							className="btl-list-view-select"
-							classNamePrefix="btl-react-select"
-							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
-							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
-							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
-							onChange={(e) => setBulkAction(e)}
-						/>
-						<div className="btl-tooltip">
-							<button className="btl-link-apply-button" onClick={() => handleDeleteTags(props.bulkActionData)}>
-								{__('Apply', 'betterlinks')}
-							</button>
-							{warning && bulkAction?.value !== 'delete' && <span className="btl-tooltiptext">{__('Please Select Action', 'betterlinks')}</span>}
-						</div>
-					</div>
-				)}
-				{props.children}
-			</div>
-		</React.Fragment>
-	);
-};
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { route_path } from 'utils/helper';
 
 const ManageTags = (props) => {
 	const [bulkActionData, setBulkActionData] = useState({});
@@ -92,9 +55,12 @@ const ManageTags = (props) => {
 							<span className="btl-tooltiptext">
 								Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
 							</span>
-							<span className="icon">
+							<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + row.id}>
 								{total_clicks}/{unique_clicks}
-							</span>
+							</Link>
+							{/* <span className="icon">
+								{total_clicks}/{unique_clicks}
+							</span> */}
 						</button>
 					</div>
 				);
@@ -157,6 +123,45 @@ const ManageTags = (props) => {
 				)}
 			</div>
 		</>
+	);
+};
+
+const TagActions = (props) => {
+	const [bulkAction, setBulkAction] = useState({});
+	const [warning, setWarning] = useState(false);
+	const handleDeleteTags = (bulkActionData) => {
+		if (bulkAction.value !== 'delete') return setWarning(true);
+		setWarning(false);
+		const selectedTags = bulkActionData.selectedRows.map((item) => ({ tag_id: item.id || item.ID }));
+		props.delete_tag(selectedTags, bulkAction);
+		setBulkAction({});
+		return props.setToggledClearRows();
+	};
+
+	return (
+		<React.Fragment>
+			<div className="btl-links-filter">
+				{props.bulkActionData && props.bulkActionData.selectedCount > 0 && (
+					<div className="btl-bulk-actions">
+						<Select
+							className="btl-list-view-select"
+							classNamePrefix="btl-react-select"
+							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
+							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
+							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
+							onChange={(e) => setBulkAction(e)}
+						/>
+						<div className="btl-tooltip">
+							<button className="btl-link-apply-button" onClick={() => handleDeleteTags(props.bulkActionData)}>
+								{__('Apply', 'betterlinks')}
+							</button>
+							{warning && bulkAction?.value !== 'delete' && <span className="btl-tooltiptext">{__('Please Select Action', 'betterlinks')}</span>}
+						</div>
+					</div>
+				)}
+				{props.children}
+			</div>
+		</React.Fragment>
 	);
 };
 

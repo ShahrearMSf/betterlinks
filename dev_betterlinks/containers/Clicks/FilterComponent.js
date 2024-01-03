@@ -2,9 +2,7 @@ import { __ } from '@wordpress/i18n';
 import SearchLoader from 'components/SearchLoader';
 import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
-import { is_extra_data_tracking_compatible, route_path } from 'utils/helper';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 const FilterComponent = (props) => {
 	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id, analyticsTab, update_activity } = props;
@@ -32,10 +30,13 @@ const FilterComponent = (props) => {
 			<div className="btl-click-filter">
 				<div style={{ display: 'flex', alignItems: 'center' }}>
 					{id && (
-						<Link
+						<a
 							className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
-							to={`${route_path}admin.php?page=betterlinks-analytics`}
-							title={__('Go back to Analytics', 'betterlinks')}
+							onClick={() => {
+								window.history.go(-1);
+								return false;
+							}}
+							href="#"
 						/>
 					)}
 				</div>

@@ -15,8 +15,8 @@ export const analyticsData = (data, id) => {
 	return results;
 };
 
-export const getData = (clicks, analyticsTab, filterText, id = null) => {
-	if (id) {
+export const getData = (clicks, analyticsTab, filterText, id = null, from = null) => {
+	if (id && !from) {
 		return clicks?.filter?.((item) => {
 			if (item.link_id != id) return;
 			const json = JSON.stringify(item);
