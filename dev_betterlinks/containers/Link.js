@@ -29,6 +29,7 @@ import Tags from 'components/Terms/Tags';
 import Copy from 'components/Copy';
 import UTMBuilder from 'components/UTMBuilder';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import CustomizeLinkPreview from 'components/CustomizeLinkPreview';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -621,56 +622,15 @@ export const Link = (props) => {
 														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 													</div>
 												</div>
-												{!!props.values?.enable_customize_meta_tags && (
-													<div className={`link-options link-options--advanced ${isOpenLinkPanel.optimizeMetaTags ? 'link-options--open' : ''}`}>
-														<button className="link-options__head" type="button" onClick={() => togglePanel('optimizeMetaTags')}>
-															<h4 className="link-options__head--title">
-																{__('Optimize Meta Tags', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
-															</h4>{' '}
-															<i className="btl btl-angle-arrow-down"></i>
-														</button>
-														{!is_pro_enabled && (
-															<div className="link-options__body">
-																<div className="link-options--teasers">
-																	<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																		<label className="btl-modal-form-label">{__('Customize Meta Tags', 'betterlinks')}</label>
-																		<input id="enable_meta_tags" type="checkbox" checked={true} disabled style={{ cursor: 'not-allowed' }} />
-																	</div>
-																	<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																		<label className="btl-modal-form-label">
-																			{__('Title', 'betterlinks')}
-																			<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																		</label>
-																		<input type="text" disabled style={{ cursor: 'not-allowed' }} />
-																	</div>
-																	<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																		<label className="btl-modal-form-label">
-																			{__('Content', 'betterlinks')}
-																			<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																		</label>
-																		<input type="text" disabled style={{ cursor: 'not-allowed' }} />
-																	</div>
-																	<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																		<label className="btl-modal-form-label">
-																			{__('Image', 'betterlinks')}
-																			<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																		</label>
-																		<button
-																			className="dashicons dashicons-upload"
-																			type="submit"
-																			style={{ cursor: 'not-allowed' }}
-																			onClick={(e) => {
-																				e.preventDefault();
-																				openUpgradeToProModal();
-																			}}
-																		></button>
-																	</div>
-																</div>
-															</div>
-														)}
-														<>{betterLinksHooks.applyFilters('linkOptionsOptimizeMetaTags', null, { ...props, ...settings, metaTag })}</>
-													</div>
-												)}
+												{/* Customize Link Preview */}
+												<CustomizeLinkPreview
+													openAccordion={isOpenLinkPanel.optimizeMetaTags}
+													togglePanel={togglePanel}
+													openUpgradeToProModal={openUpgradeToProModal}
+													form={props}
+													settings={settings}
+													metaTag={metaTag}
+												/>
 												{!is_pro_enabled && (
 													<div>
 														<div className={`link-options link-options--auto-link-keywords`}>
