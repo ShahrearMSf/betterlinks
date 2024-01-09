@@ -182,9 +182,6 @@
 			}
 			button[type='button'] {
 				min-height: 35px;
-				border: 1px solid $success-lighten;
-				background: $success-lighten;
-				color: #fff;
 				padding: 2px 25px;
 				border-radius: 3px;
 				font-size: 16px;
@@ -196,11 +193,6 @@
 				&:not(:last-child) {
 					margin-right: 15px;
 				}
-				&:hover {
-					box-shadow: 0 22px 42px rgba(#003be2, 0.18);
-					border-color: $success;
-					background: $success;
-				}
 			}
 			.btl-modal-customize-link-preview__btn {
 				display: flex;
@@ -211,13 +203,23 @@
 				border-radius: 5px;
 				width: 100px;
 				height: 60px;
-
+				cursor: pointer;
+				padding: 0 !important;
 				span {
 					font-size: 12px;
 				}
 			}
 			.btl-modal-customize-link-preview__save_btn {
 				cursor: pointer;
+				border: 1px solid $success-lighten;
+				background: $success-lighten;
+				color: #fff;
+
+				&:hover {
+					box-shadow: 0 22px 42px rgba(#003be2, 0.18);
+					border-color: $success;
+					background: $success;
+				}
 				&--teaser {
 					opacity: 0.7;
 					cursor: not-allowed;
@@ -309,6 +311,50 @@
 		.btl-modal-customize-link-preview__form-group-twitter,
 		.btl-modal-customize-link-preview__form-group-facebook {
 			margin-bottom: 25px;
+		}
+	}
+}
+
+body {
+	&.betterlinks-dark-mode {
+		.btl-modal-customize-link-preview-container,
+		.btl-modal-customize-link-preview__title,
+		.btl-modal-customize-link-preview--note,
+		.btl-modal-customize-link-preview--text-counter {
+			color: $white;
+		}
+
+		.btl-modal-customize-link-preview-container {
+			.btl-modal-customize-link-preview__form-group {
+				> div {
+					textarea,
+					textarea:focus,
+					button[type='button'] {
+						border-color: #2c3650;
+						background-color: #2c3650;
+						color: #f7f8fa;
+					}
+				}
+			}
+
+			.btl-customized-link-preview-facebook {
+				border-color: #2c3650;
+				.btl-customized-link-preview-content-container {
+					background-color: #2c3650;
+
+					span {
+						color: #f7f8fa;
+					}
+				}
+			}
+			.react-tabs__tab-list .react-tabs__tab {
+				background-color: #2c3650;
+				color: #fff;
+
+				&.react-tabs__tab--selected {
+					background-color: #252f47;
+				}
+			}
 		}
 	}
 }
