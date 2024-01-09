@@ -569,7 +569,7 @@ export const Link = (props) => {
 															</div>
 														</div>
 													)}
-													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords, metaTag })}</>
+													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, password, metaTag })}</>
 												</div>
 												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>

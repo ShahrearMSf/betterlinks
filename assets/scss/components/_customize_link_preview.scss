@@ -3,11 +3,31 @@
 	display: flex;
 	justify-content: space-between;
 	column-gap: 20px;
+
+	.react-tabs__tab-list .react-tabs__tab {
+		border-right: 1px solid transparent;
+		border-left: 1px solid transparent;
+
+		&--selected {
+			border-right-color: #ebebeb !important;
+			border-left-color: #ebebeb !important;
+		}
+	}
 }
 .btl-modal-customize-link-preview-box {
 	font-family: Arial, Helvetica, sans-serif;
 	width: 40%;
 
+	.btl-modal-customize-link-preview__title {
+		font-size: 22px;
+		font-weight: 500;
+		color: #373747;
+		margin-top: 0;
+		line-height: 1.3;
+		margin-bottom: 30px;
+		display: flex;
+		align-items: center;
+	}
 	.react-tabs__tab-panel > div {
 		width: 100%;
 	}
@@ -86,7 +106,8 @@
 	&--note {
 		display: block;
 		margin-top: 2px;
-		font-size: 9px;
+		margin-right: 1px;
+		font-size: 11px;
 	}
 	.btl-modal-customize-link-preview__title {
 		font-size: 22px;

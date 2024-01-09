@@ -46,18 +46,35 @@ const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, meta
 					<div className="link-options__body">
 						<div className="link-options--teasers">
 							<div className="btl-modal-form-group">
-								<label className="btl-modal-form-label">{__('Customize Link Preview', 'betterlinks')}</label>
-								<input
-									id="enable_meta_tags"
-									name="enable_meta_tags"
-									type="checkbox"
-									checked={!!form.values?.enable_meta_tags}
-									onClick={(e) => {
-										const checked = e.target.checked;
-										if (checked) setOpenModal(checked);
-										form.setFieldValue('enable_meta_tags', checked);
-									}}
-								/>
+								<label className="btl-checkbox-field">
+									<input
+										id="enable_meta_tags"
+										name="enable_meta_tags"
+										className="btl-check"
+										type="checkbox"
+										checked={!!form.values?.enable_meta_tags}
+										onClick={(e) => {
+											const checked = e.target.checked;
+											if (checked) setOpenModal(checked);
+											form.setFieldValue('enable_meta_tags', checked);
+										}}
+									/>
+									<span className="text">
+										Enable Link Preview
+										{form.values.enable_meta_tags && (
+											<div className="btl-tooltip">
+												<span
+													className="btl btl-edit"
+													style={{ color: 'rgba(0,59,226,.9)' }}
+													onClick={(e) => {
+														e.preventDefault();
+														setOpenModal(true);
+													}}
+												/>
+											</div>
+										)}
+									</span>
+								</label>
 							</div>
 						</div>
 					</div>
