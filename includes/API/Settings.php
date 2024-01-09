@@ -97,7 +97,7 @@ class Settings extends Controller {
 		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
 		$enable_customize_meta_tag = !empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
 
-        if( class_exists('\BetterLinksPro\Helper')) {
+        if( class_exists('BetterLinksPro')) {
 			$pro_helper = new Helper();
             if( $enable_password_protection ){
                 $pro_helper->add_password_protect_page();
