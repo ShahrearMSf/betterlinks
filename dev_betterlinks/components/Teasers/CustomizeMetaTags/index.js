@@ -14,12 +14,13 @@ const CustomizeMetaTags = ({ settings, update_option }) => {
 
 	const pro_version = pro_version_check();
 
-	if (pro_version !== null && pro_version < 7.2) {
+	if (pro_version !== null && pro_version < 8) {
+		// this feature is from 1.8.0 version, betterlinks-pro
 		return (
 			<div className="btl-form-group">
 				<div className="short-description">
 					<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-					{__('To Utilize the Customize Meta Tags Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
+					{__('To Utilize the Customize Link Preview Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
 				</div>
 			</div>
 		);
@@ -34,7 +35,7 @@ const CustomizeMetaTags = ({ settings, update_option }) => {
 						{!is_pro_enabled && (
 							<span className="btl-form-group btl-form-group--teaser btl-form-group-password-protection" onClick={openUpgradeToProModal}>
 								<label className="btl-form-label">
-									{__('Enable Customize Meta Tags', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+									{__('Enable Customize Link Preview', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 								</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">

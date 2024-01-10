@@ -12,7 +12,7 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 		__('Auto-Create Links', 'betterlinks'),
 		__('Affiliate Link Disclosure', 'betterlinks'),
 		__('Password Protected Redirect', 'betterlinks'),
-		__('Customize Meta Tags', 'betterlinks'),
+		__('Customize Link Preview', 'betterlinks'),
 	];
 	const panelList = [
 		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,

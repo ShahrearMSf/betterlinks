@@ -1,8 +1,15 @@
 .link-options--customize-link-preview {
 	.btl-modal-form-group {
 		.btl-tooltip span {
-			// color: rgba(0, 59, 226, 0.9);
-		color: #b0b2ba;
+			color: #b0b2ba;
+
+			&:hover {
+				color: #003be2;
+			}
+
+			&.btl-tooltiptext {
+				color: $white;
+			}
 		}
 	}
 }
@@ -12,9 +19,13 @@
 	justify-content: space-between;
 	column-gap: 20px;
 
+	.react-tabs__tab-list {
+		display: flex;
+	}
 	.react-tabs__tab-list .react-tabs__tab {
 		border-right: 1px solid transparent;
 		border-left: 1px solid transparent;
+		flex-grow: 1;
 
 		&--selected {
 			border-right-color: #ebebeb !important;
@@ -46,7 +57,9 @@
 			line-height: 0;
 			img {
 				width: 100%;
-				height: 250px;
+				min-width: 300px;
+				min-height: 167px;
+				max-height: 250px;
 				object-fit: cover;
 			}
 		}
@@ -83,7 +96,7 @@
 
 				&-title {
 					color: #1d2129;
-					line-height: 1rem;
+					line-height: 1.25rem;
 					font-weight: 600;
 					font-size: 16px;
 					padding-top: 2px;
@@ -110,7 +123,7 @@
 	}
 }
 .btl-modal-customize-link-preview {
-	width: 60%;
+	width: 58%;
 	&--note {
 		display: block;
 		margin-top: 2px;
@@ -251,7 +264,11 @@
 				}
 				&--teaser {
 					opacity: 0.7;
-					cursor: not-allowed;
+					cursor: pointer;
+					border: 1px solid $success-lighten;
+					background: $success-lighten;
+					color: #fff;
+
 					&:hover {
 						box-shadow: unset !important;
 						border: 1px solid $success-lighten !important;
@@ -265,7 +282,9 @@
 
 				img {
 					width: 100%;
-					height: 250px;
+					min-width: 300px;
+					min-height: 167px;
+					max-height: 250px;
 					border-radius: 2px;
 					object-fit: cover;
 					border: 1px solid #ebebeb;
@@ -359,6 +378,7 @@ body {
 		.btl-modal-customize-link-preview-container {
 			.btl-modal-customize-link-preview__form-group {
 				> div {
+					input[type='text'],
 					textarea,
 					textarea:focus,
 					button[type='button'] {

@@ -135,6 +135,7 @@ export const Link = (props) => {
 		...objForGutenTargetBlank,
 	};
 	const initialUpdateValues = {
+		...settings.settings,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id: catId,
@@ -146,7 +147,6 @@ export const Link = (props) => {
 		password: password && password?.password,
 		old_allow_visitor_contact: password && '1' === password?.allow_contact,
 		allow_visitor_contact: password && '1' === password?.allow_contact,
-		...settings.settings,
 	};
 
 	function openModal() {
