@@ -35,7 +35,7 @@ const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, meta
 	}, []);
 	return (
 		<>
-			<div className={`link-options link-options--advanced ${openAccordion ? 'link-options--open' : ''}`}>
+			<div className={`link-options link-options--advanced link-options--customize-link-preview ${openAccordion ? 'link-options--open' : ''}`}>
 				<button className="link-options__head" type="button" onClick={() => togglePanel('optimizeMetaTags')}>
 					<h4 className="link-options__head--title">
 						{__('Customize Link Preview', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
@@ -60,12 +60,11 @@ const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, meta
 										}}
 									/>
 									<span className="text">
-										Enable Link Preview
+										<span>{__('Enable Link Preview', 'betterlinks')}</span>
 										{form.values.enable_meta_tags && (
 											<div className="btl-tooltip">
 												<span
 													className="btl btl-edit"
-													style={{ color: 'rgba(0,59,226,.9)' }}
 													onClick={(e) => {
 														e.preventDefault();
 														setOpenModal(true);

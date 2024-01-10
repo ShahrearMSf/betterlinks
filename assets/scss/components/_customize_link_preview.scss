@@ -1,3 +1,11 @@
+.link-options--customize-link-preview {
+	.btl-modal-form-group {
+		.btl-tooltip span {
+			// color: rgba(0, 59, 226, 0.9);
+		color: #b0b2ba;
+		}
+	}
+}
 .btl-modal-customize-link-preview-container {
 	@import './tab';
 	display: flex;
@@ -260,6 +268,7 @@
 					height: 250px;
 					border-radius: 2px;
 					object-fit: cover;
+					border: 1px solid #ebebeb;
 				}
 				.btl-image-delete {
 					position: absolute;
@@ -341,7 +350,9 @@ body {
 		.btl-modal-customize-link-preview-container,
 		.btl-modal-customize-link-preview__title,
 		.btl-modal-customize-link-preview--note,
-		.btl-modal-customize-link-preview--text-counter {
+		.btl-modal-customize-link-preview--text-counter,
+		.link-options--customize-link-preview .btl-modal-form-group .text > span,
+		.link-options--customize-link-preview .btl-modal-form-group .text .btl-tooltip > span {
 			color: $white;
 		}
 
@@ -354,6 +365,10 @@ body {
 						border-color: #2c3650;
 						background-color: #2c3650;
 						color: #f7f8fa;
+					}
+
+					.btl-image-container img {
+						border-color: #2c3650;
 					}
 				}
 			}
@@ -374,6 +389,8 @@ body {
 
 				&.react-tabs__tab--selected {
 					background-color: #252f47;
+					border-right-color: #2c3650 !important;
+					border-left-color: #2c3650 !important;
 				}
 			}
 		}
