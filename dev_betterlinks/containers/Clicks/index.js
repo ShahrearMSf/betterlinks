@@ -59,7 +59,7 @@ const Clicks = (props) => {
 					top_medium: medium || [],
 					darkMode,
 					Chart,
-					BarLoader: BarLoader
+					BarLoader: BarLoader,
 				}}
 			/>
 			<div className="btl-analytic-table-wrapper">

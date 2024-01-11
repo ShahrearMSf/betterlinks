@@ -11,7 +11,7 @@ import TableLoader from 'components/Loader/TableLoader';
 import TagQuickAction from 'containers/AddNewTags/TagQuickAction';
 import Select from 'react-select';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import { route_path } from 'utils/helper';
+import { is_extra_data_tracking_compatible, route_path, sortFunction } from 'utils/helper';
 
 const ManageTags = (props) => {
 	const [bulkActionData, setBulkActionData] = useState({});
@@ -37,7 +37,7 @@ const ManageTags = (props) => {
 		{
 			name: __('Link Count', 'betterlinks'),
 			selector: 'link_count',
-			sortable: false,
+			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('link_count') }),
 			cell: (row) => {
 				return <div>{+(row?.link_count || 0)}</div>;
 			},
@@ -58,9 +58,6 @@ const ManageTags = (props) => {
 							<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + row.id}>
 								{total_clicks}/{unique_clicks}
 							</Link>
-							{/* <span className="icon">
-								{total_clicks}/{unique_clicks}
-							</span> */}
 						</button>
 					</div>
 				);

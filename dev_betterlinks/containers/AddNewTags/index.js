@@ -23,12 +23,15 @@ const AddNewTags = (props) => {
 		const isExist = (tags || []).some((item) => item.term_slug === value);
 		props.setFieldValue('term_slug', value);
 		if (!!isExist) {
-			return setErrorMsg(__('Tags already exist'));
+			return setErrorMsg(__('Tags already exist', 'betterlinks'));
 		}
 		setErrorMsg('');
 	};
 
 	const __handleSubmit = (values, actions) => {
+		if ('' === values.term_slug) {
+			return setErrorMsg(__("Tag field can't be empty", 'betterlinks'));
+		}
 		const data = {
 			ID: row?.ID || values.term_id,
 			term_name: values.term_slug,

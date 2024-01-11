@@ -5,12 +5,12 @@ import { MultiSelect } from 'react-multi-select-component';
 import { useEffect } from 'react';
 
 const FilterComponent = (props) => {
-	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id, analyticsTab, update_activity } = props;
+	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id } = props;
 	const [selectedValues, setSelectedValues] = useState([]);
 	useEffect(() => {
 		setSelectedValues(Object.values(analytics || []));
 	}, [analytics]);
-
+	const tag_id = betterLinksQuery.get('tag_id');
 	const options = [
 		{ label: 'Browser', value: 'browser' },
 		{ label: 'IP', value: 'ip' },
@@ -53,7 +53,7 @@ const FilterComponent = (props) => {
 							</button>
 						)}
 					</form>
-					{id && (
+					{id && !tag_id && (
 						<MultiSelect
 							options={options}
 							value={selectedValues}

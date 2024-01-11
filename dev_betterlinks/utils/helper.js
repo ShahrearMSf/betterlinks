@@ -620,7 +620,7 @@ const getDevice = (device) => {
 	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
 	return device;
 };
-const sortFunction = (title) => (rowA, rowB) => {
+export const sortFunction = (title) => (rowA, rowB) => {
 	if (['total_clicks', 'unique_clicks'].includes(title)) {
 		if (+rowA[title] > +rowB[title]) return 1;
 		else if (+rowB[title] > +rowA[title]) return -1;
@@ -758,14 +758,14 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			selector: 'total_clicks',
 			width: '150px',
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('total_clicks') }),
-			cell: (row) => <div>{row?.total_clicks || 1}</div>,
+			cell: (row) => <div>{row?.total_clicks || 0}</div>,
 		},
 		{
 			name: __('Unique Clicks', 'betterlinks'),
 			selector: 'unique_clicks',
 			width: '150px',
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('unique_clicks') }),
-			cell: (row) => <div>{row?.unique_clicks || 1}</div>,
+			cell: (row) => <div>{row?.unique_clicks || 0}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),

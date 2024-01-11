@@ -21,7 +21,7 @@ const AnalyticsList = (props) => {
 	const columns = useCallback(getColumns(analytics, analyticsTab), [analytics, analyticsTab]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
-	return <DataList columns={newColumns} data={unique_list || []} progressPending={unique_list ? false : true} id={id} from={from}/>;
+	return <DataList columns={newColumns} data={unique_list || []} progressPending={unique_list ? false : true} id={id} from={from} />;
 };
 
 const mapStateToProps = (state) => ({
