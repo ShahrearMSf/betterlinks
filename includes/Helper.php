@@ -68,19 +68,19 @@ class Helper {
 
 	public static function get_menu_items() {
 		$menu_items = array(
-			BETTERLINKS_PLUGIN_SLUG                => array(
+			BETTERLINKS_PLUGIN_SLUG                  => array(
 				'title'      => __( 'Manage Links', 'betterlinks' ),
-				'capability' => 'manage_options',
-			),
-			BETTERLINKS_PLUGIN_SLUG . '-analytics' => array(
-				'title'      => __( 'Analytics', 'betterlinks' ),
 				'capability' => 'manage_options',
 			),
 			BETTERLINKS_PLUGIN_SLUG . '-manage-tags' => array(
 				'title'      => __( 'Manage Tags', 'betterlinks' ),
 				'capability' => 'manage_options',
 			),
-			BETTERLINKS_PLUGIN_SLUG . '-settings'  => array(
+			BETTERLINKS_PLUGIN_SLUG . '-analytics'   => array(
+				'title'      => __( 'Analytics', 'betterlinks' ),
+				'capability' => 'manage_options',
+			),
+			BETTERLINKS_PLUGIN_SLUG . '-settings'    => array(
 				'title'      => __( 'Settings', 'betterlinks' ),
 				'capability' => 'manage_options',
 			),
@@ -437,16 +437,16 @@ class Helper {
 	}
 
 	public static function update_links_analytics() {
-		$results   = array();
+		$results      = array();
 		$clicks_count = self::get_clicks_count();
 
-		$total_clicks = $clicks_count['total_clicks'];
+		$total_clicks  = $clicks_count['total_clicks'];
 		$unique_clicks = $clicks_count['unique_clicks'];
-		
-		for ($i=0; $i < count($total_clicks); $i++) { 
-			$results[$total_clicks[$i]['link_id']] = array(
-				'link_count' => $total_clicks[$i]['total_clicks'],
-				'ip' => isset($unique_clicks[$i]['unique_clicks']) ? $unique_clicks[$i]['unique_clicks'] : 1
+
+		for ( $i = 0; $i < count( $total_clicks ); $i++ ) {
+			$results[ $total_clicks[ $i ]['link_id'] ] = array(
+				'link_count' => $total_clicks[ $i ]['total_clicks'],
+				'ip'         => isset( $unique_clicks[ $i ]['unique_clicks'] ) ? $unique_clicks[ $i ]['unique_clicks'] : 1,
 			);
 		}
 
