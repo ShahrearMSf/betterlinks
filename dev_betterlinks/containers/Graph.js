@@ -15,7 +15,16 @@ import {
 	insertOverlayElement,
 	removeOverlayElement,
 } from 'utils/helper';
-import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
+import {
+	fetchCustomClicksData,
+	fetch_clicks_data,
+	fetch_individual_clicks,
+	get_analytics_graph_by_tag,
+	get_analytics_unique_list_by_id,
+	get_chart_data,
+	get_graph_data,
+	get_medium_data,
+} from 'redux/actions/clicks.actions';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 import GraphTeaser from './Clicks/GraphTeaser';
 import ChartLoader from './Clicks/ChartLoader';
@@ -34,6 +43,7 @@ const Graph = (props) => {
 		activity,
 	} = props;
 	const id = betterLinksQuery.get('id');
+	const tag_id = betterLinksQuery.get('tag_id');
 	const labels = get_labels(is_pro_enabled ? props.data.clicks : teaserClickData.clicks);
 
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
@@ -68,6 +78,11 @@ const Graph = (props) => {
 			}
 			if (id && is_pro_enabled) {
 				props.fetch_individual_clicks({ link_id: id, from, to, setLoading });
+			}
+
+			if (tag_id) {
+				props.get_analytics_graph_by_tag({ from, to, tag_id, setLoading });
+				props.get_analytics_unique_list_by_id({ from, to, tag_id, setLoading });
 			}
 			setTimeout(function () {
 				setFilterButtonText(__('Done!', 'betterlinks'));
@@ -150,7 +165,9 @@ const Graph = (props) => {
 				{is_pro_enabled && chartLoading ? (
 					<ChartLoader />
 				) : (
-					!id && betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser darkMode={darkMode} />, extraAnalytics)
+					!id &&
+					!tag_id &&
+					betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser darkMode={darkMode} />, extraAnalytics)
 				)}
 			</div>
 		</div>
@@ -170,6 +187,8 @@ const mapDispatchToProps = (dispatch) => {
 		get_medium_data: bindActionCreators(get_medium_data, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 		fetch_individual_clicks: bindActionCreators(fetch_individual_clicks, dispatch),
+		get_analytics_graph_by_tag: bindActionCreators(get_analytics_graph_by_tag, dispatch),
+		get_analytics_unique_list_by_id: bindActionCreators(get_analytics_unique_list_by_id, dispatch),
 	};
 };
 
