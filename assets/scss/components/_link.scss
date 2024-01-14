@@ -7,18 +7,22 @@
 		display: flex;
 		align-items: center;
 		min-height: 35px;
+		justify-content: space-between;
+		column-gap: 2px;
+
 		.dnd-link-title {
-			margin-right: 5px;
+			// margin-right: 5px;
 			display: flex;
 			align-items: center;
 			margin-top: 0;
 			margin-bottom: 0;
-			font-size: 14px;
+			font-size: 12px;
 			font-weight: 500;
 			line-height: 1.1;
 			color: $secondary-darken;
 			word-break: break-word;
 			padding-left: 3px;
+
 			.icon {
 				margin-right: 4px;
 				display: inline-flex;
@@ -30,14 +34,20 @@
 					color: $danger;
 				}
 			}
+			.btl-tooltip {
+				margin-left: 0;
+			}
 		}
 		.btl-dnd-link-button-group {
 			position: relative;
-			margin-left: auto;
-			margin-right: 5px;
 			display: flex;
 			align-items: center;
 			min-height: 25px;
+			column-gap: 2px;
+
+			.btl-tooltip {
+				margin-left: 0;
+			}
 		}
 	}
 	.btl-confirm-message {

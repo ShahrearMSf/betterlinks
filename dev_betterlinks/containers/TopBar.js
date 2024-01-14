@@ -45,12 +45,14 @@ const TopBar = (props) => {
 
 	return (
 		<div className="topbar">
-			<div className="topbar__logo">
-				<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
-				<span className="topbar__logo__text">{props.label}</span>
-			</div>
+			<div className="topbar__logo_container">
+				<div className="topbar__logo">
+					<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
+					<span className="topbar__logo__text">{props.label}</span>
+				</div>
 
-			{props.render()}
+				{props.render()}
+			</div>
 			<div className="topbar-inner">
 				{currentPage === 'betterlinks' && (
 					<React.Fragment>
