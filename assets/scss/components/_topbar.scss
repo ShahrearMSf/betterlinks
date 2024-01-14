@@ -1,6 +1,8 @@
 .topbar {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
+	justify-content: space-between;
 	padding: 25px 30px;
 	margin-bottom: 30px;
 	border-width: 1px;
@@ -8,6 +10,51 @@
 	border-color: $light-darken;
 	background-color: $white;
 	border-radius: 8px;
+
+	.topbar__logo_container {
+		display: flex;
+	}
+	$breakpoint-tablet: 680px;
+	@media (max-width: $breakpoint-tablet) {
+		column-gap: 5px;
+		.topbar__logo_container {
+			flex-direction: column;
+
+			.btl-create-links {
+				margin-left: 0;
+				margin-top: 5px;
+			}
+		}
+
+		.topbar-inner {
+			column-gap: 5px;
+			.btl-view-control {
+				column-gap: 5px;
+				button.btl-link-view-toggler {
+					margin-right: 0;
+					width: 35px;
+					min-width: 35px;
+					height: 35px;
+					font-size: 12px;
+				}
+			}
+
+			.theme-mood-button {
+				height: 35px;
+
+				.theme-mood span.icon {
+					height: 25px;
+					width: 35px;
+				}
+			}
+		}
+	}
+
+	@media (max-width: 445px) {
+		row-gap: 10px;
+		justify-content: center;
+	}
+
 	&__logo {
 		display: flex;
 		justify-content: center;
@@ -50,7 +97,7 @@
 		}
 	}
 	.topbar-inner {
-		margin-left: auto;
+		// margin-left: auto;
 		display: flex;
 		align-items: center;
 	}
