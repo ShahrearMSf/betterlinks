@@ -72,8 +72,35 @@ class Ajax {
 
 		// Analytics
 		add_action( 'wp_ajax_betterlinks__admin_fetch_analytics_graph', array( $this, 'fetch_analytics_graph' ) );
+
+		// Notices
+		add_action( 'wp_ajax_betterlinks__admin_menu_notice', array( $this, 'admin_menu_notice' ) );
+		add_action( 'wp_ajax_betterlinks__admin_dashboard_notice', array( $this, 'admin_dashboard_notice' ) );
 	}
 
+	public function admin_dashboard_notice() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$dashboard_notice = get_option('betterlinks_dashboard_notice', 0);
+		if( BETTERLINKS_MENU_NOTICE !== $dashboard_notice ){
+			update_option('betterlinks_dashboard_notice', BETTERLINKS_MENU_NOTICE);
+		}
+		wp_send_json([
+			'result' => BETTERLINKS_MENU_NOTICE
+		]);
+	}
+	public function admin_menu_notice() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+		wp_send_json([
+			'result' => get_option('betterlinks_menu_notice', 0)
+		]);
+	}
 	public function fetch_analytics_graph() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -119,10 +146,6 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		// give betterlinks a lot of time to properly set the migration work for background.
-		/*
-		if ( function_exists( 'ini_set' ) ) {
-			ini_set( 'max_execution_time', 300 );
-		} */
 		set_time_limit( 300 );
 
 		if ( \BetterLinks\Helper::btl_get_option( 'btl_prettylink_migration_should_not_start_in_background' ) ) {
@@ -313,28 +336,10 @@ class Ajax {
 		$title   = isset( $_GET['title'] ) ? sanitize_text_field( $_GET['title'] ) : '';
 		$results = \BetterLinks\Helper::search_clicks_data( $title );
 
-		// $top_referer = $device_stats = $top_os = $top_browser = $top_medium = $top_links_clicks = array();
-		// if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-		// 	$from         = date( 'Y-m-d', strtotime( ' - 30 days' ) );
-		// 	$to           = date( 'Y-m-d' );
-		// 	$top_referer  = \BetterLinksPro\Helper::get_top_referer( $from, $to );
-		// 	$device_stats = \BetterLinksPro\Helper::get_device_click_stats( $from, $to );
-		// 	$top_os       = \BetterLinksPro\Helper::get_top_os( $from, $to );
-		// 	$top_browser  = \BetterLinksPro\Helper::get_top_browser( $from, $to );
-
-		// 	$top_medium       = \BetterLinksPro\Helper::get_top_medium( $results, $top_clicks_id );
-		// 	$top_links_clicks = array_splice( $top_medium, -1 );
-		// }
 
 		wp_send_json_success(
 			array(
 				'clicks'           => $results,
-				// 'referer'          => $top_referer,
-				// 'devices'          => $device_stats,
-				// 'os'               => $top_os,
-				// 'browser'          => $top_browser,
-				// 'top_medium'       => $top_medium,
-				// 'top_links_clicks' => $top_links_clicks,
 			)
 		);
 	}

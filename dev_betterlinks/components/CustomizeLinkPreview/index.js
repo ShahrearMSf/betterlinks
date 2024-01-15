@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { is_pro_enabled } from 'utils/helper';
+import { is_pro_enabled, pro_version_check } from 'utils/helper';
 import CustomizeLinkPreviewTeaser from './CustomizeLinkPreviewTeaser';
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
@@ -10,7 +10,6 @@ import Note from './Note';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, metaTag }) => {
-	// if (!form.values?.enable_customize_meta_tags) return null;
 	const [openModal, setOpenModal] = useState(false);
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const closeModal = () => setOpenModal(false);
@@ -42,6 +41,8 @@ const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, meta
 		}
 		togglePanel('optimizeMetaTags');
 	};
+	const pro_version = pro_version_check();
+
 	return (
 		<>
 			<div className={`link-options link-options--advanced link-options--customize-link-preview ${openAccordion ? 'link-options--open' : ''}`}>
@@ -93,6 +94,14 @@ const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, meta
 						<span className="btl-close-modal" onClick={closeModal}>
 							<i className="btl btl-cancel" />
 						</span>
+						{pro_version !== null && pro_version < 8 && (
+							<div className="btl-form-group">
+								<div className="short-description">
+									<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
+									{__('To Utilize the Customize Link Preview Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro v-1.8.0', 'betterlinks')}
+								</div>
+							</div>
+						)}
 						<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 						<CustomizeLinkPreviewTeaser openUpgradeToProModal={openUpgradeToProModal} />
 						{betterLinksHooks.applyFilters('linkOptionsOptimizeMetaTags', null, { ...form, ...settings, metaTag, Note, closeModal, ReactTabs })}

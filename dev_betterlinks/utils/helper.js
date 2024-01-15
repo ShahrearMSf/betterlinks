@@ -20,6 +20,7 @@ export const {
 	betterlinks_links_option,
 	betterlinkspro_version,
 	is_extra_data_tracking_compatible,
+	menu_notice,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -810,4 +811,4 @@ export const get_labels = (clicks) => {
 	return labels;
 };
 
-export const pro_version_check = () => betterlinkspro_version	 ? parseFloat(betterlinkspro_version?.slice(2)) : null;
+export const pro_version_check = () => (betterlinkspro_version ? parseFloat(betterlinkspro_version?.slice(2)) : null);

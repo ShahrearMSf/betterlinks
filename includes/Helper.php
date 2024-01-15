@@ -6,6 +6,9 @@ class Helper {
 	use Traits\Query;
 	use Traits\Clicks;
 
+	public static function btl_menu_notice() {
+		return BETTERLINKS_MENU_NOTICE !== get_option('betterlinks_menu_notice', 0);
+	}
 	public static function get_links() {
 		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
 			$data = json_decode( file_get_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/links.json' ), true );

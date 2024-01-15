@@ -414,7 +414,7 @@ export const Link = (props) => {
 											<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 										</div>
 										{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
-											<div className="btl-modal-form-group">
+											<div className="btl-modal-form-group btl-modal-form-group-submit">
 												<label className="btl-modal-form-label"></label>
 												<button type="submit" className="btl-modal-submit-button">
 													{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
@@ -646,6 +646,14 @@ export const Link = (props) => {
 										)}
 									</div>
 								</div>
+								{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
+									<div className="btl-modal-form-group btl-modal-form-group-submit-medium-device">
+										<label className="btl-modal-form-label"></label>
+										<button type="submit" className="btl-modal-submit-button">
+											{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+										</button>
+									</div>
+								)}
 							</Form>
 						);
 					}}
