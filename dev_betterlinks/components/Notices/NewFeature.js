@@ -9,7 +9,7 @@ const NewFeature = () => {
 		const stored_dashboard_notice = localStorage.getItem('betterlinks__admin_dashboard_notice');
 		if (menu_notice !== stored_dashboard_notice) {
 			const btl = document.querySelector('.btl-dashboard-notice .notice-dismiss');
-			btl.addEventListener('click', () => {
+			btl?.addEventListener('click', () => {
 				try {
 					makeRequest({
 						action: 'betterlinks__admin_dashboard_notice',

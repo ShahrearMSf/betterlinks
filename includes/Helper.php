@@ -97,7 +97,7 @@ class Helper {
 			return true;
 		} else {
 			foreach ( self::get_menu_items() as $key => $value ) {
-				if ( BETTERLINKS_PLUGIN_SLUG . '_page_' . $key === $hook || strpos( $hook, BETTERLINKS_PLUGIN_SLUG . '_page_' . $key ) ) {
+				if ( BETTERLINKS_PLUGIN_SLUG . '_page_' . $key === $hook || strpos( $hook, BETTERLINKS_PLUGIN_SLUG . '_page_' . $key ) || strpos('_'.$hook, 'betterlinks') ) {
 					return true;
 				}
 			}
