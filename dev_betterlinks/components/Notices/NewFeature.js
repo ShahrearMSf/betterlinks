@@ -30,12 +30,12 @@ const NewFeature = () => {
 		<div className="notice is-dismissible btl-dashboard-notice">
 			<p>
 				{__('📣 NEW: BetterLinks Pro 1.8.0 is here, with new ', 'betterlinks')}
-				<a target="_blank" href="#">
-					Customize Link Preview
+				<a target="_blank" href="https://betterlinks.io/docs/how-to-customize-link-preview/">
+					{__('Customize Link Preview', 'betterlinks')}
 				</a>
 				{__(' feature & more! Check out the ', 'betterlinks')}
-				<a target="_blank" href="#">
-					Changelog
+				<a target="_blank" href="https://betterlinks.io/changelog/">
+					{__('Changelog', 'betterlinks')}
 				</a>
 				{__(' for more details 🎉', 'betterlinks')}
 			</p>
