@@ -10,6 +10,9 @@ import Note from './Note';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, metaTag }) => {
+	const { enable_customize_meta_tags } = settings.settings;
+	if (is_pro_enabled && !enable_customize_meta_tags) return null;
+	
 	const [openModal, setOpenModal] = useState(false);
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const closeModal = () => setOpenModal(false);
