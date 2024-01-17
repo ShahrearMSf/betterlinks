@@ -14,6 +14,11 @@
 			display: flex;
 			flex-wrap: wrap;
 		}
+		@media (max-width: 680px) {
+			.btl-links-filter {
+				justify-content: center;
+			}
+		}
 		.btl-bulk-actions {
 			margin-right: 12px;
 			.btl-list-view-select {
@@ -213,6 +218,11 @@
 					&:nth-child(5) {
 						min-width: 70px;
 					}
+					&:nth-child(5) {
+						div {
+							width: 200px;
+						}
+					}
 					.rdt_TableCol_Sortable {
 						color: $dark;
 						font-size: 14px;
@@ -231,6 +241,7 @@
 				border: 1px solid $light-darken;
 				border-radius: 5px;
 				box-shadow: 0 3px 4px rgba(#00094e, 0.03);
+				padding-right: 5px;
 				.rdt_TableCell {
 					display: flex;
 					justify-content: center;
@@ -246,6 +257,12 @@
 					&:nth-child(4),
 					&:nth-child(5) {
 						min-width: 70px;
+						text-align: center;
+					}
+					&:nth-child(5) {
+						div {
+							width: 200px;
+						}
 					}
 					div {
 						font-size: 14px;
@@ -298,6 +315,7 @@
 						display: inline-flex;
 						align-items: center;
 						justify-content: center;
+						column-gap: 5px;
 						width: 100%;
 						.btl-confirm-message {
 							display: flex;
@@ -353,7 +371,7 @@
 						cursor: pointer;
 						transition: color 0.2s ease 0s;
 						text-decoration: none;
-						margin: 0 7px;
+						// margin: 0 7px;
 						&:focus {
 							border: none;
 							outline: none;

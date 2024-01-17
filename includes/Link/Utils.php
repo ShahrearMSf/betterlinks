@@ -171,7 +171,7 @@ class Utils
             'click_order' => 0,
             'created_at' => $now,
             'created_at_gmt' => $now_gmt,
-            'rotation_target_url' => '',
+            'rotation_target_url' => $data['target_url'],
             'target_url' => $data['target_url']
         ];
         if(!$is_disable_analytics_ip){

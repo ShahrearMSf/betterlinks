@@ -4,7 +4,6 @@ import { is_extra_data_tracking_compatible, is_pro_enabled } from 'utils/helper'
 function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
 	const formattedData = {};
 	const newClicksData = [];
-	// console.log(unq)
 	for (const item of unique_list) {
 		const linkId = `id_${item.link_id || ''}`;
 		const itemIp = `ip_${item.ip || ''}`.replaceAll(':', '_colon_').replaceAll('.', '_dot_');

@@ -3,6 +3,7 @@
 namespace BetterLinks\API;
 
 use BetterLinks\Traits\ArgumentSchema;
+use \BetterLinksPro\Helper;
 
 class Settings extends Controller {
 
@@ -93,11 +94,24 @@ class Settings extends Controller {
 		$response['affiliate_disclosure_text'] = isset( $response['affiliate_disclosure_text'] ) && is_string( $response['affiliate_disclosure_text'] ) ? $response['affiliate_disclosure_text'] : '';
 		$enable_password_protection = isset( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
 
-		if( $enable_password_protection ) {
-			(new \BetterLinksPro\Helper)->add_password_protect_page();
-		}else{
-			(new \BetterLinksPro\Helper)->delete_password_protect_page();
-		}
+		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
+		$enable_customize_meta_tag = !empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
+
+        if( class_exists('BetterLinksPro')) {
+			$pro_helper = new Helper();
+            if( $enable_password_protection ){
+                $pro_helper->add_password_protect_page();
+            }else {
+                $pro_helper->delete_custom_page('password-protected-form');
+            }
+
+			if( $enable_customize_meta_tag ){
+				$pro_helper->add_customized_meta_tag_page();
+			}else {
+				$pro_helper->delete_custom_page('customized-meta-tags');
+			}
+        }
+
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );

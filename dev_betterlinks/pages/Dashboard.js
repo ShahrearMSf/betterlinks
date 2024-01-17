@@ -4,6 +4,7 @@ import Analytics from 'pages/Analytics';
 import Settings from 'pages/Settings';
 import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
+import NewFeature from 'components/Notices/NewFeature';
 
 const renderSwitch = (param) => {
 	switch (param) {
@@ -20,7 +21,7 @@ const renderSwitch = (param) => {
 	}
 };
 
-const Dashboard = ({ notice }) => {
+const Dashboard = ({ notice, menuNotice }) => {
 	return (
 		<React.Fragment>
 			{notice && (
@@ -30,6 +31,7 @@ const Dashboard = ({ notice }) => {
 					</p>
 				</div>
 			)}
+			<NewFeature />
 
 			<Suspense fallback="">{renderSwitch(betterLinksQuery.get('page'))}</Suspense>
 		</React.Fragment>

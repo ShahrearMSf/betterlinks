@@ -522,8 +522,8 @@ trait Query
             $betterlinks = self::get_link_by_ID($item['link_id']);
         }
         $is_analytics_ip_enabled = isset($item['ip']) && isset($item['host']);
-        $addedPlaceholderString = $is_analytics_ip_enabled ? " created_at_gmt, ip, host " : " created_at_gmt ";
-        $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s " : " %s ";
+        $addedPlaceholderString = $is_analytics_ip_enabled ? " created_at_gmt, rotation_target_url, ip, host " : " created_at_gmt, rotation_target_url ";
+        $addedDbColumnsString = $is_analytics_ip_enabled ? " %s, %s, %s, %s " : " %s, %s ";
 
         if( $is_extra_data_tracking_compatible ) {
             $addedPlaceholderString .= ", brand_name, model, bot_name, browser_type, os_version, browser_version, language";
@@ -542,7 +542,8 @@ trait Query
             $item['visitor_id'],
             $item['click_order'],
             $item['created_at'],
-            $item['created_at_gmt']
+            $item['created_at_gmt'],
+            $item['rotation_target_url']
         ];
         if($is_analytics_ip_enabled){
             $db_data_array[] = $item['ip'];

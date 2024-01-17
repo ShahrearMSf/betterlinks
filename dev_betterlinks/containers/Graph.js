@@ -4,17 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Chart from 'react-apexcharts';
 import { DateRangePicker } from 'react-date-range';
-import {
-	getDataset,
-	get_labels,
-	is_extra_data_tracking_compatible,
-	is_pro_enabled,
-	plugin_root_url,
-	teaserClickData,
-	formatDate,
-	insertOverlayElement,
-	removeOverlayElement,
-} from 'utils/helper';
+import { getDataset, get_labels, is_extra_data_tracking_compatible, is_pro_enabled, plugin_root_url, formatDate, insertOverlayElement, removeOverlayElement } from 'utils/helper';
 import { fetchCustomClicksData, fetch_clicks_data, fetch_individual_clicks, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 import GraphTeaser from './Clicks/GraphTeaser';
@@ -34,7 +24,7 @@ const Graph = (props) => {
 		activity,
 	} = props;
 	const id = betterLinksQuery.get('id');
-	const labels = get_labels(is_pro_enabled ? props.data.clicks : teaserClickData.clicks);
+	const labels = get_labels(props.data.clicks);
 
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);

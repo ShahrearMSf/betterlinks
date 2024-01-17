@@ -418,15 +418,6 @@ $breakpoint-phone: 560px;
 @media (max-width: $breakpoint-phone) {
 	.btl-analytic {
 		.btl-top-charts {
-			// > div {
-			// 	.MuiAccordion-root.Mui-expanded.Mui-disabled {
-			// 		width: 99% !important;
-			// 	}
-			// 	.MuiAccordionDetails-root img.btl-donut-no-data {
-			// 		width: 100%;
-			// 	}
-			// }
-
 			.btl-top-charts-1,
 			.btl-top-charts-2 {
 				grid-template-columns: repeat(1, 1fr);

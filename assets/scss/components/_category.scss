@@ -1,6 +1,6 @@
 .dnd-category-wrapper {
 	column-count: 4;
-	column-gap: 20px;
+	// column-gap: 20px;
 	orphans: 1;
 	widows: 1;
 	@media screen and (max-width: 1599px) {
@@ -9,9 +9,14 @@
 	@media screen and (max-width: 1199px) {
 		column-count: 2;
 	}
-	@media screen and (max-width: 599px) {
+	@media screen and (max-width: 699px) {
 		column-count: 1;
 	}
+	// @media screen and (max-width: 950px) {
+	// 	.dnd-link-title {
+	// 		font-size: 12px !important;
+	// 	}
+	// }
 	&.d-flex {
 		display: flex;
 	}
