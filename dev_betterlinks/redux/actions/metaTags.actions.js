@@ -5,7 +5,6 @@ export const ADD_NEW_META_TAGS = 'ADD_NEW_META_TAGS';
 
 export const add_meta_tags = (params) => async (dispatch) => {
 	if (!is_pro_enabled) return;
-	console.log({ params });
 	const form_data = new FormData();
 	form_data.append('action', 'betterlinkspro/admin/add_meta_tags');
 	form_data.append('security', betterlinks_nonce);

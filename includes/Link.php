@@ -38,7 +38,6 @@ class Link extends Utils {
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false )  && !empty( self::$link_options['enable_password_protection'] )) { // phpcs:ignore.
 				$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
 				$request_uri       = site_url( '/' ) . $request_uri;
-				// error_log('hhelo');
 				$short_url         = $this->get_protected_self_url_short_link( $request_uri );
 				$referer_short_url = $this->referer_short_url( $referer );
 
