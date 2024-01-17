@@ -139,6 +139,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 1.7.3 - 17/01/2024 =
+
+- Fixed: Uncaught Error issue with Settings API
+- Improved: Manage Links UI Responsiveness
+- Few minor bug fixes & improvements
+
 = 1.7.2 - 01/01/2024 =
 
 - Fixed: Style issue inside the Gutenberg Editor
