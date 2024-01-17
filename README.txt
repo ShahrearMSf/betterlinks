@@ -70,6 +70,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Auto-Create Links [PRO]
 - Affiliate Link Disclosure [PRO]
 - Password Protected Redirect [PRO]
+- Customize Link Preview [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
