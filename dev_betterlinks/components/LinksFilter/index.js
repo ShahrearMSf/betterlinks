@@ -49,6 +49,7 @@ const LinksFilter = (props) => {
 							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
 							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
 							onChange={(e) => setBulkAction(e)}
+							label={__('Hridoy', 'betterlinks')}
 						/>
 						<div className="btl-tooltip">
 							<button
