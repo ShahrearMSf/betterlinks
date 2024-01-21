@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import TableLoader from 'components/Loader/TableLoader';
@@ -17,7 +17,6 @@ const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
 
 	const handleSearchTextChange = (e) => {
-		// const value = (e?.target?.value || '').trim();
 		const value = e.target.value; // Accepting space in the search field.
 		setSearchedText(value);
 	};

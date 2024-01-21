@@ -2,14 +2,20 @@
 namespace BetterLinks;
 
 use BetterLinks\Link\Utils;
-// use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use DeviceDetector\DeviceDetector;
 
 class Link extends Utils {
+	private static $link_options;
 
 	public function __construct() {
 		if ( ! is_admin() && isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) {
 			add_action( 'init', array( $this, 'run_redirect' ), 0 );
 		}
+		$settings = get_option( 'betterlinks_links', true );
+		if ( is_string( $settings ) ) {
+			$settings = json_decode( $settings, true );
+		}
+		self::$link_options = $settings;
 	}
 
 	/**
@@ -23,22 +29,13 @@ class Link extends Utils {
 		$param       = explode( '?', $request_uri, 2 );
 		$data        = $this->get_slug_raw( rtrim( current( $param ), '/' ) );
 
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
+		$dd         = new DeviceDetector( $user_agent );
+		$dd->parse();
 
-		$data['is_customized_meta'] = true;
-		// $CrawlerDetect = new CrawlerDetect;
-		// if ($data['is_customized_meta'] && $CrawlerDetect->isCrawler()) {
-		// 	update_option('hridoy', 'yes');
-		// 	wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
-		// 	exit();
-		// }
-        // if( $data['is_customized_meta'] ) {
-        //     wp_redirect(esc_url_raw(site_url().'/customize-meta-tags/?short_url='.esc_attr($data['short_url'])));
-        //     exit();
-        // }
-
-
-		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { //phpcs:ignore. 
-			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
+		$data['is_bot'] = $dd->isBot();
+		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
+			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false )  && !empty( self::$link_options['enable_password_protection'] )) { // phpcs:ignore.
 				$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
 				$request_uri       = site_url( '/' ) . $request_uri;
 				$short_url         = $this->get_protected_self_url_short_link( $request_uri );

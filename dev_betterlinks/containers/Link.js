@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import Select from 'components/Select';
@@ -14,7 +13,6 @@ import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/t
 import {
 	modalCustomStyles,
 	modalCustomSmallStyles,
-	betterlinks_nonce,
 	site_url,
 	generateSlug,
 	generateShortURL,
@@ -31,6 +29,7 @@ import Tags from 'components/Terms/Tags';
 import Copy from 'components/Copy';
 import UTMBuilder from 'components/UTMBuilder';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import CustomizeLinkPreview from 'components/CustomizeLinkPreview';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -67,7 +66,9 @@ export const Link = (props) => {
 
 	// 👇 password protection
 	const passwords = props.password;
-	// const password = bett
+
+	// 👇 Customized Meta Tags
+	const { metaTags } = props.metaTags;
 
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);
@@ -81,8 +82,10 @@ export const Link = (props) => {
 		options: true,
 		advanced: false,
 		dynamicRedirect: false,
+		optimizeMetaTags: false,
 	});
 	const [password, setPassword] = useState(null);
+	const [metaTag, setMetaTag] = useState(null);
 
 	useEffect(() => {
 		if (data?.ID && passwords?.password && Object.values(passwords.password).length > 0) {
@@ -90,6 +93,13 @@ export const Link = (props) => {
 			setPassword(password);
 		}
 	}, [passwords]);
+
+	useEffect(() => {
+		if (data?.ID && metaTags && Object.values(metaTags).length > 0) {
+			const metaTag = Object.values(metaTags).find((item) => item.link_id == data.ID);
+			setMetaTag(metaTag);
+		}
+	}, [metaTags]);
 	//👇 this useEffect is only for this 'Link' component's gutenberg implementation start
 	useEffect(() => {
 		if (betterlinksGutenStore) {
@@ -125,6 +135,7 @@ export const Link = (props) => {
 		...objForGutenTargetBlank,
 	};
 	const initialUpdateValues = {
+		...settings.settings,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		cat_id: catId,
@@ -403,7 +414,7 @@ export const Link = (props) => {
 											<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 										</div>
 										{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
-											<div className="btl-modal-form-group">
+											<div className="btl-modal-form-group btl-modal-form-group-submit">
 												<label className="btl-modal-form-label"></label>
 												<button type="submit" className="btl-modal-submit-button">
 													{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
@@ -550,7 +561,7 @@ export const Link = (props) => {
 																	<input id="expire" type="checkbox" disabled />
 																</div>
 																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																	<label className="btl-modal-form-label" htmlFor="expire">
+																	<label className="btl-modal-form-label">
 																		{__('Password Protection', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 																	</label>
 																	<input id="enable_password" type="checkbox" disabled />
@@ -558,7 +569,7 @@ export const Link = (props) => {
 															</div>
 														</div>
 													)}
-													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, ...passwords })}</>
+													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, password, metaTag })}</>
 												</div>
 												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
@@ -611,6 +622,15 @@ export const Link = (props) => {
 														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 													</div>
 												</div>
+												{/* Customize Link Preview */}
+												<CustomizeLinkPreview
+													openAccordion={isOpenLinkPanel.optimizeMetaTags}
+													togglePanel={togglePanel}
+													openUpgradeToProModal={openUpgradeToProModal}
+													form={props}
+													settings={settings}
+													metaTag={metaTag}
+												/>
 												{!is_pro_enabled && (
 													<div>
 														<div className={`link-options link-options--auto-link-keywords`}>
@@ -626,6 +646,14 @@ export const Link = (props) => {
 										)}
 									</div>
 								</div>
+								{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
+									<div className="btl-modal-form-group btl-modal-form-group-submit-medium-device">
+										<label className="btl-modal-form-label"></label>
+										<button type="submit" className="btl-modal-submit-button">
+											{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+										</button>
+									</div>
+								)}
 							</Form>
 						);
 					}}
@@ -638,6 +666,7 @@ const mapStateToProps = (state) => ({
 	settings: state.settings,
 	terms: state.terms,
 	password: state.password,
+	metaTags: state.metaTags,
 });
 
 const mapDispatchToProps = (dispatch) => {

@@ -2,6 +2,7 @@ import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
 import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 import { add_new_password, fetch_links_password } from './password.actions';
 import { edit_gutenberg_auto_link } from './gutenbergredirectlink.actions';
+import { add_meta_tags } from './metaTags.actions';
 export const DRAG_AND_DROP = 'DRAG_AND_DROP';
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
 export const FETCH_WITHOUT_CATEGORY_INITIAL_DATA = 'FETCH_WITHOUT_CATEGORY_INITIAL_DATA';
@@ -203,6 +204,16 @@ export const add_new_link =
 				})(dispatch);
 			}
 
+			if (formData.old_enable_meta_tags !== formData.enable_meta_tags || (formData.enable_meta_tags && '' !== formData.meta_title)) {
+				add_meta_tags({
+					link_id: ID,
+					meta_title: formData.meta_title,
+					meta_description: formData.meta_description,
+					meta_image: formData.meta_image || '',
+					status: !!formData.enable_meta_tags,
+				})(dispatch);
+			}
+
 			if (cat_data?.is_newly_created) {
 				dispatch({
 					type: ADD_TERM,
@@ -265,6 +276,16 @@ export const add_new_link =
 					})(dispatch);
 				}
 
+				if (formData.old_enable_meta_tags !== formData.enable_meta_tags || (formData.enable_meta_tags && '' !== formData.meta_title)) {
+					add_meta_tags({
+						link_id: ID,
+						meta_title: formData.meta_title,
+						meta_description: formData.meta_description,
+						meta_image: formData.meta_image || '',
+						status: !!formData.enable_meta_tags,
+					})(dispatch);
+				}
+
 				if (cat_data?.is_newly_created) {
 					dispatch({
 						type: ADD_TERM,
@@ -322,13 +343,22 @@ export const edit_link =
 
 			const { cat_data, tags_data = [], ID } = res?.data?.data;
 
-			// if (res?.data?.data?.enable_password != item?.enable_password) {
 			if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
 				add_new_password({
 					link_id: ID,
 					password: item.password,
 					status: item.enable_password,
 					allow_contact: item.allow_visitor_contact,
+				})(dispatch);
+			}
+
+			if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
+				add_meta_tags({
+					link_id: ID,
+					meta_title: item.meta_title,
+					meta_description: item.meta_description,
+					meta_image: item.meta_image || '',
+					status: !!item.enable_meta_tags,
 				})(dispatch);
 			}
 
@@ -368,6 +398,16 @@ export const edit_link =
 							password: item.password,
 							status: item.enable_password,
 							allow_contact: item.allow_visitor_contact,
+						})(dispatch);
+					}
+
+					if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
+						add_meta_tags({
+							link_id: ID,
+							meta_title: item.meta_title,
+							meta_description: item.meta_description,
+							meta_image: item.meta_image || '',
+							status: !!item.enable_meta_tags,
 						})(dispatch);
 					}
 

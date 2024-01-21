@@ -239,6 +239,7 @@ body {
 
 @import './components/modal';
 @import './components/utm_builder';
+@import './components/customize_link_preview';
 
 // expire status circle styles starts
 
@@ -638,8 +639,8 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	}
 }
 
+// // Search Icon Css Loader
 .betterlinks-body {
-	// Search Icon Css Loader
 	h1 {
 		font-family: 'Dosis', sans-serif;
 		padding-bottom: 10px;

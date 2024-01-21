@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Link } from 'react-router-dom';
 import { route_path, plugin_root_url } from 'utils/helper';
-const Navbar = () => {
+const Navbar = ({ menuNotice }) => {
 	const currentPage = betterLinksQuery.get('page');
 	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
 		betterLinksHooks.applyFilters(item, i !== 2)
@@ -17,6 +17,7 @@ const Navbar = () => {
 				to={`${route_path}admin.php?page=${rootLinks}`}
 				className="wp-has-submenu wp-has-current-submenu wp-menu-open menu-top menu-icon-generic toplevel_page_betterlinks menu-top-last"
 				aria-haspopup="false"
+				style={{ backgroundColor: '#20639a' }}
 			>
 				<div className="wp-menu-arrow">
 					<div></div>
@@ -24,7 +25,10 @@ const Navbar = () => {
 				<div className="wp-menu-image dashicons-before" aria-hidden="true">
 					<img src={plugin_root_url + 'assets/images/logo.svg'} alt="logo" />
 				</div>
-				<div className="wp-menu-name">{__('BetterLinks', 'betterlinks')}</div>
+				<div className="wp-menu-name">
+					{__('BetterLinks', 'betterlinks')}
+					{menuNotice && <span className="btl-menu-notice">1</span>}
+				</div>
 			</Link>
 			{shouldShowSubmenu && (
 				<ul className="wp-submenu wp-submenu-wrap">

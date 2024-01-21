@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -70,6 +70,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Auto-Create Links [PRO]
 - Affiliate Link Disclosure [PRO]
 - Password Protected Redirect [PRO]
+- Customize Link Preview [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
@@ -138,6 +139,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.7.3 - 17/01/2024 =
+
+- Fixed: Uncaught Error issue with Settings API
+- Improved: Manage Links UI Responsiveness
+- Few minor bug fixes & improvements
 
 = 1.7.2 - 01/01/2024 =
 

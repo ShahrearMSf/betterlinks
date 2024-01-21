@@ -68,11 +68,17 @@ class Assets
                 'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
                 'prefix' => $prefix,
                 'betterlinkspro_version' => defined('BETTERLINKS_PRO_VERSION') ? BETTERLINKS_PRO_VERSION : null,
-                'is_extra_data_tracking_compatible' => apply_filters('betterlinks/is_extra_data_tracking_compatible', false)
+                'is_extra_data_tracking_compatible' => apply_filters('betterlinks/is_extra_data_tracking_compatible', false),
+                'menu_notice' => defined('BETTERLINKS_MENU_NOTICE') ? BETTERLINKS_MENU_NOTICE : null,
             ]);
+
+            $menu_notice = get_option('betterlinks_menu_notice', 0);
+            if( defined( 'BETTERLINKS_MENU_NOTICE' ) && BETTERLINKS_MENU_NOTICE !== $menu_notice ) {
+                update_option('betterlinks_menu_notice', BETTERLINKS_MENU_NOTICE);
+            }
         }
         wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
-        wp_enqueue_style('betterlinks-admin-notice', BETTERLINKS_ASSETS_URI . 'css/betterlinks-admin-notice.css', [], null, 'all');
+        wp_enqueue_style('betterlinks-admin-notice', BETTERLINKS_ASSETS_URI . 'css/betterlinks-admin-notice.css', [], BETTERLINKS_VERSION, 'all');
     }
 
     /**

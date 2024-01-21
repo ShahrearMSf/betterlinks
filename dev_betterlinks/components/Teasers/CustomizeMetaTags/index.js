@@ -1,30 +1,31 @@
-import UpgradeToPro from '../UpgradeToPro';
-import { __ } from '@wordpress/i18n';
-import { useUpgradeProModal } from 'utils/customHooks';
-import { is_pro_enabled, pro_version_check, saveSettingsHandler } from 'utils/helper';
-import { Formik, Form } from 'formik';
 import { useState } from 'react';
+import { useUpgradeProModal } from 'utils/customHooks';
+import UpgradeToPro from '../UpgradeToPro';
+import { is_pro_enabled, pro_version_check, saveSettingsHandler } from 'utils/helper';
+import { __ } from '@wordpress/i18n';
+import { Form, Formik } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
-import ReactQuill from 'react-quill';
 
-const PasswordProtection = ({ settings, update_option }) => {
+const CustomizeMetaTags = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
 	const pro_version = pro_version_check();
 
-	if (pro_version !== null && pro_version < 6.3) {
+	if (pro_version !== null && pro_version < 8) {
+		// this feature is from 1.8.0 version, betterlinks-pro
 		return (
 			<div className="btl-form-group">
 				<div className="short-description">
 					<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-					{__('To Utilize the Password Protected Redirect Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
+					{__('To Utilize the Customize Link Preview Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro v-1.8.0', 'betterlinks')}
 				</div>
 			</div>
 		);
 	}
+
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -34,17 +35,17 @@ const PasswordProtection = ({ settings, update_option }) => {
 						{!is_pro_enabled && (
 							<span className="btl-form-group btl-form-group--teaser btl-form-group-password-protection" onClick={openUpgradeToProModal}>
 								<label className="btl-form-label">
-									{__('Enable Password Protected Redirect', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+									{__('Enable Customize Link Preview', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 								</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
-										<input className="btl-check" name="enable_password_protection" type="checkbox" disabled={true} />
+										<input className="btl-check" name="" type="checkbox" disabled={true} />
 										<span className="text" />
 									</label>
 								</div>
 							</span>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksPasswordProtection', null, { ...props, ReactQuill })}
+						{betterLinksHooks.applyFilters('BetterLinksCustomizeMetaTags', null, props)}
 						{is_pro_enabled && (
 							<>
 								<button className="button-primary btn-save-settings" type="submit">
@@ -64,4 +65,4 @@ const mapDispatchToProps = (dispatch) => {
 		update_option: bindActionCreators(update_option, dispatch),
 	};
 };
-export default connect(null, mapDispatchToProps)(PasswordProtection);
+export default connect(null, mapDispatchToProps)(CustomizeMetaTags);

@@ -22,7 +22,7 @@ class Menu
 	{
 		add_menu_page(
 			'BetterLinks',
-			'BetterLinks',
+			sprintf('BetterLinks %1$s', Helper::btl_menu_notice() ? '<span class="btl-menu-notice">1</span>' : ''),
 			apply_filters('betterlinks/admin/menu_capability', 'manage_options'),
 			BETTERLINKS_PLUGIN_SLUG,
 			[$this, 'load_main_template'],
