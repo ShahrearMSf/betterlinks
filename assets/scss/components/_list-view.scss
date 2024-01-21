@@ -222,11 +222,11 @@
 					&:nth-child(5) {
 						min-width: 70px;
 					}
-					&:nth-child(5) {
-						div {
-							width: 200px;
-						}
-					}
+					// &:nth-child(5) {
+					// 	div {
+					// 		width: 200px;
+					// 	}
+					// }
 					.rdt_TableCol_Sortable {
 						color: $dark;
 						font-size: 14px;
@@ -263,11 +263,11 @@
 						min-width: 70px;
 						text-align: center;
 					}
-					&:nth-child(5) {
-						div {
-							width: 200px;
-						}
-					}
+					// &:nth-child(5) {
+					// 	div {
+					// 		width: 200px;
+					// 	}
+					// }
 					div {
 						font-size: 14px;
 						color: $secondary;

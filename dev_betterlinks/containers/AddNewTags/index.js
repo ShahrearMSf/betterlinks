@@ -46,11 +46,11 @@ const AddNewTags = (props) => {
 	return (
 		<>
 			{(tags || []).length > 0 && icon ? (
-				<ActionButton type="edit" label={__('Edit Tags', 'betterlinks')} onClickHandler={openModal} />
+				<ActionButton type="edit" label={__('Edit Tag', 'betterlinks')} onClickHandler={openModal} />
 			) : (
 				<div className="btl-create-autolinks btl-create-tags">
 					<button className="btl-create-autolink-button btl-create-tags-button" onClick={openModal}>
-						{__('Add New Tags', 'betterlinks')}
+						{__('Add New Tag', 'betterlinks')}
 					</button>
 				</div>
 			)}

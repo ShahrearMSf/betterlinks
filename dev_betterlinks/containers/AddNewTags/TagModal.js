@@ -24,7 +24,7 @@ const TagModal = ({ open, errorMsg, closeModal, __handleChange, __handleSubmit, 
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="tags">
-											{__('Tags', 'betterlinks')}
+											{__('Tag', 'betterlinks')}
 											<span style={{ color: '#f97272', marginLeft: '2px' }}>*</span>
 										</label>
 										<div style={{ width: '100%' }}>
@@ -37,7 +37,7 @@ const TagModal = ({ open, errorMsg, closeModal, __handleChange, __handleSubmit, 
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label"></label>
 										<button type="submit" className="btl-modal-submit-button" disabled={'' !== errorMsg && '' !== props.values.term_slug}>
-											{row?.id ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+											{row?.term_slug ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 										</button>
 									</div>
 								</div>

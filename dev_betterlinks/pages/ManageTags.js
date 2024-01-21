@@ -43,7 +43,7 @@ const ManageTags = (props) => {
 			},
 		},
 		{
-			name: __('Analytic', 'betterlinks'),
+			name: __('Analytics', 'betterlinks'),
 			selector: 'link_count',
 			sortable: false,
 			cell: (row) => {
