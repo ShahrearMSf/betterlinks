@@ -99,7 +99,7 @@ export const fetch_individual_clicks = (params) => async (dispatch) => {
 	}
 };
 export const fetch_clicks_data = (params) => async (dispatch) => {
-	const { from, to, setLoading } = params;
+	const { from, to, setLoading = () => {} } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
 	setLoading(true);
 	try {
