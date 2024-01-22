@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 export const {
 	betterlinks_nonce,
@@ -840,4 +841,18 @@ export const get_tags = (links) => {
 			});
 
 	return tags;
+};
+
+export const sortByClicksTag = (type = '', tags, tag_analytics) => {
+	const [analyticsType, sortType] = type.split('-');
+	if (!analyticsType || !sortType) return tags;
+
+	let sortedTags = _.orderBy(tags, (item) => {
+		return +tag_analytics[analyticsType][item.id] || 0;
+	});
+	
+	if ('desc' === sortType) {
+		sortedTags = _.reverse(sortedTags);
+	}
+	return sortedTags;
 };

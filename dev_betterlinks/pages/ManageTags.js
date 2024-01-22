@@ -11,12 +11,13 @@ import TableLoader from 'components/Loader/TableLoader';
 import TagQuickAction from 'containers/AddNewTags/TagQuickAction';
 import Select from 'react-select';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import { is_extra_data_tracking_compatible, route_path, sortFunction } from 'utils/helper';
+import { is_extra_data_tracking_compatible, route_path, sortByClicksTag, sortFunction } from 'utils/helper';
 
 const ManageTags = (props) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [toggledClearRows, setToggleClearRows] = useState(false);
 	const [searchText, setSearchText] = useState('');
+	const [selectedClicksType, setClicksType] = useState(null);
 	const { tags, tag_analytics } = props.terms;
 	useEffect(() => {
 		if (!tags) {
@@ -85,13 +86,29 @@ const ManageTags = (props) => {
 		const matchedTags = (tags || [])?.filter((item) => {
 			return (item?.term_slug || '').match(regex);
 		});
-		return Array.isArray(matchedTags) ? matchedTags : tags;
+
+		const sortedTags = sortByClicksTag(selectedClicksType?.value, matchedTags, tag_analytics);
+		return Array.isArray(sortedTags) ? sortedTags : tags;
 	};
 	const subHeaderComponent = (
 		<TagActions bulkActionData={bulkActionData} setToggledClearRows={() => setToggleClearRows(!toggledClearRows)} delete_tag={props.delete_tag}>
 			<div className="btl-autolink-filter btl-click-filter">
 				<input id="search_autolink" type="search" placeholder="Search Tags" value={searchText} onChange={__handleSearch} />
 			</div>
+			<Select
+				className="btl-list-view-select btl-shortable-filter"
+				classNamePrefix="btl-react-select"
+				placeholder="Sort by Clicks"
+				options={[
+					{ value: 'total_clicks-desc', label: __('Most Clicks', 'betterlinks') },
+					{ value: 'total_clicks-asc', label: __('Least Clicks', 'betterlinks') },
+					{ value: 'unique_clicks-desc', label: __('Most Unique Clicks', 'betterlinks') },
+					{ value: 'unique_clicks-asc', label: __('Least Unique Clicks', 'betterlinks') },
+				]}
+				value={selectedClicksType}
+				onChange={(e) => setClicksType(e)}
+				isClearable={true}
+			/>
 		</TagActions>
 	);
 	return (
