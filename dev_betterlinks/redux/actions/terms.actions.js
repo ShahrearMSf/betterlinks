@@ -24,6 +24,9 @@ export const add_new_tag = (data) => async (dispatch) => {
 		const res = await API.post(namespace + 'terms', {
 			params: data,
 		});
+
+		if (!res.data.success) return;
+
 		if (res.data.success) {
 			dispatch({
 				type: res.data?.update ? UPDATE_TERM : ADD_TERM,

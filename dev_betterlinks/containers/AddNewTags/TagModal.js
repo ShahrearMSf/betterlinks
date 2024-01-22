@@ -3,9 +3,18 @@ import { modalCustomStyles } from 'utils/helper';
 import { Field, Form, Formik } from 'formik';
 import { __ } from '@wordpress/i18n';
 
+const tagModalStyles = {
+	...modalCustomStyles,
+	content: {
+		...modalCustomStyles.content,
+		maxWidth: '500px',
+		padding: '60px 60px 30px 60px',
+	},
+};
+
 const TagModal = ({ open, errorMsg, closeModal, __handleChange, __handleSubmit, row }) => {
 	return (
-		<Modal isOpen={open} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
+		<Modal isOpen={open} onRequestClose={closeModal} style={tagModalStyles} ariaHideApp={false}>
 			<span className="btl-close-modal" onClick={closeModal}>
 				<span className="btl btl-cancel" />
 			</span>
@@ -19,7 +28,7 @@ const TagModal = ({ open, errorMsg, closeModal, __handleChange, __handleSubmit, 
 			>
 				{(props) => {
 					return (
-						<Form className="w-100" onSubmit={props.handleSubmit}>
+						<Form className="w-100 btl-manage-tags-form" onSubmit={props.handleSubmit}>
 							<div className="btl-entry-content">
 								<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
 									<div className="btl-modal-form-group">
