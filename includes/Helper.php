@@ -38,6 +38,33 @@ class Helper {
 				);
 	}
 
+	public static function split_test_enabled( $data ) {
+		// error_log( json_encode( $data ) );
+        $extra = isset($data['dynamic_redirect'], $data['dynamic_redirect']['extra']) ? $data['dynamic_redirect']['extra'] : null;
+
+        $is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
+        $is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
+        if( !$is_enable || !$is_expire_enable) return false;
+
+        $expire_metrics = isset( $extra['expire_split_after'] ) ?  $extra['expire_split_after'] : 'clicks';
+        $expire_split_clicks = isset( $extra['expire_split_clicks'] ) ? (int) $extra['expire_split_clicks'] : 0;
+        $clicks_count = null;
+        
+        if( class_exists('\BetterLinksPro\Helper') ){
+            $pro_helper = new \BetterLinksPro\Helper;
+            
+            if( 'clicks' === $expire_metrics ){
+                $clicks_count = $pro_helper::get_individual_clicks_count($data['ID']);
+            }elseif( 'unique_clicks' === $expire_metrics) {
+                $clicks_count = $pro_helper::get_individual_unique_clicks_count($data['ID']);
+            }
+        }
+
+        $result = $clicks_count < $expire_split_clicks;
+
+        return $result;
+    }
+
 	public static function get_link_from_json_file( $short_url ) {
 		if ( empty( $short_url ) ) {
 			return;

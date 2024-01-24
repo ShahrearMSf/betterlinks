@@ -159,6 +159,11 @@ class Utils
             $visitor_uid = uniqid('bl');
             setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
         }
+        // error_log( json_encode($data['dynamic_redirect']) );
+        // checking is split tes enabled
+        $is_split_enabled = \BetterLinks\Helper::split_test_enabled($data);
+        // error_log( $is_split_enabled ? 'true' : 'false' );
+        
         $click_data = [
             'link_id' => $data['ID'],
             'browser' => isset($data['browser']) ? $data['browser'] : '',
@@ -171,8 +176,10 @@ class Utils
             'click_order' => 0,
             'created_at' => $now,
             'created_at_gmt' => $now_gmt,
+            // 'rotation_target_url' => $is_split_enabled ? $data['target_url'] : null,
             'rotation_target_url' => $data['target_url'],
-            'target_url' => $data['target_url']
+            'target_url' => $data['target_url'],
+            'is_split_enabled' => $is_split_enabled
         ];
         if(!$is_disable_analytics_ip){
             $IP = $this->get_current_client_IP();
@@ -197,7 +204,7 @@ class Utils
         } else {
             try {
                 $click_id = \BetterLinks\Helper::insert_click($arg);
-                if (!empty($click_id)) {
+                if (!empty($click_id) && $is_split_enabled) {
                     do_action('betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $arg['target_url']);
                 }
             } catch (\Throwable $th) {
@@ -205,6 +212,7 @@ class Utils
             }
         }
     }
+    
     public function get_current_client_IP()
     {
         $address = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field($_SERVER['REMOTE_ADDR']) : '';
