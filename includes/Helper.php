@@ -39,12 +39,13 @@ class Helper {
 	}
 
 	public static function split_test_enabled( $data ) {
-		// error_log( json_encode( $data ) );
         $extra = isset($data['dynamic_redirect'], $data['dynamic_redirect']['extra']) ? $data['dynamic_redirect']['extra'] : null;
 
         $is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
+		if( !$is_enable ) return false;
+
         $is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
-        if( !$is_enable || !$is_expire_enable) return false;
+		if( $is_enable && !$is_expire_enable ) return true;
 
         $expire_metrics = isset( $extra['expire_split_after'] ) ?  $extra['expire_split_after'] : 'clicks';
         $expire_split_clicks = isset( $extra['expire_split_clicks'] ) ? (int) $extra['expire_split_clicks'] : 0;
