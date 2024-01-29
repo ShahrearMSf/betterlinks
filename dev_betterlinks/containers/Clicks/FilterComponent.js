@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import SearchLoader from 'components/SearchLoader';
 import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
-import { is_extra_data_tracking_compatible, route_path } from 'utils/helper';
+import { route_path } from 'utils/helper';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
 
