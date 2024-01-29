@@ -18,12 +18,12 @@ const AddNewTags = (props) => {
 		setOpen(false);
 	};
 
-	const __handleChange = (e, props, row) => {
+	const __handleChange = (e, props) => {
 		const value = e.target.value;
 		const isExist = (tags || []).some((item) => item.term_slug === value);
 		props.setFieldValue('term_slug', value);
 		if (!!isExist) {
-			return setErrorMsg(__('Tags already exist', 'betterlinks'));
+			return setErrorMsg(__('Tag already exist', 'betterlinks'));
 		}
 		setErrorMsg('');
 	};
@@ -42,7 +42,7 @@ const AddNewTags = (props) => {
 
 		closeModal();
 	};
-	
+
 	return (
 		<>
 			{(tags || []).length > 0 && icon ? (

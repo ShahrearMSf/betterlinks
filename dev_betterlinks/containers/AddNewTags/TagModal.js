@@ -37,14 +37,14 @@ const TagModal = ({ open, errorMsg, closeModal, __handleChange, __handleSubmit, 
 											<span style={{ color: '#f97272', marginLeft: '2px' }}>*</span>
 										</label>
 										<div style={{ width: '100%' }}>
-											<Field id="term_slug" className="btl-modal-form-control" type="text" name="term_slug" required onChange={(e) => __handleChange(e, props, row)} autoFocus />
+											<Field id="term_slug" className="btl-modal-form-control" type="text" name="term_slug" required onChange={(e) => __handleChange(e, props)} autoFocus />
 											<span className="btl_duplicate_tags" style={{ color: 'red', height: '5px', display: 'block' }}>
 												{errorMsg}
 											</span>
 										</div>
 									</div>
 									<div className="btl-modal-form-group">
-										<label className="btl-modal-form-label"></label>
+										<label className="btl-modal-form-label" />
 										<button type="submit" className="btl-modal-submit-button" disabled={'' !== errorMsg && '' !== props.values.term_slug}>
 											{row?.term_slug ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 										</button>

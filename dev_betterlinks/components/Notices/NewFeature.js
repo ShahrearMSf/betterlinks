@@ -29,6 +29,17 @@ const NewFeature = () => {
 	return (
 		<div className="notice is-dismissible btl-dashboard-notice">
 			<p>
+				{__('📣 NEW: BetterLinks 1.8.0 is here, with new ', 'betterlinks')}
+				<a target="_blank" href="#">
+					{__('Manage Tags', 'betterlinks')}
+				</a>
+				{__(' feature & more! Check out the ', 'betterlinks')}
+				<a target="_blank" href="https://betterlinks.io/changelog/">
+					{__('Changelog', 'betterlinks')}
+				</a>
+				{__(' for more details 🎉', 'betterlinks')}
+			</p>
+			{/* <p>
 				{__('📣 NEW: BetterLinks Pro 1.8.0 is here, with new ', 'betterlinks')}
 				<a target="_blank" href="https://betterlinks.io/docs/configure-customize-link-preview/">
 					{__('Customize Link Preview', 'betterlinks')}
@@ -38,7 +49,7 @@ const NewFeature = () => {
 					{__('Changelog', 'betterlinks')}
 				</a>
 				{__(' for more details 🎉', 'betterlinks')}
-			</p>
+			</p> */}
 		</div>
 	);
 };
