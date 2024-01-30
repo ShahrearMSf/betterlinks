@@ -10,38 +10,59 @@
 		background: #fff;
 		padding: 20px;
 		margin-bottom: 10px;
-		display: flex;
-		justify-content: space-between;
 		height: 30px;
 
-		> div {
+		&:not(:has(> .btl-single-click-tag-info)) {
 			display: flex;
-			align-items: center;
-			font-size: 14px;
-			column-gap: 5px;
+			justify-content: space-between;
+		}
+		.btl-single-click-tag-info {
+			display: flex;
+			justify-content: space-between;
 
-			span {
-				line-height: 24px;
-			}
-			span.dashicons {
-				font-size: 15px;
-				line-height: 1.5;
-			}
+			> div {
+				display: flex;
+				align-items: center;
+				font-size: 14px;
+				column-gap: 5px;
 
-			span.btl-column-name {
-				color: #19285d;
-				font-weight: 500;
-				word-wrap: break-word;
-			}
+				span {
+					line-height: 24px;
+				}
+				span.dashicons {
+					font-size: 15px;
+					line-height: 1.5;
+				}
 
-			span.btl-link-name {
-				color: #9b9daf;
-				font-weight: 500;
-				word-wrap: break-word;
+				span.btl-single-info-svg-icon {
+					width: 20px;
+					height: 20px;
+					transform: scale(0.8);
+
+					svg {
+						// fill: #3c434a;
+						stroke: #3c434a;
+					}
+				}
+
+				span.btl-column-name {
+					color: #19285d;
+					font-weight: 500;
+					word-wrap: break-word;
+				}
+
+				span.btl-link-name {
+					color: #9b9daf;
+					font-weight: 500;
+					word-wrap: break-word;
+				}
+				.btl-link-name {
+					width: auto;
+				}
 			}
-			.btl-link-name {
-				width: auto;
-			}
+		}
+
+		.btl-single-click-tag-info {
 		}
 	}
 	.btl-chart-preloader {
@@ -431,6 +452,31 @@ $breakpoint-phone: 560px;
 					canvas {
 						width: 300px !important;
 					}
+				}
+			}
+		}
+
+		.btl-analytics-filter {
+			flex-direction: column;
+
+			.btl-analytics-filter__control {
+				margin-left: unset;
+			}
+		}
+		.btl-single-click-info-header {
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			height: auto;
+
+			.btl-single-click-tag-info {
+				flex-direction: column;
+				width: 200px;
+				row-gap: 5px;
+
+				.btl-single-info--name {
+					font-size: 16px;
+					column-gap: 7px;
 				}
 			}
 		}
