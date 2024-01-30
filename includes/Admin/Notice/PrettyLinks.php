@@ -24,9 +24,9 @@ class PrettyLinks extends MigrationNotice
                 $self::$pagenow = $pagenow;
                 if (!get_option('betterlinks_hide_notice_ptl_migrate') || $pagenow === 'admin.php') {
                     if(get_option('betterlinks_notice_ptl_migration_running_in_background')){
-                        add_action('admin_notices', [$self, 'migration_running_notice']);
+                        add_action('admin_notices', [$self, 'migration_running_notice'], 100);
                     }else{
-                        add_action('admin_notices', [$self, 'migration_notice']);
+                        add_action('admin_notices', [$self, 'migration_notice'], 100);
                     }
                     add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }

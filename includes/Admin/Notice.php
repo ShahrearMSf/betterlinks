@@ -30,15 +30,54 @@ class Notice {
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
-
-		Notice\PrettyLinks::init();
-		Notice\Simple301::init();
-		Notice\ThirstyAffiliates::init();
-
-		// Remove OLD notice from 1.0.0 (if other WPDeveloper plugin has notice)
-		NoticeRemover::get_instance( '1.0.0' );
+				
+		add_action( 'in_admin_header', [ $this, 'remove_admin_notice' ] );
 	}
 
+	public function remove_admin_notice() {
+		$current_screen = get_current_screen();
+		$dashboard_notice = get_option('betterlinks_dashboard_notice');
+		if( 0 === strpos($current_screen->id, "toplevel_page_betterlinks") || 0 === strpos($current_screen->id, "betterlinks_page_") ){
+			remove_all_actions( 'user_admin_notices' );
+			remove_all_actions( 'admin_notices' );
+
+			if( BETTERLINKS_MENU_NOTICE !== $dashboard_notice ) {
+				add_action('admin_notices', array($this, 'new_feature_notice'));
+			}
+			
+            // To showing notice in BetterLinks page
+			add_action( 'admin_notices', function () {
+				do_action('btl_admin_notices');
+				Notice\PrettyLinks::init();
+				Notice\Simple301::init();
+				Notice\ThirstyAffiliates::init();
+				// Remove OLD notice from 1.0.0 (if other WPDeveloper plugin has notice)
+				NoticeRemover::get_instance( '1.0.0' );
+			} );
+		}
+	}
+
+	public function new_feature_notice() {
+		printf("<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
+		<p>
+		%s
+		<a target='_blank' href='#'>
+			%s
+		</a>
+		%s
+		<a target='_blank' href='https://betterlinks.io/changelog/'>
+			%s
+		</a>
+		%s
+	</p>
+		</div>", 
+		__('📣 NEW: BetterLinks 1.8.0 is here, with new ', 'betterlinks'),
+		__('Manage Tags', 'betterlinks'),
+		__(' feature & more! Check out the ', 'betterlinks'),
+		__('Changelog', 'betterlinks'),
+		__(' for more details 🎉', 'betterlinks')
+	);
+	}
 	public function usage_tracker() {
 		$this->opt_in_tracker = PluginUsageTracker::get_instance( BETTERLINKS_PLUGIN_FILE, [
 			'opt_in'       => true,
@@ -165,4 +204,5 @@ class Notice {
 		self::$cache_bank->create_account( $notices );
 		self::$cache_bank->calculate_deposits( $notices );
 	}
+
 }
