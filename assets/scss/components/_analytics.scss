@@ -14,6 +14,27 @@
 		justify-content: space-between;
 		height: 30px;
 
+		&:has(> .btl-split-test-winner-image-container) {
+			// split test analytics
+			display: flex;
+			justify-content: flex-start;
+			column-gap: 30px;
+			height: auto;
+
+			.btl-split-test-winner-details-container {
+				flex-direction: column;
+				align-items: flex-start;
+
+				.btl-winner-link-details {
+					display: flex;
+
+					> div {
+						display: flex;
+					}
+				}
+			}
+		}
+
 		> div {
 			display: flex;
 			align-items: center;
