@@ -56,9 +56,15 @@ const ManageTags = (props) => {
 							<span className="btl-tooltiptext">
 								Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
 							</span>
-							<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + row.id}>
-								{total_clicks}/{unique_clicks}
-							</Link>
+							{total_clicks > 0 ? (
+								<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + row.id}>
+									{total_clicks}/{unique_clicks}
+								</Link>
+							) : (
+								<span>
+									{total_clicks}/{unique_clicks}
+								</span>
+							)}
 						</button>
 					</div>
 				);

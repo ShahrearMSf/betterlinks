@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { get_analytics_graph_by_tag, get_analytics_unique_list_by_id } from 'redux/actions/clicks.actions';
 import { fetch_all_tags } from 'redux/actions/terms.actions';
-import { formatDate } from 'utils/helper';
-
+import { formatDate, plugin_root_url } from 'utils/helper';
+import { ReactComponent as TotalClick } from '../../../assets/images/total-click.svg';
+import { ReactComponent as UniqueClick } from '../../../assets/images/unique-click.svg';
 const TagClicks = (props) => {
 	const [loading, setLoading] = useState(false);
 	const { tag_id } = props;
@@ -57,26 +58,32 @@ const TagClicks = (props) => {
 			/>
 			{tagDetails?.tagName && (
 				<div className="btl-single-click-info-header">
-					<div className="btl-single-info--name">
-						<span className="dashicons dashicons-tag" />
-						<span className="btl-column-name">Tag Name:</span>
-						<span className="btl-link-name" title={tagDetails?.tagName}>
-							{tagDetails?.tagName || <StringLoader />}
-						</span>
-					</div>
-					<div className="btl-single-info--name">
-						{/* <span className="dashicons dashicons-admin-links" /> */}
-						<span className="btl-column-name">Total Clicks:</span>
-						<span className="btl-link-name" title={`${tagDetails?.totalClicks} Clicks`}>
-							{tagDetails?.totalClicks || <StringLoader />}
-						</span>
-					</div>
-					<div className="btl-single-info--name">
-						{/* <span className="dashicons dashicons-admin-links" /> */}
-						<span className="btl-column-name">Unique Clicks:</span>
-						<span className="btl-link-name" title={`${tagDetails?.uniqueClicks} Clicks`}>
-							{tagDetails?.uniqueClicks || <StringLoader />}
-						</span>
+					<div className="btl-single-click-tag-info">
+						<div className="btl-single-info--name">
+							<span className="dashicons dashicons-tag" />
+							<span className="btl-column-name">Tag Name:</span>
+							<span className="btl-link-name" title={tagDetails?.tagName}>
+								{tagDetails?.tagName || <StringLoader />}
+							</span>
+						</div>
+						<div className="btl-single-info--name">
+							<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+								<TotalClick />
+							</span>
+							<span className="btl-column-name">Total Clicks:</span>
+							<span className="btl-link-name" title={`${tagDetails?.totalClicks} Clicks`}>
+								{tagDetails?.totalClicks || <StringLoader />}
+							</span>
+						</div>
+						<div className="btl-single-info--name" style={{ marginRight: '10px' }}>
+							<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+								<UniqueClick />
+							</span>
+							<span className="btl-column-name">Unique Clicks:</span>
+							<span className="btl-link-name" title={`${tagDetails?.uniqueClicks} Clicks`}>
+								{tagDetails?.uniqueClicks || <StringLoader />}
+							</span>
+						</div>
 					</div>
 				</div>
 			)}
