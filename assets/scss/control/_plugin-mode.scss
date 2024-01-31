@@ -176,9 +176,35 @@
 		color: $light;
 		margin-right: 12px;
 
-		&:hover {
-			background-color: #36405a;
+		&:has(> .btl-split-test-winner-image-container) {
+			.btl-split-test-winner-image-container {
+				// background: #3d4863;
+				background: linear-gradient(180deg, #3d4863 13%, #2c3650 83%);
+
+				p {
+					color: $light;
+				}
+			}
+			.btl-split-test-winner-details-container {
+				.btl-winner-link-box {
+					background: #3d4863;
+
+					> * {
+						color: $light;
+					}
+				}
+				.btl-winner-link-details {
+					.btl-winner-link-clicks-details {
+						> * {
+							color: $light;
+						}
+					}
+				}
+			}
 		}
+		// &:hover {
+		// 	background-color: #36405a;
+		// }
 	}
 	.btl-single-click-info-header {
 		span:not(.dashicons),
