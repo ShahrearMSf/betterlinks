@@ -58,18 +58,19 @@ class Notice {
 	}
 
 	public function new_feature_notice() {
-		printf("<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
-		<p>
-		%s
-		<a target='_blank' href='#'>
-			%s
-		</a>
-		%s
-		<a target='_blank' href='https://betterlinks.io/changelog/'>
-			%s
-		</a>
-		%s
-	</p>
+		printf(
+	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
+				<p>
+				%s
+				<a target='_blank' href='https://betterlinks.io/docs/manage-tags/'>
+					%s
+				</a>
+				%s
+				<a target='_blank' href='https://betterlinks.io/changelog/'>
+					%s
+				</a>
+				%s
+				</p>
 		</div>", 
 		__('📣 NEW: BetterLinks 1.8.0 is here, with new ', 'betterlinks'),
 		__('Manage Tags', 'betterlinks'),
