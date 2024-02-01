@@ -159,10 +159,9 @@ class Utils
             $visitor_uid = uniqid('bl');
             setcookie($visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/');
         }
-        // error_log( json_encode($data['dynamic_redirect']) );
         // checking is split tes enabled
-        $is_split_enabled = \BetterLinks\Helper::split_test_enabled($data);
-        // error_log( $is_split_enabled ? 'true' : 'false' );
+        $split_test_data = \BetterLinks\Helper::split_test_enabled($data);
+        $is_split_enabled = isset( $split_test_data['result'] ) ? $split_test_data['result'] : false;
         
         $click_data = [
             'link_id' => $data['ID'],
@@ -176,7 +175,6 @@ class Utils
             'click_order' => 0,
             'created_at' => $now,
             'created_at_gmt' => $now_gmt,
-            // 'rotation_target_url' => $is_split_enabled ? $data['target_url'] : null,
             'rotation_target_url' => $data['target_url'],
             'target_url' => $data['target_url'],
             'is_split_enabled' => $is_split_enabled
