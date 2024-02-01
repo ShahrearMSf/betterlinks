@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { get_analytics_graph_by_tag, get_analytics_unique_list_by_id } from 'redux/actions/clicks.actions';
 import { fetch_all_tags } from 'redux/actions/terms.actions';
-import { formatDate, plugin_root_url } from 'utils/helper';
-import { ReactComponent as TotalClick } from '../../../assets/images/total-click.svg';
-import { ReactComponent as UniqueClick } from '../../../assets/images/unique-click.svg';
+import { formatDate } from 'utils/helper';
+import { TotalClick, UniqueClick, Tag } from './icons';
+
 const TagClicks = (props) => {
 	const [loading, setLoading] = useState(false);
 	const { tag_id } = props;
@@ -60,7 +60,9 @@ const TagClicks = (props) => {
 				<div className="btl-single-click-info-header">
 					<div className="btl-single-click-tag-info">
 						<div className="btl-single-info--name">
-							<span className="dashicons dashicons-tag" />
+							<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+								<Tag />
+							</span>
 							<span className="btl-column-name">Tag Name:</span>
 							<span className="btl-link-name" title={tagDetails?.tagName}>
 								{tagDetails?.tagName || <StringLoader />}

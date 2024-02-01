@@ -1,5 +1,8 @@
 import { is_pro_enabled } from 'utils/helper';
 
+export { ReactComponent as Link } from '../../../assets/images/icons/link.svg';
+export { ReactComponent as Target } from '../../../assets/images/icons/target.svg';
+export { ReactComponent as WWW } from '../../../assets/images/icons/www.svg';
 export const analyticsData = (data, id) => {
 	let results = {
 		clicks: {},
