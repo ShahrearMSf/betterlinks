@@ -174,11 +174,9 @@
 		background-color: #2c3650;
 		border-color: #2c3650;
 		color: $light;
-		margin-right: 12px;
 
 		&:has(> .btl-split-test-winner-image-container) {
 			.btl-split-test-winner-image-container {
-				// background: #3d4863;
 				background: linear-gradient(180deg, #3d4863 13%, #2c3650 83%);
 
 				p {
@@ -202,9 +200,6 @@
 				}
 			}
 		}
-		// &:hover {
-		// 	background-color: #36405a;
-		// }
 	}
 	.btl-single-click-info-header {
 		span:not(.dashicons),

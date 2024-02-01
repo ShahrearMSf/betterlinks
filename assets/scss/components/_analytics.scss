@@ -67,10 +67,16 @@
 						color: #65677b;
 						font-size: 14px;
 						line-height: 1.5rem;
+						text-decoration: none;
+
+						&:hover {
+							text-decoration: underline;
+						}
 					}
 				}
 				.btl-winner-link-details {
 					display: flex;
+					max-width: 900px;
 					width: calc(100% - 100px);
 					justify-content: space-between;
 
@@ -121,7 +127,7 @@
 				}
 			}
 
-			$breakpoint-tablet: 768px;
+			$breakpoint-tablet: 980px;
 			@media (max-width: $breakpoint-tablet) {
 				.btl-split-test-winner-details-container {
 					.btl-winner-link-box {
