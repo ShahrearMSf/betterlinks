@@ -35,9 +35,9 @@ const TagClicks = (props) => {
 
 	const tagDetails = useCallback(() => {
 		return {
-			tagName: tags?.find((item) => +item.id === 2)?.['term_name'],
-			totalClicks: tag_analytics?.total_clicks[2] || 0,
-			uniqueClicks: tag_analytics?.unique_clicks[2] || 0,
+			tagName: tags?.find((item) => item.id === tag_id)?.['term_name'],
+			totalClicks: tag_analytics?.total_clicks[tag_id] || 0,
+			uniqueClicks: tag_analytics?.unique_clicks[tag_id] || 0,
 		};
 	}, [tags])();
 
@@ -60,28 +60,34 @@ const TagClicks = (props) => {
 				<div className="btl-single-click-info-header">
 					<div className="btl-single-click-tag-info">
 						<div className="btl-single-info--name">
-							<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+							<span className="btl-single-info-svg-icon">
 								<Tag />
 							</span>
-							<span className="btl-column-name">Tag Name:</span>
+							<span className="btl-column-name" style={{ marginRight: '5px' }}>
+								Tag Name:
+							</span>
 							<span className="btl-link-name" title={tagDetails?.tagName}>
 								{tagDetails?.tagName || <StringLoader />}
 							</span>
 						</div>
 						<div className="btl-single-info--name">
-							<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+							<span className="btl-single-info-svg-icon">
 								<TotalClick />
 							</span>
-							<span className="btl-column-name">Total Clicks:</span>
+							<span className="btl-column-name" style={{ marginRight: '5px' }}>
+								Total Clicks:
+							</span>
 							<span className="btl-link-name" title={`${tagDetails?.totalClicks} Clicks`}>
 								{tagDetails?.totalClicks || <StringLoader />}
 							</span>
 						</div>
-						<div className="btl-single-info--name" style={{ marginRight: '10px' }}>
-							<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+						<div className="btl-single-info--name" style={{ marginRight: '15px' }}>
+							<span className="btl-single-info-svg-icon">
 								<UniqueClick />
 							</span>
-							<span className="btl-column-name">Unique Clicks:</span>
+							<span className="btl-column-name" style={{ marginRight: '5px' }}>
+								Unique Clicks:
+							</span>
 							<span className="btl-link-name" title={`${tagDetails?.uniqueClicks} Clicks`}>
 								{tagDetails?.uniqueClicks || <StringLoader />}
 							</span>
@@ -89,7 +95,7 @@ const TagClicks = (props) => {
 					</div>
 				</div>
 			)}
-			<div className="btl-analytic-table-wrapper">
+			<div className="btl-analytic-table-wrapper btl-analytic-table-wrapper-manage-tags">
 				<AnalyticsList analyticsTab={null} unique_list={tag_clicks?.[tag_id]} loading={loading} id={tag_id} from="manage_tags" />
 			</div>
 		</div>

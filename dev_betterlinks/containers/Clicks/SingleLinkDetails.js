@@ -14,28 +14,34 @@ const SingleLinkDetails = ({ clicks }) => {
 	return (
 		<div className="btl-single-click-info-header">
 			<div className="btl-single-info--name">
-				<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+				<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px', transform: 'scale(0.8)' }}>
 					<Link />
 				</span>
-				<span className="btl-column-name">Link Name:</span>
+				<span className="btl-column-name" style={{ marginRight: '5px' }}>
+					Link Name:
+				</span>
 				<span className="btl-link-name" title={link_title}>
 					{link_title?.slice(0, 40) || <StringLoader />}
 				</span>
 			</div>
 			<div className="btl-single-info-short-url btl-single-info--name">
-				<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+				<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px', transform: 'scale(0.8)' }}>
 					<WWW />
 				</span>
-				<span className="btl-column-name">Shortened URL:</span>
+				<span className="btl-column-name" style={{ marginRight: '5px' }}>
+					Shortened URL:
+				</span>
 				<a href={shortend_url} className="btl-link-name" target="_blank" title={shortend_url}>
 					{short_url?.slice(0, 40) || <StringLoader />}
 				</a>
 			</div>
 			<div className="btl-single-info-target-url btl-single-info--name">
-				<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px' }}>
+				<span className="btl-single-info-svg-icon" style={{ width: '20px', height: '20px', transform: 'scale(0.8)' }}>
 					<Target />
 				</span>
-				<span className="btl-column-name">Target URL:</span>
+				<span className="btl-column-name" style={{ marginRight: '5px' }}>
+					Target URL:
+				</span>
 				<a href={target_url} className="btl-link-name" title={target_url} target="_blank">
 					{target_url?.slice(0, 40) || <StringLoader />}
 					{target_url?.length > 40 && '[...]'}

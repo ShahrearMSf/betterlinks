@@ -562,6 +562,17 @@ $breakpoint-phone: 560px;
 }
 
 // analytic table
+.btl-analytic-table-wrapper:not(.btl-analytic-table-wrapper-single-clicks) {
+	.rdt_Table {
+		.rdt_TableBody {
+			justify-content: center;
+			.rdt_TableCell:nth-child(4),
+			.rdt_TableCell:nth-child(5) {
+				justify-content: center;
+			}
+		}
+	}
+}
 .btl-analytic-table-wrapper {
 	padding: 20px 15px;
 	border-radius: 8px;
@@ -679,6 +690,11 @@ $breakpoint-phone: 560px;
 				&:hover {
 					background: #fbfcff;
 				}
+			}
+		}
+		.rdt_TableCol {
+			&:has(#column-total_clicks) {
+				justify-content: center;
 			}
 		}
 		.rdt_TableCell {
