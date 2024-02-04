@@ -7,7 +7,7 @@ class Helper {
 	use Traits\Clicks;
 
 	public static function btl_menu_notice() {
-		return BETTERLINKS_MENU_NOTICE !== get_option('betterlinks_menu_notice', 0);
+		return BETTERLINKS_MENU_NOTICE !== get_option( 'betterlinks_menu_notice', 0 );
 	}
 	public static function get_links() {
 		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
@@ -97,7 +97,7 @@ class Helper {
 			return true;
 		} else {
 			foreach ( self::get_menu_items() as $key => $value ) {
-				if ( BETTERLINKS_PLUGIN_SLUG . '_page_' . $key === $hook || strpos( $hook, BETTERLINKS_PLUGIN_SLUG . '_page_' . $key ) || strpos('_'.$hook, 'betterlinks') ) {
+				if ( BETTERLINKS_PLUGIN_SLUG . '_page_' . $key === $hook || strpos( $hook, BETTERLINKS_PLUGIN_SLUG . '_page_' . $key ) || strpos( '_' . $hook, 'betterlinks' ) ) {
 					return true;
 				}
 			}
@@ -229,7 +229,7 @@ class Helper {
 				}
 
 				// $item->old_link_status = $item->link_status;.
-				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes, true ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
+				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
 				} elseif ( 'broken' === $item->link_status && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
 					// if the link is fixed, but if db is not updated it to fixed link immediately then it will be marked as old status code.
@@ -305,7 +305,7 @@ class Helper {
 			$tempArray[ $short_url ] = self::json_link_formatter( $data );
 			$existingData['links']   = $tempArray;
 		}
-		return file_put_contents( $file, json_encode( $existingData ) );
+		return file_put_contents( $file, wp_json_encode( $existingData ) );
 	}
 	public static function update_json_into_file( $file, $data, $old_short_url = '' ) {
 		if ( ! isset( $data['short_url'] ) ) {
@@ -324,7 +324,7 @@ class Helper {
 				}
 				$tempArray[ $short_url ]   = self::json_link_formatter( $data );
 				$existingData['wildcards'] = $tempArray;
-				return file_put_contents( $file, json_encode( $existingData ) );
+				return file_put_contents( $file, wp_json_encode( $existingData ) );
 			}
 		} else {
 			$tempArray = $existingData['links'];
@@ -335,7 +335,7 @@ class Helper {
 				}
 				$tempArray[ $short_url ] = self::json_link_formatter( $data );
 				$existingData['links']   = $tempArray;
-				return file_put_contents( $file, json_encode( $existingData ) );
+				return file_put_contents( $file, wp_json_encode( $existingData ) );
 			}
 		}
 	}
@@ -348,7 +348,7 @@ class Helper {
 				unset( $tempArray[ $short_url ] );
 				unset( $tempArray[ strToLower( $short_url ) ] );
 				$existingData['wildcards'] = $tempArray;
-				return file_put_contents( $file, json_encode( $existingData ) );
+				return file_put_contents( $file, wp_json_encode( $existingData ) );
 			}
 		} elseif ( isset( $existingData['links'][ $short_url ] ) || isset( $existingData['links'][ strtolower( $short_url ) ] ) ) {
 			$tempArray = $existingData['links'];
@@ -356,7 +356,7 @@ class Helper {
 				unset( $tempArray[ $short_url ] );
 				unset( $tempArray[ strtolower( $short_url ) ] );
 				$existingData['links'] = $tempArray;
-				return file_put_contents( $file, json_encode( $existingData ) );
+				return file_put_contents( $file, wp_json_encode( $existingData ) );
 			}
 		}
 		return;
@@ -436,20 +436,20 @@ class Helper {
 	}
 
 	public static function update_links_analytics() {
-		$results   = array();
+		$results      = array();
 		$clicks_count = self::get_clicks_count();
 
-		$total_clicks = $clicks_count['total_clicks'];
+		$total_clicks  = $clicks_count['total_clicks'];
 		$unique_clicks = $clicks_count['unique_clicks'];
-		
-		for ($i=0; $i < count($total_clicks); $i++) { 
-			$results[$total_clicks[$i]['link_id']] = array(
-				'link_count' => $total_clicks[$i]['total_clicks'],
-				'ip' => isset($unique_clicks[$i]['unique_clicks']) ? $unique_clicks[$i]['unique_clicks'] : 1
+
+		for ( $i = 0; $i < count( $total_clicks ); $i++ ) {
+			$results[ $total_clicks[ $i ]['link_id'] ] = array(
+				'link_count' => $total_clicks[ $i ]['total_clicks'],
+				'ip'         => isset( $unique_clicks[ $i ]['unique_clicks'] ) ? $unique_clicks[ $i ]['unique_clicks'] : 1,
 			);
 		}
 
-		return update_option( 'betterlinks_analytics_data', json_encode( $results ), false );
+		return update_option( 'betterlinks_analytics_data', wp_json_encode( $results ), false );
 	}
 
 	public static function maybe_json( $data ) {
