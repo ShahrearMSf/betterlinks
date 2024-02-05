@@ -1,8 +1,11 @@
-const SelectTeaser = (props) => {
+import { __ } from '@wordpress/i18n';
+import Select from 'react-select';
+
+const SelectTeaser = ({ title = '', ...props }) => {
 	return (
-		<div className="btl-role-item btl-form-group" onClick={openUpgradeToProModal}>
+		<div className="btl-role-item btl-form-group" {...props}>
 			<label className="btl-form-label">
-				BetterLinks Category
+				{title}
 				<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 			</label>
 			<div className="link-options__body">

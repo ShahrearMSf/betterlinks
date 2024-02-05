@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
 import ReactQuill from 'react-quill';
+import CheckList from '../AutoLinkCreate/CheckList';
+import SelectTeaser from '../AutoLinkCreate/SelectTeaser';
 
 const PasswordProtection = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -32,17 +34,17 @@ const PasswordProtection = ({ settings, update_option }) => {
 				{(props) => (
 					<Form>
 						{!is_pro_enabled && (
-							<span className="btl-form-group btl-form-group--teaser btl-form-group-password-protection" onClick={openUpgradeToProModal}>
-								<label className="btl-form-label">
-									{__('Enable Password Protected Redirect', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-								</label>
-								<div className="link-options__body">
-									<label className="btl-checkbox-field block">
-										<input className="btl-check" name="enable_password_protection" type="checkbox" disabled={true} />
-										<span className="text" />
-									</label>
+							<>
+								<CheckList title={__('Password Protected Redirect', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<div style={{ filter: 'blur(1px)' }}>
+									<CheckList title={__('Enable Cookie', 'betterlinks')} onClick={openUpgradeToProModal} />
+									<CheckList title={__('Advanced Settings', 'betterlinks')} onClick={openUpgradeToProModal} />
+									<SelectTeaser title={__('Form Template', 'betterlinks')} onClick={openUpgradeToProModal} />
+									<CheckList title={__('Enable Title', 'betterlinks')} onClick={openUpgradeToProModal} />
+									<CheckList title={__('Enable Instruction', 'betterlinks')} onClick={openUpgradeToProModal} />
+									<CheckList title={__('Show Protected URL', 'betterlinks')} onClick={openUpgradeToProModal} />
 								</div>
-							</span>
+							</>
 						)}
 						{betterLinksHooks.applyFilters('BetterLinksPasswordProtection', null, { ...props, ReactQuill })}
 						{is_pro_enabled && (
