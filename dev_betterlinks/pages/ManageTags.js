@@ -48,8 +48,8 @@ const ManageTags = (props) => {
 			selector: 'link_count',
 			sortable: false,
 			cell: (row) => {
-				const total_clicks = tag_analytics['total_clicks']?.[row.id] || 0;
-				const unique_clicks = tag_analytics['unique_clicks']?.[row.id] || 0;
+				const total_clicks = tag_analytics?.['total_clicks']?.[row.id] || 0;
+				const unique_clicks = tag_analytics?.['unique_clicks']?.[row.id] || 0;
 				return (
 					<div>
 						<button className="dnd-link-button btl-tooltip">

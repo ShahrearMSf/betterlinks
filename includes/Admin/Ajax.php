@@ -572,9 +572,9 @@ class Ajax {
 		}
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 		$args = array(
-			'ID'        => ( $_REQUEST['ID'] ? sanitize_text_field( $_REQUEST['ID'] ) : '' ),
-			'short_url' => ( $_REQUEST['short_url'] ? sanitize_text_field( $_REQUEST['short_url'] ) : '' ),
-			'term_id'   => ( $_REQUEST['term_id'] ? sanitize_text_field( $_REQUEST['term_id'] ) : '' ),
+			'ID'        => ( isset($_REQUEST['ID']) ? sanitize_text_field( $_REQUEST['ID'] ) : '' ),
+			'short_url' => ( isset($_REQUEST['short_url']) ? sanitize_text_field( $_REQUEST['short_url'] ) : '' ),
+			'term_id'   => ( isset($_REQUEST['term_id']) ? sanitize_text_field( $_REQUEST['term_id'] ) : '' ),
 		);
 		$this->delete_link( $args );
 
