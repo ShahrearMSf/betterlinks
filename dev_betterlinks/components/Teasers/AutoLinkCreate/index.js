@@ -17,6 +17,15 @@ export default function AutoLinkCreate({ autoCreateLinkSettings, terms, setAutoC
 					<Formik>
 						<Form>
 							<CheckList title={__('Enable Auto-Create Links', 'betterlinks')} onClick={openUpgradeToProModal} />
+							<CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+							<div>
+								<select>
+									<option value="none" selected>
+										Select Category
+									</option>
+								</select>
+							</div>
+							<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
 						</Form>
 					</Formik>
 				</>
