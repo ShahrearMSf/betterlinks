@@ -20,10 +20,32 @@
 			justify-content: flex-start;
 			column-gap: 30px;
 			height: auto;
+			position: relative;
+			overflow: hidden;
 
+			.btl-split-test-ribbon {
+				position: absolute;
+				top: 13%;
+				left: -32px;
+				background-color: #3158ef;
+				color: $light;
+				transform: rotate(320deg);
+				font-size: 14px;
+				font-weight: 700;
+				z-index: 100;
+				padding: 5px;
+				overflow: hidden;
+				width: 160px;
+				display: flex;
+				justify-content: center;
+				box-shadow: 0 2px 4px 0 rgb(0 0 0/20%);
+				pointer-events: auto;
+				cursor: pointer;
+				user-select: none;
+			}
 			.btl-split-test-winner-image-container {
 				position: relative;
-				border-radius: 183px;
+				border-radius: 20px;
 				background: linear-gradient(0deg, #fff 13%, #f6f6f6 83%);
 				width: 100px;
 				padding: 35px 41px 25px 40px;

@@ -7,7 +7,7 @@ class Helper {
 	use Traits\Clicks;
 
 	public static function btl_menu_notice() {
-		return BETTERLINKS_MENU_NOTICE !== get_option('betterlinks_menu_notice', 0);
+		return BETTERLINKS_MENU_NOTICE !== get_option( 'betterlinks_menu_notice', 0 );
 	}
 	public static function get_links() {
 		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
@@ -40,49 +40,70 @@ class Helper {
 
 	public static function split_test_enabled( $data ) {
 		$extra = null;
-		$id = null;
-		if( 'string' === gettype($data) ){
-			$id = $data;
-			$dynamic_redirect = self::get_link_data_by_id($data, 'dynamic_redirect');
+		$id    = null;
+		if ( 'string' === gettype( $data ) ) {
+			$id               = $data;
+			$dynamic_redirect = self::get_link_data_by_id( $id, 'dynamic_redirect' );
 
-			if( is_string( $dynamic_redirect ) ){
-				$dynamic_redirect = json_decode($dynamic_redirect);
+			$split_test_data_meta = self::get_link_meta( $id, 'split_test_data' );
+
+			if ( ! empty( $split_test_data_meta ) ) {
+				$split_test_data_meta              = (array) $split_test_data_meta;
+				$split_test_data_meta['completed'] = true;
+				return $split_test_data_meta;
 			}
-			$extra = isset($dynamic_redirect->extra) ? (array) $dynamic_redirect->extra : null;
-		}else{
-			$id = $data['ID'];
-			$extra = isset($data['dynamic_redirect'], $data['dynamic_redirect']['extra']) ? $data['dynamic_redirect']['extra'] : null;
+
+			if ( is_string( $dynamic_redirect ) ) {
+				$dynamic_redirect = json_decode( $dynamic_redirect );
+			}
+			$extra = isset( $dynamic_redirect->extra ) ? (array) $dynamic_redirect->extra : null;
+		} else {
+			$id                   = $data['ID'];
+			$split_test_data_meta = self::get_link_meta( $id, 'split_test_data' );
+			if ( ! empty( $split_test_data_meta ) ) {
+				$split_test_data_meta              = (array) $split_test_data_meta;
+				$split_test_data_meta['completed'] = true;
+				return $split_test_data_meta;
+			}
+			$extra = isset( $data['dynamic_redirect'], $data['dynamic_redirect']['extra'] ) ? $data['dynamic_redirect']['extra'] : null;
 		}
-		if( empty( $extra ) ) return false;
+		if ( empty( $extra ) ) {
+			return false;
+		}
 
-        $is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
-		if( !$is_enable ) return false;
+		$is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
+		if ( ! $is_enable ) {
+			return false;
+		}
 
-        $is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
-		if( $is_enable && !$is_expire_enable ) return $is_expire_enable;
+		$is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
+		if ( $is_enable && ! $is_expire_enable ) {
+			return $is_expire_enable;
+		}
 
-        $expire_metrics = isset( $extra['expire_split_after'] ) ?  $extra['expire_split_after'] : 'clicks';
-        $expire_split_clicks = isset( $extra['expire_split_clicks'] ) ? (int) $extra['expire_split_clicks'] : 0;
-        $clicks_count = null;
-        
-        if( class_exists('\BetterLinksPro\Helper') ){
-            $pro_helper = new \BetterLinksPro\Helper;
-            
-            if( 'clicks' === $expire_metrics ){
-                $clicks_count = $pro_helper::get_individual_clicks_count($id);
-            }elseif( 'unique_clicks' === $expire_metrics) {
-                $clicks_count = $pro_helper::get_individual_unique_clicks_count($id);
-            }
-        }
+		$expire_metrics      = isset( $extra['expire_split_after'] ) ? $extra['expire_split_after'] : 'clicks';
+		$expire_split_clicks = isset( $extra['expire_split_clicks'] ) ? (int) $extra['expire_split_clicks'] : 0;
+		$clicks_count        = null;
 
-        $result = $clicks_count < $expire_split_clicks;
+		if ( class_exists( '\BetterLinksPro\Helper' ) ) {
+			$pro_helper = new \BetterLinksPro\Helper();
 
-        return array(
-			'result' => $result,
-			'expire_metrics' => $expire_metrics,
-			'expire_split_clicks' => $expire_split_clicks
+			if ( 'clicks' === $expire_metrics ) {
+				$clicks_count = $pro_helper::get_individual_clicks_count( $id );
+			} elseif ( 'unique_clicks' === $expire_metrics ) {
+				$clicks_count = $pro_helper::get_individual_unique_clicks_count( $id );
+			}
+		}
+
+		$result = $clicks_count < $expire_split_clicks;
+		return array(
+			'result'              => $result,
+			'expire_metrics'      => $expire_metrics,
+			'expire_split_clicks' => $expire_split_clicks,
+			'clicks_count'        => $clicks_count,
+			'completed'           => ! $result,
 		);
-    }
+	}
 
 	public static function get_link_from_json_file( $short_url ) {
 		if ( empty( $short_url ) ) {
@@ -143,7 +164,7 @@ class Helper {
 			return true;
 		} else {
 			foreach ( self::get_menu_items() as $key => $value ) {
-				if ( BETTERLINKS_PLUGIN_SLUG . '_page_' . $key === $hook || strpos( $hook, BETTERLINKS_PLUGIN_SLUG . '_page_' . $key ) || strpos('_'.$hook, 'betterlinks') ) {
+				if ( BETTERLINKS_PLUGIN_SLUG . '_page_' . $key === $hook || strpos( $hook, BETTERLINKS_PLUGIN_SLUG . '_page_' . $key ) || strpos( '_' . $hook, 'betterlinks' ) ) {
 					return true;
 				}
 			}
@@ -277,7 +298,7 @@ class Helper {
 				// $item->old_link_status = $item->link_status;.
 				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes, true ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
-				} elseif ( 'broken' === $item->link_status && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
+				} elseif ( 'broken' === $item->link_status && isset( $broken_links[ $item->ID ]['old_link_status'] ) && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
 					// if the link is fixed, but if db is not updated it to fixed link immediately then it will be marked as old status code.
 					$item->link_status = $broken_links[ $item->ID ]['old_link_status'];
 				}
@@ -482,16 +503,16 @@ class Helper {
 	}
 
 	public static function update_links_analytics() {
-		$results   = array();
+		$results      = array();
 		$clicks_count = self::get_clicks_count();
 
-		$total_clicks = $clicks_count['total_clicks'];
+		$total_clicks  = $clicks_count['total_clicks'];
 		$unique_clicks = $clicks_count['unique_clicks'];
-		
-		for ($i=0; $i < count($total_clicks); $i++) { 
-			$results[$total_clicks[$i]['link_id']] = array(
-				'link_count' => $total_clicks[$i]['total_clicks'],
-				'ip' => isset($unique_clicks[$i]['unique_clicks']) ? $unique_clicks[$i]['unique_clicks'] : 1
+
+		for ( $i = 0; $i < count( $total_clicks ); $i++ ) {
+			$results[ $total_clicks[ $i ]['link_id'] ] = array(
+				'link_count' => $total_clicks[ $i ]['total_clicks'],
+				'ip'         => isset( $unique_clicks[ $i ]['unique_clicks'] ) ? $unique_clicks[ $i ]['unique_clicks'] : 1,
 			);
 		}
 
