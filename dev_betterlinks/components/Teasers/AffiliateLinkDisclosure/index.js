@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
 import ReactQuill from 'react-quill';
+import CheckList from '../AutoLinkCreate/CheckList';
+import SelectTeaser from '../AutoLinkCreate/SelectTeaser';
 
 const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -20,17 +22,21 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 				{(props) => (
 					<Form>
 						{!is_pro_enabled && (
-							<span className="btl-form-group btl-form-group--teaser btl-form-group-affiliate-link-disclosure" onClick={openUpgradeToProModal}>
-								<label className="btl-form-label">
-									{__('Affiliate Link Disclosure', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-								</label>
-								<div className="link-options__body">
-									<label className="btl-checkbox-field block">
-										<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
-										<span className="text" />
+							<>
+								<CheckList title={__('Affiliate Link Disclosure', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<CheckList title={__('Enable Preview', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<SelectTeaser title={__('Disclosure Position', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<div className="btl-role-item btl-form-group" style={{ marginBottom: '60px' }}>
+									<label className="btl-form-label">
+										{__('Disclosure Content', 'betterlinks')}
+										{/* <span className="pro-badge">{__('Pro', 'betterlinks')}</span> */}
 									</label>
+									<div className="link-options__body">
+										<ReactQuill theme="snow" value="" onChange={openUpgradeToProModal} />
+									</div>
 								</div>
-							</span>
+								<CheckList title={__('Advanced Options', 'betterlinks')} onClick={openUpgradeToProModal} />
+							</>
 						)}
 						{betterLinksHooks.applyFilters('BetterLinksOptionsTabSettings', null, { ...props, ReactQuill })}
 						{is_pro_enabled && (

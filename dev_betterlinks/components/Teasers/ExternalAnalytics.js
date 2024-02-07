@@ -24,9 +24,7 @@ const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
 							action="#"
 						>
 							<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
-								<label className="btl-form-label">
-									{__('Enable Google Analytics', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-								</label>
+								<label className="btl-form-label">{__('Enable Google Analytics', 'betterlinks')}</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field">
 										<input type="checkbox" className="btl-check" name="is_enable_ga" disabled />
@@ -48,9 +46,7 @@ const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
 							action="#"
 						>
 							<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
-								<label className="btl-form-label">
-									{__('Enable Facebook Pixel Tracking', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-								</label>
+								<label className="btl-form-label">{__('Enable Facebook Pixel Tracking', 'betterlinks')}</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field">
 										<input type="checkbox" className="btl-check" name="is_enable_pixel" disabled />
