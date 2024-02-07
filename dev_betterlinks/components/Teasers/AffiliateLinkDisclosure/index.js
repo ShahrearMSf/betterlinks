@@ -24,20 +24,18 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 						{!is_pro_enabled && (
 							<>
 								<CheckList title={__('Affiliate Link Disclosure', 'betterlinks')} onClick={openUpgradeToProModal} />
-								<div style={{ filter: 'blur(1px)' }}>
-									<CheckList title={__('Enable Preview', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<SelectTeaser title={__('Disclosure Position', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<div className="btl-role-item btl-form-group" style={{ marginBottom: '60px' }}>
-										<label className="btl-form-label">
-											{__('Disclosure Content', 'betterlinks')}
-											<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-										</label>
-										<div className="link-options__body">
-											<ReactQuill theme="snow" value="" onChange={openUpgradeToProModal} />
-										</div>
+								<CheckList title={__('Enable Preview', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<SelectTeaser title={__('Disclosure Position', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<div className="btl-role-item btl-form-group" style={{ marginBottom: '60px' }}>
+									<label className="btl-form-label">
+										{__('Disclosure Content', 'betterlinks')}
+										{/* <span className="pro-badge">{__('Pro', 'betterlinks')}</span> */}
+									</label>
+									<div className="link-options__body">
+										<ReactQuill theme="snow" value="" onChange={openUpgradeToProModal} />
 									</div>
-									<CheckList title={__('Advanced Options', 'betterlinks')} onClick={openUpgradeToProModal} />
 								</div>
+								<CheckList title={__('Advanced Options', 'betterlinks')} onClick={openUpgradeToProModal} />
 							</>
 						)}
 						{betterLinksHooks.applyFilters('BetterLinksOptionsTabSettings', null, { ...props, ReactQuill })}

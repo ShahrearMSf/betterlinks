@@ -36,14 +36,12 @@ const PasswordProtection = ({ settings, update_option }) => {
 						{!is_pro_enabled && (
 							<>
 								<CheckList title={__('Password Protected Redirect', 'betterlinks')} onClick={openUpgradeToProModal} />
-								<div style={{ filter: 'blur(1px)' }}>
-									<CheckList title={__('Enable Cookie', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<CheckList title={__('Advanced Settings', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<SelectTeaser title={__('Form Template', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<CheckList title={__('Enable Title', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<CheckList title={__('Enable Instruction', 'betterlinks')} onClick={openUpgradeToProModal} />
-									<CheckList title={__('Show Protected URL', 'betterlinks')} onClick={openUpgradeToProModal} />
-								</div>
+								<CheckList title={__('Enable Cookie', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<CheckList title={__('Advanced Settings', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<SelectTeaser title={__('Form Template', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<CheckList title={__('Enable Title', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<CheckList title={__('Enable Instruction', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<CheckList title={__('Show Protected URL', 'betterlinks')} onClick={openUpgradeToProModal} />
 							</>
 						)}
 						{betterLinksHooks.applyFilters('BetterLinksPasswordProtection', null, { ...props, ReactQuill })}

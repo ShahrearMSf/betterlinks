@@ -17,12 +17,10 @@ export default function AutoLinkCreate({ autoCreateLinkSettings, terms, setAutoC
 					<Formik>
 						<Form>
 							<CheckList title={__('Enable Auto-Create Links', 'betterlinks')} onClick={openUpgradeToProModal} />
-							<div style={{ filter: 'blur(1px)' }}>
-								<CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
-								<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
-								<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
-								<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
-							</div>
+							<CheckList title={__('Post Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+							<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
+							<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+							<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
 						</Form>
 					</Formik>
 				</>
