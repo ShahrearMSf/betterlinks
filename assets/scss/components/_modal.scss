@@ -3,7 +3,7 @@
 	overflow: auto;
 }
 .ReactModal__Content {
-	&:not(:has(.btl-manage-tags-form)){
+	&:not(:has(.btl-manage-tags-form)) {
 		padding: 60px !important;
 	}
 	width: 60%;
@@ -327,7 +327,7 @@
 	.btl-manage-tags-form .btl-entry-content .btl-entry-content-left {
 		width: auto;
 
-		.btl-modal-submit-button{
+		.btl-modal-submit-button {
 			min-width: auto;
 			font-size: 16px;
 			height: 35px;
@@ -763,7 +763,7 @@
 		}
 	}
 
-	.btl-
+	.btl-,
 	.betterlinks-upgradetopro {
 		text-align: center;
 		h3 {
