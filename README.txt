@@ -24,6 +24,7 @@ Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings 
 - Analyze & track your marketing campaigns
 - Enhance your affiliate marketing strategies
 - Manage your links directly in Gutenberg Editor
+- Manage your tags and check the performance of your links associated to each tags
 - Reduce link load time with optimized queries
 - Monitor marketing campaigns with UTM Builder
 - Prevent bot traffic and clicks with Bot Blocker
