@@ -2,7 +2,6 @@ import { __ } from '@wordpress/i18n';
 import SearchLoader from 'components/SearchLoader';
 import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
-import { route_path } from 'utils/helper';
 import { useEffect } from 'react';
 
 const FilterComponent = (props) => {
