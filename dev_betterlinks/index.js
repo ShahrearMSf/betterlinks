@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from 'App';
@@ -8,12 +8,14 @@ import { createHooks } from '@wordpress/hooks';
 window.betterLinksHooks = createHooks();
 
 document.addEventListener('DOMContentLoaded', function () {
-	ReactDOM.render(
+	const betterlinksbody = document.getElementById('betterlinksbody');
+	const root = createRoot(betterlinksbody);
+
+	root.render(
 		<Provider store={store}>
 			<Router>
 				<App />
 			</Router>
-		</Provider>,
-		document.getElementById('betterlinksbody')
+		</Provider>
 	);
 });

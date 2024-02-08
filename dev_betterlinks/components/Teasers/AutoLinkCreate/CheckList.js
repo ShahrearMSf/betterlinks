@@ -9,10 +9,7 @@ const propTypes = {
 export default function CheckList({ title = '', ...props }) {
 	return (
 		<div className="btl-role-item btl-form-group" {...props}>
-			<label className="btl-form-label">
-				{title}
-				<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-			</label>
+			<label className="btl-form-label">{title}</label>
 			<div className="link-options__body">
 				<label className="btl-checkbox-field">
 					<Field type="checkbox" className="btl-check" disabled />

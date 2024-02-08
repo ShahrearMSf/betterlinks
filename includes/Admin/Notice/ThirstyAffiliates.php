@@ -16,13 +16,13 @@ class ThirstyAffiliates extends MigrationNotice
 
             if (!get_option('betterlinks_notice_ta_migrate')) {
                 if (!get_option('betterlinks_hide_notice_ta_migrate')) {
-                    add_action('admin_notices', [$self, 'migration_notice']);
+                    add_action('admin_notices', [$self, 'migration_notice'], 100);
                     add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }
             } elseif (get_option('betterlinks_notice_ta_migrate')) {
                 if (!get_option('betterlinks_hide_notice_ta_deactive')) {
                     if (!isset($_GET['page']) || (isset($_GET['page']) && $_GET['page'] !== 'thirstylink')) {
-                        add_action('admin_notices', [$self, 'deactive_notice']);
+                        add_action('admin_notices', [$self, 'deactive_notice'], 100);
                     }
                     add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }

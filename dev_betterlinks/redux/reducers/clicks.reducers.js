@@ -1,4 +1,12 @@
-import { FETCH_CHART_DATA, FETCH_CLICKS_DATA, FETCH_GRAPH_DATA, FETCH_INDIVIDUAL_CLICKS, FETCH_MEDIUM_DATA } from 'redux/actions/clicks.actions';
+import {
+	FETCH_ANALYTICS_GRAPH_BY_TAGS,
+	FETCH_CHART_DATA,
+	FETCH_CLICKS_DATA,
+	FETCH_GRAPH_DATA,
+	FETCH_INDIVIDUAL_CLICKS,
+	FETCH_MEDIUM_DATA,
+	FETCH_UNIQUE_CLICKS_BY_TAGS,
+} from 'redux/actions/clicks.actions';
 import { is_extra_data_tracking_compatible, is_pro_enabled } from 'utils/helper';
 
 function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
@@ -83,6 +91,28 @@ function clicks(state = { individual_clicks: {} }, action) {
 			return {
 				...state,
 				individual_clicks,
+			};
+		}
+		case FETCH_UNIQUE_CLICKS_BY_TAGS: {
+			const { data, id } = payload;
+
+			const tag_clicks = state?.tag_clicks || {};
+			const newClicksData = get_parsed_clicks_list(data.list, 'all', data.analytic);
+			tag_clicks[id] = newClicksData;
+
+			return {
+				...state,
+				tag_clicks: tag_clicks,
+			};
+		}
+		case FETCH_ANALYTICS_GRAPH_BY_TAGS: {
+			const { data, id } = payload;
+			const tag_graphs = state?.tag_graphs || {};
+			tag_graphs[id] = data;
+
+			return {
+				...state,
+				tag_graphs: tag_graphs,
 			};
 		}
 		default:

@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 export const {
 	betterlinks_nonce,
@@ -248,7 +249,7 @@ export const formatDate = (date = new Date(), format) => {
 	return format.replace(/mm|dd|yyyy|h|m|s/gi, (matched) => map[matched]);
 };
 
-export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav) => {
+export const linksFilterData = (stored, filterText, selectedCategory, selectedClicksType, selectedDateType, customDateFilter, sortByFav, selectedTag) => {
 	let results = stored;
 	results = stored.filter((item) => {
 		const newFilterText = filterText
@@ -270,6 +271,21 @@ export const linksFilterData = (stored, filterText, selectedCategory, selectedCl
 	results = results.sort((a, b) => new Date(b.link_date) - new Date(a.link_date));
 	if (selectedCategory && selectedCategory.value) {
 		results = results.filter((item) => item.cat_id == selectedCategory.value);
+	}
+	if (selectedTag && selectedTag.value) {
+		let total = [];
+		for (let index = 0; index < results.length; index++) {
+			const item = results[index];
+
+			for (let jIndex = 0; jIndex < item?.tags_data?.length; jIndex++) {
+				const element = item?.tags_data?.[jIndex];
+
+				if (element.term_name === selectedTag.label) {
+					total = [...total, item];
+				}
+			}
+		}
+		results = total;
 	}
 	if (selectedClicksType) {
 		if (selectedClicksType.value == 'mostClicks') {
@@ -566,11 +582,7 @@ export const getFavoriteLinkCount = (links) => {
 };
 
 export const analytic = (analytic, ID) => {
-	let isLinkAble = betterLinksHooks.applyFilters('betterLinksIsEnableIndividualAnalytic', false);
-	if (isLinkAble) {
-		return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
-	}
-	return +analytic.link_count + '/' + +analytic.ip;
+	return <Link to={route_path + 'admin.php?page=betterlinks-analytics&id=' + ID}>{+analytic.link_count + '/' + +analytic.ip}</Link>;
 };
 
 export const saveSettingsHandler = (values, update_option, setFormSubmitText) => {
@@ -610,7 +622,7 @@ const getDevice = (device) => {
 	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
 	return device;
 };
-const sortFunction = (title) => (rowA, rowB) => {
+export const sortFunction = (title) => (rowA, rowB) => {
 	if (['total_clicks', 'unique_clicks'].includes(title)) {
 		if (+rowA[title] > +rowB[title]) return 1;
 		else if (+rowB[title] > +rowA[title]) return -1;
@@ -748,14 +760,14 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			selector: 'total_clicks',
 			width: '150px',
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('total_clicks') }),
-			cell: (row) => <div>{row?.total_clicks || 1}</div>,
+			cell: (row) => <div>{row?.total_clicks || 0}</div>,
 		},
 		{
 			name: __('Unique Clicks', 'betterlinks'),
 			selector: 'unique_clicks',
 			width: '150px',
 			...(is_extra_data_tracking_compatible && { sortFunction: sortFunction('unique_clicks') }),
-			cell: (row) => <div>{row?.unique_clicks || 1}</div>,
+			cell: (row) => <div>{row?.unique_clicks || 0}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),
@@ -812,3 +824,35 @@ export const get_labels = (clicks) => {
 };
 
 export const pro_version_check = () => (betterlinkspro_version ? parseFloat(betterlinkspro_version?.slice(2)) : null);
+
+export const get_tags = (links) => {
+	const tags = {};
+	links &&
+		Object.values(links)
+			.map((item) => item.lists)
+			.flat()
+			.filter((item) => item.tags_data?.length)
+			.map((item) => item.tags_data)
+			.flat()
+			.map((item) => {
+				if (!tags?.[item.term_id]) {
+					tags[item.term_id] = item.term_slug;
+				}
+			});
+
+	return tags;
+};
+
+export const sortByClicksTag = (type = '', tags, tag_analytics) => {
+	const [analyticsType, sortType] = type.split('-');
+	if (!analyticsType || !sortType) return tags;
+
+	let sortedTags = _.orderBy(tags, (item) => {
+		return +tag_analytics[analyticsType][item.id] || 0;
+	});
+	
+	if ('desc' === sortType) {
+		sortedTags = _.reverse(sortedTags);
+	}
+	return sortedTags;
+};

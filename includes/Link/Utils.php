@@ -61,7 +61,7 @@ class Utils
             return;
         }
         if (filter_var($data['track_me'], FILTER_VALIDATE_BOOLEAN)) {
-            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
             $dd = new DeviceDetector($user_agent);
             $dd->parse();
 

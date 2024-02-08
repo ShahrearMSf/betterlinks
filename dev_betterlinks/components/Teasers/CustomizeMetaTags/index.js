@@ -7,6 +7,7 @@ import { Form, Formik } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
+import CheckList from '../AutoLinkCreate/CheckList';
 
 const CustomizeMetaTags = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -32,19 +33,7 @@ const CustomizeMetaTags = ({ settings, update_option }) => {
 			<Formik enableReinitialize initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
 				{(props) => (
 					<Form>
-						{!is_pro_enabled && (
-							<span className="btl-form-group btl-form-group--teaser btl-form-group-password-protection" onClick={openUpgradeToProModal}>
-								<label className="btl-form-label">
-									{__('Enable Customize Link Preview', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-								</label>
-								<div className="link-options__body">
-									<label className="btl-checkbox-field block">
-										<input className="btl-check" name="" type="checkbox" disabled={true} />
-										<span className="text" />
-									</label>
-								</div>
-							</span>
-						)}
+						{!is_pro_enabled && <CheckList title={__('Enable Customize Link Preview', 'betterlinks')} onClick={openUpgradeToProModal} />}
 						{betterLinksHooks.applyFilters('BetterLinksCustomizeMetaTags', null, props)}
 						{is_pro_enabled && (
 							<>

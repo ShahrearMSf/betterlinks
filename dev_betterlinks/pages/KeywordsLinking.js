@@ -52,11 +52,10 @@ const KeywordsLinking = (props) => {
 	const loadedAll = props.postdatas.fetchedAll && props.keywords.data;
 
 	const search = (
-		<div className="btl-autolink-filter">
+		<div className="btl-autolink-filter btl-click-filter">
 			<input id="search_autolink" type="search" placeholder="Search Keywords" value={searchedText} onChange={handleSearchTextChange} />
 		</div>
 	);
-
 	return (
 		<React.Fragment>
 			{loadedAll ? (

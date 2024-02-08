@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { route_path, plugin_root_url } from 'utils/helper';
 const Navbar = ({ menuNotice }) => {
 	const currentPage = betterLinksQuery.get('page');
-	const shouldShowSubmenu = ['isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) => betterLinksHooks.applyFilters(item, i !== 2));
+	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
+		betterLinksHooks.applyFilters(item, i !== 2)
+	);
 	let rootLinks = 'betterlinks';
 	if (!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && shouldShowSubmenu) {
 		rootLinks = currentPage;
@@ -38,6 +40,11 @@ const Navbar = ({ menuNotice }) => {
 					{betterLinksHooks.applyFilters('isShowKeywordsLinkingMenu', false) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-keywords-linking' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks-keywords-linking'}>{__('Auto-Link Keywords', 'betterlinks')}</Link>
+						</li>
+					)}
+					{betterLinksHooks.applyFilters('isShowManageTagsMenu', true) && (
+						<li className={`wp-first-item ${currentPage == 'betterlinks-manage-tags' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-manage-tags'}>{__('Manage Tags', 'betterlinks')}</Link>
 						</li>
 					)}
 					{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (
