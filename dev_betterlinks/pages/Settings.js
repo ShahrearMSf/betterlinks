@@ -32,7 +32,7 @@ const Settings = (props) => {
 	const { terms } = props.terms;
 	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
 		__('General', 'betterlinks'),
-		__('Options', 'betterlinks'),
+		__('Advanced Options', 'betterlinks'),
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
 		__('Broken Link Checker', 'betterlinks'),

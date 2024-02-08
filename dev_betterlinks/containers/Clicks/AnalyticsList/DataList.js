@@ -11,7 +11,7 @@ import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.action
 import { getData } from '../clicks.helper';
 
 const DataList = (props) => {
-	const { columns, data, progressPending, id = null } = props;
+	const { columns, data, progressPending, id = null, from=null } = props;
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [searchStatus, setSearchStatus] = useState(false);
 	const [isSearching, setSearching] = useState(false);
@@ -70,7 +70,7 @@ const DataList = (props) => {
 			className="btl-analytic-table"
 			title={__('Single Clicks', 'betterlinks')}
 			columns={columns}
-			data={getData(data, analyticsTab, filterText, id)}
+			data={getData(data, analyticsTab, filterText, id, from)}
 			pagination
 			progressPending={progressPending}
 			progressComponent={<TableLoader />}

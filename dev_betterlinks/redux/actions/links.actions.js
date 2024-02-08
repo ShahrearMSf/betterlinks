@@ -124,12 +124,12 @@ export const update_cat = (params) => async (dispatch) => {
 			params: params,
 		});
 		dispatch({
-			type: UPDATE_TERM,
-			payload: res.data?.data,
-		});
-		dispatch({
 			type: UPDATE_CAT,
 			payload: res.data,
+		});
+		dispatch({
+			type: UPDATE_TERM,
+			payload: res.data?.data,
 		});
 	} catch (e) {
 		makeRequest({
@@ -141,12 +141,12 @@ export const update_cat = (params) => async (dispatch) => {
 		}).then((response) => {
 			if (response.data) {
 				dispatch({
-					type: UPDATE_TERM,
-					payload: res.data?.data,
-				});
-				dispatch({
 					type: UPDATE_CAT,
 					payload: response.data,
+				});
+				dispatch({
+					type: UPDATE_TERM,
+					payload: res.data?.data,
 				});
 			}
 		});
@@ -159,12 +159,12 @@ export const delete_cat = (params) => async (dispatch) => {
 			params: params,
 		});
 		dispatch({
-			type: DELETE_TERM,
-			payload: res.data?.data,
-		});
-		dispatch({
 			type: DELETE_CAT,
 			payload: res.data,
+		});
+		dispatch({
+			type: DELETE_TERM,
+			payload: res.data?.data,
 		});
 	} catch (e) {
 		makeRequest({
@@ -173,12 +173,12 @@ export const delete_cat = (params) => async (dispatch) => {
 		}).then((res) => {
 			if (res.data) {
 				dispatch({
-					type: DELETE_TERM,
-					payload: res.data?.data,
-				});
-				dispatch({
 					type: DELETE_CAT,
 					payload: res.data,
+				});
+				dispatch({
+					type: DELETE_TERM,
+					payload: res.data?.data,
 				});
 			}
 		});

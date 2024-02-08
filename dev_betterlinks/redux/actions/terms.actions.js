@@ -1,6 +1,71 @@
 import axios from 'axios';
-import { API, namespace, betterlinks_nonce } from 'utils/helper';
-import { FETCH_AUTOLINK_SETTINGS, FETCH_TERMS_DATA } from 'redux/actions/actionstrings';
+import { API, namespace, betterlinks_nonce, makeRequest } from 'utils/helper';
+import { ADD_TERM, DELETE_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA, UPDATE_TERM } from 'redux/actions/actionstrings';
+
+export const delete_tag = (params) => async (dispatch) => {
+	params.map(async (item) => {
+		try {
+			const res = await API.delete(namespace + 'terms', {
+				params: item,
+			});
+			if (res.data.success) {
+				dispatch({
+					type: DELETE_TERM,
+					payload: res.data?.data,
+				});
+			}
+		} catch (error) {
+			console.log('error is: ', error.message);
+		}
+	});
+};
+export const add_new_tag = (data) => async (dispatch) => {
+	try {
+		const res = await API.post(namespace + 'terms', {
+			params: data,
+		});
+
+		if (!res.data.success) return;
+
+		if (res.data.success) {
+			dispatch({
+				type: res.data?.update ? UPDATE_TERM : ADD_TERM,
+				payload: res.data?.data,
+			});
+		}
+	} catch (e) {
+		makeRequest({
+			action: 'betterlinks/admin/create_new_term',
+			ID: data.ID,
+			term_name: data.term_name,
+			term_slug: data.term_slug,
+			term_type: data.term_type,
+		}).then((res) => {
+			if (res.data) {
+				dispatch({
+					type: res.data?.update ? UPDATE_TERM : ADD_TERM,
+					payload: res.data?.data,
+				});
+			}
+		});
+	}
+};
+
+export const fetch_all_tags = () => async (dispatch) => {
+	try {
+		const res = await API.get(namespace + 'terms/tags');
+
+		if (res?.data) {
+			dispatch({
+				type: FETCH_TAGS,
+				payload: res.data,
+			});
+		}
+	} catch (error) {
+		console.log({ error: error.message });
+	}
+};
+
 export const fetch_terms_data = (params) => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'terms', {

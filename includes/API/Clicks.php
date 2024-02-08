@@ -87,6 +87,43 @@ class Clicks extends Controller {
 				),
 			)
 		);
+		register_rest_route(
+			$this->namespace,
+			$endpoint . 'tags/' . '(?P<id>[\d]+)',
+			array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_tags_analytics' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			$endpoint . 'tags/get_graphs/' . '(?P<id>[\d]+)',
+			array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_tags_graph' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_clicks_schema(),
+				),
+			)
+		);
 
 		register_rest_route(
 			$this->namespace,
@@ -210,6 +247,59 @@ class Clicks extends Controller {
 	}
 
 	/**
+	 * Get analytics graph data by Tag ID
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_tags_graph( $request ) {
+		$request = $request->get_params();
+		$from    = isset( $request['from'] ) ? $request['from'] : '';
+		$to      = isset( $request['to'] ) ? $request['to'] : '';
+		$id      = isset( $request['id'] ) ? $request['id'] : '';
+
+		$results = $this->get_analytics_graph_data_by_tag( $from, $to, $id );
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => $results,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Get unique analytics list by Tag ID
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_tags_analytics( $request ) {
+		$request = $request->get_params();
+
+		$from = isset( $request['from'] ) ? $request['from'] : '';
+		$to   = isset( $request['to'] ) ? $request['to'] : '';
+		$id   = isset( $request['id'] ) ? $request['id'] : '';
+
+		$results = $this->get_analytics_unique_list_by_tag( $from, $to, $id );
+
+		$analytic = get_option( 'betterlinks_analytics_data' );
+		$analytic = $analytic ? json_decode( $analytic, true ) : array();
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => array(
+					'list'     => $results,
+					'analytic' => $analytic,
+				),
+			),
+			200
+		);
+	}
+
+	/**
 	 * Get betterlinks
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -218,10 +308,10 @@ class Clicks extends Controller {
 	public function get_items( $request ) {
 		$request = $request->get_params();
 
-		$from  = isset( $request['from'] ) ? $request['from'] : '';
-		$to  = isset( $request['to'] ) ? $request['to'] : '';
+		$from = isset( $request['from'] ) ? $request['from'] : '';
+		$to   = isset( $request['to'] ) ? $request['to'] : '';
 
-		$unique_list = $this->get_analytics_unique_list($from, $to);
+		$unique_list = $this->get_analytics_unique_list( $from, $to );
 
 		$analytic = get_option( 'betterlinks_analytics_data' );
 		$analytic = $analytic ? json_decode( $analytic, true ) : array();
@@ -254,10 +344,10 @@ class Clicks extends Controller {
 
 		$results      = $this->get_individual_analytics_clicks( $id, $from, $to );
 		$link_details = $this->get_individual_link_details( $id );
-		$graph_data   = [
-			'total_count'  => [],
-			'unique_count' => [],
-		];
+		$graph_data   = array(
+			'total_count'  => array(),
+			'unique_count' => array(),
+		);
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
 			$graph_data = \BetterLinksPro\Helper::get_individual_graph_data( $id, $from, $to );
 		}

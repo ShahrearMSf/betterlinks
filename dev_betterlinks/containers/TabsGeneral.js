@@ -66,7 +66,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 				if (response.data) {
 					delayStatusChanged(null, __('Done!', 'betterlinks'), __('Refresh Stats', 'betterlinks'), setCacheButtonText);
 					// update analytic data
-					fetch_clicks_data();
+					fetch_clicks_data({});
 				}
 			},
 			(error) => {

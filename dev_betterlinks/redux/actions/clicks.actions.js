@@ -7,6 +7,66 @@ export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
 export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
 export const FETCH_MEDIUM_DATA = 'FETCH_MEDIUM_DATA';
 
+export const FETCH_UNIQUE_CLICKS_BY_TAGS = 'FETCH_UNIQUE_CLICKS_BY_TAGS';
+export const FETCH_ANALYTICS_GRAPH_BY_TAGS = 'FETCH_ANALYTICS_GRAPH_BY_TAGS';
+
+export const get_analytics_graph_by_tag = (params) => async (dispatch) => {
+	const { tag_id, from, to, setLoading } = params;
+	const endPoint = `${namespace}clicks/tags/get_graphs/${tag_id}`;
+	setLoading(true);
+
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data) {
+			throw new Error('rest api not working properly for fetch_analytics graph by tag id');
+		}
+		setLoading(false);
+		dispatch({
+			type: FETCH_ANALYTICS_GRAPH_BY_TAGS,
+			payload: {
+				data: res.data?.data || [],
+				id: tag_id,
+			},
+		});
+	} catch (error) {
+		console.log('error is ' + error.message);
+	}
+};
+
+export const get_analytics_unique_list_by_id = (params) => async (dispatch) => {
+	const { tag_id, from, to, setLoading } = params;
+
+	const endPoint = namespace + 'clicks/tags/' + tag_id;
+	setLoading(true);
+
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data) {
+			throw new Error('rest api not working properly for fetch_individual_clicks_data');
+		}
+		setLoading(false);
+		dispatch({
+			type: FETCH_UNIQUE_CLICKS_BY_TAGS,
+			payload: {
+				data: res.data?.data || [],
+				id: tag_id,
+			},
+		});
+	} catch (error) {
+		console.log('error is ' + error.message);
+	}
+};
+
 export const get_medium_data = (params) => async (dispatch) => {
 	const { from, to, setLoading } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_medium');
@@ -99,7 +159,7 @@ export const fetch_individual_clicks = (params) => async (dispatch) => {
 	}
 };
 export const fetch_clicks_data = (params) => async (dispatch) => {
-	const { from, to, setLoading } = params;
+	const { from, to, setLoading = () => {} } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks');
 	setLoading(true);
 	try {

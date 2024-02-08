@@ -14,13 +14,13 @@ class Simple301 extends MigrationNotice
         $self::$pagenow = $pagenow;
         if (defined('SIMPLE301REDIRECTS_VERSION') && !get_option('betterlinks_notice_s301r_migrate')) {
             if (!get_option('betterlinks_hide_notice_s301r_migrate')) {
-                add_action('admin_notices', [$self, 'migration_notice']);
+                add_action('admin_notices', [$self, 'migration_notice'], 100);
                 add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
             }
         } elseif (defined('SIMPLE301REDIRECTS_VERSION') && get_option('betterlinks_notice_s301r_migrate')) {
             if (!get_option('betterlinks_hide_notice_s301r_deactive')) {
                 if (!isset($_GET['page']) || (isset($_GET['page']) && $_GET['page'] !== '301options')) {
-                    add_action('admin_notices', [$self, 'deactive_notice']);
+                    add_action('admin_notices', [$self, 'deactive_notice'], 100);
                 }
                 add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
             }

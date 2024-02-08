@@ -18,8 +18,7 @@ const zipPlugin = () => {
             '!*.json', 
             '!*.lock', 
             '!*.js', 
-            '!*.config', 
-            '!*.txt'])
+            '!*.config'])
 		// .pipe(zip(`${plugin_name}_${version}.zip`))
 		.pipe(zip(`${plugin_name}.zip`))
 		.pipe(gulp.dest('./'));

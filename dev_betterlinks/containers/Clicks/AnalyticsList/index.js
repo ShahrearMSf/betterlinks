@@ -9,7 +9,7 @@ import { fetch_analytics_settings } from 'redux/actions/analytics.actions';
 import DataList from './DataList';
 
 const AnalyticsList = (props) => {
-	const { analyticsTab, unique_list } = props;
+	const { analyticsTab, unique_list, id = null, from = null } = props;
 	const { settings } = props.settings;
 	const { analytics } = props.analytics;
 
@@ -21,7 +21,7 @@ const AnalyticsList = (props) => {
 	const columns = useCallback(getColumns(analytics, analyticsTab), [analytics, analyticsTab]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
-	return <DataList columns={newColumns} data={unique_list || []} progressPending={unique_list ? false : true} />;
+	return <DataList columns={newColumns} data={unique_list || []} progressPending={unique_list ? false : true} id={id} from={from} />;
 };
 
 const mapStateToProps = (state) => ({

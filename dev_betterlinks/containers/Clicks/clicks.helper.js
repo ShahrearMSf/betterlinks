@@ -1,5 +1,8 @@
 import { is_pro_enabled } from 'utils/helper';
 
+export { ReactComponent as Link } from '../../../assets/images/icons/link.svg';
+export { ReactComponent as Target } from '../../../assets/images/icons/target.svg';
+export { ReactComponent as WWW } from '../../../assets/images/icons/www.svg';
 export const analyticsData = (data, id) => {
 	let results = {
 		clicks: {},
@@ -15,8 +18,8 @@ export const analyticsData = (data, id) => {
 	return results;
 };
 
-export const getData = (clicks, analyticsTab, filterText, id = null) => {
-	if (id) {
+export const getData = (clicks, analyticsTab, filterText, id = null, from = null) => {
+	if (id && !from) {
 		return clicks?.filter?.((item) => {
 			if (item.link_id != id) return;
 			const json = JSON.stringify(item);

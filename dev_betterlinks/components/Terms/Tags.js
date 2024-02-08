@@ -16,6 +16,7 @@ const defaultProps = {};
 
 const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 	const [saveTags, setSaveTags] = useState(null);
+
 	useEffect(() => {
 		if (linkId) {
 			let form_data = new FormData();

@@ -24,9 +24,9 @@ class PrettyLinks extends MigrationNotice
                 $self::$pagenow = $pagenow;
                 if (!get_option('betterlinks_hide_notice_ptl_migrate') || $pagenow === 'admin.php') {
                     if(get_option('betterlinks_notice_ptl_migration_running_in_background')){
-                        add_action('admin_notices', [$self, 'migration_running_notice']);
+                        add_action('admin_notices', [$self, 'migration_running_notice'], 100);
                     }else{
-                        add_action('admin_notices', [$self, 'migration_notice']);
+                        add_action('admin_notices', [$self, 'migration_notice'], 100);
                     }
                     add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }
@@ -35,7 +35,7 @@ class PrettyLinks extends MigrationNotice
                 $self::$pagenow = $pagenow;
                 if (!get_option('betterlinks_hide_notice_ptl_deactive')) {
                     if (!isset($_GET['post_type']) || (isset($_GET['post_type']) && $_GET['post_type'] !== 'pretty-link')) {
-                        add_action('admin_notices', [$self, 'deactive_notice']);
+                        add_action('admin_notices', [$self, 'deactive_notice'], 100);
                     }
                     add_action('admin_print_footer_scripts', [$self, 'admin_scripts']);
                 }
@@ -49,7 +49,7 @@ class PrettyLinks extends MigrationNotice
         ?>
         <div class="notice notice-info betterlinks-notice-pt-migrate <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('Migration of Pretty Links data to BetterLinks is currently running in background. Migration might take a little while, please be patient.', 'betterlinks'); ?>
+                <?php esc_html_e('Migration of Pretty Links data to BetterLinks is currently running in background. Migration might take a little while, please be patient.', 'betterlinks'); ?>
             </p>
         </div>
         <?php
@@ -60,8 +60,8 @@ class PrettyLinks extends MigrationNotice
         ?>
         <div class="notice notice-info betterlinks-notice-pt-migrate <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('Whoops! You are already using Pretty Links on your website. To migrate your Pretty Links data to BetterLinks, click here.', 'betterlinks'); ?>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=betterlinks-settings&migration=prettylinks')); ?>" class="button button-primary"><?php _e('Start Migration', 'betterlinks'); ?></a>
+                <?php esc_html_e('Whoops! You are already using Pretty Links on your website. To migrate your Pretty Links data to BetterLinks, click here.', 'betterlinks'); ?>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=betterlinks-settings&migration=prettylinks')); ?>" class="button button-primary"><?php esc_html_e('Start Migration', 'betterlinks'); ?></a>
             </p>
         </div>
         <?php
@@ -71,8 +71,8 @@ class PrettyLinks extends MigrationNotice
         ?>
         <div class="notice notice-error betterlinks-notice-deactive-prettylinks <?php echo self::$pagenow !== 'admin.php' ? 'is-dismissible' : ''; ?>">
             <p>
-                <?php _e('All Pretty Links have been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website.', 'betterlinks'); ?>
-                <a href="#" class="button button-primary deactive"><?php _e('Deactivate Pretty Links', 'betterlinks'); ?></a>
+                <?php esc_html_e('All Pretty Links have been successfully migrated to BetterLinks. You can now safely deactivate Pretty Links on your website.', 'betterlinks'); ?>
+                <a href="#" class="button button-primary deactive"><?php esc_html_e('Deactivate Pretty Links', 'betterlinks'); ?></a>
             </p>
         </div>
         <?php
@@ -83,29 +83,28 @@ class PrettyLinks extends MigrationNotice
         $nonce = wp_create_nonce('betterlinks_admin_nonce'); ?>
 		<script type='text/javascript'>
         window.betterlinksAdminPrettylinksMigrationRequiredDatas = {
-            failed_links: <?php echo json_encode(self::$failed_links); ?>,
-            failed_clicks: <?php echo json_encode(self::$failed_clicks); ?>,
-            total_successful_links: <?php echo json_encode(self::$total_successful_links); ?>,
-            total_successful_clicks: <?php echo json_encode(self::$total_successful_clicks); ?>,
+            failed_links: <?php echo wp_json_encode(self::$failed_links); ?>,
+            failed_clicks: <?php echo wp_json_encode(self::$failed_clicks); ?>,
+            total_successful_links: <?php echo wp_json_encode(self::$total_successful_links); ?>,
+            total_successful_clicks: <?php echo wp_json_encode(self::$total_successful_clicks); ?>,
         }
 		jQuery( document ).ready(function() {
 			jQuery('.betterlinks-notice-deactive-prettylinks a.deactive').on('click', function(e){
 				e.preventDefault();
 				jQuery.post(ajaxurl, {
 					'action': 'betterlinks/admin/deactive_prettylinks',
-					'security': "<?php echo $nonce; ?>"
+					'security': "<?php echo $nonce; // phpcs:ignore ?>"
 				}, function(response) {
 					if(response.success){
-						location.reload(true); 
+						location.reload(true);
 					}
 				});
 			})
-			
+
 			jQuery('.betterlinks-notice-deactive-prettylinks button.notice-dismiss').on('click', function(){
 				jQuery.post(ajaxurl, {
 					'action': 'betterlinks/admin/migration_prettylinks_notice_hide',
-                    // 
-					'security': "<?php echo $nonce; ?>",
+					'security': "<?php echo $nonce; // phpcs:ignore ?>",
 					'type': 'deactive'
 				}, function(response) {});
 			})
@@ -113,7 +112,7 @@ class PrettyLinks extends MigrationNotice
 			jQuery('.betterlinks-notice-pt-migrate button.notice-dismiss').on('click', function(){
 				jQuery.post(ajaxurl, {
 					'action': 'betterlinks/admin/migration_prettylinks_notice_hide',
-					'security': "<?php echo $nonce; ?>",
+					'security': "<?php echo $nonce; // phpcs:ignore ?>",
 					'type': 'migrate'
 				}, function(response) {});
 			})

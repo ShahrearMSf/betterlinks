@@ -78,6 +78,15 @@ const LinksFilter = (props) => {
 					isClearable={true}
 				/>
 				<Select
+					className="btl-list-view-select btl-category-filter"
+					classNamePrefix="btl-react-select"
+					placeholder="Tags"
+					value={props.selectedTag}
+					options={props.tagItems}
+					onChange={(e) => props.tagSelectHandler(e)}
+					isClearable={true}
+				/>
+				<Select
 					className="btl-list-view-select btl-shortable-filter"
 					classNamePrefix="btl-react-select"
 					placeholder="Sort by Clicks"

@@ -3,8 +3,9 @@
 	overflow: auto;
 }
 .ReactModal__Content {
-	// overflow: visible !important;
-	padding: 60px !important;
+	&:not(:has(.btl-manage-tags-form)) {
+		padding: 60px !important;
+	}
 	width: 60%;
 	max-height: 100vh;
 	overflow-y: auto !important;
@@ -321,6 +322,18 @@
 					}
 				}
 			}
+		}
+	}
+	.btl-manage-tags-form .btl-entry-content .btl-entry-content-left {
+		width: auto;
+
+		.btl-modal-submit-button {
+			min-width: auto;
+			font-size: 16px;
+			height: 35px;
+			padding: 2px 25px;
+			font-weight: inherit;
+			border-radius: 3px;
 		}
 	}
 	.btl-modal-shorturl-wrap {
@@ -749,6 +762,8 @@
 			box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 		}
 	}
+
+	.btl-,
 	.betterlinks-upgradetopro {
 		text-align: center;
 		h3 {

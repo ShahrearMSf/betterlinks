@@ -1,10 +1,12 @@
 import { __ } from '@wordpress/i18n';
+import ProBadge from 'components/Badge/ProBadge';
 import AffiliateLinkDisclosure from 'components/Teasers/AffiliateLinkDisclosure';
 import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import CustomizeMetaTags from 'components/Teasers/CustomizeMetaTags';
 import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import PasswordProtection from 'components/Teasers/PasswordProtection';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { is_pro_enabled } from 'utils/helper';
 
 const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
 	const tabList = [
@@ -28,7 +30,10 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 			<Tabs>
 				<TabList>
 					{optionsTabList.map((item, index) => (
-						<Tab key={index}>{item}</Tab>
+						<Tab key={index}>
+							{item}
+							{!is_pro_enabled && <ProBadge />}
+						</Tab>
 					))}
 				</TabList>
 				<div className="btl-tab-panel-inner" style={{ height: 'fit-content', width: '800px' }}>

@@ -16,7 +16,7 @@ import ChartLoader from './ChartLoader';
 import SingleLinkDetails from './SingleLinkDetails';
 
 const SingleClicks = (props) => {
-	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const [isOpenUpgradeToProModal, _, closeUpgradeToProModal] = useUpgradeProModal();
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
 	const { id, clicks } = props;
 	const { individual_clicks } = clicks;
@@ -55,7 +55,7 @@ const SingleClicks = (props) => {
 				<ChartLoader />
 			)}
 			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
-			<div className="btl-analytic-table-wrapper">
+			<div className="btl-analytic-table-wrapper btl-analytic-table-wrapper-single-clicks">
 				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} />
 			</div>
 		</div>
