@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.7.3
+Stable tag: 1.8.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -78,7 +78,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins for FREE:
 
-🔝 [Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 1 million active users in the WordPress repository.
+🔝 [Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 2 million active users in the WordPress repository.
 
 🔔 [NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
 
@@ -139,6 +139,13 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 1.8.0 - 08/02/2024 =
+
+- Added: Manage Tags Feature
+- Fixed: Undefined variable issue in Analytics
+- Fixed: Fatal Error - Uncaught TypeError issue
+- Few minor bug fixes & improvements
 
 = 1.7.3 - 17/01/2024 =
 
