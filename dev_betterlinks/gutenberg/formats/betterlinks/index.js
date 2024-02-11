@@ -163,7 +163,8 @@ export const betterlinksFormat = {
 			}
 			const link = '1' === foundLink?.uncloaked ? foundLink.target_url : newText;
 			const withHttp = /^https?\:\/\//i.test(link) ? link : `http://${link}`;
-			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow });
+			const additionalClass = foundLink?.additional_css || '';
+			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow, additionalClass });
 			if (isCollapsed(value) && !isActive) {
 				// Scenario: we don't have any selected text && even the cursor isn't on
 				const toInsert = applyFormat(create({ text: withHttp }), linkFormat, 0, withHttp.length);

@@ -226,6 +226,10 @@ class Helper {
 		}
 
 		foreach ( $items as $item ) {
+			if( $additional_class = self::get_link_meta($item->ID, '_btl_additional_css_classes') ){
+				$item->additional_css = $additional_class;
+			}
+			
 			if ( 'category' === $item->term_type ) {
 				// insert analytic data.
 				if ( isset( $analytic[ $item->ID ] ) ) {

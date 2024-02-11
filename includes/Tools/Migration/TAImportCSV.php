@@ -79,6 +79,7 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
             $track_me = isset($betterlinks_links['track_me']) ? $betterlinks_links['track_me'] : false;
             $param_forwarding = isset($betterlinks_links['param_forwarding']) ? $betterlinks_links['param_forwarding'] : false;
             $redirect_type = isset($betterlinks_links['redirect_type']) ? $betterlinks_links['redirect_type'] : false;
+            $additional_css_classes = isset( $item[9] ) ? sanitize_text_field($item[9]) : '';
             $results[] = [
                 'link_title'    =>  $item[0],
                 'link_slug'     =>  $item[2],
@@ -94,7 +95,8 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
                 'dynamic_redirect'  => json_encode($dynamic_redirect),
                 'category'  => $item[3],
                 'keywords' => !empty($item[6]) ? str_replace(';', ',', $item[6]) : '',
-                'keyword_limit' => !empty($item[8]) ? $item[8] : 100
+                'keyword_limit' => !empty($item[8]) ? $item[8] : 100,
+                'additional_css_classes' => $additional_css_classes
             ];
         }
         return $results;
