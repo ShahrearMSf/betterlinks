@@ -26,7 +26,6 @@ const getLinksListViewColumnData = (props) => {
 			sortable: false,
 			width: '25%',
 			cell: (row) => {
-				console.log(row);
 				const expireStatusDot = useBtlExpireStatusDot({ data: row, view: 'list' });
 				return (
 					!!row.link_title && (
@@ -156,13 +155,16 @@ const ListCanvas = (props) => {
 		if (!terms) {
 			props.fetch_terms_data();
 		}
-		if (!password) {
+	}, []);
+
+	useEffect(() => {
+		if (!password && settings?.['enable_password_protection']) {
 			props.fetch_links_password();
 		}
-		if (!metaTags) {
+		if (!metaTags && settings?.['enable_customize_meta_tags']) {
 			props.fetch_meta_tags();
 		}
-	}, []);
+	}, [settings]);
 
 	var stored =
 		links &&
