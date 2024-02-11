@@ -41,6 +41,7 @@ export default function CatForm({ catId, catName, catSlug, submitHandler, hideHa
 	};
 
 	const onSubmit = (values) => {
+		if ('' === values?.term_slug.trim()) return;
 		catSlugUniqueCheck(values.term_slug, values.ID).then((isUnique) => {
 			if (!isUnique) {
 				const term_name = values.term_name.trim();
