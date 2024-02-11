@@ -84,13 +84,16 @@ function DndCanvas(props) {
 		if (!terms) {
 			props.fetch_terms_data();
 		}
-		if (!password) {
+	}, []);
+
+	useEffect(() => {
+		if (!password && settings?.['enable_password_protection']) {
 			props.fetch_links_password();
 		}
-		if (!metaTags) {
+		if (!metaTags && settings?.['enable_customize_meta_tags']) {
 			props.fetch_meta_tags();
 		}
-	}, []);
+	}, [settings]);
 
 	// if sort by favorite is selected and there is no favorite link
 	if (getFavoriteLinkCount(links) === 0 && sortByFav)
