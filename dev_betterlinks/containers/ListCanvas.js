@@ -24,7 +24,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Title', 'betterlinks'),
 			selector: 'link_title',
 			sortable: false,
-			// width: '25%',
+			width: '25%',
 			cell: (row) => {
 				console.log(row);
 				const expireStatusDot = useBtlExpireStatusDot({ data: row, view: 'list' });
