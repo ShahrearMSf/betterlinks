@@ -28,7 +28,7 @@ const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
 								<div className="link-options__body">
 									<label className="btl-checkbox-field">
 										<input type="checkbox" className="btl-check" name="is_enable_ga" disabled />
-										<span className="text"></span>
+										<span className="text" />
 									</label>
 								</div>
 							</div>
@@ -50,11 +50,18 @@ const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
 								<div className="link-options__body">
 									<label className="btl-checkbox-field">
 										<input type="checkbox" className="btl-check" name="is_enable_pixel" disabled />
-										<span className="text"></span>
+										<span className="text" />
 									</label>
 								</div>
 							</div>
 						</form>
+					</div>
+					<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
+						<label className="btl-form-label">{__('Global Head Scripts', 'betterlinks')}</label>
+						<div className="link-options__body">
+							<textarea disabled style={{ marginLeft: '25px' }} />
+							<span className="text" />
+						</div>
 					</div>
 				</div>
 			</div>
