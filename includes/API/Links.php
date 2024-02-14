@@ -191,7 +191,6 @@ class Links extends Controller
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($request['params']);
-        error_log('api'. print_r( $args, true ) );
         $response = $this->update_link($args);
         return new \WP_REST_Response(
             [

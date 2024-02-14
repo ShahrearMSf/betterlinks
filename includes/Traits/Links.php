@@ -93,6 +93,11 @@ trait Links
                 $params['cat_id'] = $arg['cat_id'];
                 \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
+            
+            if( method_exists('\BetterLinksPro\Helper', 'update_custom_script_data') ){
+                \BetterLinksPro\Helper::update_custom_script_data($id, $arg);
+            }
+
             $response = array_merge($arg, [
                 'ID' => strval($id),
             ]);

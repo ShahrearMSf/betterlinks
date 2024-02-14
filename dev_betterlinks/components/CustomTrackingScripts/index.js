@@ -12,6 +12,7 @@ const CustomTrackingScripts = ({ openAccordion, openUpgradeToProModal, __handleT
 					<>
 						<button className="link-options__head" type="button" onClick={() => __handleToggle('customTrackingScripts')}>
 							<h4 className="link-options__head--title">{__('Custom Tracking Scripts', 'betterlinks')}</h4>
+							<i className="btl btl-angle-arrow-down" />
 						</button>
 						<div className="link-options__body">{betterLinksHooks.applyFilters('linkOptionsCustomTrackingScripts', null, props)}</div>
 					</>
