@@ -72,13 +72,15 @@ class Helper {
 		}
 
 		$is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
+		
 		if ( ! $is_enable ) {
 			return false;
 		}
 
 		$is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
+		
 		if ( $is_enable && ! $is_expire_enable ) {
-			return $is_expire_enable;
+			return ['result' => true];
 		}
 
 		$expire_metrics      = isset( $extra['expire_split_after'] ) ? $extra['expire_split_after'] : 'clicks';
