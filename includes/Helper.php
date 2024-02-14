@@ -232,12 +232,15 @@ class Helper {
 					$item->analytic = $analytic[ $item->ID ];
 				}
 
-				$custom_tracking_scripts = \BetterLinks\Helper::get_link_meta($item->ID, 'btl_custom_tracking_scripts');
-				if( !empty( $custom_tracking_scripts ) ){
-					$item->custom_tracking_scripts = unserialize($custom_tracking_scripts);
+				if( class_exists('\BetterLinksPro') ){
+					$custom_tracking_scripts = \BetterLinks\Helper::get_link_meta($item->ID, 'btl_custom_tracking_scripts');
+					if( !empty( $custom_tracking_scripts ) ){
+						$custom_tracking_scripts = unserialize($custom_tracking_scripts);
+						$item->enable_custom_scripts = isset($custom_tracking_scripts['enable']) ? $custom_tracking_scripts['enable'] : false;
+						$item->custom_tracking_scripts = isset($custom_tracking_scripts['script']) ? $custom_tracking_scripts['script'] : '';
+					}
 				}
 
-				// $item->old_link_status = $item->link_status;.
 				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
 				} elseif ( 'broken' === $item->link_status && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {

@@ -280,7 +280,6 @@ export const Link = (props) => {
 					initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)}
 					onSubmit={(values, actions) => {
 						const { setSubmitting, setFieldError } = actions;
-						console.log(actions);
 						setSubmitting(false);
 
 						if (!values?.custom_tracking_scripts) {

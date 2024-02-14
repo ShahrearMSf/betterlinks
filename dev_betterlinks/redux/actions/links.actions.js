@@ -337,7 +337,6 @@ export const add_new_link =
 export const edit_link =
 	(item, forGutenbergStore = false) =>
 	async (dispatch) => {
-		// console.log({ item });
 		try {
 			const res = await API.put(namespace + 'links/' + item.ID, {
 				params: item,

@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 const CustomTrackingScriptTeaser = ({ openUpgradeToProModal }) => {
 	return (
 		<button className="link-options__head" type="button" onClick={openUpgradeToProModal}>
