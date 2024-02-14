@@ -30,6 +30,7 @@ import Copy from 'components/Copy';
 import UTMBuilder from 'components/UTMBuilder';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import CustomizeLinkPreview from 'components/CustomizeLinkPreview';
+import CustomTrackingScripts from 'components/CustomTrackingScripts';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -83,6 +84,7 @@ export const Link = (props) => {
 		advanced: false,
 		dynamicRedirect: false,
 		optimizeMetaTags: false,
+		customTrackingScripts: false,
 	});
 	const [password, setPassword] = useState(null);
 	const [metaTag, setMetaTag] = useState(null);
@@ -251,6 +253,14 @@ export const Link = (props) => {
 		});
 	};
 
+	const __handleToggle = (toggle) => {
+		if (!is_pro_enabled) {
+			setOpenModal(true);
+			return;
+		}
+		togglePanel(toggle);
+	};
+
 	return (
 		<>
 			{data ? (
@@ -268,8 +278,15 @@ export const Link = (props) => {
 				</span>
 				<Formik
 					initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)}
-					onSubmit={(values, { setSubmitting }) => {
+					onSubmit={(values, actions) => {
+						const { setSubmitting, setFieldError } = actions;
+						console.log(actions);
 						setSubmitting(false);
+
+						if (!values?.custom_tracking_scripts) {
+							setFieldError('custom_tracking_scripts', true);
+							return;
+						}
 						onSubmit(values);
 					}}
 				>
@@ -625,11 +642,18 @@ export const Link = (props) => {
 												{/* Customize Link Preview */}
 												<CustomizeLinkPreview
 													openAccordion={isOpenLinkPanel.optimizeMetaTags}
-													togglePanel={togglePanel}
 													openUpgradeToProModal={openUpgradeToProModal}
 													form={props}
 													settings={settings}
 													metaTag={metaTag}
+													__handleToggle={__handleToggle}
+												/>
+												{/* Custom Tracking Scripts */}
+												<CustomTrackingScripts
+													openAccordion={isOpenLinkPanel.customTrackingScripts}
+													openUpgradeToProModal={openUpgradeToProModal}
+													__handleToggle={__handleToggle}
+													props={{ ...props, Field }}
 												/>
 												{!is_pro_enabled && (
 													<div>

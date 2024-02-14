@@ -210,7 +210,13 @@ trait ArgumentSchema
                 ],
                 'password' => [
                     'type' => 'string'
-                ]
+                ],
+                'enable_custom_scripts' => [
+                    'type' => 'boolean'
+                ],
+                'custom_tracking_scripts' => [
+                    'type' => 'string'
+                ],
             ],
             $this->terms_schema()
         );

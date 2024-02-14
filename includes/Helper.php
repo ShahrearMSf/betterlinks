@@ -232,6 +232,11 @@ class Helper {
 					$item->analytic = $analytic[ $item->ID ];
 				}
 
+				$custom_tracking_scripts = \BetterLinks\Helper::get_link_meta($item->ID, 'btl_custom_tracking_scripts');
+				if( !empty( $custom_tracking_scripts ) ){
+					$item->custom_tracking_scripts = unserialize($custom_tracking_scripts);
+				}
+
 				// $item->old_link_status = $item->link_status;.
 				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
@@ -375,6 +380,7 @@ class Helper {
 	}
 
 	public static function sanitize_text_or_array_field( $array_or_string ) {
+		
 		$boolean = array( 'true', 'false', '1', '0' );
 		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title' );
 		if ( is_string( $array_or_string ) ) {
@@ -456,12 +462,12 @@ class Helper {
 		return update_option( 'betterlinks_analytics_data', wp_json_encode( $results ), false );
 	}
 
-	public static function maybe_json( $data ) {
+	public static function maybe_json( $data, $sanitize_text = true ) {
 		if ( is_array( $data ) || is_object( $data ) ) {
 			return wp_json_encode( $data );
 		}
 
-		if ( is_string( $data ) ) {
+		if ( is_string( $data ) && $sanitize_text) {
 			return sanitize_text_field( $data );
 		}
 

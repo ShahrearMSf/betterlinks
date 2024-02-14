@@ -115,7 +115,8 @@ class Links extends Controller
      */
     public function get_items($request)
     {
-        $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        // $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
+        $cache_data = false;
         if (empty($cache_data) || !json_decode($cache_data, true)) {
             $results = \BetterLinks\Helper::get_prepare_all_links();
             set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
@@ -190,11 +191,7 @@ class Links extends Controller
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
         $args = $this->sanitize_links_data($request['params']);
-        // $cat_id = $args['cat_id'];
-        // $is_cat_exists = \BetterLinks\Traits\Query::is_term_exists($cat_id);
-        // if( empty( $is_cat_exists ) ) {
-        //     $args['cat_id'] = '1';
-        // }
+        error_log('api'. print_r( $args, true ) );
         $response = $this->update_link($args);
         return new \WP_REST_Response(
             [

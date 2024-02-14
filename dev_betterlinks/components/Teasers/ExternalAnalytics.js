@@ -58,8 +58,9 @@ const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
 					</div>
 					<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
 						<label className="btl-form-label">{__('Global Head Scripts', 'betterlinks')}</label>
-						<div className="link-options__body">
-							<textarea disabled style={{ marginLeft: '25px' }} />
+						<div className="link-options__body link-options__body_tracking">
+							<input className="btl-text-field" disabled onClick={() => openUpgradeToProModal()} />
+
 							<span className="text" />
 						</div>
 					</div>

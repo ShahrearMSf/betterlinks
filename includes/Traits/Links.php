@@ -54,8 +54,10 @@ trait Links
                 } elseif ( in_array( $key, ['tags_id', 'favorite', 'analytic'] ) ) {
                     $result = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
                     $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($result);
-                }elseif( in_array( $key, ['enable_password', 'password'] ) ) { // password protected parameters
+                }elseif( in_array( $key, ['enable_password', 'password', 'enable_custom_scripts'] ) ) { // password protected parameters
                     $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($POST[$key]);
+                }elseif( 'custom_tracking_scripts' === $key){
+                    $data[$key] = $POST[$key]; // it contains javascript code
                 }
             }
         }
@@ -105,10 +107,33 @@ trait Links
         $wpdb->query("START TRANSACTION");
         $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
         $params = array_intersect_key($arg, $lookFor);
+        
+        // error_log( print_r( $params, true ) );
         $old_short_url = isset($arg['old_short_url']) ? $arg['old_short_url'] : '';
         // update link
         $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params), true);
         $term_data = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
+
+        // error_log( print_r( $arg, true ) );
+
+        $custom_tracking_scripts = \BetterLinks\Helper::get_link_meta($id, 'btl_custom_tracking_scripts');
+        $custom_tracking_scripts = unserialize($custom_tracking_scripts);
+        $is_enable_scripts = isset( $arg['enable_custom_scripts'] ) ? $arg['enable_custom_scripts'] : false;
+        // error_log( $custom_tracking_scripts['script'] );
+        $custom_script = [
+            'enable' => $is_enable_scripts,
+            'script' => $arg['custom_tracking_scripts']
+        ];
+        if( $is_enable_scripts ){
+            if( empty($custom_tracking_scripts) ){
+                \BetterLinks\Helper::add_link_meta($id, 'btl_custom_tracking_scripts', serialize($custom_script));
+            }else{
+                \BetterLinks\Helper::update_link_meta($id, 'btl_custom_tracking_scripts', serialize($custom_script) );
+            }
+        }elseif( isset( $custom_tracking_scripts['enable'] ) && $custom_tracking_scripts['enable'] !== $is_enable_scripts ) {
+            \BetterLinks\Helper::update_link_meta($id, 'btl_custom_tracking_scripts', serialize($custom_script) );
+        }
+        
         $wpdb->query("COMMIT");
         foreach ($term_data as $key => $value) {
             if(empty($value["term_type"])){
