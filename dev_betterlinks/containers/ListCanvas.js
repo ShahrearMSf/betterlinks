@@ -24,7 +24,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Title', 'betterlinks'),
 			selector: 'link_title',
 			sortable: false,
-			width: '25%',
+			width: '255px',
 			cell: (row) => {
 				const expireStatusDot = useBtlExpireStatusDot({ data: row, view: 'list' });
 				return (
@@ -55,7 +55,12 @@ const getLinksListViewColumnData = (props) => {
 			cell: (row) => {
 				return (
 					<div className="btl-short-url-wrapper">
-						<span className="btl-short-url">{row.target_url}</span>
+						<span className="btl-short-url btl-truncate" title={row.target_url}>
+							{row.target_url}
+						</span>
+						<a className="dnd-link-button" href={row.target_url} target="_blank">
+							<i className="btl btl-visit-url" />
+						</a>
 					</div>
 				);
 			},
