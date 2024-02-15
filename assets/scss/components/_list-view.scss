@@ -213,7 +213,7 @@
 						text-align: left;
 					}
 					&:nth-child(3) {
-						min-width: 300px;
+						// min-width: 300px;
 						.rdt_TableCol_Sortable {
 							margin-right: 35px;
 						}
@@ -222,11 +222,6 @@
 					&:nth-child(5) {
 						min-width: 70px;
 					}
-					// &:nth-child(5) {
-					// 	div {
-					// 		width: 200px;
-					// 	}
-					// }
 					.rdt_TableCol_Sortable {
 						color: $dark;
 						font-size: 14px;
@@ -252,21 +247,12 @@
 					align-items: center;
 					padding-top: 3px;
 					padding-bottom: 3px;
+					width: 255px;
 
 					&:nth-child(2) {
 						justify-content: flex-start;
-						min-width: 255px;
+						min-width: 220px;
 					}
-					// &:nth-child(4),
-					// &:nth-child(5) {
-					// 	min-width: 70px;
-					// 	text-align: center;
-					// }
-					// &:nth-child(5) {
-					// 	div {
-					// 		width: 200px;
-					// 	}
-					// }
 					div {
 						font-size: 14px;
 						color: $secondary;
