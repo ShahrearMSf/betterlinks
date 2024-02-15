@@ -62,7 +62,7 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/manage-tags/'>
+				<a target='_blank' href='#'>
 					%s
 				</a>
 				%s
@@ -72,9 +72,9 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks 1.8.0 is here, with new ', 'betterlinks'),
-		__('Manage Tags', 'betterlinks'),
-		__(' feature & more! Check out the ', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 1.8.1 is here, with Improved ', 'betterlinks'),
+		__('Split Test', 'betterlinks'),
+		__(' & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
 	);
