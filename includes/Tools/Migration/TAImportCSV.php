@@ -79,22 +79,24 @@ class TAImportCSV extends BaseCSV implements ImportCsvInterface
             $track_me = isset($betterlinks_links['track_me']) ? $betterlinks_links['track_me'] : false;
             $param_forwarding = isset($betterlinks_links['param_forwarding']) ? $betterlinks_links['param_forwarding'] : false;
             $redirect_type = isset($betterlinks_links['redirect_type']) ? $betterlinks_links['redirect_type'] : false;
+            $additional_css_classes = isset( $item[9] ) ? sanitize_text_field($item[9]) : '';
             $results[] = [
                 'link_title'    =>  $item[0],
                 'link_slug'     =>  $item[2],
                 'link_status'   => $link_status,
-                'nofollow'  => ($item[16] == 'global' ? $nofollow : $item[16]),
+                'nofollow'  => (isset( $item[17] ) && 'global' === $item[16] ? $nofollow : (!empty($item[16]) ? $item[16] : $nofollow)),
                 'sponsored'  => $sponsored,
                 'track_me'  => $track_me,
-                'param_forwarding'  => ($item[17] == 'global' ?$param_forwarding : $item[17]),
-                'redirect_type'  => ($item[18] == 'global' ? $redirect_type : $item[18]),
+                'param_forwarding'  => (isset( $item[17] ) && 'global' === $item[17] ? $param_forwarding : (!empty($item[17]) ? $item[17] : $param_forwarding)),
+                'redirect_type'  => (isset( $item[18] ) && 'global' === $item[18] ? $redirect_type : (!empty($item[18]) ? $item[18] : $redirect_type)),
                 'target_url'  => $item[1],
                 'short_url'  => trim((isset($betterlinks_link['prefix']) && !empty($betterlinks_link['prefix']) ? $betterlinks_link['prefix'] . '/' . $item[2] : $item[2]), '/'),
                 'expire'  => json_encode($expire),
                 'dynamic_redirect'  => json_encode($dynamic_redirect),
                 'category'  => $item[3],
                 'keywords' => !empty($item[6]) ? str_replace(';', ',', $item[6]) : '',
-                'keyword_limit' => !empty($item[8]) ? $item[8] : 100
+                'keyword_limit' => !empty($item[8]) ? $item[8] : 100,
+                'additional_css_classes' => $additional_css_classes
             ];
         }
         return $results;

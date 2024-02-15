@@ -42,20 +42,36 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Shortened URL', 'betterlinks'),
 			selector: 'short_url',
 			sortable: false,
+			// width: '100px',
 			cell: (row) => {
 				return <LinkCopyUrl shortUrl={row.short_url} />;
+			},
+		},
+		{
+			name: __('Target URL', 'betterlinks'),
+			selector: 'target_url',
+			sortable: false,
+			// width: '450px',
+			cell: (row) => {
+				return (
+					<div className="btl-short-url-wrapper">
+						<span className="btl-short-url">{row.target_url}</span>
+					</div>
+				);
 			},
 		},
 		{
 			name: __('Redirect Type', 'betterlinks'),
 			selector: 'redirect_type',
 			sortable: false,
+			width: '150px',
 			cell: (row) => <div>{row.redirect_type == 'cloak' ? 'Cloaked' : row.redirect_type}</div>,
 		},
 		{
 			name: __('Clicks', 'betterlinks'),
 			selector: '',
 			sortable: false,
+			width: '150px',
 			cell: (row) => (
 				<div>
 					{row.analytic ? (
@@ -76,12 +92,14 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Date', 'betterlinks'),
 			selector: 'link_date',
 			sortable: false,
+			width: '150px',
 			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
+			width: '150px',
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction
@@ -137,13 +155,16 @@ const ListCanvas = (props) => {
 		if (!terms) {
 			props.fetch_terms_data();
 		}
-		if (!password) {
+	}, []);
+
+	useEffect(() => {
+		if (!password && settings?.['enable_password_protection']) {
 			props.fetch_links_password();
 		}
-		if (!metaTags) {
+		if (!metaTags && settings?.['enable_customize_meta_tags']) {
 			props.fetch_meta_tags();
 		}
-	}, []);
+	}, [settings]);
 
 	var stored =
 		links &&
@@ -254,7 +275,7 @@ const ListCanvas = (props) => {
 						subHeaderComponent={subHeaderComponentMemo}
 						persistTableHead
 						selectableRows
-						selectableRowsVisibleOnly
+						// selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
 						clearSelectedRows={toggledClearRows}
 					/>

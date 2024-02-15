@@ -441,7 +441,7 @@ export const makeAllLinksArr = (store) =>
 		: // if all links are not fetched properly then return false
 		  false;
 
-export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
+export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow, additionalClass }) => {
 	const attributes = { url };
 	let rel = '';
 
@@ -460,6 +460,10 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 
 	if (rel) {
 		attributes.rel = rel;
+	}
+
+	if ('' !== additionalClass) {
+		attributes.class = additionalClass;
 	}
 
 	const result = {

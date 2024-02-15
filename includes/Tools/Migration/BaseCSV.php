@@ -25,6 +25,11 @@ class BaseCSV
                 \BetterLinks\Helper::insert_terms_relationships($term, $link_id);
             }
         }
+
+        if( !empty( $item['additional_css_classes'] ) ) {
+            \BetterLinks\Helper::add_link_meta($link_id, '_btl_additional_css_classes', $item['additional_css_classes']);
+        }
+        
         return $link_id;
     }
 
