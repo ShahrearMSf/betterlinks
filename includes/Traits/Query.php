@@ -784,12 +784,9 @@ trait Query
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
-        $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, (int)$link_id);
+        $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
         $results = $wpdb->get_results($query);
         if (!empty($results)) {
-            if( 'string' === gettype(current($results)->meta_value) ){
-                return current($results)->meta_value;
-            }
             return json_decode(current($results)->meta_value);
         }
         return;
