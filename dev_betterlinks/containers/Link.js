@@ -282,7 +282,7 @@ export const Link = (props) => {
 						const { setSubmitting, setFieldError } = actions;
 						setSubmitting(false);
 
-						if (!values?.custom_tracking_scripts) {
+						if (values?.enable_custom_scripts && !values?.custom_tracking_scripts) {
 							setFieldError('custom_tracking_scripts', true);
 							return;
 						}
