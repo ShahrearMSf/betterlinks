@@ -68,12 +68,14 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Redirect Type', 'betterlinks'),
 			selector: 'redirect_type',
 			sortable: false,
+			width: '120px',
 			cell: (row) => <div>{row.redirect_type == 'cloak' ? 'Cloaked' : row.redirect_type}</div>,
 		},
 		{
 			name: __('Clicks', 'betterlinks'),
 			selector: '',
 			sortable: false,
+			width: '120px',
 			cell: (row) => (
 				<div>
 					{row.analytic ? (
@@ -94,12 +96,14 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Date', 'betterlinks'),
 			selector: 'link_date',
 			sortable: false,
+			width: '120px',
 			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
+			width: '150px',
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction
