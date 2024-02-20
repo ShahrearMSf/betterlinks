@@ -55,8 +55,8 @@ trait ArgumentSchema
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             'param_struct' => [
-                'type' => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
+                'type' => 'object',
+                // 'sanitize_callback' => 'sanitize_text_field',
             ],
             'redirect_type' => [
                 'type' => 'string',

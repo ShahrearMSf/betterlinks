@@ -87,6 +87,8 @@ export const Link = (props) => {
 	const [password, setPassword] = useState(null);
 	const [metaTag, setMetaTag] = useState(null);
 
+	const customFields = settings?.settings?.customFields || [];
+
 	useEffect(() => {
 		if (data?.ID && passwords?.password && Object.values(passwords.password).length > 0) {
 			const password = Object.values(passwords.password).find((item) => item.link_id == data.ID);
@@ -413,6 +415,41 @@ export const Link = (props) => {
 											</label>
 											<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 										</div>
+										{customFields.length && (
+											<>
+												<div className="btl-modal-form-group">
+													<label className="btl-modal-form-label" htmlFor="useCustomFields">
+														{__('Use Custom Fields', 'betterlinks')}
+													</label>
+													<Field
+														id="useCustomFields"
+														className="btl-check"
+														name="param_struct.useCustomFields"
+														type="checkbox"
+														onChange={() => props.setFieldValue('param_struct.useCustomFields', !props.values?.param_struct?.useCustomFields)}
+														disabled={false}
+													/>
+												</div>
+												{props.values?.param_struct?.useCustomFields &&
+													customFields.map((field, index) => {
+														return (
+															<div key={index} className="btl-modal-form-group">
+																<label className="btl-modal-form-label" htmlFor={field.value}>
+																	{__(field.label, 'betterlinks')}
+																</label>
+																<Field
+																	className="btl-modal-form-control"
+																	id={field.value}
+																	name={`param_struct[${field.value}]`}
+																	onChange={(e) => {
+																		props.setFieldValue(`param_struct[${field.value}]`, e.target.value);
+																	}}
+																/>
+															</div>
+														);
+													})}
+											</>
+										)}
 										{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
 											<div className="btl-modal-form-group btl-modal-form-group-submit">
 												<label className="btl-modal-form-label"></label>

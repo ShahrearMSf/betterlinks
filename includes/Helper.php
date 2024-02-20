@@ -231,7 +231,9 @@ class Helper {
 				if ( isset( $analytic[ $item->ID ] ) ) {
 					$item->analytic = $analytic[ $item->ID ];
 				}
-
+				if( !empty( $item->param_struct ) ){
+					$item->param_struct = unserialize($item->param_struct);
+				}
 				// $item->old_link_status = $item->link_status;.
 				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
