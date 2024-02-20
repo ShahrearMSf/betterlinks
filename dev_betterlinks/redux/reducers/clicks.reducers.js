@@ -74,7 +74,7 @@ function clicks(state = { individual_clicks: {} }, action) {
 		}
 		case FETCH_CLICKS_DATA: {
 			const { unique_list, analytic } = payload.data;
-			const newClicksData = get_parsed_clicks_list(unique_list, 'all', analytic);
+			const newClicksData = get_parsed_clicks_list(unique_list || [], 'all', analytic || null);
 
 			return {
 				...state,

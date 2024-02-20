@@ -766,7 +766,8 @@ class Ajax {
 		if ( $count === false ) {
 			wp_send_json_error( $count );
 		}
-		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+		\BetterLinks\Helper::clear_query_cache();
+        \BetterLinks\Helper::clear_analytics_cache(); 
 		\BetterLinks\Helper::update_links_analytics();
 		$new_clicks_data = \BetterLinks\Helper::get_clicks_by_date( $from, $to );
 		$new_links_data  = \BetterLinks\Helper::get_prepare_all_links();
