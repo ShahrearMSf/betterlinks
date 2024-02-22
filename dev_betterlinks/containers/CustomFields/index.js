@@ -31,22 +31,19 @@ const CustomFields = ({ settings, update_option }) => {
 		setModalOpen(false);
 	};
 
-	const deleteField = (index) => {};
+	const onSubmit = (values, { setFieldError }) => {
+		const customFieldsValues = _.map(values?.customFields || [], 'value');
+		const hasEmptyValue = _.some(customFieldsValues, (val) => !val || '' === val || val.includes(' ')); // Checks for string is valid or not.
+		if (hasEmptyValue) {
+			setFieldError('customFields', 'Please fill all the fields');
+			return;
+		}
+		saveSettingsHandler(values, update_option, setFormSubmitText);
+	};
 
 	return (
 		<>
-			<Formik
-				initialValues={{ ...settings }}
-				onSubmit={(values, { setFieldError }) => {
-					const customFieldsValues = _.map(values?.customFields || [], 'value');
-					const hasSpace = _.some(customFieldsValues, (val) => val.includes(' ')); // Checks for string with spaces.
-					if (hasSpace) {
-						setFieldError('customFields', 'Single word, no spaces. Only underscores and dashes allowed');
-						return;
-					}
-					saveSettingsHandler(values, update_option, setFormSubmitText);
-				}}
-			>
+			<Formik initialValues={{ ...settings }} onSubmit={onSubmit}>
 				{({ values }) => {
 					return (
 						<Form>
@@ -57,26 +54,26 @@ const CustomFields = ({ settings, update_option }) => {
 									const lastIndex = values?.customFields?.length - 1;
 									return (
 										<>
-											<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={true}>
+											<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
 												<div>
 													<span className="btl-close-modal" onClick={closeModal}>
 														<i className="btl btl-cancel" />
 													</span>
 													<div className="btl-confirmation-alert">
-														<h3 className="btl-modal-utm-builder__title">Are you sure to delete this field?</h3>
+														<h3 className="btl-modal-utm-builder__title">{__('Are you sure to delete this field?', 'betterlinks')}</h3>
 														<div className="btl-confirmation-buttons">
 															<button
 																type="button"
 																onClick={() => {
-																	const deleteIndex = arrayHelpers.form?.errors?.['deleteFieldIndex'];
+																	const deleteIndex = arrayHelpers.form?.errors?.deleteFieldIndex;
 																	arrayHelpers.remove(deleteIndex);
 																	closeModal();
 																}}
 															>
-																Yes
+																{__('Yes', 'betterlinks')}
 															</button>
 															<button type="button" onClick={closeModal}>
-																Cancel
+																{__('Cancel', 'betterlinks')}
 															</button>
 														</div>
 													</div>
@@ -88,7 +85,7 @@ const CustomFields = ({ settings, update_option }) => {
 														{__('Field Title', 'betterlinks')}
 													</label>
 												</div>
-												{values?.customFields?.length &&
+												{values?.customFields?.length > 0 ? (
 													values.customFields.map((fields, index) => {
 														return (
 															<div key={index} className="btl-form-group" style={{ columnGap: '5px' }}>
@@ -101,6 +98,7 @@ const CustomFields = ({ settings, update_option }) => {
 																		arrayHelpers.form.setFieldValue(`customFields.${index}.label`, e.target.value);
 																		arrayHelpers.form.setFieldValue(`customFields.${index}.value`, fieldSlug);
 																	}}
+																	autoFocus={true}
 																/>
 																<div className="btl-utm-action-btns">
 																	<button
@@ -110,7 +108,7 @@ const CustomFields = ({ settings, update_option }) => {
 																		onClick={() => {
 																			setModalOpen(true);
 																			arrayHelpers.form.setFieldError('deleteFieldIndex', index);
-																		}} // insert an empty string at a position
+																		}}
 																	>
 																		<span className="dashicons dashicons-trash"></span>
 																	</button>
@@ -119,23 +117,44 @@ const CustomFields = ({ settings, update_option }) => {
 																{lastIndex === index && (
 																	<button
 																		type="button"
-																		className="button button-primary"
+																		className="button"
+																		style={{ lineHeight: '0' }}
 																		onClick={() => {
 																			if (!lastField || _.includes(lastField, ' ')) {
-																				arrayHelpers.form.setFieldError('customFields', 'Single word, no spaces. Underscores and dashes allowed');
+																				arrayHelpers.form.setFieldError('customFields', 'Please fill all the fields');
 																				return;
 																			}
 																			arrayHelpers.push('');
 																		}}
 																	>
-																		Add Fields
+																		<span className="dashicons dashicons-plus-alt2" />
 																	</button>
 																)}
 															</div>
 														);
-													})}
+													})
+												) : (
+													<div className="btl-form-group" style={{ columnGap: '5px' }}>
+														<Field className="btl-form-control" name="disabled.label" placeholder="Click on plus icon to add custom field" disabled />
+
+														<button
+															type="button"
+															className="button"
+															style={{ lineHeight: '0' }}
+															onClick={() => {
+																if (!lastField || _.includes(lastField, ' ')) {
+																	arrayHelpers.form.setFieldError('customFields', 'Single word, no spaces. Underscores and dashes allowed');
+																	return;
+																}
+																arrayHelpers.push('');
+															}}
+														>
+															<span className="dashicons dashicons-plus-alt2" />
+														</button>
+													</div>
+												)}
 											</div>
-											{!!arrayHelpers.form?.errors?.['customFields'] && (
+											{!!arrayHelpers.form?.errors?.customFields && (
 												<span style={{ color: 'red', display: 'block', marginTop: '5px' }}>{arrayHelpers.form?.errors?.['customFields']}</span>
 											)}
 										</>

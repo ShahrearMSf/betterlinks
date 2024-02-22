@@ -415,7 +415,7 @@ export const Link = (props) => {
 											</label>
 											<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 										</div>
-										{customFields.length && (
+										{customFields?.length > 0 && (
 											<>
 												<div className="btl-modal-form-group">
 													<label className="btl-modal-form-label" htmlFor="useCustomFields">
