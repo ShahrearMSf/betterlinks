@@ -12,7 +12,7 @@ import CustomFields from './CustomFields';
 const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
 	const tabList = [
 		{
-			label: __('Customize Fields', 'betterlinks'),
+			label: __('Custom Fields', 'betterlinks'),
 			type: 'free',
 		},
 		{
