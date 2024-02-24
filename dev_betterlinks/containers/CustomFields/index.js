@@ -80,11 +80,11 @@ const CustomFields = ({ settings, update_option }) => {
 												</div>
 											</Modal>
 											<div>
-												<div className="btl-form-group">
+												{/* <div className="btl-form-group">
 													<label className="btl-form-label" htmlFor="link_title">
-														{__('Field Title', 'betterlinks')}
+														{__('Title', 'betterlinks')}
 													</label>
-												</div>
+												</div> */}
 												{values?.customFields?.length > 0 ? (
 													values.customFields.map((fields, index) => {
 														return (
@@ -135,7 +135,17 @@ const CustomFields = ({ settings, update_option }) => {
 													})
 												) : (
 													<div className="btl-form-group" style={{ columnGap: '5px' }}>
-														<Field className="btl-form-control" name="disabled.label" placeholder="Click on plus icon to add custom field" disabled />
+														<Field
+															className="btl-form-control"
+															name={`customFields.0.label`}
+															placeholder="Custom field label"
+															onChange={(e) => {
+																const fieldSlug = generateSlug(e.target.value);
+																arrayHelpers.form.setFieldValue(`customFields.0.label`, e.target.value);
+																arrayHelpers.form.setFieldValue(`customFields.0.value`, fieldSlug);
+															}}
+															// placeholder="Click on plus icon to add custom field"
+														/>
 
 														<button
 															type="button"
