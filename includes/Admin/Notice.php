@@ -72,7 +72,7 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks Pro 1.8.1 is here, with Improved ', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 1.8.3 is here, with Improved ', 'betterlinks'),
 		__('Split Test', 'betterlinks'),
 		__(' & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
