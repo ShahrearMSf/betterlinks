@@ -68,7 +68,7 @@ export const Link = (props) => {
 	const passwords = props.password;
 
 	// 👇 Customized Meta Tags
-	const { metaTags } = props.metaTags;
+	const { metaTags } = props.metaTags || {};
 
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isFetchTerms, setIsFetchTerms] = useState(false);

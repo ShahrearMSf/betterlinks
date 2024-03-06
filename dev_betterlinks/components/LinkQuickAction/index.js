@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
 import QRScanner from 'components/QRScanner';
 import { site_url, copyShortUrl, analytic } from 'utils/helper';
+import { Link as ReactLink } from 'react-router-dom/cjs/react-router-dom.min';
 
 const propTypes = {
 	isShowAnalytics: PropTypes.bool,
@@ -65,7 +66,7 @@ const LinkQuickAction = ({
 	};
 	return (
 		<React.Fragment>
-			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', data)}
+			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', { data, ReactLink })}
 			{isShowAnalytics && data.analytic && (
 				<button className="dnd-link-button btl-tooltip">
 					<span className="btl-tooltiptext">{__('Clicks: ', 'betterlinks') + +data.analytic.link_count + ' / ' + __('Unique Clicks: ', 'betterlinks') + +data.analytic.ip}</span>
