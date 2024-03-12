@@ -24,7 +24,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Title', 'betterlinks'),
 			selector: 'link_title',
 			sortable: false,
-			width: '25%',
+			width: '255px',
 			cell: (row) => {
 				const expireStatusDot = useBtlExpireStatusDot({ data: row, view: 'list' });
 				return (
@@ -47,15 +47,35 @@ const getLinksListViewColumnData = (props) => {
 			},
 		},
 		{
+			name: __('Target URL', 'betterlinks'),
+			selector: 'target_url',
+			sortable: false,
+			// width: '450px',
+			cell: (row) => {
+				return (
+					<div className="btl-short-url-wrapper">
+						<span className="btl-short-url btl-truncate" title={row.target_url}>
+							{row.target_url}
+						</span>
+						<a className="dnd-link-button" href={row.target_url} target="_blank">
+							<i className="btl btl-visit-url" />
+						</a>
+					</div>
+				);
+			},
+		},
+		{
 			name: __('Redirect Type', 'betterlinks'),
 			selector: 'redirect_type',
 			sortable: false,
+			width: '120px',
 			cell: (row) => <div>{row.redirect_type == 'cloak' ? 'Cloaked' : row.redirect_type}</div>,
 		},
 		{
 			name: __('Clicks', 'betterlinks'),
 			selector: '',
 			sortable: false,
+			width: '120px',
 			cell: (row) => (
 				<div>
 					{row.analytic ? (
@@ -76,12 +96,14 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Date', 'betterlinks'),
 			selector: 'link_date',
 			sortable: false,
+			width: '120px',
 			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
+			width: '150px',
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction

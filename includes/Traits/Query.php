@@ -901,4 +901,11 @@ trait Query
         $results = array_column($results, 'meta_value');
         return $results;
     }
+
+    public static function get_link_data_by_id($id, $fields) {
+        global $wpdb;
+        $query = $wpdb->prepare( "SELECT `{$fields}` from {$wpdb->prefix}betterlinks WHERE id=%d", [$id] );
+        $result = $wpdb->get_var($query);
+        return $result;
+    }
 }
