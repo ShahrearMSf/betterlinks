@@ -43,7 +43,7 @@ class Cron
                 if (is_array($Clicks)) {
                     foreach ($Clicks as $key => $item) {
                         $click_id = Helper::insert_click($item);
-                        if (!empty($click_id)) {
+                        if (!empty($click_id) && $item['is_split_enabled']) {
                             do_action('betterlinks/link/after_insert_click', $item['link_id'], $click_id, $item['target_url']);
                         }
                     }

@@ -38,6 +38,75 @@ class Helper {
 				);
 	}
 
+	public static function split_test_enabled( $data ) {
+		$extra = null;
+		$id    = null;
+		if ( 'string' === gettype( $data ) ) {
+			$id               = $data;
+			$dynamic_redirect = self::get_link_data_by_id( $id, 'dynamic_redirect' );
+
+			$split_test_data_meta = self::get_link_meta( $id, 'split_test_data' );
+
+			if ( ! empty( $split_test_data_meta ) ) {
+				$split_test_data_meta              = (array) $split_test_data_meta;
+				$split_test_data_meta['completed'] = true;
+				return $split_test_data_meta;
+			}
+
+			if ( is_string( $dynamic_redirect ) ) {
+				$dynamic_redirect = json_decode( $dynamic_redirect );
+			}
+			$extra = isset( $dynamic_redirect->extra ) ? (array) $dynamic_redirect->extra : null;
+		} else {
+			$id                   = $data['ID'];
+			$split_test_data_meta = self::get_link_meta( $id, 'split_test_data' );
+			if ( ! empty( $split_test_data_meta ) ) {
+				$split_test_data_meta              = (array) $split_test_data_meta;
+				$split_test_data_meta['completed'] = true;
+				return $split_test_data_meta;
+			}
+			$extra = isset( $data['dynamic_redirect'], $data['dynamic_redirect']['extra'] ) ? $data['dynamic_redirect']['extra'] : null;
+		}
+		if ( empty( $extra ) ) {
+			return false;
+		}
+
+		$is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
+		
+		if ( ! $is_enable ) {
+			return false;
+		}
+
+		$is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
+		
+		if ( $is_enable && ! $is_expire_enable ) {
+			return ['result' => true];
+		}
+
+		$expire_metrics      = isset( $extra['expire_split_after'] ) ? $extra['expire_split_after'] : 'clicks';
+		$expire_split_clicks = isset( $extra['expire_split_clicks'] ) ? (int) $extra['expire_split_clicks'] : 0;
+		$clicks_count        = null;
+
+		if ( class_exists( '\BetterLinksPro\Helper' ) ) {
+			$pro_helper = new \BetterLinksPro\Helper();
+
+			if ( 'clicks' === $expire_metrics ) {
+				$clicks_count = $pro_helper::get_individual_clicks_count( $id );
+			} elseif ( 'unique_clicks' === $expire_metrics ) {
+				$clicks_count = $pro_helper::get_individual_unique_clicks_count( $id );
+			}
+		}
+
+		$result = $clicks_count < $expire_split_clicks;
+		return array(
+			'result'              => $result,
+			'expire_metrics'      => $expire_metrics,
+			'expire_split_clicks' => $expire_split_clicks,
+			'clicks_count'        => $clicks_count,
+			'completed'           => ! $result,
+		);
+	}
+
 	public static function get_link_from_json_file( $short_url ) {
 		if ( empty( $short_url ) ) {
 			return;
@@ -237,7 +306,7 @@ class Helper {
 				// $item->old_link_status = $item->link_status;.
 				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
-				} elseif ( 'broken' === $item->link_status && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
+				} elseif ( 'broken' === $item->link_status && isset( $broken_links[ $item->ID ]['old_link_status'] ) && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
 					// if the link is fixed, but if db is not updated it to fixed link immediately then it will be marked as old status code.
 					$item->link_status = $broken_links[ $item->ID ]['old_link_status'];
 				}
