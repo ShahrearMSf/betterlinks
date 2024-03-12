@@ -85,7 +85,6 @@ const Settings = (props) => {
 				action: 'betterlinks/admin/get_external_analytics',
 			}).then((response) => {
 				if (response.data) {
-					console.log(response.data);
 					setTrackingSettings({ ...response.data.data });
 				}
 			});
@@ -95,7 +94,7 @@ const Settings = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
-			<Tabs defaultIndex={currentTab == 'true' ? 2 : 1}>
+			<Tabs defaultIndex={currentTab == 'true' ? 2 : 0}>
 				<TabList>
 					{tabList.map((item, index) => (
 						<Tab key={index}>{item}</Tab>
