@@ -75,6 +75,10 @@
 			&:before {
 				color: darken($secondary-lighten, 10%);
 			}
+
+			.dnd-link-button {
+				color: $white;
+			}
 		}
 		.btl-dnd-link-button-group {
 			.light-tooltip {

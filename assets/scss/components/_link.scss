@@ -37,6 +37,19 @@
 			.btl-tooltip {
 				margin-left: 0;
 			}
+
+			.dnd-link-button {
+				border: none;
+				width: auto;
+				overflow: visible;
+
+				background: transparent;
+				font: inherit;
+				line-height: normal;
+				-webkit-font-smoothing: inherit;
+				-moz-osx-font-smoothing: inherit;
+				-webkit-appearance: none;
+			}
 		}
 		.btl-dnd-link-button-group {
 			position: relative;
