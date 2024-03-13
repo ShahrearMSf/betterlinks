@@ -257,7 +257,8 @@ export const Link = (props) => {
 		<>
 			{data ? (
 				<button onClick={openModal} className={`dnd-link-button ${isFetchTerms ? 'btl-rotating' : ''}`}>
-					<span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
+					<span style={{ textDecoration: 'underline', cursor: 'pointer' }}>{props.children}</span>
+					{!props.children && <span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>}
 				</button>
 			) : (
 				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>

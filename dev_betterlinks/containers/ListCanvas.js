@@ -16,6 +16,7 @@ import TableLoader from 'components/Loader/TableLoader';
 import { useBtlExpireStatusDot } from 'utils/customHooks';
 import { fetch_links_password } from 'redux/actions/password.actions';
 import { fetch_meta_tags } from 'redux/actions/metaTags.actions';
+import Link from 'containers/Link';
 
 const getLinksListViewColumnData = (props) => {
 	const is_allow_qr = props?.settings?.settings?.is_allow_qr;
@@ -32,7 +33,9 @@ const getLinksListViewColumnData = (props) => {
 						<>
 							<FavoriteIcon data={row} />
 							{expireStatusDot}
-							<div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>
+							<Link catId={parseInt(row.cat_id)} catName={''} data={row} submitHandler={props.edit_link}>
+								<div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>
+							</Link>
 						</>
 					)
 				);
@@ -279,6 +282,7 @@ const ListCanvas = (props) => {
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
 						clearSelectedRows={toggledClearRows}
+						paginationRowsPerPageOptions={[10, 30, 50, 100, 200]}
 					/>
 				) : (
 					<TableLoader />
