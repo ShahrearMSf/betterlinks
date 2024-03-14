@@ -809,7 +809,6 @@ trait Query
             $meta_value["keywords"] = preg_replace('/\’|\'|\‘/', "'", $meta_value["keywords"]);
         }
         $meta_value = \BetterLinks\Helper::maybe_json($meta_value, false);
-        error_log( $meta_value );
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
