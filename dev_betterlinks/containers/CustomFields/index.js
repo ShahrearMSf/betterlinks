@@ -35,7 +35,7 @@ const CustomFields = ({ settings, update_option }) => {
 		const customFieldsValues = _.map(values?.customFields || [], 'value');
 		const hasEmptyValue = _.some(customFieldsValues, (val) => !val || '' === val || val.includes(' ')); // Checks for string is valid or not.
 		if (hasEmptyValue) {
-			setFieldError('customFields', 'Please fill all the fields');
+			setFieldError('customFields', __('Please fill all the fields', 'betterlinks'));
 			return;
 		}
 		saveSettingsHandler(values, update_option, setFormSubmitText);
@@ -47,6 +47,17 @@ const CustomFields = ({ settings, update_option }) => {
 				{({ values }) => {
 					return (
 						<Form>
+							<div className="btl-form-group">
+								<div className="btl-form-field">
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>Note: </b>
+										<span>{__('Custom Fields Note will be here. For more info, ')}</span>
+										<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
+											{__('Click here', 'betterlinks-pro')}
+										</a>
+									</div>
+								</div>
+							</div>
 							<FieldArray
 								name="customFields"
 								render={(arrayHelpers) => {
@@ -80,11 +91,6 @@ const CustomFields = ({ settings, update_option }) => {
 												</div>
 											</Modal>
 											<div>
-												{/* <div className="btl-form-group">
-													<label className="btl-form-label" htmlFor="link_title">
-														{__('Title', 'betterlinks')}
-													</label>
-												</div> */}
 												{values?.customFields?.length > 0 ? (
 													values.customFields.map((fields, index) => {
 														return (
@@ -121,7 +127,7 @@ const CustomFields = ({ settings, update_option }) => {
 																		style={{ lineHeight: '0' }}
 																		onClick={() => {
 																			if (!lastField || _.includes(lastField, ' ')) {
-																				arrayHelpers.form.setFieldError('customFields', 'Please fill all the fields');
+																				arrayHelpers.form.setFieldError('customFields', __('Please fill all the fields', 'betterlinks'));
 																				return;
 																			}
 																			arrayHelpers.push('');
@@ -138,27 +144,15 @@ const CustomFields = ({ settings, update_option }) => {
 														<Field
 															className="btl-form-control"
 															name={`customFields.0.label`}
-															placeholder="Custom field label"
+															placeholder={__('Custom field label', 'betterlinks')}
 															onChange={(e) => {
 																const fieldSlug = generateSlug(e.target.value);
-																arrayHelpers.form.setFieldValue(`customFields.0.label`, e.target.value);
-																arrayHelpers.form.setFieldValue(`customFields.0.value`, fieldSlug);
+																arrayHelpers.form.setFieldValue('customFields.0.label', e.target.value);
+																arrayHelpers.form.setFieldValue('customFields.0.value', fieldSlug);
 															}}
-															// placeholder="Click on plus icon to add custom field"
 														/>
 
-														<button
-															type="button"
-															className="button"
-															style={{ lineHeight: '0' }}
-															onClick={() => {
-																if (!lastField || _.includes(lastField, ' ')) {
-																	arrayHelpers.form.setFieldError('customFields', 'Single word, no spaces. Underscores and dashes allowed');
-																	return;
-																}
-																arrayHelpers.push('');
-															}}
-														>
+														<button type="button" className="button" style={{ lineHeight: '0' }} onClick={() => arrayHelpers.push('')}>
 															<span className="dashicons dashicons-plus-alt2" />
 														</button>
 													</div>
