@@ -787,9 +787,13 @@ trait Query
         $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key=%s AND link_id=%d", $meta_key, $link_id);
         $results = $wpdb->get_results($query);
         if (!empty($results)) {
+            if( is_serialized(current($results)->meta_value, true)){
+                return current($results)->meta_value;
+            }
             if( is_string(current($results)->meta_value) ){
                 return json_decode(current($results)->meta_value);
             }
+            
             return json_decode(current($results)->meta_value);
         }
         return;
