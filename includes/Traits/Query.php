@@ -788,7 +788,7 @@ trait Query
         $results = $wpdb->get_results($query);
         if (!empty($results)) {
             if( is_string(current($results)->meta_value) ){
-                return current($results)->meta_value;
+                return json_decode(current($results)->meta_value);
             }
             return json_decode(current($results)->meta_value);
         }
