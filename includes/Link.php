@@ -3,6 +3,7 @@ namespace BetterLinks;
 
 use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
+use WP_Http;
 
 class Link extends Utils {
 	private static $link_options;
@@ -17,6 +18,19 @@ class Link extends Utils {
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
+		if( isset($_GET['action'], $_GET['api_secret']) && $_GET['action'] === 'btl_cle' && $_GET['api_secret'] === md5(AUTH_KEY) ){
+			$target_url = isset( $_GET['target_url'] ) ? $_GET['target_url'] : '';
+			
+			$http = new WP_Http;
+			$result = $http->get( $target_url, array( 'sslverify' => false ) );
+			$title = '';
+			if( !empty( $result['body'] ) && preg_match("/<title>(.*)<\/title>/siU", $result['body'], $title_matches) ){
+				$title = html_entity_decode( $title_matches[1] );
+			}
+			// code .
+			return;
+		}
+
 		// Note: Using sanitize_text_field for $_SERVER['REQUEST_URI'] may not handle redirects properly when short URLs contain non-ASCII characters (e.g., Chinese).
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
 		$request_uri = stripslashes( rawurldecode( $request_uri ) );
