@@ -103,7 +103,7 @@ class Helper {
 			'expire_metrics'      => $expire_metrics,
 			'expire_split_clicks' => $expire_split_clicks,
 			'clicks_count'        => $clicks_count,
-			'completed'           => ! $result,
+			'completed'           => ! ($clicks_count < ($expire_split_clicks - 1)),
 		);
 	}
 
