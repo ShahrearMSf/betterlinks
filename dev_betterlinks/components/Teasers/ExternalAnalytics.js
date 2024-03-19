@@ -2,11 +2,14 @@ import { __ } from '@wordpress/i18n';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { is_pro_enabled } from 'utils/helper';
 import { useUpgradeProModal } from 'utils/customHooks';
+import { bindActionCreators } from 'redux';
+import { update_tracking_settings } from 'redux/actions/settings.actions';
+import { connect } from 'react-redux';
 
-const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
+const ExternalAnalytics = ({ trackingSettings, setTrackingSettings, update_tracking_settings }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	if (is_pro_enabled) {
-		return betterLinksHooks.applyFilters('BetterLinksTrackingPro', null, { ...trackingSettings, setTrackingSettings });
+		return betterLinksHooks.applyFilters('BetterLinksTrackingPro', null, { ...trackingSettings, update_tracking_settings });
 	}
 	return (
 		<>
@@ -70,4 +73,10 @@ const ExternalAnalytics = ({ trackingSettings, setTrackingSettings }) => {
 	);
 };
 
-export default ExternalAnalytics;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		update_tracking_settings: bindActionCreators(update_tracking_settings, dispatch),
+	};
+};
+
+export default connect(null, mapDispatchToProps)(ExternalAnalytics);

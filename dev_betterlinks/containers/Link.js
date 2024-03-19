@@ -31,6 +31,7 @@ import UTMBuilder from 'components/UTMBuilder';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import CustomizeLinkPreview from 'components/CustomizeLinkPreview';
 import CustomTrackingScripts from 'components/CustomTrackingScripts';
+import { fetch_tracking_settings } from 'redux/actions/settings.actions';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -652,7 +653,7 @@ export const Link = (props) => {
 													openAccordion={isOpenLinkPanel.customTrackingScripts}
 													openUpgradeToProModal={openUpgradeToProModal}
 													__handleToggle={__handleToggle}
-													props={{ ...props, Field }}
+													props={{ ...props, tracking: settings?.tracking, Field }}
 												/>
 												{!is_pro_enabled && (
 													<div>
@@ -696,6 +697,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		//👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
 		fetch_terms_data: bindActionCreators(fetch_terms_action_function, dispatch),
+		fetch_tracking_settings: bindActionCreators(fetch_tracking_settings, dispatch),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);

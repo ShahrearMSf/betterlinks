@@ -3,6 +3,7 @@ import { is_pro_enabled } from 'utils/helper';
 import CustomTrackingScriptTeaser from './Teaser';
 
 const CustomTrackingScripts = ({ openAccordion, openUpgradeToProModal, __handleToggle, props }) => {
+	if (is_pro_enabled && !props?.tracking?.is_enable_custom_scripts) return;
 	return (
 		<>
 			<div className={`link-options link-options--advanced link-options--customize-link-preview ${openAccordion ? 'link-options--open' : ''}`}>
