@@ -314,4 +314,34 @@ class Utils {
 		}
 		return false;
 	}
+
+	public function create_new_link( $title, $target_url ) {
+		$initial_values = array(
+			'link_title' => $title,
+			'link_slug' => '',
+			'target_url' => $target_url,
+			'short_url' => '',
+			'link_note' => '',
+			'link_date' => '',
+			'link_date_gmt' => '',
+			'link_modified' => '',
+			'link_modified_gmt' => '',
+			'cat_id' => null,
+		);
+		return $initial_values;
+		// const initialValues = {
+		// 	link_title: '',
+		// 	link_slug: '',
+		// 	target_url: '',
+		// 	short_url: generateShortURL(settings.settings, null),
+		// 	link_note: '',
+		// 	link_date: currentDate,
+		// 	link_date_gmt: currentDate,
+		// 	link_modified: currentDate,
+		// 	link_modified_gmt: currentDate,
+		// 	cat_id: catId ? catId : null,
+		// 	...settings.settings,
+		// 	...objForGutenTargetBlank,
+		// };
+	}
 }
