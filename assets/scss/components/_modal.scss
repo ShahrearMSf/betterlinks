@@ -229,6 +229,9 @@
 							margin-top: 3px;
 							margin-left: 3px;
 						}
+						.btl-modal-form-textarea::placeholder {
+							opacity: 0.6;
+						}
 						input[type='number'],
 						input[type='password'],
 						input[type='text'],
