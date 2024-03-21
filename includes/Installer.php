@@ -1,6 +1,8 @@
 <?php
 namespace BetterLinks;
 
+use BetterLinks\Admin\Cache;
+
 class Installer extends \WP_Background_Process
 {
     use Traits\DBTables;
@@ -153,6 +155,7 @@ class Installer extends \WP_Background_Process
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
+        Cache::init();
     }
 
     /**

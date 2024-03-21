@@ -4,6 +4,7 @@ namespace BetterLinks;
 use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
 use WP_Http;
+use BetterLinks\Helper;
 
 class Link extends Utils {
 	private static $link_options;
@@ -20,16 +21,15 @@ class Link extends Utils {
 	public function run_redirect() {
 		if( isset($_GET['action'], $_GET['api_secret']) && $_GET['action'] === 'btl_cle' && $_GET['api_secret'] === md5(AUTH_KEY) ){
 			$target_url = isset( $_GET['target_url'] ) ? $_GET['target_url'] : '';
-			if( !empty( $target_url ) ) return;
+			if( empty( $target_url ) ) return;
 			
 			$http = new WP_Http;
 			$result = $http->get( $target_url, array( 'sslverify' => false ) );
 			$title = '';
-			if( !empty( $result['body'] ) && preg_match("/<title>(.*)<\/title>/siU", $result['body'], $title_matches) ){
+			if( !is_wp_error($result) && !empty( $result['body'] ) && preg_match("/<title>(.*)<\/title>/siU", $result['body'], $title_matches) ){
 				$title = html_entity_decode( $title_matches[1] );
-				$link_data = $this->create_new_link($title, $target_url);
 			}
-			// code .
+			$this->create_new_link($title, $target_url);
 			return;
 		}
 

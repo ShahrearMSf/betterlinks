@@ -159,7 +159,6 @@ class Links extends Controller
     {
         $request = $request->get_params();
         delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
-        error_log( print_r( $request['params'], true ) );
         $args = $this->sanitize_links_data($request['params']);
         $results = $this->insert_link($args);
         if ($results) {

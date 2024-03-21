@@ -1,12 +1,16 @@
 <?php
 namespace BetterLinks\Link;
 
+use BetterLinks\Admin\Cache;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
 use DeviceDetector\Parser\OperatingSystem;
 use DeviceDetector\Parser\Client\Browser;
+use \BetterLinks\Traits\Links;
+use \BetterLinks\Traits\ArgumentSchema;
 
 class Utils {
+	use Links, ArgumentSchema;
 
 	public function __construct() {
 		AbstractDeviceParser::setVersionTruncation( AbstractDeviceParser::VERSION_TRUNCATION_NONE );
@@ -316,32 +320,42 @@ class Utils {
 	}
 
 	public function create_new_link( $title, $target_url ) {
+		$date = wp_date('Y-m-d H:i:s');
+		$helper = new \BetterLinks\Helper;
+		$slug = $helper->generate_random_slug();
+		$settings = Cache::get_json_settings();
+		$prefix = isset( $settings['prefix'] ) ? $settings['prefix']. '/' : '';
+		$nofollow = !empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
+		$sponsored = !empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
+		$track_me = !empty( $settings['track_me'] ) ? $settings['track_me'] : null;
+		$param_forwarding = !empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
+		$short_url = $prefix . $slug;
+
 		$initial_values = array(
 			'link_title' => $title,
-			'link_slug' => '',
+			'link_slug' => $slug,
 			'target_url' => $target_url,
-			'short_url' => '',
-			'link_note' => '',
-			'link_date' => '',
-			'link_date_gmt' => '',
-			'link_modified' => '',
-			'link_modified_gmt' => '',
-			'cat_id' => null,
+			'short_url' => $short_url,
+			'redirect_type' => '307',
+			'nofollow' => $nofollow,
+			'sponsored' => $sponsored,
+			'track_me' => $track_me,
+			'param_forwarding' => $param_forwarding,
+			'link_date' => $date,
+			'link_date_gmt' => $date,
+			'link_modified' => $date,
+			'link_modified_gmt' => $date,
+			'cat_id' => 1,
 		);
-		return $initial_values;
-		// const initialValues = {
-		// 	link_title: '',
-		// 	link_slug: '',
-		// 	target_url: '',
-		// 	short_url: generateShortURL(settings.settings, null),
-		// 	link_note: '',
-		// 	link_date: currentDate,
-		// 	link_date_gmt: currentDate,
-		// 	link_modified: currentDate,
-		// 	link_modified_gmt: currentDate,
-		// 	cat_id: catId ? catId : null,
-		// 	...settings.settings,
-		// 	...objForGutenTargetBlank,
-		// };
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+		$args    = $this->sanitize_links_data( $initial_values );
+		$results = $this->insert_link( $args );
+		
+		if( !empty( $results ) ) {
+			require_once( BETTERLINKS_ROOT_DIR_PATH . '/includes/Views/create-link-externally.php');
+			exit;
+		}
+		wp_safe_redirect(home_url());
+		exit;
 	}
 }

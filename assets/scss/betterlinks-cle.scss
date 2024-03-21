@@ -1,0 +1,62 @@
+// BetterLinks Create Link Externally - page css
+body {
+	display: flex;
+	justify-content: center;
+}
+.btl-create-link-externally {
+	width: 500px;
+	> div.btl-shortened-url {
+		display: flex;
+		align-items: center;
+		column-gap: 5px;
+		margin-top: 10px;
+
+		> span {
+			// font-size: 18px;
+			font-size: 14px;
+			line-height: 1;
+			background: rgba(0, 59, 226, 0.05);
+			font-weight: 500;
+			padding: 5px 10px;
+			min-height: 26px;
+			width: 233px;
+			min-width: 233px;
+			border: 1.5px solid #003be2;
+			border-radius: 5px;
+			color: #003be2;
+			display: inline-flex;
+			align-items: center;
+			word-break: break-all;
+		}
+		.btl-short-url-copy-button {
+			border: none;
+			margin: 0;
+			padding: 0;
+			width: auto;
+			overflow: visible;
+			height: 30px;
+
+			background: transparent;
+
+			/* inherit font & color from ancestor */
+			color: inherit;
+			font: inherit;
+
+			/* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
+			line-height: normal;
+
+			/* Corrects font smoothing for webkit */
+			-webkit-font-smoothing: inherit;
+			-moz-osx-font-smoothing: inherit;
+
+			/* Corrects inability to style clickable `input` types in iOS */
+			-webkit-appearance: none;
+
+			/* Remove excess padding and border in Firefox 4+ */
+			&::-moz-focus-inner {
+				border: 0;
+				padding: 0;
+			}
+		}
+	}
+}

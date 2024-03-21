@@ -2,6 +2,7 @@
 
 namespace BetterLinks\API;
 
+use BetterLinks\Admin\Cache;
 use BetterLinks\Traits\ArgumentSchema;
 use \BetterLinksPro\Helper;
 
@@ -115,6 +116,7 @@ class Settings extends Controller {
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
+			Cache::write_json_settings();
 		}
 		// regenerate links for wildcards option update
 		\BetterLinks\Helper::write_links_inside_json();
