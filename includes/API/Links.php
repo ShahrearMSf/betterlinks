@@ -115,8 +115,7 @@ class Links extends Controller
      */
     public function get_items($request)
     {
-        // $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
-        $cache_data = false;
+        $cache_data = get_transient(BETTERLINKS_CACHE_LINKS_NAME);
         if (empty($cache_data) || !json_decode($cache_data, true)) {
             $results = \BetterLinks\Helper::get_prepare_all_links();
             set_transient(BETTERLINKS_CACHE_LINKS_NAME, json_encode($results));
