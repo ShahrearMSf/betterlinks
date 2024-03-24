@@ -784,9 +784,16 @@ trait Query
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
-        $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key = %s AND link_id = %d", $meta_key, $link_id);
+        $query = $wpdb->prepare("SELECT meta_value FROM $table WHERE meta_key=%s AND link_id=%d", $meta_key, $link_id);
         $results = $wpdb->get_results($query);
         if (!empty($results)) {
+            if( is_serialized(current($results)->meta_value, true)){
+                return current($results)->meta_value;
+            }
+            if( is_string(current($results)->meta_value) ){
+                return json_decode(current($results)->meta_value);
+            }
+            
             return json_decode(current($results)->meta_value);
         }
         return;
@@ -797,10 +804,11 @@ trait Query
         global $wpdb;
         $meta_key   = wp_unslash($meta_key);
         $meta_value = wp_unslash($meta_value);
+        
         if (isset($meta_value["keywords"])) {
             $meta_value["keywords"] = preg_replace('/\’|\'|\‘/', "'", $meta_value["keywords"]);
         }
-        $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
+        $meta_value = \BetterLinks\Helper::maybe_json($meta_value, false);
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }
@@ -827,7 +835,7 @@ trait Query
         if (isset($meta_value["keywords"])) {
             $meta_value["keywords"] = preg_replace('/\’|\'|\‘/', "'", $meta_value["keywords"]);
         }
-        $meta_value = \BetterLinks\Helper::maybe_json($meta_value);
+        $meta_value = \BetterLinks\Helper::maybe_json($meta_value, false);
         if (empty($link_id) || empty($meta_key)) {
             return false;
         }

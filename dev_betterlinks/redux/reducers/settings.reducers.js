@@ -1,4 +1,4 @@
-import { FETCH_SETTINGS, UPDATE_OPTION } from 'redux/actions/settings.actions';
+import { FETCH_SETTINGS, FETCH_TRACKING_SETTINGS, UPDATE_OPTION } from 'redux/actions/settings.actions';
 function settings(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
@@ -6,6 +6,13 @@ function settings(state = {}, action) {
 			return {
 				...state,
 				settings: {
+					...payload,
+				},
+			};
+		case FETCH_TRACKING_SETTINGS:
+			return {
+				...state,
+				tracking: {
 					...payload,
 				},
 			};

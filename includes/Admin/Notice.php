@@ -62,7 +62,7 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/split-test-using-dynamic-redirects/'>
+				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-scripts/'>
 					%s
 				</a>
 				%s
@@ -72,9 +72,9 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks Pro 1.8.3 is here, with Improved ', 'betterlinks'),
-		__('Split Test', 'betterlinks'),
-		__(' & more! Check out the ', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 1.9.0 is here, with new ', 'betterlinks'),
+		__('Custom Scripts', 'betterlinks'),
+		__('feature & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
 	);

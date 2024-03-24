@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loader from 'components/Loader';
 import { fetch_links_data, onDragEnd, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
-import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_settings_data, fetch_tracking_settings } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import CreateCategory from 'components/CreateCategory';
@@ -77,6 +77,7 @@ function DndCanvas(props) {
 	useEffect(() => {
 		if (!settings) {
 			props.fetch_settings_data();
+			props.fetch_tracking_settings();
 		}
 		if (!links) {
 			props.fetch_links_data();
@@ -135,6 +136,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
 		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+		fetch_tracking_settings: bindActionCreators(fetch_tracking_settings, dispatch),
 		onDragEnd: bindActionCreators(onDragEnd, dispatch),
 		add_new_cat: bindActionCreators(add_new_cat, dispatch),
 		add_new_link: bindActionCreators(add_new_link, dispatch),
