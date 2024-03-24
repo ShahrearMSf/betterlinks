@@ -20,7 +20,7 @@ class Link extends Utils {
 	 */
 	public function run_redirect() {
 		if( isset($_GET['action'], $_GET['api_secret']) && $_GET['action'] === 'btl_cle' && $_GET['api_secret'] === md5(AUTH_KEY) ){
-			$target_url = isset( $_GET['target_url'] ) ? $_GET['target_url'] : '';
+			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
 			if( empty( $target_url ) ) return;
 			
 			$http = new WP_Http;
@@ -28,8 +28,8 @@ class Link extends Utils {
 			$title = '';
 			if( !is_wp_error($result) && !empty( $result['body'] ) && preg_match("/<title>(.*)<\/title>/siU", $result['body'], $title_matches) ){
 				$title = html_entity_decode( $title_matches[1] );
+				$this->create_new_link($title, $target_url);
 			}
-			$this->create_new_link($title, $target_url);
 			return;
 		}
 
