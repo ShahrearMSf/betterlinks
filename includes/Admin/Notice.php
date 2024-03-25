@@ -64,7 +64,7 @@ class Notice {
 				%s
 				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-scripts/'>
 					%s
-				</a>
+				</a>&nbsp;
 				%s
 				<a target='_blank' href='https://betterlinks.io/changelog/'>
 					%s
