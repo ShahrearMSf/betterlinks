@@ -3,9 +3,9 @@ Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hrr
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, shortlinks, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,10 +141,15 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 1.8.2 - 24/03/2024 =
+
+- Few minor bug fixes & improvement
+
 = 1.8.1 - 06/03/2024 =
-• Improved: Added Target URL in List View
-• Improved: Added Custom CSS import support from ThirstyAffiliates
-• Few minor bug fixes & improvement
+
+- Improved: Added Target URL in List View
+- Improved: Added Custom CSS import support from ThirstyAffiliates
+- Few minor bug fixes & improvement
 
 = 1.8.0 - 08/02/2024 =
 

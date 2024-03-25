@@ -144,7 +144,7 @@
 						transform: rotate(-90deg);
 					}
 					&--title {
-						font-size: 17px;
+						font-size: 15px;
 						color: #373757;
 						font-weight: 700;
 						margin: 0;
@@ -232,8 +232,11 @@
 							padding-bottom: 0 !important;
 						}
 						input[type='checkbox'] {
-							margin-top: 5px;
+							margin-top: 3px;
 							margin-left: 3px;
+						}
+						.btl-modal-form-textarea::placeholder {
+							opacity: 0.6;
 						}
 						input[type='number'],
 						input[type='password'],

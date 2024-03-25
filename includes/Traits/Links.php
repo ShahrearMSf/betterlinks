@@ -58,8 +58,10 @@ trait Links
                 } elseif ( in_array( $key, ['tags_id', 'favorite', 'analytic'] ) ) {
                     $result = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
                     $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($result);
-                }elseif( in_array( $key, ['enable_password', 'password'] ) ) { // password protected parameters
+                }elseif( in_array( $key, ['enable_password', 'password', 'enable_custom_scripts'] ) ) { // password protected parameters
                     $data[$key] = \BetterLinks\Helper::sanitize_text_or_array_field($POST[$key]);
+                }elseif( 'custom_tracking_scripts' === $key){
+                    $data[$key] = $POST[$key]; // it contains javascript code
                 }
             }
         }
@@ -95,6 +97,11 @@ trait Links
                 $params['cat_id'] = $arg['cat_id'];
                 \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
+            
+            if( method_exists('\BetterLinksPro\Helper', 'update_custom_script_data') ){
+                \BetterLinksPro\Helper::update_custom_script_data($id, $arg);
+            }
+
             $response = array_merge($arg, [
                 'ID' => strval($id),
             ]);
@@ -113,10 +120,12 @@ trait Links
         $wpdb->query("START TRANSACTION");
         $lookFor = array_combine(array_keys($this->links_schema()), array_keys($this->links_schema()));
         $params = array_intersect_key($arg, $lookFor);
+        
         $old_short_url = isset($arg['old_short_url']) ? $arg['old_short_url'] : '';
         // update link
         $id = \BetterLinks\Helper::insert_link(apply_filters('betterlinks/api/params', $params), true);
         $term_data = \BetterLinks\Helper::insert_terms_and_terms_relationship($id, $arg);
+
         $wpdb->query("COMMIT");
         foreach ($term_data as $key => $value) {
             if(empty($value["term_type"])){
@@ -135,6 +144,11 @@ trait Links
             $params['cat_id'] = $arg['cat_id'];
             \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
         }
+
+        if( method_exists('\BetterLinksPro\Helper', 'update_custom_script_data') ){
+            \BetterLinksPro\Helper::update_custom_script_data($id, $arg);
+        }
+
         if( !empty( $arg['param_struct'] ) ){
             $arg['param_struct'] = unserialize($arg['param_struct']);
         }

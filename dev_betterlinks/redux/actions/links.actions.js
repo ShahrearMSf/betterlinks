@@ -56,6 +56,7 @@ export const fetch_links_data =
 			if (!res?.data?.data) {
 				throw new Error('rest api not working properly for fetch_links_data');
 			}
+			// console.warn({ data: res.data.data });
 			dispatch({
 				type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
 				payload: res.data,
