@@ -897,7 +897,7 @@ class Ajax {
 	public function get_external_analytics() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
 		if ( apply_filters( 'betterlinkspro/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ) ) ) {
-			$data = get_option( BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME, array() );
+			$data = defined('BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME') ? get_option( BETTERLINKS_PRO_EXTERNAL_ANALYTICS_OPTION_NAME, array() ) : [];
 			if ( is_string( $data ) ) {
 				$data = json_decode( $data, true );
 			}

@@ -42,7 +42,14 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 	return (
 		<>
 			<div className={`link-options link-options--advanced link-options--customize-link-preview ${openAccordion ? 'link-options--open' : ''}`}>
-				<button className="link-options__head" type="button" onClick={() => __handleToggle('optimizeMetaTags')}>
+				<button
+					className="link-options__head"
+					type="button"
+					onClick={() => {
+						setOpenModal(true);
+						__handleToggle('optimizeMetaTags');
+					}}
+				>
 					<h4 className="link-options__head--title">
 						{__('Customize Link Preview', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
 					</h4>{' '}
