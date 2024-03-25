@@ -258,10 +258,6 @@ export const Link = (props) => {
 	};
 
 	const __handleToggle = (toggle) => {
-		if (!is_pro_enabled) {
-			setOpenModal(true);
-			return;
-		}
 		togglePanel(toggle);
 	};
 
