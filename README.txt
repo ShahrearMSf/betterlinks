@@ -141,6 +141,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 1.8.3 - 25/03/2024 =
+
+- Fixed: Console error on API request in Manage Link Page
+- Fixed: Custom Link Preview teaser
+- Few minor bug fixes & improvement
+
 = 1.8.2 - 24/03/2024 =
 
 - Few minor bug fixes & improvement
