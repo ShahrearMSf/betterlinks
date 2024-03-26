@@ -51,7 +51,9 @@ const CustomFields = ({ settings, update_option }) => {
 								<div className="btl-form-field">
 									<div className="short-description">
 										<b style={{ fontWeight: 700 }}>Note: </b>
-										<span>{__('Custom Fields Note will be here. For more info, ')}</span>
+										<span>
+											{__('It will allow you to add Custom Text Fields to store additional information alongside BetterLinks default fields for each link. For more info, ')}
+										</span>
 										<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
 											{__('Click here', 'betterlinks-pro')}
 										</a>
