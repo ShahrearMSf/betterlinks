@@ -11,16 +11,16 @@ import { is_pro_enabled } from 'utils/helper';
 
 const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
 	const tabList = [
-		__('Tracking', 'betterlinks'),
 		__('Create Link Externally', 'betterlinks'),
+		__('Tracking', 'betterlinks'),
 		__('Auto-Create Links', 'betterlinks'),
 		__('Affiliate Link Disclosure', 'betterlinks'),
 		__('Password Protected Redirect', 'betterlinks'),
 		__('Customize Link Preview', 'betterlinks'),
 	];
 	const panelList = [
-		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
 		<CreateLinkExternally />,
+		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
 		<AffiliateLinkDisclosure settings={settings} />,
 		<PasswordProtection settings={settings} />,
@@ -30,7 +30,7 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (
 		<div className="betterlinks-options-tabs-wrapper">
-			<Tabs defaultIndex={1}>
+			<Tabs>
 				<TabList>
 					{optionsTabList.map((item, index) => (
 						<Tab key={index}>
