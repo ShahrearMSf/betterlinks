@@ -13,7 +13,7 @@ const LinkFields = ({ props, customFields }) => {
 		<>
 			<div className="btl-modal-form-group">
 				<label className="btl-modal-form-label" htmlFor="useCustomFields">
-					{__('Use Custom Fields', 'betterlinks')}
+					{__('Custom Fields', 'betterlinks')}
 				</label>
 				<Field
 					id="useCustomFields"

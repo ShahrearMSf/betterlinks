@@ -34,8 +34,14 @@ const CustomFields = ({ settings, update_option }) => {
 	const onSubmit = (values, { setFieldError }) => {
 		const customFieldsValues = _.map(values?.customFields || [], 'value');
 		const hasEmptyValue = _.some(customFieldsValues, (val) => !val || '' === val || val.includes(' ')); // Checks for string is valid or not.
+
 		if (hasEmptyValue) {
 			setFieldError('customFields', __('Please fill all the fields', 'betterlinks'));
+			return;
+		}
+		const uniqueValues = [...new Set(customFieldsValues)];
+		if (JSON.stringify(customFieldsValues) !== JSON.stringify(uniqueValues)) {
+			setFieldError('customFields', __('Field label must be unique', 'betterlinks'));
 			return;
 		}
 		saveSettingsHandler(values, update_option, setFormSubmitText);
@@ -96,7 +102,7 @@ const CustomFields = ({ settings, update_option }) => {
 												{values?.customFields?.length > 0 ? (
 													values.customFields.map((fields, index) => {
 														return (
-															<div key={index} className="btl-form-group" style={{ columnGap: '5px' }}>
+															<div key={`${fields.value}_${index}`} className="btl-form-group" style={{ columnGap: '5px' }}>
 																<Field
 																	className="btl-form-control"
 																	name={`customFields.${index}.label`}
