@@ -4,7 +4,6 @@ namespace BetterLinks;
 use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
 use WP_Http;
-use BetterLinks\Helper;
 
 class Link extends Utils {
 	private static $link_options;
@@ -19,16 +18,26 @@ class Link extends Utils {
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
-		if( isset($_GET['action'], $_GET['api_secret']) && $_GET['action'] === 'btl_cle' && $_GET['api_secret'] === md5(AUTH_KEY) ){
+		if ( isset( $_GET['action'], $_GET['api_secret'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field($_GET['api_secret']) === md5( AUTH_KEY ) ) {
 			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
-			if( empty( $target_url ) ) return;
-			
-			$http = new WP_Http;
+			if ( empty( $target_url ) ) {
+				return;
+			}
+
+			$settings = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
+			if ( is_string( $settings ) ) {
+				$settings = json_decode( $settings, true );
+			}
+			if ( empty( $settings['enable_cle'] ) ) {
+				return;
+			}
+
+			$http   = new WP_Http();
 			$result = $http->get( $target_url, array( 'sslverify' => false ) );
-			$title = '';
-			if( !is_wp_error($result) && !empty( $result['body'] ) && preg_match("/<title>(.*)<\/title>/siU", $result['body'], $title_matches) ){
+			$title  = '';
+			if ( ! is_wp_error( $result ) && ! empty( $result['body'] ) && preg_match( '/<title>(.*)<\/title>/siU', $result['body'], $title_matches ) ) {
 				$title = html_entity_decode( $title_matches[1] );
-				$this->create_new_link($title, $target_url);
+				$this->create_new_link( $title, $target_url );
 			}
 			return;
 		}

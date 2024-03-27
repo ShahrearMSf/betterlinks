@@ -10,20 +10,25 @@ const CreateLinkExternally = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	return (
 		<>
-			<Formik
-				enableReinitialize
-				initialValues={{ ...settings }}
-				onSubmit={(values) => {
-					console.log('sublitted');
-				}}
-			>
+			<Formik initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
 				{(props) => {
 					return (
-						<>
+						<Form>
+							<div className="btl-form-group">
+								<div className="btl-form-field">
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>Note: </b>
+										<span>{__('It will allow you to create link externally from your bookmark. For more info, ')}</span>
+										<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
+											{__('Click here', 'betterlinks-pro')}
+										</a>
+									</div>
+								</div>
+							</div>
 							<span className="btl-form-group">
-								<label className="btl-form-label">
+								<label className="btl-form-label" style={{ 'min-width': '120px' }}>
 									{__('Enable', 'betterlinks-pro')}
-									<div className="btl-tooltip">
+									{/* <div className="btl-tooltip">
 										<span className="dashicons dashicons-info-outline" />
 										<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
 											{__('When enabled, this will allow you to Customize the Meta attributes of the shortened URL. ', 'betterlinks-pro')}
@@ -31,7 +36,7 @@ const CreateLinkExternally = ({ settings, update_option }) => {
 												{__('Learn More', 'betterlinks-pro')}
 											</a>
 										</span>
-									</div>
+									</div> */}
 								</label>
 								<div className="btl-form-field">
 									<label className="btl-checkbox-field block">
@@ -46,25 +51,28 @@ const CreateLinkExternally = ({ settings, update_option }) => {
 									</label>
 								</div>
 							</span>
-							<div
-								style={{
-									display: 'flex',
-									'column-gap': '5px',
-									'align-items': 'center',
-								}}
-							>
-								<a
-									href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_secret=${betterlinks_auth}&target_url='+encodeURI(location.href)`}
-									className="button button-primary"
+							{props.values.enable_cle && (
+								<div
+									style={{
+										display: 'flex',
+										'column-gap': '5px',
+										'align-items': 'center',
+										marginBottom: '20px',
+									}}
 								>
-									Create Link Externally
-								</a>
-								<span>Just drag this button in your bookmark</span>
-							</div>
+									<a
+										href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_secret=${betterlinks_auth}&target_url='+encodeURI(location.href)`}
+										className="button button-primary"
+									>
+										Create Link Externally
+									</a>
+									<span>Just drag this button in your bookmark</span>
+								</div>
+							)}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
-						</>
+						</Form>
 					);
 				}}
 			</Formik>
