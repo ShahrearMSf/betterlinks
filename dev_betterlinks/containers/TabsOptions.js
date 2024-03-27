@@ -19,8 +19,8 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 		__('Customize Link Preview', 'betterlinks'),
 	];
 	const panelList = [
-		<CreateLinkExternally />,
-		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
+		<CreateLinkExternally settings={settings} />,
+		<ExternalAnalytics trackingSettings={trackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
 		<AffiliateLinkDisclosure settings={settings} />,
 		<PasswordProtection settings={settings} />,
