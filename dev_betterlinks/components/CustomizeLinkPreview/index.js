@@ -9,10 +9,10 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import Note from './Note';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, metaTag }) => {
+const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handleToggle }) => {
 	const { enable_customize_meta_tags } = settings.settings;
 	if (is_pro_enabled && !enable_customize_meta_tags) return null;
-	
+
 	const [openModal, setOpenModal] = useState(false);
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const closeModal = () => setOpenModal(false);
@@ -37,19 +37,19 @@ const CustomizeLinkPreview = ({ openAccordion, togglePanel, form, settings, meta
 		}
 	}, []);
 
-	const __handleToggle = () => {
-		if (!is_pro_enabled) {
-			setOpenModal(true);
-			return;
-		}
-		togglePanel('optimizeMetaTags');
-	};
 	const pro_version = pro_version_check();
 
 	return (
 		<>
 			<div className={`link-options link-options--advanced link-options--customize-link-preview ${openAccordion ? 'link-options--open' : ''}`}>
-				<button className="link-options__head" type="button" onClick={__handleToggle}>
+				<button
+					className="link-options__head"
+					type="button"
+					onClick={() => {
+						setOpenModal(true);
+						__handleToggle('optimizeMetaTags');
+					}}
+				>
 					<h4 className="link-options__head--title">
 						{__('Customize Link Preview', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
 					</h4>{' '}

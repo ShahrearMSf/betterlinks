@@ -28,6 +28,8 @@ vendor/jaybizzle/crawler-detect/composer.json
 vendor/jaybizzle/crawler-detect/README.md
 .gitattributes
 jsconfig.json
+*.lock
+gulpfile.js
 
 vendor/priyomukul/wp-notice/composer.json
 vendor/priyomukul/wp-notice/.gitignore

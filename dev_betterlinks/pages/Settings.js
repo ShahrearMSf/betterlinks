@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_settings_data } from 'redux/actions/settings.actions';
+import { fetch_settings_data, fetch_tracking_settings } from 'redux/actions/settings.actions';
 import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import Topbar from 'containers/TopBar';
 import TabsGeneral from 'containers/TabsGeneral';
@@ -44,7 +44,7 @@ const Settings = (props) => {
 			settings={settings}
 			autoCreateLinkSettings={autoCreateLinkSettings}
 			terms={terms}
-			trackingSettings={trackingSettings}
+			trackingSettings={props.settings?.tracking}
 			setTrackingSettings={setTrackingSettings}
 			setAutoCreateLinkSettings={setAutoCreateLinkSettings}
 		/>,
@@ -56,6 +56,7 @@ const Settings = (props) => {
 	useEffect(() => {
 		if (!settings) {
 			props.fetch_settings_data();
+			props.fetch_tracking_settings();
 		}
 		if (!props.postdatas.fetchedAll) {
 			props.fetch_post_types_data();
@@ -79,15 +80,6 @@ const Settings = (props) => {
 			if (!props.terms) {
 				props.fetch_terms_data();
 			}
-
-			// External Analytics settings
-			makeRequest({
-				action: 'betterlinks/admin/get_external_analytics',
-			}).then((response) => {
-				if (response.data) {
-					setTrackingSettings({ ...response.data.data });
-				}
-			});
 		}
 	}, []);
 
@@ -119,6 +111,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+		fetch_tracking_settings: bindActionCreators(fetch_tracking_settings, dispatch),
 		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
