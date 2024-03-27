@@ -60,7 +60,7 @@ class Assets
                 'namespace' => BETTERLINKS_PLUGIN_SLUG . '/v1/',
                 'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
                 'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
-                'site_url' => site_url(),
+                'site_url' => apply_filters('betterlinks/site_url', site_url()),
                 'route_path' => parse_url(admin_url(), PHP_URL_PATH),
                 'exists_links_json' => BETTERLINKS_EXISTS_LINKS_JSON,
                 'exists_clicks_json' => BETTERLINKS_EXISTS_CLICKS_JSON,
