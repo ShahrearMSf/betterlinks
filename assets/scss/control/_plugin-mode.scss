@@ -472,6 +472,11 @@
 			}
 		}
 	}
+	.btl-utm-action-btns button,
+	> button {
+		background-color: rgba(0, 0, 0, 0);
+		color: $light;
+	}
 }
 .btl-checkbox-field {
 	.text {

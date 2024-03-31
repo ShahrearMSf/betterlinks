@@ -60,7 +60,12 @@ const CustomFields = ({ settings, update_option }) => {
 										<span>
 											{__('It will allow you to add Custom Text Fields to store additional information alongside BetterLinks default fields for each link. For more info, ')}
 										</span>
-										<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
+										<a
+											className="external-analytic-tooltip-anchor"
+											href="https://betterlinks.io/docs/add-custom-fields-in-betterlinks/"
+											target="_blank"
+											style={{ color: 'inherit' }}
+										>
 											{__('Click here', 'betterlinks-pro')}
 										</a>
 									</div>
