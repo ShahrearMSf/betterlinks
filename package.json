@@ -29,6 +29,7 @@
 		"@material-ui/pickers": "^3.3.10",
 		"@wordpress/edit-post": "^7.25.0",
 		"@wordpress/i18n": "^4.2.2",
+		"@wordpress/url": "^3.55.0",
 		"apexcharts": "^3.44.0",
 		"axios": "^0.21.1",
 		"chart.js": "^3.4.0",

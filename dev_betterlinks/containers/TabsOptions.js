@@ -5,6 +5,7 @@ import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import CustomizeMetaTags from 'components/Teasers/CustomizeMetaTags';
 import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import PasswordProtection from 'components/Teasers/PasswordProtection';
+import ShortLinkCustomDomain from 'components/Teasers/ShortLinkCustomDomain';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { is_pro_enabled } from 'utils/helper';
 
@@ -15,6 +16,7 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 		__('Affiliate Link Disclosure', 'betterlinks'),
 		__('Password Protected Redirect', 'betterlinks'),
 		__('Customize Link Preview', 'betterlinks'),
+		__('Short Link Custom Domain', 'betterlinks'),
 	];
 	const panelList = [
 		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
@@ -22,12 +24,13 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 		<AffiliateLinkDisclosure settings={settings} />,
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
+		<ShortLinkCustomDomain settings={settings} />,
 	];
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (
 		<div className="betterlinks-options-tabs-wrapper">
-			<Tabs>
+			<Tabs defaultIndex={5}>
 				<TabList>
 					{optionsTabList.map((item, index) => (
 						<Tab key={index}>

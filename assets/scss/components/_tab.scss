@@ -137,6 +137,13 @@
 				font-size: 16px;
 				font-weight: 500;
 				outline: none;
+
+				&::placeholder {
+					opacity: 0.6;
+				}
+			}
+			.btl-text-field-teaser {
+				cursor: not-allowed;
 			}
 		}
 	}
