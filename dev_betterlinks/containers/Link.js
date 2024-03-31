@@ -32,6 +32,7 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import CustomizeLinkPreview from 'components/CustomizeLinkPreview';
 import CustomTrackingScripts from 'components/CustomTrackingScripts';
 import { fetch_tracking_settings } from 'redux/actions/settings.actions';
+import LinkFields from 'components/CustomFields/LinkFields';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -89,6 +90,8 @@ export const Link = (props) => {
 	});
 	const [password, setPassword] = useState(null);
 	const [metaTag, setMetaTag] = useState(null);
+
+	const customFields = settings?.settings?.customFields || [];
 
 	useEffect(() => {
 		if (data?.ID && passwords?.password && Object.values(passwords.password).length > 0) {
@@ -262,7 +265,8 @@ export const Link = (props) => {
 		<>
 			{data ? (
 				<button onClick={openModal} className={`dnd-link-button ${isFetchTerms ? 'btl-rotating' : ''}`}>
-					<span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>
+					<span style={{ textDecoration: 'underline', cursor: 'pointer' }}>{props.children}</span>
+					{!props.children && <span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>}
 				</button>
 			) : (
 				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
@@ -426,6 +430,9 @@ export const Link = (props) => {
 											</label>
 											<Tags linkId={data ? parseInt(data.ID) : 0} fieldName="tags_id" data={terms} setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
 										</div>
+										{/* Custom Native Fields are here */}
+										{customFields?.length > 0 && <LinkFields props={props} customFields={customFields} />}
+
 										{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
 											<div className="btl-modal-form-group btl-modal-form-group-submit">
 												<label className="btl-modal-form-label"></label>

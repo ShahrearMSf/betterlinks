@@ -300,7 +300,9 @@ class Helper {
 				if ( isset( $analytic[ $item->ID ] ) ) {
 					$item->analytic = $analytic[ $item->ID ];
 				}
-
+				if( !empty( $item->param_struct ) ){
+					$item->param_struct = unserialize($item->param_struct);
+				}
 				if( class_exists('\BetterLinksPro') ){
 					$custom_tracking_scripts = \BetterLinks\Helper::get_link_meta($item->ID, 'btl_custom_tracking_scripts');
 					if( !empty( $custom_tracking_scripts ) ){
@@ -454,7 +456,7 @@ class Helper {
 	public static function sanitize_text_or_array_field( $array_or_string ) {
 		
 		$boolean = array( 'true', 'false', '1', '0' );
-		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title' );
+		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields' );
 		if ( is_string( $array_or_string ) ) {
 			$array_or_string = in_array( $array_or_string, $boolean ) || is_bool( $array_or_string ) ? rest_sanitize_boolean( $array_or_string ) : sanitize_text_field( $array_or_string );
 		} elseif ( is_array( $array_or_string ) ) {
