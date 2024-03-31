@@ -62,7 +62,7 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-scripts/'>
+				<a target='_blank' href='https://betterlinks.io/docs/add-custom-fields-in-betterlinks/'>
 					%s
 				</a>&nbsp;
 				%s
@@ -73,7 +73,7 @@ class Notice {
 				</p>
 		</div>", 
 		__('📣 NEW: BetterLinks 1.9.0 is here, with new ', 'betterlinks'),
-		__('Custom Native Fields', 'betterlinks'),
+		__('Custom Fields', 'betterlinks'),
 		__('feature & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
