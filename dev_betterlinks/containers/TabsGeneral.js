@@ -254,7 +254,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 									<div className="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
 										{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
-										{site_url}
+										{(is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_url}
 										{props.values.prefix && (
 											<>
 												/<strong>{props.values.prefix}</strong>

@@ -13,7 +13,7 @@ import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/t
 import {
 	modalCustomStyles,
 	modalCustomSmallStyles,
-	site_url,
+	site_url as site_link,
 	generateSlug,
 	generateShortURL,
 	formatDate,
@@ -257,6 +257,8 @@ export const Link = (props) => {
 	const __handleToggle = (toggle) => {
 		togglePanel(toggle);
 	};
+
+	const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
 
 	return (
 		<>

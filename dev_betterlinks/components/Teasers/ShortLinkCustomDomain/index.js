@@ -2,7 +2,7 @@ import { useState, lazy } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Form, Formik } from 'formik';
-import { is_pro_enabled, saveSettingsHandler } from 'utils/helper';
+import { is_pro_enabled, saveSettingsHandler, site_url } from 'utils/helper';
 import { update_option } from 'redux/actions/settings.actions';
 import CheckList from '../AutoLinkCreate/CheckList';
 import { bindActionCreators } from 'redux';
@@ -20,10 +20,15 @@ const ShortLinkCustomDomain = ({ settings, update_option }) => {
 				enableReinitialize
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
+					if (!is_pro_enabled) return;
+
 					const { enable_shortlink_custom_domain: enabled, shortlink_custom_domain: url } = values;
 					if (enabled && ('' === url || !isURL(url))) {
 						return;
 					}
+					if (enabled) localStorage.setItem('btl_custom_domain', url);
+					else localStorage.setItem('btl_custom_domain', site_url);
+
 					saveSettingsHandler(values, update_option, setFormSubmitText);
 				}}
 			>
