@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import { useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
+import CreateLinkExternallyTeaser from 'components/Teasers/CreateLinkExternally';
+import { redirectType } from 'utils/data';
+import Select2 from 'react-select';
 
-const CreateLinkExternally = ({ settings, update_option }) => {
+const CreateLinkExternally = ({ settings, terms, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	return (
 		<>
@@ -14,61 +17,10 @@ const CreateLinkExternally = ({ settings, update_option }) => {
 				{(props) => {
 					return (
 						<Form>
-							<div className="btl-form-group">
-								<div className="btl-form-field">
-									<div className="short-description">
-										<b style={{ fontWeight: 700 }}>Note: </b>
-										<span>{__('It will allow you to create link externally from your bookmark. For more info, ')}</span>
-										<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
-											{__('Click here', 'betterlinks-pro')}
-										</a>
-									</div>
-								</div>
-							</div>
-							<span className="btl-form-group">
-								<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-									{__('Enable', 'betterlinks-pro')}
-									{/* <div className="btl-tooltip">
-										<span className="dashicons dashicons-info-outline" />
-										<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
-											{__('When enabled, this will allow you to Customize the Meta attributes of the shortened URL. ', 'betterlinks-pro')}
-											<a target="_blank" href="#" style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}>
-												{__('Learn More', 'betterlinks-pro')}
-											</a>
-										</span>
-									</div> */}
-								</label>
-								<div className="btl-form-field">
-									<label className="btl-checkbox-field block">
-										<input
-											className="btl-check"
-											name="enable_cle"
-											type="checkbox"
-											onChange={() => props.setFieldValue('enable_cle', !props.values?.enable_cle)}
-											checked={props.values?.enable_cle}
-										/>
-										<span className="text">{__('', 'betterlinks-pro')}</span>
-									</label>
-								</div>
-							</span>
-							{props.values.enable_cle && (
-								<div
-									style={{
-										display: 'flex',
-										'column-gap': '5px',
-										'align-items': 'center',
-										marginBottom: '20px',
-									}}
-								>
-									<a
-										href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_secret=${betterlinks_auth}&target_url='+encodeURI(location.href)`}
-										className="button button-primary"
-									>
-										Create Link Externally
-									</a>
-									<span>Just drag this button in your bookmark</span>
-								</div>
-							)}
+							{props.values?.cle?.enable_cle && <DragableButton />}
+							<Notes />
+							<FreeSettings props={props} />
+							{betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, terms, redirectType, Select2 })}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
@@ -85,3 +37,80 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(CreateLinkExternally);
+
+const FreeSettings = ({ props }) => {
+	return (
+		<>
+			<span className="btl-form-group">
+				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
+					{__('Enable', 'betterlinks-pro')}
+				</label>
+				<div className="btl-form-field">
+					<label className="btl-checkbox-field block">
+						<input
+							className="btl-check"
+							name="cle.enable_cle"
+							type="checkbox"
+							onChange={() => props.setFieldValue('cle.enable_cle', !props.values?.cle?.enable_cle)}
+							checked={props.values?.cle?.enable_cle}
+						/>
+						<span className="text">{__('', 'betterlinks-pro')}</span>
+					</label>
+				</div>
+			</span>
+			<span className="btl-form-group">
+				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
+					{__('Advanced', 'betterlinks-pro')}
+				</label>
+				<div className="btl-form-field">
+					<label className="btl-checkbox-field block">
+						<input
+							className="btl-check"
+							name="cle.advanced_options"
+							type="checkbox"
+							onChange={() => props.setFieldValue('cle.advanced_options', !props.values?.cle?.advanced_options)}
+							checked={props.values?.cle?.advanced_options}
+						/>
+						<span className="text">{__('', 'betterlinks-pro')}</span>
+					</label>
+				</div>
+			</span>
+		</>
+	);
+};
+
+const Notes = () => {
+	return (
+		<div className="btl-form-group">
+			<div className="btl-form-field">
+				<div className="short-description">
+					<b style={{ fontWeight: 700 }}>Note: </b>
+					<span>{__('It will allow you to create link externally from your bookmark. For more info, ')}</span>
+					<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
+						{__('Click here', 'betterlinks-pro')}
+					</a>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+const DragableButton = () => {
+	return (
+		<div
+			style={{
+				display: 'flex',
+				'column-gap': '5px',
+				'align-items': 'center',
+			}}
+		>
+			<a
+				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_secret=${betterlinks_auth}&target_url='+encodeURI(location.href)`}
+				className="button button-primary"
+			>
+				Create Link Externally
+			</a>
+			<span>Just drag this button in your bookmark</span>
+		</div>
+	);
+};

@@ -39,3 +39,35 @@ export const affiliateLinkPosition = [
 		value: 'top-bottom',
 	},
 ];
+
+// Advanced Option Feature List
+export const tabList = [
+	{
+		label: __('Custom Fields', 'betterlinks'),
+		type: 'free',
+	},
+	{
+		label: __('Create Link Externally', 'betterlinks'),
+		type: 'free',
+	},
+	{
+		label: __('Tracking', 'betterlinks'),
+		type: 'pro',
+	},
+	{
+		label: __('Auto-Create Links', 'betterlinks'),
+		type: 'pro',
+	},
+	{
+		label: __('Affiliate Link Disclosure', 'betterlinks'),
+		type: 'pro',
+	},
+	{
+		label: __('Password Protected Redirect', 'betterlinks'),
+		type: 'pro',
+	},
+	{
+		label: __('Customize Link Preview', 'betterlinks'),
+		type: 'pro',
+	},
+];

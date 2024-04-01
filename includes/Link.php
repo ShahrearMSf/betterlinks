@@ -1,9 +1,10 @@
 <?php
 namespace BetterLinks;
 
+use WP_Http;
+use BetterLinks\Admin\Cache;
 use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
-use WP_Http;
 
 class Link extends Utils {
 	private static $link_options;
@@ -24,11 +25,8 @@ class Link extends Utils {
 				return;
 			}
 
-			$settings = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
-			if ( is_string( $settings ) ) {
-				$settings = json_decode( $settings, true );
-			}
-			if ( empty( $settings['enable_cle'] ) ) {
+			$settings = Cache::get_json_settings();
+			if ( empty( $settings["cle"]['enable_cle'] ) ) {
 				return;
 			}
 
