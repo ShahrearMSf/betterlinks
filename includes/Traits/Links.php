@@ -50,6 +50,10 @@ trait Links
                             }
                         }
                     }
+                    if( 'param_struct' === $key){
+                        $data[$key] = serialize($POST[$key]);
+                        continue;
+                    }
                     $data[$key] = $tempSanitizeData;
                 } elseif ( in_array( $key, ['tags_id', 'favorite', 'analytic'] ) ) {
                     $result = (is_array($POST[$key]) ? $POST[$key] : json_decode(html_entity_decode(stripslashes($POST[$key])), true));
@@ -101,12 +105,16 @@ trait Links
             $response = array_merge($arg, [
                 'ID' => strval($id),
             ]);
+            if( !empty( $response['param_struct'] ) ){
+                $response['param_struct'] = unserialize($response['param_struct']);
+            }
             return $response;
         }
         return false;
     }
     public function update_link($arg)
     {
+        
         // Start Transaction
         global $wpdb;
         $wpdb->query("START TRANSACTION");
@@ -141,6 +149,9 @@ trait Links
             \BetterLinksPro\Helper::update_custom_script_data($id, $arg);
         }
 
+        if( !empty( $arg['param_struct'] ) ){
+            $arg['param_struct'] = unserialize($arg['param_struct']);
+        }
         return $arg;
     }
     public function update_link_favorite($args)

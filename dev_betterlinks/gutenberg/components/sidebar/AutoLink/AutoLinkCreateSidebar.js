@@ -283,6 +283,10 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 				return false;
 			}
 
+			if (autoLinkStoreData?.disable_auto_short_link) {
+				return false;
+			}
+
 			const autoLinkFreeParams = {
 				ID: '',
 				cat_id: '',
