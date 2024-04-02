@@ -132,6 +132,30 @@
 		width: 200px;
 	}
 }
+.btl-cle {
+	.btl-cle-teaser {
+		filter: blur(1px);
+	}
+	.btl-form-group {
+		.btl-form-label {
+			min-width: 120px;
+		}
+	}
+
+	.btl-cle-select-teaser {
+		margin-bottom: 20px;
+		.btl-form-group .btl-form-label {
+			min-width: 148px;
+		}
+	}
+
+	.btl-cle-select {
+		margin-bottom: 20px;
+		.btl-form-group .btl-form-label {
+			min-width: 185px;
+		}
+	}
+}
 .btl-checkbox-field {
 	display: flex;
 	cursor: pointer;

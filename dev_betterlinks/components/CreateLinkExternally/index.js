@@ -13,14 +13,21 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	return (
 		<>
-			<Formik initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
+			<Formik
+				enableReinitialize={true}
+				initialValues={{ ...settings }}
+				onSubmit={(values) => {
+					saveSettingsHandler(values, update_option, setFormSubmitText);
+				}}
+			>
 				{(props) => {
 					return (
-						<Form>
-							{props.values?.cle?.enable_cle && <DragableButton />}
+						<Form className="btl-cle">
+							{props.values?.cle?.enable_cle && <DragableButton cle={props.values?.cle} />}
 							<Notes />
 							<FreeSettings props={props} />
-							{betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, terms, redirectType, Select2 })}
+							{props.values?.cle?.advanced_options &&
+								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
@@ -51,7 +58,7 @@ const FreeSettings = ({ props }) => {
 							className="btl-check"
 							name="cle.enable_cle"
 							type="checkbox"
-							onChange={() => props.setFieldValue('cle.enable_cle', !props.values?.cle?.enable_cle)}
+							onChange={(e) => props.setFieldValue('cle.enable_cle', e.target.checked)}
 							checked={props.values?.cle?.enable_cle}
 						/>
 						<span className="text">{__('', 'betterlinks-pro')}</span>
@@ -68,7 +75,7 @@ const FreeSettings = ({ props }) => {
 							className="btl-check"
 							name="cle.advanced_options"
 							type="checkbox"
-							onChange={() => props.setFieldValue('cle.advanced_options', !props.values?.cle?.advanced_options)}
+							onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
 							checked={props.values?.cle?.advanced_options}
 						/>
 						<span className="text">{__('', 'betterlinks-pro')}</span>
@@ -102,6 +109,11 @@ const DragableButton = () => {
 				display: 'flex',
 				'column-gap': '5px',
 				'align-items': 'center',
+				'background-color': 'rgb(227, 244, 255)',
+				position: 'sticky',
+				top: '35px',
+				zIndex: '1',
+				padding: '12px',
 			}}
 		>
 			<a

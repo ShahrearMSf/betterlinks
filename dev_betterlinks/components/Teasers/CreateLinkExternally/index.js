@@ -10,12 +10,16 @@ const CreateLinkExternallyTeaser = ({ props }) => {
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<SelectTeaser title={__('BetterLink Category')} is_pro={true} onClick={openUpgradeToProModal} />
-			<SelectTeaser title={__('Redirect Type')} is_pro={true} onClick={openUpgradeToProModal} />
-			<CheckList title={__('No Follow', 'betterlinks')} is_pro={true} onClick={openUpgradeToProModal} />
-			<CheckList title={__('Sponsored', 'betterlinks')} is_pro={true} onClick={openUpgradeToProModal} />
-			<CheckList title={__('Parameter Forwarding', 'betterlinks')} is_pro={true} onClick={openUpgradeToProModal} />
-			<CheckList title={__('Tracking', 'betterlinks')} is_pro={true} onClick={openUpgradeToProModal} />
+			<div className="btl-cle-teaser" onClick={openUpgradeToProModal}>
+				<CheckList title={__('No Follow', 'betterlinks')} />
+				<CheckList title={__('Sponsored', 'betterlinks')} />
+				<CheckList title={__('Param. Forward', 'betterlinks')} />
+				<CheckList title={__('Tracking', 'betterlinks')} />
+				<div className="btl-cle-select-teaser">
+					<SelectTeaser title={__('BetterLink Category')} />
+					<SelectTeaser title={__('Redirect Type')} />
+				</div>
+			</div>
 		</>
 	);
 };

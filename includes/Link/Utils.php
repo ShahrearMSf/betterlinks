@@ -347,6 +347,8 @@ class Utils {
 			'link_modified_gmt' => $date,
 			'cat_id' => 1,
 		);
+		$initial_values = apply_filters('betterlinks_before_cle', $initial_values);
+		
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );

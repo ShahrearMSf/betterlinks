@@ -588,10 +588,11 @@ class Ajax {
 		if ( ! apply_filters( 'betterlinks/api/settings_get_items_permissions_check', current_user_can( 'manage_options' ) ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		$results = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
+		// $results = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
+		$results = Cache::get_json_settings();
 		if ( $results ) {
 			wp_send_json_success(
-				$results,
+				json_encode( $results ),
 				200
 			);
 		}
