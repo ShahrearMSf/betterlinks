@@ -19,24 +19,20 @@ class Link extends Utils {
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
-		if ( isset( $_GET['action'], $_GET['api_secret'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field($_GET['api_secret']) === md5( AUTH_KEY ) ) {
+		if ( isset( $_GET['action'], $_GET['api_secret'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_secret'] ) === md5( AUTH_KEY ) ) {
 			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
-			if ( empty( $target_url ) ) {
-				return;
-			}
 
 			$settings = Cache::get_json_settings();
-			if ( empty( $settings["cle"]['enable_cle'] ) ) {
+			if ( empty( $settings['cle']['enable_cle'] ) ) {
 				return;
 			}
 
-			$http   = new WP_Http();
-			$result = $http->get( $target_url, array( 'sslverify' => false ) );
-			$title  = '';
-			if ( ! is_wp_error( $result ) && ! empty( $result['body'] ) && preg_match( '/<title>(.*)<\/title>/siU', $result['body'], $title_matches ) ) {
-				$title = html_entity_decode( $title_matches[1] );
+			$title = ( new Helper() )->fetch_target_url( $target_url );
+
+			if ( ! empty( $title ) ) {
 				$this->create_new_link( $title, $target_url );
 			}
+
 			return;
 		}
 
