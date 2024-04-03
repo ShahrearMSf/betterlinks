@@ -77,7 +77,6 @@ export const fetch_settings_data = () => async (dispatch) => {
 		// 	throw new Error('rest api not working properly for fetch_settings_data');
 		// }
 		window.betterLinksGlobal.prefix = payload.prefix;
-		console.log(payload);
 		dispatch({
 			type: FETCH_SETTINGS,
 			payload: { ...payload },
