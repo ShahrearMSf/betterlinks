@@ -466,6 +466,44 @@
 				}
 			}
 		}
+
+		.btl-modal-form-title-wrapper {
+			position: relative;
+			width: 100%;
+
+			.btl-modal-form-label-found {
+				position: absolute;
+				top: 100%;
+				padding: 7px;
+				background-color: aliceblue;
+				width: calc(100% - 10px);
+				border-radius: 7px;
+				-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+				-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+				box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+
+				span.btl-modal-fetced-title {
+					font-weight: bold;
+				}
+
+				span.btl-modal-title-overwrite {
+					display: inline-block;
+					color: $light;
+					padding: 0px 6px;
+					border-radius: 5px;
+					margin-right: 3px;
+					cursor: pointer;
+
+					&-yes {
+						background: #2961ff;
+						border: 1px solid #2961ff;
+					}
+					&-no {
+						background-color: red;
+					}
+				}
+			}
+		}
 	}
 	form.is-invalid {
 		.btl-modal-form-group > input {
