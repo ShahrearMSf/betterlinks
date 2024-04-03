@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import { subDays } from 'date-fns';
+import { dateI18n } from '@wordpress/date';
 import LinkCopyUrl from 'components/LinkCopyUrl';
 import LinksFilter from 'components/LinksFilter';
-import { linksFilterData, formatDate, insertOverlayElement, analytic, get_tags } from 'utils/helper';
+import { linksFilterData, insertOverlayElement, analytic, get_tags, betterlinks_date_format } from 'utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data, fetch_tracking_settings } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
@@ -71,7 +72,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Redirect Type', 'betterlinks'),
 			selector: 'redirect_type',
 			sortable: false,
-			width: '120px',
+			width: '80px',
 			cell: (row) => <div>{row.redirect_type == 'cloak' ? 'Cloaked' : row.redirect_type}</div>,
 		},
 		{
@@ -100,7 +101,7 @@ const getLinksListViewColumnData = (props) => {
 			selector: 'link_date',
 			sortable: false,
 			width: '120px',
-			cell: (row) => <div>{formatDate(new Date(row.link_date), 'mm/dd/yyyy')}</div>,
+			cell: (row) => <div>{dateI18n(betterlinks_date_format || 'F j, Y', new Date(row.link_date))}</div>,
 		},
 		{
 			name: __('Action', 'betterlinks'),

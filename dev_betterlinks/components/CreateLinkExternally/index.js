@@ -23,10 +23,11 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 				{(props) => {
 					return (
 						<Form className="btl-cle">
-							{props.values?.cle?.enable_cle && <DragableButton cle={props.values?.cle} />}
 							<Notes />
+							{props.values?.cle?.enable_cle && <DragableButton cle={props.values?.cle} />}
 							<FreeSettings props={props} />
-							{props.values?.cle?.advanced_options &&
+							{props.values?.cle?.enable_cle &&
+								props.values?.cle?.advanced_options &&
 								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
@@ -65,23 +66,25 @@ const FreeSettings = ({ props }) => {
 					</label>
 				</div>
 			</span>
-			<span className="btl-form-group">
-				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-					{__('Advanced', 'betterlinks-pro')}
-				</label>
-				<div className="btl-form-field">
-					<label className="btl-checkbox-field block">
-						<input
-							className="btl-check"
-							name="cle.advanced_options"
-							type="checkbox"
-							onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
-							checked={props.values?.cle?.advanced_options}
-						/>
-						<span className="text">{__('', 'betterlinks-pro')}</span>
+			{props.values?.cle?.enable_cle && (
+				<span className="btl-form-group">
+					<label className="btl-form-label" style={{ 'min-width': '120px' }}>
+						{__('Advanced', 'betterlinks-pro')}
 					</label>
-				</div>
-			</span>
+					<div className="btl-form-field">
+						<label className="btl-checkbox-field block">
+							<input
+								className="btl-check"
+								name="cle.advanced_options"
+								type="checkbox"
+								onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
+								checked={props.values?.cle?.advanced_options}
+							/>
+							<span className="text">{__('', 'betterlinks-pro')}</span>
+						</label>
+					</div>
+				</span>
+			)}
 		</>
 	);
 };

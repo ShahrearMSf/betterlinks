@@ -23,6 +23,7 @@ export const {
 	is_extra_data_tracking_compatible,
 	menu_notice,
 	betterlinks_auth,
+	betterlinks_date_format,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
