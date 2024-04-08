@@ -3,7 +3,7 @@ import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import TextField from '@material-ui/core/TextField';
-import { plugin_root_url } from 'utils/helper';
+import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
@@ -20,12 +20,15 @@ export default function BrokenLinks(props) {
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
+	if (is_pro_enabled) {
+		return betterLinksHooks.applyFilters('betterLinksSettingsBrokenLinkChecker', null);
+	}
 	return (
 		<React.Fragment>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
 				<div className="btl-broken-link-checker-wrapper">
-					<div className="btl-broken-link-checker">
+					<div className="btl-broken-link-checker" style={{ width: '55%' }}>
 						<h3>{__('Scheduled Scan', 'betterlinks')}</h3>
 						<p>
 							{__('Enable', 'betterlinks')} <strong>{__('“Scheduled Scan”', 'betterlinks')}</strong> {__('to automatically scan broken links on your website.', 'betterlinks')}

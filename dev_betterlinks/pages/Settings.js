@@ -17,6 +17,7 @@ import Docs from 'components/Docs';
 import TabsOptions from 'containers/TabsOptions';
 import { is_pro_enabled, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
+import TabsBrokenLinkChecker from 'containers/TabsBrokenLinkChecker';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -34,8 +35,8 @@ const Settings = (props) => {
 		__('General', 'betterlinks'),
 		__('Advanced Options', 'betterlinks'),
 		__('Tools', 'betterlinks'),
-		__('Role Management', 'betterlinks'),
 		__('Broken Link Checker', 'betterlinks'),
+		__('Role Management', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
@@ -49,8 +50,8 @@ const Settings = (props) => {
 			setAutoCreateLinkSettings={setAutoCreateLinkSettings}
 		/>,
 		<TabsTools query={query} />,
+		<TabsBrokenLinkChecker />,
 		<RoleManagement />,
-		<BrokenLinks />,
 		<GoPremium />,
 	]);
 	useEffect(() => {
@@ -86,7 +87,7 @@ const Settings = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
-			<Tabs defaultIndex={currentTab == 'true' ? 2 : 0}>
+			<Tabs defaultIndex={currentTab == 'true' ? 2 : 3}>
 				<TabList>
 					{tabList.map((item, index) => (
 						<Tab key={index}>{item}</Tab>
