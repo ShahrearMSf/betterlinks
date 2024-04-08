@@ -1,4 +1,18 @@
+.betterlinks-broken-links-tabs-wrapper {
+	.btl-tab-panel-inner {
+		padding: 10px;
+	}
+	.react-tabs {
+		&__tab-list {
+			min-width: 200px;
+		}
+		&__tab {
+			padding: 15px;
+		}
+	}
+}
 .btl-broken-links-panel {
+	padding: 10px;
 	&:not(:first-child) {
 		margin-top: 20px;
 	}
@@ -510,7 +524,7 @@
 			display: none;
 		}
 		span {
-			padding: 10px 10px;
+			padding: 8px;
 			display: inline-block;
 			border: 1px solid #e7e7e7;
 			border-right: none;
