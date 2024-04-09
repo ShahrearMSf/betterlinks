@@ -36,6 +36,10 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 			label: __('Customize Link Preview', 'betterlinks'),
 			type: 'pro',
 		},
+		{
+			label: __('Custom Domain', 'betterlinks'),
+			type: 'pro',
+		},
 	];
 	const panelList = [
 		<CustomFields settings={settings} />,
@@ -50,7 +54,7 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (
 		<div className="betterlinks-options-tabs-wrapper">
-			<Tabs defaultIndex={5}>
+			<Tabs>
 				<TabList>
 					{optionsTabList.map((item, index) => (
 						<Tab key={index}>
