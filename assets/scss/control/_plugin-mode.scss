@@ -75,6 +75,10 @@
 			&:before {
 				color: darken($secondary-lighten, 10%);
 			}
+
+			.dnd-link-button {
+				color: $white;
+			}
 		}
 		.btl-dnd-link-button-group {
 			.light-tooltip {
@@ -467,6 +471,11 @@
 				color: $white;
 			}
 		}
+	}
+	.btl-utm-action-btns button,
+	> button {
+		background-color: rgba(0, 0, 0, 0);
+		color: $light;
 	}
 }
 .btl-checkbox-field {

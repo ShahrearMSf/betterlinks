@@ -8,17 +8,37 @@ import PasswordProtection from 'components/Teasers/PasswordProtection';
 import ShortLinkCustomDomain from 'components/Teasers/ShortLinkCustomDomain';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { is_pro_enabled } from 'utils/helper';
+import CustomFields from './CustomFields';
 
 const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
 	const tabList = [
-		__('Tracking', 'betterlinks'),
-		__('Auto-Create Links', 'betterlinks'),
-		__('Affiliate Link Disclosure', 'betterlinks'),
-		__('Password Protected Redirect', 'betterlinks'),
-		__('Customize Link Preview', 'betterlinks'),
-		__('Short Link Custom Domain', 'betterlinks'),
+		{
+			label: __('Custom Fields', 'betterlinks'),
+			type: 'free',
+		},
+		{
+			label: __('Tracking', 'betterlinks'),
+			type: 'pro',
+		},
+		{
+			label: __('Auto-Create Links', 'betterlinks'),
+			type: 'pro',
+		},
+		{
+			label: __('Affiliate Link Disclosure', 'betterlinks'),
+			type: 'pro',
+		},
+		{
+			label: __('Password Protected Redirect', 'betterlinks'),
+			type: 'pro',
+		},
+		{
+			label: __('Customize Link Preview', 'betterlinks'),
+			type: 'pro',
+		},
 	];
 	const panelList = [
+		<CustomFields settings={settings} />,
 		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
 		<AffiliateLinkDisclosure settings={settings} />,
@@ -34,8 +54,8 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 				<TabList>
 					{optionsTabList.map((item, index) => (
 						<Tab key={index}>
-							{item}
-							{!is_pro_enabled && <ProBadge />}
+							{item.label}
+							{'pro' === item.type && !is_pro_enabled && <ProBadge />}
 						</Tab>
 					))}
 				</TabList>

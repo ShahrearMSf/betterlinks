@@ -4,6 +4,7 @@ import { plugin_root_url } from 'utils/helper';
 import { useBtlExpireStatusDot } from 'utils/customHooks';
 import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
+import Link from 'containers/Link';
 
 const List = (props) => {
 	const {
@@ -31,7 +32,9 @@ const List = (props) => {
 							</span>
 							<FavoriteIcon data={item} />
 							{expireStatusDot}
-							<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }} />
+							<Link catId={parseInt(catId)} catName={term_name} data={item} submitHandler={edit_link}>
+								<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }} />
+							</Link>
 						</h3>
 
 						<div className="btl-dnd-link-button-group">
