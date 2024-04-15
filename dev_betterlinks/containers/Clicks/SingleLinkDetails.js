@@ -1,7 +1,8 @@
 import ContentLoader from 'react-content-loader';
-import { site_url } from 'utils/helper';
+import { is_pro_enabled, site_url as site_link } from 'utils/helper';
 import { Link, Target, WWW } from './clicks.helper';
 
+const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
 const SingleLinkDetails = ({ clicks }) => {
 	const { link_title, short_url, target_url } = clicks;
 	const StringLoader = () => (

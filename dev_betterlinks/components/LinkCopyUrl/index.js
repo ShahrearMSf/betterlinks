@@ -1,7 +1,8 @@
 import { __ } from '@wordpress/i18n';
-import { site_url } from 'utils/helper';
+import { is_pro_enabled, site_url as site_link } from 'utils/helper';
 import LinkCopyButton from './LinkCopyButton';
 
+const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
 const LinkCopyUrl = (props) => {
 	return (
 		<React.Fragment>

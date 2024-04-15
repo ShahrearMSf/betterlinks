@@ -1,4 +1,4 @@
-import { useState, lazy } from 'react';
+import { useState } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Form, Formik } from 'formik';

@@ -2,7 +2,7 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
 import { useState, useEffect } from 'react';
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
-import { debounce, formatDate, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url } from 'utils/helper';
+import { debounce, formatDate, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url as site_link } from 'utils/helper';
 import { redirectType as redirectTypeObj } from 'utils/data';
 import ToggleTitle from '../../ToggleTitle';
 import { EDIT_GUTENBERG_AUTO_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
@@ -17,6 +17,7 @@ import { set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirec
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 const { subscribe } = wp.data;
 
+const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal, autoLinkCreateEnabled }) => {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isExists, setExists] = useState(false);
