@@ -4,7 +4,7 @@ const { Popover } = wp.components;
 
 // redux import
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
-import { is_pro_enabled, site_url } from 'utils/helper';
+import { is_pro_enabled, site_url as site_link } from 'utils/helper';
 
 const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
 export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
