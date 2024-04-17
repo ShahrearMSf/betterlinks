@@ -118,6 +118,46 @@
 					border-right: 1px solid #e7e7e7;
 				}
 			}
+
+			form {
+				.btl-form-group {
+					.btl-form-label {
+						min-width: 175px;
+					}
+				}
+			}
+			&.btl-fullsite {
+				progress {
+					appearance: none;
+					display: inline-block;
+					box-sizing: border-box;
+					width: 300px;
+					height: 25px;
+					border-radius: 20px;
+					margin-top: 20px;
+
+					/* Chrome and Safari */
+					&::-webkit-progress-bar {
+						background: #e6e6e6;
+						border-radius: 100px;
+					}
+
+					&::-webkit-progress-value {
+						background-color: #003be2;
+						// background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, 0.1) 33%, rgba(0, 0, 0, 0.1) 66%, transparent 66%),
+						// -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)), -webkit-linear-gradient(left, #09c, #f44);
+						border-radius: 20px;
+					}
+
+					/* Firefox */
+					&::-moz-progress-bar {
+						background-color: #003be2;
+						// background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, 0.1) 33%, rgba(0, 0, 0, 0.1) 66%, transparent 66%),
+						// 	-webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)), -webkit-linear-gradient(left, #09c, #f44);
+						border-radius: 20px;
+					}
+				}
+			}
 		}
 		&:not(:last-child) {
 			margin-bottom: 15px;
@@ -513,6 +553,61 @@
 			color: $success;
 			margin-left: 5px;
 			cursor: pointer;
+		}
+	}
+
+	&--fullsite {
+		.rdt_Table {
+			.rdt_TableHead {
+				.rdt_TableHeadRow {
+					.rdt_TableCol {
+						&:nth-child(2) {
+							min-width: 280px;
+						}
+						&:nth-child(4) {
+							min-width: 100px;
+						}
+					}
+				}
+			}
+			.rdt_TableBody {
+				.rdt_TableRow .rdt_TableCell {
+					.betterlinks-broken-links-status-column {
+						padding: 8px;
+						border-radius: 20px;
+						font-size: 12px;
+						&.btl-danger {
+							background-color: rgba(255, 95, 116, 0.15);
+							color: $danger;
+						}
+						&.btl-danger2 {
+							background-color: rgba(255, 95, 116, 0.15);
+							color: $danger;
+						}
+						&.btl-success {
+							background-color: rgb(8, 244, 34);
+							color: $light;
+						}
+					}
+					&:nth-child(2) {
+						min-width: 280px;
+						.dnd-link-button {
+							span {
+								position: relative;
+								z-index: 1;
+							}
+							&:focus {
+								outline: none;
+							}
+						}
+					}
+					&:nth-child(4) {
+						min-width: 100px;
+						padding-left: 0;
+						justify-content: center;
+					}
+				}
+			}
 		}
 	}
 }
