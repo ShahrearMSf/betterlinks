@@ -118,7 +118,7 @@ export default function BrokenLinks(props) {
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
 											<Field type="checkbox" className="btl-check" disabled />
-											<sapan className="text"></sapan>
+											<span className="text" />
 										</label>
 									</div>
 								</span>

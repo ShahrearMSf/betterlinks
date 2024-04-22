@@ -12,7 +12,7 @@ const TabsBrokenLinkChecker = () => {
 			type: 'pro',
 		},
 		{
-			label: __('Full Site Link Checker', 'betterlinks'),
+			label: __('Full Site Link Scanner', 'betterlinks'),
 			type: 'pro',
 		},
 	];
