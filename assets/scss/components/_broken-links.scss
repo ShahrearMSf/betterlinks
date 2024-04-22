@@ -157,6 +157,49 @@
 						border-radius: 20px;
 					}
 				}
+				.btl-link-scan-btn-group {
+					display: flex;
+					column-gap: 5px;
+
+					.btl-link-scan-btn {
+						display: flex;
+						align-items: center;
+						column-gap: 5px;
+					}
+					.btl-resume-link-scan-btn {
+						border-color: $danger;
+					}
+				}
+				.btl-form-field {
+					.btl-modal-select--full {
+						min-width: 300px;
+						width: max-content !important;
+					}
+				}
+				.btl-spin {
+					-webkit-animation: btl-spin 2s infinite linear;
+					animation: btl-spin 2s infinite linear;
+				}
+				@-webkit-keyframes btl-spin {
+					0% {
+						-webkit-transform: rotate(0deg);
+						transform: rotate(0deg);
+					}
+					100% {
+						-webkit-transform: rotate(359deg);
+						transform: rotate(359deg);
+					}
+				}
+				@keyframes btl-spin {
+					0% {
+						-webkit-transform: rotate(0deg);
+						transform: rotate(0deg);
+					}
+					100% {
+						-webkit-transform: rotate(359deg);
+						transform: rotate(359deg);
+					}
+				}
 			}
 		}
 		&:not(:last-child) {
@@ -562,16 +605,26 @@
 				.rdt_TableHeadRow {
 					.rdt_TableCol {
 						&:nth-child(2) {
-							min-width: 280px;
+							min-width: 300px;
 						}
 						&:nth-child(4) {
 							min-width: 100px;
+						}
+						&:nth-child(5) {
+							min-width: 200px;
+						}
+						&:last-child {
+							max-width: 80px;
 						}
 					}
 				}
 			}
 			.rdt_TableBody {
 				.rdt_TableRow .rdt_TableCell {
+					> div,
+					> div span {
+						font-size: 12px !important;
+					}
 					.betterlinks-broken-links-status-column {
 						padding: 8px;
 						border-radius: 20px;
@@ -590,7 +643,7 @@
 						}
 					}
 					&:nth-child(2) {
-						min-width: 280px;
+						min-width: 300px;
 						.dnd-link-button {
 							span {
 								position: relative;
@@ -605,6 +658,24 @@
 						min-width: 100px;
 						padding-left: 0;
 						justify-content: center;
+					}
+					&:nth-child(3) {
+						> div {
+							height: 20px;
+							display: flex;
+						}
+						button.btl-short-url-copy-button {
+							border: none;
+							padding: 0;
+							background: transparent;
+							line-height: normal;
+						}
+					}
+					&:nth-child(5) {
+						min-width: 200px;
+					}
+					&:last-child {
+						max-width: 80px;
 					}
 				}
 			}
