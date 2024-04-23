@@ -143,7 +143,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 = 1.9.1 - 23/04/2024 =
 
-- Fixed: Exported CSV file shows the dates in the category column
+- Fixed: Exported CSV file's column label
 - Few minor bug fixes & improvement
 
 = 1.9.0 - 31/03/2024 =
