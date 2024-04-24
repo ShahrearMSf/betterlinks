@@ -693,9 +693,13 @@
 
 		> header {
 			.btl-subheader-form {
-				display: flex;
 				width: 100%;
-
+				display: flex;
+				justify-content: space-between;
+				> .btl-subheader-form-input {
+					display: flex;
+					column-gap: 10px;
+				}
 				.btl-list-view-select {
 					width: 200px;
 				}
