@@ -141,7 +141,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 1.9.1 - 23/04/2024 =
+= 1.9.1 - 24/04/2024 =
 
 - Fixed: Exported CSV file's column label
 - Few minor bug fixes & improvement
