@@ -72,15 +72,15 @@ class Helper {
 		}
 
 		$is_enable = isset( $extra['split_test'] ) ? '1' === $extra['split_test'] : false;
-		
+
 		if ( ! $is_enable ) {
 			return false;
 		}
 
 		$is_expire_enable = isset( $extra['expire_split'] ) ? '1' === $extra['expire_split'] : false;
-		
+
 		if ( $is_enable && ! $is_expire_enable ) {
-			return ['result' => true];
+			return array( 'result' => true );
 		}
 
 		$expire_metrics      = isset( $extra['expire_split_after'] ) ? $extra['expire_split_after'] : 'clicks';
@@ -103,7 +103,7 @@ class Helper {
 			'expire_metrics'      => $expire_metrics,
 			'expire_split_clicks' => $expire_split_clicks,
 			'clicks_count'        => $clicks_count,
-			'completed'           => ! ($clicks_count < ($expire_split_clicks - 1)),
+			'completed'           => ! ( $clicks_count < ( $expire_split_clicks - 1 ) ),
 		);
 	}
 
@@ -282,6 +282,11 @@ class Helper {
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 	}
 
+	public static function create_links_cache() {
+		$results = self::get_prepare_all_links();
+		set_transient( BETTERLINKS_CACHE_LINKS_NAME, json_encode( $results ) );
+	}
+
 	public static function parse_link_response( $items, $analytic, $broken_links ) {
 		$results                  = array();
 		$broken_link_status_codes = array( 401, 403, 404 );
@@ -300,15 +305,15 @@ class Helper {
 				if ( isset( $analytic[ $item->ID ] ) ) {
 					$item->analytic = $analytic[ $item->ID ];
 				}
-				if( !empty( $item->param_struct ) ){
-					$item->param_struct = unserialize($item->param_struct);
+				if ( ! empty( $item->param_struct ) ) {
+					$item->param_struct = unserialize( $item->param_struct );
 				}
-				if( class_exists('\BetterLinksPro') ){
-					$custom_tracking_scripts = \BetterLinks\Helper::get_link_meta($item->ID, 'btl_custom_tracking_scripts');
-					if( !empty( $custom_tracking_scripts ) ){
-						$custom_tracking_scripts = unserialize($custom_tracking_scripts);
-						$item->enable_custom_scripts = isset($custom_tracking_scripts['enable']) ? $custom_tracking_scripts['enable'] : false;
-						$item->custom_tracking_scripts = isset($custom_tracking_scripts['script']) ? $custom_tracking_scripts['script'] : '';
+				if ( class_exists( '\BetterLinksPro' ) ) {
+					$custom_tracking_scripts = self::get_link_meta( $item->ID, 'btl_custom_tracking_scripts' );
+					if ( ! empty( $custom_tracking_scripts ) ) {
+						$custom_tracking_scripts       = unserialize( $custom_tracking_scripts );
+						$item->enable_custom_scripts   = isset( $custom_tracking_scripts['enable'] ) ? $custom_tracking_scripts['enable'] : false;
+						$item->custom_tracking_scripts = isset( $custom_tracking_scripts['script'] ) ? $custom_tracking_scripts['script'] : '';
 					}
 				}
 
@@ -454,7 +459,7 @@ class Helper {
 	}
 
 	public static function sanitize_text_or_array_field( $array_or_string ) {
-		
+
 		$boolean = array( 'true', 'false', '1', '0' );
 		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields' );
 		if ( is_string( $array_or_string ) ) {
@@ -541,7 +546,7 @@ class Helper {
 			return wp_json_encode( $data );
 		}
 
-		if ( is_string( $data ) && $sanitize_text) {
+		if ( is_string( $data ) && $sanitize_text ) {
 			return sanitize_text_field( $data );
 		}
 
