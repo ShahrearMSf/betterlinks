@@ -1,7 +1,6 @@
 <?php
 namespace BetterLinks;
 
-use WP_Http;
 use BetterLinks\Admin\Cache;
 use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
@@ -19,16 +18,20 @@ class Link extends Utils {
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
-		if ( isset( $_GET['action'], $_GET['api_secret'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_secret'] ) === md5( AUTH_KEY ) ) {
+		if ( isset( $_GET['action'], $_GET['api_key'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_key'] ) === md5( AUTH_KEY ) ) {
 			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
 
+			$title = isset( $_GET['title'] ) ?  sanitize_text_field( $_GET['title'] ) : ''; // geting title from document obj, instead of fetching
+			
 			$settings = Cache::get_json_settings();
 			if ( empty( $settings['cle']['enable_cle'] ) ) {
 				return;
 			}
 
-			$title = ( new Helper() )->fetch_target_url( $target_url );
-
+			if( empty( $title ) ){
+				$title = ( new Helper() )->fetch_target_url( $target_url );
+			}
+			
 			if ( ! empty( $title ) ) {
 				$this->create_new_link( $title, $target_url );
 			}
