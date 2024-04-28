@@ -1,4 +1,6 @@
 // BetterLinks Create Link Externally - page css
+$primary: #19285d;
+
 body {
 	display: flex;
 	justify-content: center;
@@ -9,9 +11,9 @@ body {
 	display: flex;
 	flex-direction: column;
 	width: 600px;
-	// font-family: 'Roboto', 'Inter', sans-serif;
-	font-family: ui-sans-serif;
-	color: #19285d;
+	font-family: 'Inter', sans-serif;
+	// font-family: ui-sans-serif;
+	color: $primary;
 	margin-top: 2rem;
 
 	> .btl-link-info-wrapper {
@@ -19,21 +21,34 @@ body {
 			font-family: 40px;
 			font-weight: 600;
 			line-height: 48px;
-			margin: 0;
+			margin: 0 0 32px 0;
 		}
 		> div {
 			display: flex;
-			align-items: center;
-			column-gap: 10px;
+			align-items: flex-start;
+			column-gap: 24px;
 
 			> span,
 			p {
 				font-size: 20px;
 				font-weight: 500;
-				line-height: 24px;
+				line-height: 20px;
+				margin: 0 0 5px 0;
 			}
-			span {
+			.btl-cle-label {
 				color: #9b9daf;
+			}
+			.btl-cle-title {
+				color: #19285d;
+			}
+
+			&.btl-link-title {
+				margin-bottom: 20px;
+			}
+			&.btl-link-target {
+				.btl-cle-target {
+					color: #65677b;
+				}
 			}
 		}
 	}
@@ -51,7 +66,7 @@ body {
 	> div.btl-shortened-url {
 		display: flex;
 		align-items: center;
-		padding: 12px 20px;
+		padding: 6px 12px 6px 32px;
 		border: 1px solid #87b2ff;
 		border-radius: 8px;
 		margin-top: 20px;
@@ -59,16 +74,15 @@ body {
 
 		> span {
 			color: #2673ff;
-			font-weight: 400;
-			font-size: 18px;
+			font-weight: 500;
+			font-size: 20px;
 			line-height: 28px;
-			letter-spacing: 0.3px;
+			// letter-spacing: 0.3px;
 		}
 		> div {
 			display: flex;
 			align-items: center;
 			column-gap: 5px;
-			margin-top: 5px;
 
 			.btl-short-url-copy-button {
 				display: flex;
@@ -107,7 +121,7 @@ body {
 
 					> span.dashicons {
 						font-size: 18px;
-						line-height: 1.1rem;
+						line-height: 1.3rem;
 					}
 				}
 				/* Remove excess padding and border in Firefox 4+ */
@@ -138,20 +152,20 @@ body {
 			flex-basis: 0;
 
 			&:nth-child(1) {
-				flex-grow: 3;
+				flex-grow: 2;
 				display: flex;
 				flex-direction: column;
-				row-gap: 10px;
+				row-gap: 16px;
 
 				> span {
 					display: flex;
 					column-gap: 10px;
 					font-size: 16px;
-					font-weight: 400;
+					font-weight: 500;
 					line-height: 19px;
 
 					&:nth-child(1) {
-						font-size: 18px;
+						font-size: 24px;
 						font-weight: 600;
 						line-height: 24px;
 					}
@@ -168,13 +182,13 @@ body {
 
 		.btl-social-share {
 			> span {
-				font-weight: 500;
+				font-weight: 600;
 				font-size: 20px;
 				line-height: 24px;
-				color: #19285d;
+				color: $primary;
 			}
 			> div {
-				margin-top: 10px;
+				margin-top: 12px;
 
 				a {
 					text-decoration: none;
@@ -188,21 +202,25 @@ body {
 		flex-direction: column;
 		align-items: center;
 		margin-top: 20px;
-		row-gap: 5px;
+		row-gap: 16px;
 		user-select: none;
 
 		> a {
 			color: #aa02d3;
 			text-decoration: none;
+			font-size: 22px;
+			line-height: 26px;
+			font-weight: 600;
 
-			span {
-				text-decoration: none;
-			}
 			&:hover {
 				text-decoration: underline;
 			}
-			// > span {
-			// }
+			> span {
+				text-decoration: none;
+				font-size: 22px;
+				line-height: 26px;
+				font-weight: 600;
+			}
 		}
 		> div {
 			font-size: 14px;
@@ -242,7 +260,7 @@ body {
 
 	> svg,
 	> img {
-		width: 40px;
+		width: 30px;
 		vertical-align: middle;
 		border-radius: 2px;
 	}
