@@ -15,6 +15,7 @@ const CreateLinkExternallyTeaser = ({ props }) => {
 				<CheckList title={__('Sponsored', 'betterlinks')} />
 				<CheckList title={__('Param. Forward', 'betterlinks')} />
 				<CheckList title={__('Tracking', 'betterlinks')} />
+				<CheckList title={__('Social Share', 'betterlinks')} />
 				<div className="btl-cle-select-teaser">
 					<SelectTeaser title={__('BetterLink Category')} />
 					<SelectTeaser title={__('Redirect Type')} />
