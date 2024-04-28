@@ -67,23 +67,42 @@ const FreeSettings = ({ props }) => {
 				</div>
 			</span>
 			{props.values?.cle?.enable_cle && (
-				<span className="btl-form-group">
-					<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-						{__('Advanced', 'betterlinks-pro')}
-					</label>
-					<div className="btl-form-field">
-						<label className="btl-checkbox-field block">
-							<input
-								className="btl-check"
-								name="cle.advanced_options"
-								type="checkbox"
-								onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
-								checked={props.values?.cle?.advanced_options}
-							/>
-							<span className="text">{__('', 'betterlinks-pro')}</span>
+				<>
+					<span className="btl-form-group">
+						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
+							{__('Powered By', 'betterlinks-pro')}
 						</label>
-					</div>
-				</span>
+						<div className="btl-form-field">
+							<label className="btl-checkbox-field block">
+								<input
+									className="btl-check"
+									name="cle.powered_by"
+									type="checkbox"
+									onChange={(e) => props.setFieldValue('cle.powered_by', e.target.checked)}
+									checked={props.values?.cle?.powered_by}
+								/>
+								<span className="text">{__('', 'betterlinks-pro')}</span>
+							</label>
+						</div>
+					</span>
+					<span className="btl-form-group">
+						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
+							{__('Advanced', 'betterlinks-pro')}
+						</label>
+						<div className="btl-form-field">
+							<label className="btl-checkbox-field block">
+								<input
+									className="btl-check"
+									name="cle.advanced_options"
+									type="checkbox"
+									onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
+									checked={props.values?.cle?.advanced_options}
+								/>
+								<span className="text">{__('', 'betterlinks-pro')}</span>
+							</label>
+						</div>
+					</span>
+				</>
 			)}
 		</>
 	);

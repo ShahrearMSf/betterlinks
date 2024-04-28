@@ -6,11 +6,12 @@ use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
 use DeviceDetector\Parser\OperatingSystem;
 use DeviceDetector\Parser\Client\Browser;
-use \BetterLinks\Traits\Links;
-use \BetterLinks\Traits\ArgumentSchema;
+use BetterLinks\Traits\Links;
+use BetterLinks\Traits\ArgumentSchema;
 
 class Utils {
-	use Links, ArgumentSchema;
+	use Links;
+	use ArgumentSchema;
 
 	public function __construct() {
 		AbstractDeviceParser::setVersionTruncation( AbstractDeviceParser::VERSION_TRUNCATION_NONE );
@@ -23,16 +24,16 @@ class Utils {
 		$is_case_sensitive = isset( $link_options['is_case_sensitive'] ) ? $link_options['is_case_sensitive'] : false;
 		$results           = current( \BetterLinks\Helper::get_link_by_short_url( $slug, $is_case_sensitive ) );
 		if ( ! empty( $results ) ) {
-			return apply_filters( 'betterlinks/link/get_link_by_slug', json_decode( json_encode( $results ), true ) );
+			return apply_filters( 'betterlinks/link/get_link_by_slug', json_decode( wp_json_encode( $results ), true ) );
 		}
-		// wildcards
+		// wildcards.
 		$links_option = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME ), true );
 		if ( isset( $links_option['wildcards'] ) && $links_option['wildcards'] ) {
 			$results = \BetterLinks\Helper::get_link_by_wildcards( 1 );
 			if ( is_array( $results ) && count( $results ) > 0 ) {
 				foreach ( $results as $key => $item ) {
 					$postion = strpos( $item['short_url'], '/*' );
-					if ( $postion !== false ) {
+					if ( false !== $postion ) {
 						$item_short_url_substr = substr( $item['short_url'], 0, $postion );
 						$slug_substr           = substr( $slug, 0, $postion );
 						if ( ! $is_case_sensitive ) {
@@ -41,7 +42,7 @@ class Utils {
 						}
 						if ( $item_short_url_substr === $slug_substr ) {
 							$target_postion = strpos( $item['target_url'], '/*' );
-							if ( $target_postion !== false ) {
+							if ( false !== $target_postion ) {
 								$target_url         = str_replace( '/*', substr( $slug, $postion ), $item['target_url'] );
 								$item['target_url'] = $target_url;
 								return apply_filters( 'betterlinks/link/get_link_by_slug', json_decode( wp_json_encode( $item ), true ) );
@@ -111,20 +112,20 @@ class Utils {
 
 		switch ( $data['redirect_type'] ) {
 			case '301':
-				wp_redirect( esc_url_raw( $target_url ), 301 );
-				exit();
+				wp_safe_redirect( esc_url_raw( $target_url ), 301 );
+				exit;
 			case '302':
-				wp_redirect( esc_url_raw( $target_url ), 302 );
-				exit();
+				wp_safe_redirect( esc_url_raw( $target_url ), 302 );
+				exit;
 			case '307':
-				wp_redirect( esc_url_raw( $target_url ), 307 );
-				exit();
+				wp_safe_redirect( esc_url_raw( $target_url ), 307 );
+				exit;
 			case 'cloak':
 				do_action( 'betterlinks/make_cloaked_redirect', $target_url, $data );
-				exit();
+				exit;
 			default:
-				wp_redirect( esc_url_raw( $target_url ) );
-				exit();
+				wp_safe_redirect( esc_url_raw( $target_url ) );
+				exit;
 		}
 	}
 	public function device_data_collect( $data, $dd ) {
@@ -135,7 +136,7 @@ class Utils {
 		$client_info = $dd->getClient();
 		$os_details  = $dd->getOs();
 
-		$language = isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en-US,en;q=0.5';
+		$language = isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) : 'en-US,en;q=0.5';
 		$language = explode( ',', $language )[0];
 
 		$client_information_arr = array(
@@ -162,7 +163,7 @@ class Utils {
 			$visitor_uid                = uniqid( 'bl' );
 			setcookie( $visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/' );
 		}
-		// checking is split tes enabled
+		// checking is split tes enabled.
 		$split_test_data  = \BetterLinks\Helper::split_test_enabled( $data );
 		$is_split_enabled = isset( $split_test_data['result'] ) ? $split_test_data['result'] : false;
 
@@ -182,7 +183,7 @@ class Utils {
 			'browser'             => isset( $data['browser'] ) ? $data['browser'] : '',
 			'os'                  => isset( $data['os'] ) ? $data['os'] : '',
 			'device'              => isset( $data['device'] ) ? $data['device'] : '',
-			'referer'             => isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '',
+			'referer'             => isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '', // phpcs:ignore
 			'uri'                 => $data['link_slug'],
 			'click_count'         => 0,
 			'visitor_id'          => isset( $_COOKIE[ $visitor_cookie ] ) ? sanitize_text_field( $_COOKIE[ $visitor_cookie ] ) : '',
@@ -235,7 +236,7 @@ class Utils {
 			$address = sanitize_text_field( $_SERVER['HTTP_X_FORWARDED_FOR'] );
 		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) && $_SERVER['HTTP_FORWARDED'] != '127.0.0.1' ) {
 			$address = sanitize_text_field( $_SERVER['HTTP_FORWARDED'] );
-		} elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) && $_SERVER['HTTP_FORWARDED_FOR'] != '127.0.0.1' ) {
+		} elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) && $_SERVER['HTTP_FORWARDED_FOR'] !== '127.0.0.1' ) {
 			$address = sanitize_text_field( $_SERVER['HTTP_FORWARDED_FOR'] );
 		}
 		$IPS = explode( ',', $address );
@@ -248,23 +249,23 @@ class Utils {
 		if ( strpos( $url, '/' ) === 0 ) {
 			return $url = site_url( '/' ) . $url;
 		}
-		return apply_filters( 'betterlinks/link/target_url', parse_url( $url, PHP_URL_SCHEME ) === null ? $scheme . $url : $url );
+		return apply_filters( 'betterlinks/link/target_url', wp_parse_url( $url, PHP_URL_SCHEME ) === null ? $scheme . $url : $url );
 	}
 
 	protected function insert_json_into_file( $file, $data ) {
-		$existingData = file_get_contents( $file );
-		$tempArray    = (array) json_decode( $existingData, true );
-		array_push( $tempArray, $data );
-		return file_put_contents( $file, json_encode( $tempArray ) );
+		$existing_data = file_get_contents( $file );
+		$temp_array    = (array) json_decode( $existing_data, true );
+		array_push( $temp_array, $data );
+		return file_put_contents( $file, wp_json_encode( $temp_array ) );
 	}
 
 	/**
-	 * @param string $request_uri - REQUEST_URI
+	 * @param string $request_uri - REQUEST_URI.
 	 *
 	 * @return boolean - returns true if the request uri is self site url
 	 */
 	protected function is_self_url( $request_uri ) {
-		// if the referer url is password-protected-form page, then return false;
+		// if the referer url is password-protected-form page, then return false.
 		if ( str_contains( $request_uri, 'password-protected-form?short_url' ) ) {
 			return false;
 		}
@@ -273,7 +274,7 @@ class Utils {
 	}
 
 	/**
-	 * @param string $request_uri REQUEST_URI
+	 * @param string $request_uri REQUEST_URI.
 	 *
 	 * @return string Short URL
 	 */
@@ -289,7 +290,7 @@ class Utils {
                     on l.ID=p.link_id 
                 where l.target_url='{$request_uri}' and p.status='1';";
 
-		$short_url = $wpdb->get_var( $sql );
+		$short_url = $wpdb->get_var( $sql ); // phpcs:ignore
 		return $short_url;
 	}
 
@@ -320,44 +321,46 @@ class Utils {
 	}
 
 	public function create_new_link( $title, $target_url ) {
-		$date = wp_date('Y-m-d H:i:s');
-		$helper = new \BetterLinks\Helper;
-		$slug = $helper->generate_random_slug();
-		$settings = Cache::get_json_settings();
-		$prefix = isset( $settings['prefix'] ) ? $settings['prefix']. '/' : '';
-		$nofollow = !empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
-		$sponsored = !empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
-		$track_me = !empty( $settings['track_me'] ) ? $settings['track_me'] : null;
-		$param_forwarding = !empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
-		$short_url = $prefix . $slug;
+		$date             = wp_date( 'Y-m-d H:i:s' );
+		$helper           = new \BetterLinks\Helper();
+		$slug             = $helper->generate_random_slug();
+		$settings         = Cache::get_json_settings();
+		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
+		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
+		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
+		$param_forwarding = ! empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
+		$powered_by       = ! empty( $settings['cle']['powered_by'] ) ? sanitize_text_field( $settings['cle']['powered_by'] ) : '';
+		$short_url        = $prefix . $slug;
 
 		$initial_values = array(
-			'link_title' => $title,
-			'link_slug' => $slug,
-			'target_url' => $target_url,
-			'short_url' => $short_url,
-			'redirect_type' => '307',
-			'nofollow' => $nofollow,
-			'sponsored' => $sponsored,
-			'track_me' => $track_me,
-			'param_forwarding' => $param_forwarding,
-			'link_date' => $date,
-			'link_date_gmt' => $date,
-			'link_modified' => $date,
+			'link_title'        => $title,
+			'link_slug'         => $slug,
+			'target_url'        => $target_url,
+			'short_url'         => $short_url,
+			'redirect_type'     => '307',
+			'nofollow'          => $nofollow,
+			'sponsored'         => $sponsored,
+			'track_me'          => $track_me,
+			'param_forwarding'  => $param_forwarding,
+			'link_date'         => $date,
+			'link_date_gmt'     => $date,
+			'link_modified'     => $date,
 			'link_modified_gmt' => $date,
-			'cat_id' => 1,
+			'cat_id'            => 1,
+			'powered_by'        => $powered_by,
 		);
-		$initial_values = apply_filters('betterlinks_before_cle', $initial_values);
-		
+		$initial_values = apply_filters( 'betterlinks_before_cle', $initial_values );
+
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );
-		
-		if( !empty( $results ) ) {
-			require_once( BETTERLINKS_ROOT_DIR_PATH . '/includes/Views/create-link-externally.php');
+
+		if ( ! empty( $results ) ) {
+			require_once BETTERLINKS_ROOT_DIR_PATH . '/includes/Views/create-link-externally.php';
 			exit;
 		}
-		wp_safe_redirect(home_url());
+		wp_safe_redirect( home_url() );
 		exit;
 	}
 }

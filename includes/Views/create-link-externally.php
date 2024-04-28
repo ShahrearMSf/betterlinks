@@ -1,18 +1,24 @@
 <?php
+/**
+ * The "Create Link Externally" feature enables users to generate BetterLinks instantly while browsing online content, facilitating seamless sharing of branded URLs for blog posts or important links.
+ *
+ * @package BetterLinks/Create-Link-Externally
+ * @since 1.9.2
+ */
+
 // @-collapse
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'You are not allowed here.' );
 }
-
-	$link_title = ! empty( $results['link_title'] ) ? $results['link_title'] : '[No Title]';
-	$target_url = ! empty( $results['target_url'] ) ? $results['target_url'] : '';
-	$short_url  = ! empty( $results['short_url'] ) ? $results['short_url'] : '';
-	$short_url  = site_url( $short_url );
+	$link_title        = ! empty( $results['link_title'] ) ? $results['link_title'] : '[No Title]';
+	$target_url        = ! empty( $results['target_url'] ) ? $results['target_url'] : '';
+	$short_url         = ! empty( $results['short_url'] ) ? $results['short_url'] : '';
+	$short_url         = site_url( $short_url );
 	$encoded_short_url = rawurlencode( $short_url );
 
-	$truncated_link_title = 50 < strlen( $link_title ) ? substr( $link_title, 0, 50 ) . '[...]' : $link_title;
+	$truncated_link_title = 100 < strlen( $link_title ) ? substr( $link_title, 0, 100 ) . '[...]' : $link_title;
 	$truncated_target_url = 50 < strlen( $target_url ) ? substr( $target_url, 0, 50 ) . '[...]' : $target_url;
-	
+
 	$nofollow         = ! empty( $results['nofollow'] ) ? 'checked' : '';
 	$sponsored        = ! empty( $results['sponsored'] ) ? 'checked' : '';
 	$param_forwarding = ! empty( $results['param_forwarding'] ) ? 'checked' : '';
@@ -20,10 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$redirect_type    = ! empty( $results['redirect_type'] ) ? $results['redirect_type'] : '307';
 	$link_date        = ! empty( $results['link_date'] ) ? gmdate( 'd F Y', strtotime( $results['link_date'] ) ) : '';
 
-	$copy_icon = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/copy-icon-1.svg';
+	$social_share = ! empty( $initial_values['social_share'] ) ? $initial_values['social_share'] : false;
+	$powered_by   = ! empty( $initial_values['powered_by'] ) ? $initial_values['powered_by'] : false;
+	$copy_icon        = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/copy-icon-1.svg';
 	$betterlinks_logo = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/full-logo.svg';
-	$go_back = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/go-back.png';
-	$telegram = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/telegram.png';
+	$go_back          = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/go-back.png';
+	$telegram         = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/telegram.png';
 	wp_register_style( 'betterlinks-cle', BETTERLINKS_ASSETS_URI . 'css/betterlinks-cle.css', array( 'dashicons' ), BETTERLINKS_VERSION );
 	wp_register_script( 'betterlinks-cle', BETTERLINKS_ASSETS_URI . 'js/betterlinks-cle.core.min.js', array( 'jquery', 'clipboard' ), BETTERLINKS_VERSION, true );
 ?>
@@ -35,8 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<title><?php esc_html_e( 'Here is your BetterLink', 'betterlinks' ); ?></title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"> -->
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"> <?php // phpcs:ignore ?>
 	<?php wp_print_styles( 'betterlinks-cle' ); ?>
 </head>
 <body>
@@ -44,12 +51,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="btl-link-info-wrapper">
 			<h1><?php esc_html_e( 'Here is your BetterLink for:', 'betterlinks' ); ?></h1>
 			<div class="btl-link-title">
-				<span><?php esc_html_e( 'Title', 'betterlinks' ); ?>:</span>
+				<p class="btl-cle-label"><?php esc_html_e( 'Title', 'betterlinks' ); ?>:</p>
 				<p class="btl-cle-title" title="<?php echo esc_html( $link_title ); ?>"><?php echo esc_html( $truncated_link_title ); ?></p>
 			</div>
 			<div class="btl-link-target">
-				<span><?php esc_html_e( 'URL', 'betterlinks' ); ?>:</span>
-				<div title="<?php echo esc_html( $target_url ); ?>">(<?php echo esc_html( $truncated_target_url ); ?>)</div>
+				<p class="btl-cle-label"><?php esc_html_e( 'URL', 'betterlinks' ); ?>:</p>
+				<p class="btl-cle-target" title="<?php echo esc_html( $target_url ); ?>">(<?php echo esc_html( $truncated_target_url ); ?>)</p>
 			</div>
 		</div>
 		<div class="btl-shortened-url">
@@ -63,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</span>
 				</button>
 				<a href="<?php echo esc_html( $short_url ); ?>" target="_blank" class="dashicons dashicons">
-					<img width="15" src="<?php echo BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/icons/target.svg'; ?>" />
+					<img width="15" src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/icons/target.svg' ); ?>" />
 				</a>
 			</div>
 		</div>
@@ -71,18 +78,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="btl-cle-link-options">
 			<div>
 				<span>Link Options:</span>
-				<span>No Follow: <span class="<?php echo $nofollow?>"><?php 'checked' === $nofollow ? esc_html_e("Active", "betterlinks") : esc_html_e("Disabled", "betterlinks") ?></span></span>
-				<span>Parameter Forwarding: <span class="<?php echo $param_forwarding?>"><?php 'checked' === $param_forwarding ? esc_html_e("Active", "betterlinks") : esc_html_e("Disabled", "betterlinks") ?></span></span>
-				<span>Tracking: <span class="<?php echo $track_me?>"><?php 'checked' === $track_me ? esc_html_e("Active", "betterlinks") : esc_html_e("Disabled", "betterlinks") ?></span></span>
-				<span>Sponsored: <span class="<?php echo $sponsored?>"><?php 'checked' === $sponsored ? esc_html_e("Active", "betterlinks") : esc_html_e("Disabled", "betterlinks") ?></span></span>
-				<span>Redirect Type: <span><?php esc_html_e($redirect_type, "betterlinks") ?></span></span>
+				<span>No Follow: <span class="<?php echo esc_attr( $nofollow ); ?>"><?php 'checked' === $nofollow ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Parameter Forwarding: <span class="<?php echo esc_attr( $param_forwarding ); ?>"><?php 'checked' === $param_forwarding ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Tracking: <span class="<?php echo esc_attr( $track_me ); ?>"><?php 'checked' === $track_me ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Sponsored: <span class="<?php echo esc_attr( $sponsored ); ?>"><?php 'checked' === $sponsored ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Redirect Type: <span class="checked"><?php echo esc_html( $redirect_type ); ?></span></span>
 			</div>
 
-			<?php 
-				if( !empty( $initial_values['pro_enabled'] ) ){
+			<?php
+			if ( ! empty( $initial_values['pro_enabled'] ) && ! empty( $social_share ) ) {
 				?>
 						<div class="btl-social-share">
-				<span>Share to</span>
+				<span><?php esc_html_e( 'Share to', 'betterlinks-pro' ); ?></span>
 				<div>
 						<a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_attr( $encoded_short_url ); ?>" target="_blank" title="<?php esc_html_e( 'Share to Facebook', 'betterlinks' ); ?>">
 							<div id="fb-share-button" class="share-button">
@@ -112,33 +119,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</svg>
 							</div>
 						</a>
-						<a href="https://t.me/share/url?url=<?php echo esc_attr( $encoded_short_url ); ?>&text=<?php echo esc_attr($link_title) ?>" target="_blank" title="<?php esc_html_e( 'Share to Tumblr', 'betterlinks' ); ?>">
+						<a href="https://t.me/share/url?url=<?php echo esc_attr( $encoded_short_url ); ?>&text=<?php echo esc_attr( $link_title ); ?>" target="_blank" title="<?php esc_html_e( 'Share to Tumblr', 'betterlinks' ); ?>">
 							<div id="linkedin-share-button" class="share-button">
-								<img src="<?php  echo $telegram; ?>" style="width:30px;"/>
+								<img src="<?php echo esc_attr( $telegram ); ?>" style="width:22px;"/>
 							</div>
 						</a>
 						
 				</div>
 			</div>
 				<?php
-				}
+			}
 			?>
 		
 		</div>
 		
 		<div class="btl-cle-footer">
 			<a href="<?php echo esc_url_raw( $target_url ); ?>" title="Go Back">
-				<span class="dashicons dashicons-controls-back"></span>
+				<!-- <span class="dashicons dashicons-controls-back"></span> -->
+				<span class="dashicons dashicons-arrow-left-alt"></span>
 				
 				<?php esc_html_e( 'Go Back', 'betterlinks' ); ?>
 			</a>
 			<div>Created at <?php echo esc_html( $link_date ); ?></div>
 			
 		</div>
-		<div class="btl-cle-credit">
-			<hr />
-			<span>Powered By: <img src="<?php echo $betterlinks_logo; ?>" alt="BetterLinks Logo" title="BetterLinks" /></span>
-		</div>
+		<?php
+			if( !empty( $powered_by ) ){
+				?>
+					<div class="btl-cle-credit">
+						<hr />
+						<span>Powered By: <img src="<?php echo esc_attr( $betterlinks_logo ); ?>" alt="BetterLinks Logo" title="BetterLinks" /></span>
+					</div>
+				<?php
+			}
+		?>
 	</div>
 
 	<?php wp_print_scripts( 'betterlinks-cle' ); ?>
