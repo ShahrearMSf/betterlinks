@@ -112,19 +112,19 @@ class Utils {
 
 		switch ( $data['redirect_type'] ) {
 			case '301':
-				wp_safe_redirect( esc_url_raw( $target_url ), 301 );
+				wp_redirect( esc_url_raw( $target_url ), 301 );
 				exit;
 			case '302':
-				wp_safe_redirect( esc_url_raw( $target_url ), 302 );
+				wp_redirect( esc_url_raw( $target_url ), 302 );
 				exit;
 			case '307':
-				wp_safe_redirect( esc_url_raw( $target_url ), 307 );
+				wp_redirect( esc_url_raw( $target_url ), 307 );
 				exit;
 			case 'cloak':
 				do_action( 'betterlinks/make_cloaked_redirect', $target_url, $data );
 				exit;
 			default:
-				wp_safe_redirect( esc_url_raw( $target_url ) );
+				wp_redirect( esc_url_raw( $target_url ) );
 				exit;
 		}
 	}
