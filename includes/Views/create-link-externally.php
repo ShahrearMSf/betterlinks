@@ -10,6 +10,20 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'You are not allowed here.' );
 }
+if ( ! empty( $prevent_unwanted_click ) ) {
+	printf(
+		'<div class="btl-create-link-externally" style="text-align: center;">
+					<div class="btl-link-info-wrapper">
+						<h1>%1$s</h1>
+						<a href="%2$s">%3$s</a>
+					</div>
+				</div>',
+		esc_html( "Short links cannot be created for this page.", "betterlinks" ),
+		esc_attr( $target_url ),
+		esc_html( "Go back", "betterlinks" )
+	);
+	exit;
+}
 	$link_title        = ! empty( $results['link_title'] ) ? $results['link_title'] : '[No Title]';
 	$target_url        = ! empty( $results['target_url'] ) ? $results['target_url'] : '';
 	$short_url         = ! empty( $results['short_url'] ) ? $results['short_url'] : '';
@@ -26,8 +40,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$redirect_type    = ! empty( $results['redirect_type'] ) ? $results['redirect_type'] : '307';
 	$link_date        = ! empty( $results['link_date'] ) ? gmdate( 'd F Y', strtotime( $results['link_date'] ) ) : '';
 
-	$social_share = ! empty( $initial_values['social_share'] ) ? $initial_values['social_share'] : false;
-	$powered_by   = ! empty( $initial_values['powered_by'] ) ? $initial_values['powered_by'] : false;
+	$social_share     = ! empty( $initial_values['social_share'] ) ? $initial_values['social_share'] : false;
+	$powered_by       = ! empty( $initial_values['powered_by'] ) ? $initial_values['powered_by'] : false;
 	$copy_icon        = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/copy-icon-1.svg';
 	$betterlinks_logo = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/full-logo.svg';
 	$go_back          = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/go-back.png';
@@ -144,14 +158,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			
 		</div>
 		<?php
-			if( !empty( $powered_by ) ){
-				?>
+		if ( ! empty( $powered_by ) ) {
+			?>
 					<div class="btl-cle-credit">
 						<hr />
 						<span>Powered By: <img src="<?php echo esc_attr( $betterlinks_logo ); ?>" alt="BetterLinks Logo" title="BetterLinks" /></span>
 					</div>
 				<?php
-			}
+		}
 		?>
 	</div>
 

@@ -20,6 +20,14 @@ class Link extends Utils {
 	public function run_redirect() {
 		if ( isset( $_GET['action'], $_GET['api_key'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_key'] ) === md5( AUTH_KEY ) ) {
 			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( sanitize_url( $_SERVER['REQUEST_URI'] ) ) : '';
+
+			$params = explode( 'action=btl_cle&api_key', $request_uri );
+			if( count( $params ) > 2 ){ // to prevent short link creation of the 'Here is your BetterLinks' page
+				$prevent_unwanted_click = true; // phpcs:ignore
+				require_once BETTERLINKS_ROOT_DIR_PATH . '/includes/Views/create-link-externally.php';
+				exit;
+			}
 
 			$title = isset( $_GET['title'] ) ?  sanitize_text_field( $_GET['title'] ) : ''; // geting title from document obj, instead of fetching
 			
