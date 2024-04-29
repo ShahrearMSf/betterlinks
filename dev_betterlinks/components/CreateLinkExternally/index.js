@@ -1,4 +1,4 @@
-import { betterlinks_auth, saveSettingsHandler, site_url } from 'utils/helper';
+import { betterlinks_auth, is_pro_enabled, saveSettingsHandler, site_url } from 'utils/helper';
 import { Form, Formik } from 'formik';
 import { update_option } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
@@ -8,6 +8,8 @@ import { __ } from '@wordpress/i18n';
 import CreateLinkExternallyTeaser from 'components/Teasers/CreateLinkExternally';
 import { redirectType } from 'utils/data';
 import Select2 from 'react-select';
+import { useUpgradeProModal } from 'utils/customHooks';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
 const CreateLinkExternally = ({ settings, terms, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -47,8 +49,10 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(null, mapDispatchToProps)(CreateLinkExternally);
 
 const FreeSettings = ({ props }) => {
+	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	return (
 		<>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<span className="btl-form-group">
 				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
 					{__('Enable', 'betterlinks-pro')}
@@ -88,6 +92,11 @@ const FreeSettings = ({ props }) => {
 					<span className="btl-form-group">
 						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
 							{__('Advanced', 'betterlinks-pro')}
+							{!is_pro_enabled && (
+								<span onClick={openUpgradeToProModal} className="pro-badge">
+									Pro
+								</span>
+							)}
 						</label>
 						<div className="btl-form-field">
 							<label className="btl-checkbox-field block">
