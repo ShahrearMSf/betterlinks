@@ -148,7 +148,7 @@ const DragableButton = () => {
 			}}
 		>
 			<a
-				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+encodeURI(location.href)+'&title='+document.title`}
+				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+encodeURI(location.href)+'&title='+encodeURI(document.title)`}
 				className="button button-primary"
 			>
 				Create Link Externally

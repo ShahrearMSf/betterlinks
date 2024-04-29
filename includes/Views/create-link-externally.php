@@ -18,9 +18,9 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 						<a href="%2$s">%3$s</a>
 					</div>
 				</div>',
-		esc_html( "Short links cannot be created for this page.", "betterlinks" ),
+		esc_html( 'Short links cannot be created for this page.', 'betterlinks' ),
 		esc_attr( $target_url ),
-		esc_html( "Go back", "betterlinks" )
+		esc_html( 'Go back', 'betterlinks' )
 	);
 	exit;
 }
@@ -59,51 +59,34 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"> <?php // phpcs:ignore ?>
 	<?php wp_print_styles( 'betterlinks-cle' ); ?>
+	<?php wp_site_icon(); ?>
 </head>
 <body>
 	<div class="btl-create-link-externally">
 		<div class="btl-link-info-wrapper">
+			<div class="btl-logo">
+				<img src="<?php echo BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/logo-large.svg'; ?>" alt="BetterLinks Logo"/>
+			</div>
 			<h1><?php esc_html_e( 'Here is your BetterLink for:', 'betterlinks' ); ?></h1>
-			<div class="btl-link-title">
-				<p class="btl-cle-label"><?php esc_html_e( 'Title', 'betterlinks' ); ?>:</p>
-				<p class="btl-cle-title" title="<?php echo esc_html( $link_title ); ?>"><?php echo esc_html( $truncated_link_title ); ?></p>
-			</div>
-			<div class="btl-link-target">
-				<p class="btl-cle-label"><?php esc_html_e( 'URL', 'betterlinks' ); ?>:</p>
-				<p class="btl-cle-target" title="<?php echo esc_html( $target_url ); ?>">(<?php echo esc_html( $truncated_target_url ); ?>)</p>
-			</div>
-		</div>
-		<div class="btl-shortened-url">
-			<span><?php echo esc_html( $short_url ); ?></span>
-			<div>
-				<button class="btl-short-url-copy-button btl-tooltip" data-clipboard-text="<?php echo esc_html( $short_url ); ?>">
-					<span class="icon">
-						<img width="15" src="<?php echo esc_attr( $copy_icon ); ?>" alt="icon">
+			<div class="btl-shortened-url">
+				<span><?php echo esc_html( $short_url ); ?></span>
+				<div>
+					<button class="btl-short-url-copy-button btl-tooltip" data-clipboard-text="<?php echo esc_html( $short_url ); ?>">
+						<span class="icon">
+							<img width="15" src="<?php echo esc_attr( $copy_icon ); ?>" alt="icon">
 
-						<span class="dashicons dashicons-yes" style="display: none;"></span>
-					</span>
-				</button>
-				<a href="<?php echo esc_html( $short_url ); ?>" target="_blank" class="dashicons dashicons">
-					<img width="15" src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/icons/target.svg' ); ?>" />
-				</a>
+							<span class="dashicons dashicons-yes" style="display: none;"></span>
+						</span>
+					</button>
+					<a href="<?php echo esc_html( $short_url ); ?>" target="_blank" class="dashicons dashicons">
+						<img width="15" src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/icons/target.svg' ); ?>" />
+					</a>
+				</div>
 			</div>
-		</div>
-
-		<div class="btl-cle-link-options">
-			<div>
-				<span>Link Options:</span>
-				<span>No Follow: <span class="<?php echo esc_attr( $nofollow ); ?>"><?php 'checked' === $nofollow ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Parameter Forwarding: <span class="<?php echo esc_attr( $param_forwarding ); ?>"><?php 'checked' === $param_forwarding ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Tracking: <span class="<?php echo esc_attr( $track_me ); ?>"><?php 'checked' === $track_me ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Sponsored: <span class="<?php echo esc_attr( $sponsored ); ?>"><?php 'checked' === $sponsored ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Redirect Type: <span class="checked"><?php echo esc_html( $redirect_type ); ?></span></span>
-			</div>
-
 			<?php
 			if ( ! empty( $initial_values['pro_enabled'] ) && ! empty( $social_share ) ) {
 				?>
 						<div class="btl-social-share">
-				<span><?php esc_html_e( 'Share to', 'betterlinks-pro' ); ?></span>
 				<div>
 						<a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_attr( $encoded_short_url ); ?>" target="_blank" title="<?php esc_html_e( 'Share to Facebook', 'betterlinks' ); ?>">
 							<div id="fb-share-button" class="share-button">
@@ -144,7 +127,26 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 				<?php
 			}
 			?>
-		
+		</div>
+		<div class="btl-link-info">
+			<div class="btl-link-title">
+				<p class="btl-cle-label"><?php esc_html_e( 'Title', 'betterlinks' ); ?>:</p>
+				<p class="btl-cle-title" title="<?php echo esc_html( $link_title ); ?>"><?php echo esc_html( $truncated_link_title ); ?></p>
+			</div>
+			<div class="btl-link-target">
+				<p class="btl-cle-label"><?php esc_html_e( 'Main URL', 'betterlinks' ); ?>:</p>
+				<p class="btl-cle-target" title="<?php echo esc_html( $target_url ); ?>">(<?php echo esc_html( $truncated_target_url ); ?>)</p>
+			</div>
+		</div>
+		<div class="btl-cle-link-options">
+			<div>
+				<span>Link Options:</span>
+				<span>No Follow: <span class="<?php echo esc_attr( $nofollow ); ?>"><?php 'checked' === $nofollow ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Parameter Forwarding: <span class="<?php echo esc_attr( $param_forwarding ); ?>"><?php 'checked' === $param_forwarding ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Tracking: <span class="<?php echo esc_attr( $track_me ); ?>"><?php 'checked' === $track_me ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Sponsored: <span class="<?php echo esc_attr( $sponsored ); ?>"><?php 'checked' === $sponsored ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span>Redirect Type: <span class="checked"><?php echo esc_html( $redirect_type ); ?></span></span>
+			</div>
 		</div>
 		
 		<div class="btl-cle-footer">
