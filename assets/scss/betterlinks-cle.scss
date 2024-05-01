@@ -137,6 +137,9 @@ body {
 .btl-create-link-externally {
 	width: 830px;
 	margin-top: 64px;
+	height: calc(100dvh - 64px);
+	display: flex;
+	flex-direction: column;
 
 	.btl-link-info-wrapper {
 		display: flex;
@@ -300,6 +303,7 @@ body {
 	}
 
 	.btl-cle-credit {
+		margin-top: auto;
 		> span {
 			height: 32px;
 			display: flex;
