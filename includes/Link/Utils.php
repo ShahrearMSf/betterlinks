@@ -320,11 +320,10 @@ class Utils {
 		return false;
 	}
 
-	public function create_new_link( $title, $target_url ) {
+	public function create_new_link( $title, $target_url, $settings ) {
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$helper           = new \BetterLinks\Helper();
 		$slug             = $helper->generate_random_slug();
-		$settings         = Cache::get_json_settings();
 		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
 		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
@@ -352,7 +351,7 @@ class Utils {
 		);
 		$initial_values = apply_filters( 'betterlinks_before_cle', $initial_values );
 
-		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+		$helper->clear_query_cache();
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );
 

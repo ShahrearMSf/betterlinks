@@ -6,8 +6,6 @@ use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
 
 class Link extends Utils {
-	private static $link_options;
-
 	public function __construct() {
 		if ( ! is_admin() && isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) {
 			add_action( 'init', array( $this, 'run_redirect' ), 0 );
@@ -35,7 +33,7 @@ class Link extends Utils {
 			}
 			
 			if ( ! empty( $title ) ) {
-				$this->create_new_link( $title, $target_url );
+				$this->create_new_link( $title, $target_url, $settings );
 			}
 
 			return;
@@ -56,13 +54,9 @@ class Link extends Utils {
 		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
 				// fetch settings to check password protected redirect is enable or not.
-				$settings = get_option( 'betterlinks_links', true );
-				if ( is_string( $settings ) ) {
-					$settings = json_decode( $settings, true );
-				}
-				self::$link_options = $settings;
+				$settings = Cache::get_json_settings();
 
-				if ( ! empty( self::$link_options['enable_password_protection'] ) ) {
+				if ( ! empty( $settings['enable_password_protection'] ) ) {
 					$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
 					$request_uri       = site_url( '/' ) . $request_uri;
 					$short_url         = $this->get_protected_self_url_short_link( $request_uri );

@@ -10,20 +10,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'You are not allowed here.' );
 }
-if ( ! empty( $prevent_unwanted_click ) ) {
-	printf(
-		'<div class="btl-create-link-externally" style="text-align: center;">
-					<div class="btl-link-info-wrapper">
-						<h1>%1$s</h1>
-						<a href="%2$s">%3$s</a>
-					</div>
-				</div>',
-		esc_html( 'Short links cannot be created for this page.', 'betterlinks' ),
-		esc_attr( $target_url ),
-		esc_html( 'Go back', 'betterlinks' )
-	);
-	exit;
-}
+if ( empty( $prevent_unwanted_click ) ) {
 	$link_title        = ! empty( $results['link_title'] ) ? $results['link_title'] : '[No Title]';
 	$target_url        = ! empty( $results['target_url'] ) ? $results['target_url'] : '';
 	$short_url         = ! empty( $results['short_url'] ) ? $results['short_url'] : '';
@@ -39,13 +26,20 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 	$track_me         = ! empty( $results['track_me'] ) ? 'checked' : '';
 	$redirect_type    = ! empty( $results['redirect_type'] ) ? $results['redirect_type'] : '307';
 	$link_date        = ! empty( $results['link_date'] ) ? gmdate( 'd F Y', strtotime( $results['link_date'] ) ) : '';
+	$category = !empty( $results['cat_data'] ) ? sanitize_text_field( $results['cat_data']['term_name'] ) : '';
 
 	$social_share     = ! empty( $initial_values['social_share'] ) ? $initial_values['social_share'] : false;
 	$powered_by       = ! empty( $initial_values['powered_by'] ) ? $initial_values['powered_by'] : false;
 	$copy_icon        = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/copy-icon-1.svg';
-	$betterlinks_logo = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/full-logo.svg';
-	$go_back          = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/go-back.png';
 	$telegram         = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/telegram.png';
+	$redirect_types   = array(
+		'307' => '307',
+		'301' => '301',
+		'302' => '302',
+		'cloak' => 'Cloaked'
+	);
+}
+	$betterlinks_logo = BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/full-logo.svg';
 	wp_register_style( 'betterlinks-cle', BETTERLINKS_ASSETS_URI . 'css/betterlinks-cle.css', array( 'dashicons' ), BETTERLINKS_VERSION );
 	wp_register_script( 'betterlinks-cle', BETTERLINKS_ASSETS_URI . 'js/betterlinks-cle.core.min.js', array( 'jquery', 'clipboard' ), BETTERLINKS_VERSION, true );
 ?>
@@ -63,9 +57,38 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 </head>
 <body>
 	<div class="btl-create-link-externally">
+		<?php 
+			if ( ! empty( $prevent_unwanted_click ) ) {
+				?>
+					<div class="btl-link-info-wrapper">
+						<div class="btl-logo">
+							<img src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/logo-large.svg' ); ?>" alt="BetterLinks Logo"/>
+						</div>
+						<h1><?php esc_html_e( 'Short Link Can\'t be created for this page', 'betterlinks' ); ?></h1>
+					</div>
+					<div class="btl-cle-footer">
+						<a href="<?php echo esc_url_raw( $target_url ); ?>" title="Go Back">
+							<span class="dashicons dashicons-arrow-left-alt"></span>
+							<?php esc_html_e( 'Go Back', 'betterlinks' ); ?>
+						</a>
+					</div>
+					<?php
+						if ( ! empty( $powered_by ) ) {
+							?>
+									<div class="btl-cle-credit">
+										<hr />
+										<span><?php esc_html_e( 'Powered By', 'betterlinks' ); ?>: <img src="<?php echo esc_attr( $betterlinks_logo ); ?>" alt="BetterLinks Logo" title="BetterLinks" /></span>
+									</div>
+								<?php
+						}
+						?>
+				<?php
+				exit;
+			}
+		?>
 		<div class="btl-link-info-wrapper">
 			<div class="btl-logo">
-				<img src="<?php echo BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/logo-large.svg'; ?>" alt="BetterLinks Logo"/>
+				<img src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/logo-large.svg' ); ?>" alt="BetterLinks Logo"/>
 			</div>
 			<h1><?php esc_html_e( 'Here is your BetterLink for:', 'betterlinks' ); ?></h1>
 			<div class="btl-shortened-url">
@@ -116,9 +139,9 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 								</svg>
 							</div>
 						</a>
-						<a href="https://t.me/share/url?url=<?php echo esc_attr( $encoded_short_url ); ?>&text=<?php echo esc_attr( $link_title ); ?>" target="_blank" title="<?php esc_html_e( 'Share to Tumblr', 'betterlinks' ); ?>">
+						<a href="https://t.me/share/url?url=<?php echo esc_attr( $encoded_short_url ); ?>&text=<?php echo esc_attr( $link_title ); ?>" target="_blank" title="<?php esc_html_e( 'Share to Telegram', 'betterlinks-pro' ); ?>">
 							<div id="linkedin-share-button" class="share-button">
-								<img src="<?php echo esc_attr( $telegram ); ?>" style="width:22px;"/>
+								<img src="<?php echo esc_attr( $telegram ); ?>" alt="<?php echo esc_html_e( 'Share to Telegram', 'betterlinks-pro' ); ?>" style="width:22px;"/>
 							</div>
 						</a>
 						
@@ -140,23 +163,22 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 		</div>
 		<div class="btl-cle-link-options">
 			<div>
-				<span>Link Options:</span>
-				<span>No Follow: <span class="<?php echo esc_attr( $nofollow ); ?>"><?php 'checked' === $nofollow ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Parameter Forwarding: <span class="<?php echo esc_attr( $param_forwarding ); ?>"><?php 'checked' === $param_forwarding ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Tracking: <span class="<?php echo esc_attr( $track_me ); ?>"><?php 'checked' === $track_me ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Sponsored: <span class="<?php echo esc_attr( $sponsored ); ?>"><?php 'checked' === $sponsored ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
-				<span>Redirect Type: <span class="checked"><?php echo esc_html( $redirect_type ); ?></span></span>
+				<span><?php esc_html_e( 'Link Options', 'betterlinks' ); ?>:</span>
+				<span><?php esc_html_e( 'No Follow', 'betterlinks' ); ?>: <span class="<?php echo esc_attr( $nofollow ); ?>"><?php 'checked' === $nofollow ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span><?php esc_html_e( 'Parameter Forwarding', 'betterlinks' ); ?>: <span class="<?php echo esc_attr( $param_forwarding ); ?>"><?php 'checked' === $param_forwarding ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span><?php esc_html_e( 'Tracking', 'betterlinks' ); ?>: <span class="<?php echo esc_attr( $track_me ); ?>"><?php 'checked' === $track_me ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span><?php esc_html_e( 'Sponsored', 'betterlinks' ); ?>: <span class="<?php echo esc_attr( $sponsored ); ?>"><?php 'checked' === $sponsored ? esc_html_e( 'Active', 'betterlinks' ) : esc_html_e( 'Disabled', 'betterlinks' ); ?></span></span>
+				<span><?php esc_html_e( 'Redirect Type', 'betterlinks' ); ?>: <span class="checked"><?php echo esc_html( $redirect_types[$redirect_type] ); ?></span></span>
+				<span><?php esc_html_e( 'Category', 'betterlinks' ); ?>: <span class="checked"><?php echo esc_html( $category ); ?></span></span>
 			</div>
 		</div>
 		
 		<div class="btl-cle-footer">
 			<a href="<?php echo esc_url_raw( $target_url ); ?>" title="Go Back">
-				<!-- <span class="dashicons dashicons-controls-back"></span> -->
 				<span class="dashicons dashicons-arrow-left-alt"></span>
-				
 				<?php esc_html_e( 'Go Back', 'betterlinks' ); ?>
 			</a>
-			<div>Created at <?php echo esc_html( $link_date ); ?></div>
+			<div><?php esc_html_e( 'Created at', 'betterlinks' ); ?> <?php echo esc_html( $link_date ); ?></div>
 			
 		</div>
 		<?php
@@ -164,7 +186,7 @@ if ( ! empty( $prevent_unwanted_click ) ) {
 			?>
 					<div class="btl-cle-credit">
 						<hr />
-						<span>Powered By: <img src="<?php echo esc_attr( $betterlinks_logo ); ?>" alt="BetterLinks Logo" title="BetterLinks" /></span>
+						<span><?php esc_html_e( 'Powered By', 'betterlinks' ); ?>: <img src="<?php echo esc_attr( $betterlinks_logo ); ?>" alt="BetterLinks Logo" title="BetterLinks" /></span>
 					</div>
 				<?php
 		}
