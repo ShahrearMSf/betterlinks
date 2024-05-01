@@ -55,7 +55,7 @@ const FreeSettings = ({ props }) => {
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<span className="btl-form-group">
 				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-					{__('Enable', 'betterlinks-pro')}
+					{__('Enable Quick Link', 'betterlinks-pro')}
 				</label>
 				<div className="btl-form-field">
 					<label className="btl-checkbox-field block">
@@ -74,7 +74,7 @@ const FreeSettings = ({ props }) => {
 				<>
 					<span className="btl-form-group">
 						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-							{__('Powered By', 'betterlinks-pro')}
+							{__('Enable Powered By', 'betterlinks-pro')}
 						</label>
 						<div className="btl-form-field">
 							<label className="btl-checkbox-field block">
@@ -91,7 +91,7 @@ const FreeSettings = ({ props }) => {
 					</span>
 					<span className="btl-form-group">
 						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-							{__('Advanced', 'betterlinks-pro')}
+							{__('Advanced Options', 'betterlinks-pro')}
 							{!is_pro_enabled && (
 								<span onClick={openUpgradeToProModal} className="pro-badge">
 									Pro
@@ -145,6 +145,7 @@ const DragableButton = () => {
 				top: '35px',
 				zIndex: '1',
 				padding: '12px',
+				marginBottom: '20px',
 			}}
 		>
 			<a

@@ -273,13 +273,20 @@ export const Link = (props) => {
 					target_url,
 				});
 				if (res.data.result) {
-					const fetchedTitle = res.data.result?.title;
+					let fetchedTitle = res.data.result?.title;
 					if (fetchedTitle === previousTitle) return;
+					let short_url = null;
+					if (fetchedTitle.length > 20) {
+						short_url = fetchedTitle
+							.split(' ')
+							.map((item) => item[0])
+							.join('');
+					}
 					if (!willUpdate) {
 						setFetchedTitle(fetchedTitle);
 						return;
 					}
-					handleTitleChange(setFieldValue, fetchedTitle || '');
+					handleTitleChange(setFieldValue, fetchedTitle || '', short_url);
 				}
 			} catch (error) {
 				console.log(error);
@@ -288,10 +295,10 @@ export const Link = (props) => {
 		[settings.settings]
 	);
 
-	const handleTitleChange = (setFieldValue, title) => {
+	const handleTitleChange = (setFieldValue, title, short_url = null) => {
 		setFieldValue('link_title', title);
 		if (!data) {
-			const shortURL = generateShortURL(settings.settings, title);
+			let shortURL = generateShortURL(settings.settings, short_url || title);
 			if (shortURL.length > 0) {
 				setFieldValue('short_url', shortURL);
 				setSlugIsExists(false);
