@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { route_path, plugin_root_url } from 'utils/helper';
 const Navbar = ({ menuNotice }) => {
 	const currentPage = betterLinksQuery.get('page');
-	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
+	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowLinkScannerMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
 		betterLinksHooks.applyFilters(item, i !== 2)
 	);
 	let rootLinks = 'betterlinks';
@@ -20,7 +20,7 @@ const Navbar = ({ menuNotice }) => {
 				style={{ backgroundColor: '#20639a' }}
 			>
 				<div className="wp-menu-arrow">
-					<div></div>
+					<div />
 				</div>
 				<div className="wp-menu-image dashicons-before" aria-hidden="true">
 					<img src={plugin_root_url + 'assets/images/logo.svg'} alt="logo" />
@@ -50,6 +50,11 @@ const Navbar = ({ menuNotice }) => {
 					{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks-analytics'}>{__('Analytics', 'betterlinks')}</Link>
+						</li>
+					)}
+					{betterLinksHooks.applyFilters('isShowLinkScannerMenu', true) && (
+						<li className={`wp-first-item ${currentPage == 'betterlinks-link-scanner' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-link-scanner'}>{__('Link Scanner', 'betterlinks')}</Link>
 						</li>
 					)}
 					{betterLinksHooks.applyFilters('isShowSettingsMenu', true) && (

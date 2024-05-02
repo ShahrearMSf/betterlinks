@@ -152,6 +152,10 @@ class Helper {
 				'title'      => __( 'Analytics', 'betterlinks' ),
 				'capability' => 'manage_options',
 			),
+			BETTERLINKS_PLUGIN_SLUG . '-link-scanner'   => array(
+				'title'      => __( 'Link Scanner', 'betterlinks' ),
+				'capability' => 'manage_options',
+			),
 			BETTERLINKS_PLUGIN_SLUG . '-settings'    => array(
 				'title'      => __( 'Settings', 'betterlinks' ),
 				'capability' => 'manage_options',
