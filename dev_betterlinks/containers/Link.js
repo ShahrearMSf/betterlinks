@@ -277,7 +277,7 @@ export const Link = (props) => {
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
-					<i className="btl btl-cancel"></i>
+					<i className="btl btl-cancel" />
 				</span>
 				<Formik
 					initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)}

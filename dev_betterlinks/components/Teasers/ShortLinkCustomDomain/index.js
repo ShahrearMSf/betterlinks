@@ -19,11 +19,12 @@ const ShortLinkCustomDomain = ({ settings, update_option }) => {
 			<Formik
 				enableReinitialize
 				initialValues={{ ...settings }}
-				onSubmit={(values) => {
+				onSubmit={(values, { setFieldError }) => {
 					if (!is_pro_enabled) return;
 
 					const { enable_shortlink_custom_domain: enabled, shortlink_custom_domain: url } = values;
 					if (enabled && ('' === url || !isURL(url))) {
+						setFieldError('error__shortlink_custom_domain', "Please fill in your custom domain or ensure it's a valid URL.");
 						return;
 					}
 					if (enabled) localStorage.setItem('btl_custom_domain', url);
