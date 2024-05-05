@@ -283,6 +283,12 @@ export const Link = (props) => {
 						const { setSubmitting, setFieldError } = actions;
 						setSubmitting(false);
 
+						const regex = /<|>|\//;
+						if (regex.test(values.link_title)) {
+							setFieldError('link_title', 'Please avoid using symbols like <, >, or / in the link title.');
+							return;
+						}
+
 						if (values?.enable_custom_scripts && !values?.custom_tracking_scripts) {
 							setFieldError('custom_tracking_scripts', true);
 							return;
@@ -292,6 +298,7 @@ export const Link = (props) => {
 				>
 					{(props) => {
 						const redirectionTypes = props.values?.enable_password ? redirectTypeForPasswordProtection : redirectType;
+						const { errors } = props;
 						return (
 							<Form className="w-100">
 								<div className="btl-entry-content">
@@ -321,23 +328,32 @@ export const Link = (props) => {
 											<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 												{__('Title', 'betterlinks')}
 											</label>
-											<Field
-												className="btl-modal-form-control"
-												id="link_title"
-												name="link_title"
-												disabled={isDisableLinkFormEditView}
-												onChange={(e) => {
-													props.setFieldValue('link_title', e.target.value);
-													if (!data) {
-														const shortURL = generateShortURL(settings.settings, e.target.value);
-														if (shortURL.length > 0) {
-															props.setFieldValue('short_url', shortURL);
-															setSlugIsExists(false);
-														}
-													}
+											<div
+												style={{
+													display: 'flex',
+													flexDirection: 'column',
+													width: '100%',
 												}}
-												required
-											/>
+											>
+												<Field
+													className="btl-modal-form-control"
+													id="link_title"
+													name="link_title"
+													disabled={isDisableLinkFormEditView}
+													onChange={(e) => {
+														props.setFieldValue('link_title', e.target.value);
+														if (!data) {
+															const shortURL = generateShortURL(settings.settings, e.target.value);
+															if (shortURL.length > 0) {
+																props.setFieldValue('short_url', shortURL);
+																setSlugIsExists(false);
+															}
+														}
+													}}
+													required
+												/>
+												{errors.link_title && <span style={{ color: 'red' }}>{errors.link_title}</span>}
+											</div>
 										</div>
 										<div className="btl-modal-form-group">
 											<label className="btl-modal-form-label" htmlFor="link_note">
