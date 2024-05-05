@@ -55,7 +55,7 @@ const FreeSettings = ({ props }) => {
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<span className="btl-form-group">
 				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-					{__('Enable Quick Link', 'betterlinks-pro')}
+					{__('Enable Quick Link', 'betterlinks')}
 				</label>
 				<div className="btl-form-field">
 					<label className="btl-checkbox-field block">
@@ -66,7 +66,7 @@ const FreeSettings = ({ props }) => {
 							onChange={(e) => props.setFieldValue('cle.enable_cle', e.target.checked)}
 							checked={props.values?.cle?.enable_cle}
 						/>
-						<span className="text">{__('', 'betterlinks-pro')}</span>
+						<span className="text">{__('', 'betterlinks')}</span>
 					</label>
 				</div>
 			</span>
@@ -74,7 +74,7 @@ const FreeSettings = ({ props }) => {
 				<>
 					<span className="btl-form-group">
 						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-							{__('Enable Powered By', 'betterlinks-pro')}
+							{__('Enable Powered By', 'betterlinks')}
 						</label>
 						<div className="btl-form-field">
 							<label className="btl-checkbox-field block">
@@ -85,13 +85,13 @@ const FreeSettings = ({ props }) => {
 									onChange={(e) => props.setFieldValue('cle.powered_by', e.target.checked)}
 									checked={props.values?.cle?.powered_by}
 								/>
-								<span className="text">{__('', 'betterlinks-pro')}</span>
+								<span className="text">{__('', 'betterlinks')}</span>
 							</label>
 						</div>
 					</span>
 					<span className="btl-form-group">
 						<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-							{__('Advanced Options', 'betterlinks-pro')}
+							{__('Advanced Options', 'betterlinks')}
 							{!is_pro_enabled && (
 								<span onClick={openUpgradeToProModal} className="pro-badge">
 									Pro
@@ -100,14 +100,23 @@ const FreeSettings = ({ props }) => {
 						</label>
 						<div className="btl-form-field">
 							<label className="btl-checkbox-field block">
-								<input
-									className="btl-check"
-									name="cle.advanced_options"
-									type="checkbox"
-									onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
-									checked={props.values?.cle?.advanced_options}
-								/>
-								<span className="text">{__('', 'betterlinks-pro')}</span>
+								{is_pro_enabled ? (
+									<>
+										<input
+											className="btl-check"
+											name="cle.advanced_options"
+											type="checkbox"
+											onChange={(e) => props.setFieldValue('cle.advanced_options', e.target.checked)}
+											checked={props.values?.cle?.advanced_options}
+										/>
+										<span className="text">{__('', 'betterlinks')}</span>
+									</>
+								) : (
+									<span
+										onClick={() => props.setFieldValue('cle.advanced_options', !props.values?.cle?.advanced_options)}
+										className={`dashicons dashicons-arrow-${props.values?.cle?.advanced_options ? 'down' : 'up'}-alt2`}
+									/>
+								)}
 							</label>
 						</div>
 					</span>
@@ -123,9 +132,9 @@ const Notes = () => {
 			<div className="btl-form-field">
 				<div className="short-description">
 					<b style={{ fontWeight: 700 }}>Note: </b>
-					<span>{__('It will allow you to create link externally from your bookmark. For more info, ')}</span>
+					<span>{__('It will allow you to create link externally from your bookmark. For more info, ', 'betterlinks')}</span>
 					<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
-						{__('Click here', 'betterlinks-pro')}
+						{__('Click here', 'betterlinks')}
 					</a>
 				</div>
 			</div>
@@ -152,9 +161,9 @@ const DragableButton = () => {
 				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+encodeURI(location.href)+'&title='+encodeURI(document.title)`}
 				className="button button-primary"
 			>
-				Create Link Externally
+				{__('Create Link Externally', 'betterlinks')}
 			</a>
-			<span>Just drag this button in your bookmark</span>
+			<span>{__('Just drag this button in your bookmark', 'betterlinks')}</span>
 		</div>
 	);
 };
