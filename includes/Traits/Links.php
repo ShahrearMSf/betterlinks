@@ -9,6 +9,10 @@ trait Links
         foreach ($this->get_links_schema() as $key => $schema) {
             if (isset($POST[$key])) {
                 if (isset($schema['sanitize_callback'])) {
+                    if( 'link_title' === $key ){
+                        $data[$key] = $POST[$key]; // it contains javascript code
+                        continue;
+                    }
                     $data[$key] = $schema['sanitize_callback']($POST[$key]);
                 } elseif (isset($schema['format']) && $schema['format'] == 'date-time') {
                     $data[$key] = sanitize_text_field($POST[$key]);

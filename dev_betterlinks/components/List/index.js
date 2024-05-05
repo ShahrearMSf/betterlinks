@@ -33,7 +33,7 @@ const List = (props) => {
 							<FavoriteIcon data={item} />
 							{expireStatusDot}
 							<Link catId={parseInt(catId)} catName={term_name} data={item} submitHandler={edit_link}>
-								<span className="text" dangerouslySetInnerHTML={{ __html: item.link_title }} />
+								<span className="text">{item.link_title}</span>
 							</Link>
 						</h3>
 
