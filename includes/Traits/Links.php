@@ -10,7 +10,7 @@ trait Links
             if (isset($POST[$key])) {
                 if (isset($schema['sanitize_callback'])) {
                     if( 'link_title' === $key ){
-                        $data[$key] = $POST[$key]; // it contains javascript code
+                        $data[$key] = $POST[$key]; // it could contain html element tags
                         continue;
                     }
                     $data[$key] = $schema['sanitize_callback']($POST[$key]);
