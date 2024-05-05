@@ -285,6 +285,11 @@ class Helper {
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 	}
 
+	public static function create_links_cache() {
+		$results = self::get_prepare_all_links();
+		set_transient( BETTERLINKS_CACHE_LINKS_NAME, json_encode( $results ) );
+	}
+
 	public static function parse_link_response( $items, $analytic, $broken_links ) {
 		$results                  = array();
 		$broken_link_status_codes = array( 401, 403, 404 );

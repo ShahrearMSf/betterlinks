@@ -35,7 +35,6 @@ const Graph = (props) => {
 	const id = betterLinksQuery.get('id');
 	const tag_id = betterLinksQuery.get('tag_id');
 	const labels = get_labels(is_pro_enabled ? props.data.clicks : []);
-
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
 
@@ -94,6 +93,13 @@ const Graph = (props) => {
 		options: {
 			chart: {
 				id: 'analytics-click-count',
+				toolbar: {
+					export: {
+						csv: {
+							headerCategory: 'Date',
+						},
+					},
+				},
 			},
 			xaxis: {
 				categories: labels,

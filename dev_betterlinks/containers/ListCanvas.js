@@ -35,7 +35,7 @@ const getLinksListViewColumnData = (props) => {
 							<FavoriteIcon data={row} />
 							{expireStatusDot}
 							<Link catId={parseInt(row.cat_id)} catName={''} data={row} submitHandler={props.edit_link}>
-								<div className="btl-link-title" dangerouslySetInnerHTML={{ __html: row.link_title }}></div>
+								<div className="btl-link-title">{row.link_title}</div>
 							</Link>
 						</>
 					)

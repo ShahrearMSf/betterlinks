@@ -306,6 +306,23 @@ export const Link = (props) => {
 		}
 	};
 
+	const submitLinkHandler = (values, actions) => {
+		const { setSubmitting, setFieldError } = actions;
+		setSubmitting(false);
+
+		const regex = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/;
+		if (regex.test(values.link_title)) {
+			setFieldError('link_title', __('Please ensure the link title does not contain any script.', 'betterlinks'));
+			return;
+		}
+
+		if (values?.enable_custom_scripts && !values?.custom_tracking_scripts) {
+			setFieldError('custom_tracking_scripts', true);
+			return;
+		}
+		onSubmit(values);
+	};
+
 	return (
 		<>
 			{data ? (
@@ -322,28 +339,17 @@ export const Link = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel"></i>
 				</span>
-				<Formik
-					initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)}
-					onSubmit={(values, actions) => {
-						const { setSubmitting, setFieldError } = actions;
-						setSubmitting(false);
-
-						if (values?.enable_custom_scripts && !values?.custom_tracking_scripts) {
-							setFieldError('custom_tracking_scripts', true);
-							return;
-						}
-						onSubmit(values);
-					}}
-				>
+				<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)} onSubmit={submitLinkHandler}>
 					{(props) => {
 						const redirectionTypes = props.values?.enable_password ? redirectTypeForPasswordProtection : redirectType;
+						const { errors } = props;
 						return (
 							<Form className="w-100">
 								<div className="btl-entry-content">
 									<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 									<Modal isOpen={modalUTMIsOpen} onRequestClose={closeUTMModal} style={modalCustomSmallStyles} ariaHideApp={false}>
 										<span className="btl-close-modal" onClick={closeUTMModal}>
-											<i className="btl btl-cancel"></i>
+											<i className="btl btl-cancel" />
 										</span>
 										{isShowCustomUTMModalContent ? (
 											<React.Fragment>
@@ -367,16 +373,25 @@ export const Link = (props) => {
 												{__('Title', 'betterlinks')}
 											</label>
 											<div className="btl-modal-form-title-wrapper">
-												<Field
-													className="btl-modal-form-control"
-													id="link_title"
-													name="link_title"
-													disabled={isDisableLinkFormEditView}
-													onChange={(e) => {
-														handleTitleChange(props.setFieldValue, e.target.value);
+												<div
+													style={{
+														display: 'flex',
+														flexDirection: 'column',
+														width: '100%',
 													}}
-													required
-												/>
+												>
+													<Field
+														className="btl-modal-form-control"
+														id="link_title"
+														name="link_title"
+														disabled={isDisableLinkFormEditView}
+														onChange={(e) => {
+															handleTitleChange(props.setFieldValue, e.target.value);
+														}}
+														required
+													/>
+													{errors.link_title && <span style={{ color: 'red' }}>{errors.link_title}</span>}
+												</div>
 												{fetchedTitle && (
 													<FetchedTitleConfirmation
 														fetchedTitle={fetchedTitle}
