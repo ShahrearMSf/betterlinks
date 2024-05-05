@@ -1,7 +1,12 @@
+import { __ } from '@wordpress/i18n';
+import TabsBrokenLinkChecker from 'containers/TabsBrokenLinkChecker';
+import TopBar from 'containers/TopBar';
+
 const LinkScanner = () => {
 	return (
 		<>
-			<h1>Hello from Link Scanner</h1>
+			<TopBar label={__('Link Scanner', 'betterlinks')} />
+			<TabsBrokenLinkChecker />
 		</>
 	);
 };

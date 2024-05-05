@@ -35,7 +35,6 @@ const Settings = (props) => {
 		__('General', 'betterlinks'),
 		__('Advanced Options', 'betterlinks'),
 		__('Tools', 'betterlinks'),
-		__('Link Scanner', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
@@ -50,7 +49,6 @@ const Settings = (props) => {
 			setAutoCreateLinkSettings={setAutoCreateLinkSettings}
 		/>,
 		<TabsTools query={query} />,
-		<TabsBrokenLinkChecker />,
 		<RoleManagement />,
 		<GoPremium />,
 	]);
@@ -87,7 +85,7 @@ const Settings = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
-			<Tabs defaultIndex={currentTab == 'true' ? 2 : 3}>
+			<Tabs defaultIndex={currentTab == 'true' ? 2 : 0}>
 				<TabList>
 					{tabList.map((item, index) => (
 						<Tab key={index}>{item}</Tab>

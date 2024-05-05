@@ -20,7 +20,7 @@ const TabsBrokenLinkChecker = () => {
 	const brokenLinkCheckerTabList = betterLinksHooks.applyFilters('betterLinksSettingsBrokenLinkCheckerTabList', tabList);
 	const brokenLinkCheckerTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (
-		<div className="betterlinks-options-tabs-wrapper betterlinks-broken-links-tabs-wrapper">
+		<>
 			<Tabs defaultIndex={1}>
 				<TabList>
 					{brokenLinkCheckerTabList.map((item, index) => (
@@ -36,7 +36,7 @@ const TabsBrokenLinkChecker = () => {
 					})}
 				</div>
 			</Tabs>
-		</div>
+		</>
 	);
 };
 

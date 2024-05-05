@@ -3,7 +3,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 import { __ } from '@wordpress/i18n';
-import { is_pro_enabled, plugin_root_url } from 'utils/helper';
+import { is_pro_enabled } from 'utils/helper';
 import { ReactComponent as Stepper } from '../../../assets/images/teasers/stepper.svg';
 import { ReactComponent as Link } from '../../../assets/images/teasers/link.svg';
 import { ReactComponent as Analytics } from '../../../assets/images/teasers/analytics.svg';
