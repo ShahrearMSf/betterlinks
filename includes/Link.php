@@ -19,7 +19,7 @@ class Link extends Utils {
 		if ( isset( $_GET['action'], $_GET['api_key'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_key'] ) === md5( AUTH_KEY ) ) {
 			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
 			
-			do_action( 'betterlinks_prevent_unwanted_cle', $target_url );
+			do_action( 'betterlinks_prevent_unwanted_cle');
 
 			$title = isset( $_GET['title'] ) ?  sanitize_text_field( $_GET['title'] ) : ''; // geting title from document obj, instead of fetching
 

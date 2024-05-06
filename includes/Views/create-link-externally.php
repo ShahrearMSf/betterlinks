@@ -1,6 +1,6 @@
 <?php
 /**
- * The "Create Link Externally" feature enables users to generate BetterLinks instantly while browsing online content, facilitating seamless sharing of branded URLs for blog posts or important links.
+ * The "Quick Link Creation" feature enables users to generate BetterLinks instantly while browsing online content, facilitating seamless sharing of branded URLs for blog posts or important links.
  *
  * @package BetterLinks/Create-Link-Externally
  * @since 1.9.2
@@ -67,7 +67,7 @@ if ( empty( $prevent_unwanted_click ) ) {
 						<h1><?php esc_html_e( 'Short Link Can\'t be created for this page', 'betterlinks' ); ?></h1>
 					</div>
 					<div class="btl-cle-footer">
-						<a href="<?php echo esc_url_raw( $target_url ); ?>" title="Go Back">
+						<a href="#" onclick="history.back()" title="<?php esc_attr_e( 'Go Back', 'betterlinks' ); ?>">
 							<span class="dashicons dashicons-arrow-left-alt"></span>
 							<?php esc_html_e( 'Go Back', 'betterlinks' ); ?>
 						</a>
@@ -174,7 +174,7 @@ if ( empty( $prevent_unwanted_click ) ) {
 		</div>
 		
 		<div class="btl-cle-footer">
-			<a href="<?php echo esc_url_raw( $target_url ); ?>" title="Go Back">
+			<a href="#" onclick="history.back()" title="Go Back">
 				<span class="dashicons dashicons-arrow-left-alt"></span>
 				<?php esc_html_e( 'Go Back', 'betterlinks' ); ?>
 			</a>

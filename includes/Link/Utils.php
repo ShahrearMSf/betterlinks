@@ -363,7 +363,7 @@ class Utils {
 		exit;
 	}
 
-	public static function prevent_unwanted_cle( $target_url ) {
+	public static function prevent_unwanted_cle() {
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( sanitize_url( $_SERVER['REQUEST_URI'] ) ) : '';
 
 		$params = explode( 'action=btl_cle&api_key', $request_uri );
