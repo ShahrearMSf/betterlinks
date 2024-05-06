@@ -55,7 +55,7 @@ const FreeSettings = ({ props }) => {
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<span className="btl-form-group">
 				<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-					{__('Enable Quick Link', 'betterlinks')}
+					{__('Enable Quick Link Creation', 'betterlinks')}
 				</label>
 				<div className="btl-form-field">
 					<label className="btl-checkbox-field block">
@@ -131,8 +131,12 @@ const Notes = () => {
 		<div className="btl-form-group">
 			<div className="btl-form-field">
 				<div className="short-description">
-					<b style={{ fontWeight: 700 }}>Note: </b>
-					<span>{__('It will allow you to create link externally from your bookmark. For more info, ', 'betterlinks')}</span>
+					<b style={{ fontWeight: 700 }}>{__('Note', 'betterlinks')}: </b>
+					<span>{__('It will allow you to create ', 'betterlinks')}</span>
+					<span>
+						<strong>{__('Quick Link ', 'betterlinks')}</strong>
+					</span>
+					<span>{__('directly from your bookmark. For more info, ', 'betterlinks')}</span>
 					<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
 						{__('Click here', 'betterlinks')}
 					</a>
@@ -158,12 +162,13 @@ const DragableButton = () => {
 			}}
 		>
 			<a
+				onClick={(e) => e.preventDefault()}
 				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+encodeURI(location.href)+'&title='+encodeURI(document.title)`}
 				className="button button-primary"
 			>
-				{__('Create Link Externally', 'betterlinks')}
+				{__('Quick Link Creation', 'betterlinks')}
 			</a>
-			<span>{__('Just drag this button in your bookmark', 'betterlinks')}</span>
+			<span>{__('Just Drag & Drop this button in your bookmark', 'betterlinks')}</span>
 		</div>
 	);
 };

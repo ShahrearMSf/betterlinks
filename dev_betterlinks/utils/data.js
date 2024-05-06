@@ -47,7 +47,7 @@ export const tabList = [
 		type: 'free',
 	},
 	{
-		label: __('Create Link Externally', 'betterlinks'),
+		label: __('Quick Link Creation', 'betterlinks'),
 		type: 'free',
 	},
 	{
