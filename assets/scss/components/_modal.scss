@@ -373,7 +373,7 @@
 
 	.btl-modal-form-group {
 		display: flex;
-		align-items: center;
+		align-items: baseline;
 		@media screen and (max-width: 650px) {
 			flex-direction: column;
 		}
