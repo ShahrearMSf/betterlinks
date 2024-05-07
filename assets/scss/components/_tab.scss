@@ -145,6 +145,18 @@
 			.btl-text-field-teaser {
 				cursor: not-allowed;
 			}
+
+			.btl-short-domain-input {
+				position: relative;
+				display: flex;
+				align-items: center;
+				column-gap: 5px;
+
+				.btl-circle-spinner {
+					position: absolute;
+					right: 15%;
+				}
+			}
 		}
 	}
 }

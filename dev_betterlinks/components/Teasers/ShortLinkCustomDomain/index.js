@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Form, Formik } from 'formik';
@@ -9,6 +9,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import { isURL } from '@wordpress/url';
+
+const ClipLoader = lazy(() => import('react-spinners/ClipLoader'));
+const Tooltip = lazy(() =>
+	import('react-lightweight-tooltip').then((module) => ({
+		default: module.Tooltip,
+	}))
+);
 
 const ShortLinkCustomDomain = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -48,7 +55,7 @@ const ShortLinkCustomDomain = ({ settings, update_option }) => {
 								</span>
 							</>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', null, props)}
+						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', null, { ...props, ClipLoader, Tooltip })}
 						{is_pro_enabled && (
 							<>
 								<button className="button-primary btn-save-settings" type="submit">
