@@ -9,13 +9,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import { isURL } from '@wordpress/url';
-
-const ClipLoader = lazy(() => import('react-spinners/ClipLoader'));
-const Tooltip = lazy(() =>
-	import('react-lightweight-tooltip').then((module) => ({
-		default: module.Tooltip,
-	}))
-);
+import ClipLoader from 'react-spinners/ClipLoader';
+import { Tooltip } from 'react-lightweight-tooltip';
+// const ClipLoader = lazy(() => import('react-spinners/ClipLoader'));
+// const Tooltip = lazy(() =>
+// 	import('react-lightweight-tooltip').then((module) => ({
+// 		default: module.Tooltip,
+// 	}))
+// );
 
 const ShortLinkCustomDomain = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
