@@ -141,7 +141,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 1.9.2 - 07/05/2024 =
+= 1.9.2 - 13/05/2024 =
 
 - Fixed: HTML element tag support inside Link Title
 - Few minor bug fixes & improvement
