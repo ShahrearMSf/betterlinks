@@ -43,7 +43,7 @@ const FilterComponent = (props) => {
 
 				<div style={{ display: 'flex' }}>
 					<form onSubmit={searchClickHandler}>
-						<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} autoFocus />
+						<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />
 						<button className="btl-search-button" type="submit" title={__('Searching', 'betterlinks')}>
 							<SearchLoader searchStatus={searchStatus} />
 						</button>
