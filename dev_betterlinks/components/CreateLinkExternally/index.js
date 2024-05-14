@@ -2,7 +2,7 @@ import { betterlinks_auth, is_pro_enabled, saveSettingsHandler, site_url } from 
 import { Form, Formik } from 'formik';
 import { update_option } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { __ } from '@wordpress/i18n';
 import CreateLinkExternallyTeaser from 'components/Teasers/CreateLinkExternally';
@@ -50,6 +50,11 @@ export default connect(null, mapDispatchToProps)(CreateLinkExternally);
 
 const FreeSettings = ({ props }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	useEffect(() => {
+		if (!('powered_by' in props.values.cle)) {
+		props.setFieldValue('cle.powered_by', true);
+		}
+	}, []);
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
