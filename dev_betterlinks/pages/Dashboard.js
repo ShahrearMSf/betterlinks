@@ -7,6 +7,7 @@ import { __ } from '@wordpress/i18n';
 import ManageTags from './ManageTags';
 
 const renderSwitch = (param) => {
+	window.scrollTo(0, 0);
 	switch (param) {
 		case 'betterlinks':
 			return <ManageLinks />;
