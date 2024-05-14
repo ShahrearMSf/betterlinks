@@ -377,19 +377,31 @@
 		@media screen and (max-width: 650px) {
 			flex-direction: column;
 		}
+		.btl-modal-form-field-wrapper {
+			display: flex;
+			width: 100%;
+			flex-direction: column;
+
+			.btl-modal-select--full {
+				width: inherit;
+			}
+			> span {
+				color: $danger;
+			}
+		}
+
 		.btl-modal-form-label {
 			min-width: 120px;
-			width: 120px;
-			font-size: 16px;
+			width: 150px;
+			font-size: 15px;
 			font-weight: 500;
 			text-align: left;
-			padding-right: 40px;
+			padding-right: 0;
 			padding-top: 18px;
 			padding-bottom: 18px;
 			cursor: initial;
 			@media screen and (max-width: 650px) {
 				margin-bottom: 15px;
-				// text-align: center;
 				padding-right: 0;
 			}
 			&.btl-required {
@@ -399,6 +411,10 @@
 					color: $danger;
 				}
 			}
+		}
+
+		&:has(> .btl-modal-form-field-wrapper, > .extra_info_keywords) .btl-modal-form-label {
+			padding-right: 30px;
 		}
 		&:not(:last-child) {
 			margin-bottom: 20px;
