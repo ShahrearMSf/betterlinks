@@ -48,7 +48,7 @@ if ( empty( $prevent_unwanted_click ) ) {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php esc_html_e( 'Here is your BetterLink', 'betterlinks' ); ?></title>
+	<title><?php esc_html_e( '🎉 Here is your Quick Link', 'betterlinks' ); ?></title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"> <?php // phpcs:ignore ?>
@@ -64,7 +64,7 @@ if ( empty( $prevent_unwanted_click ) ) {
 						<div class="btl-logo">
 							<img src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/logo-large.svg' ); ?>" alt="BetterLinks Logo"/>
 						</div>
-						<h1><?php esc_html_e( 'Short Link Can\'t be created for this page', 'betterlinks' ); ?></h1>
+						<h1 style="font-size:35px;"><?php esc_html_e( 'Quick Link creation is unavailable for this URL', 'betterlinks' ); ?></h1>
 					</div>
 					<div class="btl-cle-footer">
 						<a href="#" onclick="history.back()" title="<?php esc_attr_e( 'Go Back', 'betterlinks' ); ?>">
@@ -86,11 +86,12 @@ if ( empty( $prevent_unwanted_click ) ) {
 				exit;
 			}
 		?>
+		<div id="confetti"></div>
 		<div class="btl-link-info-wrapper">
 			<div class="btl-logo">
 				<img src="<?php echo esc_attr( BETTERLINKS_PLUGIN_ROOT_URI . 'assets/images/logo-large.svg' ); ?>" alt="BetterLinks Logo"/>
 			</div>
-			<h1><?php esc_html_e( 'Here is your BetterLink for:', 'betterlinks' ); ?></h1>
+			<h1><?php esc_html_e( '🎉 Here is your Quick Link:', 'betterlinks' ); ?></h1>
 			<div class="btl-shortened-url">
 				<span><?php echo esc_html( $short_url ); ?></span>
 				<div>
