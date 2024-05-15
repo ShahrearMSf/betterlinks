@@ -31,9 +31,12 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 							<Notes />
 							{props.values?.cle?.enable_cle && <DragableButton cle={props.values?.cle} />}
 							<FreeSettings props={props} isLatestVersion={pro_version !== null && pro_version >= 9.4} />
-							{props.values?.cle?.enable_cle && props.values?.cle?.advanced_options && !(pro_version !== null && pro_version < 9.4) ? (
-								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })
-							) : (
+							{props.values?.cle?.enable_cle &&
+								props.values?.cle?.advanced_options &&
+								pro_version !== null &&
+								pro_version >= 9.4 &&
+								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })}
+							{pro_version !== null && pro_version < 9.4 && (
 								<>
 									<CreateLinkExternallyTeaser props={props} />
 									<div className="btl-form-group">
