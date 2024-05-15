@@ -51,8 +51,8 @@ export default connect(null, mapDispatchToProps)(CreateLinkExternally);
 const FreeSettings = ({ props }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	useEffect(() => {
-		if (!('powered_by' in props.values.cle)) {
-		props.setFieldValue('cle.powered_by', true);
+		if (!props?.values?.cle || !('powered_by' in props.values?.cle)) {
+			props.setFieldValue('cle.powered_by', true);
 		}
 	}, []);
 	return (
