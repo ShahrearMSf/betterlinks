@@ -1,4 +1,4 @@
-import { betterlinks_auth, is_pro_enabled, saveSettingsHandler, site_url } from 'utils/helper';
+import { betterlinks_auth, is_pro_enabled, pro_version_check, saveSettingsHandler, site_url } from 'utils/helper';
 import { Form, Formik } from 'formik';
 import { update_option } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
@@ -13,6 +13,9 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
 const CreateLinkExternally = ({ settings, terms, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
+
+	const pro_version = pro_version_check();
+
 	return (
 		<>
 			<Formik
@@ -27,10 +30,20 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 						<Form className="btl-cle">
 							<Notes />
 							{props.values?.cle?.enable_cle && <DragableButton cle={props.values?.cle} />}
-							<FreeSettings props={props} />
-							{props.values?.cle?.enable_cle &&
-								props.values?.cle?.advanced_options &&
-								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })}
+							<FreeSettings props={props} isLatestVersion={pro_version !== null && pro_version >= 9.4} />
+							{props.values?.cle?.enable_cle && props.values?.cle?.advanced_options && !(pro_version !== null && pro_version < 9.4) ? (
+								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })
+							) : (
+								<>
+									<CreateLinkExternallyTeaser props={props} />
+									<div className="btl-form-group">
+										<div className="short-description">
+											<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
+											{__('To Configure the Advanced Options, kindly ensure that you have updated to the latest version of BetterLinks Pro', 'betterlinks')}
+										</div>
+									</div>
+								</>
+							)}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
@@ -48,7 +61,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(null, mapDispatchToProps)(CreateLinkExternally);
 
-const FreeSettings = ({ props }) => {
+const FreeSettings = ({ props, isLatestVersion }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	useEffect(() => {
 		if (!props?.values?.cle || !('powered_by' in props.values?.cle)) {
@@ -105,7 +118,7 @@ const FreeSettings = ({ props }) => {
 						</label>
 						<div className="btl-form-field">
 							<label className="btl-checkbox-field block">
-								{is_pro_enabled ? (
+								{is_pro_enabled && isLatestVersion ? (
 									<>
 										<input
 											className="btl-check"
