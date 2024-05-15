@@ -35,7 +35,7 @@ const CustomFields = ({ settings, update_option }) => {
 		const customFieldsValues = _.map(values?.customFields || [], 'value');
 		const hasEmptyValue = _.some(customFieldsValues, (val) => !val || '' === val || val.includes(' ')); // Checks for string is valid or not.
 
-		if (customFieldsValues.length === 0) {
+		if (customFieldsValues.length === 0 && settings.customFields.length === 0) {
 			setFieldError('customFields', __('Please create at least one Custom Field to save.', 'betterlinks'));
 			return;
 		}
