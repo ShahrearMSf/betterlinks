@@ -157,7 +157,7 @@ const Notes = () => {
 						<strong>{__('Quick Link ', 'betterlinks')}</strong>
 					</span>
 					<span>{__('directly from your bookmark. For more info, ', 'betterlinks')}</span>
-					<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
+					<a className="external-analytic-tooltip-anchor" href="https://betterlinks.io/docs/configure-quick-link-creation/" target="_blank" style={{ color: 'inherit' }}>
 						{__('Click here', 'betterlinks')}
 					</a>
 				</div>
