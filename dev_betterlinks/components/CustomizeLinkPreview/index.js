@@ -46,7 +46,7 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 					className="link-options__head"
 					type="button"
 					onClick={() => {
-						setOpenModal(true);
+						!is_pro_enabled && setOpenModal(true);
 						__handleToggle('optimizeMetaTags');
 					}}
 				>
