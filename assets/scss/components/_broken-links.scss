@@ -377,12 +377,12 @@
 			}
 			&:nth-child(5) {
 				min-width: 290px;
-				padding-left: 40px;
+				// padding-left: 40px;
 			}
 			&:last-child {
 				max-width: 130px;
-				justify-content: center;
-				padding-left: 40px;
+				// justify-content: center;
+				// padding-left: 40px;
 			}
 		}
 		background-color: transparent;
@@ -395,7 +395,7 @@
 					&:nth-child(4) {
 						> div {
 							display: flex;
-							justify-content: center;
+							justify-content: flex-start;
 							width: 270px;
 						}
 					}
@@ -451,7 +451,7 @@
 					}
 				}
 				&:nth-child(4) {
-					padding-left: 25px;
+					// padding-left: 25px;
 					.btl-short-url-wrapper {
 						width: 290px;
 						.btl-short-url {
@@ -607,9 +607,9 @@
 						&:nth-child(1) {
 							min-width: 300px;
 						}
-						&:nth-child(2) {
-							max-width: initial;
-						}
+						// &:nth-child(2) {
+						// 	max-width: initial;
+						// }
 						&:nth-child(3) {
 							min-width: 100px;
 						}
@@ -617,7 +617,7 @@
 							min-width: 200px;
 						}
 						&:last-child {
-							max-width: 100px;
+							// max-width: 100px;
 							min-width: 100px;
 						}
 					}
@@ -664,7 +664,7 @@
 						justify-content: center;
 					}
 					&:nth-child(2) {
-						max-width: initial;
+						// max-width: initial;
 						> div {
 							width: 80%;
 							display: flex;
@@ -680,11 +680,12 @@
 						}
 					}
 					&:nth-child(4) {
+						justify-content: flex-start;
 						min-width: 200px;
 						max-width: 230px;
 					}
 					&:last-child {
-						max-width: 100px;
+						// max-width: 100px;
 						min-width: 100px;
 					}
 				}
@@ -702,6 +703,14 @@
 				}
 				.btl-list-view-select {
 					width: 200px;
+				}
+
+				.btl-react-select__input {
+					input {
+						&:focus {
+							box-shadow: unset;
+						}
+					}
 				}
 			}
 		}
