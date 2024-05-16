@@ -144,6 +144,11 @@
 			}
 			.btl-text-field-teaser {
 				cursor: not-allowed;
+
+				&::placeholder {
+					font-size: 14px;
+					font-weight: normal;
+				}
 			}
 
 			.btl-short-domain-input {
