@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.9.2
+Stable tag: 2.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -140,6 +140,16 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 2.0.0 - 19/05/2024 =
+
+- Added: Quick Link Creation Feature
+- Improvement: Link title will be automatically generated from the target URL's title
+- Improvement: Manage Links date format now matches the WordPress default format
+- Improvement: Manage Tags UI
+- Fixed: Analytics now displays from the top of the page
+- Fixed: Added proper validation for Custom Fields
+- Few minor bug fixes & improvement
 
 = 1.9.2 - 13/05/2024 =
 
