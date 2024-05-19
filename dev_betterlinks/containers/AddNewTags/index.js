@@ -9,7 +9,7 @@ import ActionButton from 'components/ActionButton';
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
-	const { tags, icon = false, row = {} } = props;
+	const { tags, icon = false, row = {}, children } = props;
 
 	const openModal = () => {
 		setOpen(true);
@@ -46,7 +46,9 @@ const AddNewTags = (props) => {
 	return (
 		<>
 			{(tags || []).length > 0 && icon ? (
-				<ActionButton type="edit" label={__('Edit Tag', 'betterlinks')} onClickHandler={openModal} />
+				<ActionButton type="edit" label={__('Edit Tag', 'betterlinks')} onClickHandler={openModal}>
+					{children}
+				</ActionButton>
 			) : (
 				<div className="btl-create-autolinks btl-create-tags">
 					<button className="btl-create-autolink-button btl-create-tags-button" onClick={openModal}>

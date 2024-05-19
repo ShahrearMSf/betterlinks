@@ -7,6 +7,7 @@ import DataTable from 'react-data-table-component';
 import KeywordsQuickAction from 'components/KeywordsQuickAction';
 import LinkCopyUrl from 'components/LinkCopyUrl';
 import { delete_keyword } from 'redux/actions/keywords.actions';
+import AddNewKeywords from './AddNewKeywords';
 
 const KeywordFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState([]);
@@ -54,7 +55,11 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			selector: 'keywords',
 			sortable: false,
 			cell: (row) => {
-				return <div>{row?.keywords?.toString()}</div>;
+				return (
+					<AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} data={row} keywords={keywords}>
+						{<div style={{ textDecoration: 'underline' }}>{row?.keywords?.toString()}</div>}
+					</AddNewKeywords>
+				);
 			},
 		},
 		{
@@ -63,7 +68,15 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			sortable: false,
 			cell: (row) => {
 				const data = links.filter((item) => item.value == row.link_id);
-				return <div>{data.length > 0 && <LinkCopyUrl shortUrl={data[0].label} />}</div>;
+				return (
+					<div>
+						{data.length > 0 ? (
+							<LinkCopyUrl shortUrl={data[0].label} />
+						) : (
+							<span style={{ fontWeight: 'bold', color: 'red' }}>{__('No link selected or link may be deleted.', 'betterlinks')}</span>
+						)}
+					</div>
+				);
 			},
 		},
 		{

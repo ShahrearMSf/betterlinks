@@ -377,19 +377,31 @@
 		@media screen and (max-width: 650px) {
 			flex-direction: column;
 		}
+		.btl-modal-form-field-wrapper {
+			display: flex;
+			width: 100%;
+			flex-direction: column;
+
+			.btl-modal-select--full {
+				width: inherit;
+			}
+			> span {
+				color: $danger;
+			}
+		}
+
 		.btl-modal-form-label {
 			min-width: 120px;
-			width: 120px;
-			font-size: 16px;
+			width: 150px;
+			font-size: 15px;
 			font-weight: 500;
 			text-align: left;
-			padding-right: 40px;
+			padding-right: 0;
 			padding-top: 18px;
 			padding-bottom: 18px;
 			cursor: initial;
 			@media screen and (max-width: 650px) {
 				margin-bottom: 15px;
-				// text-align: center;
 				padding-right: 0;
 			}
 			&.btl-required {
@@ -399,6 +411,10 @@
 					color: $danger;
 				}
 			}
+		}
+
+		&:has(> .btl-modal-form-field-wrapper, > .extra_info_keywords) .btl-modal-form-label {
+			padding-right: 30px;
 		}
 		&:not(:last-child) {
 			margin-bottom: 20px;
@@ -462,6 +478,44 @@
 							right: -12px;
 							width: 20px;
 						}
+					}
+				}
+			}
+		}
+
+		.btl-modal-form-title-wrapper {
+			position: relative;
+			width: 72%;
+
+			.btl-modal-form-label-found {
+				position: absolute;
+				top: 100%;
+				padding: 7px;
+				background-color: aliceblue;
+				width: calc(100% - 10px);
+				border-radius: 7px;
+				-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+				-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+				box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+
+				span.btl-modal-fetced-title {
+					font-weight: bold;
+				}
+
+				span.btl-modal-title-overwrite {
+					display: inline-block;
+					color: $light;
+					padding: 0px 6px;
+					border-radius: 5px;
+					margin-right: 3px;
+					cursor: pointer;
+
+					&-yes {
+						background: #2961ff;
+						border: 1px solid #2961ff;
+					}
+					&-no {
+						background-color: red;
 					}
 				}
 			}

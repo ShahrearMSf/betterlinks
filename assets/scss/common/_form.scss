@@ -132,6 +132,28 @@
 		width: 200px;
 	}
 }
+.btl-cle {
+	.btl-form-group {
+		.btl-form-label {
+			min-width: 120px;
+			width: 200px;
+		}
+	}
+
+	.btl-cle-select-teaser {
+		margin-bottom: 20px;
+		.btl-form-group .btl-form-label {
+			min-width: 148px;
+		}
+	}
+
+	.btl-cle-select {
+		margin-bottom: 20px;
+		.btl-form-group .btl-form-label {
+			min-width: 185px;
+		}
+	}
+}
 .btl-checkbox-field {
 	display: flex;
 	cursor: pointer;
@@ -335,6 +357,7 @@ span.pro-badge {
 	align-items: center;
 	border-radius: 2px;
 	transform: translateY(-10px);
+	cursor: pointer;
 }
 
 //  fix: 'Auto-Linked Keywords Icon' option checkbox is not aligned start

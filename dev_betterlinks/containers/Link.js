@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
@@ -6,6 +6,7 @@ import Select from 'components/Select';
 import { Formik, Field, Form } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 
 //👇 slight tweak (renamed 'fetch_terms_data' to 'fetch_terms_action_function') to use the <Link /> component inside gutenberg
 import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/terms.actions';
@@ -22,6 +23,7 @@ import {
 	add_top_loader,
 	remove_top_loader,
 	shortURLUniqueCheck,
+	makeRequest,
 } from 'utils/helper';
 import { redirectType, redirectTypeForPasswordProtection } from 'utils/data';
 import Category from 'components/Terms/Category';
@@ -33,6 +35,7 @@ import CustomizeLinkPreview from 'components/CustomizeLinkPreview';
 import CustomTrackingScripts from 'components/CustomTrackingScripts';
 import { fetch_tracking_settings } from 'redux/actions/settings.actions';
 import LinkFields from 'components/CustomFields/LinkFields';
+import FetchedTitleConfirmation from 'components/Link/FetchedTitleConfirmation';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -90,6 +93,7 @@ export const Link = (props) => {
 	});
 	const [password, setPassword] = useState(null);
 	const [metaTag, setMetaTag] = useState(null);
+	const [fetchedTitle, setFetchedTitle] = useState(null);
 
 	const customFields = settings?.settings?.customFields || [];
 
@@ -261,6 +265,47 @@ export const Link = (props) => {
 		togglePanel(toggle);
 	};
 
+	const fetchTargetURL = useCallback(
+		_.debounce(async (target_url, setFieldValue, willUpdate, previousTitle) => {
+			try {
+				const res = await makeRequest({
+					action: 'betterlinks__fetch_target_url',
+					target_url,
+				});
+				if (res.data.result) {
+					let fetchedTitle = res.data.result?.title;
+					if (fetchedTitle === previousTitle) return;
+					let short_url = null;
+					if (fetchedTitle.length > 20) {
+						short_url = fetchedTitle
+							.split(' ')
+							.map((item) => item[0])
+							.join('');
+					}
+					if (!willUpdate) {
+						setFetchedTitle(fetchedTitle);
+						return;
+					}
+					handleTitleChange(setFieldValue, fetchedTitle || '', short_url);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		}, 500),
+		[settings.settings]
+	);
+
+	const handleTitleChange = (setFieldValue, title, short_url = null) => {
+		setFieldValue('link_title', title);
+		if (!data) {
+			let shortURL = generateShortURL(settings.settings, short_url || title);
+			if (shortURL.length > 0) {
+				setFieldValue('short_url', shortURL);
+				setSlugIsExists(false);
+			}
+		}
+	};
+
 	const submitLinkHandler = (values, actions) => {
 		const { setSubmitting, setFieldError } = actions;
 		setSubmitting(false);
@@ -327,31 +372,36 @@ export const Link = (props) => {
 											<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 												{__('Title', 'betterlinks')}
 											</label>
-											<div
-												style={{
-													display: 'flex',
-													flexDirection: 'column',
-													width: '100%',
-												}}
-											>
-												<Field
-													className="btl-modal-form-control"
-													id="link_title"
-													name="link_title"
-													disabled={isDisableLinkFormEditView}
-													onChange={(e) => {
-														props.setFieldValue('link_title', e.target.value);
-														if (!data) {
-															const shortURL = generateShortURL(settings.settings, e.target.value);
-															if (shortURL.length > 0) {
-																props.setFieldValue('short_url', shortURL);
-																setSlugIsExists(false);
-															}
-														}
+											<div className="btl-modal-form-title-wrapper">
+												<div
+													style={{
+														display: 'flex',
+														flexDirection: 'column',
+														width: '100%',
 													}}
-													required
-												/>
-												{errors.link_title && <span style={{ color: 'red' }}>{errors.link_title}</span>}
+												>
+													<Field
+														className="btl-modal-form-control"
+														id="link_title"
+														name="link_title"
+														disabled={isDisableLinkFormEditView}
+														onChange={(e) => {
+															handleTitleChange(props.setFieldValue, e.target.value);
+														}}
+														required
+													/>
+													{errors.link_title && <span style={{ color: 'red' }}>{errors.link_title}</span>}
+												</div>
+												{fetchedTitle && (
+													<FetchedTitleConfirmation
+														fetchedTitle={fetchedTitle}
+														handleYes={() => {
+															handleTitleChange(props.setFieldValue, fetchedTitle);
+															setFetchedTitle(null);
+														}}
+														handleNo={() => setFetchedTitle(null)}
+													/>
+												)}
 											</div>
 										</div>
 										<div className="btl-modal-form-group">
@@ -389,7 +439,12 @@ export const Link = (props) => {
 												className="btl-modal-form-control"
 												id="target_url"
 												name="target_url"
-												onChange={(e) => props.setFieldValue('target_url', e.target.value.replace(/\s+/g, ''))}
+												onChange={(e) => {
+													const target_url = e.target.value.replace(/\s+/g, '');
+													props.setFieldValue('target_url', target_url);
+													const willUpdateTitle = '' === props.values?.link_title;
+													fetchTargetURL(target_url, props.setFieldValue, willUpdateTitle, props.values?.link_title);
+												}}
 												placeholder=""
 												disabled={isDisableLinkFormEditView}
 												required

@@ -1,6 +1,8 @@
 <?php
 namespace BetterLinks;
 
+use BetterLinks\Admin\Cache;
+
 class Installer extends \WP_Background_Process
 {
     use Traits\DBTables;
@@ -19,7 +21,7 @@ class Installer extends \WP_Background_Process
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
         $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links', 'clear_cache'];
-        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
+        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache', 'fix_json_files'];
         $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
 
@@ -153,6 +155,7 @@ class Installer extends \WP_Background_Process
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
+        Cache::init();
     }
 
     /**
@@ -175,6 +178,11 @@ class Installer extends \WP_Background_Process
             [
                 'base' => BETTERLINKS_UPLOAD_DIR_PATH,
                 'file' => 'clicks.json',
+                'content' => $emptyContent,
+            ],
+            [
+                'base' => BETTERLINKS_UPLOAD_DIR_PATH,
+                'file' => 'settings.json',
                 'content' => $emptyContent,
             ],
         ];
@@ -350,6 +358,22 @@ class Installer extends \WP_Background_Process
                 [ "fixed_missing_terms_relation_after_ta_one_click_migration" => true ]
             );
             Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
+        }
+    }
+
+    public function fix_json_files() {
+        $file = [
+            'base' => BETTERLINKS_UPLOAD_DIR_PATH,
+            'file' => 'settings.json',
+            'content' => '{}',
+        ];
+
+        if (wp_mkdir_p($file['base']) && !file_exists(trailingslashit($file['base']) . $file['file'])) {
+            $file_handle = @fopen(trailingslashit($file['base']) . $file['file'], 'wb');
+            if ($file_handle) {
+                fwrite($file_handle, $file['content']);
+                fclose($file_handle);
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 <?php
 namespace BetterLinks;
 
+use BetterLinks\Admin\Cache;
+use WP_Http;
+
 class Helper {
 
 	use Traits\Query;
@@ -662,5 +665,49 @@ class Helper {
 		}
 		$installer->data( array( 'betterlinks_ptl_clicks_migrated' ) )->save();
 		return $installer;
+	}
+
+	public function generate_random_slug( $length = 3 ) {
+		$characters        = '0123456789abcdefghijklmnopqrstuvwxyz';
+		$random_string     = '';
+		$characters_length = strlen( $characters );
+
+		for ( $i = 0; $i < $length; $i++ ) {
+			$random_string .= $characters[ wp_rand( 0, $characters_length - 1 ) ];
+		}
+		$random_num = wp_rand( 0, 10 ) . wp_rand( 0, 10 ) . wp_rand( 0, 10 );
+		return $random_string . $random_num;
+	}
+	public function get_betterlinks_prefix() {
+		if ( BETTERLINKS_EXISTS_SETTINGS_JSON ) {
+			$data = Cache::get_json_settings();
+
+			if ( empty( $data ) ) {
+				$data = Cache::write_json_settings();
+			}
+			$prefix = ! empty( $data['prefix'] ) ? $data['prefix'] . '/' : '';
+			return $prefix;
+		}
+
+		$betterlinks_links = get_option( 'betterlinks_links', array() );
+		if ( is_string( $betterlinks_links ) ) {
+			$betterlinks_links = json_decode( $betterlinks_links, true );
+		}
+		$prefix = ! empty( $betterlinks_links['prefix'] ) ? $betterlinks_links['prefix'] . '/' : '';
+		return $prefix;
+	}
+
+	public function fetch_target_url( $target_url ) {
+		if ( empty( $target_url ) ) {
+			return false;
+		}
+
+		$http   = new WP_Http();
+		$result = $http->get( $target_url, array( 'sslverify' => false ) );
+		$title  = '';
+		if ( ! is_wp_error( $result ) && ! empty( $result['body'] ) && preg_match( '/<title>(.*)<\/title>/siU', $result['body'], $title_matches ) ) {
+			$title = html_entity_decode( $title_matches[1] );
+		}
+		return $title;
 	}
 }

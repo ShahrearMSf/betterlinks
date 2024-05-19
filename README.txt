@@ -5,7 +5,7 @@ Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, li
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.9.2
+Stable tag: 2.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,6 +20,7 @@ Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings 
 
 - Easy-to-use WordPress link shortener
 - Create attractive looking links instantly
+- Create Short Link on the fly with just one click even without admin access.
 - Add multiple link redirect types (301, 302, 307)
 - Analyze & track your marketing campaigns
 - Enhance your affiliate marketing strategies
@@ -140,6 +141,16 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 2.0.0 - 19/05/2024 =
+
+- Added: Quick Link Creation Feature
+- Improvement: Link title will be automatically generated from the target URL's title
+- Improvement: Manage Links date format now matches the WordPress default format
+- Improvement: Manage Tags UI
+- Fixed: Analytics now displays from the top of the page
+- Fixed: Added proper validation for Custom Fields
+- Few minor bug fixes & improvement
 
 = 1.9.2 - 13/05/2024 =
 
@@ -303,239 +314,6 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 - Fixed: Gutenberg instant redirect option not showing sometimes
 - Few minor bug fixes & improvements
 
-
-= 1.5.5 - 22/12/2022 =
-
-- Added: Link QR Code Scanner inside List View
-- Improved: Date Format in BetterLinks Analytics
-- Improved: Added Link prefix option when importing from Thirsty Affiliates
-- Few minor bug fixes & improvements
-
-= 1.5.4 - 30/11/2022 =
-
-- Fixed: ThirstyAffiliates links not migrating properly
-- Fixed: Link Expiration Date Schedule not working
-- Improved: Optimized requests when opening Link Editor modal
-- Fixed: Duplicate category being created when creating through link editor modal
-- Fixed: Some links being missing in the Manage links screen
-- Fixed: Conflict with Presto Player
-- Few minor bug fixes & improvements
-
-= 1.5.3 - 23/11/2022 =
-
-- Few minor bug fixes & improvements
-
-= 1.5.2 - 20/11/2022 =
-
-- Fixed: Instant Gutenberg Redirect | Options not working properly
-- Few minor bug fixes & improvements
-
-= 1.5.1 - 06/11/2022 =
-
-- Revamped: Improved background process during migration from third party plugins for better performance
-- Fixed: Database Error – Table doesn't exist
-- Few minor bug fixes & improvements
-
-= 1.5.0 - 20/09/2022 =
-
-- Added: Option to Add/Manage Links inside Gutenberg Editor
-- Few minor bug fixes & improvements
-
-= 1.4.1 - 03/08/2022 =
-
-- Added: Option to enable/disable links being case sensitive
-- Few minor bug fixes & improvements
-
-= 1.4.0 - 06/07/2022 =
-
-- Added: Option to "Add Links as Favorites"
-- Fixed: Shortened URLs being case sensitive
-- Few minor bug fixes & improvements
-
-= 1.3.4 - 19/06/2022 =
-
-- Fixed: Link redirection not working for sub-directory sites
-- Few minor bug fixes & improvements
-
-= 1.3.3 - 30/05/2022 =
-
-- Fixed: Sorted link not staying at the same position after editing the link in the Grid view
-- Fixed: 'Select option arrow' of 'Rows per page' in 'list view' not showing correctly
-- Fixed: Unable to create links as Manage Links page showing blank screen
-- Added: Visit link option in the Grid view
-- Few minor bug fixes & improvements
-
-= 1.3.2 - 25/05/2022 =
-
-- Compatibility: Compatible to WordPress v6.0
-- Few minor bug fixes & improvements
-
-= 1.3.1 - 19/04/2022 =
-
-- Improved: Query optimization for better performance
-- Few minor bug fixes & improvements
-
-= 1.3.0 - 19/01/2022 =
-
-- Added: Instant Link Redirect option inside Elementor Page Builder
-- Few minor bug fixes & improvements
-
-= 1.2.9 - 11/01/2022 =
-
-- Few minor bug fix & improvements
-
-= 1.2.8 - 30/11/2021 =
-
-- Few minor bug fix & improvements
-
-= 1.2.7 - 28/10/2021 =
-
-- Added: Option to generate random strings for shortened links
-- Added: Translations for missing strings
-- Improved: Import functionality to overwrite existing links
-- Few minor bug fix & improvements
-
-= 1.2.6 - 19/10/2021 =
-
-- Added: QR Code Generator for shortened links
-- Added: Sample CSV export option
-- Improved: Security enhancement for CSV
-- Few minor bug fix & improvements
-
-
-= 1.2.5 - 07/10/2021 =
-
-- Added: ThirstyAffiliates Migration
-- Added: Translations compatibility
-- Few minor bug fix & improvements
-
-= 1.2.4 - 29/09/2021 =
-
-- Improved: Query optimization for better performance & security enhancement
-- Added: Default Link Prefix option
-- Few minor bug fix & improvements
-
-= 1.2.3 - 21/09/2021 =
-
-- Added: CSV Import/Export option
-- Fixed: CSS conflict with Yoast SEO
-- Fixed: Import/Export Category relation issue
-- Few minor bug fix & improvements
-
-
-= 1.2.2 - 31/08/2021 =
-
-- Few minor bug fix & improvements
-
-= 1.2.1 - 24/08/2021 =
-
-- Few minor bug fix & improvements
-
-= 1.2.0 - 23/08/2021 =
-
-- Fixed: Tags not updating & creating
-- Fixed: Category not updating properly
-- Added: Link title automatically being converted to Shortened URL
-- Few minor bug fix & improvements
-
-= 1.1.9 - 12/08/2021 =
-
-- Added: AJAX Fallback when REST API is disabled
-- Fixed: Sanitized REST API data
-- Few minor bug fix & improvements
-
-= 1.1.8 - 28/07/2021 =
-
-- Improved: Coding structure to enhance security
-- Few minor bug fix & improvements
-
-= 1.1.7 - 08/07/2021 =
-
-- Few minor bug fix & improvements
-
-= 1.1.6 - 06/07/2021 =
-
-- Improved: Updated User Interface
-- Few minor bug fix & improvements
-
-= 1.1.5 - 23/06/2021 =
-
-- Removed: PHP session
-
-= 1.1.4 - 20/06/2021 =
-
-- Fixed: Conflict with Gutenberg Editor
-- Few minor bug fix and improvements
-
-= 1.1.3 - 15/06/2021 =
-
-- Added: Instant Gutenberg Redirect option
-- Added: Bot Blocker option
-- Few minor bug fix and improvements
-
-= 1.1.2 - 07/06/2021 =
-
-- Improved: Optimized background process for better performance
-- Few minor bug fix and improvements
-
-= 1.1.1 - 24/05/2021 =
-
-- Fixed: Database migration issue with version update
-- Fixed: BetterLinks Import/Export feature not working properly
-- Few minor bug fix and improvements
-
-= 1.1.0 - 20/05/2021 =
-
-- Added: UTM Builder
-- Few minor bug fix and improvements
-
-= 1.0.5 - 07/04/2021 =
-
-- Fixed: Redirection not working if shortened URL ends with a ‘/‘
-- Few minor bug fix and improvements
-
-= 1.0.4 - 01/04/2021 =
-
-- Fixed: Link categories not updating correctly after deletion
-- Fixed: Parameter forwarding not working
-- Fixed: Link order not showing correctly after migrating from Simple 301 Redirects
-- Improved: URL parsing before redirecting
-- Few minor bug fix and improvements
-
-= 1.0.3 - 25/03/2021 =
-
-- Added: Migration for Simple 301 Redirects plugin
-- Tweaked: UI/UX update
-- Added: Wildcard option
-- Removed: Blank link showing in the Grid view
-- Few minor bug fix and improvements
-
-= 1.0.2 - 24/02/2021 =
-
-- Fixed: Analytics not showing instantly after regenerating stats
-- Fixed: Clicks count not working
-- Fixed: Most Recent click data not showing at the top in Analytics
-- Improved: Overall UI/UX
-- Improved: Migration from Pretty Links
-- Few minor bug fix and improvements
-
-= 1.0.1 - 15/01/2021 =
-
-- Fixed: Migration not working
-- Few minor bug fix and improvements
-
-= 1.0.0 - 11/01/2021 =
-
-- Added: 'List View' to manage links
-- Added: 'Analytics' Feature
-- Added: Migration from PrettyLinks
-- Added: General Settings panel
-- Improved: optimized code for faster response
-- Few minor bug fix and improvements
-
-= 0.0.1 - 14/01/2021 =
-
-* Initial beta release
-
+[See changelog for all versions](https://betterlinks.io/changelog/).
 
 == Upgrade Notice ==

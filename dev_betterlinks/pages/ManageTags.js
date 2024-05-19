@@ -31,9 +31,11 @@ const ManageTags = (props) => {
 			name: __('Tags', 'betterlinks'),
 			selector: 'tags',
 			sortable: false,
-			cell: (row) => {
-				return <div>{row.term_name}</div>;
-			},
+			cell: (row) => (
+				<AddNewTags tags={tags || []} icon={true} row={row}>
+					{<div style={{ textDecoration: 'underline' }}>{row.term_name}</div>}
+				</AddNewTags>
+			),
 		},
 		{
 			name: __('Link Count', 'betterlinks'),
