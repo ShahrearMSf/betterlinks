@@ -20,6 +20,7 @@ Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings 
 
 - Easy-to-use WordPress link shortener
 - Create attractive looking links instantly
+- Create Short Link on the fly with just one click even without admin access.
 - Add multiple link redirect types (301, 302, 307)
 - Analyze & track your marketing campaigns
 - Enhance your affiliate marketing strategies
