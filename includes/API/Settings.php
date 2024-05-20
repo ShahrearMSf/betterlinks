@@ -2,6 +2,7 @@
 
 namespace BetterLinks\API;
 
+use BetterLinks\Admin\Cache;
 use BetterLinks\Traits\ArgumentSchema;
 use \BetterLinksPro\Helper;
 
@@ -55,11 +56,11 @@ class Settings extends Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function get_items( $request ) {
-		$response = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
+		$response = Cache::get_json_settings();
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
-				'data'    => $response,
+				'data'    => json_encode( $response ),
 			),
 			200
 		);
@@ -112,9 +113,15 @@ class Settings extends Controller {
 			}
         }
 
+		if( class_exists('\BetterLinksPro\Helper') && (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] ))){
+			$category                           = \BetterLinksPro\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
+			$response['cle']['category'] = $category;
+		}
+
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
+			Cache::write_json_settings();
 		}
 		// regenerate links for wildcards option update
 		\BetterLinks\Helper::write_links_inside_json();

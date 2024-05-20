@@ -394,6 +394,7 @@ trait Query
                         'term_id' => $request['cat_id'],
                         'link_id' => $link_id,
                         'term_slug' => $result["term_slug"],
+                        'term_name' => $result["term_name"],
                         'term_type' => 'category',
                     ];
                 }

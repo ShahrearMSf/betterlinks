@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { update_tracking_settings } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
 
-const ExternalAnalytics = ({ trackingSettings, setTrackingSettings, update_tracking_settings }) => {
+const ExternalAnalytics = ({ trackingSettings, update_tracking_settings }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	if (is_pro_enabled) {
 		return betterLinksHooks.applyFilters('BetterLinksTrackingPro', null, { ...trackingSettings, update_tracking_settings });

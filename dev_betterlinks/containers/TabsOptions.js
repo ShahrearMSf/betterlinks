@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import ProBadge from 'components/Badge/ProBadge';
+import CreateLinkExternally from 'components/CreateLinkExternally';
 import AffiliateLinkDisclosure from 'components/Teasers/AffiliateLinkDisclosure';
 import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import CustomizeMetaTags from 'components/Teasers/CustomizeMetaTags';
@@ -9,41 +10,13 @@ import ShortLinkCustomDomain from 'components/Teasers/ShortLinkCustomDomain';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { is_pro_enabled } from 'utils/helper';
 import CustomFields from './CustomFields';
+import { tabList } from 'utils/data';
 
-const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setTrackingSettings, setAutoCreateLinkSettings }) => {
-	const tabList = [
-		{
-			label: __('Custom Fields', 'betterlinks'),
-			type: 'free',
-		},
-		{
-			label: __('Tracking', 'betterlinks'),
-			type: 'pro',
-		},
-		{
-			label: __('Auto-Create Links', 'betterlinks'),
-			type: 'pro',
-		},
-		{
-			label: __('Affiliate Link Disclosure', 'betterlinks'),
-			type: 'pro',
-		},
-		{
-			label: __('Password Protected Redirect', 'betterlinks'),
-			type: 'pro',
-		},
-		{
-			label: __('Customize Link Preview', 'betterlinks'),
-			type: 'pro',
-		},
-		{
-			label: __('Custom Domain', 'betterlinks'),
-			type: 'pro',
-		},
-	];
+const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
-		<ExternalAnalytics trackingSettings={trackingSettings} setTrackingSettings={setTrackingSettings} />,
+		<CreateLinkExternally settings={settings} terms={terms} />,
+		<ExternalAnalytics trackingSettings={trackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
 		<AffiliateLinkDisclosure settings={settings} />,
 		<PasswordProtection settings={settings} />,

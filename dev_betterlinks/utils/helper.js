@@ -22,6 +22,8 @@ export const {
 	betterlinkspro_version,
 	is_extra_data_tracking_compatible,
 	menu_notice,
+	betterlinks_auth,
+	betterlinks_date_format,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -850,7 +852,7 @@ export const sortByClicksTag = (type = '', tags, tag_analytics) => {
 	let sortedTags = _.orderBy(tags, (item) => {
 		return +tag_analytics[analyticsType][item.id] || 0;
 	});
-	
+
 	if ('desc' === sortType) {
 		sortedTags = _.reverse(sortedTags);
 	}
