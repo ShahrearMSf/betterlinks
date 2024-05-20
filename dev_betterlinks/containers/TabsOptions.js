@@ -27,7 +27,7 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (
 		<div className="betterlinks-options-tabs-wrapper">
-			<Tabs defaultIndex={6}>
+			<Tabs>
 				<TabList>
 					{optionsTabList.map((item, index) => (
 						<Tab key={index}>
