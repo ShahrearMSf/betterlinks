@@ -376,7 +376,7 @@
 				min-width: 320px;
 			}
 			&:nth-child(5) {
-				min-width: 290px;
+				// min-width: 290px;
 				// padding-left: 40px;
 			}
 			&:last-child {
@@ -401,7 +401,7 @@
 					}
 					&:nth-child(5) {
 						> div {
-							width: 200px;
+							// width: 200px;
 							display: flex;
 							justify-content: center;
 						}
@@ -625,6 +625,9 @@
 			}
 			.rdt_TableBody {
 				.rdt_TableRow .rdt_TableCell {
+					padding-left: 15px;
+					padding-right: 15px;
+
 					> div,
 					> div span {
 						font-size: 12px !important;
