@@ -30,7 +30,7 @@ const RedirectType = (props) => {
 				classNamePrefix="btl-react-select"
 				id={field.id}
 				name={field.name}
-				defaultValue={props.value && props.value.filter((item) => item.value == props.defaultValue)}
+				defaultValue={props.value && props.value.filter((item) => item.value == (props.defaultValue || '307'))}
 				onChange={onChange}
 				options={props.value}
 				value={selectValue}
