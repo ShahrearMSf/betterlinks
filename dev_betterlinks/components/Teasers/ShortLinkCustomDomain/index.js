@@ -2,7 +2,7 @@ import { useState, lazy } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Form, Formik } from 'formik';
-import { is_pro_enabled, saveSettingsHandler, site_url } from 'utils/helper';
+import { is_pro_enabled, saveSettingsHandler } from 'utils/helper';
 import { update_option } from 'redux/actions/settings.actions';
 import CheckList from '../AutoLinkCreate/CheckList';
 import { bindActionCreators } from 'redux';
@@ -10,13 +10,6 @@ import { connect } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import { isURL } from '@wordpress/url';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { Tooltip } from 'react-lightweight-tooltip';
-// const ClipLoader = lazy(() => import('react-spinners/ClipLoader'));
-// const Tooltip = lazy(() =>
-// 	import('react-lightweight-tooltip').then((module) => ({
-// 		default: module.Tooltip,
-// 	}))
-// );
 
 const ShortLinkCustomDomain = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -28,16 +21,8 @@ const ShortLinkCustomDomain = ({ settings, update_option }) => {
 				enableReinitialize
 				initialValues={{ ...settings }}
 				onSubmit={(values, { setFieldError }) => {
-					if (!is_pro_enabled) return;
-
-					const { enable_shortlink_custom_domain: enabled, shortlink_custom_domain: url } = values;
-					if (enabled && ('' === url || !isURL(url))) {
-						setFieldError('error__shortlink_custom_domain', "Please fill in your custom domain or ensure it's a valid URL.");
-						return;
-					}
-					if (enabled) localStorage.setItem('btl_custom_domain', url);
-					else localStorage.setItem('btl_custom_domain', site_url);
-
+					const result = betterLinksHooks.applyFilters('BetterLinksCustomDomainSettings', false, { values, setFieldError, isURL });
+					if (!result) return;
 					saveSettingsHandler(values, update_option, setFormSubmitText);
 				}}
 			>
@@ -56,14 +41,7 @@ const ShortLinkCustomDomain = ({ settings, update_option }) => {
 								</span>
 							</>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', null, { ...props, ClipLoader, Tooltip })}
-						{is_pro_enabled && (
-							<>
-								<button className="button-primary btn-save-settings" type="submit">
-									{formSubmitText}
-								</button>
-							</>
-						)}
+						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', null, { ...props, ClipLoader, formSubmitText })}
 					</Form>
 				)}
 			</Formik>
