@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Facebook, Linkedin, Twitter } from './SocialPreview';
-import { is_pro_enabled, site_url as site_link } from 'utils/helper';
-const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
+import { site_url as site_link } from 'utils/helper';
 
 const socialMedia = [__('Facebook', 'betterlinks'), __('X (Formerly Twitter)', 'betterlinks'), __('LinkedIn', 'betterlinks')];
 const CustomizePreviewContainr = () => {
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 	return (
 		<div className="btl-modal-customize-link-preview-box">
 			<h3 class="btl-modal-customize-link-preview__title">{__('Social Link Preview', 'betterlinks')}</h3>

@@ -212,7 +212,8 @@ export const copyShortUrl = (shortUrl) => {
 };
 
 export const makeShortUrl = (shortUrl) => {
-	return shortUrl[0] === '/' ? site_url + shortUrl : site_url + '/' + shortUrl;
+	const site_link = betterLinksHooks.applyFilters('site_url', site_url);
+	return shortUrl[0] === '/' ? site_link + shortUrl : site_link + '/' + shortUrl;
 };
 
 export const getBrowser = (agent) => {

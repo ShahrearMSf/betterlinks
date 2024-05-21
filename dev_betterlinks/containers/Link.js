@@ -323,7 +323,7 @@ export const Link = (props) => {
 		onSubmit(values);
 	};
 
-	const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 
 	return (
 		<>

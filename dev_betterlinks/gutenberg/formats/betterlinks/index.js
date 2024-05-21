@@ -26,7 +26,7 @@ import { Link } from 'containers/Link';
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
 
-const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
+const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 export const betterlinksFormat = {
 	name,
 	title,

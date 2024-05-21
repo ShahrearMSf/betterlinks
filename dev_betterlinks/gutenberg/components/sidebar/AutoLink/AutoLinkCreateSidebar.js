@@ -17,8 +17,8 @@ import { set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirec
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 const { subscribe } = wp.data;
 
-const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal, autoLinkCreateEnabled }) => {
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isExists, setExists] = useState(false);
 	const [terms, setTerms] = useState(false);

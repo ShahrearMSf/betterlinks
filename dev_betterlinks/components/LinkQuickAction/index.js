@@ -28,8 +28,6 @@ const defaultProps = {
 	isShowDeleteLink: true,
 };
 
-const site_url = (is_pro_enabled && localStorage.getItem('btl_custom_domain')) || site_link;
-
 const LinkQuickAction = ({
 	isAlowQr,
 	isShowCopyLink,
@@ -66,6 +64,7 @@ const LinkQuickAction = ({
 			setCopyUrl(false);
 		}, 3000);
 	};
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', { data, ReactLink })}
