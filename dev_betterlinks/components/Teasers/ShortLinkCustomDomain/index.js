@@ -1,4 +1,4 @@
-import { useState, lazy } from 'react';
+import { useState } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Form, Formik } from 'formik';
@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import { isURL } from '@wordpress/url';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 const ShortLinkCustomDomain = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -41,7 +42,7 @@ const ShortLinkCustomDomain = ({ settings, update_option }) => {
 								</span>
 							</>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', null, { ...props, ClipLoader, formSubmitText })}
+						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', null, { ...props, ClipLoader, formSubmitText, ...{ Tab, Tabs, TabList, TabPanel } })}
 					</Form>
 				)}
 			</Formik>
