@@ -8,6 +8,7 @@ const config = {
 		'betterlinks.core.min': './dev_betterlinks/index.js',
 		'betterlinks-gutenberg.core.min': './dev_betterlinks/gutenberg/index.js',
 		'betterlinks-cle.core.min': './dev_betterlinks/betterlinks-cle.js',
+		'betterlinks-intflboards.core.min': './dev_betterlinks/integration/fluent-boards.js',
 	},
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),

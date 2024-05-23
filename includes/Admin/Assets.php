@@ -8,6 +8,9 @@ class Assets
     {
         add_action('admin_enqueue_scripts', [$this, 'plugin_scripts']);
         add_action('enqueue_block_editor_assets', [$this, 'block_editor_assets']);
+        add_filter( 'fluent_boards/asset_listed_slugs', function($approvedSlugs) {
+            return wp_parse_args( $approvedSlugs, [ 'betterlinks-intflboards' ] );
+        });
     }
 
     /**
@@ -81,6 +84,22 @@ class Assets
         }
         wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
         wp_enqueue_style('betterlinks-admin-notice', BETTERLINKS_ASSETS_URI . 'css/betterlinks-admin-notice.css', [], BETTERLINKS_VERSION, 'all');
+        
+        if( 'toplevel_page_fluent-boards' == $hook ){
+            $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-intflboards.core.min.asset.php';
+            wp_enqueue_script(
+                'betterlinks-intflboards',
+                BETTERLINKS_ASSETS_URI . 'js/betterlinks-intflboards.core.min.js',
+                $dependencies['dependencies'],
+                $dependencies['version'],
+                [
+                    'in_footer' => true,
+                ]
+            );
+            wp_localize_script('betterlinks-intflboards', 'betterLinksFlbIntegration', [
+                'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
+            ]);
+        }
     }
 
     /**
