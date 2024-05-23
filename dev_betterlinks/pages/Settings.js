@@ -54,6 +54,7 @@ const Settings = (props) => {
 		<GoPremium />,
 	]);
 	useEffect(() => {
+		window.scrollTo(0, 220);
 		if (!settings) {
 			props.fetch_settings_data();
 			props.fetch_tracking_settings();
@@ -86,7 +87,7 @@ const Settings = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
-			<Tabs defaultIndex={currentTab == 'true' ? 2 : 0}>
+			<Tabs defaultIndex={currentTab == 'true' ? 2 : 1}>
 				<TabList>
 					{tabList.map((item, index) => (
 						<Tab key={index}>{item}</Tab>
