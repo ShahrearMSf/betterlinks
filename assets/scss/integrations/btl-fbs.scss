@@ -1,0 +1,53 @@
+#btl-intflboards-btn-wrapper {
+	position: relative;
+	.el-button {
+		position: relative;
+
+		span.btl-fbs-loader {
+			position: absolute;
+			right: 5px;
+		}
+	}
+	.fbs-task-add-popover-box {
+		z-index: 2047;
+		position: absolute;
+		width: 412px;
+		margin-top: 3%;
+		right: -18%;
+
+		.el-popper__arrow {
+			position: absolute;
+			left: 160px;
+		}
+
+		.btl-fbs-link-data {
+			.btl-form-group {
+				p {
+					display: flex;
+					align-items: center;
+					span {
+						background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+						border-radius: 5px 3px 3px 5px;
+						font-size: 14px;
+						padding: 5px;
+						color: #fff;
+						font-style: italic;
+						-ms-overflow-style: none; /* Internet Explorer 10+ */
+						scrollbar-width: none; /* Firefox */
+
+						&::-webkit-scrollbar {
+							display: none;
+						}
+					}
+					input {
+						width: 45%;
+
+						&:focus {
+							border: 1px solid gray;
+						}
+					}
+				}
+			}
+		}
+	}
+}
