@@ -29,7 +29,7 @@ gulp.task('zip', zipPlugin);
 
 const buildStyles = () => {
 	// prettier-ignore
-	return gulp.src(['assets/scss/*.scss', 'assets/css/betterlinks-admin-notice.css'])
+	return gulp.src(['assets/scss/**/*.scss', 'assets/css/betterlinks-admin-notice.css'])
         .pipe(sass().on('error', sass.logError))
         .pipe(csso())
         .pipe(gulp.dest('./assets/css'));
