@@ -79,6 +79,121 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks__admin_dashboard_notice', array( $this, 'admin_dashboard_notice' ) );
 
 		add_action( 'wp_ajax_betterlinks__fetch_target_url', array( $this, 'fetch_target_url' ) );
+
+		// Fluent Board Integration
+		add_action( 'wp_ajax_betterlinks__check_fbs_link', array( $this, 'check_fbs_link' ) );
+		add_action( 'wp_ajax_betterlinks__create_fbs_link', array( $this, 'create_fbs_link' ) );
+	}
+
+	public function create_fbs_link() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! apply_filters( 'betterlinks/api/links_create_item_permissions_check', current_user_can( 'manage_options' ) ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$helper = new Helper();
+
+		$settings = Cache::get_json_settings();
+		$title = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
+		$taskId = isset( $_POST['taskId'] ) ? sanitize_text_field( $_POST['taskId'] ) : null;
+		if( empty( $taskId ) ){
+			wp_send_json_error([
+				'result' => false
+			]);
+		}
+		$slug = "fbs-{$taskId}";
+		$target_url = isset( $_POST['target_url'] ) ? sanitize_url( $_POST['target_url'] ) : null;
+		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$short_url        = $prefix . $slug;
+		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
+		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
+		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
+		$param_forwarding = ! empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
+		$date             = wp_date( 'Y-m-d H:i:s' );
+		$redirect_type = ! empty( $settings['redirect_type'] ) ? $settings['redirect_type'] : '307';
+
+		$initial_values = array(
+			'link_title'        => $title,
+			'link_slug'         => $slug,
+			'target_url'        => $target_url,
+			'short_url'         => $short_url,
+			'redirect_type'     => $redirect_type,
+			'nofollow'          => $nofollow,
+			'sponsored'         => $sponsored,
+			'track_me'          => $track_me,
+			'param_forwarding'  => $param_forwarding,
+			'link_date'         => $date,
+			'link_date_gmt'     => $date,
+			'link_modified'     => $date,
+			'link_modified_gmt' => $date,
+			'cat_id'            => 1,
+		);
+
+		$helper->clear_query_cache();
+		$args    = $this->sanitize_links_data( $initial_values );
+		$results = $this->insert_link( $args );
+
+		if( !empty( $results  ) ) {
+			error_log( print_r( $results, true ) );
+		}
+
+		wp_send_json_success(array(
+			'result' => $results,
+			'status' => 'created'
+		));
+	}
+
+	public function check_fbs_link() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! apply_filters( 'betterlinks/api/links_create_item_permissions_check', current_user_can( 'manage_options' ) ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$boardUrl = isset( $_POST['boardUrl'] ) ? sanitize_text_field( $_POST['boardUrl'] ) : null;
+		$taskId = isset( $_POST['taskId'] ) ? (int) sanitize_text_field( $_POST['taskId'] ) : null;
+
+		$target_url = null;
+
+		if( !empty( $boardUrl ) || !empty( $taskId ) ) {
+			global $wpdb;
+
+			$target_url = $boardUrl . 'tasks/' . $taskId;
+			$link = $wpdb->get_row( $wpdb->prepare( "SELECT `short_url` FROM {$wpdb->prefix}betterlinks where target_url=%s", $target_url ) );
+			$task = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
+
+			if( !empty ( $link ) ){
+				wp_send_json_success(array(
+					'result' => array(
+						'short_url' => $link->short_url,
+						'task_slug' => $task->slug
+					),
+					'is_exists' => true
+				));
+			}
+
+			// if not exists any short url
+			$task = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
+
+			if ( ! empty( $task ) ) {
+				wp_send_json_success(
+					array(
+						'result' => array(
+							'title' => $task->title,
+							'slug'  => $task->slug,
+							'target_url' => $target_url
+						),
+						'is_exists' => false
+					)
+				);
+			}
+		}
+
+
+		wp_send_json_error(
+			array(
+				'result' => false,
+			)
+		);
 	}
 
 	public function fetch_target_url() {
