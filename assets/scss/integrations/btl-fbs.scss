@@ -22,21 +22,28 @@
 
 		.btl-fbs-link-data {
 			.btl-form-group {
+				> label {
+					font-weight: 500;
+					display: inline-block;
+					margin-bottom: 5px;
+				}
 				p {
 					display: flex;
 					align-items: center;
 					span {
-						background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
-						border-radius: 5px 3px 3px 5px;
-						font-size: 14px;
-						padding: 5px;
-						color: #fff;
-						font-style: italic;
-						-ms-overflow-style: none; /* Internet Explorer 10+ */
-						scrollbar-width: none; /* Firefox */
+						&.btl-site-url {
+							background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+							border-radius: 5px 3px 3px 5px;
+							font-size: 14px;
+							padding: 5px;
+							color: #fff;
+							font-style: italic;
+							-ms-overflow-style: none; /* Internet Explorer 10+ */
+							scrollbar-width: none; /* Firefox */
 
-						&::-webkit-scrollbar {
-							display: none;
+							&::-webkit-scrollbar {
+								display: none;
+							}
 						}
 					}
 					input {
@@ -45,6 +52,23 @@
 						&:focus {
 							border: 1px solid gray;
 						}
+					}
+
+					.btl-copy-icon {
+						cursor: pointer;
+					}
+				}
+				button {
+					width: auto;
+					background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+					margin-top: 5px;
+					color: #fff;
+					padding: 3px 5px;
+					font-size: 12px;
+
+					&.btl-btn-disable {
+						background: #c8c8c8;
+						cursor: not-allowed;
 					}
 				}
 			}
