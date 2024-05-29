@@ -419,11 +419,14 @@ class Helper {
 			}
 		} else {
 			$tempArray = $existingData['links'];
+			$previous_data = [];
 			if ( is_array( $tempArray ) ) {
 				if ( ! empty( $old_short_url ) ) {
+					$previous_data = $tempArray[ $old_short_url ];
 					unset( $tempArray[ $old_short_url ] );
 					unset( $tempArray[ strToLower( $old_short_url ) ] );
 				}
+				$data = wp_parse_args($data, $previous_data);
 				$tempArray[ $short_url ] = self::json_link_formatter( $data );
 				$existingData['links']   = $tempArray;
 				return file_put_contents( $file, wp_json_encode( $existingData ) );
