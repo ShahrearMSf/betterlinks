@@ -72,8 +72,8 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks 2.0 is here, with new ', 'betterlinks'),
-		__('Quick Link Creation', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 2.0 is here, with new ', 'betterlinks'),
+		__('Custom Domain', 'betterlinks'),
 		__('feature & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
