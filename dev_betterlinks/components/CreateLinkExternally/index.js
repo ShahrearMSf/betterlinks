@@ -134,7 +134,7 @@ const FreeSettings = ({ props, isLatestVersion }) => {
 								) : (
 									<span
 										onClick={() => props.setFieldValue('cle.advanced_options', !props.values?.cle?.advanced_options)}
-										className={`dashicons dashicons-arrow-${props.values?.cle?.advanced_options ? 'down' : 'up'}-alt2`}
+										className={`dashicons dashicons-arrow-${props.values?.cle?.advanced_options ? 'up' : 'down'}-alt2`}
 									/>
 								)}
 							</label>
