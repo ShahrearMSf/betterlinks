@@ -2,7 +2,7 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { __ } = wp.i18n;
 import { useState, useEffect } from 'react';
 import LinkCopyButton from 'components/LinkCopyUrl/LinkCopyButton';
-import { debounce, formatDate, is_pro_enabled, shortURLUniqueCheckGutenberg, site_url as site_link } from 'utils/helper';
+import { debounce, formatDate, is_pro_enabled, shortURLUniqueCheckGutenberg } from 'utils/helper';
 import { redirectType as redirectTypeObj } from 'utils/data';
 import ToggleTitle from '../../ToggleTitle';
 import { EDIT_GUTENBERG_AUTO_LINK, SAVE_GUTENBERG_AUTO_LINK } from 'redux/actions/actionstrings';
@@ -15,10 +15,11 @@ import { fetch_auto_link_create_settings, fetch_terms_by_link_id, fetch_terms_da
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { set_auto_short_links_disable_ids } from 'redux/actions/gutenbergredirectlink.actions';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { btl_custom_domain } from 'gutenberg/components';
 const { subscribe } = wp.data;
 
 const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgradeToProModal, autoLinkCreateEnabled }) => {
-	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
+	const site_url = btl_custom_domain;
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isExists, setExists] = useState(false);
 	const [terms, setTerms] = useState(false);
