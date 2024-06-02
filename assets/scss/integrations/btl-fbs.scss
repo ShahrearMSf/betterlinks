@@ -24,6 +24,12 @@
 			display: flex;
 			justify-content: space-between;
 			margin-bottom: 20px;
+
+			span.close-button {
+				cursor: pointer;
+				border: unset;
+				transition: 0.3s;
+			}
 		}
 		.btl-fbs-link-data {
 			.btl-form-group {
@@ -74,6 +80,29 @@
 					&.btl-btn-disable {
 						background: #c8c8c8;
 						cursor: not-allowed;
+					}
+				}
+			}
+			.btl-fbs-qr-section {
+				margin-top: 5px;
+				.betterlinksqrcode {
+					display: flex;
+					column-gap: 10px;
+					margin: 10px 0;
+
+					> canvas {
+						height: 100px;
+						width: 100px;
+					}
+
+					.btl-fbs-qr-sidebar {
+						display: flex;
+						flex-direction: column;
+						row-gap: 10px;
+
+						> a.btl-fbs-qr-download {
+							width: max-content;
+						}
 					}
 				}
 			}
