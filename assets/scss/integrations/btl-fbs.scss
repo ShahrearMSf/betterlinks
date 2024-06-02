@@ -20,6 +20,11 @@
 			left: 160px;
 		}
 
+		.btl-fbs-top-bar {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 20px;
+		}
 		.btl-fbs-link-data {
 			.btl-form-group {
 				> label {

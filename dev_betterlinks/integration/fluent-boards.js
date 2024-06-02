@@ -179,6 +179,11 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks }) => {
 			data-popper-escaped="false"
 			data-popper-placement="bottom"
 		>
+			<div className="btl-fbs-top-bar">
+				<div />
+				<span>Share and more...</span>
+				<span className="dashicons dashicons-no-alt" />
+			</div>
 			<div className="btl-fbs-link-data">
 				<div className="btl-form-group">
 					<label htmlFor="short_url">Link for this task</label>
