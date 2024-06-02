@@ -4,6 +4,7 @@ const { plugin_root_url, TASKS, betterlinks_nonce, site_url } = window?.betterLi
 import ClipLoader from 'react-spinners/ClipLoader';
 import axios from 'axios';
 import { copyToClipboard, formatFormData } from './utils/helper';
+import QRScanner from './components/QRScanner';
 
 const App = () => {
 	const [task, setTask] = useState({
@@ -158,14 +159,16 @@ const App = () => {
 				<span>{__('Share BetterLinks', 'betterlinks')}</span>
 				{loading && <ClipLoader className="btl-fbs-loader" color="#2961ff" size={18} />}
 			</button>
-			{openModal && <PopUp task={task} setTask={setTask} __updateBetterLinks={__updateBetterLinks} __createBetterLinks={__createBetterLinks} />}
+			{openModal && (
+				<PopUp task={task} setTask={setTask} __updateBetterLinks={__updateBetterLinks} __createBetterLinks={__createBetterLinks} closeModal={() => setOpenModal(false)} />
+			)}
 		</>
 	);
 };
 
 export default App;
 
-const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks }) => {
+const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeModal }) => {
 	const [editShortUrl, setEditShortUrlStatus] = useState(false);
 	const [copy, setCopy] = useState(false);
 
@@ -181,8 +184,8 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks }) => {
 		>
 			<div className="btl-fbs-top-bar">
 				<div />
-				<span>Share and more...</span>
-				<span className="dashicons dashicons-no-alt" />
+				<span>{__('Share and more...', 'betterlinks')}</span>
+				<span className="dashicons dashicons-no-alt close-button el-button" onClick={closeModal} />
 			</div>
 			<div className="btl-fbs-link-data">
 				<div className="btl-form-group">
@@ -234,36 +237,38 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks }) => {
 					</div>
 				</div>
 				{'' !== task?.short_url && (
-					<div
-						className="btl-form-group fbs_task_mover_actions"
-						style={{
-							display: 'flex',
-							alignItems: 'center',
-							columnGap: '5px',
-							// fontSize: '12px',
-						}}
-					>
-						<button
-							className={`el-button el-button--primary ${!editShortUrl ? 'btl-btn-disable' : ''}`}
-							onClick={() => {
-								setEditShortUrlStatus(false);
-								if (task?.id) {
-									if (task?.short_url === task?.old_short_url) return;
-									__updateBetterLinks({
-										id: task?.id,
-										short_url: task?.short_url,
-										old_short_url: task?.old_short_url,
-									});
-									return;
-								}
-								__createBetterLinks();
+					<>
+						<QRScanner short_url={task.old_short_url} />
+						<div
+							className="btl-form-group fbs_task_mover_actions"
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								columnGap: '5px',
 							}}
-							disabled={!editShortUrl}
 						>
-							{task?.id ? __('Update', 'betterlinks') : __('Create', 'betterlinks')}
-						</button>
-						{task?.updateMessage && <span style={{ fontSize: '12px', color: 'failed' === task?.status ? 'red' : 'green' }}>{task?.updateMessage}</span>}
-					</div>
+							<button
+								className={`el-button el-button--primary ${!editShortUrl ? 'btl-btn-disable' : ''}`}
+								onClick={() => {
+									setEditShortUrlStatus(false);
+									if (task?.id) {
+										if (task?.short_url === task?.old_short_url) return;
+										__updateBetterLinks({
+											id: task?.id,
+											short_url: task?.short_url,
+											old_short_url: task?.old_short_url,
+										});
+										return;
+									}
+									__createBetterLinks();
+								}}
+								disabled={!editShortUrl}
+							>
+								{task?.id ? __('Update', 'betterlinks') : __('Create', 'betterlinks')}
+							</button>
+							{task?.updateMessage && <span style={{ fontSize: '12px', color: 'failed' === task?.status ? 'red' : 'green' }}>{task?.updateMessage}</span>}
+						</div>
+					</>
 				)}
 			</div>
 			<span className="el-popper__arrow" data-popper-arrow />
