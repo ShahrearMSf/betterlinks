@@ -158,6 +158,29 @@ class Ajax {
 		$param_forwarding = ! empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$redirect_type = ! empty( $settings['redirect_type'] ) ? $settings['redirect_type'] : '307';
+		$fbs_cat = !empty( $settings['btl-fbs']['fbs_cat'] ) ? $settings['btl-fbs']['fbs_cat'] : 1;
+
+		if( empty( $settings['btl-fbs']['fbs_cat'] ) ){
+			delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+			$args    = array(
+				'ID'        => 0,
+				'term_name' => 'Fluent Boards',
+				'term_slug' => 'btl-fluent-boards',
+				'term_type' => 'category',
+			);
+			$results = $this->create_term( $args );
+			$fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : $fbs_cat;
+			$settings['btl-fbs']['fbs_cat'] = $fbs_cat;
+
+			$response = json_encode($settings);
+
+			if ( $response ) {
+				update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
+				Cache::write_json_settings();
+			}
+			// regenerate links for wildcards option update
+			Helper::write_links_inside_json();
+		}
 
 		$initial_values = array(
 			'link_title'        => $title,
@@ -173,7 +196,7 @@ class Ajax {
 			'link_date_gmt'     => $date,
 			'link_modified'     => $date,
 			'link_modified_gmt' => $date,
-			'cat_id'            => 1,
+			'cat_id'            => $fbs_cat
 		);
 
 		$helper->clear_query_cache();
@@ -188,6 +211,8 @@ class Ajax {
 				'status' => 'failed',
 			));
 		}
+
+		// update fbs_activities
 
 		wp_send_json_success(array(
 			'result' => $results,
