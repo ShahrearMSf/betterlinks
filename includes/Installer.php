@@ -152,6 +152,7 @@ class Installer extends \WP_Background_Process
                 'is_autolink_icon'      => false,
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
+                'enable_custom_domain_menu' => false,
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
@@ -238,6 +239,10 @@ class Installer extends \WP_Background_Process
             }
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '==' ) ) {
                 $this->modifyBetterLinksClicksTable();
+            }
+            
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '>' ) ) {
+                $this->update_settings();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);

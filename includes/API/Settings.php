@@ -118,6 +118,8 @@ class Settings extends Controller {
 			$response['cle']['category'] = $category;
 		}
 
+		update_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, !empty( $response['enable_custom_domain_menu'] ) ? $response['enable_custom_domain_menu'] : false );
+
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );

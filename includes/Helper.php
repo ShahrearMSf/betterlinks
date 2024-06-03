@@ -142,6 +142,8 @@ class Helper {
 	}
 
 	public static function get_menu_items() {
+		// $enable_custom_domain_menu = get_option(BETTERLINKS_CUSTOM_DOMAIN_MENU, false);
+		$enable_custom_domain_menu = true;
 		$menu_items = array(
 			BETTERLINKS_PLUGIN_SLUG                  => array(
 				'title'      => __( 'Manage Links', 'betterlinks' ),
@@ -160,6 +162,18 @@ class Helper {
 				'capability' => 'manage_options',
 			),
 		);
+		
+		if( !empty( $enable_custom_domain_menu ) ){
+			$before = array_splice( $menu_items, 0, 2 );
+			$inserted = array(
+				BETTERLINKS_PLUGIN_SLUG . '-custom-domain' => array(
+					'title'      => __( 'Custom Domain', 'betterlinks' ),
+					'capability' => 'manage_options',
+				),
+			);
+			$menu_items = $before + $inserted + $menu_items;
+		}
+
 		return apply_filters( 'betterlinks/helper/menu_items', $menu_items );
 	}
 
