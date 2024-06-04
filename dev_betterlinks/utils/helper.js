@@ -25,6 +25,7 @@ export const {
 	betterlinks_auth,
 	betterlinks_date_format,
 	betterlinks_custom_domain_menu,
+	betterlinks_settings,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({

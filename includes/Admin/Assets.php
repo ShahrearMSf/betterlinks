@@ -73,6 +73,7 @@ class Assets
                 'betterlinks_auth' => md5(AUTH_KEY),
                 'betterlinks_date_format' => get_option( 'date_format' ),
                 'betterlinks_custom_domain_menu' => get_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, 0 ),
+                'betterlinks_settings' => Cache::get_json_settings()
             ]);
 
             $menu_notice = get_option('betterlinks_menu_notice', 0);
