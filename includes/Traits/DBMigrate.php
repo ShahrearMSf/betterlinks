@@ -38,4 +38,7 @@ trait DBMigrate
             $this->wpdb->query("ALTER TABLE  $betterlinks_clicks_table ADD rotation_target_url varchar(255) NULL");
         }
     }
+    public function update_fluent_settings() {
+        // $settings = Cache::get_json
+    }
 }

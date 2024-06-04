@@ -74,7 +74,8 @@ class Assets
                 'is_extra_data_tracking_compatible' => apply_filters('betterlinks/is_extra_data_tracking_compatible', false),
                 'menu_notice' => defined('BETTERLINKS_MENU_NOTICE') ? BETTERLINKS_MENU_NOTICE : null,
                 'betterlinks_auth' => md5(AUTH_KEY),
-                'betterlinks_date_format' => get_option( 'date_format' )
+                'betterlinks_date_format' => get_option( 'date_format' ),
+                'is_fbs_enabled' => defined('FLUENT_BOARDS')
             ]);
 
             $menu_notice = get_option('betterlinks_menu_notice', 0);
