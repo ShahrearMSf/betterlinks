@@ -24,6 +24,7 @@ export const {
 	menu_notice,
 	betterlinks_auth,
 	betterlinks_date_format,
+	is_fbs_enabled,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
