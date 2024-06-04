@@ -152,7 +152,7 @@ class Installer extends \WP_Background_Process
                 'is_autolink_icon'      => false,
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
-                'enable_custom_domain_menu' => false,
+                'enable_custom_domain_menu' => true,
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
