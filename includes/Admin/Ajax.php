@@ -137,6 +137,10 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 
+		if( ! defined('FLUENT_BOARDS') ) {
+			wp_die("You don't have permission to do this");
+		}
+
 		$helper = new Helper();
 
 		$settings = Cache::get_json_settings();
@@ -158,9 +162,9 @@ class Ajax {
 		$param_forwarding = ! empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$redirect_type = ! empty( $settings['redirect_type'] ) ? $settings['redirect_type'] : '307';
-		$fbs_cat = !empty( $settings['btl-fbs']['fbs_cat'] ) ? $settings['btl-fbs']['fbs_cat'] : 1;
+		$fbs_cat = !empty( $settings['fbs']['cat_id'] ) ? $settings['fbs']['cat_id'] : 1;
 
-		if( empty( $settings['btl-fbs']['fbs_cat'] ) ){
+		if( empty( $settings['fbs']['cat_id'] ) ){
 			delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 			$args    = array(
 				'ID'        => 0,
@@ -170,7 +174,7 @@ class Ajax {
 			);
 			$results = $this->create_term( $args );
 			$fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : $fbs_cat;
-			$settings['btl-fbs']['fbs_cat'] = $fbs_cat;
+			$settings['fbs']['cat_id'] = $fbs_cat;
 
 			$response = json_encode($settings);
 
@@ -848,13 +852,17 @@ class Ajax {
 			if ( $enable_password_protection ) {
 				( new \BetterLinksPro\Helper() )->add_password_protect_page();
 			} else {
-				( new \BetterLinksPro\Helper() )->delete_password_protect_page();
+				( new \BetterLinksPro\Helper() )->delete_custom_page('password-protected-form');
 			}
 
 			if ( $enable_customize_meta_tag ) {
 				( new \BetterLinksPro\Helper() )->add_customized_meta_tag_page();
 			} else {
 				( new \BetterLinksPro\Helper() )->delete_custom_page( 'customized-meta-tags' );
+			}
+
+			if( (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] )) ){
+
 			}
 		}
 

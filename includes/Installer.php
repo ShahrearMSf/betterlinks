@@ -7,6 +7,8 @@ class Installer extends \WP_Background_Process
 {
     use Traits\DBTables;
     use Traits\DBMigrate;
+    use Traits\Terms;
+
     protected $wpdb;
     protected $charset_collate;
     protected $action = 'betterlinks_background_task';
@@ -136,6 +138,14 @@ class Installer extends \WP_Background_Process
     public function save_settings()
     {
         if (!Helper::btl_get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
+            $args    = array(
+				'ID'        => 0,
+				'term_name' => 'Fluent Boards',
+				'term_slug' => 'btl-fluent-boards',
+				'term_type' => 'category',
+			);
+			$results = $this->create_term( $args );
+			$fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
             $value = [
                 'redirect_type'         => '307',
                 'nofollow'   		    => true,
@@ -152,7 +162,10 @@ class Installer extends \WP_Background_Process
                 'is_autolink_icon'      => false,
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
-                'is_fbs_enabled'        => true
+                'fbs'        => [
+                    'enable_fbs' => true,
+                    'cat_id'    => $fbs_cat
+                ]
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }

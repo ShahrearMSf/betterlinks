@@ -118,6 +118,11 @@ class Settings extends Controller {
 			$response['cle']['category'] = $category;
 		}
 
+		if( (!empty( $response['fbs']['enable_fbs'] ) || !empty( $response['fbs']['cat_id'] )) ){
+			$category                           = \BetterLinksPro\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+			$response['fbs']['cat_id'] = $category;
+		}
+
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
