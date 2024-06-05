@@ -17,9 +17,10 @@ import ServerConfig from './ServerConfig';
 import ApacheConfig from './ApacheConfig';
 import NginxConfig from './NginxConfig';
 
-const ShortLinkCustomDomain = ({ settings, update_option }) => {
+const ShortLinkCustomDomain = (props) => {
+	const { update_option } = props;
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
-	const { settings } = settings;
+	const { settings } = props.settings;
 	return (
 		<>
 			<Formik
