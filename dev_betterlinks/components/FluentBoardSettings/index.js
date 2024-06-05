@@ -1,7 +1,14 @@
 import { __ } from '@wordpress/i18n';
+import Category from 'components/Terms/Category';
 import { Form, Formik } from 'formik';
+import { useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { update_option } from 'redux/actions/settings.actions';
+import { saveSettingsHandler } from 'utils/helper';
 
-const FluentBoardSettings = ({ settings, terms }) => {
+const FluentBoardSettings = ({ settings, terms, update_option }) => {
+	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	return (
 		<>
 			<Formik
@@ -9,6 +16,7 @@ const FluentBoardSettings = ({ settings, terms }) => {
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
 					saveSettingsHandler(values, update_option, setFormSubmitText);
+					// console.info(values);
 				}}
 			>
 				{(props) => (
@@ -30,11 +38,31 @@ const FluentBoardSettings = ({ settings, terms }) => {
 								</label>
 							</div>
 						</span>
+						<span className="btl-form-group">
+							<label className="btl-form-label" style={{ 'min-width': '120px' }}>
+								{__('Choose Category', 'betterlinks')}
+							</label>
+							<div className="btl-form-field">
+								<Category
+									catId={parseInt(props.values?.fbs?.cat_id)}
+									data={{ terms }}
+									fieldName="fbs.cat_id"
+									setFieldValue={props.setFieldValue}
+									// disabled={isDisableLinkFormEditView}
+								/>
+							</div>
+						</span>
+						<button className="button-primary btn-save-settings" type="submit">
+							{formSubmitText}
+						</button>
 					</Form>
 				)}
 			</Formik>
 		</>
 	);
 };
+const mapDispatchToProps = (dispatch) => ({
+	update_option: bindActionCreators(update_option, dispatch),
+});
 
-export default FluentBoardSettings;
+export default connect(null, mapDispatchToProps)(FluentBoardSettings);
