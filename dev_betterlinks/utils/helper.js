@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import _ from 'lodash';
+import clipboardCopy from 'clipboard-copy';
 
 export const {
 	betterlinks_nonce,
@@ -198,12 +199,13 @@ export const modalCustomSmallStyles = {
 };
 
 export const copyToClipboard = (copyText) => {
-	var tempInput = document.createElement('input');
-	tempInput.value = copyText;
-	document.body.appendChild(tempInput);
-	tempInput.select();
-	document.execCommand('copy');
-	document.body.removeChild(tempInput);
+	// var tempInput = document.createElement('input');
+	// tempInput.value = copyText;
+	// document.body.appendChild(tempInput);
+	// tempInput.select();
+	// document.execCommand('copy');
+	// document.body.removeChild(tempInput);
+	clipboardCopy(copyText);
 	return;
 };
 

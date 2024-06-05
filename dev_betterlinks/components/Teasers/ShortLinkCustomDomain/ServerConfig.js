@@ -1,0 +1,30 @@
+import { __ } from '@wordpress/i18n';
+import { Field } from 'formik';
+
+const ServerConfig = () => {
+	return (
+		<>
+			<div className="server-type-wrapper">
+				<div id="server-type" className="server-type-title">
+					{__('Select your server type', 'betterlinks')}
+				</div>
+				<div role="group" aria-labelledby="server-type" className="server-type">
+					<div>
+						<label htmlFor="apache">
+							<Field id="apache" type="radio" name="server_type" value="apache" />
+							{__('Apache', 'betterlinks')}
+						</label>
+					</div>
+					<div>
+						<label htmlFor="nginx">
+							<Field id="nginx" type="radio" name="server_type" value="nginx" />
+							{__('Nginx', 'betterlinks')}
+						</label>
+					</div>
+				</div>
+			</div>
+		</>
+	);
+};
+
+export default ServerConfig;

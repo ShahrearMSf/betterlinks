@@ -19,7 +19,7 @@ const defaultProps = {
 	render: () => {},
 };
 
-const TopBar = (props) => {
+const TopBar = ({ is_pro = false, ...props }) => {
 	const { propsForAnalytics } = props;
 	const { darkMode: mode } = props.activity;
 	const [isDarkMode, setIsDarkMode] = useState(mode);
@@ -49,6 +49,7 @@ const TopBar = (props) => {
 				<div className="topbar__logo">
 					<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 					<span className="topbar__logo__text">{props.label}</span>
+					{is_pro && <span class="pro-badge">Pro</span>}
 				</div>
 
 				{props.render()}
