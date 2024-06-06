@@ -23,14 +23,15 @@ const QRScanner = ({ short_url }) => {
 					}}
 				>
 					{openQr ? __('Hide QR Code', 'betterlinks') : __('Show QR Code', 'betterlinks')}
+					<span className={`dashicons dashicons-arrow-${openQr ? 'up' : 'down'}-alt2`} />
 				</a>
 				{openQr && (
 					<div className="betterlinksqrcode">
 						<QRCode value={makeShortUrl(short_url)} size={100} level={'H'} />
 						<div className="btl-fbs-qr-sidebar">
-							<p>Link anyone to this card by sending them this QR code: </p>
-							<a className="el-button el-button-primary btl-fbs-qr-download" onClick={download}>
-								Download
+							<p>{__('Link anyone to this card by sending them this QR code: ', 'betterlinks')}</p>
+							<a className="btl-fbs-qr-download" onClick={download} title={__('Download', 'betterlinks')}>
+								{__('Download', 'betterlinks')}
 							</a>
 						</div>
 					</div>

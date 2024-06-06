@@ -1,4 +1,4 @@
-export const { site_url } = window.betterLinksFlbIntegration;
+export const { site_url, admin_url } = window.betterLinksFlbIntegration;
 
 export const formatFormData = (form_data, payload) => {
 	Object.entries(payload).forEach(([key, value]) => {
@@ -24,4 +24,20 @@ export const copyToClipboard = (copyText) => {
 
 export const makeShortUrl = (shortUrl) => {
 	return shortUrl[0] === '/' ? site_url + shortUrl : site_url + '/' + shortUrl;
+};
+
+export const delayStatusChanged = (firstStatus, secondStatus, thirdStatus, setState) => {
+	if (firstStatus) {
+		setState(firstStatus);
+	}
+	setTimeout(() => {
+		if (secondStatus) {
+			setState(secondStatus);
+		}
+		if (thirdStatus) {
+			setTimeout(() => {
+				setState(thirdStatus);
+			}, 3000);
+		}
+	}, 1000);
 };

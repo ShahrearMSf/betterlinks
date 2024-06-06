@@ -75,4 +75,4 @@ export const tabList = [
 		label: __('Customize Link Preview', 'betterlinks'),
 		type: 'pro',
 	},
-];
+].filter(Boolean);

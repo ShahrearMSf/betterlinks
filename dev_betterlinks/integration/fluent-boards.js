@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 const { plugin_root_url, TASKS, betterlinks_nonce, site_url } = window?.betterLinksFlbIntegration;
 import ClipLoader from 'react-spinners/ClipLoader';
 import axios from 'axios';
-import { copyToClipboard, formatFormData } from './utils/helper';
+import { admin_url, copyToClipboard, delayStatusChanged, formatFormData } from './utils/helper';
 import QRScanner from './components/QRScanner';
 
 const App = () => {
@@ -14,6 +14,7 @@ const App = () => {
 	});
 	const [openModal, setOpenModal] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const [updateText, setUpdateText] = useState(__('Update', 'betterlinks'));
 
 	useEffect(() => {
 		const taskUrl = window.location.href;
@@ -89,7 +90,6 @@ const App = () => {
 			action: 'betterlinks__update_fbs_link',
 			...task,
 		});
-		// setLoading(true);
 		const response = await axios
 			.post(ajaxurl, form_data)
 			.then((res) => res)
@@ -103,6 +103,8 @@ const App = () => {
 			old_short_url: result?.short_url || prev?.old_short_url,
 			updateMessage: message,
 		}));
+
+		delayStatusChanged(__('Updating...', 'betterlinks'), __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
 
 		let timer = setTimeout(() => {
 			setTask((prev) => ({
@@ -154,13 +156,20 @@ const App = () => {
 		<>
 			<button className="el-button" onClick={__handleClickShareButton}>
 				<i className="el-icon">
-					<img width="16" src={plugin_root_url + 'assets/images/logo-large.svg'} alt={__('BetterLinks Colorfull Logo', 'betterlinks')} />
+					<img width="16" src={plugin_root_url + 'assets/images/logo-black&white.svg'} alt={__('BetterLinks Colorfull Logo', 'betterlinks')} />
 				</i>
-				<span>{__('Share BetterLinks', 'betterlinks')}</span>
+				<span>{__('Share Task', 'betterlinks')}</span>
 				{loading && <ClipLoader className="btl-fbs-loader" color="#2961ff" size={18} />}
 			</button>
 			{openModal && (
-				<PopUp task={task} setTask={setTask} __updateBetterLinks={__updateBetterLinks} __createBetterLinks={__createBetterLinks} closeModal={() => setOpenModal(false)} />
+				<PopUp
+					task={task}
+					setTask={setTask}
+					__updateBetterLinks={__updateBetterLinks}
+					__createBetterLinks={__createBetterLinks}
+					closeModal={() => setOpenModal(false)}
+					updateText={updateText}
+				/>
 			)}
 		</>
 	);
@@ -168,23 +177,14 @@ const App = () => {
 
 export default App;
 
-const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeModal }) => {
+const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeModal, updateText }) => {
 	const [editShortUrl, setEditShortUrlStatus] = useState(false);
 	const [copy, setCopy] = useState(false);
 
 	return (
-		<div
-			className="el-popper is-light el-popover fbs-task-add-popover-box"
-			tabIndex={-1}
-			aria-hidden="false"
-			role="tooltip"
-			data-popper-reference-hidden="false"
-			data-popper-escaped="false"
-			data-popper-placement="bottom"
-		>
+		<div className="el-popper is-light el-popover fbs-task-add-popover-box" tabIndex={-1} aria-hidden="false" role="tooltip" data-popper-placement="bottom">
 			<div className="btl-fbs-top-bar">
-				<div />
-				<span>{__('Share and more...', 'betterlinks')}</span>
+				<span className="btl-title">{__('Share and more...', 'betterlinks')}</span>
 				<span className="dashicons dashicons-no-alt close-button el-button" onClick={closeModal} />
 			</div>
 			<div className="btl-fbs-link-data">
@@ -214,25 +214,28 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 									}));
 								}}
 							/>
-							{copy ? (
-								<span className="dashicons dashicons-yes" />
-							) : (
-								<img
-									className="btl-copy-icon"
-									onClick={() => {
-										const short_link = `${site_url}/${task?.short_url}`;
-										if (copyToClipboard(short_link)) {
-											setCopy(true);
+							<div className="btl-fbs-icon">
+								{copy ? (
+									<span className="dashicons dashicons-yes" />
+								) : (
+									<img
+										width={20}
+										className="btl-copy-icon"
+										onClick={() => {
+											const short_link = `${site_url}/${task?.short_url}`;
+											if (copyToClipboard(short_link)) {
+												setCopy(true);
 
-											let timer = setTimeout(() => {
-												setCopy(false);
-												clearTimeout(timer);
-											}, 3000);
-										}
-									}}
-									src={plugin_root_url + 'assets/images/copy-icon-1.svg'}
-								/>
-							)}
+												let timer = setTimeout(() => {
+													setCopy(false);
+													clearTimeout(timer);
+												}, 3000);
+											}
+										}}
+										src={plugin_root_url + 'assets/images/copy-icon-1.svg'}
+									/>
+								)}
+							</div>
 						</p>
 					</div>
 				</div>
@@ -247,8 +250,10 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 								columnGap: '5px',
 							}}
 						>
+							<a href={`${admin_url}?page=betterlinks`} target="_blank">
+								{__('Manage All Your Links with BetterLinks', 'betterlinks')}
+							</a>
 							<button
-								className={`el-button el-button--primary ${!editShortUrl ? 'btl-btn-disable' : ''}`}
 								onClick={() => {
 									setEditShortUrlStatus(false);
 									if (task?.id) {
@@ -262,11 +267,10 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 									}
 									__createBetterLinks();
 								}}
-								disabled={!editShortUrl}
 							>
-								{task?.id ? __('Update', 'betterlinks') : __('Create', 'betterlinks')}
+								{task?.id ? updateText : __('Create', 'betterlinks')}
 							</button>
-							{task?.updateMessage && <span style={{ fontSize: '12px', color: 'failed' === task?.status ? 'red' : 'green' }}>{task?.updateMessage}</span>}
+							{/* {task?.updateMessage && <span style={{ fontSize: '12px', color: 'failed' === task?.status ? 'red' : 'green' }}>{task?.updateMessage}</span>} */}
 						</div>
 					</>
 				)}
