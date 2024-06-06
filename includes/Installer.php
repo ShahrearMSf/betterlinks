@@ -138,14 +138,17 @@ class Installer extends \WP_Background_Process
     public function save_settings()
     {
         if (!Helper::btl_get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
-            $args    = array(
-				'ID'        => 0,
-				'term_name' => 'Fluent Boards',
-				'term_slug' => 'btl-fluent-boards',
-				'term_type' => 'category',
-			);
-			$results = $this->create_term( $args );
-			$fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
+            $fbs_cat = 0;
+            if( defined( 'FLUENT_BOARDS' ) ){
+                $args    = array(
+                    'ID'        => 0,
+                    'term_name' => 'Fluent Boards',
+                    'term_slug' => 'btl-fluent-boards',
+                    'term_type' => 'category',
+                );
+                $results = $this->create_term( $args );
+                $fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
+            }
             $value = [
                 'redirect_type'         => '307',
                 'nofollow'   		    => true,
@@ -253,7 +256,7 @@ class Installer extends \WP_Background_Process
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '==' ) ) {
                 $this->modifyBetterLinksClicksTable();
             }
-            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.4', '>' ) ) {
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '>' ) ) {
                 $this->update_fluent_settings();
             }
         }

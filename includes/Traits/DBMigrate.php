@@ -44,14 +44,19 @@ trait DBMigrate
     public function update_fluent_settings() {
         $settings = Cache::get_json_settings();
         if( empty( $settings['fbs']['enable_fbs'] ) ){
-            $args    = array(
-				'ID'        => 0,
-				'term_name' => 'Fluent Boards',
-				'term_slug' => 'btl-fluent-boards',
-				'term_type' => 'category',
-			);
-			$results = $this->create_term( $args );
-			$fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
+            $fbs_cat = 0;
+            
+            if( defined( 'FLUENT_BOARDS' ) ){
+                $args    = array(
+                    'ID'        => 0,
+                    'term_name' => 'Fluent Boards',
+                    'term_slug' => 'btl-fluent-boards',
+                    'term_type' => 'category',
+                );
+                $results = $this->create_term( $args );
+                $fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
+            }
+
             $settings['fbs'] = [
                 'enable_fbs' => true,
                 'cat_id' => $fbs_cat,
