@@ -45,8 +45,8 @@ class Assets
                 },
                 1
             );
-            wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], 'cc7d1ed3e50e336c37ea43a0d361013c', 'all');
             $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.core.min.asset.php';
+            wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], $dependencies['version'], 'all');
             wp_enqueue_script(
                 'betterlinks-admin-core',
                 BETTERLINKS_ASSETS_URI . 'js/betterlinks.core.min.js',
@@ -102,8 +102,9 @@ class Assets
                 'TASKS' => 'tasks/',
                 'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
                 'site_url' => apply_filters('betterlinks/site_url', site_url()),
+                'admin_url' => admin_url('/admin.php')
             ]);
-            wp_enqueue_style('betterlinks-intflboards', BETTERLINKS_ASSETS_URI . 'css/integrations/btl-fbs.css', [], BETTERLINKS_VERSION, 'all');
+            wp_enqueue_style('betterlinks-intflboards', BETTERLINKS_ASSETS_URI . 'css/integrations/btl-fbs.css', [], $dependencies['version'], 'all');
         }
     }
 
