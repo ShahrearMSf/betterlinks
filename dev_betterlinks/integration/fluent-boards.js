@@ -13,7 +13,7 @@ const App = () => {
 		taskId: '',
 	});
 	const [openModal, setOpenModal] = useState(false);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [updateText, setUpdateText] = useState(__('Update', 'betterlinks'));
 
 	useEffect(() => {
@@ -31,9 +31,10 @@ const App = () => {
 				taskId,
 			});
 		}
-	}, []);
+	}, [window.location.href]);
 
 	const checkFbsLink = async (task) => {
+		setLoading(true);
 		const { taskId, taskName, boardUrl } = task;
 		let form_data = new FormData();
 		form_data.append('security', betterlinks_nonce);
