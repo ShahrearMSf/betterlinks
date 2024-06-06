@@ -11,13 +11,13 @@
 	.fbs-task-add-popover-box {
 		z-index: 2047;
 		position: absolute;
-		width: 412px;
+		width: 350px !important;
 		margin-top: 3%;
 		right: -18%;
 
 		.el-popper__arrow {
 			position: absolute;
-			left: 160px;
+			left: 50%;
 		}
 
 		.btl-fbs-top-bar {
@@ -26,10 +26,18 @@
 			align-items: center;
 			margin-bottom: 20px;
 
+			> span.btl-title {
+				font-weight: 500;
+				font-size: 15px;
+				color: rgb(25, 40, 93);
+			}
+
 			span.close-button {
 				cursor: pointer;
 				border: unset;
 				transition: 0.3s;
+				font-size: 18px;
+				padding: 5px 15px;
 			}
 		}
 		.btl-fbs-link-data {
@@ -42,12 +50,15 @@
 				p {
 					display: flex;
 					align-items: center;
+					border: 1px solid rgb(235, 235, 235);
+					border-radius: 6px;
+
 					span {
 						&.btl-site-url {
-							background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+							background: rgba(69, 117, 255, 1);
 							border-radius: 5px 3px 3px 5px;
 							font-size: 14px;
-							padding: 5px;
+							padding: 8px 10px;
 							color: #fff;
 							font-style: italic;
 							-ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -60,40 +71,90 @@
 					}
 					input {
 						width: 45%;
+						border: unset;
+						box-shadow: unset;
 
 						&:focus {
-							border: 1px solid gray;
+							border: unset;
 						}
 					}
-
+					.btl-fbs-icon {
+						width: 25px;
+						height: 25px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						margin-right: 2px;
+					}
 					.btl-copy-icon {
 						cursor: pointer;
 					}
 				}
-				button {
-					width: auto;
-					background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
-					margin-top: 5px;
-					color: #fff;
-					padding: 3px 5px;
-					font-size: 12px;
 
-					&.btl-btn-disable {
-						background: #c8c8c8;
-						cursor: not-allowed;
+				&.fbs_task_mover_actions {
+					justify-content: space-between;
+					> button {
+						width: 90px;
+						height: 35px;
+						border-radius: 5px;
+						padding: 2px;
+						background-color: rgba(38, 115, 255, 1);
+						color: #fff;
+						box-shadow: 0px 5px 5px 0px rgba(255, 255, 255, 0.1) inset;
+						cursor: pointer;
+						justify-content: center;
+
+						&:hover {
+							background-color: rgba(0, 81, 229, 1);
+						}
+
+						&.btl-btn-disable {
+							background: rgba(176, 178, 186, 1);
+							cursor: not-allowed;
+						}
+					}
+
+					> a {
+						font-size: 12px;
+						color: #9fa0ad;
+						// color: rgba(35, 91, 251, 1);
+						border-bottom: 1px solid #9fa0ad;
+						// border-bottom: 1px solid rgba(35, 91, 251, 1);
+						padding-bottom: 2px;
 					}
 				}
 			}
 			.btl-fbs-qr-section {
-				margin-top: 5px;
+				margin-top: 8px;
+				font-weight: 500;
+				font-size: 14px;
+				line-height: 17px;
+				padding: 3px;
+
+				> a.btl-fbs-show-hide-qr {
+					color: rgb(159, 160, 173);
+					border-bottom: 1px solid rgba(183, 183, 183, 1);
+					padding-bottom: 2px;
+					font-size: 13px;
+
+					> span.dashicons {
+						font-size: 17px;
+						margin-left: 3px;
+						line-height: 1.2rem;
+					}
+				}
 				.betterlinksqrcode {
 					display: flex;
 					column-gap: 10px;
-					margin: 10px 0;
+					margin-top: 20px;
+					margin-bottom: 10px;
 
 					> canvas {
 						height: 100px;
 						width: 100px;
+						border: 1px solid rgb(217, 225, 244);
+						padding: 8px;
+						border-radius: 8px;
 					}
 
 					.btl-fbs-qr-sidebar {
@@ -101,8 +162,19 @@
 						flex-direction: column;
 						row-gap: 10px;
 
+						> p {
+							font-weight: 400;
+							font-size: 13px;
+							line-height: 19px;
+							color: rgb(112, 112, 112);
+						}
+
 						> a.btl-fbs-qr-download {
 							width: max-content;
+							color: rgba(35, 91, 251, 1);
+							border-bottom: 1px solid rgba(35, 91, 251, 1);
+							cursor: pointer;
+							font-size: 13px;
 						}
 					}
 				}
