@@ -29,7 +29,7 @@ const QRScanner = ({ short_url }) => {
 					<div className="betterlinksqrcode">
 						<QRCode value={makeShortUrl(short_url)} size={100} level={'H'} />
 						<div className="btl-fbs-qr-sidebar">
-							<p>{__('Link anyone to this card by sending them this QR code: ', 'betterlinks')}</p>
+							<p>{__('Scan/Download the QR code to Share this task: ', 'betterlinks')}</p>
 							<a className="btl-fbs-qr-download" onClick={download} title={__('Download', 'betterlinks')}>
 								{__('Download', 'betterlinks')}
 							</a>

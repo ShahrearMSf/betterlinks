@@ -16,14 +16,13 @@ const FluentBoardSettings = ({ settings, terms, update_option }) => {
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
 					saveSettingsHandler(values, update_option, setFormSubmitText);
-					// console.info(values);
 				}}
 			>
 				{(props) => (
 					<Form className="btl-fbs">
 						<span className="btl-form-group">
-							<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-								{__('Enable Fluent Board', 'betterlinks')}
+							<label className="btl-form-label" style={{ 'min-width': '230px' }}>
+								{__('Enable Link Management', 'betterlinks')}
 							</label>
 							<div className="btl-form-field">
 								<label className="btl-checkbox-field block">
@@ -40,16 +39,26 @@ const FluentBoardSettings = ({ settings, terms, update_option }) => {
 						</span>
 						<span className="btl-form-group">
 							<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-								{__('Choose Category', 'betterlinks')}
+								{__('Choose a Default Category', 'betterlinks')}
+								<div className="btl-tooltip">
+									<span className="dashicons dashicons-info-outline" />
+									<span
+										className="btl-tooltiptext"
+										style={{
+											width: '255px',
+											textAlign: 'left',
+											lineHeight: '1.2em',
+										}}
+									>
+										{__(
+											'This category will be assigned by default when you create links inside Fluent Boards for your tasks. You can manage your links from BetterLinks Dashboard afterwards.',
+											'betterlinks'
+										)}
+									</span>
+								</div>
 							</label>
 							<div className="btl-form-field">
-								<Category
-									catId={parseInt(props.values?.fbs?.cat_id)}
-									data={{ terms }}
-									fieldName="fbs.cat_id"
-									setFieldValue={props.setFieldValue}
-									// disabled={isDisableLinkFormEditView}
-								/>
+								<Category catId={parseInt(props.values?.fbs?.cat_id)} data={{ terms }} fieldName="fbs.cat_id" setFieldValue={props.setFieldValue} />
 							</div>
 						</span>
 						<button className="button-primary btn-save-settings" type="submit">

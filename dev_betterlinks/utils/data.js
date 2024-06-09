@@ -52,7 +52,7 @@ export const tabList = [
 		type: 'free',
 	},
 	is_fbs_enabled && {
-		label: __('Fluent Board', 'betterlinks'),
+		label: __('Fluent Boards Settings', 'betterlinks'),
 		type: 'free',
 	},
 	{
