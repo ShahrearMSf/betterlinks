@@ -77,6 +77,7 @@ const App = () => {
 	};
 
 	const __handleClickShareButton = () => {
+		if (loading) return;
 		if (task?.short_url) {
 			setOpenModal(!openModal);
 			return;
@@ -96,16 +97,18 @@ const App = () => {
 			.then((res) => res)
 			.catch((err) => err);
 		const { result, message } = response.data?.data;
-		// setLoading(false);
 
 		setTask((prev) => ({
 			...prev,
 			short_url: result?.short_url || prev?.short_url,
 			old_short_url: result?.short_url || prev?.old_short_url,
 			updateMessage: message,
+			status: !!result,
 		}));
 
-		delayStatusChanged(__('Updating...', 'betterlinks'), __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
+		if (!!result) {
+			delayStatusChanged(__('Updating...', 'betterlinks'), __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
+		}
 
 		let timer = setTimeout(() => {
 			setTask((prev) => ({
@@ -113,7 +116,7 @@ const App = () => {
 				updateMessage: null,
 			}));
 			clearTimeout(timer);
-		}, 2000);
+		}, 5000);
 	};
 
 	const __createBetterLinks = async () => {
@@ -131,26 +134,35 @@ const App = () => {
 			.catch((err) => err);
 
 		const { result, status } = response.data?.data;
+		
 		setLoading(false);
 		setOpenModal(true);
-		if ('created' === status) {
+		if (!!status) {
 			setTask((prev) => ({
 				...prev,
 				short_url: result?.short_url,
 				old_short_url: result?.short_url,
 				id: result?.ID,
+				status,
 				updateMessage: __('Short Link created successfully.', 'betterlinks'),
 			}));
 			return;
 		}
-		if ('failed' === status) {
+		if (!status) {
 			setTask((prev) => ({
 				...prev,
 				short_url: result?.short_url,
 				status,
-				updateMessage: __('Something went wrong, please try again', 'betterlinks'),
+				updateMessage: __('Link already exists', 'betterlinks'),
 			}));
 		}
+		let timer = setTimeout(() => {
+			setTask((prev) => ({
+				...prev,
+				updateMessage: null,
+			}));
+			clearTimeout(timer);
+		}, 5000);
 	};
 
 	return (
@@ -190,31 +202,23 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 			</div>
 			<div className="btl-fbs-link-data">
 				<div className="btl-form-group">
-					<label htmlFor="short_url">Link for this task</label>
+					<label htmlFor="short_url">{__('Link for this task', 'betterlinks')}</label>
 					<div>
 						<p className="btl-fbs-link-text">
-							<span
-								className="btl-site-url"
-								style={{
-									maxWidth: '50%',
-									overflowX: 'auto',
-									whiteSpace: 'nowrap',
-									cursor: 'ew-resize',
-								}}
-							>
-								{site_url}/
-							</span>
-							<input
-								type="text"
-								value={`${task?.short_url}`}
-								onChange={(e) => {
-									!editShortUrl && setEditShortUrlStatus(true);
-									setTask((prev) => ({
-										...prev,
-										short_url: e.target.value,
-									}));
-								}}
-							/>
+							<div>
+								<span className="btl-site-url">{site_url}/</span>
+								<input
+									type="text"
+									value={`${task?.short_url}`}
+									onChange={(e) => {
+										!editShortUrl && setEditShortUrlStatus(true);
+										setTask((prev) => ({
+											...prev,
+											short_url: e.target.value,
+										}));
+									}}
+								/>
+							</div>
 							<div className="btl-fbs-icon">
 								{copy ? (
 									<span className="dashicons dashicons-yes" />
@@ -239,19 +243,13 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 							</div>
 						</p>
 					</div>
+					{task?.updateMessage && <span className={`btl-fbs-message ${!!task?.status ? 'success' : 'error'}`}>{task.updateMessage}</span>}
 				</div>
 				{'' !== task?.short_url && (
 					<>
-						<QRScanner short_url={task.old_short_url} />
-						<div
-							className="btl-form-group fbs_task_mover_actions"
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								columnGap: '5px',
-							}}
-						>
-							<a href={`${admin_url}?page=betterlinks`} target="_blank">
+						{task?.old_short_url && <QRScanner short_url={task.old_short_url} />}
+						<div className="btl-form-group fbs_task_mover_actions">
+							<a href={`${admin_url}?page=betterlinks`} target="_blank" title="Manage All Your Links with BetterLinks">
 								{__('Manage All Your Links with BetterLinks', 'betterlinks')}
 							</a>
 							<button
@@ -271,7 +269,6 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 							>
 								{task?.id ? updateText : __('Create', 'betterlinks')}
 							</button>
-							{/* {task?.updateMessage && <span style={{ fontSize: '12px', color: 'failed' === task?.status ? 'red' : 'green' }}>{task?.updateMessage}</span>} */}
 						</div>
 					</>
 				)}
