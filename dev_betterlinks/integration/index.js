@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import App from './fluent-boards';
+import { fbs_settings } from './utils/helper';
 
 document.addEventListener('DOMContentLoaded', function () {
 	// Callback function to execute when mutations are observed
@@ -22,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		})();
 	}
-
-	const observer = new MutationObserver(handleMutations);
-	observer.observe(document.body, { childList: true, subtree: true });
+	if (fbs_settings?.enable_fbs) {
+		const observer = new MutationObserver(handleMutations);
+		observer.observe(document.body, { childList: true, subtree: true });
+	}
 });

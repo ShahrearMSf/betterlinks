@@ -9,7 +9,7 @@ class Assets
         add_action('admin_enqueue_scripts', [$this, 'plugin_scripts']);
         add_action('enqueue_block_editor_assets', [$this, 'block_editor_assets']);
         add_filter( 'fluent_boards/asset_listed_slugs', function($approvedSlugs) {
-            return wp_parse_args( $approvedSlugs, [ 'betterlinks-intflboards' ] );
+            return wp_parse_args( [ 'betterlinks-intflboards' ], $approvedSlugs );
         });
     }
 
@@ -97,12 +97,14 @@ class Assets
                     'in_footer' => true,
                 ]
             );
+            $settings = Cache::get_json_settings();
             wp_localize_script('betterlinks-intflboards', 'betterLinksFlbIntegration', [
                 'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
                 'TASKS' => 'tasks/',
                 'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
                 'site_url' => apply_filters('betterlinks/site_url', site_url()),
-                'admin_url' => admin_url('/admin.php')
+                'admin_url' => admin_url('/admin.php'),
+                'fbs_settings' => isset($settings['fbs']) ? $settings['fbs'] : null
             ]);
             wp_enqueue_style('betterlinks-intflboards', BETTERLINKS_ASSETS_URI . 'css/integrations/btl-fbs.css', [], $dependencies['version'], 'all');
         }

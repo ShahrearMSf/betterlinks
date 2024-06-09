@@ -1,4 +1,4 @@
-export const { site_url, admin_url } = window.betterLinksFlbIntegration;
+export const { site_url, admin_url, fbs_settings } = window.betterLinksFlbIntegration;
 
 export const formatFormData = (form_data, payload) => {
 	Object.entries(payload).forEach(([key, value]) => {
