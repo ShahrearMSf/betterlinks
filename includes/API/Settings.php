@@ -113,15 +113,16 @@ class Settings extends Controller {
 			}
         }
 
-		if( class_exists('\BetterLinksPro\Helper') && (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] ))){
-			$category                           = \BetterLinksPro\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
+		if( (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] ))){
+			$category                           = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
 			$response['cle']['category'] = $category;
 		}
 
 		if( (!empty( $response['fbs']['enable_fbs'] ) || !empty( $response['fbs']['cat_id'] )) ){
-			$category                           = \BetterLinksPro\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+			$category                           = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
 			$response['fbs']['cat_id'] = $category;
 		}
+
 
 		$response = json_encode( $response );
 		if ( $response ) {

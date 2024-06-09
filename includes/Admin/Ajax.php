@@ -93,7 +93,7 @@ class Ajax {
 		}
 
 		$helper = new Helper();
-		$id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : null;
+		$id = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
 		$short_url = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : null;
 		$old_short_url = isset( $_POST['old_short_url'] ) ? sanitize_text_field( $_POST['old_short_url'] ) : null;
 
@@ -213,8 +213,6 @@ class Ajax {
 				'status' => false,
 			));
 		}
-
-		// update fbs_activities
 
 		wp_send_json_success(array(
 			'result' => $results,
@@ -859,8 +857,14 @@ class Ajax {
 				( new \BetterLinksPro\Helper() )->delete_custom_page( 'customized-meta-tags' );
 			}
 
-			if( (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] )) ){
-
+			if( (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] ))){
+				$category                           = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
+				$response['cle']['category'] = $category;
+			}
+	
+			if( (!empty( $response['fbs']['enable_fbs'] ) || !empty( $response['fbs']['cat_id'] )) ){
+				$category                           = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+				$response['fbs']['cat_id'] = $category;
 			}
 		}
 

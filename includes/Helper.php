@@ -713,4 +713,25 @@ class Helper {
 		}
 		return $title;
 	}
+	public static function insert_new_category( $slug ) {
+		if ( ! ! intval( $slug ) ) {
+			return $slug;
+		}
+
+		$is_cat_exists = self::term_exists( $slug );
+		if ( ! $is_cat_exists ) {
+			$insert_id = self::insert_term(
+				array(
+					'term_name' => $slug,
+					'term_slug' => self::make_slug( $slug ),
+					'term_type' => 'category',
+				)
+			);
+			if ( $insert_id ) {
+				self::clear_query_cache();
+				$slug = $insert_id;
+			}
+		}
+		return $slug;
+	}
 }
