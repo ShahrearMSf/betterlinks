@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
+import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { saveSettingsHandler } from 'utils/helper';
 
-const FluentBoardSettings = ({ settings, terms, update_option }) => {
+const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	return (
 		<>
@@ -16,6 +17,7 @@ const FluentBoardSettings = ({ settings, terms, update_option }) => {
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
 					saveSettingsHandler(values, update_option, setFormSubmitText);
+					fetch_terms_data();
 				}}
 			>
 				{(props) => (
@@ -72,6 +74,7 @@ const FluentBoardSettings = ({ settings, terms, update_option }) => {
 };
 const mapDispatchToProps = (dispatch) => ({
 	update_option: bindActionCreators(update_option, dispatch),
+	fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(FluentBoardSettings);
