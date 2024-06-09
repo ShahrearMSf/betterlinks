@@ -88,7 +88,7 @@ class Ajax {
 
 	public function update_fbs_link() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! apply_filters( 'betterlinks/api/links_update_item_permissions_check', current_user_can( 'manage_options' ) ) ) {
+		if ( ! defined('FLUENT_BOARDS') ) {
 			wp_die( "You don't have permission to do this." );
 		}
 
@@ -128,12 +128,10 @@ class Ajax {
 			),
 			'message' => __('Short Link updated successfully', 'betterlinks')
 		));
-
-
 	}
 	public function create_fbs_link() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! apply_filters( 'betterlinks/api/links_create_item_permissions_check', current_user_can( 'manage_options' ) ) ) {
+		if ( ! defined('FLUENT_BOARDS') ) {
 			wp_die( "You don't have permission to do this." );
 		}
 
@@ -212,7 +210,7 @@ class Ajax {
 				'result' => array(
 					'short_url' => $short_url
 				),
-				'status' => 'failed',
+				'status' => false,
 			));
 		}
 
@@ -220,13 +218,13 @@ class Ajax {
 
 		wp_send_json_success(array(
 			'result' => $results,
-			'status' => 'created'
+			'status' => true
 		));
 	}
 
 	public function check_fbs_link() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! apply_filters( 'betterlinks/api/links_create_item_permissions_check', current_user_can( 'manage_options' ) ) ) {
+		if ( ! defined('FLUENT_BOARDS') ) {
 			wp_die( "You don't have permission to do this." );
 		}
 
