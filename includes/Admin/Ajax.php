@@ -88,93 +88,97 @@ class Ajax {
 
 	public function update_fbs_link() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! defined('FLUENT_BOARDS') ) {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
 
-		$helper = new Helper();
-		$id = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
-		$short_url = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : null;
+		$helper        = new Helper();
+		$id            = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
+		$short_url     = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : null;
 		$old_short_url = isset( $_POST['old_short_url'] ) ? sanitize_text_field( $_POST['old_short_url'] ) : null;
 
-		if( $helper::is_exists_short_url($short_url) ){
-			wp_send_json_error(array(
-				'result' => false,
-				'message' => __('Link already exists', 'betterlinks')
-			));
+		if ( $helper::is_exists_short_url( $short_url ) ) {
+			wp_send_json_error(
+				array(
+					'result'  => false,
+					'message' => __( 'Link already exists', 'betterlinks' ),
+				)
+			);
 		}
 
 		global $wpdb;
-		$data = array(
-			'short_url' => $short_url
+		$data  = array(
+			'short_url' => $short_url,
 		);
 		$where = array(
-			'id' => $id
+			'id' => $id,
 		);
-		if( empty( $wpdb->update( $wpdb->prefix . "betterlinks", $data, $where ) ) ){
-			wp_send_json_error(array(
-				'result' => false,
-				'message' => __('Something went wrong, please try again', 'betterlinks')
-			));
+		if ( empty( $wpdb->update( $wpdb->prefix . 'betterlinks', $data, $where ) ) ) {
+			wp_send_json_error(
+				array(
+					'result'  => false,
+					'message' => __( 'Something went wrong, please try again', 'betterlinks' ),
+				)
+			);
 		}
 		$helper::clear_query_cache();
-		if (BETTERLINKS_EXISTS_LINKS_JSON) {
-            $helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', ['short_url' => $short_url], $old_short_url);
-        }
+		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
+			$helper::update_json_into_file( trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', array( 'short_url' => $short_url ), $old_short_url );
+		}
 
-		wp_send_json_error(array(
-			'result' => array(
-				'short_url' => $short_url
-			),
-			'message' => __('Short Link updated successfully', 'betterlinks')
-		));
+		wp_send_json_error(
+			array(
+				'result'  => array(
+					'short_url' => $short_url,
+				),
+				'message' => __( 'Short Link updated successfully', 'betterlinks' ),
+			)
+		);
 	}
 	public function create_fbs_link() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! defined('FLUENT_BOARDS') ) {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
 			wp_die( "You don't have permission to do this." );
-		}
-
-		if( ! defined('FLUENT_BOARDS') ) {
-			wp_die("You don't have permission to do this");
 		}
 
 		$helper = new Helper();
 
 		$settings = Cache::get_json_settings();
-		$title = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
-		$taskId = isset( $_POST['taskId'] ) ? sanitize_text_field( $_POST['taskId'] ) : null;
-		if( empty( $taskId ) ){
-			wp_send_json_error([
-				'result' => false
-			]);
+		$title    = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
+		$taskId   = isset( $_POST['taskId'] ) ? sanitize_text_field( $_POST['taskId'] ) : null;
+		if ( empty( $taskId ) ) {
+			wp_send_json_error(
+				array(
+					'result' => false,
+				)
+			);
 		}
-		$slug = "fbs-{$taskId}";
-		$target_url = isset( $_POST['target_url'] ) ? sanitize_url( $_POST['target_url'] ) : null;
-		$short_url = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url']  ) : null;
+		$slug             = "fbs-{$taskId}";
+		$target_url       = isset( $_POST['target_url'] ) ? sanitize_url( $_POST['target_url'] ) : null;
+		$short_url        = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : null;
 		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
-		$short_url        = !empty($short_url) ? $short_url :  $prefix . $slug;
+		$short_url        = ! empty( $short_url ) ? $short_url : $prefix . $slug;
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
 		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
 		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
 		$param_forwarding = ! empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
 		$date             = wp_date( 'Y-m-d H:i:s' );
-		$redirect_type = ! empty( $settings['redirect_type'] ) ? $settings['redirect_type'] : '307';
-		$fbs_cat = !empty( $settings['fbs']['cat_id'] ) ? $settings['fbs']['cat_id'] : 1;
+		$redirect_type    = ! empty( $settings['redirect_type'] ) ? $settings['redirect_type'] : '307';
+		$fbs_cat          = ! empty( $settings['fbs']['cat_id'] ) ? $settings['fbs']['cat_id'] : 1;
 
-		if( empty( $settings['fbs']['cat_id'] ) ){
+		if ( empty( $settings['fbs']['cat_id'] ) ) {
 			delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
-			$args    = array(
+			$args                      = array(
 				'ID'        => 0,
 				'term_name' => 'Fluent Boards',
 				'term_slug' => 'btl-fluent-boards',
 				'term_type' => 'category',
 			);
-			$results = $this->create_term( $args );
-			$fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : $fbs_cat;
+			$results                   = $this->create_term( $args );
+			$fbs_cat                   = ! empty( $results['ID'] ) ? $results['ID'] : $fbs_cat;
 			$settings['fbs']['cat_id'] = $fbs_cat;
 
-			$response = json_encode($settings);
+			$response = json_encode( $settings );
 
 			if ( $response ) {
 				update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
@@ -198,55 +202,61 @@ class Ajax {
 			'link_date_gmt'     => $date,
 			'link_modified'     => $date,
 			'link_modified_gmt' => $date,
-			'cat_id'            => $fbs_cat
+			'cat_id'            => $fbs_cat,
 		);
 
 		$helper->clear_query_cache();
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );
 
-		if( empty( $results  ) ) {
-			wp_send_json_error(array(
-				'result' => array(
-					'short_url' => $short_url
-				),
-				'status' => false,
-			));
+		if ( empty( $results ) ) {
+			wp_send_json_error(
+				array(
+					'result' => array(
+						'short_url' => $short_url,
+					),
+					'status' => false,
+				)
+			);
 		}
 
-		wp_send_json_success(array(
-			'result' => $results,
-			'status' => true
-		));
+		wp_send_json_success(
+			array(
+				'result' => $results,
+				'status' => true,
+			)
+		);
 	}
 
 	public function check_fbs_link() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! defined('FLUENT_BOARDS') ) {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
 
 		$boardUrl = isset( $_POST['boardUrl'] ) ? sanitize_text_field( $_POST['boardUrl'] ) : null;
-		$taskId = isset( $_POST['taskId'] ) ? (int) sanitize_text_field( $_POST['taskId'] ) : null;
+		$taskId   = isset( $_POST['taskId'] ) ? (int) sanitize_text_field( $_POST['taskId'] ) : null;
 
 		$target_url = null;
 
-		if( !empty( $boardUrl ) || !empty( $taskId ) ) {
+		if ( ! empty( $boardUrl ) || ! empty( $taskId ) ) {
 			global $wpdb;
 
 			$target_url = $boardUrl . 'tasks/' . $taskId;
-			$link = $wpdb->get_row( $wpdb->prepare( "SELECT `id`,`short_url` FROM {$wpdb->prefix}betterlinks where target_url=%s", $target_url ) );
-			$task = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
+			$link       = $wpdb->get_row( $wpdb->prepare( "SELECT `id`,`short_url` FROM {$wpdb->prefix}betterlinks where target_url=%s", $target_url ) );
+			$task       = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
 
-			if( !empty ( $link ) ){
-				wp_send_json_success(array(
-					'result' => array(
-						'id' => $link->id,
-						'short_url' => $link->short_url,
-						'task_slug' => $task->slug
-					),
-					'is_exists' => true
-				));
+			if ( ! empty( $link ) ) {
+				wp_send_json_success(
+					array(
+						'result'    => array(
+							'id'        => $link->id,
+							'short_url' => $link->short_url,
+							'task_slug' => $task->slug,
+						),
+						'is_exists' => true,
+					)
+				);
 			}
 
 			// if not exists any short url
@@ -255,17 +265,16 @@ class Ajax {
 			if ( ! empty( $task ) ) {
 				wp_send_json_success(
 					array(
-						'result' => array(
-							'title' => $task->title,
-							'slug'  => $task->slug,
-							'target_url' => $target_url
+						'result'    => array(
+							'title'      => $task->title,
+							'slug'       => $task->slug,
+							'target_url' => $target_url,
 						),
-						'is_exists' => false
+						'is_exists' => false,
 					)
 				);
 			}
 		}
-
 
 		wp_send_json_error(
 			array(
@@ -848,7 +857,7 @@ class Ajax {
 			if ( $enable_password_protection ) {
 				( new \BetterLinksPro\Helper() )->add_password_protect_page();
 			} else {
-				( new \BetterLinksPro\Helper() )->delete_custom_page('password-protected-form');
+				( new \BetterLinksPro\Helper() )->delete_custom_page( 'password-protected-form' );
 			}
 
 			if ( $enable_customize_meta_tag ) {
@@ -857,13 +866,13 @@ class Ajax {
 				( new \BetterLinksPro\Helper() )->delete_custom_page( 'customized-meta-tags' );
 			}
 
-			if( (!empty( $response['cle']['enable_cle'] ) || !empty( $response['cle']['category'] ))){
-				$category                           = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
+			if ( ( ! empty( $response['cle']['enable_cle'] ) || ! empty( $response['cle']['category'] ) ) ) {
+				$category                    = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
 				$response['cle']['category'] = $category;
 			}
-	
-			if( (!empty( $response['fbs']['enable_fbs'] ) || !empty( $response['fbs']['cat_id'] )) ){
-				$category                           = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+
+			if ( ( ! empty( $response['fbs']['enable_fbs'] ) || ! empty( $response['fbs']['cat_id'] ) ) ) {
+				$category                  = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
 				$response['fbs']['cat_id'] = $category;
 			}
 		}
