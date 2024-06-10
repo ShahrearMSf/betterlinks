@@ -89,6 +89,7 @@ class Settings extends Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function update_item( $request ) {
+		$helper = new \BetterLinks\Helper();
 		$response                              = $request->get_params();
 		$response                              = $helper::sanitize_text_or_array_field( $response );
 		$response['uncloaked_categories']      = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
@@ -97,8 +98,6 @@ class Settings extends Controller {
 
 		$enable_password_protection = ! empty( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
 		$enable_customize_meta_tag  = ! empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
-
-		$helper = new \BetterLinks\Helper();
 
 		if ( class_exists( 'BetterLinksPro' ) ) {
 			$pro_helper = new Helper();
