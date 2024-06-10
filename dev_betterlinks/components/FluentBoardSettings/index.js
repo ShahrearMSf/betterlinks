@@ -25,6 +25,22 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 						<span className="btl-form-group">
 							<label className="btl-form-label" style={{ 'min-width': '230px' }}>
 								{__('Enable Link Management', 'betterlinks')}
+								<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
+									<span className="dashicons dashicons-info-outline" />
+									<span
+										className="btl-tooltiptext"
+										style={{
+											width: '255px',
+											textAlign: 'left',
+											lineHeight: '1.2em',
+										}}
+									>
+										{__('Enabling this option will allow you to create shortlinks for tasks directly within the Fluent Boards. For more info, ', 'betterlinks')}
+										<a href="https://betterlinks.io/docs/fluent-boards-link-management-with-betterlinks" target="_blank" style={{ color: 'inherit' }}>
+											{__('Click Here', 'betterlinks')}
+										</a>
+									</span>
+								</div>
 							</label>
 							<div className="btl-form-field">
 								<label className="btl-checkbox-field block">
@@ -42,7 +58,7 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 						<span className="btl-form-group">
 							<label className="btl-form-label" style={{ 'min-width': '120px' }}>
 								{__('Choose a Default Category', 'betterlinks')}
-								<div className="btl-tooltip">
+								<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
 									<span className="dashicons dashicons-info-outline" />
 									<span
 										className="btl-tooltiptext"
