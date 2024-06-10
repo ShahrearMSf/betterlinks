@@ -1,11 +1,11 @@
-=== BetterLinks - Shorten, Track and Manage any URL ===
+=== BetterLinks – An Advanced Plugin for Affiliate Links, Link Shortening, Link Tracking, Link Branding & Marketing ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hrrarya
 Donate link: https://wpdeveloper.com
-Tags: affiliate links, link branding,Link Shortner, link tracking, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, shortlinks, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
+Tags: affiliate links, cloaking, link shortener, short links, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,7 +14,7 @@ Ultimate plugin to create, shorten, track and manage any URL. Gather analytics r
 
 == Description ==
 
-Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings you the chance to easily create, shorten and manage any URL to help you cross-promote your brands & products. With its aesthetic User Interface, you can shorten anything without breaking any sweat and track analytics to measure successful campaigns easily.
+Want to make your brand stand out? [BetterLinks](https://betterlinks.io/) brings you the chance to easily create, shorten and manage any URL to help you cross-promote your brands & products. With its intuitive & easy to understand user interface, you can - short any links, do split tests with dynamic redirects, check broken links, do split testing, monitor campaigns with UTM builder, manage user roles, examine click-through rates, create external links, track analytics, and much more without breaking any sweat to make each marketing campaigns successful.
 
 ## WHY YOU NEED BETTERLINKS 🔥
 
@@ -24,11 +24,13 @@ Want to make your brand standout? [BetterLinks](https://betterlinks.io/) brings 
 - Add multiple link redirect types (301, 302, 307)
 - Analyze & track your marketing campaigns
 - Enhance your affiliate marketing strategies
-- Manage your links directly in Gutenberg Editor
+- Manage your links directly in Gutenberg & Elementor
 - Manage your tags and check the performance of your links associated to each tags
 - Reduce link load time with optimized queries
 - Monitor marketing campaigns with UTM Builder
 - Prevent bot traffic and clicks with Bot Blocker
+- Create and manage external links instantly
+- Check broken links and fix easily
 
 https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
@@ -80,16 +82,23 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins for FREE:
 
-🔝 [Essential Addons For Elementor](https://essential-addons.com/elementor/) – Most popular Elementor extensions with 2 million active users in the WordPress repository.
+🔝 [Essential Addons For Elementor](https://wordpress.org/plugins/essential-addons-for-elementor-lite/) – Most popular Elementor extensions with 2 million active users in the WordPress repository.
 
-🔔 [NotificationX](https://notificationx.com/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
+👉 [Essential Blocks For Gutenberg](https://wordpress.org/plugins/essential-blocks/) - The ultimate blocks library to enhance your Gutenberg web-building experience.
 
-📄 [EmbedPress](https://embedpress.com/): Easiest WordPress embedding plugin to add content from 100+ sources with one-click. Works in Gutenberg, Elementor, and more.
+🔔 [NotificationX](https://wordpress.org/plugins/notificationx/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
+
+📄 [EmbedPress](https://wordpress.org/plugins/embedpress/): Easiest WordPress embedding plugin to add content from 100+ sources with one-click. Works in Gutenberg, Elementor, and more.
+
+📝 [BetterDocs](https://wordpress.org/plugins/betterdocs)– Best Documentation & Knowledge Base Plugin for WordPress, which also reduces your manual support request.
 
 ⏰ [SchedulePress](https://wordpress.org/plugins/wp-scheduled-posts/) – Complete solution for scheduling WordPress posts through an editorial calendar & social share.
 
-Visit [WPDeveloper](https://wpdeveloper.com/) to learn more about how to do better in WordPress with [Help Tutorial, Tips & Tricks](https://wpdeveloper.com/blog).
+☁️ [Templately](https://wordpress.org/plugins/templately/) – Free templates library for Elementor & Gutenberg along with the cloud collaboration for WordPress.
 
+⚡ [Flexia](https://wordpress.org/themes/flexia/): Most lightweight, customizable & multi purpose theme for WordPress.
+
+Visit [WPDeveloper](https://wpdeveloper.com/) to learn more about how to do better in WordPress with [Help Tutorial, Tips & Tricks](https://wpdeveloper.com/blog).
 
 
 
@@ -141,6 +150,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 2.1.0 - 11/06/2024 =
+
+- Added: Fluent Boards Link Management Feature
+- Few minor bug fixes & improvement
 
 = 2.0.0 - 19/05/2024 =
 
