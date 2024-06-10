@@ -1,4 +1,4 @@
-export const { site_url, admin_url, fbs_settings } = window.betterLinksFlbIntegration;
+export const { site_url, admin_url, fbs_settings, plugin_root_url, TASKS, betterlinks_nonce } = window.betterLinksFlbIntegration;
 
 export const formatFormData = (form_data, payload) => {
 	Object.entries(payload).forEach(([key, value]) => {
@@ -40,4 +40,5 @@ export const delayStatusChanged = (firstStatus, secondStatus, thirdStatus, setSt
 			}, 3000);
 		}
 	}, 1000);
+	return true;
 };

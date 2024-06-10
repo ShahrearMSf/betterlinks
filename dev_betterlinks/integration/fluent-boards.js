@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
-const { plugin_root_url, TASKS, betterlinks_nonce, site_url } = window?.betterLinksFlbIntegration;
 import ClipLoader from 'react-spinners/ClipLoader';
 import axios from 'axios';
-import { admin_url, copyToClipboard, delayStatusChanged, formatFormData } from './utils/helper';
+import { admin_url, copyToClipboard, delayStatusChanged, formatFormData, plugin_root_url, TASKS, betterlinks_nonce, site_url } from './utils/helper';
 import QRScanner from './components/QRScanner';
 
 const App = () => {
@@ -17,21 +16,27 @@ const App = () => {
 	const [updateText, setUpdateText] = useState(__('Update', 'betterlinks'));
 
 	useEffect(() => {
-		const taskUrl = window.location.href;
-		const urlParts = taskUrl.split(TASKS);
-		const boardUrl = urlParts?.[0] || '';
+		let timer = setTimeout(() => {
+			const taskUrl = window.location.href;
+			const urlParts = taskUrl.split(TASKS);
+			const boardUrl = urlParts?.[0] || '';
 
-		const taskName = urlParts?.[1] || '';
-		const taskId = taskName.split('-')?.[0] || '';
+			const taskName = urlParts?.[1] || '';
+			const taskId = taskName.split('-')?.[0] || '';
 
-		if (taskId) {
-			checkFbsLink({
-				boardUrl,
-				taskName,
-				taskId,
-			});
-		}
-	}, [window.location.href]);
+			if (taskId) {
+				checkFbsLink({
+					boardUrl,
+					taskName,
+					taskId,
+				});
+			}
+		}, 1000);
+
+		return () => {
+			clearTimeout(timer);
+		};
+	}, []);
 
 	const checkFbsLink = async (task) => {
 		setLoading(true);
@@ -102,7 +107,7 @@ const App = () => {
 			...prev,
 			short_url: result?.short_url || prev?.short_url,
 			old_short_url: result?.short_url || prev?.old_short_url,
-			updateMessage: message,
+			updateMessage: !result && message,
 			status: !!result,
 		}));
 
@@ -134,7 +139,7 @@ const App = () => {
 			.catch((err) => err);
 
 		const { result, status } = response.data?.data;
-		
+
 		setLoading(false);
 		setOpenModal(true);
 		if (!!status) {
@@ -146,6 +151,7 @@ const App = () => {
 				status,
 				updateMessage: __('Short Link created successfully.', 'betterlinks'),
 			}));
+			resetMessage();
 			return;
 		}
 		if (!status) {
@@ -156,6 +162,9 @@ const App = () => {
 				updateMessage: __('Link already exists', 'betterlinks'),
 			}));
 		}
+	};
+
+	const resetMessage = () => {
 		let timer = setTimeout(() => {
 			setTask((prev) => ({
 				...prev,
@@ -169,7 +178,7 @@ const App = () => {
 		<>
 			<button className="el-button" onClick={__handleClickShareButton}>
 				<i className="el-icon">
-					<img width="16" src={plugin_root_url + 'assets/images/logo-black&white.svg'} alt={__('BetterLinks Colorfull Logo', 'betterlinks')} />
+					<img width="16" src={plugin_root_url + 'assets/images/logo-black&white.svg'} alt={__('BetterLinks Colorful Logo', 'betterlinks')} />
 				</i>
 				<span>{__('Share Task', 'betterlinks')}</span>
 				{loading && <ClipLoader className="btl-fbs-loader" color="#2961ff" size={18} />}
@@ -249,7 +258,7 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 					<>
 						{task?.old_short_url && <QRScanner short_url={task.old_short_url} />}
 						<div className="btl-form-group fbs_task_mover_actions">
-							<a href={`${admin_url}?page=betterlinks`} target="_blank" title="Manage All Your Links with BetterLinks">
+							<a href={`${admin_url}?page=betterlinks`} target="_blank" title={__('Manage All Your Links with BetterLinks', 'betterlinks')}>
 								{__('Manage All Your Links with BetterLinks', 'betterlinks')}
 							</a>
 							<button
