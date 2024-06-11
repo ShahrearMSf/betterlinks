@@ -35,7 +35,7 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 											lineHeight: '1.2em',
 										}}
 									>
-										{__('Enabling this option will allow you to create shortlinks for tasks directly within the Fluent Boards. For more info, ', 'betterlinks')}
+										{__('Enabling this option will allow you to create short links for tasks directly within the Fluent Boards. For more info, ', 'betterlinks')}
 										<a href="https://betterlinks.io/docs/fluent-boards-link-management-with-betterlinks" target="_blank" style={{ color: 'inherit' }}>
 											{__('Click Here', 'betterlinks')}
 										</a>
