@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { is_fbs_enabled } from './helper';
 export const redirectType = [
 	{
 		value: '307',
@@ -50,6 +51,10 @@ export const tabList = [
 		label: __('Quick Link Creation', 'betterlinks'),
 		type: 'free',
 	},
+	is_fbs_enabled && {
+		label: __('Fluent Boards Settings', 'betterlinks'),
+		type: 'free',
+	},
 	{
 		label: __('Tracking', 'betterlinks'),
 		type: 'pro',
@@ -70,4 +75,4 @@ export const tabList = [
 		label: __('Customize Link Preview', 'betterlinks'),
 		type: 'pro',
 	},
-];
+].filter(Boolean);

@@ -79,6 +79,208 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks__admin_dashboard_notice', array( $this, 'admin_dashboard_notice' ) );
 
 		add_action( 'wp_ajax_betterlinks__fetch_target_url', array( $this, 'fetch_target_url' ) );
+
+		// Fluent Board Integration
+		add_action( 'wp_ajax_betterlinks__check_fbs_link', array( $this, 'check_fbs_link' ) );
+		add_action( 'wp_ajax_betterlinks__create_fbs_link', array( $this, 'create_fbs_link' ) );
+		add_action( 'wp_ajax_betterlinks__update_fbs_link', array( $this, 'update_fbs_link' ) );
+	}
+
+	public function update_fbs_link() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$helper        = new Helper();
+		$id            = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : null;
+		$short_url     = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : null;
+		$old_short_url = isset( $_POST['old_short_url'] ) ? sanitize_text_field( $_POST['old_short_url'] ) : null;
+
+		if ( $helper::is_exists_short_url( $short_url ) ) {
+			wp_send_json_error(
+				array(
+					'result'  => false,
+					'message' => __( 'Link already exists', 'betterlinks' ),
+				)
+			);
+		}
+
+		global $wpdb;
+		$data  = array(
+			'short_url' => $short_url,
+		);
+		$where = array(
+			'id' => $id,
+		);
+		if ( empty( $wpdb->update( $wpdb->prefix . 'betterlinks', $data, $where ) ) ) {
+			wp_send_json_error(
+				array(
+					'result'  => false,
+					'message' => __( 'Something went wrong, please try again', 'betterlinks' ),
+				)
+			);
+		}
+		$helper::clear_query_cache();
+		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
+			$helper::update_json_into_file( trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', array( 'short_url' => $short_url ), $old_short_url );
+		}
+
+		wp_send_json_error(
+			array(
+				'result'  => array(
+					'short_url' => $short_url,
+				),
+				'message' => __( 'Short Link updated successfully', 'betterlinks' ),
+			)
+		);
+	}
+	public function create_fbs_link() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$helper = new Helper();
+
+		$settings = Cache::get_json_settings();
+		$title    = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
+		$taskId   = isset( $_POST['taskId'] ) ? sanitize_text_field( $_POST['taskId'] ) : null;
+		if ( empty( $taskId ) ) {
+			wp_send_json_error(
+				array(
+					'result' => false,
+				)
+			);
+		}
+		$slug             = "fbs-{$taskId}";
+		$target_url       = isset( $_POST['target_url'] ) ? sanitize_url( $_POST['target_url'] ) : null;
+		$short_url        = isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : null;
+		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$short_url        = ! empty( $short_url ) ? $short_url : $prefix . $slug;
+		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
+		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
+		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
+		$param_forwarding = ! empty( $settings['param_forwarding'] ) ? $settings['param_forwarding'] : null;
+		$date             = wp_date( 'Y-m-d H:i:s' );
+		$redirect_type    = ! empty( $settings['redirect_type'] ) ? $settings['redirect_type'] : '307';
+		$fbs_cat          = ! empty( $settings['fbs']['cat_id'] ) ? $settings['fbs']['cat_id'] : 1;
+
+		if ( empty( $settings['fbs']['cat_id'] ) ) {
+			delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+			$args                      = array(
+				'ID'        => 0,
+				'term_name' => 'Fluent Boards',
+				'term_slug' => 'btl-fluent-boards',
+				'term_type' => 'category',
+			);
+			$results                   = $this->create_term( $args );
+			$fbs_cat                   = ! empty( $results['ID'] ) ? $results['ID'] : $fbs_cat;
+			$settings['fbs']['cat_id'] = $fbs_cat;
+
+			$response = json_encode( $settings );
+
+			if ( $response ) {
+				update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
+				Cache::write_json_settings();
+			}
+			// regenerate links for wildcards option update
+			Helper::write_links_inside_json();
+		}
+
+		$initial_values = array(
+			'link_title'        => $title,
+			'link_slug'         => $slug,
+			'target_url'        => $target_url,
+			'short_url'         => $short_url,
+			'redirect_type'     => $redirect_type,
+			'nofollow'          => $nofollow,
+			'sponsored'         => $sponsored,
+			'track_me'          => $track_me,
+			'param_forwarding'  => $param_forwarding,
+			'link_date'         => $date,
+			'link_date_gmt'     => $date,
+			'link_modified'     => $date,
+			'link_modified_gmt' => $date,
+			'cat_id'            => $fbs_cat,
+		);
+
+		$helper->clear_query_cache();
+		$args    = $this->sanitize_links_data( $initial_values );
+		$results = $this->insert_link( $args );
+
+		if ( empty( $results ) ) {
+			wp_send_json_error(
+				array(
+					'result' => array(
+						'short_url' => $short_url,
+					),
+					'status' => false,
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'result' => $results,
+				'status' => true,
+			)
+		);
+	}
+
+	public function check_fbs_link() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$boardUrl = isset( $_POST['boardUrl'] ) ? sanitize_text_field( $_POST['boardUrl'] ) : null;
+		$taskId   = isset( $_POST['taskId'] ) ? (int) sanitize_text_field( $_POST['taskId'] ) : null;
+
+		$target_url = null;
+
+		if ( ! empty( $boardUrl ) || ! empty( $taskId ) ) {
+			global $wpdb;
+
+			$target_url = $boardUrl . 'tasks/' . $taskId;
+			$link       = $wpdb->get_row( $wpdb->prepare( "SELECT `id`,`short_url` FROM {$wpdb->prefix}betterlinks where target_url=%s", $target_url ) );
+			$task       = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
+
+			if ( ! empty( $link ) ) {
+				wp_send_json_success(
+					array(
+						'result'    => array(
+							'id'        => $link->id,
+							'short_url' => $link->short_url,
+							'task_slug' => $task->slug,
+						),
+						'is_exists' => true,
+					)
+				);
+			}
+
+			// if not exists any short url
+			$task = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
+
+			if ( ! empty( $task ) ) {
+				wp_send_json_success(
+					array(
+						'result'    => array(
+							'title'      => $task->title,
+							'slug'       => $task->slug,
+							'target_url' => $target_url,
+						),
+						'is_exists' => false,
+					)
+				);
+			}
+		}
+
+		wp_send_json_error(
+			array(
+				'result' => false,
+			)
+		);
 	}
 
 	public function fetch_target_url() {
@@ -655,13 +857,23 @@ class Ajax {
 			if ( $enable_password_protection ) {
 				( new \BetterLinksPro\Helper() )->add_password_protect_page();
 			} else {
-				( new \BetterLinksPro\Helper() )->delete_password_protect_page();
+				( new \BetterLinksPro\Helper() )->delete_custom_page( 'password-protected-form' );
 			}
 
 			if ( $enable_customize_meta_tag ) {
 				( new \BetterLinksPro\Helper() )->add_customized_meta_tag_page();
 			} else {
 				( new \BetterLinksPro\Helper() )->delete_custom_page( 'customized-meta-tags' );
+			}
+
+			if ( ( ! empty( $response['cle']['enable_cle'] ) || ! empty( $response['cle']['category'] ) ) ) {
+				$category                    = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
+				$response['cle']['category'] = $category;
+			}
+
+			if ( ( ! empty( $response['fbs']['enable_fbs'] ) || ! empty( $response['fbs']['cat_id'] ) ) ) {
+				$category                  = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+				$response['fbs']['cat_id'] = $category;
 			}
 		}
 
