@@ -14,7 +14,7 @@ Ultimate plugin to create, shorten, track and manage any URL. Gather analytics r
 
 == Description ==
 
-Want to make your brand stand out? [BetterLinks](https://betterlinks.io/) brings you the chance to easily create, shorten and manage any URL to help you cross-promote your brands & products. With its intuitive & easy to understand user interface, you can - short any links, do split tests with dynamic redirects, check broken links, do split testing, monitor campaigns with UTM builder, manage user roles, examine click-through rates, create external links, track analytics, and much more without breaking any sweat to make each marketing campaigns successful.
+Want to make your brand stand out? [BetterLinks](https://betterlinks.io/) brings you the chance to easily create, shorten and manage any URL to help you cross-promote your brands & products. With its intuitive & easy to understand user interface, you can - short any links, do split tests with dynamic redirects, check broken links, monitor campaigns with UTM builder, manage user roles, examine click-through rates, create links without admin access, track analytics, and much more without breaking any sweat to make each marketing campaigns successful.
 
 ## WHY YOU NEED BETTERLINKS 🔥
 
@@ -25,41 +25,43 @@ Want to make your brand stand out? [BetterLinks](https://betterlinks.io/) brings
 - Analyze & track your marketing campaigns
 - Enhance your affiliate marketing strategies
 - Manage your links directly in Gutenberg & Elementor
-- Manage your tags and check the performance of your links associated to each tags
+- Manage your tags and check the performance of your links associated to each tag
 - Reduce link load time with optimized queries
 - Monitor marketing campaigns with UTM Builder
 - Prevent bot traffic and clicks with Bot Blocker
-- Create and manage external links instantly
-- Check broken links and fix easily
+- Check broken links right from the dashboard
+- Easily manage & share your Fluent Boards task
 
 https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
 ## SIMPLE & FAST LINK MANAGEMENT PLUGIN 🎉
 
 
-**✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. Manage everything from creating, editing, configurations & all from just one place
+**✨ Aesthetic Drag & Drop UI:** Create & manage any links with just a couple of clicks. From creating, editing to configuring have everything in one place
 
 **🧲 Quick Link Shortening:** Make your long URL links into short ones and create pretty links within minutes
 
 **💫 One-Click Share:** Copy your shortened URL right from the dashboard and share it instantly
 
-**⚙️ Easy Configuration:** Easily setup your Link Redirects (301, 302 and 307) and all your Link options
+**⚙️ Easy Configuration:** Easily setup your Link Redirects (301, 302, 307 and Cloaked) and all your Link options
 
 **💪 Fast Response:** Less Database queries resulting in faster response time
 
-**🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks with one-click
+**🔃 Simple Migration:** Migrate from Third-party Plugins such as PrettyLinks, ThirstyAffiliates with one-click
 
 ## POWERFUL LINK TRACKING & ANALYTICS FEATURES 🚀
 
-**📈 Real Time Analytics:** Generate real-time analytics data and easily evaluate the performance of your cloaked links with just a glance
+**📈 Real-time Analytics:** Generate real-time analytics data and easily evaluate the performance of your shortened links with just a glance
 
 **🔎 Examine Click-Through Rate:** Examine the performance of your click-through rates of your shortened URLs right from one place
 
-**📊 Generate Reports:** Gather analytics reports to evaluate and run successful marketing campaigns
+**📊 Generate Reports:** Gather analytics reports (e.g., top referer clicks, top social media clicks, top OS clicks, top browser clicks and more) to evaluate and run successful marketing campaigns
 
-**📅 Interactive Calendar to Filter Clicks:** Easily filter your cloaked links based on certain dates from the interactive calendar
+**📅 Interactive Calendar to Filter Clicks:** Easily filter your shortened links based on certain dates from the interactive calendar
 
 **🔗 UTM Builder to Track Campaigns:** Add parameters to URLs to monitor your marketing campaigns
+
+**🚀 Instant Gutenberg & Elementor Redirects: Redirect your URLs and manage your links directly from Elementor & Gutenberg Editor
 
 ## More Advanced Features with BetterLinks PRO:
 
@@ -67,6 +69,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Control and manage user roles & permissions [PRO]
 - Set link scheduler, expiration dates & number of click limits [PRO]
 - Integrate seamlessly with Google Analytics [PRO]
+- Facebook Pixel Tracking [PRO]
 - Carry out split tests with Dynamic Redirects [PRO]
 - Force enable secure HTTPS Redirection [PRO]
 - Broken Link Checker with Email Notification [PRO]
@@ -75,6 +78,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Affiliate Link Disclosure [PRO]
 - Password Protected Redirect [PRO]
 - Customize Link Preview [PRO]
+- Custom Scripts [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
@@ -88,15 +92,17 @@ If you like BetterLinks, then consider checking out our other WordPress Plugins 
 
 🔔 [NotificationX](https://wordpress.org/plugins/notificationx/) – Best Social Proof & FOMO Marketing Solution to increase conversion rates.
 
-📄 [EmbedPress](https://wordpress.org/plugins/embedpress/): Easiest WordPress embedding plugin to add content from 100+ sources with one-click. Works in Gutenberg, Elementor, and more.
+📄 [EmbedPress](https://wordpress.org/plugins/embedpress/): Easiest WordPress embedding plugin to add content from 100+ sources with one click. Works in Gutenberg, Elementor, and more.
 
 📝 [BetterDocs](https://wordpress.org/plugins/betterdocs)– Best Documentation & Knowledge Base Plugin for WordPress, which also reduces your manual support request.
 
 ⏰ [SchedulePress](https://wordpress.org/plugins/wp-scheduled-posts/) – Complete solution for scheduling WordPress posts through an editorial calendar & social share.
 
-☁️ [Templately](https://wordpress.org/plugins/templately/) – Free templates library for Elementor & Gutenberg along with the cloud collaboration for WordPress.
+☁️ [Templately](https://wordpress.org/plugins/templately/) – Free WordPress templates library for Elementor & Gutenberg along with the cloud collaboration with team option.
 
-⚡ [Flexia](https://wordpress.org/themes/flexia/): Most lightweight, customizable & multi purpose theme for WordPress.
+🔎 [Easy.Jobs](https://wordpress.org/plugins/easyjobs/) – Smart and easy recruitment and talent sourcing solution for hiring remotely with AI-powered screening system, question sets, remote interviews, and designing branded career pages with Elementor.
+
+🎨 [Flexia](https://wordpress.org/themes/flexia/): Most lightweight, customizable & multi purpose theme for WordPress.
 
 Visit [WPDeveloper](https://wpdeveloper.com/) to learn more about how to do better in WordPress with [Help Tutorial, Tips & Tricks](https://wpdeveloper.com/blog).
 
