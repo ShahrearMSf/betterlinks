@@ -1,7 +1,7 @@
 === BetterLinks – An Advanced Plugin for Affiliate Links, Link Shortening, Link Tracking, Link Branding & Marketing ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hrrarya
 Donate link: https://wpdeveloper.com
-Tags: affiliate links, cloaking, link shortener, short links, redirects, links, shortlinks, urls, link cloaking, tinyurl, link shortener, url shortener, cloak, cloaking, slugs, shorturl, shorten, shortening, marketing, marketing plugin, affiliate, pretty links, short links, shrinking, betterlinks, affiliate, affiliate marketing, link redirection, url shortener, 301, 302, 307, 404, seo, url redirection
+Tags: affiliate links, cloaking, link shortener, short links, redirects
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
@@ -86,7 +86,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 ## 🔥 WHAT’S NEXT
 If you like BetterLinks, then consider checking out our other WordPress Plugins for FREE:
 
-🔝 [Essential Addons For Elementor](https://wordpress.org/plugins/essential-addons-for-elementor-lite/) – Most popular Elementor extensions with 2 million active users in the WordPress repository.
+🔝 [Essential Addons For Elementor](https://wordpress.org/plugins/essential-addons-for-elementor-lite/) – Most popular Elementor extensions with 2 million+ active users in the WordPress repository.
 
 👉 [Essential Blocks For Gutenberg](https://wordpress.org/plugins/essential-blocks/) - The ultimate blocks library to enhance your Gutenberg web-building experience.
 
@@ -182,157 +182,6 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 - Fixed: Exported CSV file's column label
 - Few minor bug fixes & improvement
 
-= 1.9.0 - 31/03/2024 =
-
-- Added: Custom Fields Feature
-- Improved: Manage Links UI
-- Few minor bug fixes & improvement
-
-= 1.8.3 - 25/03/2024 =
-
-- Fixed: Console error on API request in Manage Link Page
-- Fixed: Custom Link Preview teaser
-- Few minor bug fixes & improvement
-
-= 1.8.2 - 24/03/2024 =
-
-- Few minor bug fixes & improvement
-
-= 1.8.1 - 06/03/2024 =
-
-- Improved: Added Target URL in List View
-- Improved: Added Custom CSS import support from ThirstyAffiliates
-- Few minor bug fixes & improvement
-
-= 1.8.0 - 08/02/2024 =
-
-- Added: Manage Tags Feature
-- Fixed: Undefined variable issue in Analytics
-- Fixed: Fatal Error - Uncaught TypeError issue
-- Few minor bug fixes & improvements
-
-= 1.7.3 - 17/01/2024 =
-
-- Fixed: Uncaught Error issue with Settings API
-- Improved: Manage Links UI Responsiveness
-- Few minor bug fixes & improvements
-
-= 1.7.2 - 01/01/2024 =
-
-- Fixed: Style issue inside the Gutenberg Editor
-- Few minor bug fixes & improvements
-
-= 1.7.1 - 31/12/2023 =
-
-- Few minor bug fixes & improvements
-
-= 1.7.0 - 31/12/2023 =
-
-- Improved: Revamped Analytics for performance improvement
-- Added: Individual Analytics for all links
-- Fixed: Link Uncloaking not working properly when a link is added directly
-- Fixed: Analytics not showing when BetterLinks is translated
-- Fixed: Redirection not working properly in different languages
-- Fixed: Triggering an infinite loop on the network while updating a page from Gutenberg
-- Few minor bug fixes & improvements
-
-= 1.6.3 - 20/11/2023 =
-
-- Few minor bug fixes & improvements
-
-= 1.6.2 - 09/11/2023 =
-
-- Fixed: Feature Images update issue for Author / Editor roles
-- Improved: Added Support for Longer Target URL
-- Few minor bug fixes & improvements
-
-
-= 1.6.1 - 15/10/2023 =
-
-- Improved: Security Enhancements
-- Improved: Added Support for Tags And Description for Link Searching
-- Improved: Included the target URL for Exporting Analytics
-- Few minor bug fixes & improvements
-
-= 1.6.0 - 8/10/2023 =
-
-- Few minor bug fixes & improvements
-
-= 1.5.18 - 21/09/2023 =
-
-- Few minor bug fixes & improvements
-
-= 1.5.17 - 13/09/2023 =
-
-- Fixed: PHP Deprecation Warnings
-- Few minor bug fixes & improvements
-
-= 1.5.16 - 11/09/2023 =
-
-- Fixed: PHP Warning generated for 'Undefined array key' in "REQUEST_METHOD"
-- Few minor bug fixes & improvements
-
-= 1.5.15 - 27/07/2023 =
-
-- Fixed: Manage Links not working when REST API is disabled
-- Few minor bug fixes & improvements
-
-= 1.5.14 - 26/07/2023 =
-
-- Few minor bug fixes & improvements
-
-= 1.5.13 - 13/06/2023 =
-
-- Improved: Added option to filter Favorite Links
-- Improved: Added indicator icon to show broken links in 'manage links'
-- Fixed: Visiting Expired Links throws PHP errors
-- Fixed: Unique Counts not working properly
-- Fixed: Changing Link category by using 'edit link' option making the stats & favorite link data disappear
-- Fixed: Total clicks not being added when Disable IP from Analytics option is enabled
-- Few minor bug fixes & improvements
-
-= 1.5.12 - 30/04/2023 =
-
-- Improved: Optimization of analytics data fetching
-- Fixed: Misleading ip count data in analytics
-- Few minor bug fixes & improvements
-
-= 1.5.11 - 16/04/2023 =
-
-- Added: Option to search link by 'shortened url' or 'target url' in 'List view'
-- Added: Option to Reset Clicks data
-- Added: Option to disable 'logging of IP addresses data' from analytics
-- Fixed: Page scrolling to bottom when using BetterLinks format in Gutenberg
-- Fixed: Gutenberg instant redirect sidebar not appearing sometimes
-- Few minor bug fixes & improvements
-
-= 1.5.10 - 06/03/2023 =
-
-- Fixed: Added empty target url check to prevent breaking site’s FrontEnd
-- Fixed: Admin menu infinite loading on sites that has rest api disabled
-- Few minor bug fixes & improvements
-
-= 1.5.9 - 28/02/2023 =
-
-- Few minor bug fixes & improvements
-
-= 1.5.8 - 07/02/2023 =
-
-- Fixed: Not able to add Featured Images in Gutenberg Editor for non-admin users
-- Few minor bug fixes & improvements
-
-= 1.5.7 - 29/01/2023 =
-
-- Fixed: BetterLinks sidebar not rendering inside Gutenberg Editor
-- Few minor bug fixes & improvements
-
-= 1.5.6 - 25/01/2023 =
-
-- Fixed: Throwing fatal error while importing links from CSV file
-- Fixed: Too many redirects when shortened url and target url are same
-- Removed: Click data column from exported BetterLinks Analytics csv
-- Fixed: Gutenberg instant redirect option not showing sometimes
-- Few minor bug fixes & improvements
 
 [See changelog for all versions](https://betterlinks.io/changelog/).
 
