@@ -12,7 +12,7 @@ const App = () => {
 		taskId: '',
 	});
 	const [openModal, setOpenModal] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [updateText, setUpdateText] = useState(__('Update', 'betterlinks'));
 
 	useEffect(() => {
