@@ -176,7 +176,7 @@ const App = () => {
 					<img width="16" src={plugin_root_url + 'assets/images/logo-black&white.svg'} alt={__('BetterLinks Logo', 'betterlinks')} />
 				</i>
 				<span>{__('Share Task', 'betterlinks')}</span>
-				{loading && <ClipLoader className="btl-fbs-loader" color="#2961ff" size={18} />}
+				{loading && <ClipLoader className="btl-fbs-loader" color="#242f3e" size={18} />}
 			</button>
 			{openModal && (
 				<PopUp

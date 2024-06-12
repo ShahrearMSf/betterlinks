@@ -351,7 +351,6 @@ class Utils {
 			'powered_by'        => $powered_by,
 		);
 		$initial_values = apply_filters( 'betterlinks_before_cle', $initial_values, $settings );
-
 		$helper->clear_query_cache();
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );
@@ -378,16 +377,36 @@ class Utils {
 	/**
 	 * Fluent Boards Task Deleted
 	 */
-	public function fbs_task_deleted($task) {
-		if( ! defined( 'FLUENT_BOARDS' ) ) return;
-		
-		$page_url = fluent_boards_page_url();
-		$taskUrl = $page_url . 'boards/' . $task->board_id . '/tasks/' . $task->id;
-		
-		global $wpdb;
-		$link = Helper::get_link_by_permalink($taskUrl, 'id, short_url');
+	public function fbs_task_deleted( $task ) {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			return;
+		}
+		$settings = Cache::get_json_settings();
+		if ( ! isset( $settings['fbs']['delete_on'] ) || 'task_delete' !== $settings['fbs']['delete_on'] ) {
+			return;
+		}
 
-		if( !empty( $link ) ) {
+		$this->fbs_shorten_link_delete( $task );
+	}
+
+	public function fbs_task_archive( $task ) {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			return;
+		}
+		$settings = Cache::get_json_settings();
+		if ( ! isset( $settings['fbs']['delete_on'] ) || 'task_archive' !== $settings['fbs']['delete_on'] ) {
+			return;
+		}
+
+		$this->fbs_shorten_link_delete( $task );
+	}
+
+	public function fbs_shorten_link_delete( $task ) {
+		$page_url = fluent_boards_page_url();
+		$taskUrl  = $page_url . 'boards/' . $task->board_id . '/tasks/' . $task->id;
+
+		$link = Helper::get_link_by_permalink( $taskUrl, 'id, short_url' );
+		if ( ! empty( $link ) ) {
 			$args = array(
 				'ID'        => ( isset( $link['id'] ) ? sanitize_text_field( $link['id'] ) : '' ),
 				'short_url' => ( isset( $link['short_url'] ) ? sanitize_text_field( $link['short_url'] ) : '' ),

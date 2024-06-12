@@ -55,7 +55,7 @@ function terms(state = {}, action) {
 		case DELETE_TERM: {
 			const ID = payload?.cat_id;
 			const newTerms = state.terms.filter((item) => `${item.ID}` !== `${ID}`);
-			const newTags = state.tags.filter((item) => `${item.id}` !== `${ID}` && `${item.ID}` != `${ID}`);
+			const newTags = state?.tags?.filter((item) => `${item.id}` !== `${ID}` && `${item.ID}` != `${ID}`);
 			return {
 				...state,
 				terms: newTerms,

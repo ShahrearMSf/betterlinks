@@ -60,6 +60,7 @@ trait DBMigrate
             $settings['fbs'] = [
                 'enable_fbs' => true,
                 'cat_id' => $fbs_cat,
+                'delete_on' => 'task_delete'
             ];
         }
         if( $settings ){
@@ -68,6 +69,36 @@ trait DBMigrate
             update_option(BETTERLINKS_LINKS_OPTION_NAME, $settings);
             Cache::write_json_settings();
             Helper::write_links_inside_json();
+        }
+    }
+
+    public function update_fluent_task_delete_settings() {
+        $settings = Cache::get_json_settings();
+        if( empty( $settings['fbs']['delete_on'] ) ){
+            $settings['fbs']['delete_on'] = 'task_delete';
+
+            if( $settings ){
+                delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+                $settings = json_encode( $settings );
+                update_option(BETTERLINKS_LINKS_OPTION_NAME, $settings);
+                Cache::write_json_settings();
+                Helper::write_links_inside_json();
+            }
+        }
+    }
+
+    public function update_cle_category() {
+        $settings = Cache::get_json_settings();
+        if( isset($settings['cle']) && empty( $settings['cle']['category'] ) ){
+            $settings['cle']['category'] = '1';
+
+            if( $settings ){
+                delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+                $settings = json_encode( $settings );
+                update_option(BETTERLINKS_LINKS_OPTION_NAME, $settings);
+                Cache::write_json_settings();
+                Helper::write_links_inside_json();
+            }
         }
     }
 }
