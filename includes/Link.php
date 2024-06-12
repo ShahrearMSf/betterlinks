@@ -9,8 +9,9 @@ class Link extends Utils {
 	public function __construct() {
 		if ( ! is_admin() && isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) {
 			add_action( 'init', array( $this, 'run_redirect' ), 0 );
-			add_action( 'betterlinks_prevent_unwanted_cle', [$this, 'prevent_unwanted_cle'] );
+			add_action( 'betterlinks_prevent_unwanted_cle', array( $this, 'prevent_unwanted_cle' ) );
 		}
+		add_action( 'fluent_boards/task_deleted', array( $this, 'fbs_task_deleted' ), 11, 1 );
 	}
 	/**
 	 * Redirects short links to the destination url
@@ -18,17 +19,17 @@ class Link extends Utils {
 	public function run_redirect() {
 		if ( isset( $_GET['action'], $_GET['api_key'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_key'] ) === md5( AUTH_KEY ) ) {
 			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
-			
-			do_action( 'betterlinks_prevent_unwanted_cle');
 
-			$title = isset( $_GET['title'] ) ?  sanitize_text_field( $_GET['title'] ) : ''; // geting title from document obj, instead of fetching
+			do_action( 'betterlinks_prevent_unwanted_cle' );
+
+			$title = isset( $_GET['title'] ) ? sanitize_text_field( $_GET['title'] ) : ''; // geting title from document obj, instead of fetching
 
 			$settings = Cache::get_json_settings();
 			if ( empty( $settings['cle']['enable_cle'] ) ) {
 				return;
 			}
 
-			if( empty( $title ) ){
+			if ( empty( $title ) ) {
 				$title = ( new Helper() )->fetch_target_url( $target_url );
 			}
 			

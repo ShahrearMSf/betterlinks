@@ -2,6 +2,7 @@
 namespace BetterLinks\Link;
 
 use BetterLinks\Admin\Cache;
+use BetterLinks\Helper;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
 use DeviceDetector\Parser\OperatingSystem;
@@ -371,6 +372,27 @@ class Utils {
 			$prevent_unwanted_click = true; // phpcs:ignore
 			require_once BETTERLINKS_ROOT_DIR_PATH . '/includes/Views/create-link-externally.php';
 			exit;
+		}
+	}
+
+	/**
+	 * Fluent Boards Task Deleted
+	 */
+	public function fbs_task_deleted($task) {
+		if( ! defined( 'FLUENT_BOARDS' ) ) return;
+		
+		$page_url = fluent_boards_page_url();
+		$taskUrl = $page_url . 'boards/' . $task->board_id . '/tasks/' . $task->id;
+		
+		global $wpdb;
+		$link = Helper::get_link_by_permalink($taskUrl, 'id, short_url');
+
+		if( !empty( $link ) ) {
+			$args = array(
+				'ID'        => ( isset( $link['id'] ) ? sanitize_text_field( $link['id'] ) : '' ),
+				'short_url' => ( isset( $link['short_url'] ) ? sanitize_text_field( $link['short_url'] ) : '' ),
+			);
+			$this->delete_link( $args );
 		}
 	}
 }
