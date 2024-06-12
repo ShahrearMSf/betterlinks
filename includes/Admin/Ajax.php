@@ -243,15 +243,15 @@ class Ajax {
 			global $wpdb;
 
 			$target_url = $boardUrl . 'tasks/' . $taskId;
-			$link       = $wpdb->get_row( $wpdb->prepare( "SELECT `id`,`short_url` FROM {$wpdb->prefix}betterlinks where target_url=%s", $target_url ) );
+			$link       = Helper::get_link_by_permalink( $target_url, '`id`, `short_url`' );
 			$task       = $wpdb->get_row( $wpdb->prepare( "SELECT `title`,`slug` FROM {$wpdb->prefix}fbs_tasks WHERE id=%d", $taskId ) );
 
 			if ( ! empty( $link ) ) {
 				wp_send_json_success(
 					array(
 						'result'    => array(
-							'id'        => $link->id,
-							'short_url' => $link->short_url,
+							'id'        => $link['id'],
+							'short_url' => $link['short_url'],
 							'task_slug' => $task->slug,
 						),
 						'is_exists' => true,
