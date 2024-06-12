@@ -97,6 +97,7 @@ const App = () => {
 			action: 'betterlinks__update_fbs_link',
 			...task,
 		});
+		setUpdateText(__('Updating...', 'betterlinks'));
 		const response = await axios
 			.post(ajaxurl, form_data)
 			.then((res) => res)
@@ -112,16 +113,10 @@ const App = () => {
 		}));
 
 		if (!!result) {
-			delayStatusChanged(__('Updating...', 'betterlinks'), __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
+			delayStatusChanged(null, __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
 		}
 
-		let timer = setTimeout(() => {
-			setTask((prev) => ({
-				...prev,
-				updateMessage: null,
-			}));
-			clearTimeout(timer);
-		}, 5000);
+		resetMessage();
 	};
 
 	const __createBetterLinks = async () => {
@@ -178,7 +173,7 @@ const App = () => {
 		<>
 			<button className="el-button" onClick={__handleClickShareButton}>
 				<i className="el-icon">
-					<img width="16" src={plugin_root_url + 'assets/images/logo-black&white.svg'} alt={__('BetterLinks Colorful Logo', 'betterlinks')} />
+					<img width="16" src={plugin_root_url + 'assets/images/logo-black&white.svg'} alt={__('BetterLinks Logo', 'betterlinks')} />
 				</i>
 				<span>{__('Share Task', 'betterlinks')}</span>
 				{loading && <ClipLoader className="btl-fbs-loader" color="#2961ff" size={18} />}
@@ -203,6 +198,40 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 	const [editShortUrl, setEditShortUrlStatus] = useState(false);
 	const [copy, setCopy] = useState(false);
 
+	const __handleUpdate = () => {
+		setEditShortUrlStatus(false);
+		if (task?.id) {
+			if (task?.short_url === task?.old_short_url) return;
+			__updateBetterLinks({
+				id: task?.id,
+				short_url: task?.short_url,
+				old_short_url: task?.old_short_url,
+			});
+			return;
+		}
+		__createBetterLinks();
+	};
+
+	const __copyShortUrl = () => {
+		const short_link = `${site_url}/${task?.short_url}`;
+		if (copyToClipboard(short_link)) {
+			setCopy(true);
+
+			let timer = setTimeout(() => {
+				setCopy(false);
+				clearTimeout(timer);
+			}, 3000);
+		}
+	};
+
+	const __handleTaskUrlChange = (e) => {
+		!editShortUrl && setEditShortUrlStatus(true);
+		setTask((prev) => ({
+			...prev,
+			short_url: e.target.value,
+		}));
+	};
+
 	return (
 		<div className="el-popper is-light el-popover fbs-task-add-popover-box" tabIndex={-1} aria-hidden="false" role="tooltip" data-popper-placement="bottom">
 			<div className="btl-fbs-top-bar">
@@ -216,38 +245,13 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 						<p className="btl-fbs-link-text">
 							<div>
 								<span className="btl-site-url">{site_url}/</span>
-								<input
-									type="text"
-									value={`${task?.short_url}`}
-									onChange={(e) => {
-										!editShortUrl && setEditShortUrlStatus(true);
-										setTask((prev) => ({
-											...prev,
-											short_url: e.target.value,
-										}));
-									}}
-								/>
+								<input type="text" value={`${task?.short_url}`} onChange={__handleTaskUrlChange} />
 							</div>
 							<div className="btl-fbs-icon">
 								{copy ? (
 									<span className="dashicons dashicons-yes" />
 								) : (
-									<img
-										width={20}
-										className="btl-copy-icon"
-										onClick={() => {
-											const short_link = `${site_url}/${task?.short_url}`;
-											if (copyToClipboard(short_link)) {
-												setCopy(true);
-
-												let timer = setTimeout(() => {
-													setCopy(false);
-													clearTimeout(timer);
-												}, 3000);
-											}
-										}}
-										src={plugin_root_url + 'assets/images/copy-icon-1.svg'}
-									/>
+									<img width={20} className="btl-copy-icon" onClick={__copyShortUrl} src={plugin_root_url + 'assets/images/copy-icon-1.svg'} />
 								)}
 							</div>
 						</p>
@@ -261,23 +265,7 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 							<a href={`${admin_url}?page=betterlinks`} target="_blank" title={__('Manage All Your Links with BetterLinks', 'betterlinks')}>
 								{__('Manage All Your Links with BetterLinks', 'betterlinks')}
 							</a>
-							<button
-								onClick={() => {
-									setEditShortUrlStatus(false);
-									if (task?.id) {
-										if (task?.short_url === task?.old_short_url) return;
-										__updateBetterLinks({
-											id: task?.id,
-											short_url: task?.short_url,
-											old_short_url: task?.old_short_url,
-										});
-										return;
-									}
-									__createBetterLinks();
-								}}
-							>
-								{task?.id ? updateText : __('Create', 'betterlinks')}
-							</button>
+							<button onClick={__handleUpdate}>{task?.id ? updateText : __('Create', 'betterlinks')}</button>
 						</div>
 					</>
 				)}
