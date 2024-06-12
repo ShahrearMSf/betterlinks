@@ -89,9 +89,10 @@ class Settings extends Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function update_item( $request ) {
-		$helper = new \BetterLinks\Helper();
-		$response                              = $request->get_params();
-		$response                              = $helper::sanitize_text_or_array_field( $response );
+		$helper   = new \BetterLinks\Helper();
+		$response = $request->get_params();
+		$response = $helper::sanitize_text_or_array_field( $response );
+
 		$response['uncloaked_categories']      = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 		$response['affiliate_disclosure_text'] = isset( $response['affiliate_disclosure_text'] ) && is_string( $response['affiliate_disclosure_text'] ) ? $response['affiliate_disclosure_text'] : '';
 		$enable_password_protection            = isset( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
@@ -114,7 +115,7 @@ class Settings extends Controller {
 			}
 		}
 
-		if ( ( ! empty( $response['cle']['enable_cle'] ) || ! empty( $response['cle']['category'] ) ) ) {
+		if ( ! empty( $response['cle']['category'] ) ) {
 			$category                    = $helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
 			$response['cle']['category'] = $category;
 		}
