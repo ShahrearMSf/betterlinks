@@ -418,15 +418,15 @@ class Helper {
 				return file_put_contents( $file, wp_json_encode( $existingData ) );
 			}
 		} else {
-			$tempArray = $existingData['links'];
-			$previous_data = [];
+			$tempArray     = $existingData['links'];
+			$previous_data = array();
 			if ( is_array( $tempArray ) ) {
 				if ( ! empty( $old_short_url ) ) {
 					$previous_data = $tempArray[ $old_short_url ];
 					unset( $tempArray[ $old_short_url ] );
 					unset( $tempArray[ strToLower( $old_short_url ) ] );
 				}
-				$data = wp_parse_args($data, $previous_data);
+				$data                    = wp_parse_args( $data, $previous_data );
 				$tempArray[ $short_url ] = self::json_link_formatter( $data );
 				$existingData['links']   = $tempArray;
 				return file_put_contents( $file, wp_json_encode( $existingData ) );
@@ -733,5 +733,10 @@ class Helper {
 			}
 		}
 		return $slug;
+	}
+
+	public static function isJson( $string ) {
+		json_decode( $string );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 }
