@@ -58,7 +58,7 @@ const App = () => {
 		setLoading(false);
 		if (is_exists) {
 			if (data?.task_slug) {
-				location.href = `${boardUrl}${TASKS}${taskId}-${data.task_slug}`;
+				location.href += `-${data.task_slug}`;
 			}
 			setTask((prev) => ({
 				...prev,
