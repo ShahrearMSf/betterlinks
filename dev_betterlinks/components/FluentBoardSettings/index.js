@@ -23,7 +23,7 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 			>
 				{(props) => {
 					const { fbs } = props.values;
-					const urlOnDeleteValue = deleteOnActions.filter((item) => item.value === (fbs.delete_on || 'task_delete'));
+					const urlOnDeleteValue = deleteOnActions.filter((item) => item.value === (fbs?.delete_on || 'task_delete'));
 					return (
 						<Form className="btl-fbs">
 							<span className="btl-form-group">
@@ -46,7 +46,7 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 											name="fbs.enable_fbs"
 											type="checkbox"
 											onChange={(e) => props.setFieldValue('fbs.enable_fbs', e.target.checked)}
-											checked={fbs.enable_fbs}
+											checked={fbs?.enable_fbs}
 										/>
 										<span className="text">{__('', 'betterlinks')}</span>
 									</label>
@@ -66,7 +66,7 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 									</div>
 								</label>
 								<div className="btl-form-field">
-									<Category catId={parseInt(fbs.cat_id)} data={{ terms }} fieldName="fbs.cat_id" setFieldValue={props.setFieldValue} />
+									<Category catId={parseInt(fbs?.cat_id)} data={{ terms }} fieldName="fbs.cat_id" setFieldValue={props.setFieldValue} />
 								</div>
 							</span>
 							<span className="btl-form-group">
