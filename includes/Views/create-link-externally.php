@@ -16,8 +16,8 @@ if ( empty( $prevent_unwanted_click ) ) {
 	$short_url         = ! empty( $results['short_url'] ) ? $results['short_url'] : '';
 	$short_url         = site_url( $short_url );
 	$encoded_short_url = rawurlencode( $short_url );
-
-	$truncated_link_title = 100 < strlen( $link_title ) ? substr( $link_title, 0, 100 ) . '[...]' : $link_title;
+	
+	$truncated_link_title = 100 < mb_strlen( $link_title, 'utf-8' ) ? mb_substr( $link_title, 0, 100, 'utf-8' ) . '[...]' : $link_title;
 	$truncated_target_url = 50 < strlen( $target_url ) ? substr( $target_url, 0, 50 ) . '[...]' : $target_url;
 
 	$nofollow         = ! empty( $results['nofollow'] ) ? 'checked' : '';
