@@ -112,9 +112,8 @@ const App = () => {
 			status: !!result,
 		}));
 
-		if (!!result) {
-			delayStatusChanged(null, __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
-		}
+		if (!!result) delayStatusChanged(null, __('Updated!', 'betterlinks'), __('Update', 'betterlinks'), setUpdateText);
+		else setUpdateText(__('Update', 'betterlinks'));
 
 		resetMessage();
 	};
