@@ -50,6 +50,7 @@ class Export
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="'.$filename.'";');
         $f = fopen('php://output', 'w');
+        error_log( print_r( $array, true ) );
         foreach ($array as $line) {
             fputcsv($f, $line);
         }
@@ -80,11 +81,12 @@ class Export
     public function simple_file_download()
     {
         global $wpdb;
-        $links = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}betterlinks", ARRAY_A);
+        $link_table_columns = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks";', DB_NAME, $wpdb->prefix );
+		$links                  = $wpdb->get_col( $link_table_columns );
+        
         if (is_array($links) && count($links) > 0) {
-            $links['tags'] = '';
-            $links['category'] = '';
-            return [array_keys($links)];
+            array_push( $links, 'tags', 'category' );
+            return [$links];
         }
         return [];
     }
