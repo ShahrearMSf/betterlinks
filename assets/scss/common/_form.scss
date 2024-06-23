@@ -153,6 +153,17 @@
 			min-width: 185px;
 		}
 	}
+	.btl-cle-dragable-section {
+		display: flex;
+		column-gap: 5px;
+		align-items: center;
+		background-color: rgb(227, 244, 255);
+		position: sticky;
+		top: 35px;
+		z-index: 1;
+		padding: 12px;
+		margin-bottom: 20px;
+	}
 }
 .btl-checkbox-field {
 	display: flex;
