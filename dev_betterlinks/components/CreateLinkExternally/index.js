@@ -22,7 +22,7 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 				enableReinitialize={true}
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
-					if (!betterlinks_auth) return;
+					if (!betterlinks_auth && values?.cle?.enable_cle) return;
 					saveSettingsHandler(values, update_option, setFormSubmitText);
 				}}
 			>
@@ -47,7 +47,11 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 									</div>
 								</>
 							)}
-							<button className="button-primary btn-save-settings" type="submit" style={{ cursor: !!betterlinks_auth ? 'pointer' : 'not-allowed' }}>
+							<button
+								className="button-primary btn-save-settings"
+								type="submit"
+								style={{ cursor: !!betterlinks_auth || !props.values?.cle?.enable_cle ? 'pointer' : 'not-allowed' }}
+							>
 								{formSubmitText}
 							</button>
 						</Form>
