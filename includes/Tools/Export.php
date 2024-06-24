@@ -75,10 +75,39 @@ class Export {
 		global $wpdb;
 		$link_table_columns = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks";', DB_NAME, $wpdb->prefix );
 		$links              = $wpdb->get_col( $link_table_columns );
+		$current_date       = wp_date( 'Y-m-d H:i:s' );
+		$sample_data        = array(
+			'1',
+			'1',
+			$current_date,
+			$current_date,
+			'Example Title Here',
+			'example-title-Here',
+			'',
+			'publish',
+			'1',
+			'',
+			'1',
+			'',
+			'',
+			'307',
+			'https://your.site/example',
+			'go/example',
+			'0',
+			$current_date,
+			$current_date,
+			'0',
+			'{"status":0,"type":"date","clicks":"","date":"","redirect_status":0,"redirect_url":""}',
+			'{"type":"","value":[],"extra":{"rotation_mode":"weighted","split_test":"","goal_link":""}}',
+			'',
+			'',
+			'',
+			'uncategorized',
+		);
 
 		if ( is_array( $links ) && count( $links ) > 0 ) {
 			array_push( $links, 'tags', 'category' );
-			return array( $links );
+			return array( $links, $sample_data );
 		}
 		return array();
 	}
