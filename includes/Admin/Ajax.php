@@ -846,35 +846,39 @@ class Ajax {
 		if ( ! apply_filters( 'betterlinks/api/settings_update_items_permissions_check', current_user_can( 'manage_options' ) ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		$response                         = \BetterLinks\Helper::fresh_ajax_request_data( $_POST );
-		$response                         = \BetterLinks\Helper::sanitize_text_or_array_field( $response );
+		$helper                           = new \BetterLinks\Helper();
+		$response                         = $helper::fresh_ajax_request_data( $_POST );
+		$response                         = $helper::sanitize_text_or_array_field( $response );
 		$response['uncloaked_categories'] = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 
 		$enable_password_protection = ! empty( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
 		$enable_customize_meta_tag  = ! empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
 
 		if ( class_exists( '\BetterLinksPro\Helper' ) ) {
+			$pro_helper = new \BetterLinksPro\Helper();
 			if ( $enable_password_protection ) {
-				( new \BetterLinksPro\Helper() )->add_password_protect_page();
+				$pro_helper->add_password_protect_page();
 			} else {
-				( new \BetterLinksPro\Helper() )->delete_custom_page( 'password-protected-form' );
+				$pro_helper->delete_custom_page( 'password-protected-form' );
 			}
 
 			if ( $enable_customize_meta_tag ) {
-				( new \BetterLinksPro\Helper() )->add_customized_meta_tag_page();
+				$pro_helper->add_customized_meta_tag_page();
 			} else {
-				( new \BetterLinksPro\Helper() )->delete_custom_page( 'customized-meta-tags' );
+				$pro_helper->delete_custom_page( 'customized-meta-tags' );
 			}
 
-			if ( ( ! empty( $response['cle']['enable_cle'] ) || ! empty( $response['cle']['category'] ) ) ) {
-				$category                    = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
+			if ( ! empty( $response['cle']['enable_cle'] ) ) {
+				$category                    = ! empty( $response['cle']['category'] ) ? sanitize_text_field( $response['cle']['category'] ) : 1;
+				$category                    = $helper::insert_new_category( sanitize_text_field( $category ) );
 				$response['cle']['category'] = $category;
 			}
+		}
 
-			if ( ( ! empty( $response['fbs']['enable_fbs'] ) || ! empty( $response['fbs']['cat_id'] ) ) ) {
-				$category                  = \BetterLinks\Helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
-				$response['fbs']['cat_id'] = $category;
-			}
+		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
+			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
+			$category                  = $helper::insert_new_category( $category );
+			$response['fbs']['cat_id'] = $category;
 		}
 
 		$response = json_encode( $response );
@@ -882,7 +886,7 @@ class Ajax {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
 		}
 		// regenerate links for wildcards option update
-		\BetterLinks\Helper::write_links_inside_json(); // it's better to write the links instantly here than scheduling/corning it
+		$helper::write_links_inside_json(); // it's better to write the links instantly here than scheduling/corning it
 		wp_send_json_success(
 			$response,
 			200

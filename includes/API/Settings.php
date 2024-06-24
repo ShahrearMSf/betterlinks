@@ -113,15 +113,17 @@ class Settings extends Controller {
 			} else {
 				$pro_helper->delete_custom_page( 'customized-meta-tags' );
 			}
+
+			if ( ! empty( $response['cle']['enable_cle'] ) ) {
+				$category                    = ! empty( $response['cle']['category'] ) ? sanitize_text_field( $response['cle']['category'] ) : 1;
+				$category                    = $helper::insert_new_category( $category );
+				$response['cle']['category'] = $category;
+			}
 		}
 
-		if ( ! empty( $response['cle']['category'] ) ) {
-			$category                    = $helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
-			$response['cle']['category'] = $category;
-		}
-
-		if ( ( ! empty( $response['fbs']['enable_fbs'] ) || ! empty( $response['fbs']['cat_id'] ) ) ) {
-			$category                  = $helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
+			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
+			$category                  = $helper::insert_new_category( $category );
 			$response['fbs']['cat_id'] = $category;
 		}
 
