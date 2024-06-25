@@ -72,11 +72,34 @@ class Export {
 	}
 
 	public function simple_file_download() {
-		global $wpdb;
-		$link_table_columns = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks";', DB_NAME, $wpdb->prefix );
-		$links              = $wpdb->get_col( $link_table_columns );
-		$current_date       = wp_date( 'Y-m-d H:i:s' );
-		$sample_data        = array(
+		$links        = array(
+			'ID',
+			'link_author',
+			'link_date',
+			'link_date_gmt',
+			'link_title',
+			'link_slug',
+			'link_note',
+			'link_status',
+			'nofollow',
+			'sponsored',
+			'track_me',
+			'param_forwarding',
+			'param_struct',
+			'redirect_type',
+			'target_url',
+			'short_url',
+			'link_order',
+			'link_modified',
+			'link_modified_gmt',
+			'wildcards',
+			'expire',
+			'dynamic_redirect',
+			'favorite',
+			'uncloaked',
+		);
+		$current_date = wp_date( 'Y-m-d H:i:s' );
+		$sample_data  = array(
 			'1',
 			'1',
 			$current_date,

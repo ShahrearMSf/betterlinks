@@ -133,6 +133,7 @@ class Settings extends Controller {
 			Cache::write_json_settings();
 		}
 		// regenerate links for wildcards option update
+		$helper::clear_query_cache();
 		$helper::write_links_inside_json();
 		return new \WP_REST_Response(
 			array(
