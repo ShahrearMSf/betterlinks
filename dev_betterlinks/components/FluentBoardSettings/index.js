@@ -27,7 +27,7 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 					return (
 						<Form className="btl-fbs">
 							<span className="btl-form-group">
-								<label className="btl-form-label" style={{ 'min-width': '230px' }}>
+								<label className="btl-form-label" style={{ 'min-width': '245px' }}>
 									{__('Enable Link Management', 'betterlinks')}
 									<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
 										<span className="dashicons dashicons-info-outline" />
@@ -52,55 +52,79 @@ const FluentBoardSettings = ({ settings, terms, update_option, fetch_terms_data 
 									</label>
 								</div>
 							</span>
-							<span className="btl-form-group">
-								<label className="btl-form-label" style={{ 'min-width': '120px' }}>
-									{__('Choose a Default Category', 'betterlinks')}
-									<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
-										<span className="dashicons dashicons-info-outline" />
-										<span className="btl-tooltiptext" style={tooltipStyles.tooltipText}>
-											{__(
-												'This category will be assigned by default when you create links inside Fluent Boards for your tasks. You can manage your links from BetterLinks Dashboard afterwards.',
-												'betterlinks'
-											)}
-										</span>
-									</div>
-								</label>
-								<div className="btl-form-field">
-									<Category catId={parseInt(fbs?.cat_id)} data={{ terms }} fieldName="fbs.cat_id" setFieldValue={props.setFieldValue} />
-								</div>
-							</span>
-							<span className="btl-form-group">
-								<label className="btl-form-label" style={{ 'min-width': '226px' }}>
-									{__('Delete Link on', 'betterlinks')}
-									<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
-										<span className="dashicons dashicons-info-outline" />
-										<span className="btl-tooltiptext" style={tooltipStyles.tooltipText}>
-											{__(
-												'This category will be assigned by default when you create links inside Fluent Boards for your tasks. You can manage your links from BetterLinks Dashboard afterwards.',
-												'betterlinks'
-											)}
-										</span>
-									</div>
-								</label>
-								<div className="btl-form-field">
-									<Select2
-										className={`btl-modal-select--full`}
-										classNamePrefix="btl-react-select"
-										id={'fbs.delete_on'}
-										name={'fbs.delete_on'}
-										defaultValue={urlOnDeleteValue}
-										onChange={(option) => {
-											if (option === null) {
-												return props.setFieldValue('fbs.delete_on', '');
-											}
-											return props.setFieldValue('fbs.delete_on', option.value);
-										}}
-										options={deleteOnActions}
-										value={urlOnDeleteValue}
-										isMulti={false}
-									/>
-								</div>
-							</span>
+							{props.values?.fbs?.enable_fbs && (
+								<>
+									<span className="btl-form-group">
+										<label className="btl-form-label" style={{ 'min-width': '245px' }}>
+											{__('Choose a Default Category', 'betterlinks')}
+											<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
+												<span className="dashicons dashicons-info-outline" />
+												<span className="btl-tooltiptext" style={tooltipStyles.tooltipText}>
+													{__(
+														'This category will be assigned by default when you create links inside Fluent Boards for your tasks. You can manage your links from BetterLinks Dashboard afterwards.',
+														'betterlinks'
+													)}
+												</span>
+											</div>
+										</label>
+										<div className="btl-form-field">
+											<Category catId={parseInt(fbs?.cat_id)} data={{ terms }} fieldName="fbs.cat_id" setFieldValue={props.setFieldValue} />
+										</div>
+									</span>
+									<span className="btl-form-group">
+										<label className="btl-form-label" style={{ 'min-width': '245px' }}>
+											{__('Show Category on Dashboard', 'betterlinks')}
+											<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
+												<span className="dashicons dashicons-info-outline" />
+												<span className="btl-tooltiptext" style={tooltipStyles.tooltipText}>
+													{__('Enable this option to display the selected category in Manage Links.', 'betterlinks')}
+												</span>
+											</div>
+										</label>
+										<div className="btl-form-field">
+											<label className="btl-checkbox-field block">
+												<input
+													className="btl-check"
+													name="fbs.show_fbs_category"
+													type="checkbox"
+													onChange={(e) => props.setFieldValue('fbs.show_fbs_category', e.target.checked)}
+													checked={fbs?.show_fbs_category}
+												/>
+												<span className="text">{__('', 'betterlinks')}</span>
+											</label>
+										</div>
+									</span>
+									<span className="btl-form-group">
+										<label className="btl-form-label" style={{ 'min-width': '245px' }}>
+											{__('Delete Link on', 'betterlinks')}
+											<div className="btl-tooltip" style={{ marginLeft: '5px' }}>
+												<span className="dashicons dashicons-info-outline" />
+												<span className="btl-tooltiptext" style={tooltipStyles.tooltipText}>
+													{__('By selecting these options, you can specify when to delete Fluent Board Links created by BetterLinks.', 'betterlinks')}
+												</span>
+											</div>
+										</label>
+										<div className="btl-form-field">
+											<Select2
+												className={`btl-modal-select--full`}
+												classNamePrefix="btl-react-select"
+												id={'fbs.delete_on'}
+												name={'fbs.delete_on'}
+												defaultValue={urlOnDeleteValue}
+												onChange={(option) => {
+													if (option === null) {
+														return props.setFieldValue('fbs.delete_on', '');
+													}
+													return props.setFieldValue('fbs.delete_on', option.value);
+												}}
+												options={deleteOnActions}
+												value={urlOnDeleteValue}
+												isMulti={false}
+											/>
+										</div>
+									</span>
+								</>
+							)}
 							<button className="button-primary btn-save-settings" type="submit">
 								{formSubmitText}
 							</button>
