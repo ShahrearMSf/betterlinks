@@ -373,45 +373,4 @@ class Utils {
 			exit;
 		}
 	}
-
-	/**
-	 * Fluent Boards Task Deleted
-	 */
-	public function fbs_task_deleted( $task ) {
-		if ( ! defined( 'FLUENT_BOARDS' ) ) {
-			return;
-		}
-		$settings = Cache::get_json_settings();
-		if ( ! isset( $settings['fbs']['delete_on'] ) || 'task_delete' !== $settings['fbs']['delete_on'] ) {
-			return;
-		}
-
-		$this->fbs_shorten_link_delete( $task );
-	}
-
-	public function fbs_task_archive( $task ) {
-		if ( ! defined( 'FLUENT_BOARDS' ) ) {
-			return;
-		}
-		$settings = Cache::get_json_settings();
-		if ( ! isset( $settings['fbs']['delete_on'] ) || 'task_archive' !== $settings['fbs']['delete_on'] ) {
-			return;
-		}
-
-		$this->fbs_shorten_link_delete( $task );
-	}
-
-	public function fbs_shorten_link_delete( $task ) {
-		$page_url = fluent_boards_page_url();
-		$taskUrl  = $page_url . 'boards/' . $task->board_id . '/tasks/' . $task->id;
-
-		$link = Helper::get_link_by_permalink( $taskUrl, 'id, short_url' );
-		if ( ! empty( $link ) ) {
-			$args = array(
-				'ID'        => ( isset( $link['id'] ) ? sanitize_text_field( $link['id'] ) : '' ),
-				'short_url' => ( isset( $link['short_url'] ) ? sanitize_text_field( $link['short_url'] ) : '' ),
-			);
-			$this->delete_link( $args );
-		}
-	}
 }

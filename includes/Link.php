@@ -11,8 +11,6 @@ class Link extends Utils {
 			add_action( 'init', array( $this, 'run_redirect' ), 0 );
 			add_action( 'betterlinks_prevent_unwanted_cle', array( $this, 'prevent_unwanted_cle' ) );
 		}
-		add_action( 'fluent_boards/task_deleted', array( $this, 'fbs_task_deleted' ), 10, 1 );
-		add_action( 'fluent_boards/board_task_archived', array( $this, 'fbs_task_archive' ), 10, 1 );
 	}
 	/**
 	 * Redirects short links to the destination url

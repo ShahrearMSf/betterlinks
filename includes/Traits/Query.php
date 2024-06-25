@@ -2,6 +2,8 @@
 
 namespace BetterLinks\Traits;
 
+use BetterLinks\Admin\Cache;
+
 trait Query {
 
 	public static function insert_link( $item, $is_update = false ) {
@@ -166,6 +168,10 @@ trait Query {
 		$broken_links = get_option( 'betterlinkspro_broken_links_logs' );
 		$broken_links = $broken_links ? json_decode( $broken_links, true ) : array();
 
+		$settings = Cache::get_json_settings();
+		
+		$fbs_category_query = apply_filters('betterlinks__intlfbs_filter_category_from_dashboard', '', $settings);
+		
 		$results = $wpdb->get_results(
 			"SELECT
             bt.ID as cat_id,
@@ -195,6 +201,7 @@ trait Query {
             LEFT JOIN  {$prefix}betterlinks_terms_relationships as btr ON bt.ID = btr.term_id
             LEFT JOIN  {$prefix}betterlinks as bl ON bl.ID = btr.link_id
             -- WHERE bt.term_type = 'category'
+			{$fbs_category_query}
             ORDER BY bl.link_order ASC;",
 			OBJECT
 		);

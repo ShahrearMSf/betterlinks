@@ -123,6 +123,7 @@ if (!class_exists('BetterLinks')) {
             if (is_admin()) {
                 new BetterLinks\Admin();
             }
+            BetterLinks\Integration::init();
             new BetterLinks\Link();
             new BetterLinks\Tools();
             new BetterLinks\Elementor();
