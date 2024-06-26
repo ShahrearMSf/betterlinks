@@ -89,9 +89,10 @@ class Settings extends Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function update_item( $request ) {
-		$helper = new \BetterLinks\Helper();
-		$response                              = $request->get_params();
-		$response                              = $helper::sanitize_text_or_array_field( $response );
+		$helper   = new \BetterLinks\Helper();
+		$response = $request->get_params();
+		$response = $helper::sanitize_text_or_array_field( $response );
+
 		$response['uncloaked_categories']      = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 		$response['affiliate_disclosure_text'] = isset( $response['affiliate_disclosure_text'] ) && is_string( $response['affiliate_disclosure_text'] ) ? $response['affiliate_disclosure_text'] : '';
 		$enable_password_protection            = isset( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
@@ -112,15 +113,17 @@ class Settings extends Controller {
 			} else {
 				$pro_helper->delete_custom_page( 'customized-meta-tags' );
 			}
+
+			if ( ! empty( $response['cle']['enable_cle'] ) ) {
+				$category                    = ! empty( $response['cle']['category'] ) ? sanitize_text_field( $response['cle']['category'] ) : 1;
+				$category                    = $helper::insert_new_category( $category );
+				$response['cle']['category'] = $category;
+			}
 		}
 
-		if ( ( ! empty( $response['cle']['enable_cle'] ) || ! empty( $response['cle']['category'] ) ) ) {
-			$category                    = $helper::insert_new_category( sanitize_text_field( $response['cle']['category'] ) );
-			$response['cle']['category'] = $category;
-		}
-
-		if ( ( ! empty( $response['fbs']['enable_fbs'] ) || ! empty( $response['fbs']['cat_id'] ) ) ) {
-			$category                  = $helper::insert_new_category( sanitize_text_field( $response['fbs']['cat_id'] ) );
+		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
+			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
+			$category                  = $helper::insert_new_category( $category );
 			$response['fbs']['cat_id'] = $category;
 		}
 
@@ -130,6 +133,7 @@ class Settings extends Controller {
 			Cache::write_json_settings();
 		}
 		// regenerate links for wildcards option update
+		$helper::clear_query_cache();
 		$helper::write_links_inside_json();
 		return new \WP_REST_Response(
 			array(
