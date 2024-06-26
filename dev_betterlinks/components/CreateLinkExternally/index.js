@@ -180,8 +180,8 @@ const DragableButton = () => {
 	if (!betterlinks_auth) {
 		return (
 			<div className="notice notice-error" style={{ marginLeft: '0', marginBottom: '15px', padding: '10px' }}>
-				{__("'AUTH_KEY' is missing in your wp-config.php file. Please ensure that AUTH_KEY is correctly set in your wp-config.php file. For more info, ", 'betterlinks')}
-				<a className="external-analytic-tooltip-anchor" href="#" target="_blank" style={{ color: 'inherit' }}>
+				{__("'AUTH_KEY' is missing in your wp-config.php file. Please ensure that AUTH_KEY is defined in your wp-config.php file. For more info, ", 'betterlinks')}
+				<a className="external-analytic-tooltip-anchor" href="https://betterlinks.io/docs/configure-quick-link-creation/#8-toc-title" target="_blank" style={{ color: 'inherit' }}>
 					{__('Click here', 'betterlinks')}
 				</a>
 			</div>
