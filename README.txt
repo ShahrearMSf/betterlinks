@@ -61,7 +61,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 
 **🔗 UTM Builder to Track Campaigns:** Add parameters to URLs to monitor your marketing campaigns
 
-**🚀 Instant Gutenberg & Elementor Redirects: Redirect your URLs and manage your links directly from Elementor & Gutenberg Editor
+**🚀 Instant Gutenberg & Elementor Redirects:** Redirect your URLs and manage your links directly from Elementor & Gutenberg Editor
 
 ## More Advanced Features with BetterLinks PRO:
 
