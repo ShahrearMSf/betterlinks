@@ -27,10 +27,10 @@ class BaseCSV {
 		return $link_id;
 	}
 
-	public function insert_keywords( $link_id, $keywords, $arg = array(), $meta_key = 'keywords' ) {
+	public function insert_keywords( $link_id, $keywords, $arg = array(), $meta_key = 'keywords', $update = false ) {
 		$results        = \BetterLinks\Helper::get_link_meta( $link_id, $meta_key );
 		$arg['link_id'] = $link_id;
-		if ( empty( $results ) ) {
+		if ( empty( $results ) || $update ) {
 			$args = wp_parse_args(
 				$arg,
 				array(

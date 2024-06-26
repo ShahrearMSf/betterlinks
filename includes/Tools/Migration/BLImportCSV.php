@@ -51,14 +51,16 @@ class BLImportCSV extends BaseCSV implements ImportCsvInterface {
 			$link_id = $this->insert_link( $item );
 			if ( ! ( empty( $link_id ) || empty( $item['auto_link_keywords'] ) ) ) {
 				$auto_link_keywords = unserialize( $item['auto_link_keywords'] );
-				// if( !empty(  ) )
-				// ['meta_key' => $meta_key, 'meta_value' => $meta_value] = $item;
-				// if ( Helper::isJson( $meta_value ) ) {
-				// 	$meta_value = json_decode( $meta_value, true );
-				// }
-				// if ( 'keywords' === $meta_key ) {
-				// 	$this->insert_keywords( $link_id, null, $meta_value, $meta_key );
-				// }
+
+				foreach ( $auto_link_keywords as $keyword ) {
+					['meta_key' => $meta_key, 'meta_value' => $meta_value] = $keyword;
+					if ( Helper::isJson( $meta_value ) ) {
+						$meta_value = json_decode( $meta_value, true );
+					}
+					if ( 'keywords' === $meta_key ) {
+						$this->insert_keywords( $link_id, null, $meta_value, $meta_key, true );
+					}
+				}
 			}
 			return $link_id;
 		}
