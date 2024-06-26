@@ -35,6 +35,7 @@ class Export {
 			$filename = 'Sample-file';
 			$data     = $this->simple_file_download();
 		}
+		// return;
 		$filename .= '.' . date( 'Y-m-d' ) . '.csv';
 		$this->array_to_csv_download(
 			$data,
@@ -60,12 +61,16 @@ class Export {
 
 	public function get_links() {
 		global $wpdb;
-		$links   = $wpdb->get_results( "SELECT l.*, m.meta_id, m.meta_key,m.meta_value FROM {$wpdb->prefix}betterlinks as l LEFT JOIN {$wpdb->prefix}betterlinkmeta as m on l.id=m.link_id", ARRAY_A );
+		$links   = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}betterlinks", ARRAY_A );
 		$results = array();
 		if ( is_array( $links ) && count( $links ) > 0 ) {
 			foreach ( $links as $link ) {
 				$terms     = $this->get_terms_from_link_id( $link['ID'] );
-				$results[] = array_merge( $link, $terms );
+				$auto_link_keywords = array(
+					'auto_link_keywords' => serialize( $this->get_auto_link_keywords_from_link_id($link['ID']) )
+				);
+				
+				$results[] = array_merge( $link, $terms, $auto_link_keywords );
 			}
 		}
 		return $results;
@@ -77,9 +82,17 @@ class Export {
 		if ( is_array( $links ) && count( $links ) > 0 ) {
 			$links['tags']     = '';
 			$links['category'] = '';
+			$links['auto_link_keywords'] = '';
 			return array( array_keys( $links ) );
 		}
 		return array();
+	}
+
+	public function get_auto_link_keywords_from_link_id( $link_id = 0 ){
+		global $wpdb;
+		$query = sprintf( 'SELECT meta_id, meta_key, meta_value FROM %2$sbetterlinkmeta where link_id=%1$s', $link_id, $wpdb->prefix );
+		$auto_link_keywords = $wpdb->get_results( $query, ARRAY_A );
+		return $auto_link_keywords;
 	}
 
 	public function get_terms_from_link_id( $link_id = 0 ) {

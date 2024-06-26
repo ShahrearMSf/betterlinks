@@ -31,7 +31,7 @@ class BLImportCSV extends BaseCSV implements ImportCsvInterface {
 				} else {
 					$click_message[] = 'import failed "' . $item['short_url'] . '" already exists';
 				}
-			} elseif ( is_array( $item ) && in_array( count( $item ), array( 24, 25, 29 ) ) ) {
+			} elseif ( is_array( $item ) && in_array( count( $item ), array( 24, 25, 27 ) ) ) {
 				$is_insert = $this->insert_link_data( $item );
 				if ( $is_insert ) {
 					$link_message[] = 'Imported Successfully "' . $item['short_url'] . '"';
@@ -49,14 +49,16 @@ class BLImportCSV extends BaseCSV implements ImportCsvInterface {
 	public function insert_link_data( $item ) {
 		if ( ! empty( $item['link_title'] ) && ! empty( $item['short_url'] ) ) {
 			$link_id = $this->insert_link( $item );
-			if ( ! ( empty( $link_id ) || empty( $item['meta_id'] ) ) ) {
-				['meta_key' => $meta_key, 'meta_value' => $meta_value] = $item;
-				if ( Helper::isJson( $meta_value ) ) {
-					$meta_value = json_decode( $meta_value, true );
-				}
-				if ( 'keywords' === $meta_key ) {
-					$this->insert_keywords( $link_id, null, $meta_value, $meta_key );
-				}
+			if ( ! ( empty( $link_id ) || empty( $item['auto_link_keywords'] ) ) ) {
+				$auto_link_keywords = unserialize( $item['auto_link_keywords'] );
+				// if( !empty(  ) )
+				// ['meta_key' => $meta_key, 'meta_value' => $meta_value] = $item;
+				// if ( Helper::isJson( $meta_value ) ) {
+				// 	$meta_value = json_decode( $meta_value, true );
+				// }
+				// if ( 'keywords' === $meta_key ) {
+				// 	$this->insert_keywords( $link_id, null, $meta_value, $meta_key );
+				// }
 			}
 			return $link_id;
 		}
