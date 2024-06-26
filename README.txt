@@ -5,7 +5,7 @@ Tags: affiliate links, cloaking, link shortener, short links, redirects
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -156,6 +156,15 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 2.1.1 - 26/06/2024 =
+
+- Improvement: Added Fluent Boards Shortened Link Deletion on Task Delete or Archive
+- Improvement: Added Category Hide option in Fluent Boards Links Management settings
+- Improvement: Added support for UTF-8 encoded characters in Quick Link Creation Feature
+- Fixed: Fatal error - Undefined variable in Quick Link Creation Feature
+- Fixed: Empty Sample CSV file on export
+- Few minor bug fixes & improvement
 
 = 2.1.0 - 11/06/2024 =
 
