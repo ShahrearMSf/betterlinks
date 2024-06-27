@@ -178,6 +178,7 @@ trait Links
     }
     public function delete_link($args)
     {
+        delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
         \BetterLinks\Helper::delete_link($args['ID']);
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
             \BetterLinks\Helper::delete_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $args['short_url']);

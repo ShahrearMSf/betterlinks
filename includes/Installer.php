@@ -167,7 +167,8 @@ class Installer extends \WP_Background_Process
                 'is_case_sensitive'     => false,
                 'fbs'        => [
                     'enable_fbs' => true,
-                    'cat_id'    => $fbs_cat
+                    'cat_id'    => $fbs_cat,
+                    'delete_on' => 'task_delete'
                 ]
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
@@ -258,6 +259,10 @@ class Installer extends \WP_Background_Process
             }
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '>' ) ) {
                 $this->update_fluent_settings();
+            }
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.4', '>' ) ) {
+                $this->update_fluent_task_delete_settings();
+                $this->update_cle_category();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);

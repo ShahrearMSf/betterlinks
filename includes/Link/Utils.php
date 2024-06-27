@@ -2,6 +2,7 @@
 namespace BetterLinks\Link;
 
 use BetterLinks\Admin\Cache;
+use BetterLinks\Helper;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
 use DeviceDetector\Parser\OperatingSystem;
@@ -350,7 +351,6 @@ class Utils {
 			'powered_by'        => $powered_by,
 		);
 		$initial_values = apply_filters( 'betterlinks_before_cle', $initial_values, $settings );
-
 		$helper->clear_query_cache();
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );
