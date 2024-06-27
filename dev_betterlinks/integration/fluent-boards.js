@@ -151,7 +151,7 @@ const App = () => {
 		if (!status) {
 			setTask((prev) => ({
 				...prev,
-				short_url: result?.short_url,
+				short_url: result?.short_url || task?.old_short_url,
 				status,
 				updateMessage: __('Link already exists', 'betterlinks'),
 			}));
