@@ -86,6 +86,7 @@ export default function CatForm({ catId, catName, catSlug, submitHandler, hideHa
 									setSlugIsExists(false);
 								}}
 								required
+								autoFocus
 							/>
 						</span>
 						{slugIsExists == true && <div className="errorlog">Already Exists</div>}
