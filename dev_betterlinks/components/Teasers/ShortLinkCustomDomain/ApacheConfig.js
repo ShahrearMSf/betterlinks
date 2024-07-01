@@ -1,10 +1,12 @@
+import { __ } from '@wordpress/i18n';
 import CodeBlock from './CodeBlock';
 
 const ApacheConfig = ({ host, custom_domain }) => {
 	return (
 		<div className="btl-individual-config-blocks --btl-records-bg">
 			<div className="btl-instruction-block-wrapper">
-				Copy and place the following rewrite rule at the beginning of the <strong>.htaccess</strong> file in your website's root directory:
+				{__('Copy and place the following rewrite rule at the beginning of the', 'betterlinks')} <strong>.htaccess</strong>{' '}
+				{__("file in your website's root directory:", 'betterlinks')}
 			</div>
 			<div className="btl-code-block-wrapper">
 				<strong>

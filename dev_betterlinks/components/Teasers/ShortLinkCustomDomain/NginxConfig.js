@@ -1,10 +1,12 @@
+import { __ } from '@wordpress/i18n';
 import CodeBlock from './CodeBlock';
 
 const NginxConfig = ({ site_url }) => {
 	return (
 		<div className="btl-individual-config-blocks --btl-records-bg">
 			<div className="btl-instruction-block-wrapper">
-				Copy and place the following rewrite rule Inside the Server Block of your Nginx configuration &amp; make sure add this before the <strong>location block</strong>
+				{__('Copy and place the following rewrite rule Inside the Server Block of your Nginx configuration & make sure add this before the', 'betterlinks')}{' '}
+				<strong>{__('location block', 'betterlinks')}</strong>
 			</div>
 			<div className="btl-code-block-wrapper">
 				<strong>

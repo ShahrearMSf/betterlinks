@@ -16,6 +16,7 @@ import DomainConfig from './DomainConfig';
 import ServerConfig from './ServerConfig';
 import ApacheConfig from './ApacheConfig';
 import NginxConfig from './NginxConfig';
+import CodeBlock from './CodeBlock';
 
 const ShortLinkCustomDomain = (props) => {
 	const { update_option } = props;
@@ -40,6 +41,7 @@ const ShortLinkCustomDomain = (props) => {
 						{betterLinksHooks.applyFilters('BetterLinksCustomDomain', <TeaserContent values={props.values} />, {
 							...props,
 							ClipLoader,
+							CodeBlock,
 							formSubmitText,
 							...{ Tab, Tabs, TabList, TabPanel, Field },
 						})}
@@ -67,11 +69,11 @@ const TeaserContent = ({ values }) => {
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<CheckList title={__('Enable Custom Domain', 'betterlinks')} onClick={openUpgradeToProModal} is_pro={true} />
 			<span className="btl-form-group btl-form-group--top">
-				<label className="btl-form-label">Custom Domain</label>
+				<label className="btl-form-label">{__('Custom Domain', 'betterlinks')}</label>
 				<div className="link-options__body" style={{ flexDirection: 'column' }}>
-					<div style={{ maxWidth: 250, display: 'flex' }} onClick={openUpgradeToProModal}>
-						<input className="btl-text-field btl-text-field-teaser" placeholder="http://example.com" disabled />
-						<button type="button" className="button button-secondary" style={{ cursor: 'not-allowed' }} onClick={(e) => e.preventDefault()} disabled>
+					<div style={{ maxWidth: 250, display: 'flex', alignItems: 'center' }} onClick={openUpgradeToProModal}>
+						<input type="text" className="btl-text-field btl-text-field-teaser" placeholder="http://example.com" disabled />
+						<button type="button" className="button button-secondary" style={{ cursor: 'not-allowed' }} onClick={(e) => e.preventDefault()}>
 							{__('Verify', 'betterlinks-pro')}
 						</button>
 					</div>

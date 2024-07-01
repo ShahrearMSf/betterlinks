@@ -1,5 +1,6 @@
-import { plugin_root_url, copyToClipboard } from 'utils/helper';
+import { copyToClipboard } from 'utils/helper';
 import { useState } from 'react';
+import { ReactComponent as CopyIcon } from '../../../../assets/images/copy-icon-1.svg';
 
 const CodeBlock = ({ enableCopy = true, code, copyCode }) => {
 	const [copyStatus, setCopyStatus] = useState(false);
@@ -17,7 +18,7 @@ const CodeBlock = ({ enableCopy = true, code, copyCode }) => {
 						}, 1000);
 					}}
 				>
-					{copyStatus ? <span className="dashicons dashicons-yes" style={{ marginRight: '2px' }} /> : <img src={plugin_root_url + '/assets/images/copy-icon-1.svg'} alt="Copy" />}
+					{copyStatus ? <span className="dashicons dashicons-yes" style={{ marginRight: '2px' }} /> : <CopyIcon />}
 				</span>
 			)}
 			<code dangerouslySetInnerHTML={{ __html: code }} />
