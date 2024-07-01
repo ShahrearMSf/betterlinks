@@ -75,8 +75,4 @@ export const tabList = [
 		label: __('Customize Link Preview', 'betterlinks'),
 		type: 'pro',
 	},
-	{
-		label: __('Custom Domain', 'betterlinks'),
-		type: 'pro',
-	},
 ].filter(Boolean);
