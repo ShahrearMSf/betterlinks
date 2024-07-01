@@ -140,7 +140,16 @@
 
 				&::placeholder {
 					opacity: 0.6;
+					color: inherit;
 				}
+			}
+			button {
+				padding: 5px 15px;
+				margin-left: 5px;
+				border-color: rgb(38, 115, 255);
+				color: rgb(38, 115, 255);
+				font-weight: 500;
+				height: fit-content;
 			}
 			.btl-text-field-teaser {
 				cursor: not-allowed;

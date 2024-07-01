@@ -478,6 +478,46 @@
 		background-color: rgba(0, 0, 0, 0);
 		color: $light;
 	}
+
+	.btl-form-field {
+		// custom domain
+		.server-type-wrapper {
+			color: $light;
+		}
+		.btl-individual-config-blocks {
+			.btl-instruction-block-wrapper,
+			code {
+				background-color: #36405a;
+				border-color: #6e7178;
+				color: #fff;
+			}
+
+			.btl-code-block-wrapper {
+				color: $light;
+				.copy-btn {
+					svg g {
+						stroke: $light;
+					}
+					.dashicons-yes {
+						color: $light;
+					}
+				}
+			}
+		}
+	}
+
+	.link-options__body {
+		input[type='text'] {
+			background-color: #36405a;
+			border-color: $secondary-darken;
+			color: $white;
+		}
+		.button.button-secondary {
+			background-color: #36405a;
+			border-color: $secondary-darken;
+			color: $white;
+		}
+	}
 }
 .btl-checkbox-field {
 	.text {
