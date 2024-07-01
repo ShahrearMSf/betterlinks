@@ -8,6 +8,9 @@ class Assets
     {
         add_action('admin_enqueue_scripts', [$this, 'plugin_scripts']);
         add_action('enqueue_block_editor_assets', [$this, 'block_editor_assets']);
+        add_filter( 'fluent_boards/asset_listed_slugs', function($approvedSlugs) {
+            return wp_parse_args( [ 'betterlinks-intflboards' ], $approvedSlugs );
+        });
     }
 
     /**
@@ -42,8 +45,8 @@ class Assets
                 },
                 1
             );
-            wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], 'cc7d1ed3e50e336c37ea43a0d361013c', 'all');
             $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.core.min.asset.php';
+            wp_enqueue_style('betterlinks-admin-style', BETTERLINKS_ASSETS_URI . 'css/betterlinks.css', [], $dependencies['version'], 'all');
             wp_enqueue_script(
                 'betterlinks-admin-core',
                 BETTERLINKS_ASSETS_URI . 'js/betterlinks.core.min.js',
@@ -70,10 +73,11 @@ class Assets
                 'betterlinkspro_version' => defined('BETTERLINKS_PRO_VERSION') ? BETTERLINKS_PRO_VERSION : null,
                 'is_extra_data_tracking_compatible' => apply_filters('betterlinks/is_extra_data_tracking_compatible', false),
                 'menu_notice' => defined('BETTERLINKS_MENU_NOTICE') ? BETTERLINKS_MENU_NOTICE : null,
-                'betterlinks_auth' => md5(AUTH_KEY),
-                'betterlinks_date_format' => get_option( 'date_format' ),
                 'betterlinks_custom_domain_menu' => get_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, 0 ),
-                'betterlinks_settings' => Cache::get_json_settings()
+                'betterlinks_settings' => Cache::get_json_settings(),
+                'betterlinks_auth' => defined('AUTH_KEY') ? md5(\AUTH_KEY) : null,
+                'betterlinks_date_format' => get_option( 'date_format' ),
+                'is_fbs_enabled' => defined('FLUENT_BOARDS')
             ]);
 
             $menu_notice = get_option('betterlinks_menu_notice', 0);
@@ -83,6 +87,29 @@ class Assets
         }
         wp_set_script_translations('betterlinks-admin-core', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
         wp_enqueue_style('betterlinks-admin-notice', BETTERLINKS_ASSETS_URI . 'css/betterlinks-admin-notice.css', [], BETTERLINKS_VERSION, 'all');
+        
+        if( 'toplevel_page_fluent-boards' == $hook ){
+            $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-intflboards.core.min.asset.php';
+            wp_enqueue_script(
+                'betterlinks-intflboards',
+                BETTERLINKS_ASSETS_URI . 'js/betterlinks-intflboards.core.min.js',
+                $dependencies['dependencies'],
+                $dependencies['version'],
+                [
+                    'in_footer' => true,
+                ]
+            );
+            $settings = Cache::get_json_settings();
+            wp_localize_script('betterlinks-intflboards', 'betterLinksFlbIntegration', [
+                'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
+                'TASKS' => 'tasks/',
+                'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
+                'site_url' => apply_filters('betterlinks/site_url', site_url()),
+                'admin_url' => admin_url('/admin.php'),
+                'fbs_settings' => isset($settings['fbs']) ? $settings['fbs'] : null
+            ]);
+            wp_enqueue_style('betterlinks-intflboards', BETTERLINKS_ASSETS_URI . 'css/integrations/btl-fbs.css', [], $dependencies['version'], 'all');
+        }
     }
 
     /**

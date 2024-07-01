@@ -22,6 +22,7 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 				enableReinitialize={true}
 				initialValues={{ ...settings }}
 				onSubmit={(values) => {
+					if (!betterlinks_auth && values?.cle?.enable_cle) return;
 					saveSettingsHandler(values, update_option, setFormSubmitText);
 				}}
 			>
@@ -46,7 +47,11 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 									</div>
 								</>
 							)}
-							<button className="button-primary btn-save-settings" type="submit">
+							<button
+								className="button-primary btn-save-settings"
+								type="submit"
+								style={{ cursor: !!betterlinks_auth || !props.values?.cle?.enable_cle ? 'pointer' : 'not-allowed' }}
+							>
 								{formSubmitText}
 							</button>
 						</Form>
@@ -66,10 +71,15 @@ export default connect(null, mapDispatchToProps)(CreateLinkExternally);
 const FreeSettings = ({ props, isLatestVersion }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	useEffect(() => {
-		if (!props?.values?.cle || !('powered_by' in props.values?.cle)) {
+		let cle = props?.values?.cle;
+		if (typeof cle === 'string') {
+			cle = JSON.parse(cle);
+		}
+		if (!cle || !('powered_by' in cle)) {
 			props.setFieldValue('cle.powered_by', true);
 		}
 	}, []);
+
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -167,20 +177,18 @@ const Notes = () => {
 };
 
 const DragableButton = () => {
+	if (!betterlinks_auth) {
+		return (
+			<div className="notice notice-error" style={{ marginLeft: '0', marginBottom: '15px', padding: '10px' }}>
+				{__("'AUTH_KEY' is missing in your wp-config.php file. Please ensure that AUTH_KEY is defined in your wp-config.php file. For more info, ", 'betterlinks')}
+				<a className="external-analytic-tooltip-anchor" href="https://betterlinks.io/docs/configure-quick-link-creation/#8-toc-title" target="_blank" style={{ color: 'inherit' }}>
+					{__('Click here', 'betterlinks')}
+				</a>
+			</div>
+		);
+	}
 	return (
-		<div
-			style={{
-				display: 'flex',
-				'column-gap': '5px',
-				'align-items': 'center',
-				'background-color': 'rgb(227, 244, 255)',
-				position: 'sticky',
-				top: '35px',
-				zIndex: '1',
-				padding: '12px',
-				marginBottom: '20px',
-			}}
-		>
+		<div className="btl-cle-dragable-section">
 			<a
 				onClick={(e) => e.preventDefault()}
 				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+encodeURI(location.href)+'&title='+encodeURI(document.title)`}

@@ -8,21 +8,23 @@ import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import PasswordProtection from 'components/Teasers/PasswordProtection';
 import ShortLinkCustomDomain from 'components/Teasers/ShortLinkCustomDomain';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { is_pro_enabled } from 'utils/helper';
+import { is_fbs_enabled, is_pro_enabled } from 'utils/helper';
 import CustomFields from './CustomFields';
 import { tabList } from 'utils/data';
+import FluentBoardSettings from 'components/FluentBoardSettings';
 
 const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
 		<CreateLinkExternally settings={settings} terms={terms} />,
+		is_fbs_enabled && <FluentBoardSettings settings={settings} terms={terms} />,
 		<ExternalAnalytics trackingSettings={trackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
 		<AffiliateLinkDisclosure settings={settings} />,
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 		<ShortLinkCustomDomain settings={settings} />,
-	];
+	].filter(Boolean);
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (

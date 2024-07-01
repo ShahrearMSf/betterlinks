@@ -77,10 +77,9 @@ const Settings = (props) => {
 					});
 				}
 			});
-
-			if (!props.terms) {
-				props.fetch_terms_data();
-			}
+		}
+		if (!terms) {
+			props.fetch_terms_data();
 		}
 	}, []);
 

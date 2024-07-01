@@ -718,19 +718,25 @@
 			}
 		}
 		.btl-static-link {
-			height: 100%;
+			width: 40%;
+			overflow: auto;
 			background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 			border-radius: 5px 3px 3px 5px;
 			font-size: 16px;
 			font-weight: 500;
-			padding: 0 10px 0 15px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
+			padding: 15px 10px 15px 10px;
+			display: block;
+			white-space: nowrap;
 			color: $white;
 			font-style: italic;
 			max-width: 200px;
-			word-break: break-word;
+			cursor: ew-resize;
+			-ms-overflow-style: none; /* Internet Explorer 10+ */
+			scrollbar-width: none; /* Firefox */
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
 			@media screen and (max-width: 1599px) {
 				font-size: 16px;
 			}

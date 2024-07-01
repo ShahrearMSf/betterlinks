@@ -7,6 +7,8 @@ class Installer extends \WP_Background_Process
 {
     use Traits\DBTables;
     use Traits\DBMigrate;
+    use Traits\Terms;
+
     protected $wpdb;
     protected $charset_collate;
     protected $action = 'betterlinks_background_task';
@@ -136,6 +138,17 @@ class Installer extends \WP_Background_Process
     public function save_settings()
     {
         if (!Helper::btl_get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
+            $fbs_cat = 0;
+            if( defined( 'FLUENT_BOARDS' ) ){
+                $args    = array(
+                    'ID'        => 0,
+                    'term_name' => 'Fluent Boards',
+                    'term_slug' => 'btl-fluent-boards',
+                    'term_type' => 'category',
+                );
+                $results = $this->create_term( $args );
+                $fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
+            }
             $value = [
                 'redirect_type'         => '307',
                 'nofollow'   		    => true,
@@ -153,6 +166,11 @@ class Installer extends \WP_Background_Process
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
                 'enable_custom_domain_menu' => true,
+                'fbs'        => [
+                    'enable_fbs' => true,
+                    'cat_id'    => $fbs_cat,
+                    'delete_on' => 'task_delete'
+                ]
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
@@ -243,6 +261,11 @@ class Installer extends \WP_Background_Process
             
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '>' ) ) {
                 $this->update_settings();
+                $this->update_fluent_settings();
+            }
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.4', '>' ) ) {
+                $this->update_fluent_task_delete_settings();
+                $this->update_cle_category();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
