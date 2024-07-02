@@ -100,26 +100,8 @@ class Settings extends Controller {
 		$enable_password_protection = ! empty( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
 		$enable_customize_meta_tag  = ! empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
 
-		if ( class_exists( 'BetterLinksPro' ) ) {
-			$pro_helper = new Helper();
-			if ( $enable_password_protection ) {
-				$pro_helper->add_password_protect_page();
-			} else {
-				$pro_helper->delete_custom_page( 'password-protected-form' );
-			}
-
-			if ( $enable_customize_meta_tag ) {
-				$pro_helper->add_customized_meta_tag_page();
-			} else {
-				$pro_helper->delete_custom_page( 'customized-meta-tags' );
-			}
-
-			if ( ! empty( $response['cle']['enable_cle'] ) ) {
-				$category                    = ! empty( $response['cle']['category'] ) ? sanitize_text_field( $response['cle']['category'] ) : 1;
-				$category                    = $helper::insert_new_category( $category );
-				$response['cle']['category'] = $category;
-			}
-		}
+		// Pro Logics
+		do_action( 'betterlinkspro/admin/update_settings', $response );
 
 		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
 			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
