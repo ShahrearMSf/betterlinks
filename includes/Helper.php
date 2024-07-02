@@ -142,7 +142,9 @@ class Helper {
 	}
 
 	public static function get_menu_items() {
-		$enable_custom_domain_menu = get_option(BETTERLINKS_CUSTOM_DOMAIN_MENU, 0);
+		// $enable_custom_domain_menu = get_option(BETTERLINKS_CUSTOM_DOMAIN_MENU, 0);
+		$enable_custom_domain_menu = Cache::get_json_settings();
+		$enable_custom_domain_menu = !empty( $enable_custom_domain_menu['enable_custom_domain_menu'] ) ?  $enable_custom_domain_menu['enable_custom_domain_menu'] : false;
 		
 		$menu_items = array(
 			BETTERLINKS_PLUGIN_SLUG                  => array(
