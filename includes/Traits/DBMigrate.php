@@ -39,21 +39,21 @@ trait DBMigrate {
 		}
 	}
 	public function update_fluent_settings() {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			return;
+		}
 		$settings = Cache::get_json_settings();
 		if ( empty( $settings['fbs']['enable_fbs'] ) ) {
-			$fbs_cat = 0;
+			$args    = array(
+				'ID'        => 0,
+				'term_name' => 'Fluent Boards',
+				'term_slug' => 'btl-fluent-boards',
+				'term_type' => 'category',
+			);
+			$results = $this->create_term( $args );
+			$fbs_cat = ! empty( $results['ID'] ) ? $results['ID'] : 0;
 
-			if ( defined( 'FLUENT_BOARDS' ) ) {
-				$args    = array(
-					'ID'        => 0,
-					'term_name' => 'Fluent Boards',
-					'term_slug' => 'btl-fluent-boards',
-					'term_type' => 'category',
-				);
-				$results = $this->create_term( $args );
-				$fbs_cat = ! empty( $results['ID'] ) ? $results['ID'] : 0;
-			}
-
+			$settings['fbs'] = array();
 			$settings['fbs'] = array(
 				'enable_fbs' => true,
 				'cat_id'     => $fbs_cat,
@@ -61,7 +61,7 @@ trait DBMigrate {
 			);
 		}
 		if ( $settings ) {
-			delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+			Helper::clear_query_cache();
 			$settings = wp_json_encode( $settings );
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $settings );
 			Cache::write_json_settings();
@@ -70,6 +70,10 @@ trait DBMigrate {
 	}
 
 	public function update_fluent_task_delete_settings() {
+		if ( ! defined( 'FLUENT_BOARDS' ) ) {
+			return;
+		}
+
 		$settings = Cache::get_json_settings();
 		if ( ! empty( $settings['fbs']['delete_on'] ) ) {
 			return;
@@ -101,22 +105,22 @@ trait DBMigrate {
 	}
 
 
-    public function update_settings() {
-        $settings = Cache::get_json_settings();
+	public function update_settings() {
+		$settings = Cache::get_json_settings();
 
-        if( empty( $settings['enable_custom_domain_menu'] ) ){
-            $settings['enable_custom_domain_menu'] = true;
-        }
-        $settings = json_encode( $settings );
-        delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
-        if ( $settings ) {
-            update_option( BETTERLINKS_LINKS_OPTION_NAME, $settings );
-            Cache::write_json_settings();
-        }
-        if( empty(get_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, false )) ) {
-            update_option(BETTERLINKS_CUSTOM_DOMAIN_MENU, true);
-        }
-        // regenerate links for wildcards option update
-        Helper::write_links_inside_json();
-    }
+		if ( empty( $settings['enable_custom_domain_menu'] ) ) {
+			$settings['enable_custom_domain_menu'] = true;
+		}
+		$settings = json_encode( $settings );
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+		if ( $settings ) {
+			update_option( BETTERLINKS_LINKS_OPTION_NAME, $settings );
+			Cache::write_json_settings();
+		}
+		if ( empty( get_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, false ) ) ) {
+			update_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, true );
+		}
+		// regenerate links for wildcards option update
+		Helper::write_links_inside_json();
+	}
 }
