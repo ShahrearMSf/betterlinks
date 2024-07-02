@@ -852,7 +852,7 @@ class Ajax {
 		$response['uncloaked_categories'] = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 
 		// Pro Logics
-		do_action( 'betterlinkspro/admin/update_settings', $response );
+		$response = apply_filters( 'betterlinkspro/admin/update_settings', $response );
 
 		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
 			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
