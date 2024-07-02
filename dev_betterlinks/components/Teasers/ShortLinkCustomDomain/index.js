@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Field, Form, Formik } from 'formik';
-import { is_pro_enabled, saveSettingsHandler, site_url } from 'utils/helper';
+import { saveSettingsHandler } from 'utils/helper';
 import { update_option } from 'redux/actions/settings.actions';
 import CheckList from '../AutoLinkCreate/CheckList';
 import { bindActionCreators } from 'redux';
@@ -86,7 +86,11 @@ const TeaserContent = ({ values }) => {
 						<span className="dashicons dashicons-info-outline" />
 						<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
 							{__('Choose how you want to point your custom domain. For more info, ', 'betterlinks-pro')}
-							<a target="_blank" href="#" style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}>
+							<a
+								target="_blank"
+								href="https://betterlinks.io/docs/configure-custom-domain/"
+								style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}
+							>
 								{__('Click Here', 'betterlinks-pro')}
 							</a>
 						</span>
@@ -105,10 +109,7 @@ const TeaserContent = ({ values }) => {
 					<div className="btl-tooltip">
 						<span className="dashicons dashicons-info-outline" />
 						<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
-							{__('Choose how you want to point your custom domain. For more info, ', 'betterlinks-pro')}
-							<a target="_blank" href="#" style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}>
-								{__('Click Here', 'betterlinks-pro')}
-							</a>
+							{__('Set up your server configuration according to the type of server you are using. ', 'betterlinks-pro')}
 						</span>
 					</div>
 				</label>

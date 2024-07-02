@@ -266,7 +266,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 							</span>
 
 							<span className="btl-form-group">
-								<label className="btl-form-label">{__('Show Custom Domain Menu', 'betterlinks')}</label>
+								<label className="btl-form-label">{__('Custom Domain', 'betterlinks')}</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
 										<Field
@@ -276,10 +276,10 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 											onChange={() => props.setFieldValue('enable_custom_domain_menu', !props.values?.enable_custom_domain_menu)}
 										/>
 										<span className="text">
-											{__('Enable custom domain in the menu list', 'betterlinks')}
+											{__('Enable Custom Domain Menu', 'betterlinks')}
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext">{__('This will allow you to generate & download QR Code for each of your shortened URL', 'betterlinks')}</span>
+												<span className="btl-tooltiptext">{__('This will allow you to show Custom Domain on the BetterLinks submenu for quick access.', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>
