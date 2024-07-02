@@ -831,7 +831,23 @@ export const get_labels = (clicks) => {
 	return labels;
 };
 
-export const pro_version_check = () => (betterlinkspro_version ? parseFloat(betterlinkspro_version?.slice(2)) : null);
+export const pro_version_check = (version, compare = '>=') => {
+	if (!betterlinkspro_version || !version) return null;
+
+	const pro_v_arr = betterlinkspro_version.split('.');
+	const v_arr = version.split('.');
+
+	if (+pro_v_arr[0] > +v_arr[0]) {
+		return true;
+	}
+
+	const lastPartofProPlugin = parseFloat(betterlinkspro_version?.slice(2));
+	const lastPartofCheckVersion = parseFloat(version?.slice(2));
+
+	return eval(lastPartofProPlugin + compare + lastPartofCheckVersion);
+
+	// return betterlinkspro_version ? parseFloat(betterlinkspro_version?.slice(2)) : null;
+};
 
 export const get_tags = (links) => {
 	const tags = {};
