@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from '../UpgradeToPro';
 import { Field, Form, Formik } from 'formik';
-import { saveSettingsHandler } from 'utils/helper';
+import { is_pro_enabled, pro_version_check, saveSettingsHandler } from 'utils/helper';
 import { update_option } from 'redux/actions/settings.actions';
 import CheckList from '../AutoLinkCreate/CheckList';
 import { bindActionCreators } from 'redux';
@@ -64,14 +64,25 @@ export default connect(mapStateToProps, mapDispatchToProps)(ShortLinkCustomDomai
 
 const TeaserContent = ({ values }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const willShowUpgradeToProModal = !is_pro_enabled && { onClick: openUpgradeToProModal };
+	const isProUpdated = pro_version_check('1.9.5');
+
 	return (
 		<>
+			{is_pro_enabled && !isProUpdated && (
+				<div className="btl-form-group">
+					<div className="short-description">
+						<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
+						{__('To Utilize the Custom Domain Feature, kindly ensure that you have updated to the latest version of BetterLinks Pro V2.0.0', 'betterlinks')}
+					</div>
+				</div>
+			)}
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<CheckList title={__('Enable Custom Domain', 'betterlinks')} onClick={openUpgradeToProModal} is_pro={true} />
+			<CheckList title={__('Enable Custom Domain', 'betterlinks')} {...willShowUpgradeToProModal} is_pro={!is_pro_enabled} />
 			<span className="btl-form-group btl-form-group--top">
 				<label className="btl-form-label">{__('Custom Domain', 'betterlinks')}</label>
 				<div className="link-options__body" style={{ flexDirection: 'column' }}>
-					<div style={{ maxWidth: 250, display: 'flex', alignItems: 'center' }} onClick={openUpgradeToProModal}>
+					<div style={{ maxWidth: 250, display: 'flex', alignItems: 'center' }} {...willShowUpgradeToProModal}>
 						<input type="text" className="btl-text-field btl-text-field-teaser" placeholder="http://example.com" disabled />
 						<button type="button" className="button button-secondary" style={{ cursor: 'not-allowed' }} onClick={(e) => e.preventDefault()}>
 							{__('Verify', 'betterlinks-pro')}
