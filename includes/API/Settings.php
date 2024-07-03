@@ -4,7 +4,6 @@ namespace BetterLinks\API;
 
 use BetterLinks\Admin\Cache;
 use BetterLinks\Traits\ArgumentSchema;
-use BetterLinksPro\Helper;
 
 class Settings extends Controller {
 
