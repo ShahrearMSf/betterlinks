@@ -164,20 +164,8 @@ class Utils {
 			$visitor_uid                = uniqid( 'bl' );
 			setcookie( $visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/' );
 		}
-		// checking is split tes enabled.
-		$split_test_data  = \BetterLinks\Helper::split_test_enabled( $data );
-		$is_split_enabled = isset( $split_test_data['result'] ) ? $split_test_data['result'] : false;
-
-		if ( ! $is_split_enabled && ! empty( $split_test_data['completed'] ) ) {
-			if ( ! \BetterLinks\Helper::get_link_meta( $data['ID'], 'split_test_data' ) ) {
-				\BetterLinks\Helper::add_link_meta( $data['ID'], 'split_test_data', $split_test_data );
-			}
-
-			if ( class_exists( '\BetterLinksPro\Helper' ) && ! \BetterLinks\Helper::get_link_meta( $data['ID'], 'split_test_analytics' ) ) {
-				$split_analytics = \BetterLinksPro\Helper::get_split_test_analytics_data( array( 'id' => $data['ID'] ) );
-				\BetterLinks\Helper::add_link_meta( $data['ID'], 'split_test_analytics', $split_analytics );
-			}
-		}
+		// checking if split tes enabled.
+		$is_split_enabled = apply_filters('betterlinkspro/admin/split_test_tracking', false, $data);
 
 		$click_data = array(
 			'link_id'             => $data['ID'],
