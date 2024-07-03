@@ -52,33 +52,8 @@ class Link extends Utils {
 
 		$data['is_bot'] = $dd->isBot();
 		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
-			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
-				// fetch settings to check password protected redirect is enable or not.
-				$settings = Cache::get_json_settings();
-
-				if ( ! empty( $settings['enable_password_protection'] ) ) {
-					$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
-					$request_uri       = site_url( '/' ) . $request_uri;
-					$short_url         = $this->get_protected_self_url_short_link( $request_uri );
-					$referer_short_url = $this->referer_short_url( $referer );
-
-					// if request are coming from password protected form and password is okk.
-					if ( $referer_short_url === $short_url ) {
-						return false;
-					}
-					$data = $this->get_slug_raw( $short_url );
-
-					$id = isset( $data['ID'] ) ? $data['ID'] : null;
-					if ( empty( $id ) ) {
-						return false;
-					}
-					$password_protection_status = \BetterLinksPro\Link::get_password_protection_status();
-					$is_active_cookie           = $this->passsword_cookie_enabled( $password_protection_status['remember_password_cookies'], $id );
-					if ( $is_active_cookie ) {
-						return false;
-					}
-				}
-			}
+			// password protection logics
+			do_action( 'betterlinkspro/admin/check_password_protection', $request_uri );
 
 			if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { // phpcs:ignore
 				return false;
