@@ -73,7 +73,8 @@ const TeaserContent = ({ values }) => {
 				<div className="btl-form-group">
 					<div className="short-description">
 						<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-						{__('The Custom Domain feature is available in BetterLinks Pro V2.0.0 and later. Make sure you have updated to the latest version to use this feature', 'betterlinks')}
+						{__('The Custom Domain feature is available in', 'betterlinks')} <strong>{__('BetterLinks Pro V2.0.0 and later', 'betterlinks')} </strong>{' '}
+						{__('. Make sure you have updated to the latest version to use this feature', 'betterlinks')}
 					</div>
 				</div>
 			)}
