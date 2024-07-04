@@ -178,6 +178,7 @@
 	&.block {
 		display: inline-block;
 		margin-right: 20px;
+		min-height: 20px;
 		.btl-tooltip {
 			margin-left: 5px;
 		}
