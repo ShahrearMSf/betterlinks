@@ -15,7 +15,6 @@ import ARecordConfig from './ARecordConfig';
 import DomainConfig from './DomainConfig';
 import ServerConfig from './ServerConfig';
 import ApacheConfig from './ApacheConfig';
-import NginxConfig from './NginxConfig';
 import CodeBlock from './CodeBlock';
 
 const ShortLinkCustomDomain = (props) => {
@@ -94,19 +93,6 @@ const TeaserContent = ({ values }) => {
 			<span className="btl-form-group btl-domain-configuration" style={{ alignItems: 'flex-start' }}>
 				<label className="btl-form-label" style={{ marginTop: '10px' }}>
 					{__('Domain Configuration', 'betterlinks-pro')}
-					<div className="btl-tooltip">
-						<span className="dashicons dashicons-info-outline" />
-						<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
-							{__('Choose how you want to point your custom domain. For more info, ', 'betterlinks-pro')}
-							<a
-								target="_blank"
-								href="https://betterlinks.io/docs/configure-custom-domain/"
-								style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}
-							>
-								{__('Click Here', 'betterlinks-pro')}
-							</a>
-						</span>
-					</div>
 				</label>
 				<div className="btl-form-field">
 					<label className="btl-checkbox-field block" />
@@ -121,22 +107,24 @@ const TeaserContent = ({ values }) => {
 					<div className="btl-tooltip">
 						<span className="dashicons dashicons-info-outline" />
 						<span className="btl-tooltiptext" style={{ width: '255px', 'text-align': 'left', 'line-height': '1.2em' }}>
-							{__('Set up your server configuration according to the type of server you are using. ', 'betterlinks-pro')}
+							{__('Choose your server according to your WordPress installation server type. For more info ', 'betterlinks-pro')}
+							<a
+								target="_blank"
+								href="https://betterlinks.io/docs/configure-custom-domain/#3-toc-title"
+								style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}
+							>
+								{__('Click Here', 'betterlinks-pro')}
+							</a>
 						</span>
 					</div>
 				</label>
 				<div className="btl-form-field">
 					<label className="btl-checkbox-field block"></label>
 					<div>
-						<ServerConfig />
+						<ServerConfig willShowUpgradeToProModal={willShowUpgradeToProModal} />
 						{'apache' === values?.server_type && (
 							<DomainConfig name=".htaccess" type="htaccess">
 								<ApacheConfig host={'yoursite.com'} custom_domain={'http://example.com'} />
-							</DomainConfig>
-						)}
-						{'nginx' === values?.server_type && (
-							<DomainConfig name="Nginx" type="nginx">
-								<NginxConfig site_url={`http://yoursite.com`} />
 							</DomainConfig>
 						)}
 					</div>

@@ -5,7 +5,14 @@ const ARecordConfig = ({ custom_host, siteIp }) => {
 	return (
 		<div className="btl-individual-config-blocks --btl-records-bg">
 			<div className="btl-instruction-block-wrapper">
-				<span>{__('Please add the following A record to your DNS settings:', 'betterlinks')}</span>
+				<span>{__('Please add the following A record to your DNS settings. ', 'betterlinks-pro')}</span>
+				<a
+					target="_blank"
+					href="https://betterlinks.io/docs/configure-custom-domain/#1-toc-title"
+					style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}
+				>
+					{__('Learn More', 'betterlinks-pro')}
+				</a>
 			</div>
 			<div className="btl-code-block-wrapper">
 				<strong>
@@ -25,7 +32,7 @@ const ARecordConfig = ({ custom_host, siteIp }) => {
 				<br />
 				<strong>
 					Value:
-					<CodeBlock code={siteIp || __('Loading...', 'betterlinks')} copyCode={siteIp || __('Loading...', 'betterlinks')} />
+					<CodeBlock code={siteIp || ''} copyCode={siteIp || ''} />
 				</strong>
 			</div>
 			<div className="btl-instruction-block-wrapper">
@@ -33,7 +40,16 @@ const ARecordConfig = ({ custom_host, siteIp }) => {
 				{__('for the A record to propagate, depending on your domain provider', 'betterlinks')}
 				<br />
 				<br />
-				{__('Now point to this WordPress installation, use the given redirect rule available in the next tab based on your server', 'betterlinks')}
+				{__('Now point to this WordPress installation, use the given redirect rule available in the following ', 'betterlinks')}
+				<strong>{__('"Server Configuration"', 'betterlinks')} </strong>
+				{__(' section. For more info ', 'betterlinks')}
+				<a
+					target="_blank"
+					href="https://betterlinks.io/docs/configure-custom-domain/#2-toc-title"
+					style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}
+				>
+					{__('Click Here', 'betterlinks-pro')}
+				</a>
 			</div>
 		</div>
 	);

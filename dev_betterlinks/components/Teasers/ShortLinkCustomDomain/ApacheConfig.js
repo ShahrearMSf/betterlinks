@@ -6,7 +6,14 @@ const ApacheConfig = ({ host, custom_domain }) => {
 		<div className="btl-individual-config-blocks --btl-records-bg">
 			<div className="btl-instruction-block-wrapper">
 				{__('Copy and place the following rewrite rule at the beginning of the', 'betterlinks')} <strong>.htaccess</strong>{' '}
-				{__("file in your website's root directory:", 'betterlinks')}
+				{__("file in your website's root directory. For more info ", 'betterlinks-pro')}
+				<a
+					target="_blank"
+					href="https://betterlinks.io/docs/configure-custom-domain/#4-toc-title"
+					style={{ color: 'inherit', 'font-weight': '700', 'text-decoration': 'underline', 'font-size': 'inherit' }}
+				>
+					{__('Click Here', 'betterlinks-pro')}
+				</a>
 			</div>
 			<div className="btl-code-block-wrapper">
 				<strong>
