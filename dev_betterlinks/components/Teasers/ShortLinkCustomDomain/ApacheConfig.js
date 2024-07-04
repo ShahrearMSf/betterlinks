@@ -11,14 +11,14 @@ const ApacheConfig = ({ host, custom_domain }) => {
 			<div className="btl-code-block-wrapper">
 				<strong>
 					<CodeBlock
-						code={`&lt;IfModule mod_rewrite.c&gt; <br>RewriteEngine On <br>RewriteCond %{HTTP_HOST} ^${host}$ [OR] <br>RewriteCond %{HTTP_HOST} ^www.${host}$ <br>RewriteRule (.*)$ ${custom_domain?.shortlink_custom_domain?.replace(
+						code={`RewriteEngine On <br>RewriteCond %{HTTP_HOST} ^${host}$ [OR] <br>RewriteCond %{HTTP_HOST} ^www.${host}$ <br>RewriteRule (.*)$ ${custom_domain?.shortlink_custom_domain?.replace(
 							/\/$/,
 							''
-						)}/$1 [R=301,L] <br>&lt;/IfModule&gt;`}
-						copyCode={`<IfModule mod_rewrite.c> \nRewriteEngine On \nRewriteCond %{HTTP_HOST} ^${host}$ [OR] \nRewriteCond %{HTTP_HOST} ^www.${host}$ \nRewriteRule (.*)$ ${custom_domain?.shortlink_custom_domain?.replace(
+						)}/$1 [R=301,L]`}
+						copyCode={`RewriteEngine On \nRewriteCond %{HTTP_HOST} ^${host}$ [OR] \nRewriteCond %{HTTP_HOST} ^www.${host}$ \nRewriteRule (.*)$ ${custom_domain?.shortlink_custom_domain?.replace(
 							/\/$/,
 							''
-						)}/$1 [R=301,L] \n</IfModule>`}
+						)}/$1 [R=301,L]`}
 					/>
 				</strong>
 			</div>
