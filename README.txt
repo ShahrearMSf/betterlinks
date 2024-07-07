@@ -157,7 +157,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 2.1.2 - 04/07/2024 =
+= 2.1.2 - 07/07/2024 =
 
 - Fixed: Uncaught Error for using a scalar value as an array
 - Few minor bug fixes & improvement
