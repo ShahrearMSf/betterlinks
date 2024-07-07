@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url, site_url } from 'utils/helper';
+import { plugin_root_url } from 'utils/helper';
 import { teaserTitle } from '../data';
 
-const Linkedin = () => {
+const Linkedin = ({ site_url }) => {
 	return (
 		<div className="btl-customized-link-preview-facebook">
 			<div className="btl-customized-link-preview-image-container">

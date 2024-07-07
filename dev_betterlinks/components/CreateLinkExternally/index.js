@@ -14,7 +14,7 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 const CreateLinkExternally = ({ settings, terms, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 
-	const pro_version = pro_version_check();
+	const isProUpdated = pro_version_check('1.9.4');
 
 	return (
 		<>
@@ -31,12 +31,12 @@ const CreateLinkExternally = ({ settings, terms, update_option }) => {
 						<Form className="btl-cle">
 							<Notes />
 							{props.values?.cle?.enable_cle && <DragableButton cle={props.values?.cle} />}
-							<FreeSettings props={props} isLatestVersion={pro_version !== null && pro_version >= 9.4} />
+							<FreeSettings props={props} isLatestVersion={isProUpdated} />
 							{props.values?.cle?.enable_cle &&
 								props.values?.cle?.advanced_options &&
-								(pro_version === null || pro_version >= 9.4) &&
+								isProUpdated &&
 								betterLinksHooks.applyFilters('betterLinksCleAdvanced', <CreateLinkExternallyTeaser props={props} />, { ...props, settings, terms, redirectType, Select2 })}
-							{pro_version !== null && pro_version < 9.4 && (
+							{!isProUpdated && (
 								<>
 									<CreateLinkExternallyTeaser props={props} />
 									<div className="btl-form-group">
@@ -144,7 +144,7 @@ const FreeSettings = ({ props, isLatestVersion }) => {
 								) : (
 									<span
 										onClick={() => props.setFieldValue('cle.advanced_options', !props.values?.cle?.advanced_options)}
-										className={`dashicons dashicons-arrow-${props.values?.cle?.advanced_options ? 'down' : 'up'}-alt2`}
+										className={`dashicons dashicons-arrow-${props.values?.cle?.advanced_options ? 'up' : 'down'}-alt2`}
 									/>
 								)}
 							</label>

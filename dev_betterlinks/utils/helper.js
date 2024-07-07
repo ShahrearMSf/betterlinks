@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import _ from 'lodash';
+import clipboardCopy from 'clipboard-copy';
 
 export const {
 	betterlinks_nonce,
@@ -24,6 +25,8 @@ export const {
 	menu_notice,
 	betterlinks_auth,
 	betterlinks_date_format,
+	betterlinks_custom_domain_menu,
+	betterlinks_settings,
 	is_fbs_enabled,
 } = window.betterLinksGlobal;
 
@@ -197,12 +200,13 @@ export const modalCustomSmallStyles = {
 };
 
 export const copyToClipboard = (copyText) => {
-	var tempInput = document.createElement('input');
-	tempInput.value = copyText;
-	document.body.appendChild(tempInput);
-	tempInput.select();
-	document.execCommand('copy');
-	document.body.removeChild(tempInput);
+	// var tempInput = document.createElement('input');
+	// tempInput.value = copyText;
+	// document.body.appendChild(tempInput);
+	// tempInput.select();
+	// document.execCommand('copy');
+	// document.body.removeChild(tempInput);
+	clipboardCopy(copyText);
 	return;
 };
 
@@ -213,7 +217,8 @@ export const copyShortUrl = (shortUrl) => {
 };
 
 export const makeShortUrl = (shortUrl) => {
-	return shortUrl[0] === '/' ? site_url + shortUrl : site_url + '/' + shortUrl;
+	const site_link = betterLinksHooks.applyFilters('site_url', site_url);
+	return shortUrl[0] === '/' ? site_link + shortUrl : site_link + '/' + shortUrl;
 };
 
 export const getBrowser = (agent) => {
@@ -826,7 +831,23 @@ export const get_labels = (clicks) => {
 	return labels;
 };
 
-export const pro_version_check = () => (betterlinkspro_version ? parseFloat(betterlinkspro_version?.slice(2)) : null);
+export const pro_version_check = (version, compare = '>=') => {
+	if (!betterlinkspro_version || !version) return null;
+
+	const pro_v_arr = betterlinkspro_version.split('.');
+	const v_arr = version.split('.');
+
+	if (+pro_v_arr[0] > +v_arr[0]) {
+		return true;
+	}
+
+	const lastPartofProPlugin = parseFloat(betterlinkspro_version?.slice(2));
+	const lastPartofCheckVersion = parseFloat(version?.slice(2));
+
+	return eval(lastPartofProPlugin + compare + lastPartofCheckVersion);
+
+	// return betterlinkspro_version ? parseFloat(betterlinkspro_version?.slice(2)) : null;
+};
 
 export const get_tags = (links) => {
 	const tags = {};

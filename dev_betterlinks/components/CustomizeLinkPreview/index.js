@@ -37,8 +37,7 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 		}
 	}, []);
 
-	const pro_version = pro_version_check();
-
+	const isProUpdated = pro_version_check('1.8.0');
 	return (
 		<>
 			<div className={`link-options link-options--advanced link-options--customize-link-preview ${openAccordion ? 'link-options--open' : ''}`}>
@@ -97,7 +96,7 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 						<span className="btl-close-modal" onClick={closeModal}>
 							<i className="btl btl-cancel" />
 						</span>
-						{pro_version !== null && pro_version < 8 && (
+						{!isProUpdated && (
 							<div className="btl-form-group">
 								<div className="short-description">
 									<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>

@@ -1,5 +1,13 @@
 import { FETCH_SETTINGS, FETCH_TRACKING_SETTINGS, UPDATE_OPTION } from 'redux/actions/settings.actions';
-function settings(state = {}, action) {
+import { betterlinks_settings } from 'utils/helper';
+
+const initialSettingsState = {
+	...(betterlinks_settings && {
+		settings: betterlinks_settings,
+	}),
+};
+
+function settings(state = initialSettingsState, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_SETTINGS:
