@@ -117,8 +117,7 @@ class Elementor {
 	 * @param Any $data - Data.
 	 */
 	public function disable_elementor_preview_redirect( $data ) {
-		$betterlinks_admin_nonce = wp_create_nonce('betterlinks_admin_nonce');
-		$elementor_preview = isset( $_GET['elementor-preview'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['elementor-preview'] ) ), $betterlinks_admin_nonce );
+		$elementor_preview = isset( $_GET['elementor-preview'] ) ;
 
 		if ( $elementor_preview ) {
 			return false;
@@ -300,7 +299,7 @@ class Elementor {
 		$current_gmt_time      = time();
 		$title                 = $document->get_settings( 'post_title' );
 		$shortLink             = $this->gen_short_link_from_permalink( $post_id );
-		$link                  = \BetterLinks\Traits\Query::get_link_by_short_url( $shortLink );
+		$link                  = Helper::get_link_by_short_url( $shortLink );
 		$link_id               = isset( $link[0]['ID'] ) ? $link[0]['ID'] : 'undefined';
 		$is_active             = $document->get_settings( 'bl_ir_active' );
 		$instant_redirect_data = array(
@@ -321,26 +320,9 @@ class Elementor {
 			'link_modified_gmt' => date( 'Y-m-d H:i:s', $current_gmt_time ),
 		);
 
-		if ( class_exists( 'BetterLinksPro' ) ) {
-			if ( $status = $document->get_settings( 'bl_ir_adv_status' ) ) {
-				$instant_redirect_data['link_status'] = $status;
-			}
+		$instant_redirect_data = apply_filters('betterlinks/elementor/editor/after_save_data', $instant_redirect_data, $document);
 
-			if ( $document->get_settings( 'bl_ir_adv_expire' ) === 'yes' ) {
-				$instant_redirect_data['expire'] = array(
-					'status'          => 1,
-					'type'            => $document->get_settings( 'bl_ir_adv_expire_after' ),
-					'clicks'          => $document->get_settings( 'bl_ir_adv_expire_after_clicks' ),
-					'date'            => $document->get_settings( 'bl_ir_adv_expire_after_date' ),
-					'redirect_status' => $document->get_settings( 'bl_ir_adv_expire_redirect' ) === 'yes' ? 1 : 0,
-					'redirect_url'    => $document->get_settings( 'bl_ir_adv_expire_redirect_url' ),
-				);
-			} else {
-				$instant_redirect_data['expire'] = '';
-			}
-		}
-
-		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+		Helper::clear_query_cache();
 
 		if ( 'undefined' === $link_id && 'yes' === $is_active ) {
 			$args = $this->sanitize_links_data( $instant_redirect_data );
@@ -355,7 +337,7 @@ class Elementor {
 				'short_url' => sanitize_text_field( $shortLink ),
 			);
 			$this->delete_link( $args );
-			\BetterLinks\Helper::delete_link_meta( $args['ID'], 'keywords' );
+			Helper::delete_link_meta( $args['ID'], 'keywords' );
 		}
 	}
 }
