@@ -5,7 +5,7 @@ Tags: affiliate links, cloaking, link shortener, short links, redirects
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -79,6 +79,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Password Protected Redirect [PRO]
 - Customize Link Preview [PRO]
 - Custom Scripts [PRO]
+- Custom Domain [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
@@ -156,6 +157,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 2.1.2 - 07/07/2024 =
+
+- Fixed: Uncaught Error for using a scalar value as an array
+- Few minor bug fixes & improvement
 
 = 2.1.1 - 26/06/2024 =
 
