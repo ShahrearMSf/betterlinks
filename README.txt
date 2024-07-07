@@ -79,6 +79,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Password Protected Redirect [PRO]
 - Customize Link Preview [PRO]
 - Custom Scripts [PRO]
+- Custom Domain [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
