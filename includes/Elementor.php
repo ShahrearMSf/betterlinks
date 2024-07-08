@@ -23,6 +23,7 @@ class Elementor {
 			add_action( 'elementor/editor/after_enqueue_scripts', array( $this, 'elementor_editor_assets' ) );
 			add_action( 'elementor/documents/register_controls', array( $this, 'instant_redirect_controls' ) );
 			add_action( 'elementor/editor/after_save', array( $this, 'handle_instant_redirect_data' ), 10 );
+			add_filter( 'elementor/document/save/data', array( $this, 'handle_page_data' ) );
 		}
 	}
 
@@ -117,7 +118,7 @@ class Elementor {
 	 * @param Any $data - Data.
 	 */
 	public function disable_elementor_preview_redirect( $data ) {
-		$elementor_preview = isset( $_GET['elementor-preview'] ) ;
+		$elementor_preview = isset( $_GET['elementor-preview'] );
 
 		if ( $elementor_preview ) {
 			return false;
@@ -302,11 +303,12 @@ class Elementor {
 		$link                  = Helper::get_link_by_short_url( $shortLink );
 		$link_id               = isset( $link[0]['ID'] ) ? $link[0]['ID'] : 'undefined';
 		$is_active             = $document->get_settings( 'bl_ir_active' );
+		$redirect_type         = $document->get_settings( 'bl_ir_redirect_type' );
 		$instant_redirect_data = array(
 			'ID'                => $link_id,
 			'target_url'        => $document->get_settings( 'bl_ir_target_url' ),
 			'cat_id'            => $document->get_settings( 'bl_ir_link_category' ),
-			'redirect_type'     => $document->get_settings( 'bl_ir_redirect_type' ),
+			'redirect_type'     => ! empty( $redirect_type ) ? $redirect_type : '307',
 			'nofollow'          => $document->get_settings( 'bl_ir_link_options_nofollow' ) === 'yes' ? 1 : '',
 			'param_forwarding'  => $document->get_settings( 'bl_ir_link_options_parameter_forwarding' ) === 'yes' ? 1 : '',
 			'sponsored'         => $document->get_settings( 'bl_ir_link_options_sponsored' ) === 'yes' ? 1 : '',
@@ -314,24 +316,26 @@ class Elementor {
 			'link_slug'         => $this->gen_slug_from_title( $title ),
 			'link_title'        => $title,
 			'short_url'         => $shortLink,
-			'link_date'         => date( 'Y-m-d H:i:s', $current_time ),
-			'link_date_gmt'     => date( 'Y-m-d H:i:s', $current_gmt_time ),
-			'link_modified'     => date( 'Y-m-d H:i:s', $current_time ),
-			'link_modified_gmt' => date( 'Y-m-d H:i:s', $current_gmt_time ),
+			'link_date'         => gmdate( 'Y-m-d H:i:s', $current_time ),
+			'link_date_gmt'     => gmdate( 'Y-m-d H:i:s', $current_gmt_time ),
+			'link_modified'     => gmdate( 'Y-m-d H:i:s', $current_time ),
+			'link_modified_gmt' => gmdate( 'Y-m-d H:i:s', $current_gmt_time ),
 		);
 
-		$instant_redirect_data = apply_filters('betterlinks/elementor/editor/after_save_data', $instant_redirect_data, $document);
+		$instant_redirect_data = apply_filters( 'betterlinks/elementor/editor/after_save_data', $instant_redirect_data, $document );
 
-		Helper::clear_query_cache();
+		if ( empty( $instant_redirect_data['target_url'] ) ) {
+			return;
+		}
 
 		if ( 'undefined' === $link_id && 'yes' === $is_active ) {
 			$args = $this->sanitize_links_data( $instant_redirect_data );
 			$this->insert_link( $args );
-		} elseif ( 'undefined' === $link_id && 'yes' === $is_active ) {
+		} elseif ( 'undefined' !== $link_id && 'yes' === $is_active ) {
 			$args = $this->sanitize_links_data( $instant_redirect_data );
 			unset( $args['link_date'], $args['link_date_gmt'] );
 			$this->update_link( $args );
-		} elseif ( 'undefined' === $link_id && 'yes' === $is_active ) {
+		} elseif ( 'undefined' !== $link_id && 'yes' !== $is_active ) {
 			$args = array(
 				'ID'        => sanitize_text_field( $link_id ),
 				'short_url' => sanitize_text_field( $shortLink ),
@@ -339,5 +343,17 @@ class Elementor {
 			$this->delete_link( $args );
 			Helper::delete_link_meta( $args['ID'], 'keywords' );
 		}
+	}
+
+	/**
+	 * Handle elementor page settings data
+	 *
+	 * @param array|mixed $data - page data.
+	 */
+	public function handle_page_data( $data ) {
+		if ( empty( $data['settings']['bl_ir_target_url'] ) || filter_var( $data['settings']['bl_ir_target_url'], FILTER_VALIDATE_URL ) === false ) {
+			$data['settings']['bl_ir_active'] = '';
+		}
+		return $data;
 	}
 }
