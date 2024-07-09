@@ -14,8 +14,6 @@ const propTypes = {
 	catSlug: PropTypes.string,
 };
 
-const defaultProps = {};
-
 const CatHeader = (props) => {
 	const { catId, catName, catSlug, update_cat, delete_cat } = props;
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -102,7 +100,6 @@ const CatHeader = (props) => {
 };
 
 CatHeader.propTypes = propTypes;
-CatHeader.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
 	links: state.links,

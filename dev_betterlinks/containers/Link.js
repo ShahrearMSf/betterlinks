@@ -47,13 +47,9 @@ const propTypes = {
 	submitHandler: PropTypes.func,
 };
 
-const defaultProps = {
-	isShowIcon: true,
-};
-
 export const Link = (props) => {
 	const {
-		isShowIcon,
+		isShowIcon = true,
 		catId,
 		data,
 		submitHandler, // this is add_new_link function
@@ -723,4 +719,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);
 Link.propTypes = propTypes;
-Link.defaultProps = defaultProps;

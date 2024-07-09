@@ -6,12 +6,8 @@ const propTypes = {
 	is_pro_feature: PropTypes.bool,
 	title: PropTypes.string,
 };
-const defaultProps = {
-	is_pro_feature: false,
-	title: '',
-};
 
-const ToggleTitle = ({ is_pro_feature = false, title }) => {
+const ToggleTitle = ({ is_pro_feature = false, title = '' }) => {
 	return (
 		<>
 			<img width="15" src={plugin_root_url + '/assets/images/logo-large.svg'} style={{ marginRight: '5px' }} />
@@ -22,6 +18,5 @@ const ToggleTitle = ({ is_pro_feature = false, title }) => {
 };
 
 ToggleTitle.propTypes = propTypes;
-ToggleTitle.defaultProps = defaultProps;
 
 export default ToggleTitle;

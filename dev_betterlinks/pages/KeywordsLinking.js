@@ -12,7 +12,7 @@ import AddNewKeywords from 'containers/AddNewKeywords';
 import { parseLinksForKeywordsListing, parseLinksForUpdateModal } from 'utils/helper';
 
 const propTypes = {};
-const defaultProps = {};
+
 const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
 
@@ -80,7 +80,6 @@ const KeywordsLinking = (props) => {
 };
 
 KeywordsLinking.propTypes = propTypes;
-KeywordsLinking.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
 	keywords: state.keywords,

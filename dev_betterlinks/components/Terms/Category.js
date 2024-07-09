@@ -10,8 +10,6 @@ const propTypes = {
 	setFieldValue: PropTypes.func,
 };
 
-const defaultProps = {};
-
 const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 	const [field] = useField(fieldName);
 
@@ -60,6 +58,5 @@ const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 		</React.Fragment>
 	);
 };
-export default Category;
 Category.propTypes = propTypes;
-Category.defaultProps = defaultProps;
+export default Category;

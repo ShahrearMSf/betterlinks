@@ -14,11 +14,6 @@ const propTypes = {
 	render: PropTypes.func,
 };
 
-const defaultProps = {
-	label: '',
-	render: () => {},
-};
-
 const TopBar = ({ is_pro = false, ...props }) => {
 	const { propsForAnalytics } = props;
 	const { darkMode: mode } = props.activity;
@@ -48,7 +43,7 @@ const TopBar = ({ is_pro = false, ...props }) => {
 			<div className="topbar__logo_container">
 				<div className="topbar__logo">
 					<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
-					<span className="topbar__logo__text">{props.label}</span>
+					<span className="topbar__logo__text">{props.label || ''}</span>
 					{is_pro && <span class="pro-badge">Pro</span>}
 				</div>
 
@@ -93,7 +88,6 @@ const TopBar = ({ is_pro = false, ...props }) => {
 };
 
 TopBar.propTypes = propTypes;
-TopBar.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
 	activity: state.activity,
