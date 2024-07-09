@@ -104,7 +104,6 @@ class Utils {
 
 		$target_url = $this->addScheme( $data['target_url'] );
 		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
-			// $   target_url = $   targ    et_url . '?' . $    param;
 			$_target_url   = wp_parse_url( $target_url );
 			$_query_params = array();
 			wp_parse_str( $param, $_query_params );
@@ -248,66 +247,6 @@ class Utils {
 		return file_put_contents( $file, wp_json_encode( $temp_array ) );
 	}
 
-	/**
-	 * @param string $request_uri - REQUEST_URI.
-	 *
-	 * @return boolean - returns true if the request uri is self site url
-	 */
-	protected function is_self_url( $request_uri ) {
-		// if the referer url is password-protected-form page, then return false.
-		if ( str_contains( $request_uri, 'password-protected-form?short_url' ) ) {
-			return false;
-		}
-		$is_self_url = url_to_postid( $request_uri );
-		return ! empty( $is_self_url );
-	}
-
-	/**
-	 * @param string $request_uri REQUEST_URI.
-	 *
-	 * @return string Short URL
-	 */
-	public function get_protected_self_url_short_link( $request_uri ) {
-		global $wpdb;
-		$is_self_url = $this->is_self_url( $request_uri );
-		if ( empty( $is_self_url ) ) {
-			return false;
-		}
-
-		$sql = "SELECT l.short_url FROM {$wpdb->prefix}betterlinks AS l 
-                LEFT JOIN {$wpdb->prefix}betterlinks_password as p 
-                    on l.ID=p.link_id 
-                where l.target_url='{$request_uri}' and p.status='1';";
-
-		$short_url = $wpdb->get_var( $sql ); // phpcs:ignore
-		return $short_url;
-	}
-
-	public function referer_short_url( $referer ) {
-		if ( empty( $referer ) ) {
-			return false;
-		}
-		$password_param = explode( '?short_url=', $referer );
-		if ( count( $password_param ) > 1 ) {
-			return $password_param[1];
-		}
-		return false;
-	}
-
-	/**
-	 * @param boolean $remember_cookies - remember cookies setting enabled or not
-	 * @param integer $id - id of the short link
-	 *
-	 * @return boolean - returns true if password is okay, and cookie is valid, otherwise returns false
-	 */
-	public function passsword_cookie_enabled( $remember_cookies, $id ) {
-		$cookie_name = "betterlinks_pass_protect_{$id}";
-		if ( ! empty( $remember_cookies ) && isset( $_COOKIE[ $cookie_name ] ) && class_exists( '\BetterLinksPro\Helper' ) ) {
-			$result = \BetterLinksPro\Helper::check_password( $_COOKIE[ $cookie_name ], $id );
-			return $result;
-		}
-		return false;
-	}
 
 	public function create_new_link( $title, $target_url, $settings ) {
 		$date             = wp_date( 'Y-m-d H:i:s' );
@@ -339,6 +278,7 @@ class Utils {
 			'powered_by'        => $powered_by,
 		);
 		$initial_values = apply_filters( 'betterlinks_before_cle', $initial_values, $settings );
+
 		$helper->clear_query_cache();
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );
