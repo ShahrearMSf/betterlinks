@@ -142,6 +142,7 @@ export const Link = (props) => {
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
+		redirect_type: '307',
 		cat_id: catId ? catId : null,
 		...settings.settings,
 		...objForGutenTargetBlank,
