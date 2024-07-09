@@ -19,7 +19,7 @@ export const {
 	page,
 	is_pro_enabled,
 	post_type,
-	betterlinks_links_option,
+	// betterlinks_links_option,
 	betterlinkspro_version,
 	is_extra_data_tracking_compatible,
 	menu_notice,
@@ -28,6 +28,7 @@ export const {
 	betterlinks_custom_domain_menu,
 	betterlinks_settings,
 	is_fbs_enabled,
+	prefix,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -200,12 +201,6 @@ export const modalCustomSmallStyles = {
 };
 
 export const copyToClipboard = (copyText) => {
-	// var tempInput = document.createElement('input');
-	// tempInput.value = copyText;
-	// document.body.appendChild(tempInput);
-	// tempInput.select();
-	// document.execCommand('copy');
-	// document.body.removeChild(tempInput);
 	clipboardCopy(copyText);
 	return;
 };
@@ -217,7 +212,7 @@ export const copyShortUrl = (shortUrl) => {
 };
 
 export const makeShortUrl = (shortUrl) => {
-	const site_link = betterLinksHooks.applyFilters('site_url', site_url);
+	const site_link = window?.betterlinksHooks?.applyFilters('site_url', site_url) || localStorage.getItem('btl_custom_domain') || site_url;
 	return shortUrl[0] === '/' ? site_link + shortUrl : site_link + '/' + shortUrl;
 };
 

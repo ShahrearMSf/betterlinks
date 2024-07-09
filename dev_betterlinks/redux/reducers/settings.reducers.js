@@ -2,7 +2,7 @@ import { FETCH_SETTINGS, FETCH_TRACKING_SETTINGS, UPDATE_OPTION } from 'redux/ac
 import { betterlinks_settings } from 'utils/helper';
 
 const initialSettingsState = {
-	...(betterlinks_settings && {
+	...(!!Object.keys(betterlinks_settings).length && {
 		settings: betterlinks_settings,
 	}),
 };

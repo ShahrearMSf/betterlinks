@@ -100,10 +100,6 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 		);
 	}
 
-	const getAffiliatePosition = (position) => {
-		// if (!position) return affiliateLinkPosition[0]['value'];
-		return affiliateLinkPosition.find((item) => item.value === affiliatePosition);
-	};
 	const onSetAffiliateDisclosure = (bool) => {
 		setChecked(bool);
 		edit_gutenberg_affiliate({
