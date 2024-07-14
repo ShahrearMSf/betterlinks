@@ -1014,7 +1014,7 @@ class Ajax {
 		);
 	}
 	public function get_post_types() {
-		$post_types = get_post_types();
+		$post_types = get_post_types(['public' => true]);
 		wp_send_json_success(
 			$post_types,
 			200

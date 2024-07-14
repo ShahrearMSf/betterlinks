@@ -11,7 +11,7 @@ import ReactQuill from 'react-quill';
 import CheckList from '../AutoLinkCreate/CheckList';
 import SelectTeaser from '../AutoLinkCreate/SelectTeaser';
 
-const AffiliateLinkDisclosure = ({ settings, update_option }) => {
+const AffiliateLinkDisclosure = ({ settings, update_option, postTypes }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
@@ -25,6 +25,7 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 							<>
 								<CheckList title={__('Affiliate Link Disclosure', 'betterlinks')} onClick={openUpgradeToProModal} />
 								<CheckList title={__('Enable Preview', 'betterlinks')} onClick={openUpgradeToProModal} />
+								<SelectTeaser title={__('Enable by Default', 'betterlinks')} onClick={openUpgradeToProModal} />
 								<SelectTeaser title={__('Disclosure Position', 'betterlinks')} onClick={openUpgradeToProModal} />
 								<div className="btl-role-item btl-form-group" style={{ marginBottom: '60px' }}>
 									<label className="btl-form-label">
@@ -38,7 +39,7 @@ const AffiliateLinkDisclosure = ({ settings, update_option }) => {
 								<CheckList title={__('Advanced Options', 'betterlinks')} onClick={openUpgradeToProModal} />
 							</>
 						)}
-						{betterLinksHooks.applyFilters('BetterLinksOptionsTabSettings', null, { ...props, ReactQuill })}
+						{betterLinksHooks.applyFilters('BetterLinksOptionsTabSettings', null, { ...props, postTypes, ReactQuill })}
 						{is_pro_enabled && (
 							<>
 								<button className="button-primary btn-save-settings" type="submit">

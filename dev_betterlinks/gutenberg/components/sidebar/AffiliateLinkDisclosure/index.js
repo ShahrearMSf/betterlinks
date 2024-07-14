@@ -27,16 +27,17 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 	const [html, setHtml] = useState('');
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const postType = wp.data.select('core/editor').getCurrentPostType();
-	const { affiliate_link_disclosure_default_enable } = betterlinks_links_option || {};
+	const { affiliate_link_disclosure_default_post_type } = betterlinks_links_option || {};
 
 	useEffect(() => {
+		const isAffiliateDisclosureEnabledForThisPostType = affiliate_link_disclosure_default_post_type?.split('|').includes(postType);
 		if (!postId) {
 			const post_id = wp.data.select('core/editor').getCurrentPostId();
 			setPostId(post_id);
 		}
 		const handleFetch = async () => {
 			const { data } = await get_affiliate_link_disclosure_post(postId);
-			const enable_affiliate_disclosure = data.includes('true') || (!data?.length && affiliate_link_disclosure_default_enable);
+			const enable_affiliate_disclosure = data.includes('true') || (!data?.length && isAffiliateDisclosureEnabledForThisPostType);
 			setChecked(enable_affiliate_disclosure);
 			edit_gutenberg_affiliate({
 				enable_affiliate_disclosure,

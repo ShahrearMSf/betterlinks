@@ -12,14 +12,14 @@ import CustomFields from './CustomFields';
 import { tabList } from 'utils/data';
 import FluentBoardSettings from 'components/FluentBoardSettings';
 
-const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
+const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings, postdatas }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
 		<CreateLinkExternally settings={settings} terms={terms} />,
 		is_fbs_enabled && <FluentBoardSettings settings={settings} terms={terms} />,
 		<ExternalAnalytics trackingSettings={trackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
-		<AffiliateLinkDisclosure settings={settings} />,
+		<AffiliateLinkDisclosure settings={settings} postTypes={postdatas?.postTypes || []} />,
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 	].filter(Boolean);
