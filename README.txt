@@ -160,7 +160,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 = 2.1.3 - 14/07/2024 =
 
-- Added: WordPress 6.6 compatibility
+- Added: WordPress 6.6 Compatibility
 - Few minor bug fixes & improvement
 
 = 2.1.2 - 07/07/2024 =
