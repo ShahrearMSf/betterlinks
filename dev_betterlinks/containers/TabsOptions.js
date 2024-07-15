@@ -11,8 +11,9 @@ import { is_fbs_enabled, is_pro_enabled } from 'utils/helper';
 import CustomFields from './CustomFields';
 import { tabList } from 'utils/data';
 import FluentBoardSettings from 'components/FluentBoardSettings';
+import AutoLinkKeywords from 'components/Teasers/AutoLinkKeywords';
 
-const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
+const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
 		<CreateLinkExternally settings={settings} terms={terms} />,
@@ -22,6 +23,7 @@ const TabsOptions = ({ settings, autoCreateLinkSettings, terms, trackingSettings
 		<AffiliateLinkDisclosure settings={settings} />,
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
+		<AutoLinkKeywords settings={settings} postdatas={postdatas} />,
 	].filter(Boolean);
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);

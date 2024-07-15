@@ -10,6 +10,7 @@ import Topbar from 'containers/TopBar';
 import ListKeywords from 'containers/ListKeywords';
 import AddNewKeywords from 'containers/AddNewKeywords';
 import { parseLinksForKeywordsListing, parseLinksForUpdateModal } from 'utils/helper';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 const propTypes = {};
 const defaultProps = {};
@@ -30,6 +31,9 @@ const KeywordsLinking = (props) => {
 	};
 
 	useEffect(() => {
+		if (!props.settings) {
+			props.fetch_settings_data();
+		}
 		if (!props.postdatas.fetchedAll) {
 			props.fetch_post_types_data();
 		}
@@ -62,7 +66,9 @@ const KeywordsLinking = (props) => {
 				<>
 					<Topbar
 						label={__('Auto-Link Keywords', 'betterlinks')}
-						render={() => <AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} />}
+						render={() => (
+							<AddNewKeywords postTypesProps={postTypesProps} linksForUpdateModal={linksForUpdateModal} keywords={props.keywords} settings={props?.settings?.settings || {}} />
+						)}
 					/>
 					<ListKeywords
 						search={search}
@@ -86,12 +92,14 @@ const mapStateToProps = (state) => ({
 	keywords: state.keywords,
 	links: state.links,
 	postdatas: state.postdatas,
+	settings: state.settings,
 });
 const mapDispatchToProps = (dispatch) => {
 	return {
 		fetch_keywords: bindActionCreators(fetch_keywords, dispatch),
 		fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
 		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
+		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(KeywordsLinking);
