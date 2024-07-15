@@ -30,6 +30,7 @@ vendor/jaybizzle/crawler-detect/README.md
 jsconfig.json
 *.lock
 gulpfile.js
+*.pot~~
 
 vendor/priyomukul/wp-notice/composer.json
 vendor/priyomukul/wp-notice/.gitignore
