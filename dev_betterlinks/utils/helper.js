@@ -390,7 +390,7 @@ export const makeRequest = async (payload = {}) => {
 	);
 };
 
-export const getAutoLinksInitialValues = (data) => {
+export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 	if (Object.keys(data).length) {
 		return {
 			keywords: data.keywords,
@@ -416,14 +416,14 @@ export const getAutoLinksInitialValues = (data) => {
 		postType: '',
 		category: '',
 		tags: '',
-		openNewTab: '',
-		useNoFollow: '',
-		caseSensitive: '',
-		keywordBefore: '',
-		keywordAfter: '',
-		leftBoundary: '',
-		rightBoundary: '',
-		limit: 100,
+		openNewTab: autoLinkKeywordSettings?.openNewTab || '',
+		useNoFollow: autoLinkKeywordSettings?.useNoFollow || '',
+		caseSensitive: autoLinkKeywordSettings?.caseSensitive || '',
+		keywordBefore: autoLinkKeywordSettings?.keywordBefore || '',
+		keywordAfter: autoLinkKeywordSettings?.keywordAfter || '',
+		leftBoundary: autoLinkKeywordSettings?.leftBoundary || '',
+		rightBoundary: autoLinkKeywordSettings?.rightBoundary || '',
+		limit: autoLinkKeywordSettings?.limit || 100,
 	};
 };
 

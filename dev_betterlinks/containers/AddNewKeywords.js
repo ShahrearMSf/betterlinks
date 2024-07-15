@@ -68,7 +68,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 					<i className="btl btl-cancel" />
 				</span>
 				<Formik
-					initialValues={getAutoLinksInitialValues(data)}
+					initialValues={getAutoLinksInitialValues(data, settings?.alk || {})}
 					onSubmit={(values, actions) => {
 						const thisItemIndex = keywords.data.findIndex((item) => data === item);
 						const formDuplicate = [];
@@ -273,33 +273,15 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 										</button>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="openNewTab"
-													type="checkbox"
-													checked={props.values?.openNewTab || !!settings?.alk?.openNewTab ? 'checked' : ''}
-													onChange={() => props.setFieldValue('openNewTab', !props.values.openNewTab)}
-												/>
+												<Field className="btl-check" name="openNewTab" type="checkbox" onChange={() => props.setFieldValue('openNewTab', !props.values.openNewTab)} />
 												<span className="text">{__('Open New Tab', 'betterlinks')}</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="useNoFollow"
-													type="checkbox"
-													checked={props.values?.useNoFollow || !!settings?.alk?.useNoFollow ? 'checked' : ''}
-													onChange={() => props.setFieldValue('useNoFollow', !props.values.useNoFollow)}
-												/>
+												<Field className="btl-check" name="useNoFollow" type="checkbox" onChange={() => props.setFieldValue('useNoFollow', !props.values.useNoFollow)} />
 												<span className="text">{__('Use No Follow', 'betterlinks')}</span>
 											</label>
 											<label className="btl-checkbox-field">
-												<Field
-													className="btl-check"
-													name="caseSensitive"
-													type="checkbox"
-													checked={props.values?.caseSensitive || !!settings?.alk?.caseSensitive ? 'checked' : ''}
-													onChange={() => props.setFieldValue('caseSensitive', !props.values.caseSensitive)}
-												/>
+												<Field className="btl-check" name="caseSensitive" type="checkbox" onChange={() => props.setFieldValue('caseSensitive', !props.values.caseSensitive)} />
 												<span className="text">{__('Case Sensitive', 'betterlinks')}</span>
 											</label>
 										</div>
@@ -319,8 +301,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 													className="btl-modal-select--mini"
 													classNamePrefix="btl-react-select"
 													options={boundary}
-													// value={boundary.filter((item) => item.value == (props.values.leftBoundary || settings?.alk?.leftBoundary))}
-													defaultValue={boundary.filter((item) => item.value == (props.values.leftBoundary || settings?.alk?.leftBoundary || ''))}
+													value={boundary.filter((item) => item.value == props.values.leftBoundary)}
 													onChange={(option) => {
 														props.setFieldValue('leftBoundary', option.value);
 													}}
