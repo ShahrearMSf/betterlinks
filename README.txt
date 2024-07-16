@@ -158,7 +158,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 2.1.3 - 14/07/2024 =
+= 2.1.3 - 16/07/2024 =
 
 - Added: WordPress 6.6 Compatibility
 - Few minor bug fixes & improvement
