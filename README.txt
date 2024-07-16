@@ -2,9 +2,9 @@
 Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hrrarya
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, cloaking, link shortener, short links, redirects
-Requires at least: 6.2
+Requires at least: 5.0
 Tested up to: 6.6
-Requires PHP: 7.4
+Requires PHP: 7.0
 Stable tag: 2.1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
