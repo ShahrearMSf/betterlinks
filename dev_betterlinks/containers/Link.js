@@ -47,13 +47,9 @@ const propTypes = {
 	submitHandler: PropTypes.func,
 };
 
-const defaultProps = {
-	isShowIcon: true,
-};
-
 export const Link = (props) => {
 	const {
-		isShowIcon,
+		isShowIcon = true,
 		catId,
 		data,
 		submitHandler, // this is add_new_link function
@@ -142,6 +138,7 @@ export const Link = (props) => {
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
+		redirect_type: '307',
 		cat_id: catId ? catId : null,
 		...settings.settings,
 		...objForGutenTargetBlank,
@@ -722,4 +719,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);
 Link.propTypes = propTypes;
-Link.defaultProps = defaultProps;

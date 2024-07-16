@@ -54,9 +54,10 @@ const Settings = (props) => {
 		<GoPremium />,
 	]);
 	useEffect(() => {
-		// window.scrollTo(0, 220);
 		if (!settings) {
 			props.fetch_settings_data();
+		}
+		if (!props?.settings?.tracking) {
 			props.fetch_tracking_settings();
 		}
 		if (!props.postdatas.fetchedAll) {

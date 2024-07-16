@@ -78,8 +78,10 @@
 						box-shadow: 0 10px 15px rgba($danger, 0.25);
 					}
 				}
-				border-radius: 5px;
-				cursor: pointer;
+				& {
+					border-radius: 5px;
+					cursor: pointer;
+				}
 				&:not(.btl-broken-link-checker-start-button-disabled):hover {
 					background: $success;
 					color: $white;
@@ -288,7 +290,9 @@
 				padding-left: 40px;
 			}
 		}
-		background-color: transparent;
+		& {
+			background-color: transparent;
+		}
 		.rdt_TableHead {
 			margin-bottom: 12px;
 			.rdt_TableHeadRow {

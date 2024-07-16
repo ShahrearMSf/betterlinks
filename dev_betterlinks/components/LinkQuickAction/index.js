@@ -20,21 +20,13 @@ const propTypes = {
 	handle_link_favorite: PropTypes.func,
 };
 
-const defaultProps = {
-	isShowAnalytics: false,
-	isShowVisitLink: true,
-	isShowCopyLink: true,
-	isShowEditLink: true,
-	isShowDeleteLink: true,
-};
-
 const LinkQuickAction = ({
 	isAlowQr,
-	isShowCopyLink,
-	isShowAnalytics,
-	isShowVisitLink,
-	isShowEditLink,
-	isShowDeleteLink,
+	isShowCopyLink = true,
+	isShowAnalytics = false,
+	isShowVisitLink = true,
+	isShowEditLink = true,
+	isShowDeleteLink = true,
 	data,
 	catId,
 	catName,
@@ -123,6 +115,5 @@ const LinkQuickAction = ({
 	);
 };
 LinkQuickAction.propTypes = propTypes;
-LinkQuickAction.defaultProps = defaultProps;
 
 export default LinkQuickAction;
