@@ -1,6 +1,6 @@
 {
 	"name": "betterlinks",
-	"version": "0.0.0",
+	"version": "2.1.4",
 	"description": "Better Links",
 	"main": "index.js",
 	"scripts": {

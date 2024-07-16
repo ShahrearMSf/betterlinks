@@ -38,6 +38,10 @@ class Notice {
 	public function btlpro_compatibility_notices() {
 		global $wp_version;
 
+		if( ! defined( 'BETTERLINKS_PRO_VERSION' ) ) {
+			return;
+		}
+
 		if( strpos( $wp_version, '6.6' ) !== false  && version_compare( BETTERLINKS_PRO_VERSION, '2.0.0', '<=' ) ){
 			$message = sprintf('
 			<strong>%1$s</strong>: %2$s <strong>v2.0.1</strong> %3$s <strong>6.6</strong>',
