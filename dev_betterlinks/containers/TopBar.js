@@ -14,12 +14,7 @@ const propTypes = {
 	render: PropTypes.func,
 };
 
-const defaultProps = {
-	label: '',
-	render: () => {},
-};
-
-const TopBar = ({ is_pro = false, ...props }) => {
+const TopBar = ({ is_pro = false, render = () => {}, ...props }) => {
 	const { propsForAnalytics } = props;
 	const { darkMode: mode } = props.activity;
 	const [isDarkMode, setIsDarkMode] = useState(mode);
@@ -52,7 +47,7 @@ const TopBar = ({ is_pro = false, ...props }) => {
 					{is_pro && <span class="pro-badge">Pro</span>}
 				</div>
 
-				{props.render()}
+				{render()}
 			</div>
 			<div className="topbar-inner">
 				{currentPage === 'betterlinks' && (
@@ -93,7 +88,7 @@ const TopBar = ({ is_pro = false, ...props }) => {
 };
 
 TopBar.propTypes = propTypes;
-TopBar.defaultProps = defaultProps;
+// TopBar.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
 	activity: state.activity,

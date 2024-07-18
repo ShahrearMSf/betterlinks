@@ -6,8 +6,6 @@ const propTypes = {
 	shortUrl: PropTypes.string,
 };
 
-const defaultProps = {};
-
 export default function Copy({ siteUrl, shortUrl }) {
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const copyShortUrlHandler = (shortUrl) => {
@@ -22,4 +20,3 @@ export default function Copy({ siteUrl, shortUrl }) {
 }
 
 Copy.propTypes = propTypes;
-Copy.defaultProps = defaultProps;

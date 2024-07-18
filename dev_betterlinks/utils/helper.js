@@ -832,9 +832,8 @@ export const get_labels = (clicks) => {
 };
 
 export const pro_version_check = (version, compare = '>=') => {
-	if (!is_pro_enabled) return true;
-	if (!betterlinkspro_version) return null;
-	if (!version) return null;
+	if (!betterlinkspro_version) return true;
+	if (!version) return false;
 
 	const pro_v_arr = betterlinkspro_version.split('.');
 	const v_arr = version.split('.');

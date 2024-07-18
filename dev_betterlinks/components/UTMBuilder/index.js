@@ -7,8 +7,6 @@ import { plugin_root_url } from 'utils/helper';
 
 const propTypes = {};
 
-const defaultProps = {};
-
 export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler }) {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
@@ -138,4 +136,3 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 }
 
 UTMBuilder.propTypes = propTypes;
-UTMBuilder.defaultProps = defaultProps;

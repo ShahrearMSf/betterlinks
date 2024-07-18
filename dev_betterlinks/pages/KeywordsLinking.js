@@ -13,7 +13,7 @@ import { parseLinksForKeywordsListing, parseLinksForUpdateModal } from 'utils/he
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 
 const propTypes = {};
-const defaultProps = {};
+
 const KeywordsLinking = (props) => {
 	const [searchedText, setSearchedText] = useState('');
 
@@ -86,7 +86,6 @@ const KeywordsLinking = (props) => {
 };
 
 KeywordsLinking.propTypes = propTypes;
-KeywordsLinking.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
 	keywords: state.keywords,
