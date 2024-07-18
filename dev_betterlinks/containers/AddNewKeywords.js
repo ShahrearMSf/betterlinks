@@ -49,6 +49,66 @@ const AddNewKeywords = (props) => {
 		setChooseAbleSavedLink([]);
 	}
 
+	const __handleAutoLinkKeywordSubmit = (values, actions) => {
+		const thisItemIndex = keywords.data.findIndex((item) => data === item);
+		const formDuplicate = [];
+		const formKeywordsArr = (values.keywords || '').trim().split(',');
+		const newKeywordsArr = [];
+		for (const item of formKeywordsArr) {
+			const newItem = trimmed(item);
+			if (newItem) newKeywordsArr.push(newItem);
+			let x = 0;
+			for (const keyItem of keywords.data) {
+				if (x == thisItemIndex) {
+					x++;
+					continue;
+				}
+				const newKeyItemsArr = keyItem.keywords.split(',');
+				for (const keyWord of newKeyItemsArr) {
+					const newKeyword = trimmed(keyWord);
+					if (newItem.toLowerCase() === newKeyword.toLowerCase() && !formDuplicate.includes(newKeyword)) {
+						formDuplicate.push(newKeyword);
+					}
+				}
+				x++;
+			}
+		}
+		values.keywords = newKeywordsArr.join(', ');
+		if (formDuplicate.length > 0 || newKeywordsArr.length == 0) {
+			setDuplicate(formDuplicate);
+			return false;
+		}
+		if (values.leftBoundary === '' || values.keywordBefore === '') {
+			values.leftBoundary = '';
+			values.keywordBefore = '';
+		}
+		if (values.rightBoundary === '' || values.keywordAfter === '') {
+			values.rightBoundary = '';
+			values.keywordAfter = '';
+		}
+		const findLink = allLinks.find((link) => link.value == values.chooseLink);
+		if (!findLink) {
+			actions.setFieldError('chooseLink_error', __('Please Select a Link', 'betterlinks'));
+			return;
+		}
+		if (values.postType.includes('page') && (values.category.length > 0 || values.tags.length > 0)) {
+			actions.setFieldError('auto_link_keyword_update_error', __('Post Category & Tags is not available for page', 'betterlinks'));
+			return;
+		}
+		if (values.chooseLink) {
+			// check Left Boundary & Keyword Before
+			if (Object.keys(data).length > 0) {
+				update_keyword(values);
+			} else {
+				add_keyword(values);
+			}
+			actions.setSubmitting(false);
+			// reset
+			actions.resetForm();
+			closeModal();
+		}
+	};
+
 	return (
 		<React.Fragment>
 			{Object.keys(data).length > 0 ? (
@@ -66,68 +126,7 @@ const AddNewKeywords = (props) => {
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel" />
 				</span>
-				<Formik
-					initialValues={getAutoLinksInitialValues(data, settings?.alk || {})}
-					onSubmit={(values, actions) => {
-						const thisItemIndex = keywords.data.findIndex((item) => data === item);
-						const formDuplicate = [];
-						const formKeywordsArr = (values.keywords || '').trim().split(',');
-						const newKeywordsArr = [];
-						for (const item of formKeywordsArr) {
-							const newItem = trimmed(item);
-							if (newItem) newKeywordsArr.push(newItem);
-							let x = 0;
-							for (const keyItem of keywords.data) {
-								if (x == thisItemIndex) {
-									x++;
-									continue;
-								}
-								const newKeyItemsArr = keyItem.keywords.split(',');
-								for (const keyWord of newKeyItemsArr) {
-									const newKeyword = trimmed(keyWord);
-									if (newItem.toLowerCase() === newKeyword.toLowerCase() && !formDuplicate.includes(newKeyword)) {
-										formDuplicate.push(newKeyword);
-									}
-								}
-								x++;
-							}
-						}
-						values.keywords = newKeywordsArr.join(', ');
-						if (formDuplicate.length > 0 || newKeywordsArr.length == 0) {
-							setDuplicate(formDuplicate);
-							return false;
-						}
-						if (values.leftBoundary === '' || values.keywordBefore === '') {
-							values.leftBoundary = '';
-							values.keywordBefore = '';
-						}
-						if (values.rightBoundary === '' || values.keywordAfter === '') {
-							values.rightBoundary = '';
-							values.keywordAfter = '';
-						}
-						const findLink = allLinks.find((link) => link.value == values.chooseLink);
-						if (!findLink) {
-							actions.setFieldError('chooseLink_error', __('Please Select a Link', 'betterlinks'));
-							return;
-						}
-						if (values.postType.includes('page') && (values.category.length > 0 || values.tags.length > 0)) {
-							actions.setFieldError('auto_link_keyword_update_error', __('Post Category & Tags is not available for page', 'betterlinks'));
-							return;
-						}
-						if (values.chooseLink) {
-							// check Left Boundary & Keyword Before
-							if (Object.keys(data).length > 0) {
-								update_keyword(values);
-							} else {
-								add_keyword(values);
-							}
-							actions.setSubmitting(false);
-							// reset
-							actions.resetForm();
-							closeModal();
-						}
-					}}
-				>
+				<Formik initialValues={getAutoLinksInitialValues(data, settings?.alk || {})} onSubmit={__handleAutoLinkKeywordSubmit}>
 					{(props) => (
 						<Form className="w-100" onSubmit={props.handleSubmit}>
 							<div className="btl-entry-content">
