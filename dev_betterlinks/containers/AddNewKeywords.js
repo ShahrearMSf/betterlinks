@@ -14,12 +14,14 @@ const propTypes = {
 	data: PropTypes.object,
 };
 
-const AddNewKeywords = ({ data = {}, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps, children }) => {
+const AddNewKeywords = (props) => {
+	const { data = {}, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps, children } = props;
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
 	const [chooseAbleSavedLink, setChooseAbleSavedLink] = useState([]);
 	const { postTypes, postTags, postCategories } = postTypesProps;
+	const { settings } = props.settings;
 	const boundary = [
 		{ value: 'whitespace', label: 'White Space' },
 		{ value: 'comma', label: 'Comma' },
@@ -357,10 +359,14 @@ const AddNewKeywords = ({ data = {}, add_keyword, update_keyword, keywords, link
 
 AddNewKeywords.propTypes = propTypes;
 
+const mapStateToProps = (state) => ({
+	settings: state.settings,
+});
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		add_keyword: bindActionCreators(add_keyword, dispatch),
 		update_keyword: bindActionCreators(update_keyword, dispatch),
 	};
 };
-export default connect(null, mapDispatchToProps)(AddNewKeywords);
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewKeywords);

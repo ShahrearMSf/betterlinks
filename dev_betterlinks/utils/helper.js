@@ -413,9 +413,9 @@ export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 	return {
 		keywords: '',
 		chooseLink: '',
-		postType: '',
-		category: '',
-		tags: '',
+		postType: autoLinkKeywordSettings?.postType || '',
+		category: autoLinkKeywordSettings?.category || '',
+		tags: autoLinkKeywordSettings?.tags || '',
 		openNewTab: autoLinkKeywordSettings?.openNewTab || '',
 		useNoFollow: autoLinkKeywordSettings?.useNoFollow || '',
 		caseSensitive: autoLinkKeywordSettings?.caseSensitive || '',
