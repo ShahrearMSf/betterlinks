@@ -9,8 +9,6 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 
 const propTypes = {};
 
-const defaultProps = {};
-
 export default function BrokenLinks(props) {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const openUpgradeToProModal = () => {
@@ -151,4 +149,3 @@ export default function BrokenLinks(props) {
 }
 
 BrokenLinks.propTypes = propTypes;
-BrokenLinks.defaultProps = defaultProps;

@@ -21,8 +21,6 @@ const customStyles = {
 
 const propTypes = {};
 
-const defaultProps = {};
-
 export default function UpgradeToPro({ isOpenModal, closeModal }) {
 	return (
 		<React.Fragment>
@@ -47,4 +45,3 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 }
 
 UpgradeToPro.propTypes = propTypes;
-UpgradeToPro.defaultProps = defaultProps;

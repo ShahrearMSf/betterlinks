@@ -14,10 +14,7 @@ const propTypes = {
 	data: PropTypes.object,
 };
 
-const defaultProps = {
-	data: {},
-};
-const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps, children }) => {
+const AddNewKeywords = ({ data = {}, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps, children }) => {
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
@@ -358,7 +355,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 };
 
 AddNewKeywords.propTypes = propTypes;
-AddNewKeywords.defaultProps = defaultProps;
 
 const mapDispatchToProps = (dispatch) => {
 	return {

@@ -32,6 +32,28 @@ class Notice {
 		}
 				
 		add_action( 'in_admin_header', [ $this, 'remove_admin_notice' ] );
+		add_action( 'btl_compatibity_notices', [$this, 'btlpro_compatibility_notices'] );
+	}
+
+	public function btlpro_compatibility_notices() {
+		global $wp_version;
+
+		if( ! defined( 'BETTERLINKS_PRO_VERSION' ) ) {
+			return;
+		}
+
+		if( strpos( $wp_version, '6.6' ) !== false  && version_compare( BETTERLINKS_PRO_VERSION, '2.0.0', '<=' ) ){
+			$message = sprintf('
+			<strong>%1$s</strong>: %2$s <strong>v2.0.1</strong> %3$s <strong>6.6</strong>',
+			__('Warning', 'betterlinks'),
+			__('Please update your BetterLinks Pro plugin to', 'betterlinks'),
+			__('to ensure compatibility with WordPress', 'betterlinks')
+		);
+	
+			$notice = sprintf( '<div style="padding: 10px;" class="notice notice-warning">%2$s</div>', 'betterlinks', $message );
+	
+			echo wp_kses_post( $notice );
+		}
 	}
 
 	public function remove_admin_notice() {
@@ -48,6 +70,7 @@ class Notice {
             // To showing notice in BetterLinks page
 			add_action( 'admin_notices', function () {
 				do_action('btl_admin_notices');
+				do_action('btl_compatibity_notices');
 				Notice\PrettyLinks::init();
 				Notice\Simple301::init();
 				Notice\ThirstyAffiliates::init();
@@ -62,9 +85,9 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-domain/'>
+				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-domain/' style='display: inline-block'>
 					%s
-				</a>&nbsp;
+				</a>
 				%s
 				<a target='_blank' href='https://betterlinks.io/changelog/'>
 					%s

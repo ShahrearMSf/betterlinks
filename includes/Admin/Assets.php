@@ -50,7 +50,7 @@ class Assets
             wp_enqueue_script(
                 'betterlinks-admin-core',
                 BETTERLINKS_ASSETS_URI . 'js/betterlinks.core.min.js',
-                $dependencies['dependencies'],
+                array_merge($dependencies['dependencies'], ['regenerator-runtime']),
                 $dependencies['version'],
                 true
             );
@@ -93,7 +93,7 @@ class Assets
             wp_enqueue_script(
                 'betterlinks-intflboards',
                 BETTERLINKS_ASSETS_URI . 'js/betterlinks-intflboards.core.min.js',
-                $dependencies['dependencies'],
+                array_merge($dependencies['dependencies'], ['regenerator-runtime']),
                 $dependencies['version'],
                 [
                     'in_footer' => true,
@@ -128,8 +128,8 @@ class Assets
         wp_enqueue_script(
             'betterlinks-gutenberg',
             BETTERLINKS_ASSETS_URI . 'js/betterlinks-gutenberg.core.min.js',
-            ['wp-edit-post', 'wp-plugins', 'wp-core-data', 'wp-data', 'wp-block-editor', 'wp-editor', 'wp-components', 'wp-blocks', 'wp-keycodes', 'wp-dom', 'wp-i18n', 'wp-hooks', 'react', 'react-dom'],
-            $dependencies['version'],
+            ['wp-edit-post', 'wp-plugins', 'wp-core-data', 'wp-data', 'wp-block-editor', 'wp-editor', 'wp-components', 'wp-blocks', 'wp-keycodes', 'wp-dom', 'wp-i18n', 'wp-hooks', 'react', 'react-dom', 'regenerator-runtime'],
+            filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js'),
             true
         );
         // $betterlinks_links_option =  json_decode(get_option('betterlinks_links'), true);
