@@ -64,6 +64,17 @@ class Utils {
 		if ( ! $data || $comparable_url === $destination_url ) {
 			return;
 		}
+		$target_url = $this->addScheme( $data['target_url'] );
+		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
+			// $   target_url = $   targ    et_url . '?' . $    param;
+			$_target_url   = wp_parse_url( $target_url );
+			$_query_params = array();
+			wp_parse_str( $param, $_query_params );
+			// error_log( print_r( $_query_params, true ) );
+			$data['query_params'] = build_query( $_query_params );
+			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . $data['query_params'];
+		}
+
 		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
             $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
 			$dd         = new DeviceDetector( $user_agent );
@@ -101,15 +112,6 @@ class Utils {
 		header( 'Cache-Control: no-cache' );
 		header( 'Pragma: no-cache' );
 		header( 'X-Redirect-Powered-By:  https://www.betterlinks.io/' );
-
-		$target_url = $this->addScheme( $data['target_url'] );
-		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
-			// $   target_url = $   targ    et_url . '?' . $    param;
-			$_target_url   = wp_parse_url( $target_url );
-			$_query_params = array();
-			wp_parse_str( $param, $_query_params );
-			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . build_query( $_query_params );
-		}
 
 		switch ( $data['redirect_type'] ) {
 			case '301':
@@ -209,6 +211,7 @@ class Utils {
 			$click_data['browser_version'] = $data['browser_version'];
 			$click_data['os_version']      = $data['os_version'];
 			$click_data['language']        = $data['language'];
+			$click_data['query_params']	   = $data['query_params'];	
 		}
 
 		$arg = apply_filters( 'betterlinks/link/insert_click_arg', $click_data );

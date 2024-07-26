@@ -722,6 +722,13 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				},
 				sortable: false,
 			},
+			{
+				name: __('Parameters', 'betterlinks'),
+				selector: 'query_params',
+				// width: '80px',
+				cell: (row) => <div>{row.query_params}</div>,
+				sortable: false,
+			},
 		];
 
 		const analyticsArr = [...Object.values(analytics || {}).map((item) => item.value)];

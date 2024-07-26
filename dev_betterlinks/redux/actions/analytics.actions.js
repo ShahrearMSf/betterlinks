@@ -6,6 +6,7 @@ const defaultAnalyticsSettings = [
 	{ label: 'Referer', value: 'referer' },
 	{ label: 'OS', value: 'os' },
 	{ label: 'Device', value: 'device' },
+	{ label: 'Parameters', value: 'query_params' },
 ];
 
 export const fetch_analytics_settings = () => (dispatch) => {

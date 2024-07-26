@@ -165,7 +165,7 @@ trait Clicks {
 			return $results;
 		}
 		global $wpdb;
-		$fields = 'ID, link_id, ip, browser, referer, os, device, created_at';
+		$fields = 'ID, link_id, ip, browser, referer, os, device,query_params, created_at';
 
 		$query   = "SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id={$id} AND created_at BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59' ORDER BY created_at DESC";
 		$results = $wpdb->get_results( $query, ARRAY_A );

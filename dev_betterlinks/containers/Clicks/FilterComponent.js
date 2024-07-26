@@ -24,6 +24,10 @@ const FilterComponent = (props) => {
 			label: 'Device',
 			value: 'device',
 		},
+		{
+			label: 'Parameters',
+			value: 'query_params',
+		},
 	];
 	return (
 		<>
