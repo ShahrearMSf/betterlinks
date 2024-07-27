@@ -642,24 +642,6 @@ export const sortFunction = (title) => (rowA, rowB) => {
 	else if (b > a) return -1;
 	return 0;
 };
-const Blured = styled.span`
-	filter: blur(2px);
-	user-select: none;
-`;
-const osData = ['Windows', 'Linux', 'Mac', 'iOS', 'Android'];
-const deviceData = ['mobile', 'desktop', 'mobile', 'desktop'];
-const BluredData = ({ data = '' }) => {
-	if ('os' === data) {
-		const rndInt = Math.floor(Math.random() * 4) + 1;
-		return <span style={{ filter: 'blur(2px)' }}>{osData[rndInt]}</span>;
-	}
-	const rndInt = Math.floor(Math.random() * 3) + 1;
-	return (
-		<span style={{ filter: 'blur(2px)' }}>
-			<img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(deviceData[rndInt])}.svg`} alt="icon" />
-		</span>
-	);
-};
 
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
@@ -706,6 +688,13 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				),
 			},
 			{
+				name: __('Parameters', 'betterlinks'),
+				selector: 'query_params',
+				// width: '80px',
+				cell: (row) => <div>{row.query_params}</div>,
+				sortable: false,
+			},
+			{
 				name: __('OS', 'betterlinks'),
 				selector: 'os',
 				width: '100px',
@@ -720,13 +709,6 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					const title = row.device === 'desktop' ? 'Computer' : row.device?.charAt(0).toUpperCase() + row.device?.slice(1);
 					return <div>{row.device && <img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(row.device)}.svg`} alt="icon" title={title} />}</div>;
 				},
-				sortable: false,
-			},
-			{
-				name: __('Parameters', 'betterlinks'),
-				selector: 'query_params',
-				// width: '80px',
-				cell: (row) => <div>{row.query_params}</div>,
 				sortable: false,
 			},
 		];

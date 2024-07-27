@@ -4,9 +4,9 @@ const defaultAnalyticsSettings = [
 	{ label: 'IP', value: 'ip' },
 	{ label: 'Timestamp', value: 'created_at' },
 	{ label: 'Referer', value: 'referer' },
+	{ label: 'Parameters', value: 'query_params' },
 	{ label: 'OS', value: 'os' },
 	{ label: 'Device', value: 'device' },
-	{ label: 'Parameters', value: 'query_params' },
 ];
 
 export const fetch_analytics_settings = () => (dispatch) => {

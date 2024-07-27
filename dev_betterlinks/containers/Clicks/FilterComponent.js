@@ -17,16 +17,16 @@ const FilterComponent = (props) => {
 		{ label: 'Timestamp', value: 'created_at' },
 		{ label: 'Referer', value: 'referer' },
 		{
+			label: 'Parameters',
+			value: 'query_params',
+		},
+		{
 			label: 'OS',
 			value: 'os',
 		},
 		{
 			label: 'Device',
 			value: 'device',
-		},
-		{
-			label: 'Parameters',
-			value: 'query_params',
 		},
 	];
 	return (
