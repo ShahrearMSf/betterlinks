@@ -249,12 +249,12 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<div style={{ maxWidth: '200px' }}>
-										<Field className="btl-text-field" name="prefix" />
+										<Field className="btl-text-field" name="prefix" value={props.values?.prefix ?? 'go'} />
 									</div>
 									<div className="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
 										{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
-										{site_url}
+										{betterLinksHooks.applyFilters('site_url', site_url)}
 										{props.values.prefix && (
 											<>
 												/<strong>{props.values.prefix}</strong>
@@ -262,6 +262,27 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										)}
 										{__('/your-affiliate-link-name.', 'betterlinks')}
 									</div>
+								</div>
+							</span>
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Custom Domain', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="enable_custom_domain_menu"
+											type="checkbox"
+											onChange={() => props.setFieldValue('enable_custom_domain_menu', !props.values?.enable_custom_domain_menu)}
+										/>
+										<span className="text">
+											{__('Enable Custom Domain Menu', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('This will allow you to show Custom Domain on the BetterLinks submenu for quick access.', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
 								</div>
 							</span>
 

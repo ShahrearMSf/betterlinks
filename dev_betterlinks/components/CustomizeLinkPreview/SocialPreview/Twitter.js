@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url, site_url } from 'utils/helper';
+import { plugin_root_url } from 'utils/helper';
 import { teaserDescription, teaserTitle } from '../data';
 
-const Twitter = () => {
+const Twitter = ({ site_url }) => {
 	return (
 		<div className="btl-customized-link-preview-facebook btl-customized-link-preview-twitter">
 			<div className="btl-customized-link-preview-image-container">

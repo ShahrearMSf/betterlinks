@@ -14,9 +14,11 @@ class Cache {
 	}
 
 	public static function get_json_settings() {
-		$settings = json_decode( file_get_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json' ), true );
-		if ( ! empty( $settings ) ) {
-			return $settings;
+		if( file_exists( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json' ) ){
+			$settings = json_decode( file_get_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json' ), true );
+			if ( ! empty( $settings ) ) {
+				return $settings;
+			}
 		}
 		return self::write_json_settings();
 	}

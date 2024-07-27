@@ -84,10 +84,11 @@ const App = (props) => {
 		}
 	}, []);
 
+	const page = betterLinksQuery.get('page');
 	return (
 		<React.Fragment>
 			<MenuPortal>
-				<Navbar menuNotice={menuNotice} />
+				<Navbar menuNotice={menuNotice} page={page} />
 			</MenuPortal>
 			<Dashboard notice={notice} menuNotice={menuNotice} />
 		</React.Fragment>

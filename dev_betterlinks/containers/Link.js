@@ -14,7 +14,7 @@ import { fetch_terms_data as fetch_terms_action_function } from 'redux/actions/t
 import {
 	modalCustomStyles,
 	modalCustomSmallStyles,
-	site_url,
+	site_url as site_link,
 	generateSlug,
 	generateShortURL,
 	formatDate,
@@ -36,6 +36,8 @@ import CustomTrackingScripts from 'components/CustomTrackingScripts';
 import { fetch_tracking_settings } from 'redux/actions/settings.actions';
 import LinkFields from 'components/CustomFields/LinkFields';
 import FetchedTitleConfirmation from 'components/Link/FetchedTitleConfirmation';
+import AdvanceOptionTeaser from 'components/Teasers/Link/AdvanceOptionTeaser';
+import DynamicRedirectsTeaser from 'components/Teasers/Link/DynamicRedirectsTeaser';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -45,13 +47,9 @@ const propTypes = {
 	submitHandler: PropTypes.func,
 };
 
-const defaultProps = {
-	isShowIcon: true,
-};
-
 export const Link = (props) => {
 	const {
-		isShowIcon,
+		isShowIcon = true,
 		catId,
 		data,
 		submitHandler, // this is add_new_link function
@@ -140,6 +138,7 @@ export const Link = (props) => {
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
+		redirect_type: '307',
 		cat_id: catId ? catId : null,
 		...settings.settings,
 		...objForGutenTargetBlank,
@@ -323,6 +322,8 @@ export const Link = (props) => {
 		onSubmit(values);
 	};
 
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
+
 	return (
 		<>
 			{data ? (
@@ -337,7 +338,7 @@ export const Link = (props) => {
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
-					<i className="btl btl-cancel"></i>
+					<i className="btl btl-cancel" />
 				</span>
 				<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', data ? initialUpdateValues : initialValues)} onSubmit={submitLinkHandler}>
 					{(props) => {
@@ -628,43 +629,19 @@ export const Link = (props) => {
 											<>
 												<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
-														<h4 className="link-options__head--title">{__('Advanced', 'betterlinks')}</h4>
-														<i className="btl btl-angle-arrow-down"></i>
+														<h4 className="link-options__head--title">
+															{__('Advanced', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
+														</h4>
+														<i className="btl btl-angle-arrow-down" />
 													</button>
-													{!is_pro_enabled && (
-														<div className="link-options__body">
-															<div className="link-options--teasers">
-																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																	<label className="btl-modal-form-label" htmlFor="status">
-																		{__('Status', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																	</label>
-																	<select id="status" disabled>
-																		<option value="publish">{__('Active', 'betterlinks')}</option>
-																		<option value="expired">{__('Expired', 'betterlinks')}</option>
-																		<option value="draft">{__('Draft', 'betterlinks')}</option>
-																	</select>
-																</div>
-																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																	<label className="btl-modal-form-label" htmlFor="expire">
-																		{__('Expire', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																	</label>
-																	<input id="expire" type="checkbox" disabled />
-																</div>
-																<div className="btl-modal-form-group" onClick={() => openUpgradeToProModal()}>
-																	<label className="btl-modal-form-label">
-																		{__('Password Protection', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
-																	</label>
-																	<input id="enable_password" type="checkbox" disabled />
-																</div>
-															</div>
-														</div>
-													)}
+													{/* Advance Options teaser */}
+													<AdvanceOptionTeaser openUpgradeToProModal={openUpgradeToProModal} />
 													<>{betterLinksHooks.applyFilters('linkOptionsAdvanced', null, { ...props, ...settings, password, metaTag })}</>
 												</div>
 												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
 														<h4 className="link-options__head--title">
-															{__('Dynamic Redirects', 'betterlinks')}{' '}
+															{__('Dynamic Redirects', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}{' '}
 															{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
 																<span className="status">{__('ON', 'betterlinks')}</span>
 															) : (
@@ -674,41 +651,8 @@ export const Link = (props) => {
 														<i className="btl btl-angle-arrow-down"></i>
 													</button>
 													<div className="link-options__body">
-														{!is_pro_enabled && (
-															<div className="link-options--teasers" onClick={() => openUpgradeToProModal()}>
-																<div className="link-options-info">
-																	<ul>
-																		<li>
-																			<label>
-																				{__('Redirection Type:', 'betterlinks')}
-																				<span className="pro-badge">Pro</span>
-																			</label>
-																		</li>
-																		<li>
-																			<label>
-																				{__('Target URL 1:', 'betterlinks')}
-																				<span className="pro-badge">Pro</span>
-																			</label>
-																			<input type="text" value="example-1.com" disabled />
-																		</li>
-																		<li>
-																			<label>
-																				{__('Target URL 2:', 'betterlinks')}
-																				<span className="pro-badge">Pro</span>
-																			</label>
-																			<input type="text" value="example-2.com" disabled />
-																		</li>
-																		<li>
-																			<label>
-																				{__('Split Test:', 'betterlinks')}
-																				<span className="pro-badge">Pro</span>
-																			</label>
-																			<input id="splittest" type="checkbox" disabled />
-																		</li>
-																	</ul>
-																</div>
-															</div>
-														)}
+														{/* Dynamic Redirects teaser */}
+														<DynamicRedirectsTeaser openUpgradeToProModal={openUpgradeToProModal} />
 														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
 													</div>
 												</div>
@@ -775,4 +719,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Link);
 Link.propTypes = propTypes;
-Link.defaultProps = defaultProps;

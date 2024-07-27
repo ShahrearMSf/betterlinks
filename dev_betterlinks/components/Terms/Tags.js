@@ -12,8 +12,6 @@ const propTypes = {
 	setFieldValue: PropTypes.func,
 };
 
-const defaultProps = {};
-
 const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 	const [saveTags, setSaveTags] = useState(null);
 
@@ -84,4 +82,3 @@ const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 
 export default Tags;
 Tags.propTypes = propTypes;
-Tags.defaultProps = defaultProps;

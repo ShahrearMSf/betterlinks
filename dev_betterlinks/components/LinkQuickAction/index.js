@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import Link from 'containers/Link';
 import QRScanner from 'components/QRScanner';
-import { site_url, copyShortUrl, analytic } from 'utils/helper';
+import { site_url as site_link, copyShortUrl, analytic, is_pro_enabled } from 'utils/helper';
 import { Link as ReactLink } from 'react-router-dom/cjs/react-router-dom.min';
 
 const propTypes = {
@@ -20,21 +20,13 @@ const propTypes = {
 	handle_link_favorite: PropTypes.func,
 };
 
-const defaultProps = {
-	isShowAnalytics: false,
-	isShowVisitLink: true,
-	isShowCopyLink: true,
-	isShowEditLink: true,
-	isShowDeleteLink: true,
-};
-
 const LinkQuickAction = ({
 	isAlowQr,
-	isShowCopyLink,
-	isShowAnalytics,
-	isShowVisitLink,
-	isShowEditLink,
-	isShowDeleteLink,
+	isShowCopyLink = true,
+	isShowAnalytics = false,
+	isShowVisitLink = true,
+	isShowEditLink = true,
+	isShowDeleteLink = true,
 	data,
 	catId,
 	catName,
@@ -64,6 +56,7 @@ const LinkQuickAction = ({
 			setCopyUrl(false);
 		}, 3000);
 	};
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 	return (
 		<React.Fragment>
 			{betterLinksHooks.applyFilters('linkQuickActionNewField', '', { data, ReactLink })}
@@ -122,6 +115,5 @@ const LinkQuickAction = ({
 	);
 };
 LinkQuickAction.propTypes = propTypes;
-LinkQuickAction.defaultProps = defaultProps;
 
 export default LinkQuickAction;

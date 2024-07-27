@@ -851,29 +851,8 @@ class Ajax {
 		$response                         = $helper::sanitize_text_or_array_field( $response );
 		$response['uncloaked_categories'] = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 
-		$enable_password_protection = ! empty( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
-		$enable_customize_meta_tag  = ! empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
-
-		if ( class_exists( '\BetterLinksPro\Helper' ) ) {
-			$pro_helper = new \BetterLinksPro\Helper();
-			if ( $enable_password_protection ) {
-				$pro_helper->add_password_protect_page();
-			} else {
-				$pro_helper->delete_custom_page( 'password-protected-form' );
-			}
-
-			if ( $enable_customize_meta_tag ) {
-				$pro_helper->add_customized_meta_tag_page();
-			} else {
-				$pro_helper->delete_custom_page( 'customized-meta-tags' );
-			}
-
-			if ( ! empty( $response['cle']['enable_cle'] ) ) {
-				$category                    = ! empty( $response['cle']['category'] ) ? sanitize_text_field( $response['cle']['category'] ) : 1;
-				$category                    = $helper::insert_new_category( sanitize_text_field( $category ) );
-				$response['cle']['category'] = $category;
-			}
-		}
+		// Pro Logics
+		$response = apply_filters( 'betterlinkspro/admin/update_settings', $response );
 
 		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
 			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
@@ -881,6 +860,7 @@ class Ajax {
 			$response['fbs']['cat_id'] = $category;
 		}
 
+		update_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, !empty( $response['enable_custom_domain_menu'] ) ? $response['enable_custom_domain_menu'] : false );
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );

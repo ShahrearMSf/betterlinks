@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 
 const propTypes = {};
 
-const defaultProps = {};
-
 export default function GoPremium(props) {
 	return (
 		<React.Fragment>
@@ -33,4 +31,3 @@ export default function GoPremium(props) {
 }
 
 GoPremium.propTypes = propTypes;
-GoPremium.defaultProps = defaultProps;

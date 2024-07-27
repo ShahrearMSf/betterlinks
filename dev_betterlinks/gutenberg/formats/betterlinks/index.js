@@ -19,13 +19,14 @@ import { fetch_settings_data } from 'redux/actions/settings.actions';
 // local imports
 import { LoadingSpinner } from 'gutenberg/components';
 import { betterlinksIcon } from './icon';
-import { makeLinkFormat } from 'utils/helper';
+import { is_pro_enabled, makeLinkFormat, site_url as site_link } from 'utils/helper';
 import { LinkPreview } from './linkPreview';
 import { Link } from 'containers/Link';
 
 const name = 'betterlinks/link-format';
 const title = __('BetterLinks');
 
+const site_url = is_pro_enabled && localStorage.getItem('btl_custom_domain') ? localStorage.getItem('btl_custom_domain') : site_link;
 export const betterlinksFormat = {
 	name,
 	title,
@@ -149,7 +150,7 @@ export const betterlinksFormat = {
 			if (!newText) {
 				return false;
 			}
-			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
+			const siteUrlWithoutHttp = site_url.replace(/https?\:\/\//, '').toLowerCase();
 			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const justShortlink = newText
 				.replace(/https?\:\/\//g, '')
@@ -177,7 +178,7 @@ export const betterlinksFormat = {
 		};
 
 		const handleMatchedLiClick = (shortUrl) => {
-			setSearchedText(`${betterLinksGlobal.site_url}/${shortUrl}`);
+			setSearchedText(`${site_url}/${shortUrl}`);
 			setMatchedLinks([]);
 			const searchFieldDomRef = searchFieldRef?.current;
 			if (!searchFieldDomRef?.focus) return false;
@@ -197,7 +198,7 @@ export const betterlinksFormat = {
 			}
 			const regex = new RegExp(`(${value})`, 'gi');
 
-			const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
+			const siteUrlWithoutHttp = site_url.replace(/https?\:\/\//, '').toLowerCase();
 			const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 			const matchedLinks = betterlinksGutenStore?.getState()?.links?.links.filter((item) => regex.test(item.link_title));
 
@@ -249,8 +250,7 @@ export const betterlinksFormat = {
 				case ENTER: {
 					if (typeof selectedIndex === 'number') {
 						const shortUrl = matchedLinks[selectedIndex].short_url;
-						const siteUrl = betterLinksGlobal.site_url;
-						const url = `${siteUrl}/${shortUrl}`;
+						const url = `${site_url}/${shortUrl}`;
 						const attributes = { url };
 
 						if (linkNewTab) {
@@ -403,7 +403,7 @@ export const betterlinksFormat = {
 												true
 											)(betterlinksGutenStore.dispatch)
 												.then((res) => {
-													const inputUrl = `${betterLinksGlobal.site_url}/${values.short_url}`;
+													const inputUrl = `${site_url}/${values.short_url}`;
 													setLinkNewTab(linkNewTab);
 													const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
 													const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow });
@@ -423,7 +423,7 @@ export const betterlinksFormat = {
 											)(betterlinksGutenStore.dispatch)
 												.then((res) => {
 													setLinkNewTab(linkNewTab);
-													setSearchedText(`${betterLinksGlobal.site_url}/${values.short_url}`);
+													setSearchedText(`${site_url}/${values.short_url}`);
 													setShowLinkModal(false);
 													setIsSubmittingForGutenberg(false);
 

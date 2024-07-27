@@ -28,6 +28,10 @@
 	@import './components/broken-links';
 	@import './components/modal';
 }
+*,
+html {
+	scroll-behavior: smooth;
+}
 body {
 	&.betterlinks-dark-mode {
 		background: #36405a;
@@ -188,6 +192,7 @@ body {
 	position: relative;
 	display: inline-block;
 	line-height: 1;
+	margin-left: 10px;
 	.btl-tooltiptext {
 		visibility: hidden;
 		width: 120px;
@@ -739,6 +744,78 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 		100% {
 			-webkit-transform: rotate(360deg);
 			transform: rotate(360deg);
+		}
+	}
+}
+
+.btl-form-field {
+	div.btl-individual-config-blocks {
+		max-width: 500px;
+		min-width: 400px;
+		width: 450px;
+		> div {
+			border-radius: 8px;
+		}
+		&.--btl-records-bg {
+			color: #333;
+			overflow-x: auto;
+		}
+
+		.btl-instruction-block-wrapper {
+			background-color: rgb(246, 246, 246);
+			color: rgb(123, 126, 152);
+			padding: 15px;
+			margin-bottom: 10px;
+		}
+		.btl-code-block-wrapper {
+			padding: 20px 10px;
+			margin-bottom: 10px;
+			border: 1px solid rgba(217, 225, 244, 1);
+
+			.btl-code-block {
+				margin-top: 8px;
+
+				> span.copy-btn {
+					position: absolute;
+					top: 5px;
+					right: 5px;
+					cursor: pointer;
+				}
+			}
+		}
+
+		code {
+			display: block;
+			min-height: 18px;
+			padding: 8px 10px;
+			border: 1px solid rgba(217, 225, 244, 1);
+			border-radius: 8px;
+			background-color: rgba(245, 245, 247, 1);
+			font-weight: normal;
+		}
+	}
+}
+
+.btl-domain-configuration .btl-form-field {
+	min-height: 230px;
+
+	.server-type-wrapper {
+		display: flex;
+		flex-direction: column;
+
+		.server-type-title {
+			font-size: 14px;
+			font-weight: 500;
+		}
+		.server-type {
+			display: flex;
+			align-items: center;
+			padding: 10px 0;
+			column-gap: 10px;
+
+			label {
+				cursor: pointer;
+			}
 		}
 	}
 }

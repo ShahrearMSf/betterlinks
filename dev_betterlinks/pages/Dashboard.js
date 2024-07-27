@@ -5,9 +5,10 @@ import Settings from 'pages/Settings';
 import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
 import ManageTags from './ManageTags';
+import CustomDomain from './CustomDomain';
 
 const renderSwitch = (param) => {
-	window.scrollTo(0, 0);
+	// window.scrollTo(0, 0);
 	switch (param) {
 		case 'betterlinks':
 			return <ManageLinks />;
@@ -17,6 +18,8 @@ const renderSwitch = (param) => {
 			return <Analytics />;
 		case 'betterlinks-manage-tags':
 			return <ManageTags />;
+		case 'betterlinks-custom-domain':
+			return <CustomDomain />;
 		case 'betterlinks-settings':
 			return <Settings />;
 		default:

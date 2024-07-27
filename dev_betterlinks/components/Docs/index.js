@@ -5,8 +5,6 @@ import { plugin_root_url } from 'utils/helper';
 
 const propTypes = {};
 
-const defaultProps = {};
-
 export default function Docs(props) {
 	return (
 		<React.Fragment>
@@ -73,4 +71,3 @@ export default function Docs(props) {
 }
 
 Docs.propTypes = propTypes;
-Docs.defaultProps = defaultProps;

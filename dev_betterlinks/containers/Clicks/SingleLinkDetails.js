@@ -1,5 +1,5 @@
 import ContentLoader from 'react-content-loader';
-import { site_url } from 'utils/helper';
+import { is_pro_enabled, site_url as site_link } from 'utils/helper';
 import { Link, Target, WWW } from './clicks.helper';
 
 const SingleLinkDetails = ({ clicks }) => {
@@ -9,7 +9,7 @@ const SingleLinkDetails = ({ clicks }) => {
 			<rect x="1" y="2" rx="3" ry="3" width="196" height="13" />
 		</ContentLoader>
 	);
-
+	const site_url = betterLinksHooks.applyFilters('site_url', site_link);
 	const shortend_url = `${site_url}/${short_url}`;
 	return (
 		<div className="btl-single-click-info-header">
