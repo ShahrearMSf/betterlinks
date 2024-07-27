@@ -2,8 +2,8 @@
 
 namespace BetterLinks\API;
 
+use BetterLinks\Admin\Cache;
 use BetterLinks\Traits\ArgumentSchema;
-use \BetterLinksPro\Helper;
 
 class Settings extends Controller {
 
@@ -55,11 +55,11 @@ class Settings extends Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function get_items( $request ) {
-		$response = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
+		$response = Cache::get_json_settings();
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
-				'data'    => $response,
+				'data'    => json_encode( $response ),
 			),
 			200
 		);
@@ -88,36 +88,32 @@ class Settings extends Controller {
 	 * @return WP_Error|WP_REST_Request
 	 */
 	public function update_item( $request ) {
-		$response                              = $request->get_params();
-		$response                              = \BetterLinks\Helper::sanitize_text_or_array_field( $response );
+		$helper   = new \BetterLinks\Helper();
+		$response = $request->get_params();
+		$response = $helper::sanitize_text_or_array_field( $response );
+
 		$response['uncloaked_categories']      = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
 		$response['affiliate_disclosure_text'] = isset( $response['affiliate_disclosure_text'] ) && is_string( $response['affiliate_disclosure_text'] ) ? $response['affiliate_disclosure_text'] : '';
-		$enable_password_protection = isset( $response['enable_password_protection'] ) ? $response['enable_password_protection'] : false;
 
-		$enable_password_protection = !empty($response['enable_password_protection']) ? $response['enable_password_protection'] : false;
-		$enable_customize_meta_tag = !empty( $response['enable_customize_meta_tags'] ) ? $response['enable_customize_meta_tags'] : false;
+		// Pro Logics
+		$response = apply_filters( 'betterlinkspro/admin/update_settings', $response );
 
-        if( class_exists('BetterLinksPro')) {
-			$pro_helper = new Helper();
-            if( $enable_password_protection ){
-                $pro_helper->add_password_protect_page();
-            }else {
-                $pro_helper->delete_custom_page('password-protected-form');
-            }
+		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
+			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
+			$category                  = $helper::insert_new_category( $category );
+			$response['fbs']['cat_id'] = $category;
+		}
 
-			if( $enable_customize_meta_tag ){
-				$pro_helper->add_customized_meta_tag_page();
-			}else {
-				$pro_helper->delete_custom_page('customized-meta-tags');
-			}
-        }
+		update_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, !empty( $response['enable_custom_domain_menu'] ) ? $response['enable_custom_domain_menu'] : false );
 
 		$response = json_encode( $response );
 		if ( $response ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $response );
+			Cache::write_json_settings();
 		}
 		// regenerate links for wildcards option update
-		\BetterLinks\Helper::write_links_inside_json();
+		$helper::clear_query_cache();
+		$helper::write_links_inside_json();
 		return new \WP_REST_Response(
 			array(
 				'success' => true,

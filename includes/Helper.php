@@ -1,6 +1,9 @@
 <?php
 namespace BetterLinks;
 
+use BetterLinks\Admin\Cache;
+use WP_Http;
+
 class Helper {
 
 	use Traits\Query;
@@ -139,6 +142,10 @@ class Helper {
 	}
 
 	public static function get_menu_items() {
+		// $enable_custom_domain_menu = get_option(BETTERLINKS_CUSTOM_DOMAIN_MENU, 0);
+		$enable_custom_domain_menu = Cache::get_json_settings();
+		$enable_custom_domain_menu = !empty( $enable_custom_domain_menu['enable_custom_domain_menu'] ) ?  $enable_custom_domain_menu['enable_custom_domain_menu'] : false;
+		
 		$menu_items = array(
 			BETTERLINKS_PLUGIN_SLUG                  => array(
 				'title'      => __( 'Manage Links', 'betterlinks' ),
@@ -161,6 +168,18 @@ class Helper {
 				'capability' => 'manage_options',
 			),
 		);
+		
+		if( !empty( $enable_custom_domain_menu ) ){
+			$before = array_splice( $menu_items, 0, 2 );
+			$inserted = array(
+				BETTERLINKS_PLUGIN_SLUG . '-custom-domain' => array(
+					'title'      => __( 'Custom Domain', 'betterlinks' ),
+					'capability' => 'manage_options',
+				),
+			);
+			$menu_items = $before + $inserted + $menu_items;
+		}
+
 		return apply_filters( 'betterlinks/helper/menu_items', $menu_items );
 	}
 
@@ -420,11 +439,14 @@ class Helper {
 			}
 		} else {
 			$tempArray = $existingData['links'];
+			$previous_data = [];
 			if ( is_array( $tempArray ) ) {
 				if ( ! empty( $old_short_url ) ) {
+					$previous_data = $tempArray[ $old_short_url ];
 					unset( $tempArray[ $old_short_url ] );
 					unset( $tempArray[ strToLower( $old_short_url ) ] );
 				}
+				$data = wp_parse_args($data, $previous_data);
 				$tempArray[ $short_url ] = self::json_link_formatter( $data );
 				$existingData['links']   = $tempArray;
 				return file_put_contents( $file, wp_json_encode( $existingData ) );
@@ -666,5 +688,70 @@ class Helper {
 		}
 		$installer->data( array( 'betterlinks_ptl_clicks_migrated' ) )->save();
 		return $installer;
+	}
+
+	public function generate_random_slug( $length = 3 ) {
+		$characters        = '0123456789abcdefghijklmnopqrstuvwxyz';
+		$random_string     = '';
+		$characters_length = strlen( $characters );
+
+		for ( $i = 0; $i < $length; $i++ ) {
+			$random_string .= $characters[ wp_rand( 0, $characters_length - 1 ) ];
+		}
+		$random_num = wp_rand( 0, 10 ) . wp_rand( 0, 10 ) . wp_rand( 0, 10 );
+		return $random_string . $random_num;
+	}
+	public function get_betterlinks_prefix() {
+		if ( BETTERLINKS_EXISTS_SETTINGS_JSON ) {
+			$data = Cache::get_json_settings();
+
+			if ( empty( $data ) ) {
+				$data = Cache::write_json_settings();
+			}
+			$prefix = ! empty( $data['prefix'] ) ? $data['prefix'] . '/' : '';
+			return $prefix;
+		}
+
+		$betterlinks_links = get_option( 'betterlinks_links', array() );
+		if ( is_string( $betterlinks_links ) ) {
+			$betterlinks_links = json_decode( $betterlinks_links, true );
+		}
+		$prefix = ! empty( $betterlinks_links['prefix'] ) ? $betterlinks_links['prefix'] . '/' : '';
+		return $prefix;
+	}
+
+	public function fetch_target_url( $target_url ) {
+		if ( empty( $target_url ) ) {
+			return false;
+		}
+
+		$http   = new WP_Http();
+		$result = $http->get( $target_url, array( 'sslverify' => false ) );
+		$title  = '';
+		if ( ! is_wp_error( $result ) && ! empty( $result['body'] ) && preg_match( '/<title>(.*)<\/title>/siU', $result['body'], $title_matches ) ) {
+			$title = html_entity_decode( $title_matches[1] );
+		}
+		return $title;
+	}
+	public static function insert_new_category( $slug ) {
+		if ( ! ! intval( $slug ) ) {
+			return $slug;
+		}
+
+		$is_cat_exists = self::term_exists( $slug );
+		if ( ! $is_cat_exists ) {
+			$insert_id = self::insert_term(
+				array(
+					'term_name' => $slug,
+					'term_slug' => self::make_slug( $slug ),
+					'term_type' => 'category',
+				)
+			);
+			if ( $insert_id ) {
+				self::clear_query_cache();
+				$slug = $insert_id;
+			}
+		}
+		return $slug;
 	}
 }

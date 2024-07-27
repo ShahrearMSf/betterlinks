@@ -1,22 +1,44 @@
 <?php
 namespace BetterLinks;
 
+use BetterLinks\Admin\Cache;
 use BetterLinks\Link\Utils;
 use DeviceDetector\DeviceDetector;
 
 class Link extends Utils {
-	private static $link_options;
-
 	public function __construct() {
 		if ( ! is_admin() && isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) {
 			add_action( 'init', array( $this, 'run_redirect' ), 0 );
+			add_action( 'betterlinks_prevent_unwanted_cle', array( $this, 'prevent_unwanted_cle' ) );
 		}
 	}
-
 	/**
 	 * Redirects short links to the destination url
 	 */
 	public function run_redirect() {
+		if ( isset( $_GET['action'], $_GET['api_key'] ) && sanitize_text_field( $_GET['action'] ) === 'btl_cle' && sanitize_text_field( $_GET['api_key'] ) === md5( AUTH_KEY ) ) {
+			$target_url = isset( $_GET['target_url'] ) ? sanitize_url( $_GET['target_url'] ) : '';
+
+			do_action( 'betterlinks_prevent_unwanted_cle' );
+
+			$title = isset( $_GET['title'] ) ? sanitize_text_field( $_GET['title'] ) : ''; // geting title from document obj, instead of fetching
+
+			$settings = Cache::get_json_settings();
+			if ( empty( $settings['cle']['enable_cle'] ) ) {
+				return;
+			}
+
+			if ( empty( $title ) ) {
+				$title = ( new Helper() )->fetch_target_url( $target_url );
+			}
+			
+			if ( ! empty( $title ) ) {
+				$this->create_new_link( $title, $target_url, $settings );
+			}
+
+			return;
+		}
+
 		// Note: Using sanitize_text_field for $_SERVER['REQUEST_URI'] may not handle redirects properly when short URLs contain non-ASCII characters (e.g., Chinese).
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore
 		$request_uri = stripslashes( rawurldecode( $request_uri ) );
@@ -32,13 +54,9 @@ class Link extends Utils {
 		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
 			if ( apply_filters( 'betterlinks/is_password_protected_redirect_compatible', false ) ) { // phpcs:ignore.
 				// fetch settings to check password protected redirect is enable or not.
-				$settings = get_option( 'betterlinks_links', true );
-				if ( is_string( $settings ) ) {
-					$settings = json_decode( $settings, true );
-				}
-				self::$link_options = $settings;
+				$settings = Cache::get_json_settings();
 
-				if ( ! empty( self::$link_options['enable_password_protection'] ) ) {
+				if ( ! empty( $settings['enable_password_protection'] ) ) {
 					$referer           = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : null;
 					$request_uri       = site_url( '/' ) . $request_uri;
 					$short_url         = $this->get_protected_self_url_short_link( $request_uri );

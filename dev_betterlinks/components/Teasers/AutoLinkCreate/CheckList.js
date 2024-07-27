@@ -6,10 +6,13 @@ const propTypes = {
 	title: PropTypes.string,
 };
 
-export default function CheckList({ title = '', ...props }) {
+export default function CheckList({ title = '', is_pro = false, ...props }) {
 	return (
 		<div className="btl-role-item btl-form-group" {...props}>
-			<label className="btl-form-label">{title}</label>
+			<label className="btl-form-label">
+				{title}
+				{is_pro && <span class="pro-badge">Pro</span>}
+			</label>
 			<div className="link-options__body">
 				<label className="btl-checkbox-field">
 					<Field type="checkbox" className="btl-check" disabled />

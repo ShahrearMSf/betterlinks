@@ -3,7 +3,7 @@
  * Plugin Name:		BetterLinks
  * Plugin URI:		https://betterlinks.io/
  * Description:		Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
- * Version:			1.9.2
+ * Version:			2.1.4
  * Author:			WPDeveloper
  * Author URI:		https://wpdeveloper.com
  * License:			GPL-3.0+
@@ -80,9 +80,9 @@ if (!class_exists('BetterLinks')) {
             /**
              * Defines CONSTANTS for Whole plugins.
              */
-            define('BETTERLINKS_VERSION', '1.9.2');
-            define('BETTERLINKS_DB_VERSION', '1.6.3');
-            define('BETTERLINKS_MENU_NOTICE', '5');
+            define('BETTERLINKS_VERSION', '2.1.4');
+            define('BETTERLINKS_DB_VERSION', '1.6.6');
+            define('BETTERLINKS_MENU_NOTICE', '7');
             define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
             define('BETTERLINKS_PLUGIN_FILE', __FILE__);
             define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -94,9 +94,11 @@ if (!class_exists('BetterLinks')) {
             define('BETTERLINKS_UPLOAD_DIR_PATH', $this->upload_dir['basedir'] . '/betterlinks_uploads');
             define('BETTERLINKS_EXISTS_LINKS_JSON', defined('BETTERLINKS_ALLOW_JSON_REDIRECT') ? file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json') && BETTERLINKS_ALLOW_JSON_REDIRECT : file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/links.json'));
             define('BETTERLINKS_EXISTS_CLICKS_JSON', file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json'));
+            define('BETTERLINKS_EXISTS_SETTINGS_JSON', defined('BETTERLINKS_ALLOW_JSON_REDIRECT') ? file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json') && BETTERLINKS_ALLOW_JSON_REDIRECT : file_exists(BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json'));
             define('BETTERLINKS_LINKS_OPTION_NAME', 'betterlinks_links');
             define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
             define('BETTERLINKS_DB_ALTER_OPTIONS', 'betterlinks_db_alter_options');
+            define('BETTERLINKS_CUSTOM_DOMAIN_MENU', 'betterlinks_custom_domain_menu');
         }
 
         public function upload_dir_path()
@@ -122,6 +124,7 @@ if (!class_exists('BetterLinks')) {
             if (is_admin()) {
                 new BetterLinks\Admin();
             }
+            BetterLinks\Integration::init();
             new BetterLinks\Link();
             new BetterLinks\Tools();
             new BetterLinks\Elementor();

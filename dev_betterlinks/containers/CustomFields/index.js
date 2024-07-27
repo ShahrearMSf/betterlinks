@@ -35,6 +35,10 @@ const CustomFields = ({ settings, update_option }) => {
 		const customFieldsValues = _.map(values?.customFields || [], 'value');
 		const hasEmptyValue = _.some(customFieldsValues, (val) => !val || '' === val || val.includes(' ')); // Checks for string is valid or not.
 
+		if (customFieldsValues.length === 0 && settings.customFields.length === 0) {
+			setFieldError('customFields', __('Please create at least one Custom Field to save.', 'betterlinks'));
+			return;
+		}
 		if (hasEmptyValue) {
 			setFieldError('customFields', __('Please fill all the fields', 'betterlinks'));
 			return;
@@ -157,7 +161,11 @@ const CustomFields = ({ settings, update_option }) => {
 														<Field
 															className="btl-form-control"
 															name={`customFields.0.label`}
-															placeholder={__('Custom field label', 'betterlinks')}
+															placeholder={__('To create Custom Field Label, click on "+" icon here 👉', 'betterlinks')}
+															disabled={true}
+															style={{
+																cursor: 'not-allowed',
+															}}
 															onChange={(e) => {
 																const fieldSlug = generateSlug(e.target.value);
 																arrayHelpers.form.setFieldValue('customFields.0.label', e.target.value);

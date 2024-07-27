@@ -1,10 +1,14 @@
 <?php
 namespace BetterLinks;
 
+use BetterLinks\Admin\Cache;
+
 class Installer extends \WP_Background_Process
 {
     use Traits\DBTables;
     use Traits\DBMigrate;
+    use Traits\Terms;
+
     protected $wpdb;
     protected $charset_collate;
     protected $action = 'betterlinks_background_task';
@@ -19,7 +23,7 @@ class Installer extends \WP_Background_Process
         $this->wpdb = $wpdb;
         $this->charset_collate = $wpdb->get_charset_collate();
         $this->activation = ['set_activation_flag','create_db_tables', 'db_migration', 'fix_betterlinks_db', 'insert_terms_data', 'create_json_files', 'save_settings', 'update_json_links', 'clear_cache'];
-        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache'];
+        $this->migration = ['set_activation_flag', 'db_migration', 'fix_betterlinks_db', 'update_json_links', 'clear_cache', 'fix_json_files'];
         $this->db_version = Helper::btl_get_option('betterlinks_db_version');
     }
 
@@ -134,6 +138,17 @@ class Installer extends \WP_Background_Process
     public function save_settings()
     {
         if (!Helper::btl_get_option(BETTERLINKS_LINKS_OPTION_NAME)) {
+            $fbs_cat = 0;
+            if( defined( 'FLUENT_BOARDS' ) ){
+                $args    = array(
+                    'ID'        => 0,
+                    'term_name' => 'Fluent Boards',
+                    'term_slug' => 'btl-fluent-boards',
+                    'term_type' => 'category',
+                );
+                $results = $this->create_term( $args );
+                $fbs_cat = !empty( $results['ID'] ) ? $results['ID'] : 0;
+            }
             $value = [
                 'redirect_type'         => '307',
                 'nofollow'   		    => true,
@@ -150,9 +165,16 @@ class Installer extends \WP_Background_Process
                 'is_autolink_icon'      => false,
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
+                'enable_custom_domain_menu' => true,
+                'fbs'        => [
+                    'enable_fbs' => true,
+                    'cat_id'    => $fbs_cat,
+                    'delete_on' => 'task_delete'
+                ]
             ];
             Helper::btl_update_option(BETTERLINKS_LINKS_OPTION_NAME, json_encode($value));
         }
+        Cache::init();
     }
 
     /**
@@ -175,6 +197,11 @@ class Installer extends \WP_Background_Process
             [
                 'base' => BETTERLINKS_UPLOAD_DIR_PATH,
                 'file' => 'clicks.json',
+                'content' => $emptyContent,
+            ],
+            [
+                'base' => BETTERLINKS_UPLOAD_DIR_PATH,
+                'file' => 'settings.json',
                 'content' => $emptyContent,
             ],
         ];
@@ -230,6 +257,15 @@ class Installer extends \WP_Background_Process
             }
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '==' ) ) {
                 $this->modifyBetterLinksClicksTable();
+            }
+            
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '>' ) ) {
+                $this->update_settings();
+                $this->update_fluent_settings();
+            }
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.4', '>' ) ) {
+                $this->update_fluent_task_delete_settings();
+                $this->update_cle_category();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
@@ -350,6 +386,22 @@ class Installer extends \WP_Background_Process
                 [ "fixed_missing_terms_relation_after_ta_one_click_migration" => true ]
             );
             Helper::btl_update_option(BETTERLINKS_DB_ALTER_OPTIONS, $new_data, !$is_db_alter_option_exist_array, $is_db_alter_option_exist_array);
+        }
+    }
+
+    public function fix_json_files() {
+        $file = [
+            'base' => BETTERLINKS_UPLOAD_DIR_PATH,
+            'file' => 'settings.json',
+            'content' => '{}',
+        ];
+
+        if (wp_mkdir_p($file['base']) && !file_exists(trailingslashit($file['base']) . $file['file'])) {
+            $file_handle = @fopen(trailingslashit($file['base']) . $file['file'], 'wb');
+            if ($file_handle) {
+                fwrite($file_handle, $file['content']);
+                fclose($file_handle);
+            }
         }
     }
 }

@@ -1,0 +1,206 @@
+#btl-intflboards-btn-wrapper {
+	position: relative;
+	.el-button {
+		position: relative;
+
+		span.btl-fbs-loader {
+			position: absolute;
+			right: 5px;
+		}
+	}
+	.fbs-task-add-popover-box {
+		z-index: 2047;
+		position: absolute;
+		width: 350px !important;
+		margin-top: 3%;
+		right: -18%;
+
+		.el-popper__arrow {
+			position: absolute;
+			left: 50%;
+		}
+
+		.btl-fbs-top-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+
+			> span.btl-title {
+				font-weight: 500;
+				font-size: 15px;
+				color: rgb(25, 40, 93);
+			}
+
+			span.close-button {
+				cursor: pointer;
+				border: unset;
+				transition: 0.3s;
+				font-size: 18px;
+				padding: 5px 15px;
+			}
+		}
+		.btl-fbs-link-data {
+			.btl-form-group {
+				> label {
+					font-weight: 500;
+					display: inline-block;
+					margin-bottom: 5px;
+				}
+				p {
+					display: flex;
+					align-items: center;
+					border: 1px solid rgb(235, 235, 235);
+					border-radius: 6px;
+
+					> div {
+						display: flex;
+					}
+
+					span {
+						&.btl-site-url {
+							max-width: 50%;
+							overflow-x: auto;
+							white-space: nowrap;
+							cursor: ew-resize;
+							background: rgba(69, 117, 255, 1);
+							border-radius: 5px 3px 3px 5px;
+							font-size: 14px;
+							padding: 8px 10px;
+							color: #fff;
+							font-style: italic;
+							-ms-overflow-style: none; /* Internet Explorer 10+ */
+							scrollbar-width: none; /* Firefox */
+
+							&::-webkit-scrollbar {
+								display: none;
+							}
+						}
+					}
+					input {
+						width: 45%;
+						border: unset;
+						box-shadow: unset;
+
+						&:focus {
+							border: unset;
+						}
+					}
+					.btl-fbs-icon {
+						width: 25px;
+						height: 25px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						margin-right: 2px;
+					}
+					.btl-copy-icon {
+						cursor: pointer;
+					}
+				}
+
+				&.fbs_task_mover_actions {
+					justify-content: space-between;
+					display: flex;
+					align-items: center;
+					column-gap: 5px;
+
+					&:not(:has(+ .btl-fbs-qr-section)) {
+						margin-top: 10px;
+					}
+
+					> button {
+						width: 90px;
+						height: 35px;
+						border-radius: 5px;
+						padding: 2px;
+						background-color: rgba(38, 115, 255, 1);
+						color: #fff;
+						box-shadow: 0px 5px 5px 0px rgba(255, 255, 255, 0.1) inset;
+						cursor: pointer;
+						justify-content: center;
+
+						&:hover {
+							background-color: rgba(0, 81, 229, 1);
+						}
+
+						&.btl-btn-disable {
+							background: rgba(176, 178, 186, 1);
+							cursor: not-allowed;
+						}
+					}
+
+					> a {
+						font-size: 12px;
+						color: rgba(35, 91, 251, 1);
+						border-bottom: 1px solid rgba(35, 91, 251, 1);
+						padding-bottom: 2px;
+					}
+				}
+				.btl-fbs-message {
+					font-size: 12px;
+					display: block;
+					text-align: right;
+
+					&.error {
+						color: rgba(251, 42, 4, 1);
+					}
+					&.success {
+						color: rgba(33, 199, 59, 1);
+					}
+				}
+			}
+			.btl-fbs-qr-section {
+				margin-top: 8px;
+				font-weight: 500;
+				font-size: 14px;
+				line-height: 17px;
+				padding: 3px;
+
+				> a.btl-fbs-show-hide-qr {
+					color: rgb(159, 160, 173);
+					border-bottom: 1px solid rgba(183, 183, 183, 1);
+					padding-bottom: 2px;
+					font-size: 13px;
+
+					> span.dashicons {
+						font-size: 17px;
+						margin-left: 3px;
+						line-height: 1.2rem;
+					}
+				}
+				.betterlinksqrcode {
+					display: flex;
+					column-gap: 10px;
+					margin-top: 20px;
+					margin-bottom: 10px;
+
+					> canvas {
+						height: 100px;
+						width: 100px;
+						border: 1px solid rgb(217, 225, 244);
+						padding: 8px;
+						border-radius: 8px;
+					}
+
+					.btl-fbs-qr-sidebar {
+						> p {
+							font-weight: 400;
+							font-size: 13px;
+							line-height: 19px;
+							color: rgb(112, 112, 112);
+						}
+
+						> a.btl-fbs-qr-download {
+							width: max-content;
+							color: rgba(35, 91, 251, 1);
+							border-bottom: 1px solid rgba(35, 91, 251, 1);
+							cursor: pointer;
+							font-size: 13px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

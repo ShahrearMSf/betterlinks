@@ -1,16 +1,32 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Link } from 'react-router-dom';
-import { route_path, plugin_root_url } from 'utils/helper';
-const Navbar = ({ menuNotice }) => {
-	const currentPage = betterLinksQuery.get('page');
-	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowLinkScannerMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
+import { route_path, plugin_root_url, betterlinks_custom_domain_menu } from 'utils/helper';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetch_settings_data } from 'redux/actions/settings.actions';
+
+const Navbar = (props) => {
+	const [customDomainMenu, setCustomDomainMenu] = useState(betterlinks_custom_domain_menu);
+	const { menuNotice, settings, page } = props;
+	const currentPage = page;
+
+	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowCustomDomainMenu', 'isShowLinkScannerMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
 		betterLinksHooks.applyFilters(item, i !== 2)
 	);
 	let rootLinks = 'betterlinks';
 	if (!betterLinksHooks.applyFilters('isShowManageLinksMenu', true) && shouldShowSubmenu) {
 		rootLinks = currentPage;
 	}
+	useEffect(() => {
+		if (!settings) {
+			props.fetch_settings_data();
+		}
+		if (settings.settings) {
+			setCustomDomainMenu(settings?.settings?.enable_custom_domain_menu);
+		}
+	}, [settings?.settings?.enable_custom_domain_menu]);
+
 	return (
 		<React.Fragment>
 			<Link
@@ -47,6 +63,11 @@ const Navbar = ({ menuNotice }) => {
 							<Link to={route_path + 'admin.php?page=betterlinks-manage-tags'}>{__('Manage Tags', 'betterlinks')}</Link>
 						</li>
 					)}
+					{betterLinksHooks.applyFilters('isShowCustomDomainMenu', customDomainMenu) && (
+						<li className={`wp-first-item ${currentPage == 'betterlinks-custom-domain' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-custom-domain'}>{__('Custom Domain', 'betterlinks')}</Link>
+						</li>
+					)}
 					{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks-analytics'}>{__('Analytics', 'betterlinks')}</Link>
@@ -68,4 +89,12 @@ const Navbar = ({ menuNotice }) => {
 	);
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+	settings: state.settings,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

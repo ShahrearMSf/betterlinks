@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API, namespace, makeRequest } from 'utils/helper';
+import { fetch_terms_data } from './terms.actions';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const FETCH_TRACKING_SETTINGS = 'FETCH_TRACKING_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
@@ -72,10 +73,9 @@ export const fetch_settings_data = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'settings');
 		const payload = JSON.parse(res.data.data);
-		// const auto_link_options = JSON.parse(res.data.auto_link);
-		if (!payload?.redirect_type) {
-			throw new Error('rest api not working properly for fetch_settings_data');
-		}
+		// if (!payload?.redirect_type) {
+		// 	throw new Error('rest api not working properly for fetch_settings_data');
+		// }
 		window.betterLinksGlobal.prefix = payload.prefix;
 		dispatch({
 			type: FETCH_SETTINGS,

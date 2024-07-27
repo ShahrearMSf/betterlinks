@@ -13,9 +13,9 @@ const CustomizeMetaTags = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
-	const pro_version = pro_version_check();
+	const isProUpdated = pro_version_check('1.8.0');
 
-	if (pro_version !== null && pro_version < 8) {
+	if (!isProUpdated) {
 		// this feature is from 1.8.0 version, betterlinks-pro
 		return (
 			<div className="btl-form-group">

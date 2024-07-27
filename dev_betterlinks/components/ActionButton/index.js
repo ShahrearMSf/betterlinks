@@ -7,20 +7,18 @@ const propTypes = {
 	onClickHandler: PropTypes.func,
 };
 
-const defaultProps = {
-	type: '',
-	label: '',
-	onClickHandler: () => {},
-};
-
-export default function ActionButton({ type, label, onClickHandler }) {
+export default function ActionButton({ type = '', label = '', onClickHandler = () => {}, children }) {
 	return (
 		<React.Fragment>
 			<div className="btl-tooltip">
 				<button className="dnd-link-button" onClick={onClickHandler}>
-					<span className="icon">
-						<i className={`btl btl-${type}`}></i>
-					</span>
+					{children ? (
+						children
+					) : (
+						<span className="icon">
+							<i className={`btl btl-${type}`}></i>
+						</span>
+					)}
 				</button>
 				<span className="btl-tooltiptext">{label}</span>
 			</div>
@@ -29,4 +27,3 @@ export default function ActionButton({ type, label, onClickHandler }) {
 }
 
 ActionButton.propTypes = propTypes;
-ActionButton.defaultProps = defaultProps;

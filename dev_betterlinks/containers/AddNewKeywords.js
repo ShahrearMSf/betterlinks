@@ -14,10 +14,7 @@ const propTypes = {
 	data: PropTypes.object,
 };
 
-const defaultProps = {
-	data: {},
-};
-const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps }) => {
+const AddNewKeywords = ({ data = {}, add_keyword, update_keyword, keywords, linksForUpdateModal: allLinks, postTypesProps, children }) => {
 	const [duplicate, setDuplicate] = useState([]);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [openPanelType, setOpenPanelType] = useState('HTML');
@@ -52,7 +49,9 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 	return (
 		<React.Fragment>
 			{Object.keys(data).length > 0 ? (
-				<ActionButton type="edit" label={__('Edit Keyword', 'betterlinks')} onClickHandler={openModal} />
+				<ActionButton type="edit" label={__('Edit Keyword', 'betterlinks')} onClickHandler={openModal}>
+					{children}
+				</ActionButton>
 			) : (
 				<div className="btl-create-autolinks">
 					<button className="btl-create-autolink-button" onClick={openModal}>
@@ -103,6 +102,15 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 							values.rightBoundary = '';
 							values.keywordAfter = '';
 						}
+						const findLink = allLinks.find((link) => link.value == values.chooseLink);
+						if (!findLink) {
+							actions.setFieldError('chooseLink_error', __('Please Select a Link', 'betterlinks'));
+							return;
+						}
+						if (values.postType.includes('page') && (values.category.length > 0 || values.tags.length > 0)) {
+							actions.setFieldError('auto_link_keyword_update_error', __('Post Category & Tags is not available for page', 'betterlinks'));
+							return;
+						}
 						if (values.chooseLink) {
 							// check Left Boundary & Keyword Before
 							if (Object.keys(data).length > 0) {
@@ -149,63 +157,55 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 										<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 											{__('Choose Link', 'betterlinks')}
 										</label>
-										<Select2
-											isClearable={true}
-											name="chooseLink"
-											className="btl-modal-select--full"
-											classNamePrefix="btl-react-select"
-											options={allLinks}
-											value={chooseAbleSavedLink}
-											onChange={(option) => {
-												props.setFieldValue('chooseLink', option ? option.value : '');
-												setChooseAbleSavedLink(option ? option : []);
-											}}
-											required={true}
-										/>
-										<input
-											tabIndex={-1}
-											autoComplete="off"
-											style={{
-												opacity: 0,
-												width: '100%',
-												height: 0,
-												position: 'absolute',
-												top: '100%',
-											}}
-											onChange={() => {}}
-											value={chooseAbleSavedLink}
-											required={true}
-										/>
+										<div className="btl-modal-form-field-wrapper">
+											<Select2
+												isClearable={true}
+												name="chooseLink"
+												className="btl-modal-select--full"
+												classNamePrefix="btl-react-select"
+												options={allLinks.filter((item) => item.value !== null)}
+												value={chooseAbleSavedLink}
+												onChange={(option) => {
+													props.setFieldValue('chooseLink', option ? option.value : '');
+													setChooseAbleSavedLink(option ? option : []);
+												}}
+												required={true}
+											/>
+											{props.errors.chooseLink_error && <span>{props.errors.chooseLink_error}</span>}
+										</div>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
 											{__('Post Type', 'betterlinks')}
 										</label>
-										<Select2
-											isMulti
-											name="postType"
-											className="btl-modal-select--full"
-											classNamePrefix="btl-react-select"
-											options={postTypes}
-											value={postTypes.filter((item) => {
-												if (props.values.postType.includes(item.value.toString())) {
-													return item;
-												}
-											})}
-											onChange={(option) => {
-												props.setFieldValue(
-													'postType',
-													option.reduce((acc, item) => {
-														acc.push(item.value);
-														return acc;
-													}, [])
-												);
-											}}
-										/>
+										<div className="btl-modal-form-field-wrapper">
+											<Select2
+												isMulti
+												name="postType"
+												className="btl-modal-select--full"
+												classNamePrefix="btl-react-select"
+												options={postTypes}
+												value={postTypes.filter((item) => {
+													if (props.values.postType.includes(item.value.toString())) {
+														return item;
+													}
+												})}
+												onChange={(option) => {
+													props.setFieldValue(
+														'postType',
+														option.reduce((acc, item) => {
+															acc.push(item.value);
+															return acc;
+														}, [])
+													);
+												}}
+											/>
+											{props.errors.auto_link_keyword_update_error && <span>{props.errors.auto_link_keyword_update_error}</span>}
+										</div>
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
-											{__('Category', 'betterlinks')}
+											{__('Post Category', 'betterlinks')}
 										</label>
 										<Select2
 											isMulti
@@ -231,7 +231,7 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 									</div>
 									<div className="btl-modal-form-group">
 										<label className="btl-modal-form-label" htmlFor="link_title">
-											{__('Tags', 'betterlinks')}
+											{__('Post Tags', 'betterlinks')}
 										</label>
 										<Select2
 											name="tags"
@@ -355,7 +355,6 @@ const AddNewKeywords = ({ data, add_keyword, update_keyword, keywords, linksForU
 };
 
 AddNewKeywords.propTypes = propTypes;
-AddNewKeywords.defaultProps = defaultProps;
 
 const mapDispatchToProps = (dispatch) => {
 	return {

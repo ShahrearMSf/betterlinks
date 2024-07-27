@@ -4,8 +4,10 @@ const { Popover } = wp.components;
 
 // redux import
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
+import { is_pro_enabled, site_url as site_link } from 'utils/helper';
 
 export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
+	const site_url = is_pro_enabled && localStorage.getItem('btl_custom_domain') ? localStorage.getItem('btl_custom_domain') : site_link;
 	const { url } = activeAttributes;
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
 	const btnRef = useRef(null);
@@ -30,7 +32,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 	};
 
 	const handleEditBetterLink = () => {
-		const siteUrlWithoutHttp = betterLinksGlobal.site_url.replace(/https?\:\/\//, '').toLowerCase();
+		const siteUrlWithoutHttp = site_url.replace(/https?\:\/\//, '').toLowerCase();
 		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
 		const justShortlink = url
 			.trim()
