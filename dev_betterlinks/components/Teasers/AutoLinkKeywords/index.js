@@ -38,40 +38,6 @@ const Teaser = () => {
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
-				<label className="btl-form-label">{__('Auto-Linked Keywords Icon', 'betterlinks')}</label>
-				<div className="link-options__body">
-					<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-						<input className="btl-check" name="is_autolink_icon" type="checkbox" disabled={true} />
-						<span className="text" />
-					</label>
-				</div>
-			</span>
-
-			<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
-				<label className="btl-form-label">
-					{__('Auto-Link Keywords inside', 'betterlinks-pro')}
-					<span style={{ display: 'block' }}>{__('Headings', 'betterlinks-pro')}</span>
-				</label>
-				<div className="link-options__body">
-					<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
-						<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
-						<span className="text" />
-					</label>
-				</div>
-			</span>
-			<SelectTeaser
-				title={
-					<>
-						{__('Disable Auto-link keywords ', 'betterlinks')}
-						<span style={{ display: 'block' }}>{__('for Post Types', 'betterlinks')}</span>
-					</>
-				}
-				onClick={openUpgradeToProModal}
-				isMulti={true}
-				defaultValue={[{ value: '', label: __('Page', 'betterlinks') }]}
-			/>
-			<hr className="btl-settings-devider" style={{ marginTop: '20px' }} />
 			{/* Note for presets  */}
 			<div className="btl-form-group">
 				<div className="btl-form-field">
@@ -116,6 +82,40 @@ const Teaser = () => {
 				defaultValue={[{ value: '', label: __('Uncategorized', 'betterlinks') }]}
 			/>
 			<SelectTeaser title={__('Post Tags', 'betterlinks')} onClick={openUpgradeToProModal} />
+			<hr className="btl-settings-devider" style={{ marginTop: '20px' }} />
+			<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
+				<label className="btl-form-label">{__('Auto-Linked Keywords Icon', 'betterlinks')}</label>
+				<div className="link-options__body">
+					<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+						<input className="btl-check" name="is_autolink_icon" type="checkbox" disabled={true} />
+						<span className="text" />
+					</label>
+				</div>
+			</span>
+
+			<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
+				<label className="btl-form-label">
+					{__('Auto-Link Keywords inside', 'betterlinks-pro')}
+					<span style={{ display: 'block' }}>{__('Headings', 'betterlinks-pro')}</span>
+				</label>
+				<div className="link-options__body">
+					<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+						<input className="btl-check" name="is_autolink_headings" type="checkbox" disabled={true} />
+						<span className="text" />
+					</label>
+				</div>
+			</span>
+			<SelectTeaser
+				title={
+					<>
+						{__('Disable Auto-link keywords ', 'betterlinks')}
+						<span style={{ display: 'block' }}>{__('for Post Types', 'betterlinks')}</span>
+					</>
+				}
+				onClick={openUpgradeToProModal}
+				isMulti={true}
+				defaultValue={[{ value: '', label: __('Page', 'betterlinks') }]}
+			/>
 		</>
 	);
 };

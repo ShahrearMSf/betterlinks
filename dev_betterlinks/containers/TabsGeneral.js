@@ -249,7 +249,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<div style={{ maxWidth: '200px' }}>
-										<Field className="btl-text-field" name="prefix" value={props.values?.prefix ?? 'go'} />
+										<Field className="btl-text-field" name="prefix" value={props.values?.prefix ?? 'go'} type="text" />
 									</div>
 									<div className="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>

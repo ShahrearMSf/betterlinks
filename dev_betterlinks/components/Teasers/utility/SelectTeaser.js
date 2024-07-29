@@ -10,7 +10,7 @@ const SelectTeaser = ({ title = '', is_pro = false, isMulti = false, defaultValu
 				{is_pro && <span class="pro-badge">Pro</span>}
 			</label>
 			<div className="link-options__body">
-				<Select2 isMulti={isMulti} className="btl-modal-select" isDisabled={true} defaultValue={defaultValue} />
+				<Select2 isMulti={isMulti} isDisabled={true} defaultValue={defaultValue} className="btl-modal-select--full" classNamePrefix="btl-react-select" />
 			</div>
 		</div>
 	);
