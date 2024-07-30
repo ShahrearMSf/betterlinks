@@ -92,7 +92,7 @@ const TabsTools = ({ query }) => {
 							)}
 							<p className="btl-file-chooser">
 								<label htmlFor="upload">{__('Choose the File You Want to Import', 'betterlinks')}</label>
-								<input type="file" id="upload_file" name="upload_file" size="25" />
+								<input type="file" id="upload_file" name="upload_file" size="25" required />
 							</p>
 							<p className="submit">
 								<input type="submit" name="submit" id="submit" className="button button-primary" value={__('Import File', 'betterlinks')} disabled="" />
