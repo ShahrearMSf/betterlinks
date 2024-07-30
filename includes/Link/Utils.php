@@ -211,7 +211,7 @@ class Utils {
 			$click_data['browser_version'] = $data['browser_version'];
 			$click_data['os_version']      = $data['os_version'];
 			$click_data['language']        = $data['language'];
-			$click_data['query_params']	   = $data['query_params'];	
+			$click_data['query_params']	   = isset( $data['query_params'] ) ? sanitize_text_field( $data['query_params'] ) : '';	
 		}
 
 		$arg = apply_filters( 'betterlinks/link/insert_click_arg', $click_data );
