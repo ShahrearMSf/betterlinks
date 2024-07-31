@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import { useField } from 'formik';
 import Select2 from 'react-select';
 import { is_pro_enabled } from 'utils/helper';
 
 const Select = (props) => {
 	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
-	const defaultValue = field.value ? field.value : '307';
-
-	if (field.value == 'cloak' && !is_pro_enabled) {
+	const isCloakDisabled = ['cloak', 'pro'].includes(field.value) && !is_pro_enabled;
+	const defaultValue = isCloakDisabled ? '307' : field.value;
+	
+	if (isCloakDisabled) {
 		setThisFieldValue('307');
 	}
 
@@ -30,6 +30,7 @@ const Select = (props) => {
 				options={props.value}
 				isMulti={props.isMulti}
 				isDisabled={props.disabled}
+				isOptionDisabled={(option) => option.disabled}
 			/>
 		</React.Fragment>
 	);

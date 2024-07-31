@@ -423,6 +423,7 @@ export const Link = (props) => {
 													{
 														value: is_pro_enabled ? 'cloak' : 'pro',
 														label: __('Cloaked', 'betterlinks'),
+														disabled: !is_pro_enabled,
 													},
 												]}
 												setUpgradeToProModal={setUpgradeToProModal}
