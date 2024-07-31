@@ -6,8 +6,6 @@ import PropTypes from 'prop-types';
 
 const propTypes = {};
 
-const defaultProps = {};
-
 export default function KeywordsQuickAction({ data, deleteKeywordHandler, keywords, postTypesProps, linksForUpdateModal }) {
 	const [isOpenDeleteBox, setIsOpenDeleteBox] = useState(false);
 	const openConfirmDialog = () => {
@@ -40,4 +38,3 @@ export default function KeywordsQuickAction({ data, deleteKeywordHandler, keywor
 }
 
 KeywordsQuickAction.propTypes = propTypes;
-KeywordsQuickAction.defaultProps = defaultProps;

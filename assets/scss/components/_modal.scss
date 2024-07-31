@@ -6,9 +6,11 @@
 	&:not(:has(.btl-manage-tags-form)) {
 		padding: 60px !important;
 	}
-	width: 60%;
-	max-height: 100vh;
-	overflow-y: auto !important;
+	& {
+		width: 60%;
+		max-height: 100vh;
+		overflow-y: auto !important;
+	}
 	/* Chrome, Safari, Edge, Opera */
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {

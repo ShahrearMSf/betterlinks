@@ -7,8 +7,6 @@ import { __ } from '@wordpress/i18n';
 
 const propTypes = {};
 
-const defaultProps = {};
-
 class QRCodeGenerator extends React.Component {
 	constructor(props) {
 		super(props);
@@ -91,4 +89,3 @@ export default function QRScanner({ shortUrl }) {
 }
 
 QRScanner.propTypes = propTypes;
-QRScanner.defaultProps = defaultProps;

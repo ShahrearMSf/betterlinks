@@ -6,21 +6,10 @@ import { is_pro_enabled } from 'utils/helper';
 const Select = (props) => {
 	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
 	const defaultValue = field.value ? field.value : '307';
-	const [selectValue, setSelectValue] = useState(field.value || []);
 
 	if (field.value == 'cloak' && !is_pro_enabled) {
 		setThisFieldValue('307');
 	}
-
-	// useEffect(() => {
-	// 	if (field.value === 'pro' && props.setUpgradeToProModal) {
-	// 		setThisFieldValue(selectValue[0]?.value, false);
-	// 		props.setFieldValue(field.name, selectValue[0]?.value);
-	// 		props.setUpgradeToProModal(true);
-	// 	} else {
-	// 		setSelectValue((props.value || []).filter((item) => item.value == field.value));
-	// 	}
-	// }, [field.value, props.value]);
 
 	const onChange = (option) => {
 		if (option == null) {

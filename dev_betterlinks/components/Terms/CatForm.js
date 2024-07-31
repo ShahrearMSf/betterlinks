@@ -13,13 +13,7 @@ const propTypes = {
 	hideHandler: PropTypes.func,
 };
 
-const defaultProps = {
-	catId: 0,
-	catName: '',
-	catSlug: '',
-};
-
-export default function CatForm({ catId, catName, catSlug, submitHandler, hideHandler }) {
+export default function CatForm({ catId = 0, catName = '', catSlug = '', submitHandler, hideHandler }) {
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const catSlugUniqueCheck = (slug, ID) => {
 		let form_data = new FormData();
@@ -109,4 +103,3 @@ export default function CatForm({ catId, catName, catSlug, submitHandler, hideHa
 }
 
 CatForm.propTypes = propTypes;
-CatForm.defaultProps = defaultProps;
