@@ -1,10 +1,10 @@
 import { Form, Formik } from 'formik';
 import { __ } from '@wordpress/i18n';
-import CheckList from './CheckList';
+import CheckList from '../utility/CheckList';
 import UpgradeToPro from '../UpgradeToPro';
 import { is_pro_enabled } from 'utils/helper';
 import { useUpgradeProModal } from 'utils/customHooks';
-import SelectTeaser from './SelectTeaser';
+import SelectTeaser from '../utility/SelectTeaser';
 
 export default function AutoLinkCreate({ autoCreateLinkSettings, terms, setAutoCreateLinkSettings }) {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
