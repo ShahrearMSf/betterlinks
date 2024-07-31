@@ -20,7 +20,7 @@ const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, track
 		is_fbs_enabled && <FluentBoardSettings settings={settings} terms={terms} />,
 		<ExternalAnalytics trackingSettings={trackingSettings} />,
 		<AutoLinkCreate autoCreateLinkSettings={autoCreateLinkSettings} terms={terms} setAutoCreateLinkSettings={setAutoCreateLinkSettings} />,
-		<AffiliateLinkDisclosure settings={settings} />,
+		<AffiliateLinkDisclosure settings={settings} postTypes={postdatas?.postTypes || []} />,
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 		<AutoLinkKeywords settings={settings} postdatas={postdatas} />,
