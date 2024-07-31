@@ -3,6 +3,8 @@ import SearchLoader from 'components/SearchLoader';
 import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
 import { useEffect } from 'react';
+import ProBadge from 'components/Badge/ProBadge';
+import { is_pro_enabled } from 'utils/helper';
 
 const FilterComponent = (props) => {
 	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id } = props;
@@ -12,20 +14,24 @@ const FilterComponent = (props) => {
 	}, [analytics]);
 	const tag_id = betterLinksQuery.get('tag_id');
 	const options = [
-		{ label: 'Browser', value: 'browser' },
-		{ label: 'IP', value: 'ip' },
-		{ label: 'Timestamp', value: 'created_at' },
-		{ label: 'Referer', value: 'referer' },
+		{ label: __('Browser', 'betterlinks'), value: 'browser' },
+		{ label: __('IP', 'betterlinks'), value: 'ip' },
+		{ label: __('Timestamp', 'betterlinks'), value: 'created_at' },
+		{ label: __('Referer', 'betterlinks'), value: 'referer' },
 		{
-			label: 'Parameters',
+			label: (
+				<div>
+					{__('Parameters', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+				</div>
+			),
 			value: 'query_params',
 		},
 		{
-			label: 'OS',
+			label: __('OS', 'betterlinks'),
 			value: 'os',
 		},
 		{
-			label: 'Device',
+			label: __('Device', 'betterlinks'),
 			value: 'device',
 		},
 	];

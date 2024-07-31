@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import _ from 'lodash';
 import clipboardCopy from 'clipboard-copy';
+import ProBadge from 'components/Badge/ProBadge';
 
 export const {
 	betterlinks_nonce,
@@ -688,10 +689,14 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				),
 			},
 			{
-				name: __('Parameters', 'betterlinks'),
+				name: (
+					<>
+						{__('Parameters', 'betterlinks')}
+						{!is_pro_enabled && <ProBadge />}
+					</>
+				),
 				selector: 'query_params',
-				// width: '80px',
-				cell: (row) => <div>{row.query_params}</div>,
+				cell: (row) => is_pro_enabled && <div>{row.query_params}</div>,
 				sortable: false,
 			},
 			{
