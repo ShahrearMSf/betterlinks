@@ -1,7 +1,6 @@
 <?php
 namespace BetterLinks\Link;
 
-use BetterLinks\Admin\Cache;
 use BetterLinks\Helper;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
@@ -19,18 +18,18 @@ class Utils {
 	}
 	public function get_slug_raw( $slug ) {
 		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
-			return apply_filters( 'betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file( $slug ) );
+			return apply_filters( 'betterlinks/link/get_link_by_slug', Helper::get_link_from_json_file( $slug ) );
 		}
 		$link_options      = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME, '{}' ), true );
 		$is_case_sensitive = isset( $link_options['is_case_sensitive'] ) ? $link_options['is_case_sensitive'] : false;
-		$results           = current( \BetterLinks\Helper::get_link_by_short_url( $slug, $is_case_sensitive ) );
+		$results           = current( Helper::get_link_by_short_url( $slug, $is_case_sensitive ) );
 		if ( ! empty( $results ) ) {
 			return apply_filters( 'betterlinks/link/get_link_by_slug', json_decode( wp_json_encode( $results ), true ) );
 		}
 		// wildcards.
 		$links_option = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME ), true );
 		if ( isset( $links_option['wildcards'] ) && $links_option['wildcards'] ) {
-			$results = \BetterLinks\Helper::get_link_by_wildcards( 1 );
+			$results = Helper::get_link_by_wildcards( 1 );
 			if ( is_array( $results ) && count( $results ) > 0 ) {
 				foreach ( $results as $key => $item ) {
 					$postion = strpos( $item['short_url'], '/*' );
@@ -69,7 +68,8 @@ class Utils {
 			$dd         = new DeviceDetector( $user_agent );
 			$dd->parse();
 
-			$data            = $this->device_data_collect( $data, $dd );
+			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+
 			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
 			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
 			$data['device']  = $dd->getDeviceName();
@@ -128,29 +128,7 @@ class Utils {
 				exit;
 		}
 	}
-	public function device_data_collect( $data, $dd ) {
-		if ( ! apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			return $data;
-		}
-
-		$client_info = $dd->getClient();
-		$os_details  = $dd->getOs();
-
-		$language = isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) : 'en-US,en;q=0.5';
-		$language = explode( ',', $language )[0];
-
-		$client_information_arr = array(
-			'brand_name'      => $dd->getBrandName(),
-			'model'           => $dd->getModel(),
-			'bot_name'        => $dd->isBot() ? $dd->getBot()['name'] : null,
-			'browser_type'    => isset( $client_info['type'] ) ? $client_info['type'] : null,
-			'browser_version' => isset( $client_info['version'] ) ? $client_info['version'] : null,
-			'os_version'      => isset( $os_details['version'] ) ? $os_details['version'] : null,
-			'language'        => ! empty( $language ) ? $language : 'en-US',
-		);
-
-		return array_merge( $data, $client_information_arr );
-	}
+	
 	public function start_trakcing( $data ) {
 		global $betterlinks;
 		$is_disable_analytics_ip = isset( $betterlinks['is_disable_analytics_ip'] ) ? $betterlinks['is_disable_analytics_ip'] : false;
@@ -204,7 +182,7 @@ class Utils {
 			$this->insert_json_into_file( BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg );
 		} else {
 			try {
-				$click_id = \BetterLinks\Helper::insert_click( $arg );
+				$click_id = Helper::insert_click( $arg );
 				if ( ! empty( $click_id ) && $is_split_enabled ) {
 					do_action( 'betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $arg['target_url'] );
 				}
@@ -250,7 +228,7 @@ class Utils {
 
 	public function create_new_link( $title, $target_url, $settings ) {
 		$date             = wp_date( 'Y-m-d H:i:s' );
-		$helper           = new \BetterLinks\Helper();
+		$helper           = new Helper();
 		$slug             = $helper->generate_random_slug();
 		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
