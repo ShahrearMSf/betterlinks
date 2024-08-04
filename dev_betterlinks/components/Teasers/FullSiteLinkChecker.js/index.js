@@ -1,5 +1,4 @@
 import { is_pro_enabled } from 'utils/helper';
-import { Formik, Field, Form } from 'formik';
 
 const FullSiteLinkChecker = () => {
 	if (is_pro_enabled) {

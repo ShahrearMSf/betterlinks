@@ -12,7 +12,7 @@
 	}
 }
 .btl-broken-links-panel {
-	padding: 10px;
+	// padding: 10px;
 	&:not(:first-child) {
 		margin-top: 20px;
 	}
@@ -125,81 +125,6 @@
 				.btl-form-group {
 					.btl-form-label {
 						min-width: 175px;
-					}
-				}
-			}
-			&.btl-fullsite {
-				progress {
-					appearance: none;
-					display: inline-block;
-					box-sizing: border-box;
-					width: 300px;
-					height: 25px;
-					border-radius: 20px;
-					margin-top: 20px;
-
-					/* Chrome and Safari */
-					&::-webkit-progress-bar {
-						background: #e6e6e6;
-						border-radius: 100px;
-					}
-
-					&::-webkit-progress-value {
-						background-color: #003be2;
-						// background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, 0.1) 33%, rgba(0, 0, 0, 0.1) 66%, transparent 66%),
-						// -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)), -webkit-linear-gradient(left, #09c, #f44);
-						border-radius: 20px;
-					}
-
-					/* Firefox */
-					&::-moz-progress-bar {
-						background-color: #003be2;
-						// background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, 0.1) 33%, rgba(0, 0, 0, 0.1) 66%, transparent 66%),
-						// 	-webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)), -webkit-linear-gradient(left, #09c, #f44);
-						border-radius: 20px;
-					}
-				}
-				.btl-link-scan-btn-group {
-					display: flex;
-					column-gap: 5px;
-
-					.btl-link-scan-btn {
-						display: flex;
-						align-items: center;
-						column-gap: 5px;
-					}
-					.btl-resume-link-scan-btn {
-						border-color: $danger;
-					}
-				}
-				.btl-form-field {
-					.btl-modal-select--full {
-						min-width: 300px;
-						width: max-content !important;
-					}
-				}
-				.btl-spin {
-					-webkit-animation: btl-spin 2s infinite linear;
-					animation: btl-spin 2s infinite linear;
-				}
-				@-webkit-keyframes btl-spin {
-					0% {
-						-webkit-transform: rotate(0deg);
-						transform: rotate(0deg);
-					}
-					100% {
-						-webkit-transform: rotate(359deg);
-						transform: rotate(359deg);
-					}
-				}
-				@keyframes btl-spin {
-					0% {
-						-webkit-transform: rotate(0deg);
-						transform: rotate(0deg);
-					}
-					100% {
-						-webkit-transform: rotate(359deg);
-						transform: rotate(359deg);
 					}
 				}
 			}

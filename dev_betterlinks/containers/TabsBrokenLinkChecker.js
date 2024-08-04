@@ -30,11 +30,11 @@ const TabsBrokenLinkChecker = () => {
 						</Tab>
 					))}
 				</TabList>
-				<div className="btl-tab-panel-inner" style={{ height: 'fit-content' }}>
-					{brokenLinkCheckerTabPanelList.map((item, index) => {
-						return <TabPanel key={index}>{item}</TabPanel>;
-					})}
-				</div>
+				{/* <div className="btl-tab-panel-inner" style={{ height: 'fit-content' }}> */}
+				{brokenLinkCheckerTabPanelList.map((item, index) => {
+					return <TabPanel key={index}>{item}</TabPanel>;
+				})}
+				{/* </div> */}
 			</Tabs>
 		</>
 	);
