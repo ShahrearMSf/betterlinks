@@ -29,6 +29,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 	const link = `${site_url}/`;
 	useEffect(
 		debounce(() => {
+			if (!is_pro_enabled) return;
 			shortURLUniqueCheckGutenberg(autoShortLink, ID).then((res) => {
 				setExists(res);
 				betterlinksGutenStore.dispatch({
@@ -43,6 +44,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 	);
 
 	useEffect(() => {
+		if (!is_pro_enabled) return;
 		const storeTerms = betterlinksGutenStore?.getState()?.terms?.terms;
 		if (storeTerms) {
 			setTerms(storeTerms);
@@ -57,6 +59,7 @@ const AutoLinkCreateSidebar = ({ ID, autoShortLink, onSetAutoShortLink, openUpgr
 	}, [terms]);
 
 	useEffect(() => {
+		if (!is_pro_enabled) return;
 		const postType = wp.data.select('core/editor').getCurrentPostType();
 		let autoLinkStoreData = betterlinksGutenStore?.getState()?.gutenbergAutoLink;
 
