@@ -302,14 +302,8 @@
 			&:nth-child(4) {
 				min-width: 320px;
 			}
-			&:nth-child(5) {
-				// min-width: 290px;
-				// padding-left: 40px;
-			}
 			&:last-child {
 				max-width: 130px;
-				// justify-content: center;
-				// padding-left: 40px;
 			}
 		}
 		& {
@@ -357,7 +351,7 @@
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					width: 100%;
+					// width: 100%;
 					margin: 0;
 					& > button {
 						width: 160px;
@@ -561,23 +555,23 @@
 					> div span {
 						font-size: 12px !important;
 					}
-					.betterlinks-broken-links-status-column {
-						padding: 8px;
-						border-radius: 20px;
-						font-size: 12px;
-						&.btl-danger {
-							background-color: rgba(255, 95, 116, 0.15);
-							color: $danger;
-						}
-						&.btl-danger2 {
-							background-color: rgba(255, 95, 116, 0.15);
-							color: $danger;
-						}
-						&.btl-success {
-							background-color: rgb(8, 244, 34);
-							color: $light;
-						}
-					}
+					// .betterlinks-broken-links-status-column {
+					// 	padding: 8px;
+					// 	border-radius: 20px;
+					// 	font-size: 12px;
+					// 	&.btl-danger {
+					// 		background-color: rgba(255, 95, 116, 0.15);
+					// 		color: $danger;
+					// 	}
+					// 	&.btl-danger2 {
+					// 		background-color: rgba(255, 95, 116, 0.15);
+					// 		color: $danger;
+					// 	}
+					// 	&.btl-success {
+					// 		background-color: rgb(8, 244, 34);
+					// 		color: $light;
+					// 	}
+					// }
 					&:nth-child(1) {
 						min-width: 300px;
 						.dnd-link-button {
@@ -593,7 +587,7 @@
 					&:nth-child(3) {
 						min-width: 100px;
 						padding-left: 0;
-						justify-content: center;
+						justify-content: flex-start;
 					}
 					&:nth-child(2) {
 						// max-width: initial;
