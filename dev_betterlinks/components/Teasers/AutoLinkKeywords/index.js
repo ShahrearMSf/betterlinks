@@ -3,26 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
 import { useUpgradeProModal } from 'utils/customHooks';
-import { pro_version_check, saveSettingsHandler } from 'utils/helper';
+import { is_pro_enabled, pro_version_check, saveSettingsHandler } from 'utils/helper';
 import UpgradeToPro from '../UpgradeToPro';
 import CheckList from '../utility/CheckList';
 import SelectTeaser from '../utility/SelectTeaser';
 import InputTeaser from '../utility/InputTeaser';
+import CompatibilityNotice from '../CompatibilityNotice';
 
 const AutoLinkKeywords = ({ settings, postdatas, update_option }) => {
-	const isProUpdated = pro_version_check('1.9.5');
-
-	if (!isProUpdated) {
-		return (
-			<div className="btl-form-group">
-				<div className="short-description">
-					<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
-					{__('To Utilize the Auto-Link Keywords Feature, kindly ensure that you have atleast BetterLinks Pro v2.1.0 installed & activated', 'betterlinks')}
-				</div>
-			</div>
-		);
-	}
-
 	return <>{betterLinksHooks.applyFilters('BetterLinksAutoLinkKeywords', <Teaser />, { settings, postdatas, update_option, saveSettingsHandler })}</>;
 };
 
@@ -38,6 +26,10 @@ const Teaser = () => {
 	return (
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+			<CompatibilityNotice
+				notice={__('To Utilize the Auto-Link Keywords Feature, kindly ensure that you have atleast BetterLinks Pro v2.0.2 installed & activated', 'betterlinks')}
+				compatibleProVersion="2.0.2"
+			/>
 			{/* Note for presets  */}
 			<div className="btl-form-group">
 				<div className="btl-form-field">
