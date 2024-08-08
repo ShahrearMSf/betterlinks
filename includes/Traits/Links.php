@@ -102,9 +102,7 @@ trait Links
                 \BetterLinks\Helper::insert_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params);
             }
             
-            if( method_exists('\BetterLinksPro\Helper', 'update_custom_script_data') ){
-                \BetterLinksPro\Helper::update_custom_script_data($id, $arg);
-            }
+            do_action( 'betterlinkspro/admin/update_link', $id, $arg  );
 
             $response = array_merge($arg, [
                 'ID' => strval($id),
@@ -149,9 +147,7 @@ trait Links
             \BetterLinks\Helper::update_json_into_file(trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json', $params, $old_short_url);
         }
 
-        if( method_exists('\BetterLinksPro\Helper', 'update_custom_script_data') ){
-            \BetterLinksPro\Helper::update_custom_script_data($id, $arg);
-        }
+        do_action( 'betterlinkspro/admin/update_link', $id, $arg );
 
         if( !empty( $arg['param_struct'] ) ){
             $arg['param_struct'] = unserialize($arg['param_struct']);

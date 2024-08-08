@@ -75,4 +75,8 @@ export const tabList = [
 		label: __('Customize Link Preview', 'betterlinks'),
 		type: 'pro',
 	},
+	{
+		label: __('Auto-Link Keywords', 'betterlinks'),
+		type: 'pro',
+	},
 ].filter(Boolean);

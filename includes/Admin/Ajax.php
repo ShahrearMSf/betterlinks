@@ -360,8 +360,8 @@ class Ajax {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		$links_count  = \BetterLinks\Helper::get_prettylinks_links_count();
-		$clicks_count = \BetterLinks\Helper::get_prettylinks_clicks_count();
+		$links_count  = Helper::get_prettylinks_links_count();
+		$clicks_count = Helper::get_prettylinks_clicks_count();
 		set_transient(
 			'betterlinks_migration_data_prettylinks',
 			array(
@@ -386,11 +386,11 @@ class Ajax {
 		// give betterlinks a lot of time to properly set the migration work for background.
 		set_time_limit( 300 );
 
-		if ( \BetterLinks\Helper::btl_get_option( 'btl_prettylink_migration_should_not_start_in_background' ) ) {
+		if ( Helper::btl_get_option( 'btl_prettylink_migration_should_not_start_in_background' ) ) {
 			// preventing multiple migration call to prevent duplicate datas from migrating.
 			wp_send_json_error( array( 'duplicate_migration_detected__so_prevented_it_here' => true ) );
 		}
-		\BetterLinks\Helper::btl_update_option( 'btl_prettylink_migration_should_not_start_in_background', true, true );
+		Helper::btl_update_option( 'btl_prettylink_migration_should_not_start_in_background', true, true );
 		global $wpdb;
 		$query = "DELETE FROM {$wpdb->prefix}options WHERE option_name IN(
                 'betterlinks_notice_ptl_migration_running_in_background',
@@ -400,10 +400,10 @@ class Ajax {
                 'btl_migration_prettylinks_current_successful_clicks_count'
         )";
 		$wpdb->query( $query ); // phpcs:ignore.
-		\BetterLinks\Helper::btl_update_option( 'btl_failed_migration_prettylinks_links', array(), true );
-		\BetterLinks\Helper::btl_update_option( 'btl_failed_migration_prettylinks_clicks', array(), true );
-		\BetterLinks\Helper::btl_update_option( 'btl_migration_prettylinks_current_successful_links_count', 0, true );
-		\BetterLinks\Helper::btl_update_option( 'btl_migration_prettylinks_current_successful_clicks_count', 0, true );
+		Helper::btl_update_option( 'btl_failed_migration_prettylinks_links', array(), true );
+		Helper::btl_update_option( 'btl_failed_migration_prettylinks_clicks', array(), true );
+		Helper::btl_update_option( 'btl_migration_prettylinks_current_successful_links_count', 0, true );
+		Helper::btl_update_option( 'btl_migration_prettylinks_current_successful_clicks_count', 0, true );
 
 		$type                  = isset( $_POST['type'] ) ? strtolower( sanitize_text_field( wp_unslash( $_POST['type'] ) ) ) : '';
 		$total_links_clicks    = get_transient( 'betterlinks_migration_data_prettylinks' );
@@ -413,17 +413,17 @@ class Ajax {
 		$installer = new \BetterLinks\Installer();
 		if ( $should_migrate_links && ! empty( $total_links_clicks['links_count'] ) ) {
 			$links_count = absint( $total_links_clicks['links_count'] );
-			$installer   = \BetterLinks\Helper::run_migration_for_ptrl_links_in_background( $installer, $links_count );
+			$installer   = Helper::run_migration_for_ptrl_links_in_background( $installer, $links_count );
 		}
 
 		if ( $should_migrate_clicks && ! empty( $total_links_clicks['clicks_count'] ) ) {
 			$clicks_count = absint( $total_links_clicks['clicks_count'] );
-			$installer    = \BetterLinks\Helper::run_migration_for_ptrl_clicks_in_background( $installer, $clicks_count );
+			$installer    = Helper::run_migration_for_ptrl_clicks_in_background( $installer, $clicks_count );
 		}
 
 		$installer->data( array( 'betterlinks_notice_ptl_migrate' ) )->save();
 		$installer->dispatch();
-		\BetterLinks\Helper::btl_update_option( 'betterlinks_notice_ptl_migration_running_in_background', true, true );
+		Helper::btl_update_option( 'betterlinks_notice_ptl_migration_running_in_background', true, true );
 		wp_send_json_success( array( 'btl_prettylinks_migration_running_in_background' => true ) );
 	}
 
@@ -487,7 +487,7 @@ class Ajax {
 			$alreadyExists = false;
 			$resutls       = array();
 			if ( ! empty( $slug ) ) {
-				$resutls = \BetterLinks\Helper::get_link_by_short_url( $slug );
+				$resutls = Helper::get_link_by_short_url( $slug );
 				if ( count( $resutls ) > 0 ) {
 					$alreadyExists = true;
 					$resutls       = current( $resutls );
@@ -510,7 +510,7 @@ class Ajax {
 		$alreadyExists = false;
 		$resutls       = array();
 		if ( ! empty( $slug ) ) {
-			$resutls = \BetterLinks\Helper::get_term_by_slug( $slug );
+			$resutls = Helper::get_term_by_slug( $slug );
 			if ( count( $resutls ) > 0 ) {
 				$alreadyExists = true;
 				$resutls       = current( $resutls );
@@ -572,7 +572,7 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		$title   = isset( $_GET['title'] ) ? sanitize_text_field( $_GET['title'] ) : '';
-		$results = \BetterLinks\Helper::search_clicks_data( $title );
+		$results = Helper::search_clicks_data( $title );
 
 		wp_send_json_success(
 			array(
@@ -588,7 +588,7 @@ class Ajax {
 		$links = ( isset( $_POST['links'] ) ? explode( ',', sanitize_text_field( $_POST['links'] ) ) : array() );
 		if ( count( $links ) > 0 ) {
 			foreach ( $links as $key => $value ) {
-				\BetterLinks\Helper::insert_link(
+				Helper::insert_link(
 					array(
 						'ID'         => $value,
 						'link_order' => $key,
@@ -608,7 +608,7 @@ class Ajax {
 		$destination = ( isset( $_POST['destination'] ) ? explode( ',', sanitize_text_field( $_POST['destination'] ) ) : array() );
 		if ( count( $source ) > 0 ) {
 			foreach ( $source as $key => $value ) {
-				\BetterLinks\Helper::insert_link(
+				Helper::insert_link(
 					array(
 						'ID'         => $value,
 						'link_order' => $key,
@@ -619,7 +619,7 @@ class Ajax {
 		}
 		if ( count( $destination ) > 0 ) {
 			foreach ( $destination as $key => $value ) {
-				\BetterLinks\Helper::insert_link(
+				Helper::insert_link(
 					array(
 						'ID'         => $value,
 						'link_order' => $key,
@@ -636,7 +636,7 @@ class Ajax {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		$response = \BetterLinks\Helper::get_thirstyaffiliates_links();
+		$response = Helper::get_thirstyaffiliates_links();
 		wp_send_json_success( $response );
 	}
 
@@ -646,7 +646,7 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		try {
-			$links    = \BetterLinks\Helper::get_thirstyaffiliates_links();
+			$links    = Helper::get_thirstyaffiliates_links();
 			$migrator = new \BetterLinks\Tools\Migration\TAOneClick();
 			$resutls  = $migrator->run_importer( $links );
 			do_action( 'betterlinks/admin/after_import_data' );
@@ -672,7 +672,7 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		$short_url = ( isset( $_POST['short_url'] ) ? sanitize_text_field( $_POST['short_url'] ) : '' );
-		$results   = \BetterLinks\Helper::get_link_by_short_url( $short_url );
+		$results   = Helper::get_link_by_short_url( $short_url );
 		wp_send_json_success( is_array( $results ) ? current( $results ) : false );
 	}
 	public function get_links_by_permalink() {
@@ -681,7 +681,7 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		$short_url = ( isset( $_POST['target_url'] ) ? sanitize_text_field( $_POST['target_url'] ) : '' );
-		$results   = \BetterLinks\Helper::get_link_by_permalink( $short_url );
+		$results   = Helper::get_link_by_permalink( $short_url );
 		wp_send_json_success( is_array( $results ) ? current( $results ) : false );
 	}
 
@@ -691,7 +691,7 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		$ID      = ( isset( $_POST['ID'] ) ? sanitize_text_field( $_POST['ID'] ) : '' );
-		$results = \BetterLinks\Helper::get_terms_by_link_ID_and_term_type( $ID, 'category' );
+		$results = Helper::get_terms_by_link_ID_and_term_type( $ID, 'category' );
 		return wp_send_json( $results );
 	}
 
@@ -714,7 +714,7 @@ class Ajax {
 		}
 		$cache_data = get_transient( BETTERLINKS_CACHE_LINKS_NAME );
 		if ( empty( $cache_data ) || ! json_decode( $cache_data, true ) ) {
-			$results = \BetterLinks\Helper::get_prepare_all_links();
+			$results = Helper::get_prepare_all_links();
 			set_transient( BETTERLINKS_CACHE_LINKS_NAME, json_encode( $results ) );
 			wp_send_json_success(
 				array(
@@ -846,7 +846,7 @@ class Ajax {
 		if ( ! apply_filters( 'betterlinks/api/settings_update_items_permissions_check', current_user_can( 'manage_options' ) ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		$helper                           = new \BetterLinks\Helper();
+		$helper                           = new Helper();
 		$response                         = $helper::fresh_ajax_request_data( $_POST );
 		$response                         = $helper::sanitize_text_or_array_field( $response );
 		$response['uncloaked_categories'] = isset( $response['uncloaked_categories'] ) && is_string( $response['uncloaked_categories'] ) ? json_decode( $response['uncloaked_categories'] ) : array();
@@ -998,11 +998,11 @@ class Ajax {
 		if ( $count === false ) {
 			wp_send_json_error( $count );
 		}
-		\BetterLinks\Helper::clear_query_cache();
-		\BetterLinks\Helper::clear_analytics_cache();
-		\BetterLinks\Helper::update_links_analytics();
-		$new_clicks_data = \BetterLinks\Helper::get_clicks_by_date( $from, $to );
-		$new_links_data  = \BetterLinks\Helper::get_prepare_all_links();
+		Helper::clear_query_cache();
+		Helper::clear_analytics_cache();
+		Helper::update_links_analytics();
+		$new_clicks_data = Helper::get_clicks_by_date( $from, $to );
+		$new_links_data  = Helper::get_prepare_all_links();
 		set_transient( BETTERLINKS_CACHE_LINKS_NAME, json_encode( $new_links_data ) );
 		wp_send_json_success(
 			array(
@@ -1014,7 +1014,7 @@ class Ajax {
 		);
 	}
 	public function get_post_types() {
-		$post_types = get_post_types();
+		$post_types = get_post_types(['public' => true]);
 		wp_send_json_success(
 			$post_types,
 			200

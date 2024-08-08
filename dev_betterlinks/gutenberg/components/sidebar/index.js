@@ -2,7 +2,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { redirectType } from 'utils/data';
-import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, betterlinks_links_option } from 'utils/helper';
+import { formatDate, generateSlug, getJsonString, is_pro_enabled, makeRequest, permalinkToShortUrl, generateRandomSlug, prefix as link_prefix } from 'utils/helper';
 import {
 	edit_gutenberg_link,
 	edit_gutenberg_auto_link,
@@ -48,7 +48,7 @@ const CustomSidebarComponent = (props) => {
 	const [expireRedirectUrl, setExpireRedirectUrl] = useState('');
 	const [autoShortLink, setAutoShortLink] = useState('');
 	const [enableAffiliateDisclosure, setEnableAffiliateDisclosure] = useState(false);
-	const prefix = betterlinks_links_option?.prefix || '';
+	const prefix = link_prefix ?? 'go';
 
 	useEffect(() => {
 		const settings = betterlinksGutenStore?.getState()?.settings?.settings;

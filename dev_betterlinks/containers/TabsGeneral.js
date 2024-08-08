@@ -249,7 +249,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 								<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 								<div className="link-options__body" style={{ flexDirection: 'column' }}>
 									<div style={{ maxWidth: '200px' }}>
-										<Field className="btl-text-field" name="prefix" value={props.values?.prefix ?? 'go'} />
+										<Field className="btl-text-field" name="prefix" value={props.values?.prefix ?? 'go'} type="text" />
 									</div>
 									<div className="short-description">
 										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
@@ -393,7 +393,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										</div>
 									</span>
 
-									<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
+									{/* <span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
 										<label className="btl-form-label">
 											{__('Auto-Keyword Linking', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
 										</label>
@@ -409,7 +409,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 												</span>
 											</label>
 										</div>
-									</span>
+									</span> */}
 									<span className="btl-form-group btl-form-group--teaser btl-form-group-uncloaked-categories">
 										<label className="btl-form-label">
 											{__('Uncloak Categories', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>

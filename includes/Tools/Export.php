@@ -65,7 +65,11 @@ class Export {
 		if ( is_array( $links ) && count( $links ) > 0 ) {
 			foreach ( $links as $link ) {
 				$terms     = $this->get_terms_from_link_id( $link['ID'] );
-				$results[] = array_merge( $link, $terms );
+				$auto_link_keywords = array(
+					'auto_link_keywords' => serialize( $this->get_auto_link_keywords_from_link_id($link['ID']) )
+				);
+				
+				$results[] = array_merge( $link, $terms, $auto_link_keywords );
 			}
 		}
 		return $results;
@@ -126,13 +130,21 @@ class Export {
 			'',
 			'',
 			'uncategorized',
+			serialize([])
 		);
 
 		if ( is_array( $links ) && count( $links ) > 0 ) {
-			array_push( $links, 'tags', 'category' );
+			array_push( $links, 'tags', 'category', 'auto_link_keywords' );
 			return array( $links, $sample_data );
 		}
 		return array();
+	}
+
+	public function get_auto_link_keywords_from_link_id( $link_id = 0 ){
+		global $wpdb;
+		$query = sprintf( 'SELECT meta_id, meta_key, meta_value FROM %2$sbetterlinkmeta where link_id=%1$s', $link_id, $wpdb->prefix );
+		$auto_link_keywords = $wpdb->get_results( $query, ARRAY_A );
+		return $auto_link_keywords;
 	}
 
 	public function get_terms_from_link_id( $link_id = 0 ) {

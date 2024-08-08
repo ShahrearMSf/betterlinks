@@ -42,11 +42,11 @@ class Notice {
 			return;
 		}
 
-		if( strpos( $wp_version, '6.6' ) !== false  && version_compare( BETTERLINKS_PRO_VERSION, '2.0.0', '<=' ) ){
+		if( version_compare( $wp_version, '6.6', '>=' )  && version_compare( BETTERLINKS_PRO_VERSION, '2.0.0', '<=' ) ){
 			$message = sprintf('
-			<strong>%1$s</strong>: %2$s <strong>v2.0.1</strong> %3$s <strong>6.6</strong>',
+			<strong>%1$s</strong>: %2$s <strong>v2.0.1</strong> %3$s <strong>6.6 or later</strong>',
 			__('Warning', 'betterlinks'),
-			__('Please update your BetterLinks Pro plugin to', 'betterlinks'),
+			__('Please update your BetterLinks Pro plugin to atleast', 'betterlinks'),
 			__('to ensure compatibility with WordPress', 'betterlinks')
 		);
 	
