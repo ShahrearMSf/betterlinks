@@ -11,7 +11,7 @@ import InputTeaser from '../utility/InputTeaser';
 import CompatibilityNotice from '../CompatibilityNotice';
 
 const AutoLinkKeywords = ({ settings, postdatas, update_option }) => {
-	return <>{betterLinksHooks.applyFilters('BetterLinksAutoLinkKeywords', <Teaser />, { settings, postdatas, update_option, saveSettingsHandler })}</>;
+	return betterLinksHooks.applyFilters('BetterLinksAutoLinkKeywords', <Teaser />, { settings, postdatas, update_option, saveSettingsHandler });
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -27,7 +27,7 @@ const Teaser = () => {
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<CompatibilityNotice
-				notice={__('To Utilize the Auto-Link Keywords Feature, kindly ensure that you have atleast BetterLinks Pro v2.0.2 installed & activated', 'betterlinks')}
+				notice={__('To Utilize the Auto-Link Keywords Feature, kindly ensure that you have at least BetterLinks Pro v2.0.2 installed & activated', 'betterlinks')}
 				compatibleProVersion="2.0.2"
 			/>
 			{/* Note for presets  */}
