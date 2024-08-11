@@ -158,7 +158,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 2.1.5 - 08/08/2024 =
+= 2.1.5 - 11/08/2024 =
 
 - Fixed: Resolved issue with undefined short slugs in Fluent Boards Link Management.
 - Few minor bug fixes & improvement
