@@ -426,7 +426,7 @@
 	.active-status {
 		color: $light;
 	}
-	
+
 	.btl-modal-select--full {
 		.btl-react-select__control {
 			background-color: #36405a !important;
@@ -781,6 +781,19 @@
 			color: #fff !important;
 		}
 	}
+
+	.btl-fullsite {
+		.btl-broken-link-checker-wrapper-left {
+			background-color: inherit;
+			color: $light;
+		}
+		.btl-broken-link-checker-wrapper-right {
+			.btl-flc-scan-details,
+			.MuiBox-root > .MuiTypography-caption {
+				color: $light;
+			}
+		}
+	}
 }
 
 .btl-broken-links-table-wrapper {
@@ -846,6 +859,10 @@
 						color: $light;
 						a {
 							color: $success-lighten;
+
+							& > span {
+								color: $light;
+							}
 						}
 					}
 					.btl-link-title {
