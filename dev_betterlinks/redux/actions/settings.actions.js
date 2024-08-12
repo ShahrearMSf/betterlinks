@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API, namespace, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from './terms.actions';
+import { fetch_links_data } from './links.actions';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const FETCH_TRACKING_SETTINGS = 'FETCH_TRACKING_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
@@ -128,4 +129,5 @@ export const update_option = (item) => async (dispatch) => {
 			}
 		});
 	}
+	fetch_links_data()(dispatch); // fetch all links from cache/db after changes on settings
 };

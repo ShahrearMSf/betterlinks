@@ -11,14 +11,13 @@ class Cache {
 			$betterlinks_links = json_decode( $betterlinks_links, true );
 		}
 		if( !is_dir( BETTERLINKS_UPLOAD_DIR_PATH ) ){
-			error_log( print_r( 'helo', true ) );
 			wp_mkdir_p(BETTERLINKS_UPLOAD_DIR_PATH);
 		}
 		return file_put_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json', json_encode( $betterlinks_links ) );
 	}
 
 	public static function get_json_settings() {
-		if( file_exists( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json' ) ){
+		if ( file_exists( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json' ) ) {
 			$settings = json_decode( file_get_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json' ), true );
 			if ( ! empty( $settings ) ) {
 				return $settings;

@@ -5,6 +5,7 @@ import { useUpgradeProModal } from 'utils/customHooks';
 import { bindActionCreators } from 'redux';
 import { update_tracking_settings } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
+import InputTeaser from './utility/InputTeaser';
 
 const ExternalAnalytics = ({ trackingSettings, update_tracking_settings }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
@@ -59,14 +60,7 @@ const ExternalAnalytics = ({ trackingSettings, update_tracking_settings }) => {
 							</div>
 						</form>
 					</div>
-					<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
-						<label className="btl-form-label">{__('Custom Scripts', 'betterlinks')}</label>
-						<div className="link-options__body link-options__body_tracking">
-							<input className="btl-text-field" disabled onClick={() => openUpgradeToProModal()} />
-
-							<span className="text" />
-						</div>
-					</div>
+					<InputTeaser title={__('Custom Scripts', 'betterlinks')} onClick={openUpgradeToProModal} />
 				</div>
 			</div>
 		</>

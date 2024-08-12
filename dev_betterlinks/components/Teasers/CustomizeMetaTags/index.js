@@ -7,7 +7,7 @@ import { Form, Formik } from 'formik';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_option } from 'redux/actions/settings.actions';
-import CheckList from '../AutoLinkCreate/CheckList';
+import CheckList from '../utility/CheckList';
 
 const CustomizeMetaTags = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));

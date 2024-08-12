@@ -4,7 +4,7 @@ import UpgradeToPro from '../UpgradeToPro';
 import { Field, Form, Formik } from 'formik';
 import { is_pro_enabled, pro_version_check, saveSettingsHandler } from 'utils/helper';
 import { update_option } from 'redux/actions/settings.actions';
-import CheckList from '../AutoLinkCreate/CheckList';
+import CheckList from '../utility/CheckList';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { __ } from '@wordpress/i18n';

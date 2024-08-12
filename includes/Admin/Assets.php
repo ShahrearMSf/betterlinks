@@ -54,8 +54,8 @@ class Assets
                 $dependencies['version'],
                 true
             );
-            $betterlinks_links_option =  get_option('betterlinks_links');
-            $prefix = !empty($betterlinks_links_option) ? $betterlinks_links_option : '';
+            $betterlinks_settings =  Cache::get_json_settings();
+            $prefix = !empty($betterlinks_settings['prefix']) ? $betterlinks_settings['prefix'] : '';
             wp_localize_script('betterlinks-admin-core', 'betterLinksGlobal', [
                 'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
                 'nonce' => wp_create_nonce('wp_rest'),
@@ -74,7 +74,7 @@ class Assets
                 'is_extra_data_tracking_compatible' => apply_filters('betterlinks/is_extra_data_tracking_compatible', false),
                 'menu_notice' => defined('BETTERLINKS_MENU_NOTICE') ? BETTERLINKS_MENU_NOTICE : null,
                 'betterlinks_custom_domain_menu' => get_option( BETTERLINKS_CUSTOM_DOMAIN_MENU, 0 ),
-                'betterlinks_settings' => Cache::get_json_settings(),
+                'betterlinks_settings' => $betterlinks_settings,
                 'betterlinks_auth' => defined('AUTH_KEY') ? md5(\AUTH_KEY) : null,
                 'betterlinks_date_format' => get_option( 'date_format' ),
                 'is_fbs_enabled' => defined('FLUENT_BOARDS')
@@ -117,22 +117,24 @@ class Assets
      */
     public function block_editor_assets()
     {
+        $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.asset.php';
         wp_enqueue_style(
             'betterlinks-gutenberg',
             BETTERLINKS_ASSETS_URI . 'css/betterlinks-gutenberg.css',
             [],
-            filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'css/betterlinks-gutenberg.css')
+            $dependencies['version']
         );
 
         wp_enqueue_script(
             'betterlinks-gutenberg',
             BETTERLINKS_ASSETS_URI . 'js/betterlinks-gutenberg.core.min.js',
-            ['wp-edit-post', 'wp-plugins', 'wp-core-data', 'wp-data', 'wp-block-editor', 'wp-editor', 'wp-components', 'wp-blocks', 'wp-keycodes', 'wp-dom', 'wp-i18n', 'wp-hooks', 'react', 'react-dom', 'regenerator-runtime'],
+            array_merge($dependencies['dependencies'], ['regenerator-runtime']),
             filemtime(BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.js'),
             true
         );
-        $betterlinks_links_option =  json_decode(get_option('betterlinks_links'), true);
-        // $prefix = isset($betterlinks_links_option['prefix']) ? $betterlinks_links_option['prefix'] : '';
+        
+        $betterlinks_settings =  Cache::get_json_settings();
+        $prefix = isset($betterlinks_settings['prefix']) ? $betterlinks_settings['prefix'] : '';
         wp_localize_script('betterlinks-gutenberg', 'betterLinksGlobal', [
             'post_type' => get_post_type(),
             'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
@@ -144,7 +146,8 @@ class Assets
             'site_url' => apply_filters('betterlinks/site_url', site_url()),
             'route_path' => parse_url(admin_url(), PHP_URL_PATH),
             'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
-            'betterlinks_links_option' => $betterlinks_links_option,
+            'prefix' => $prefix,
+            'betterlinks_settings' => $betterlinks_settings
         ]);
         wp_set_script_translations('betterlinks-gutenberg', 'betterlinks', BETTERLINKS_ROOT_DIR_PATH . 'languages/');
     }

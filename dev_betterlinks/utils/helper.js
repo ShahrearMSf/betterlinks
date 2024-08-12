@@ -20,7 +20,7 @@ export const {
 	page,
 	is_pro_enabled,
 	post_type,
-	betterlinks_links_option,
+	// betterlinks_links_option,
 	betterlinkspro_version,
 	is_extra_data_tracking_compatible,
 	menu_notice,
@@ -29,6 +29,7 @@ export const {
 	betterlinks_custom_domain_menu,
 	betterlinks_settings,
 	is_fbs_enabled,
+	prefix,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -201,12 +202,6 @@ export const modalCustomSmallStyles = {
 };
 
 export const copyToClipboard = (copyText) => {
-	// var tempInput = document.createElement('input');
-	// tempInput.value = copyText;
-	// document.body.appendChild(tempInput);
-	// tempInput.select();
-	// document.execCommand('copy');
-	// document.body.removeChild(tempInput);
 	clipboardCopy(copyText);
 	return;
 };
@@ -218,7 +213,7 @@ export const copyShortUrl = (shortUrl) => {
 };
 
 export const makeShortUrl = (shortUrl) => {
-	const site_link = betterLinksHooks.applyFilters('site_url', site_url);
+	const site_link = window?.betterlinksHooks?.applyFilters('site_url', site_url) || localStorage.getItem('btl_custom_domain') || site_url;
 	return shortUrl[0] === '/' ? site_link + shortUrl : site_link + '/' + shortUrl;
 };
 
@@ -391,7 +386,7 @@ export const makeRequest = async (payload = {}) => {
 	);
 };
 
-export const getAutoLinksInitialValues = (data) => {
+export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 	if (Object.keys(data).length) {
 		return {
 			keywords: data.keywords,
@@ -414,17 +409,17 @@ export const getAutoLinksInitialValues = (data) => {
 	return {
 		keywords: '',
 		chooseLink: '',
-		postType: '',
-		category: '',
-		tags: '',
-		openNewTab: '',
-		useNoFollow: '',
-		caseSensitive: '',
-		keywordBefore: '',
-		keywordAfter: '',
-		leftBoundary: '',
-		rightBoundary: '',
-		limit: 100,
+		postType: autoLinkKeywordSettings?.postType || '',
+		category: autoLinkKeywordSettings?.category || '',
+		tags: autoLinkKeywordSettings?.tags || '',
+		openNewTab: autoLinkKeywordSettings?.openNewTab || '',
+		useNoFollow: autoLinkKeywordSettings?.useNoFollow || '',
+		caseSensitive: autoLinkKeywordSettings?.caseSensitive || '',
+		keywordBefore: autoLinkKeywordSettings?.keywordBefore || '',
+		keywordAfter: autoLinkKeywordSettings?.keywordAfter || '',
+		leftBoundary: autoLinkKeywordSettings?.leftBoundary || '',
+		rightBoundary: autoLinkKeywordSettings?.rightBoundary || '',
+		limit: autoLinkKeywordSettings?.limit || 100,
 	};
 };
 
