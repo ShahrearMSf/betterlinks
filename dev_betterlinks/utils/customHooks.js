@@ -22,8 +22,8 @@ export const useBtlExpireStatusDot = ({ data = {}, view = 'dnd' }) => {
 	);
 };
 
-export const useUpgradeProModal = () => {
-	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+export const useUpgradeProModal = (value = false) => {
+	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(value);
 	const openUpgradeToProModal = () => setUpgradeToProModal(true);
 	const closeUpgradeToProModal = () => setUpgradeToProModal(false);
 
