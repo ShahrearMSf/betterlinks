@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import styled from 'styled-components';
 import _ from 'lodash';
 import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
@@ -691,6 +690,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					</>
 				),
 				selector: 'query_params',
+				width: '150px',
 				cell: (row) => is_pro_enabled && <div>{row.query_params}</div>,
 				sortable: false,
 			},
