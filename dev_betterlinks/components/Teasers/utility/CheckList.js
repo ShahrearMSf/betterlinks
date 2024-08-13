@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { Field } from 'formik';
 import PropTypes from 'prop-types';
 
 const propTypes = {
@@ -15,7 +14,7 @@ export default function CheckList({ title = '', is_pro = false, ...props }) {
 			</label>
 			<div className="link-options__body">
 				<label className="btl-checkbox-field">
-					<Field type="checkbox" className="btl-check" disabled />
+					<input type="checkbox" className="btl-check" disabled />
 					<span className="text" />
 				</label>
 			</div>

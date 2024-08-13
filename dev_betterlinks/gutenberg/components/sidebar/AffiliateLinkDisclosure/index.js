@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import ToggleTitle from 'gutenberg/components/ToggleTitle';
 import { useUpgradeProModal } from 'utils/customHooks';
-import { is_pro_enabled } from 'utils/helper';
+import { betterlinks_settings, is_pro_enabled } from 'utils/helper';
 import { CheckboxControl, SelectControl } from '@wordpress/components';
 import QuillEditor from 'components/QuillEditor';
 import { useState, useEffect, useLayoutEffect } from 'react';
@@ -27,23 +27,28 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 	const [html, setHtml] = useState('');
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const postType = wp.data.select('core/editor').getCurrentPostType();
+	const { affiliate_link_disclosure_default_post_type } = betterlinks_settings || {};
 
 	useEffect(() => {
-		const postId = wp.data.select('core/editor').getCurrentPostId();
-		if (postId) {
-			setPostId(postId);
+		if (!is_pro_enabled) return;
+		const isAffiliateDisclosureEnabledForThisPostType = affiliate_link_disclosure_default_post_type?.split('|').includes(postType);
+		if (!postId) {
+			const post_id = wp.data.select('core/editor').getCurrentPostId();
+			setPostId(post_id);
 		}
 		const handleFetch = async () => {
 			const { data } = await get_affiliate_link_disclosure_post(postId);
-			setChecked(data.includes('true'));
+			const enable_affiliate_disclosure = data?.includes('true') || (!data?.length && isAffiliateDisclosureEnabledForThisPostType);
+			setChecked(enable_affiliate_disclosure);
 			edit_gutenberg_affiliate({
-				enable_affiliate_disclosure: data.includes('true'),
+				enable_affiliate_disclosure,
 			});
 		};
 		handleFetch();
 	}, [postId]);
 
 	useLayoutEffect(() => {
+		if (!is_pro_enabled) return;
 		const postId = wp.data.select('core/editor').getCurrentPostId();
 		const handleAffiliateText = async () => {
 			const { data } = await get_affiliate_link_disclosure_text(postId);
@@ -100,10 +105,6 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 		);
 	}
 
-	const getAffiliatePosition = (position) => {
-		// if (!position) return affiliateLinkPosition[0]['value'];
-		return affiliateLinkPosition.find((item) => item.value === affiliatePosition);
-	};
 	const onSetAffiliateDisclosure = (bool) => {
 		setChecked(bool);
 		edit_gutenberg_affiliate({

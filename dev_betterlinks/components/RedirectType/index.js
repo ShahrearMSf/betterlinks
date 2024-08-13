@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useField } from 'formik';
 import Select2 from 'react-select';
+import { __ } from '@wordpress/i18n';
+import { is_pro_enabled } from 'utils/helper';
 
 const RedirectType = (props) => {
 	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
-	const [selectValue, setSelectValue] = useState(field?.value);
+	const [selectValue, setSelectValue] = useState(field?.value != 'cloak' && is_pro_enabled ? field : { label: __('307 (Temporary)', 'betterlinks'), value: '307' });
 
 	useEffect(() => {
 		if (field?.value === 'pro') {

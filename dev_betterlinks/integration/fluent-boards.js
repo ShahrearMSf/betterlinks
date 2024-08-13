@@ -83,8 +83,18 @@ const App = () => {
 
 	const __handleClickShareButton = () => {
 		if (loading) return;
+
+		if (hasErrors(task)) {
+			return;
+		}
+
 		if (task?.short_url) {
 			setOpenModal(!openModal);
+			setTask((prev) => ({
+				...prev,
+				status: null,
+				updateMessage: null,
+			}));
 			return;
 		}
 		__createBetterLinks();
@@ -151,7 +161,7 @@ const App = () => {
 		if (!status) {
 			setTask((prev) => ({
 				...prev,
-				short_url: result?.short_url,
+				short_url: result?.short_url || task?.old_short_url,
 				status,
 				updateMessage: __('Link already exists', 'betterlinks'),
 			}));
@@ -164,8 +174,21 @@ const App = () => {
 				...prev,
 				updateMessage: null,
 			}));
-			clearTimeout(timer);
 		}, 5000);
+		clearTimeout(timer);
+	};
+
+	const hasErrors = (task) => {
+		if (!task?.short_url && task?.old_short_url) {
+			setTask((prev) => ({
+				...prev,
+				short_url: task?.old_short_url,
+				status: false,
+				updateMessage: __("Field can't be empty", 'betterlinks'),
+			}));
+			return true;
+		}
+		return false;
 	};
 
 	return (
@@ -264,7 +287,9 @@ const PopUp = ({ task, setTask, __updateBetterLinks, __createBetterLinks, closeM
 							<a href={`${admin_url}?page=betterlinks`} target="_blank" title={__('Manage All Your Links with BetterLinks', 'betterlinks')}>
 								{__('Manage All Your Links with BetterLinks', 'betterlinks')}
 							</a>
-							<button onClick={__handleUpdate}>{task?.id ? updateText : __('Create', 'betterlinks')}</button>
+							<button onClick={__handleUpdate} {...(task?.short_url === task?.old_short_url && { className: 'btl-btn-disable' })}>
+								{task?.id ? updateText : __('Create', 'betterlinks')}
+							</button>
 						</div>
 					</>
 				)}

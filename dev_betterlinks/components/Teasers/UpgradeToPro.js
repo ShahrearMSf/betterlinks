@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
-import { plugin_root_url } from 'utils/helper';
+import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 
 const customStyles = {
 	overlay: {
@@ -21,6 +21,7 @@ const customStyles = {
 const propTypes = {};
 
 export default function UpgradeToPro({ isOpenModal, closeModal }) {
+	if (is_pro_enabled) return '';
 	return (
 		<React.Fragment>
 			<Modal isOpen={isOpenModal} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>

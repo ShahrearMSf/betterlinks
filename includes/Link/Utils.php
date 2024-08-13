@@ -1,7 +1,6 @@
 <?php
 namespace BetterLinks\Link;
 
-use BetterLinks\Admin\Cache;
 use BetterLinks\Helper;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
@@ -19,18 +18,18 @@ class Utils {
 	}
 	public function get_slug_raw( $slug ) {
 		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
-			return apply_filters( 'betterlinks/link/get_link_by_slug', \BetterLinks\Helper::get_link_from_json_file( $slug ) );
+			return apply_filters( 'betterlinks/link/get_link_by_slug', Helper::get_link_from_json_file( $slug ) );
 		}
 		$link_options      = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME, '{}' ), true );
 		$is_case_sensitive = isset( $link_options['is_case_sensitive'] ) ? $link_options['is_case_sensitive'] : false;
-		$results           = current( \BetterLinks\Helper::get_link_by_short_url( $slug, $is_case_sensitive ) );
+		$results           = current( Helper::get_link_by_short_url( $slug, $is_case_sensitive ) );
 		if ( ! empty( $results ) ) {
 			return apply_filters( 'betterlinks/link/get_link_by_slug', json_decode( wp_json_encode( $results ), true ) );
 		}
 		// wildcards.
 		$links_option = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME ), true );
 		if ( isset( $links_option['wildcards'] ) && $links_option['wildcards'] ) {
-			$results = \BetterLinks\Helper::get_link_by_wildcards( 1 );
+			$results = Helper::get_link_by_wildcards( 1 );
 			if ( is_array( $results ) && count( $results ) > 0 ) {
 				foreach ( $results as $key => $item ) {
 					$postion = strpos( $item['short_url'], '/*' );
@@ -69,7 +68,8 @@ class Utils {
 			$dd         = new DeviceDetector( $user_agent );
 			$dd->parse();
 
-			$data            = $this->device_data_collect( $data, $dd );
+			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+
 			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
 			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
 			$data['device']  = $dd->getDeviceName();
@@ -104,7 +104,6 @@ class Utils {
 
 		$target_url = $this->addScheme( $data['target_url'] );
 		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
-			// $   target_url = $   targ    et_url . '?' . $    param;
 			$_target_url   = wp_parse_url( $target_url );
 			$_query_params = array();
 			wp_parse_str( $param, $_query_params );
@@ -129,29 +128,7 @@ class Utils {
 				exit;
 		}
 	}
-	public function device_data_collect( $data, $dd ) {
-		if ( ! apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			return $data;
-		}
-
-		$client_info = $dd->getClient();
-		$os_details  = $dd->getOs();
-
-		$language = isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) : 'en-US,en;q=0.5';
-		$language = explode( ',', $language )[0];
-
-		$client_information_arr = array(
-			'brand_name'      => $dd->getBrandName(),
-			'model'           => $dd->getModel(),
-			'bot_name'        => $dd->isBot() ? $dd->getBot()['name'] : null,
-			'browser_type'    => isset( $client_info['type'] ) ? $client_info['type'] : null,
-			'browser_version' => isset( $client_info['version'] ) ? $client_info['version'] : null,
-			'os_version'      => isset( $os_details['version'] ) ? $os_details['version'] : null,
-			'language'        => ! empty( $language ) ? $language : 'en-US',
-		);
-
-		return array_merge( $data, $client_information_arr );
-	}
+	
 	public function start_trakcing( $data ) {
 		global $betterlinks;
 		$is_disable_analytics_ip = isset( $betterlinks['is_disable_analytics_ip'] ) ? $betterlinks['is_disable_analytics_ip'] : false;
@@ -164,20 +141,8 @@ class Utils {
 			$visitor_uid                = uniqid( 'bl' );
 			setcookie( $visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/' );
 		}
-		// checking is split tes enabled.
-		$split_test_data  = \BetterLinks\Helper::split_test_enabled( $data );
-		$is_split_enabled = isset( $split_test_data['result'] ) ? $split_test_data['result'] : false;
-
-		if ( ! $is_split_enabled && ! empty( $split_test_data['completed'] ) ) {
-			if ( ! \BetterLinks\Helper::get_link_meta( $data['ID'], 'split_test_data' ) ) {
-				\BetterLinks\Helper::add_link_meta( $data['ID'], 'split_test_data', $split_test_data );
-			}
-
-			if ( class_exists( '\BetterLinksPro\Helper' ) && ! \BetterLinks\Helper::get_link_meta( $data['ID'], 'split_test_analytics' ) ) {
-				$split_analytics = \BetterLinksPro\Helper::get_split_test_analytics_data( array( 'id' => $data['ID'] ) );
-				\BetterLinks\Helper::add_link_meta( $data['ID'], 'split_test_analytics', $split_analytics );
-			}
-		}
+		// checking if split tes enabled.
+		$is_split_enabled = apply_filters('betterlinkspro/admin/split_test_tracking', false, $data);
 
 		$click_data = array(
 			'link_id'             => $data['ID'],
@@ -217,7 +182,7 @@ class Utils {
 			$this->insert_json_into_file( BETTERLINKS_UPLOAD_DIR_PATH . '/clicks.json', $arg );
 		} else {
 			try {
-				$click_id = \BetterLinks\Helper::insert_click( $arg );
+				$click_id = Helper::insert_click( $arg );
 				if ( ! empty( $click_id ) && $is_split_enabled ) {
 					do_action( 'betterlinks/link/after_insert_click', $arg['link_id'], $click_id, $arg['target_url'] );
 				}
@@ -260,70 +225,10 @@ class Utils {
 		return file_put_contents( $file, wp_json_encode( $temp_array ) );
 	}
 
-	/**
-	 * @param string $request_uri - REQUEST_URI.
-	 *
-	 * @return boolean - returns true if the request uri is self site url
-	 */
-	protected function is_self_url( $request_uri ) {
-		// if the referer url is password-protected-form page, then return false.
-		if ( str_contains( $request_uri, 'password-protected-form?short_url' ) ) {
-			return false;
-		}
-		$is_self_url = url_to_postid( $request_uri );
-		return ! empty( $is_self_url );
-	}
-
-	/**
-	 * @param string $request_uri REQUEST_URI.
-	 *
-	 * @return string Short URL
-	 */
-	public function get_protected_self_url_short_link( $request_uri ) {
-		global $wpdb;
-		$is_self_url = $this->is_self_url( $request_uri );
-		if ( empty( $is_self_url ) ) {
-			return false;
-		}
-
-		$sql = "SELECT l.short_url FROM {$wpdb->prefix}betterlinks AS l 
-                LEFT JOIN {$wpdb->prefix}betterlinks_password as p 
-                    on l.ID=p.link_id 
-                where l.target_url='{$request_uri}' and p.status='1';";
-
-		$short_url = $wpdb->get_var( $sql ); // phpcs:ignore
-		return $short_url;
-	}
-
-	public function referer_short_url( $referer ) {
-		if ( empty( $referer ) ) {
-			return false;
-		}
-		$password_param = explode( '?short_url=', $referer );
-		if ( count( $password_param ) > 1 ) {
-			return $password_param[1];
-		}
-		return false;
-	}
-
-	/**
-	 * @param boolean $remember_cookies - remember cookies setting enabled or not
-	 * @param integer $id - id of the short link
-	 *
-	 * @return boolean - returns true if password is okay, and cookie is valid, otherwise returns false
-	 */
-	public function passsword_cookie_enabled( $remember_cookies, $id ) {
-		$cookie_name = "betterlinks_pass_protect_{$id}";
-		if ( ! empty( $remember_cookies ) && isset( $_COOKIE[ $cookie_name ] ) && class_exists( '\BetterLinksPro\Helper' ) ) {
-			$result = \BetterLinksPro\Helper::check_password( $_COOKIE[ $cookie_name ], $id );
-			return $result;
-		}
-		return false;
-	}
 
 	public function create_new_link( $title, $target_url, $settings ) {
 		$date             = wp_date( 'Y-m-d H:i:s' );
-		$helper           = new \BetterLinks\Helper();
+		$helper           = new Helper();
 		$slug             = $helper->generate_random_slug();
 		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
@@ -351,6 +256,7 @@ class Utils {
 			'powered_by'        => $powered_by,
 		);
 		$initial_values = apply_filters( 'betterlinks_before_cle', $initial_values, $settings );
+
 		$helper->clear_query_cache();
 		$args    = $this->sanitize_links_data( $initial_values );
 		$results = $this->insert_link( $args );

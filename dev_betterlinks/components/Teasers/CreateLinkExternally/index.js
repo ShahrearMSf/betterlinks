@@ -1,8 +1,8 @@
 import { useUpgradeProModal } from 'utils/customHooks';
-import SelectTeaser from '../AutoLinkCreate/SelectTeaser';
+import SelectTeaser from '../utility/SelectTeaser';
 import UpgradeToPro from '../UpgradeToPro';
 import { __ } from '@wordpress/i18n';
-import CheckList from '../AutoLinkCreate/CheckList';
+import CheckList from '../utility/CheckList';
 
 const CreateLinkExternallyTeaser = ({ props }) => {
 	if (!props.values?.cle?.enable_cle || !props.values?.cle?.advanced_options) return;

@@ -42,6 +42,7 @@ const Settings = (props) => {
 		<TabsGeneral settings={settings} />,
 		<TabsOptions
 			settings={settings}
+			postdatas={props?.postdatas || {}}
 			autoCreateLinkSettings={autoCreateLinkSettings}
 			terms={terms}
 			trackingSettings={props.settings?.tracking}
