@@ -247,9 +247,16 @@
 						width: max-content;
 						font-weight: 600;
 
+						&:has(span.btl-no-status) {
+							background-color: rgba(255, 241, 235, 1);
+							color: rgba(255, 132, 71, 1);
+							border-radius: 4px;
+							border: none;
+							cursor: not-allowed;
+						}
 						span {
-							&.dashicons {
-								font-size: 21px !important;
+							&.btl-no-status {
+								font-size: 10px !important;
 							}
 						}
 					}
@@ -262,6 +269,12 @@
 					}
 					&.btl-danger2 {
 						border-color: rgba(233, 156, 133, 1);
+					}
+				}
+
+				.btl-short-url-copy-button {
+					.icon {
+						cursor: pointer;
 					}
 				}
 			}

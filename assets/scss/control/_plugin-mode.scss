@@ -785,12 +785,56 @@
 	.btl-fullsite {
 		.btl-broken-link-checker-wrapper-left {
 			background-color: inherit;
-			color: $light;
+			border-color: #6e7178;
+			h4 {
+				color: $light;
+			}
 		}
 		.btl-broken-link-checker-wrapper-right {
 			.btl-flc-scan-details,
 			.MuiBox-root > .MuiTypography-caption {
 				color: $light;
+			}
+		}
+	}
+	&.btl-broken-links-table-wrapper--fullsite {
+		.btl-subheader-form {
+			button.button {
+				background-color: #36405a;
+				border-color: #6e7178;
+				color: $light;
+			}
+			.btl-subheader-form-input {
+				input,
+				.btl-react-select__control {
+					background-color: #36405a;
+					border-color: #6e7178;
+					color: $light;
+
+					&::placeholder {
+						color: $light;
+					}
+				}
+
+				.btl-react-select__value-container > div {
+					color: $light;
+
+					.btl-react-select__input > input {
+						height: 30px;
+					}
+				}
+			}
+		}
+
+		.btl-broken-links-table {
+			.rdt_Table {
+				.rdt_TableHeadRow,
+				.rdt_TableRow {
+					border-color: #6e7178;
+				}
+				// {
+
+				// }
 			}
 		}
 	}
