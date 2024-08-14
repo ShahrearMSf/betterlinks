@@ -2,14 +2,18 @@
 
 namespace BetterLinks\Admin;
 
+use BetterLinks\Admin\Metabox\InstantRedirect;
+
 class Metabox {
 
     private $is_pro_enabled;
     public static function init() {
         $self = new self();
         $self->is_pro_enabled = apply_filters('betterlinks/pro_enabled', false);
+        $instantRedirect = new InstantRedirect();
         add_action('add_meta_boxes', [$self, 'add_auto_create_shortlink_teaser'], 10, 2);
         add_action('add_meta_boxes', [$self, 'add_affiliate_disclosure_teaser'], 10, 2);
+        add_action( 'add_meta_boxes', [$instantRedirect, 'add_instant_redirect'], 10, 2 );
     }
 
     public function add_affiliate_disclosure_teaser( $post_type, $post ) {
