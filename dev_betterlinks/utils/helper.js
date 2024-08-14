@@ -670,7 +670,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('Referrer', 'betterlinks'),
 				selector: 'referer',
-				width: '500px',
+				width: '300px',
 				sortable: false,
 				cell: (row) => (
 					<div>
@@ -690,8 +690,20 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					</>
 				),
 				selector: 'query_params',
-				width: '150px',
-				cell: (row) => is_pro_enabled && <div>{row.query_params}</div>,
+				width: '350px',
+				cell: (row) => {
+					if (!is_pro_enabled) {
+						return;
+					}
+					const query_params = JSON.parse(row.query_params);
+					return (
+						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}>
+							{query_params?.pf && <span>P.F:{query_params?.pf}</span>}
+							<span>UTM:&nbsp;utm_campaign=book-sell&utm_medium=facebook&utm_source=banner&utm_content=books&utm_term=book</span>
+							<span>Target&nbsp;Url:&nbsp;site=yes&hello=true&dummy=true&loc=4.5&lat=0.8</span>
+						</div>
+					);
+				},
 				sortable: false,
 			},
 			{

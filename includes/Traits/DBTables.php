@@ -87,6 +87,7 @@ trait DBTables
             os_version VARCHAR(20) NULL,
             browser_version VARCHAR(20) NULL,
             `language` VARCHAR(10) NULL,
+            `query_params` TEXT NULL,
             referer varchar(255) NULL,
             host varchar(255) NULL,
             uri varchar(255) NULL,
@@ -183,7 +184,7 @@ trait DBTables
 			$table_name = $wpdb->prefix . 'betterlinks_clicks';
 
             $sql        = "ALTER TABLE {$table_name}
-                ADD COLUMN `query_params` VARCHAR(255) NULL AFTER `language`;";
+                ADD COLUMN `query_params` TEXT NULL AFTER `language`;";
 			$wpdb->query( $sql );
         }
     }
