@@ -638,6 +638,32 @@ export const sortFunction = (title) => (rowA, rowB) => {
 	return 0;
 };
 
+const ParameterItem = ({ type, item }) => {
+	if (!item) return;
+	const parameterStyles = {
+		root: {
+			display: 'flex',
+			alignItems: 'center',
+		},
+		round: {
+			width: '10px',
+			height: '10px',
+			'background-color': '#ee8038',
+			display: 'inline-block',
+			'border-radius': '50%',
+			'margin-right': '3px',
+		},
+	};
+	return (
+		<>
+			<span style={parameterStyles.root}>
+				{/* <span className="btl-round" style={parameterStyles.round} /> */}
+				{type}:{item}
+			</span>
+		</>
+	);
+};
+
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
 		const singleColumn = [
@@ -698,7 +724,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					const query_params = JSON.parse(row.query_params);
 					return (
 						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}>
-							{query_params?.pf && <span>P.F:{query_params?.pf}</span>}
+							<ParameterItem item={query_params?.pf} type="P.F" />
 							<span>UTM:&nbsp;utm_campaign=book-sell&utm_medium=facebook&utm_source=banner&utm_content=books&utm_term=book</span>
 							<span>Target&nbsp;Url:&nbsp;site=yes&hello=true&dummy=true&loc=4.5&lat=0.8</span>
 						</div>
