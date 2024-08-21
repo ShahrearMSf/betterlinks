@@ -7,7 +7,7 @@
 
 	.btl-broken-link-checker-wrapper-left {
 		width: 55%;
-		flex: 0 0 calc(45% - 10px);
+		flex: 0 0 calc(42% - 10px);
 		background-color: #f2f6ff;
 		padding: 25px;
 		display: flex;
@@ -44,10 +44,12 @@
 		width: 100%;
 		display: flex;
 		align-items: center;
-		justify-content: space-around;
+		column-gap: 15px;
 
 		.btl-flc-scan-details {
-			width: 50%;
+			width: 100%;
+			max-width: 460px;
+			padding: 10px;
 
 			> div {
 				display: flex;
@@ -75,11 +77,51 @@
 						}
 					}
 				}
+
+				&.btl-flc-scanned-count {
+					margin-top: 30px;
+					column-gap: 10px;
+					user-select: none;
+					> div {
+						border-radius: 6px;
+						border-width: 1px;
+						border-style: solid;
+						padding: 5px 8px;
+
+						&.btl-flc-scanned-count {
+							&--active {
+								border-color: rgba(134, 216, 133, 1);
+								background-color: rgba(247, 255, 247, 1);
+							}
+							&--broken {
+								background-color: rgba(255, 248, 245, 1);
+								border-color: rgba(233, 156, 133, 1);
+							}
+							&--forbidden {
+								background-color: rgba(255, 253, 247, 1);
+								border-color: rgba(255, 230, 130, 1);
+							}
+						}
+						span {
+							display: flex;
+							column-gap: 5px;
+							font-size: 14px;
+						}
+						p {
+							font-size: 20px;
+							font-weight: bold;
+							margin-left: 20px;
+						}
+					}
+				}
 			}
 		}
 	}
 
 	.MuiBox-root {
+		.MuiCircularProgress-root {
+			transition: ease all 0.5s;
+		}
 		.btl-flc-circle-progressbar {
 			z-index: 2;
 			> svg circle {
@@ -287,5 +329,27 @@
 				justify-content: flex-start;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 1275px) {
+	.btl-flc-scanned-count {
+		align-items: unset !important;
+	}
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1260px) {
+	.MuiCircularProgress-root {
+		width: 150px !important;
+		height: 150px !important;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.btl-broken-link-checker-wrapper-left {
+		flex: auto !important;
+	}
+	.btl-broken-link-checker-wrapper-right {
+		justify-content: center !important;
 	}
 }

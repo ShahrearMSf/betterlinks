@@ -795,6 +795,15 @@
 			.MuiBox-root > .MuiTypography-caption {
 				color: $light;
 			}
+			.btl-flc-scan-details {
+				.btl-flc-scanned-count {
+					> div {
+						background-color: #36405a;
+						border-color: #6e7178;
+						color: $light;
+					}
+				}
+			}
 		}
 	}
 	&.btl-broken-links-table-wrapper--fullsite {
@@ -831,6 +840,20 @@
 				.rdt_TableHeadRow,
 				.rdt_TableRow {
 					border-color: #6e7178;
+				}
+				> div:nth-child(2):has(:not(.rdt_TableBody)) {
+					background-color: transparent;
+					border-color: #6e7178;
+					color: $light;
+
+					.btl-no-data-found {
+						svg {
+							stroke: #6e7178;
+							* {
+								fill: #36405a;
+							}
+						}
+					}
 				}
 				// {
 
