@@ -8,20 +8,20 @@ import FullSiteLinkChecker from 'components/Teasers/FullSiteLinkChecker.js';
 const TabsBrokenLinkChecker = () => {
 	const tabList = [
 		{
-			label: __('BetterLinks Checker', 'betterlinks'),
-			type: 'pro',
-		},
-		{
 			label: __('Full Site Link Scanner', 'betterlinks'),
 			type: 'pro',
 		},
+		{
+			label: __('BetterLinks Checker', 'betterlinks'),
+			type: 'pro',
+		},
 	];
-	const panelList = [<BrokenLinks />, <FullSiteLinkChecker />];
+	const panelList = [<FullSiteLinkChecker />, <BrokenLinks />];
 	const brokenLinkCheckerTabList = betterLinksHooks.applyFilters('betterLinksSettingsBrokenLinkCheckerTabList', tabList);
 	const brokenLinkCheckerTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);
 	return (
 		<>
-			<Tabs defaultIndex={1}>
+			<Tabs>
 				<TabList>
 					{brokenLinkCheckerTabList.map((item, index) => (
 						<Tab key={index}>

@@ -8,7 +8,6 @@ import Box from '@material-ui/core/Box';
 import DataTable from 'react-data-table-component';
 import { columns, teaserFLCLinks } from './teaser.data';
 import { plugin_root_url } from 'utils/helper';
-import { useState } from 'react';
 
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
@@ -39,6 +38,12 @@ const Teaser = () => {
 							<ScanDetail color="blue" title={__('Total Posts, Pages & Custom Posts:', 'betterlinks')} value="10" />
 							<ScanDetail color="green" title={__('Total Scaned Posts:', 'betterlinks')} value="5" />
 							<ScanDetail color="yellow" title={__('Total Scaned Links:', 'betterlinks')} value="5" />
+
+							<div className="btl-flc-scanned-count">
+								<ScannedCount type="active" />
+								<ScannedCount type="broken" />
+								<ScannedCount type="forbidden" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -86,11 +91,41 @@ const ScanDetail = ({ color, title, value = null }) => {
 	);
 };
 
+const ScannedCount = ({ type = 'active' }) => {
+	// @-collapse
+	const types = {
+		active: {
+			icon: plugin_root_url + 'assets/images/all-right.svg',
+			title: __('Total Active Links', 'betterlinks'),
+			count: '35',
+		},
+		broken: {
+			icon: plugin_root_url + 'assets/images/broken-links.svg',
+			title: __('Broken Links', 'betterlinks'),
+			count: '4',
+		},
+		forbidden: {
+			icon: plugin_root_url + 'assets/images/stop.svg',
+			title: __('403 Forbidden', 'betterlinks'),
+			count: '1',
+		},
+	};
+	return (
+		<div className={`btl-flc-scanned-count--${type}`} title={`${types[type].title} count: ${types[type].count}`}>
+			<span>
+				<img src={types[type].icon} alt={`${type}-links-count`} />
+				{types[type].title}
+			</span>
+			<p>{types[type].count}</p>
+		</div>
+	);
+};
+
 const CircularProgressWithLabel = ({ value = null }) => {
 	return (
 		<Box position="relative" display="inline-flex">
-			<CircularProgress variant="determinate" className="btl-flc-circle-progressbar" value={50} size={200} />
-			<CircularProgress variant="determinate" className="flc-background-circle" value={100} size={200} />
+			<CircularProgress variant="determinate" className="btl-flc-circle-progressbar" value={50} size={180} />
+			<CircularProgress variant="determinate" className="flc-background-circle" value={100} size={180} />
 			<Box top={0} left={0} bottom={0} right={0} position="absolute" display="flex" alignItems="center" justifyContent="center">
 				<Typography variant="caption" component="div" color="textSecondary">
 					{value || __('No Data Found', 'betterlinks-pro')}

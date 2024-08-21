@@ -1,28 +1,29 @@
-import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import TextField from '@material-ui/core/TextField';
-import { is_pro_enabled, plugin_root_url } from 'utils/helper';
+import { plugin_root_url, pro_version_check } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { useUpgradeProModal } from 'utils/customHooks';
+import Note from 'components/CustomizeLinkPreview/Note';
 
 const propTypes = {};
 
-export default function BrokenLinks(props) {
-	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const openUpgradeToProModal = () => {
-		setUpgradeToProModal(true);
-	};
+export default function BrokenLinks() {
+	return betterLinksHooks.applyFilters('betterLinksSettingsBrokenLinkChecker', <Teaser />);
+}
 
-	const closeUpgradeToProModal = () => {
-		setUpgradeToProModal(false);
-	};
-	if (is_pro_enabled) {
-		return betterLinksHooks.applyFilters('betterLinksSettingsBrokenLinkChecker', null);
-	}
+function Teaser(props) {
+	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const is_pro_updated = pro_version_check('2.0.3');
 	return (
 		<React.Fragment>
+			{!is_pro_updated && (
+				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, padding: '5px', fontSize: '12px' }}>
+					<Note note="In this update, we've relocated the BetterLinks Broken Link Checker. To access it from the new location, please update the BetterLinks Pro plugin to at least v2.0.3. If you haven’t updated yet, you can still find the Broken Link Checker on the settings page." />
+				</div>
+			)}
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
 				<div className="btl-broken-link-checker-wrapper">
@@ -36,7 +37,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Enable Scheduled Scan', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
@@ -48,7 +49,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Frequency', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<Select className="btl-select" classNamePrefix="btl" isDisabled />
@@ -57,7 +58,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Day', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<div className="scheduleweekdayselect">
@@ -73,7 +74,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Time', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<TextField disabled />
@@ -111,7 +112,7 @@ export default function BrokenLinks(props) {
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Enable Reporting', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
@@ -123,7 +124,7 @@ export default function BrokenLinks(props) {
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Reporting Email', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
@@ -134,7 +135,7 @@ export default function BrokenLinks(props) {
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Reporting Email Subject', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										{/* <ProBadge /> */}
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
