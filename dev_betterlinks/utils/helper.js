@@ -638,27 +638,31 @@ export const sortFunction = (title) => (rowA, rowB) => {
 	return 0;
 };
 
-const ParameterItem = ({ type, item }) => {
+const ParameterItem = ({ type, item, style = {} }) => {
 	if (!item) return;
 	const parameterStyles = {
 		root: {
 			display: 'flex',
-			alignItems: 'center',
+			alignItems: 'flex-start',
+			backgroundColor: 'rgb(240, 242, 247)',
+			padding: '8px 12px 8px 12px',
+			borderRadius: '8px',
+			fontSize: '12px',
+			fontWeight: '400',
+			...style?.root,
 		},
-		round: {
-			width: '10px',
-			height: '10px',
-			'background-color': '#ee8038',
-			display: 'inline-block',
-			'border-radius': '50%',
-			'margin-right': '3px',
+		type: {
+			fontSize: '14px',
+			fontWeight: '500',
+			...style?.type,
 		},
 	};
 	return (
 		<>
 			<span style={parameterStyles.root}>
 				{/* <span className="btl-round" style={parameterStyles.round} /> */}
-				{type}:{item}
+				<span style={parameterStyles.type}>{type}:</span>
+				<span>{item}</span>
 			</span>
 		</>
 	);
@@ -724,9 +728,33 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					const query_params = JSON.parse(row.query_params);
 					return (
 						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}>
-							<ParameterItem item={query_params?.pf} type="P.F" />
-							<span>UTM:&nbsp;utm_campaign=book-sell&utm_medium=facebook&utm_source=banner&utm_content=books&utm_term=book</span>
-							<span>Target&nbsp;Url:&nbsp;site=yes&hello=true&dummy=true&loc=4.5&lat=0.8</span>
+							<ParameterItem
+								item={query_params?.pf}
+								type="P.F"
+								style={{
+									type: {
+										flexBasis: '30px',
+									},
+								}}
+							/>
+							<ParameterItem
+								item={query_params?.target_url}
+								type="Target URL"
+								style={{
+									type: {
+										flexBasis: '85px',
+									},
+								}}
+							/>
+							<ParameterItem
+								item={query_params?.utm}
+								type="UTM"
+								style={{
+									type: {
+										flexBasis: '105px',
+									},
+								}}
+							/>
 						</div>
 					);
 				},

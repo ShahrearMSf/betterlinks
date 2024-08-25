@@ -63,13 +63,14 @@ class Utils {
 		if ( ! $data || $comparable_url === $destination_url ) {
 			return;
 		}
+		
 		$target_url = $this->addScheme( $data['target_url'] );
+		$_query_params = array();
+		wp_parse_str( $param, $_query_params );
+		$data['pf'] = build_query( $_query_params );
 		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
 			$_target_url   = wp_parse_url( $target_url );
-			$_query_params = array();
-			wp_parse_str( $param, $_query_params );
-			$data['query_params'] = build_query( $_query_params );
-			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . $data['query_params'];
+			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . $data['pf'];
 		}
 
 		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
@@ -111,14 +112,6 @@ class Utils {
 		header( 'Pragma: no-cache' );
 		header( 'X-Redirect-Powered-By:  https://www.betterlinks.io/' );
 
-		$target_url = $this->addScheme( $data['target_url'] );
-		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
-			$_target_url   = wp_parse_url( $target_url );
-			$_query_params = array();
-			wp_parse_str( $param, $_query_params );
-			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . build_query( $_query_params );
-		}
-
 		switch ( $data['redirect_type'] ) {
 			case '301':
 				wp_redirect( esc_url_raw( $target_url ), 301 );
@@ -153,6 +146,7 @@ class Utils {
 		// checking if split tes enabled.
 		$is_split_enabled = apply_filters('betterlinkspro/admin/split_test_tracking', false, $data);
 
+		
 		$click_data = array(
 			'link_id'             => $data['ID'],
 			'browser'             => isset( $data['browser'] ) ? $data['browser'] : '',
@@ -176,9 +170,8 @@ class Utils {
 		}
 
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$query_params = [
-				'pf' => isset( $data['query_params'] ) ? sanitize_text_field( $data['query_params'] ) : ''
-			];
+			$query_params = apply_filters( 'betterlinkspro/admin/parameter_tracking_values', [], $data );
+			
 			$click_data['brand_name']      = $data['brand_name'];
 			$click_data['model']           = $data['model'];
 			$click_data['bot_name']        = $data['bot_name'];
