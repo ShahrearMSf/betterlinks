@@ -28,6 +28,17 @@
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 20px;
+
+	> div.btl-tracking-settings {
+		> div:not(.btl-multi-checkbox) {
+			width: 387px;
+		}
+		.btl-form-group {
+			.link-options__body {
+				width: 600px;
+			}
+		}
+	}
 }
 .btl-tab-inner-divider-2 {
 	display: grid;
