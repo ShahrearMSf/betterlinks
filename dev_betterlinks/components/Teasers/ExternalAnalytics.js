@@ -66,15 +66,15 @@ const ExternalAnalytics = ({ trackingSettings, update_tracking_settings }) => {
 						<div className="link-options__body" onClick={openUpgradeToProModal}>
 							<label className="btl-checkbox-field block">
 								<input className="btl-check" type="checkbox" disabled />
-								<span className="text">{__('Forwarded Parameter', 'betterlinks')}</span>
+								<span className="text">{__('Forwarded Parameters', 'betterlinks')}</span>
 							</label>
 							<label className="btl-checkbox-field block">
 								<input className="btl-check" type="checkbox" disabled />
-								<span className="text">{__('Target URL Parameter', 'betterlinks')}</span>
+								<span className="text">{__('Target URL Parameters', 'betterlinks')}</span>
 							</label>
 							<label className="btl-checkbox-field block">
 								<input className="btl-check" type="checkbox" disabled />
-								<span className="text">{__('UTM Parameter', 'betterlinks')}</span>
+								<span className="text">{__('UTM Parameters', 'betterlinks')}</span>
 							</label>
 						</div>
 					</span>
