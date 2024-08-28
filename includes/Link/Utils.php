@@ -230,7 +230,7 @@ class Utils {
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$helper           = new Helper();
 		$slug             = $helper->generate_random_slug();
-		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$prefix           = !empty( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
 		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
 		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
