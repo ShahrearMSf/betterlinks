@@ -191,7 +191,7 @@ const DragableButton = () => {
 		<div className="btl-cle-dragable-section">
 			<a
 				onClick={(e) => e.preventDefault()}
-				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+encodeURI(location.href)+'&title='+encodeURI(document.title)`}
+				href={`javascript:location.href='${site_url}/index.php?action=btl_cle&api_key=${betterlinks_auth}&target_url='+escape(location.href)+'&title='+encodeURI(document.title)`}
 				className="button button-primary"
 			>
 				{__('Quick Link Creation', 'betterlinks')}
