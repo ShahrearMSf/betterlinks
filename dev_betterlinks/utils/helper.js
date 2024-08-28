@@ -652,7 +652,7 @@ const ParameterItem = ({ type, item, style = {} }) => {
 			...style?.root,
 		},
 		type: {
-			fontSize: '14px',
+			fontSize: '12px',
 			fontWeight: '500',
 			...style?.type,
 		},
@@ -660,9 +660,7 @@ const ParameterItem = ({ type, item, style = {} }) => {
 	return (
 		<>
 			<span style={parameterStyles.root}>
-				{/* <span className="btl-round" style={parameterStyles.round} /> */}
-				<span style={parameterStyles.type}>{type}:</span>
-				<span>{item}</span>
+				<span style={parameterStyles.type}>{type}: &nbsp;</span> <span>{item}</span>
 			</span>
 		</>
 	);
@@ -727,13 +725,13 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					}
 					const query_params = JSON.parse(row.query_params);
 					return (
-						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}>
+						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px', width: '100%' }}>
 							<ParameterItem
 								item={query_params?.pf}
-								type="P.F"
+								type="Forwarded"
 								style={{
 									type: {
-										flexBasis: '30px',
+										minWidth: '25px',
 									},
 								}}
 							/>
@@ -742,7 +740,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 								type="Target URL"
 								style={{
 									type: {
-										flexBasis: '85px',
+										minWidth: '70px',
 									},
 								}}
 							/>
@@ -751,7 +749,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 								type="UTM"
 								style={{
 									type: {
-										flexBasis: '105px',
+										minWidth: '40px',
 									},
 								}}
 							/>
