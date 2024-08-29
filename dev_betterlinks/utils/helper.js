@@ -723,7 +723,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					if (!is_pro_enabled) {
 						return;
 					}
-					const query_params = JSON.parse(row.query_params);
+					const query_params = JSON.parse(row.query_params || '{}');
 					return (
 						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px', width: '100%' }}>
 							<ParameterItem
