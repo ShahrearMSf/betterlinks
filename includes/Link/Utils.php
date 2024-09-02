@@ -131,7 +131,7 @@ class Utils {
 				exit;
 		}
 	}
-	
+
 	public function start_trakcing( $data ) {
 		global $betterlinks;
 		$is_disable_analytics_ip = isset( $betterlinks['is_disable_analytics_ip'] ) ? $betterlinks['is_disable_analytics_ip'] : false;
@@ -172,13 +172,13 @@ class Utils {
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
 			$query_params = apply_filters( 'betterlinkspro/admin/parameter_tracking_values', array(), $data );
 
-			$click_data['brand_name']      = $data['brand_name'];
-			$click_data['model']           = $data['model'];
-			$click_data['bot_name']        = $data['bot_name'];
-			$click_data['browser_type']    = $data['browser_type'];
-			$click_data['browser_version'] = $data['browser_version'];
-			$click_data['os_version']      = $data['os_version'];
-			$click_data['language']        = $data['language'];
+			$click_data['brand_name']      = isset( $data['brand_name'] ) ? $data['brand_name'] : '';
+			$click_data['model']           = isset( $data['model'] ) ? $data['model'] : '';
+			$click_data['bot_name']        = isset( $data['bot_name'] ) ? $data['bot_name'] : '';
+			$click_data['browser_type']    = isset( $data['browser_type'] ) ? $data['browser_type'] : '';
+			$click_data['browser_version'] = isset( $data['browser_version'] ) ? $data['browser_version'] : '';
+			$click_data['os_version']      = isset( $data['os_version'] ) ? $data['os_version'] : '';
+			$click_data['language']        = isset( $data['language'] ) ? $data['language'] : '';
 			$click_data['query_params']    = wp_json_encode( $query_params );
 		}
 
@@ -236,7 +236,7 @@ class Utils {
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$helper           = new Helper();
 		$slug             = $helper->generate_random_slug();
-		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$prefix           = ! empty( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
 		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
 		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
