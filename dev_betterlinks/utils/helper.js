@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import _ from 'lodash';
 import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
+import { Badge, Tooltip } from '@material-ui/core';
 
 export const {
 	betterlinks_nonce,
@@ -668,6 +669,7 @@ const ParameterItem = ({ type, item, style = {} }) => {
 
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
+		const isProUpdated = pro_version_check('2.0.3');
 		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
@@ -715,6 +717,11 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 					<>
 						{__('Parameters', 'betterlinks')}
 						{!is_pro_enabled && <ProBadge />}
+						{!isProUpdated && (
+							<Tooltip arrow title="To use Parameter Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.0.3 installed & activated" placement="top">
+								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
+							</Tooltip>
+						)}
 					</>
 				),
 				selector: 'query_params',
