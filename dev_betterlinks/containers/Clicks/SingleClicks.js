@@ -57,7 +57,7 @@ const SingleClicks = (props) => {
 			)}
 			<CompatibilityNotice
 				mode="white"
-				notice={__('To use Parameter Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.0.3 installed & activated', 'betterlinks')}
+				notice={__('To use the Parameter Tracking feature, please ensure that you have at least BetterLinks Pro v2.0.3 or later', 'betterlinks')}
 				compatibleProVersion="2.0.3"
 			/>
 			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
