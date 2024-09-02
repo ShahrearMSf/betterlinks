@@ -68,7 +68,7 @@ class Utils {
 			$dd         = new DeviceDetector( $user_agent );
 			$dd->parse();
 
-			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+			$data = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
 
 			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
 			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
@@ -128,7 +128,7 @@ class Utils {
 				exit;
 		}
 	}
-	
+
 	public function start_trakcing( $data ) {
 		global $betterlinks;
 		$is_disable_analytics_ip = isset( $betterlinks['is_disable_analytics_ip'] ) ? $betterlinks['is_disable_analytics_ip'] : false;
@@ -142,7 +142,7 @@ class Utils {
 			setcookie( $visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/' );
 		}
 		// checking if split tes enabled.
-		$is_split_enabled = apply_filters('betterlinkspro/admin/split_test_tracking', false, $data);
+		$is_split_enabled = apply_filters( 'betterlinkspro/admin/split_test_tracking', false, $data );
 
 		$click_data = array(
 			'link_id'             => $data['ID'],
@@ -167,13 +167,13 @@ class Utils {
 		}
 
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$click_data['brand_name']      = $data['brand_name'];
-			$click_data['model']           = $data['model'];
-			$click_data['bot_name']        = $data['bot_name'];
-			$click_data['browser_type']    = $data['browser_type'];
-			$click_data['browser_version'] = $data['browser_version'];
-			$click_data['os_version']      = $data['os_version'];
-			$click_data['language']        = $data['language'];
+			$click_data['brand_name']      = isset( $data['brand_name'] ) ? $data['brand_name'] : '';
+			$click_data['model']           = isset( $data['model'] ) ? $data['model'] : '';
+			$click_data['bot_name']        = isset( $data['bot_name'] ) ? $data['bot_name'] : '';
+			$click_data['browser_type']    = isset( $data['browser_type'] ) ? $data['browser_type'] : '';
+			$click_data['browser_version'] = isset( $data['browser_version'] ) ? $data['browser_version'] : '';
+			$click_data['os_version']      = isset( $data['os_version'] ) ? $data['os_version'] : '';
+			$click_data['language']        = isset( $data['language'] ) ? $data['language'] : '';
 		}
 
 		$arg = apply_filters( 'betterlinks/link/insert_click_arg', $click_data );
@@ -230,7 +230,7 @@ class Utils {
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$helper           = new Helper();
 		$slug             = $helper->generate_random_slug();
-		$prefix           = !empty( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$prefix           = ! empty( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
 		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
 		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;
