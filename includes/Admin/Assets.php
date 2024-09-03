@@ -117,9 +117,8 @@ class Assets
      */
     public function block_editor_assets()
     {
-        global $pagenow, $wp_scripts;
-        if( 'post.php' !== $pagenow ) return;
-        error_log( print_r( $wp_scripts, true ) );
+        global $pagenow;
+        if( 'customize.php' === $pagenow ) return;
         $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks-gutenberg.core.min.asset.php';
         wp_enqueue_style(
             'betterlinks-gutenberg',
