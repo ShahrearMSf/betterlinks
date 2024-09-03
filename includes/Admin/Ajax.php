@@ -682,7 +682,7 @@ class Ajax {
 		}
 		$short_url = ( isset( $_POST['target_url'] ) ? sanitize_text_field( $_POST['target_url'] ) : '' );
 		$results   = Helper::get_link_by_permalink( $short_url );
-		wp_send_json_success( is_array( $results ) ? current( $results ) : false );
+		wp_send_json_success( is_array( $results ) ? $results : false );
 	}
 
 	public function get_category_by_link_id() {
