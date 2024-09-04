@@ -39,7 +39,7 @@ if (!class_exists('BetterLinks')) {
             add_action('admin_init', [$this, 'run_migrator']);
             add_action('admin_init', [$this, 'do_the_works_if_failed_during_activation'], 100);
             $this->dispatch_hook();
-
+            add_action( 'wp_enqueue_scripts', [$this, 'frontend_scripts'] );
         }
 
         public function do_the_works_if_failed_during_activation()
@@ -171,6 +171,13 @@ if (!class_exists('BetterLinks')) {
         public function deactivate()
         {
             new BetterLinks\Uninstall();
+        }
+
+        public function frontend_scripts() {
+            $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.app.core.min.asset.php';
+            wp_enqueue_script( 'betterlinks-app', BETTERLINKS_ASSETS_URI . 'js/betterlinks.app.core.min.js', $dependencies['dependencies'], $dependencies['version'], true );
+
+            wp_localize_script('betterlinks-app', 'betterLinksApp', []);
         }
     }
 }
