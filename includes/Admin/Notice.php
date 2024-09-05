@@ -220,7 +220,7 @@ class Notice {
 				'recurrence'  => false,
 				'dismissible' => true,
 				'refresh'     => BETTERLINKS_VERSION,
-				"expire"      => strtotime( '11:59:59pm 2nd December, 2024' ),
+				"expire"      => strtotime( '11:59:59pm 2nd December, 2023' ),
 				'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
 			]
 		);
