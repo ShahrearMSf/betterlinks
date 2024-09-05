@@ -56,6 +56,7 @@ class Utils {
 	}
 	public function dispatch_redirect( $data, $param ) {
 		global $betterlinks;
+
 		$comparable_url  = rtrim( preg_replace( '/https?\:\/\//', '', site_url( '/' ) ), '/' ) . '/' . $data['short_url'];
 		$destination_url = rtrim( preg_replace( '/https?\:\/\//', '', $data['target_url'] ), '/' );
 		$comparable_url  = rtrim( preg_replace( '/^www\.?/', '', $comparable_url ), '/' );
@@ -63,12 +64,22 @@ class Utils {
 		if ( ! $data || $comparable_url === $destination_url ) {
 			return;
 		}
+
+		$target_url    = $this->addScheme( $data['target_url'] );
+		$_query_params = array();
+		wp_parse_str( $param, $_query_params );
+		$data['pf'] = build_query( $_query_params );
+		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
+			$_target_url = wp_parse_url( $target_url );
+			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . $data['pf'];
+		}
+
 		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
             $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
 			$dd         = new DeviceDetector( $user_agent );
 			$dd->parse();
 
-			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+			$data = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
 
 			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
 			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
@@ -102,14 +113,6 @@ class Utils {
 		header( 'Pragma: no-cache' );
 		header( 'X-Redirect-Powered-By:  https://www.betterlinks.io/' );
 
-		$target_url = $this->addScheme( $data['target_url'] );
-		if ( filter_var( $data['param_forwarding'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $param ) && $param !== $data['link_slug'] ) {
-			$_target_url   = wp_parse_url( $target_url );
-			$_query_params = array();
-			wp_parse_str( $param, $_query_params );
-			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . build_query( $_query_params );
-		}
-
 		switch ( $data['redirect_type'] ) {
 			case '301':
 				wp_redirect( esc_url_raw( $target_url ), 301 );
@@ -128,7 +131,7 @@ class Utils {
 				exit;
 		}
 	}
-	
+
 	public function start_trakcing( $data ) {
 		global $betterlinks;
 		$is_disable_analytics_ip = isset( $betterlinks['is_disable_analytics_ip'] ) ? $betterlinks['is_disable_analytics_ip'] : false;
@@ -142,7 +145,7 @@ class Utils {
 			setcookie( $visitor_cookie, $visitor_uid, $visitor_cookie_expire_time, '/' );
 		}
 		// checking if split tes enabled.
-		$is_split_enabled = apply_filters('betterlinkspro/admin/split_test_tracking', false, $data);
+		$is_split_enabled = apply_filters( 'betterlinkspro/admin/split_test_tracking', false, $data );
 
 		$click_data = array(
 			'link_id'             => $data['ID'],
@@ -167,13 +170,16 @@ class Utils {
 		}
 
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
-			$click_data['brand_name']      = $data['brand_name'];
-			$click_data['model']           = $data['model'];
-			$click_data['bot_name']        = $data['bot_name'];
-			$click_data['browser_type']    = $data['browser_type'];
-			$click_data['browser_version'] = $data['browser_version'];
-			$click_data['os_version']      = $data['os_version'];
-			$click_data['language']        = $data['language'];
+			$query_params = apply_filters( 'betterlinkspro/admin/parameter_tracking_values', array(), $data );
+
+			$click_data['brand_name']      = isset( $data['brand_name'] ) ? $data['brand_name'] : '';
+			$click_data['model']           = isset( $data['model'] ) ? $data['model'] : '';
+			$click_data['bot_name']        = isset( $data['bot_name'] ) ? $data['bot_name'] : '';
+			$click_data['browser_type']    = isset( $data['browser_type'] ) ? $data['browser_type'] : '';
+			$click_data['browser_version'] = isset( $data['browser_version'] ) ? $data['browser_version'] : '';
+			$click_data['os_version']      = isset( $data['os_version'] ) ? $data['os_version'] : '';
+			$click_data['language']        = isset( $data['language'] ) ? $data['language'] : '';
+			$click_data['query_params']    = wp_json_encode( $query_params );
 		}
 
 		$arg = apply_filters( 'betterlinks/link/insert_click_arg', $click_data );
@@ -230,7 +236,7 @@ class Utils {
 		$date             = wp_date( 'Y-m-d H:i:s' );
 		$helper           = new Helper();
 		$slug             = $helper->generate_random_slug();
-		$prefix           = isset( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
+		$prefix           = ! empty( $settings['prefix'] ) ? $settings['prefix'] . '/' : '';
 		$nofollow         = ! empty( $settings['nofollow'] ) ? $settings['nofollow'] : null;
 		$sponsored        = ! empty( $settings['sponsored'] ) ? $settings['sponsored'] : null;
 		$track_me         = ! empty( $settings['track_me'] ) ? $settings['track_me'] : null;

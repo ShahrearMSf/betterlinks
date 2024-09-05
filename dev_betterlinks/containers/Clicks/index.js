@@ -31,10 +31,12 @@ const Clicks = (props) => {
 		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
 		pastDate = from || formatDate(pastDate, 'yyyy-mm-dd');
 		if (!clicks) {
-			props.fetch_clicks_data({ from: pastDate, to: currentDate, setLoading });
 			props.get_chart_data({ from: pastDate, to: currentDate, setLoading: setChartLoading });
 			props.get_graph_data({ from: pastDate, to: currentDate, setLoading: setGraphLoading });
 			props.get_medium_data({ from: pastDate, to: currentDate, setLoading: setMediumLoading });
+		}
+		if (!clicks?.unique_list) {
+			props.fetch_clicks_data({ from: pastDate, to: currentDate, setLoading });
 		}
 	}, [clicks]);
 	return (

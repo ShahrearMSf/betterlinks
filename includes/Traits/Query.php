@@ -540,8 +540,8 @@ trait Query {
 		$addedDbColumnsString    = $is_analytics_ip_enabled ? ' %s, %s, %s, %s ' : ' %s, %s ';
 
 		if ( $is_extra_data_tracking_compatible ) {
-			$addedPlaceholderString .= ', brand_name, model, bot_name, browser_type, os_version, browser_version, language';
-			$addedDbColumnsString   .= ', %s, %s, %s, %s, %s, %s, %s';
+			$addedPlaceholderString .= ', brand_name, model, bot_name, browser_type, os_version, browser_version, language, query_params';
+			$addedDbColumnsString   .= ', %s, %s, %s, %s, %s, %s, %s, %s';
 		}
 
 		$query         = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os,device, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
@@ -572,6 +572,7 @@ trait Query {
 			$db_data_array[] = isset( $item['os_version'] ) ? $item['os_version'] : '';
 			$db_data_array[] = isset( $item['browser_version'] ) ? $item['browser_version'] : '';
 			$db_data_array[] = isset( $item['language'] ) ? $item['language'] : '';
+			$db_data_array[] = isset( $item['query_params'] ) ? $item['query_params'] : '';
 		}
 		if ( isset( current( $betterlinks )['ID'] ) ) {
 			$wpdb->query(

@@ -39,9 +39,10 @@ export const update_tracking_settings = (settings) => async (dispatch) => {
 			pixel_access_token,
 			is_enable_custom_scripts,
 			global_head_scripts,
+			parameter_tracking,
 			betterlinkspro_nonce,
 		} = settings;
-
+		const parameter_tracking_settings = JSON.stringify(parameter_tracking || {});
 		const form_data = new FormData();
 		form_data.append('action', 'betterlinkspro/admin/external_analytics');
 		form_data.append('is_enable_ga', is_enable_ga);
@@ -53,6 +54,7 @@ export const update_tracking_settings = (settings) => async (dispatch) => {
 		form_data.append('pixel_access_token', pixel_access_token);
 		form_data.append('is_enable_custom_scripts', is_enable_custom_scripts);
 		form_data.append('global_head_scripts', global_head_scripts || '');
+		form_data.append('parameter_tracking', parameter_tracking_settings);
 
 		form_data.append('security', betterlinkspro_nonce);
 		axios.post(ajaxurl, form_data).then(

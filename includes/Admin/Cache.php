@@ -10,8 +10,10 @@ class Cache {
 		if ( is_string( $betterlinks_links ) ) {
 			$betterlinks_links = json_decode( $betterlinks_links, true );
 		}
-		// Using file_put_contents is like opening a file, writing to it, and then closing it. Sometimes, it might show warnings because of caching, so it's better to silence the warning.
-		return @file_put_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json', json_encode( $betterlinks_links ) ); // phpcs:ignore
+		if( !is_dir( BETTERLINKS_UPLOAD_DIR_PATH ) ){
+			wp_mkdir_p(BETTERLINKS_UPLOAD_DIR_PATH);
+		}
+		return file_put_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json', json_encode( $betterlinks_links ) );
 	}
 
 	public static function get_json_settings() {
