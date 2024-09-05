@@ -85,7 +85,7 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-domain/' style='display: inline-block'>
+				<a target='_blank' href='https://betterlinks.io/docs/parameter-tracking-with-betterlinks/' style='display: inline-block'>
 					%s
 				</a>
 				%s
@@ -95,8 +95,8 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks Pro 2.0 is here, with new ', 'betterlinks'),
-		__('Custom Domain', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 2.1 is here, with new ', 'betterlinks'),
+		__('Parameter Tracking', 'betterlinks'),
 		__('feature & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
