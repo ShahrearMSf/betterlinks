@@ -16,7 +16,7 @@ const ExternalAnalytics = ({ trackingSettings, update_tracking_settings }) => {
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-tab-inner-divider">
-				<div>
+				<div className="btl-tracking-settings">
 					<div className="btl-external-analytics-container btl-googleanalytics-container teaser">
 						<form
 							className="form"
@@ -61,6 +61,23 @@ const ExternalAnalytics = ({ trackingSettings, update_tracking_settings }) => {
 						</form>
 					</div>
 					<InputTeaser title={__('Custom Scripts', 'betterlinks')} onClick={openUpgradeToProModal} />
+					<span className="btl-form-group btl-multi-checkbox" style={{ alignItems: 'baseline' }}>
+						<label className="btl-form-label">{__('Parameter Tracking', 'betterlinks')}</label>
+						<div className="link-options__body" onClick={openUpgradeToProModal}>
+							<label className="btl-checkbox-field block">
+								<input className="btl-check" type="checkbox" disabled />
+								<span className="text">{__('Forwarded Parameters', 'betterlinks')}</span>
+							</label>
+							<label className="btl-checkbox-field block">
+								<input className="btl-check" type="checkbox" disabled />
+								<span className="text">{__('Target URL Parameters', 'betterlinks')}</span>
+							</label>
+							<label className="btl-checkbox-field block">
+								<input className="btl-check" type="checkbox" disabled />
+								<span className="text">{__('UTM Parameters', 'betterlinks')}</span>
+							</label>
+						</div>
+					</span>
 				</div>
 			</div>
 		</>
