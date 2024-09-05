@@ -4,6 +4,11 @@ namespace BetterLinks\Admin;
 
 use BetterLinks\Cron;
 use BetterLinks\Helper;
+use BetterLinks\Link\Utils;
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\Device\AbstractDeviceParser;
+use DeviceDetector\Parser\OperatingSystem;
+use DeviceDetector\Parser\Client\Browser;
 
 class Ajax {
 
@@ -84,6 +89,9 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks__check_fbs_link', array( $this, 'check_fbs_link' ) );
 		add_action( 'wp_ajax_betterlinks__create_fbs_link', array( $this, 'create_fbs_link' ) );
 		add_action( 'wp_ajax_betterlinks__update_fbs_link', array( $this, 'update_fbs_link' ) );
+
+		// js analytics tracking
+		add_action( 'wp_ajax_betterlinks__js_analytics_trakcing', array( $this, 'js_analytics_trakcing' ) );
 	}
 
 	public function update_fbs_link() {
@@ -1137,5 +1145,43 @@ class Ajax {
 			wp_send_json_success( $data );
 		}
 		wp_die( "You don't have permission to do this." );
+	}
+
+	public function js_analytics_trakcing() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( !apply_filters( 'betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ) ) ) {
+			wp_die("You don't have permission to do this.");
+		}
+		global $wpdb;
+		$query = $wpdb->prepare( "select short_url from {$wpdb->prefix}betterlinks where ID=%s", $_POST['linkId'] );
+		$short_url = $wpdb->get_row( $query, ARRAY_A );
+		$short_url = current( $short_url );
+		$utils = new Utils();
+		$data = $utils->get_slug_raw($short_url);
+		
+
+		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
+            $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
+			$dd         = new DeviceDetector( $user_agent );
+			$dd->parse();
+
+			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+
+			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
+			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
+			$data['device']  = $dd->getDeviceName();
+
+			if ( isset( $betterlinks['disablebotclicks'] ) && $betterlinks['disablebotclicks'] ) {
+				if ( ! $dd->isBot() ) {
+					$utils->start_trakcing( $data );
+				}
+			} else {
+				$utils->start_trakcing( $data );
+			}
+		}
+
+		wp_send_json([
+			'data' => true
+		]);
 	}
 }

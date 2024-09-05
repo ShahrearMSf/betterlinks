@@ -34,7 +34,7 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 	const handleEditBetterLink = () => {
 		const siteUrlWithoutHttp = site_url.replace(/https?\:\/\//, '').toLowerCase();
 		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
-		const link = insertedLinkData?.short_url;
+		const link = insertedLinkData?.short_url || url;
 		const justShortlink = link
 			.trim()
 			.replace(/https?\:\/\//gi, '')

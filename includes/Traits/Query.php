@@ -181,6 +181,7 @@ trait Query {
 		return $link;
 	}
 	public static function get_link_by_ID( $ID ) {
+		// error_log( print_r( $ID, true ) );
 		global $wpdb;
 		$link = $wpdb->get_results(
 			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}betterlinks WHERE ID=%d", $ID ),

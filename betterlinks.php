@@ -127,6 +127,7 @@ if (!class_exists('BetterLinks')) {
             BetterLinks\Integration::init();
             new BetterLinks\Link();
             new BetterLinks\Tools();
+            new BetterLinks\Frontend;
             new BetterLinks\Elementor();
         }
 
@@ -177,7 +178,10 @@ if (!class_exists('BetterLinks')) {
             $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.app.core.min.asset.php';
             wp_enqueue_script( 'betterlinks-app', BETTERLINKS_ASSETS_URI . 'js/betterlinks.app.core.min.js', $dependencies['dependencies'], $dependencies['version'], true );
 
-            wp_localize_script('betterlinks-app', 'betterLinksApp', []);
+            wp_localize_script('betterlinks-app', 'betterLinksApp', [
+                'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
+                'ajaxurl' => admin_url('admin-ajax.php')
+            ]);
         }
     }
 }
