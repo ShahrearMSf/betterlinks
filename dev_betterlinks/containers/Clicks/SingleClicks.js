@@ -57,8 +57,8 @@ const SingleClicks = (props) => {
 			)}
 			<CompatibilityNotice
 				mode="white"
-				notice={__('To use the Parameter Tracking feature, please ensure that you have at least BetterLinks Pro v2.0.3 or later', 'betterlinks')}
-				compatibleProVersion="2.0.3"
+				notice={__('To use the Parameter Tracking feature, please ensure that you have at least BetterLinks Pro v2.1.0 or later', 'betterlinks')}
+				compatibleProVersion="2.1.0"
 			/>
 			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
 			<div className="btl-analytic-table-wrapper btl-analytic-table-wrapper-single-clicks">

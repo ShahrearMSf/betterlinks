@@ -669,7 +669,7 @@ const ParameterItem = ({ type, item, style = {} }) => {
 
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
-		const isProUpdated = pro_version_check('2.0.3');
+		const isProUpdated = pro_version_check('2.1.0');
 		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
@@ -718,7 +718,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 						{__('Parameters', 'betterlinks')}
 						{!is_pro_enabled && <ProBadge />}
 						{!isProUpdated && (
-							<Tooltip arrow title="To use Parameter Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.0.3 installed & activated" placement="top">
+							<Tooltip arrow title="To use Parameter Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.1.0 installed & activated" placement="top">
 								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
 							</Tooltip>
 						)}
