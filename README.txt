@@ -158,6 +158,10 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 2.1.7 - 06/09/2024 =
+
+- Few minor bug fixes & improvement
+
 = 2.1.6 - 05/09/2024 =
 
 - Improvement: Added 7G Firewall compatibility
