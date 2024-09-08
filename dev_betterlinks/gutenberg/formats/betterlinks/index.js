@@ -105,9 +105,18 @@ export const betterlinksFormat = {
 		}, [value.start, value.end]);
 
 		useEffect(() => {
-			const foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.ID === activeAttributes?.dataLinkId);
+			const { dataLinkId, url = '' } = activeAttributes;
+			let foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.ID === dataLinkId);
+
+			if (!foundLink && !url.startsWith(site_url)) {
+				foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.target_url === url);
+			}
 			setInsertedLinkData(foundLink);
-		}, []);
+
+			return () => {
+				setInsertedLinkData(null);
+			};
+		}, [activeAttributes]);
 
 		const onClick = () => {
 			setIsVisible(true);
