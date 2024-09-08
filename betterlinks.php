@@ -180,7 +180,8 @@ if (!class_exists('BetterLinks')) {
 
             wp_localize_script('betterlinks-app', 'betterLinksApp', [
                 'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
-                'ajaxurl' => admin_url('admin-ajax.php')
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'site_url' => apply_filters('betterlinks/site_url', site_url()),
             ]);
         }
     }

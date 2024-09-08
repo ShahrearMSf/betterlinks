@@ -5,10 +5,6 @@ namespace BetterLinks\Admin;
 use BetterLinks\Cron;
 use BetterLinks\Helper;
 use BetterLinks\Link\Utils;
-use DeviceDetector\DeviceDetector;
-use DeviceDetector\Parser\Device\AbstractDeviceParser;
-use DeviceDetector\Parser\OperatingSystem;
-use DeviceDetector\Parser\Client\Browser;
 
 class Ajax {
 
@@ -1149,38 +1145,19 @@ class Ajax {
 	}
 
 	public function js_analytics_tracking() {
-		// check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		// if ( !apply_filters( 'betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ) ) ) {
-		// 	wp_die("You don't have permission to do this.");
-		// }
 		global $wpdb;
 
-		$query = $wpdb->prepare( "select short_url from {$wpdb->prefix}betterlinks where ID=%s", $_POST['linkId'] );
+		$searchKey = !empty( $_POST['target_url'] ) ? 'target_url' : 'ID';
+		$searchValue = (isset( $_POST['target_url'] ) ? sanitize_url($_POST['target_url']) : '');
+		$searchValue = (empty( $searchValue ) && isset( $_POST['linkId'] ) ? sanitize_text_field( $_POST['linkId'] ) : '');
+
+		$query = $wpdb->prepare( "select short_url from {$wpdb->prefix}betterlinks where {$searchKey}=%s", $searchValue );
 		$short_url = $wpdb->get_row( $query, ARRAY_A );
 		$short_url = current( $short_url );
 		$utils = new Utils();
 		$data = $utils->get_slug_raw($short_url);
-		
 
-		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
-            $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
-			$dd         = new DeviceDetector( $user_agent );
-			$dd->parse();
-
-			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
-
-			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
-			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
-			$data['device']  = $dd->getDeviceName();
-
-			if ( isset( $betterlinks['disablebotclicks'] ) && $betterlinks['disablebotclicks'] ) {
-				if ( ! $dd->isBot() ) {
-					$utils->start_trakcing( $data );
-				}
-			} else {
-				$utils->start_trakcing( $data );
-			}
-		}
+		Helper::init_tracking($data, $utils);
 
 		wp_send_json([
 			'data' => true
