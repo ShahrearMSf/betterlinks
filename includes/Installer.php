@@ -255,7 +255,7 @@ class Installer extends \WP_Background_Process
                 // run analytics total clicks & unique clicks data migration
                 \BetterLinks\Helper::update_links_analytics();
             }
-            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '==' ) ) {
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.3', '>=' ) ) {
                 $this->modifyBetterLinksClicksTable();
             }
             
@@ -266,6 +266,10 @@ class Installer extends \WP_Background_Process
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.4', '>' ) ) {
                 $this->update_fluent_task_delete_settings();
                 $this->update_cle_category();
+            }
+
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.6', '>' ) ){
+                $this->modifyBetterLinksClicksTable2();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);

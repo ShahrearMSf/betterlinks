@@ -1,9 +1,10 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import styled from 'styled-components';
 import _ from 'lodash';
 import clipboardCopy from 'clipboard-copy';
+import ProBadge from 'components/Badge/ProBadge';
+import { Badge, Tooltip } from '@material-ui/core';
 
 export const {
 	betterlinks_nonce,
@@ -641,27 +642,38 @@ export const sortFunction = (title) => (rowA, rowB) => {
 	else if (b > a) return -1;
 	return 0;
 };
-const Blured = styled.span`
-	filter: blur(2px);
-	user-select: none;
-`;
-const osData = ['Windows', 'Linux', 'Mac', 'iOS', 'Android'];
-const deviceData = ['mobile', 'desktop', 'mobile', 'desktop'];
-const BluredData = ({ data = '' }) => {
-	if ('os' === data) {
-		const rndInt = Math.floor(Math.random() * 4) + 1;
-		return <span style={{ filter: 'blur(2px)' }}>{osData[rndInt]}</span>;
-	}
-	const rndInt = Math.floor(Math.random() * 3) + 1;
+
+const ParameterItem = ({ type, item, style = {} }) => {
+	if (!item) return;
+	const parameterStyles = {
+		root: {
+			display: 'flex',
+			alignItems: 'flex-start',
+			backgroundColor: 'rgb(240, 242, 247)',
+			padding: '8px 12px 8px 12px',
+			borderRadius: '8px',
+			fontSize: '12px',
+			fontWeight: '400',
+			...style?.root,
+		},
+		type: {
+			fontSize: '12px',
+			fontWeight: '500',
+			...style?.type,
+		},
+	};
 	return (
-		<span style={{ filter: 'blur(2px)' }}>
-			<img width="25" src={`${plugin_root_url}assets/images/devices/${getDevice(deviceData[rndInt])}.svg`} alt="icon" />
-		</span>
+		<>
+			<span style={parameterStyles.root}>
+				<span style={parameterStyles.type}>{type}: &nbsp;</span> <span>{item}</span>
+			</span>
+		</>
 	);
 };
 
 export const getColumns = (analytics, analyticsTab, id = null) => {
 	if (!!id) {
+		const isProUpdated = pro_version_check('2.1.0');
 		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
@@ -692,7 +704,7 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 			{
 				name: __('Referrer', 'betterlinks'),
 				selector: 'referer',
-				width: '500px',
+				width: '300px',
 				sortable: false,
 				cell: (row) => (
 					<div>
@@ -703,6 +715,59 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 						</div>
 					</div>
 				),
+			},
+			{
+				name: (
+					<>
+						{__('Parameters', 'betterlinks')}
+						{!is_pro_enabled && <ProBadge />}
+						{!isProUpdated && (
+							<Tooltip arrow title="To use Parameter Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.1.0 installed & activated" placement="top">
+								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
+							</Tooltip>
+						)}
+					</>
+				),
+				selector: 'query_params',
+				width: '350px',
+				cell: (row) => {
+					if (!is_pro_enabled) {
+						return;
+					}
+					const query_params = JSON.parse(row.query_params || '{}');
+					return (
+						<div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px', width: '100%' }}>
+							<ParameterItem
+								item={query_params?.pf}
+								type="Forwarded"
+								style={{
+									type: {
+										minWidth: '25px',
+									},
+								}}
+							/>
+							<ParameterItem
+								item={query_params?.target_url}
+								type="Target URL"
+								style={{
+									type: {
+										minWidth: '70px',
+									},
+								}}
+							/>
+							<ParameterItem
+								item={query_params?.utm}
+								type="UTM"
+								style={{
+									type: {
+										minWidth: '40px',
+									},
+								}}
+							/>
+						</div>
+					);
+				},
+				sortable: false,
 			},
 			{
 				name: __('OS', 'betterlinks'),

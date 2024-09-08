@@ -11,7 +11,7 @@ import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.action
 import { getData } from '../clicks.helper';
 
 const DataList = (props) => {
-	const { columns, data, progressPending, id = null, from=null } = props;
+	const { columns, data, progressPending, id = null, from = null } = props;
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [searchStatus, setSearchStatus] = useState(false);
 	const [isSearching, setSearching] = useState(false);
