@@ -23,11 +23,17 @@ class LinkChecker {
             $next = 0;
             foreach ($matches[0] as $match) {
                 $linkId = $this->get_string_text( $match[0], 'data-link-id' );
+                if( empty( $linkId ) ) {
+                    continue;
+                }
                 $link = self::get_link_by_ID(intval($linkId));
                 $this->link = is_array( $link ) ? current( $link ) : false;
                 if( empty( $this->link ) ) continue;
 
                 $href = $this->get_string_text( $match[0], 'href' );
+                if( empty( $href ) ) {
+                    continue;
+                }
                 $href = $this->check_hrefs($href);
 
                 $pattern = '/(<a\s+[^>]*href\s*=\s*["\'])([^"\']*)(["\'][^>]*>)/i';
@@ -49,7 +55,9 @@ class LinkChecker {
 
         private function get_string_text($string, $attr){
             preg_match('/'. $attr .'="([^"]+)"/', $string, $matches);
+            if( empty( $matches ) ) return '';
             $value = explode('=', $matches[0]);
+            if( empty( $value[1] ) ) return '';
             $value = trim($value[1], '"');
             return $value;
         }
