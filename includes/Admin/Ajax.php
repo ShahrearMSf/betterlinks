@@ -91,7 +91,8 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks__update_fbs_link', array( $this, 'update_fbs_link' ) );
 
 		// js analytics tracking
-		add_action( 'wp_ajax_betterlinks__js_analytics_trakcing', array( $this, 'js_analytics_trakcing' ) );
+		add_action( 'wp_ajax_nopriv_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
+		add_action( 'wp_ajax_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
 	}
 
 	public function update_fbs_link() {
@@ -1147,12 +1148,13 @@ class Ajax {
 		wp_die( "You don't have permission to do this." );
 	}
 
-	public function js_analytics_trakcing() {
-		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( !apply_filters( 'betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ) ) ) {
-			wp_die("You don't have permission to do this.");
-		}
+	public function js_analytics_tracking() {
+		// check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		// if ( !apply_filters( 'betterlinks/admin/current_user_can_edit_settings', current_user_can( 'manage_options' ) ) ) {
+		// 	wp_die("You don't have permission to do this.");
+		// }
 		global $wpdb;
+
 		$query = $wpdb->prepare( "select short_url from {$wpdb->prefix}betterlinks where ID=%s", $_POST['linkId'] );
 		$short_url = $wpdb->get_row( $query, ARRAY_A );
 		$short_url = current( $short_url );
