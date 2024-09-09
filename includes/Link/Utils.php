@@ -5,6 +5,9 @@ use BetterLinks\Helper;
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
 use BetterLinks\Traits\Links;
 use BetterLinks\Traits\ArgumentSchema;
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\OperatingSystem;
+use DeviceDetector\Parser\Client\Browser;
 
 class Utils {
 	use Links;
@@ -71,7 +74,26 @@ class Utils {
 			$target_url .= ( isset( $_target_url['query'] ) ? '&' : '?' ) . $data['pf'];
 		}
 
-		Helper::init_tracking($data, $this);
+		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
+			$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
+			$dd         = new DeviceDetector( $user_agent );
+			$dd->parse();
+	
+			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+	
+			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
+			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
+			$data['device']  = $dd->getDeviceName();
+	
+			if ( isset( $betterlinks['disablebotclicks'] ) && $betterlinks['disablebotclicks'] ) {
+				if ( ! $dd->isBot() ) {
+					$this->start_trakcing( $data );
+				}
+			} else {
+				$this->start_trakcing( $data );
+			}
+		}
+		
 
 		$robots_tags = array();
 		if ( filter_var( $data['sponsored'], FILTER_VALIDATE_BOOLEAN ) ) {
