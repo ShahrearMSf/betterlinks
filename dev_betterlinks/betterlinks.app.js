@@ -7,23 +7,11 @@
 		trackUnCloakedLinksWithoutLinkID() {
 			const self = this;
 			$(document).on('click', 'body a.betterlinks-linked-text:not([data-link-id])', function (e) {
-				const target = e.target;
-				if (!target?.href?.startsWith(betterLinksApp?.site_url)) {
+				if (!e.target?.href?.startsWith(betterLinksApp?.site_url)) {
 					e.preventDefault();
 
-					const targetUrl = target.href;
-					// const form_data = new FormData();
-					// form_data.append('action', 'betterlinks__js_analytics_tracking');
-					// form_data.append('security', betterLinksApp.betterlinks_nonce);
-					// form_data.append('target_url', targetUrl);
-
 					self.redirectToTarget(e.target);
-
-					// fetch(betterLinksApp.ajaxurl, {
-					// 	method: 'POST',
-					// 	body: form_data,
-					// });
-					self.initTracking('target_url', targetUrl);
+					self.initTracking('target_url', e.target.href);
 				}
 				return;
 			});
@@ -34,17 +22,7 @@
 				e.preventDefault();
 
 				const linkId = e.target.dataset?.linkId;
-				// const form_data = new FormData();
-				// form_data.append('action', 'betterlinks__js_analytics_tracking');
-				// form_data.append('security', betterLinksApp.betterlinks_nonce);
-				// form_data.append('linkId', linkId);
-
 				self.redirectToTarget(e.target);
-
-				// fetch(betterLinksApp.ajaxurl, {
-				// 	method: 'POST',
-				// 	body: form_data,
-				// });
 				self.initTracking('linkId', linkId);
 			});
 		},
