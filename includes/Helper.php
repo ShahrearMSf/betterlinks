@@ -692,25 +692,48 @@ class Helper {
 	}
 
 	public static function init_tracking( $data, $utils ) {
-		if ( !filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) return;
-		
 		global $betterlinks;
 		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; // phpcs:ignore
 		$dd         = new DeviceDetector( $user_agent );
 		$dd->parse();
 
-		$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+		$data['is_bot'] = $dd->isBot();
+		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
+			// password protection logics
+			do_action( 'betterlinkspro/admin/check_password_protection', $data['short_url'], $data );
 
-		$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
-		$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
-		$data['device']  = $dd->getDeviceName();
+			if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { // phpcs:ignore
+				return false;
+			}
+		}
+		$data = apply_filters( 'betterlinks/link/before_dispatch_redirect', $data ); // phpcs:ignore.
+		if ( empty( $data ) ) {
+			return false;
+		}
+		do_action( 'betterlinks/before_redirect', $data ); // phpcs:ignore.
 
-		if ( isset( $betterlinks['disablebotclicks'] ) && $betterlinks['disablebotclicks'] ) {
-			if ( ! $dd->isBot() ) {
+		$comparable_url  = rtrim( preg_replace( '/https?\:\/\//', '', site_url( '/' ) ), '/' ) . '/' . $data['short_url'];
+		$destination_url = rtrim( preg_replace( '/https?\:\/\//', '', $data['target_url'] ), '/' );
+		$comparable_url  = rtrim( preg_replace( '/^www\.?/', '', $comparable_url ), '/' );
+		$destination_url = rtrim( preg_replace( '/^www\.?/', '', $destination_url ), '/' );
+		if ( ! $data || $comparable_url === $destination_url ) {
+			return;
+		}
+
+		if ( filter_var( $data['track_me'], FILTER_VALIDATE_BOOLEAN ) ) {
+			$data      = apply_filters( 'betterlinks/extra_tracking_data', $data, $dd );
+	
+			$data['os']      = OperatingSystem::getOsFamily( $dd->getOs( 'name' ) );
+			$data['browser'] = Browser::getBrowserFamily( $dd->getClient( 'name' ) );
+			$data['device']  = $dd->getDeviceName();
+	
+			if ( isset( $betterlinks['disablebotclicks'] ) && $betterlinks['disablebotclicks'] ) {
+				if ( ! $dd->isBot() ) {
+					$utils->start_trakcing( $data );
+				}
+			} else {
 				$utils->start_trakcing( $data );
 			}
-		} else {
-			$utils->start_trakcing( $data );
 		}
 	}
 }
