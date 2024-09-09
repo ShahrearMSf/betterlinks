@@ -700,7 +700,9 @@ class Helper {
 		$data['is_bot'] = $dd->isBot();
 		if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) {
 			// password protection logics
-			do_action( 'betterlinkspro/admin/check_password_protection', $data['short_url'], $data );
+			if( empty( $data['skip_password_protection'] ) ){
+				do_action( 'betterlinkspro/admin/check_password_protection', $data['short_url'], $data );
+			}
 
 			if ( empty( $data['target_url'] ) || ! apply_filters( 'betterlinks/pre_before_redirect', $data ) ) { // phpcs:ignore
 				return false;

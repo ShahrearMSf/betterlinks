@@ -1156,7 +1156,7 @@ class Ajax {
 		$short_url = current( $short_url );
 		$utils = new Utils();
 		$data = $utils->get_slug_raw($short_url);
-
+		$data['skip_password_protection'] = true;
 		Helper::init_tracking($data, $utils);
 
 		wp_send_json([
