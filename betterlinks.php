@@ -176,7 +176,7 @@ if (!class_exists('BetterLinks')) {
 
         public function frontend_scripts() {
             $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.app.core.min.asset.php';
-            wp_enqueue_script( 'betterlinks-app', BETTERLINKS_ASSETS_URI . 'js/betterlinks.app.core.min.js', $dependencies['dependencies'], $dependencies['version'], true );
+            wp_enqueue_script( 'betterlinks-app', BETTERLINKS_ASSETS_URI . 'js/betterlinks.app.core.min.js', array_merge( $dependencies['dependencies'], ['jquery'] ), $dependencies['version'], true );
 
             wp_localize_script('betterlinks-app', 'betterLinksApp', [
                 'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
