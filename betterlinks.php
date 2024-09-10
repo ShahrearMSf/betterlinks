@@ -13,6 +13,8 @@
  * Domain Path:		/languages
  */
 
+use BetterLinks\Admin\Cache;
+
 if (!defined('ABSPATH')) {
     exit();
 }
@@ -145,6 +147,7 @@ if (!class_exists('BetterLinks')) {
         public function set_global_settings()
         {
             $GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
+            $GLOBALS['betterlinks_settings'] = Cache::get_json_settings();
         }
 
         public function run_migrator()
