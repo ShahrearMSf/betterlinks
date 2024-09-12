@@ -38,7 +38,7 @@ const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
 		}
 		const handleFetch = async () => {
 			const { data } = await get_affiliate_link_disclosure_post(postId);
-			const enable_affiliate_disclosure = data?.includes('true') || (!data?.length && isAffiliateDisclosureEnabledForThisPostType);
+			const enable_affiliate_disclosure = data && (data?.includes('true') || (!data?.length && isAffiliateDisclosureEnabledForThisPostType));
 			setChecked(enable_affiliate_disclosure);
 			edit_gutenberg_affiliate({
 				enable_affiliate_disclosure,

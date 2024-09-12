@@ -6,7 +6,7 @@ import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import Graph from 'containers/Graph';
 import { fetch_clicks_data, fetch_individual_clicks } from 'redux/actions/clicks.actions';
 import { useUpgradeProModal } from 'utils/customHooks';
-import { formatDate, getColumns, is_pro_enabled } from 'utils/helper';
+import { formatDate, getColumns, is_pro_enabled, pro_version_check } from 'utils/helper';
 import { analyticsData } from './clicks.helper';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
@@ -14,6 +14,7 @@ import { __ } from '@wordpress/i18n';
 import DataList from './AnalyticsList/DataList';
 import ChartLoader from './ChartLoader';
 import SingleLinkDetails from './SingleLinkDetails';
+import CompatibilityNotice from 'components/Teasers/CompatibilityNotice';
 
 const SingleClicks = (props) => {
 	const [isOpenUpgradeToProModal, _, closeUpgradeToProModal] = useUpgradeProModal();
@@ -61,6 +62,11 @@ const SingleClicks = (props) => {
 			) : (
 				<ChartLoader />
 			)}
+			<CompatibilityNotice
+				mode="white"
+				notice={__('To use the Parameter Tracking feature, please ensure that you have at least BetterLinks Pro v2.1.0 or later', 'betterlinks')}
+				compatibleProVersion="2.1.0"
+			/>
 			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
 			<div className="btl-analytic-table-wrapper btl-analytic-table-wrapper-single-clicks">
 				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} />

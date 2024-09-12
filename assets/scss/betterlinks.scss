@@ -539,6 +539,10 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	flex-direction: column;
 	margin-top: 0;
 	margin-right: 20px;
+
+	li {
+		user-select: none;
+	}
 }
 
 // quill-editor-css start

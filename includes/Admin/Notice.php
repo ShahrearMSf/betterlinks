@@ -85,7 +85,7 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/configure-custom-domain/' style='display: inline-block'>
+				<a target='_blank' href='https://betterlinks.io/docs/parameter-tracking-with-betterlinks/' style='display: inline-block'>
 					%s
 				</a>
 				%s
@@ -95,8 +95,8 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks Pro 2.0 is here, with new ', 'betterlinks'),
-		__('Custom Domain', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 2.1 is here, with new ', 'betterlinks'),
+		__('Parameter Tracking', 'betterlinks'),
 		__('feature & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
@@ -222,6 +222,25 @@ class Notice {
 				'refresh'     => BETTERLINKS_VERSION,
 				"expire"      => strtotime( '11:59:59pm 2nd December, 2023' ),
 				'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
+			]
+		);
+
+		$b_message            = '<p style="margin-top: 0; margin-bottom: 10px;"><strong>4<sup>th</sup> Anniversary Sale:</strong> Supercharge your link management with advanced features & enjoy up to <strong>30% savings</strong></p><a class="button button-primary" href="https://betterlinks.io/4th-birthday-sale" target="_blank">Upgrade to pro</a> <button data-dismiss="true" class="dismiss-btn button button-campaign">I don’t want to save money</button>';
+		$_black_friday_notice = [
+			'thumbnail' => self::ASSET_URL . 'images/full-logo.svg',
+			'html'      => $b_message,
+		];
+
+		$notices->add(
+			'betterlinks_4th_year',
+			$_black_friday_notice,
+			[
+				'start'       => $notices->time(),
+				'recurrence'  => false,
+				'dismissible' => true,
+				'refresh'     => BETTERLINKS_VERSION,
+				"expire"      => strtotime( '11:59:59pm 19th September, 2024' ),
+				'display_if'  => ! is_array( $notices->is_installed( 'betterlinks-pro/betterlinks-pro.php' ) )
 			]
 		);
 

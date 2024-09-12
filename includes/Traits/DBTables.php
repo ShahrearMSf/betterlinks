@@ -87,6 +87,7 @@ trait DBTables
             os_version VARCHAR(20) NULL,
             browser_version VARCHAR(20) NULL,
             `language` VARCHAR(10) NULL,
+            `query_params` TEXT NULL,
             referer varchar(255) NULL,
             host varchar(255) NULL,
             uri varchar(255) NULL,
@@ -171,4 +172,20 @@ trait DBTables
 			$wpdb->query( $sql );
 		}
 	}
+
+    // adding query_params column into betterlinks_clicks table
+    public function modifyBetterLinksClicksTable2() {
+        global $wpdb;
+
+        $check_column_exists_sql = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks_clicks" and column_name="query_params";', DB_NAME, $wpdb->prefix );
+		$result                  = $wpdb->query( $check_column_exists_sql );
+
+        if ( ! $result ) {
+			$table_name = $wpdb->prefix . 'betterlinks_clicks';
+
+            $sql        = "ALTER TABLE {$table_name}
+                ADD COLUMN `query_params` TEXT NULL AFTER `language`;";
+			$wpdb->query( $sql );
+        }
+    }
 }
