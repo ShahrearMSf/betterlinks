@@ -16,12 +16,12 @@ export default function BrokenLinks() {
 
 function Teaser(props) {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
-	const is_pro_updated = pro_version_check('2.0.3');
+	const is_pro_updated = pro_version_check('2.1.1');
 	return (
 		<React.Fragment>
 			{!is_pro_updated && (
 				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, padding: '5px', fontSize: '12px' }}>
-					<Note note="In this update, we've relocated the BetterLinks Broken Link Checker. To access it from the new location, please update the BetterLinks Pro plugin to at least v2.0.3. If you haven’t updated yet, you can still find the Broken Link Checker on the settings page." />
+					<Note note="In this update, we've relocated the BetterLinks Broken Link Checker. To access it from the new location, please update the BetterLinks Pro plugin to at least v2.1.1. If you haven’t updated yet, you can still find the Broken Link Checker on the settings page." />
 				</div>
 			)}
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -35,10 +35,7 @@ function Teaser(props) {
 						<Formik>
 							<Form>
 								<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Enable Scheduled Scan', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Enable Scheduled Scan', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
 											<Field type="checkbox" className="btl-check" disabled />
@@ -47,19 +44,13 @@ function Teaser(props) {
 									</div>
 								</div>
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Frequency', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Frequency', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<Select className="btl-select" classNamePrefix="btl" isDisabled />
 									</div>
 								</div>
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Day', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Day', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<div className="scheduleweekdayselect">
 											{weekOption.map((day, index) => (
@@ -72,10 +63,7 @@ function Teaser(props) {
 									</div>
 								</div>
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Time', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Time', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<TextField disabled />
 									</div>
@@ -110,10 +98,7 @@ function Teaser(props) {
 						<Formik>
 							<Form>
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Enable Reporting', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Enable Reporting', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
 											<Field type="checkbox" className="btl-check" disabled />
@@ -122,10 +107,7 @@ function Teaser(props) {
 									</div>
 								</span>
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Reporting Email', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Reporting Email', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
 											<Field type="text" className="btl-form-control" disabled />
@@ -133,10 +115,7 @@ function Teaser(props) {
 									</div>
 								</span>
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">
-										{__('Reporting Email Subject', 'betterlinks')}
-										{/* <ProBadge /> */}
-									</label>
+									<label className="btl-form-label">{__('Reporting Email Subject', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
 											<Field type="text" className="btl-form-control" disabled />

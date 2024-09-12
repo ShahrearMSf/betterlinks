@@ -1,6 +1,8 @@
 const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
+const { dependencies } = require('./package.json');
+const keys = Object.keys(dependencies).join('|');
 
 const config = {
 	...defaultConfig,

@@ -4,7 +4,7 @@ import UpgradeToPro from '../UpgradeToPro';
 import { useUpgradeProModal } from 'utils/customHooks';
 import DataTable from 'react-data-table-component';
 import { columns, teaserFLCLinks } from './teaser.data';
-import { plugin_root_url, is_pro_enabled } from 'utils/helper';
+import { plugin_root_url, is_pro_enabled, pro_version_check } from 'utils/helper';
 
 import { List, ListItem, ListItemText, Box, CardContent, Card, CircularProgress, Typography } from '@material-ui/core';
 import { ReactComponent as Stepper } from '../../../../assets/images/teasers/stepper.svg';
@@ -12,61 +12,70 @@ import { ReactComponent as Link } from '../../../../assets/images/teasers/link.s
 import { ReactComponent as Analytics } from '../../../../assets/images/teasers/analytics.svg';
 import { ReactComponent as Eye } from '../../../../assets/images/teasers/eye.svg';
 import { ReactComponent as Selector } from '../../../../assets/images/teasers/selector.svg';
+import Note from 'components/CustomizeLinkPreview/Note';
 
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const is_pro_updated = pro_version_check('2.1.1');
 	return (
-		<div style={{ position: 'relative' }}>
-			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<UpgradePopup />
-			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
-				<div className="btl-broken-link-checker-wrapper btl-fullsite">
-					<div className="btl-broken-link-checker btl-broken-link-checker-wrapper-left" style={{ width: '55%' }}>
-						<div>
-							<h4>{__('Select Post Type and Scan Url', 'betterlinks')}</h4>
-							<Settings />
-							<div className="btl-link-scan-btn-group">
-								<button onClick={openUpgradeToProModal} className="btl-link-scan-btn btl-filled-button" style={{ cursor: 'pointer' }}>
-									{__('Start New Scan', 'betterlinks')}
-								</button>
+		<>
+			{!is_pro_updated && (
+				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, marginBottom: '10px', padding: '10px', fontSize: '12px' }}>
+					<Note note="To utilize the Full Site Link Scanner Feature, please update the BetterLinks Pro plugin to at least v2.1.1." />
+				</div>
+			)}
+			<div style={{ position: 'relative' }}>
+				<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+				<UpgradePopup />
+				<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
+					<div className="btl-broken-link-checker-wrapper btl-fullsite">
+						<div className="btl-broken-link-checker btl-broken-link-checker-wrapper-left" style={{ width: '55%' }}>
+							<div>
+								<h4>{__('Select Post Type and Scan Url', 'betterlinks')}</h4>
+								<Settings />
+								<div className="btl-link-scan-btn-group">
+									<button onClick={openUpgradeToProModal} className="btl-link-scan-btn btl-filled-button" style={{ cursor: 'pointer' }}>
+										{__('Start New Scan', 'betterlinks')}
+									</button>
 
-								<button className="btl-resume-link-scan-btn" disabled>
-									{__('Resume Scan', 'betterlinks')}
-								</button>
+									<button className="btl-resume-link-scan-btn" disabled>
+										{__('Resume Scan', 'betterlinks')}
+									</button>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div className="btl-broken-link-checker-wrapper-right">
-						<CircularProgressWithLabel value={__('50%', 'betterlinks-pro')} />
-						<div className="btl-flc-scan-details">
-							<ScanDetail color="blue" title={__('Total Posts, Pages & Custom Posts:', 'betterlinks')} value="10" />
-							<ScanDetail color="green" title={__('Total Scaned Posts:', 'betterlinks')} value="5" />
-							<ScanDetail color="yellow" title={__('Total Scaned Links:', 'betterlinks')} value="5" />
+						<div className="btl-broken-link-checker-wrapper-right">
+							<CircularProgressWithLabel value={__('50%', 'betterlinks-pro')} />
+							<div className="btl-flc-scan-details">
+								<ScanDetail color="blue" title={__('Total Posts, Pages & Custom Posts:', 'betterlinks')} value="10" />
+								<ScanDetail color="green" title={__('Total Scaned Posts:', 'betterlinks')} value="5" />
+								<ScanDetail color="yellow" title={__('Total Scaned Links:', 'betterlinks')} value="5" />
 
-							<div className="btl-flc-scanned-count">
-								<ScannedCount type="active" />
-								<ScannedCount type="broken" />
-								<ScannedCount type="forbidden" />
+								<div className="btl-flc-scanned-count">
+									<ScannedCount type="active" />
+									<ScannedCount type="broken" />
+									<ScannedCount type="forbidden" />
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-table-wrapper btl-broken-links-table-wrapper--fullsite">
+					<DataTable
+						className="btl-broken-links-table"
+						title={__('Broken Link Reports', 'betterlinks')}
+						columns={columns}
+						data={teaserFLCLinks}
+						pagination
+						subHeader
+						highlightOnHover={false}
+						subHeaderComponent={<SubHeaderComponent />}
+						persistTableHead={true}
+					/>
+				</div>
 			</div>
-			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-table-wrapper btl-broken-links-table-wrapper--fullsite">
-				<DataTable
-					className="btl-broken-links-table"
-					title={__('Broken Link Reports', 'betterlinks')}
-					columns={columns}
-					data={teaserFLCLinks}
-					pagination
-					subHeader
-					highlightOnHover={false}
-					subHeaderComponent={<SubHeaderComponent />}
-					persistTableHead={true}
-				/>
-			</div>
-		</div>
+		</>
 	);
 };
 
@@ -102,12 +111,12 @@ const ScannedCount = ({ type = 'active' }) => {
 		active: {
 			icon: plugin_root_url + 'assets/images/all-right.svg',
 			title: __('Total Active Links', 'betterlinks'),
-			count: '35',
+			count: '3',
 		},
 		broken: {
 			icon: plugin_root_url + 'assets/images/broken-links.svg',
 			title: __('Broken Links', 'betterlinks'),
-			count: '4',
+			count: '1',
 		},
 		forbidden: {
 			icon: plugin_root_url + 'assets/images/stop.svg',

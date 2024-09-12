@@ -1,15 +1,21 @@
-import React, { Suspense } from 'react';
-import ManageLinks from 'pages/ManageLinks';
-import Analytics from 'pages/Analytics';
-import Settings from 'pages/Settings';
-import KeywordsLinking from 'pages/KeywordsLinking';
+import React, { lazy, Suspense } from 'react';
+// import ManageLinks from 'pages/ManageLinks';
+// import Analytics from 'pages/Analytics';
+// import Settings from 'pages/Settings';
+// import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
-import ManageTags from './ManageTags';
-import CustomDomain from './CustomDomain';
-import LinkScanner from './LinkScanner';
+// import ManageTags from './ManageTags';
+// import CustomDomain from './CustomDomain';
+// import LinkScanner from './LinkScanner';
+const LinkScanner = lazy(() => import(/* webpackChunkName: "link-scanner" */ './LinkScanner'));
+const ManageLinks = lazy(() => import(/* webpackChunkName: "manage-links" */ './ManageLinks'));
+const Analytics = lazy(() => import(/* webpackChunkName: "analytics" */ './Analytics'));
+const Settings = lazy(() => import(/* webpackChunkName: "settings" */ './Settings'));
+const KeywordsLinking = lazy(() => import(/* webpackChunkName: "keyword-linking" */ './KeywordsLinking'));
+const ManageTags = lazy(() => import(/* webpackChunkName: "manage-tags" */ './ManageTags'));
+const CustomDomain = lazy(() => import(/* webpackChunkName: "custom-domain" */ './CustomDomain'));
 
 const renderSwitch = (param) => {
-	// window.scrollTo(0, 0);
 	switch (param) {
 		case 'betterlinks':
 			return <ManageLinks />;
