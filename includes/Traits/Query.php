@@ -543,7 +543,7 @@ trait Query {
 			$addedPlaceholderString .= ', brand_name, model, bot_name, browser_type, os_version, browser_version, language';
 			$addedDbColumnsString   .= ', %s, %s, %s, %s, %s, %s, %s';
 		}
-
+		if( empty($betterlinks) || empty( current( $betterlinks )['ID'] ) ) return;
 		$query         = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os,device, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
 		$db_data_array = array(
 			current( $betterlinks )['ID'],
