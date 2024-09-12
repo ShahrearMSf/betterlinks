@@ -46,11 +46,18 @@ const SingleClicks = (props) => {
 	const columns = useCallback(getColumns(analytics, analyticsTab, id), [analytics]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
+	const uniqueIpCount = [...new Set(individual_clicks?.[id]?.analytics.map((item) => item.ip))].length;
 	return (
 		<div className="btl-analytic">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			{individual_clicks?.[id] ? (
-				<Graph data={analyticsData(individual_clicks?.[id].graph_data)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} setLoading={setLoading} />
+				<Graph
+					data={analyticsData(individual_clicks?.[id].graph_data)}
+					customDateFilter={customDateFilter}
+					setCustomDateFilter={setCustomDateFilter}
+					setLoading={setLoading}
+					uniqueIpCount={uniqueIpCount}
+				/>
 			) : (
 				<ChartLoader />
 			)}

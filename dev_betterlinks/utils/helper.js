@@ -607,15 +607,19 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
 };
 
-export const getDataset = (data) => {
+export const getDataset = (data, uniqueIpCount) => {
+	const clicks = Object.values(data.clicks || {});
+	const clicksCount = clicks.reduce((acc, cur) => acc + +cur, 0);
+	const uniqueClicks = Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.();
+
 	const dataset = [
 		{
-			name: __('Clicks', 'betterlinks'),
-			data: Object.values(data.clicks)?.reverse?.(),
+			name: __('Clicks', 'betterlinks') + `<span> ${clicksCount || ''}</span>`,
+			data: clicks?.reverse?.(),
 		},
 		{
-			name: __('Unique Clicks', 'betterlinks'),
-			data: Object.values(data?.unique_clicks || { unique_clicks: {} })?.reverse?.(),
+			name: __('Unique Clicks', 'betterlinks') + `<span> ${uniqueIpCount || ''}</span>`,
+			data: uniqueClicks,
 		},
 	];
 	return dataset;
