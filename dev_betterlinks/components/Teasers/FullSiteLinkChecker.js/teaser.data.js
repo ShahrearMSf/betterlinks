@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
 import { plugin_root_url } from 'utils/helper';
 
 export const teaserFLCLinks = [

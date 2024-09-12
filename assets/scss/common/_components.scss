@@ -1,0 +1,136 @@
+.btl-analytics-chart-overlay {
+	align-items: center;
+	background-color: hsla(0, 0%, 100%, 0.7);
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+
+	> div {
+		width: 50%;
+		height: 350px;
+		background: #fefefe;
+		box-shadow: -3px 8px 30px 0px rgba(0, 0, 0, 0.1);
+		overflow: visible;
+		border-radius: 20px;
+
+		ul li {
+			margin: 0 !important;
+		}
+		h5 {
+			color: #000;
+			font-size: 24px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: 28px;
+			margin-bottom: 0.5em;
+			margin-top: 1em;
+			text-align: center;
+		}
+		span {
+			color: #666b78;
+			font-size: 16px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 1.5rem;
+			margin: 0;
+			overflow: hidden;
+			text-align: center;
+			display: inline-block;
+		}
+
+		.btl-graphteaser-icon {
+			display: flex;
+			align-items: center;
+			column-gap: 10px;
+
+			p {
+				// color: #666b78;
+				font-size: 16px;
+				font-style: normal;
+				font-weight: 400;
+				line-height: 29px;
+				margin: 0;
+				overflow: hidden;
+				text-align: center;
+			}
+			svg {
+				width: 18px;
+
+				// path {
+				// 	stroke: #fff;
+				// }
+			}
+		}
+
+		.MuiCardContent-root {
+			position: relative;
+			text-align: center;
+		}
+		.analytics-upgrade-btn {
+			position: absolute;
+			align-items: center;
+			display: flex;
+			height: 60px;
+			justify-content: center;
+			margin: auto;
+			transform: translate(4px, 43px);
+			width: 100%;
+			bottom: 6%;
+
+			a {
+				align-items: center;
+				color: #fff;
+				display: flex;
+				font-size: 17px;
+				font-style: normal;
+				font-weight: 500;
+				height: 72px;
+				justify-content: center;
+				line-height: 40px;
+				position: relative;
+				text-decoration: none;
+				width: 320px;
+				background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+				border-radius: 15px;
+				box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
+
+				&:hover {
+					background: linear-gradient(202deg, #2058f2 0, #0238cd 100%);
+				}
+
+				&:focus {
+					outline: 0;
+					box-shadow: unset;
+				}
+			}
+		}
+
+		.MuiList-root {
+			padding: 15px 0;
+			width: 400px;
+			margin: 0 auto 18px auto;
+
+			.MuiListItem-root {
+				padding: 0 !important;
+
+				.MuiListItemText-root {
+					flex: unset;
+					margin: 0 !important;
+				}
+				.MuiTypography-root {
+					color: #666b78;
+					font-size: 16px;
+					font-style: normal;
+					font-weight: 400;
+					line-height: 1rem;
+					margin: 0;
+					overflow: hidden;
+				}
+			}
+		}
+	}
+}

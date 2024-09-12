@@ -2,18 +2,23 @@ import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
 import UpgradeToPro from '../UpgradeToPro';
 import { useUpgradeProModal } from 'utils/customHooks';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import DataTable from 'react-data-table-component';
 import { columns, teaserFLCLinks } from './teaser.data';
-import { plugin_root_url } from 'utils/helper';
+import { plugin_root_url, is_pro_enabled } from 'utils/helper';
+
+import { List, ListItem, ListItemText, Box, CardContent, Card, CircularProgress, Typography } from '@material-ui/core';
+import { ReactComponent as Stepper } from '../../../../assets/images/teasers/stepper.svg';
+import { ReactComponent as Link } from '../../../../assets/images/teasers/link.svg';
+import { ReactComponent as Analytics } from '../../../../assets/images/teasers/analytics.svg';
+import { ReactComponent as Eye } from '../../../../assets/images/teasers/eye.svg';
+import { ReactComponent as Selector } from '../../../../assets/images/teasers/selector.svg';
 
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	return (
-		<>
+		<div style={{ position: 'relative' }}>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+			<UpgradePopup />
 			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
 				<div className="btl-broken-link-checker-wrapper btl-fullsite">
 					<div className="btl-broken-link-checker btl-broken-link-checker-wrapper-left" style={{ width: '55%' }}>
@@ -61,7 +66,7 @@ const Teaser = () => {
 					persistTableHead={true}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 
@@ -171,6 +176,59 @@ const Settings = () => {
 					</div>
 				</span>
 			</form>
+		</div>
+	);
+};
+
+const UpgradePopup = () => {
+	if (is_pro_enabled) return null;
+	return (
+		<div className="btl-analytics-chart-overlay" style={{ zIndex: '10' }}>
+			<Card sx={{ minWidth: 275 }}>
+				<CardContent>
+					<Typography variant="h5" color="text.secondary" gutterBottom>
+						{__('Get BetterLinks PRO & Reveal In-Depth Analytics 🔒', 'betterlinks')}
+					</Typography>
+					<Typography variant="p" color="text.secondary" gutterBottom>
+						{__('Track your links with detailed analytics, dynamic infographics, insights on OS,', 'betterlinks')}
+						<br />
+						{__(' browser,top medium - social, search platforms and more.', 'betterlinks')}
+					</Typography>
+					<List>
+						{[
+							<div className="btl-graphteaser-icon">
+								<Stepper />
+								<p>{__('Track your top-performing link Click Sources', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<Link />
+								<p>{__('Access exclusive click data for Better Insights', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<Analytics />
+								<p>{__('Measure the performance of your shortened links', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<Eye />
+								<p>{__('Identify your most-clicked links for optimal strategy', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<Selector />
+								<p>{__('Get detailed individual click stats at your fingertips', 'betterlinks')}</p>
+							</div>,
+						].map((item) => (
+							<ListItem disableGutters>
+								<ListItemText primary={item} />
+							</ListItem>
+						))}
+					</List>
+					<div className="analytics-upgrade-btn">
+						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank">
+							{__('Upgrade To BetterLinks PRO', 'betterlinks')}
+						</a>
+					</div>
+				</CardContent>
+			</Card>
 		</div>
 	);
 };
