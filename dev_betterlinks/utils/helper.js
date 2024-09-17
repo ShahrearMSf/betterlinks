@@ -643,24 +643,24 @@ const ParameterItem = ({ type, item, style = {} }) => {
 	if (!item) return;
 	const parameterStyles = {
 		root: {
-			display: 'flex',
-			alignItems: 'flex-start',
-			backgroundColor: 'rgb(240, 242, 247)',
-			padding: '8px 12px 8px 12px',
-			borderRadius: '8px',
-			fontSize: '12px',
-			fontWeight: '400',
+			// display: 'flex',
+			// alignItems: 'flex-start',
+			// backgroundColor: 'rgb(240, 242, 247)',
+			// padding: '8px 12px 8px 12px',
+			// borderRadius: '8px',
+			// fontSize: '12px',
+			// fontWeight: '400',
 			...style?.root,
 		},
 		type: {
-			fontSize: '12px',
-			fontWeight: '500',
+			// fontSize: '12px',
+			// fontWeight: '500',
 			...style?.type,
 		},
 	};
 	return (
 		<>
-			<span style={parameterStyles.root}>
+			<span className="btl-parameter-tracking-values" style={parameterStyles.root}>
 				<span style={parameterStyles.type}>{type}: &nbsp;</span> <span>{item}</span>
 			</span>
 		</>
