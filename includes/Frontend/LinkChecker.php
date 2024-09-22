@@ -26,6 +26,7 @@ class LinkChecker {
                 if( empty( $linkId ) ) {
                     continue;
                 }
+
                 $link = self::get_link_by_ID(intval($linkId));
                 $this->link = is_array( $link ) ? current( $link ) : false;
                 if( empty( $this->link ) ) continue;
@@ -40,10 +41,11 @@ class LinkChecker {
                 $replacement = '${1}' . $href . '${3}';
                 $replace = preg_replace($pattern, $replacement, $match[0]);
 
-                if( empty( $this->link['uncloaked'] ) ){
-                    $pattern = '/\s*data-link-id=["\'][^"\']*["\']/i';
-                    $replace = preg_replace($pattern, '', $replace);
-                }
+                // if( empty( $this->link['uncloaked'] ) ){
+                //     $pattern = '/\s*data-link-id=["\'][^"\']*["\']/i';
+                //     $replace = preg_replace($pattern,  '', $replace);
+                // }
+                // error_log( print_r( $this->link, true ) );
 
                 $match[1] = $match[1] + $next; 
                 $content  = substr_replace( $content , $replace , $match[1] , strlen( $match[0] ) );
