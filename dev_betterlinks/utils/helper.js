@@ -14,6 +14,7 @@ export const {
 	plugin_root_url,
 	plugin_root_path,
 	site_url,
+	actual_site_url,
 	route_path,
 	exists_links_json,
 	exists_clicks_json,
@@ -479,7 +480,7 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow, linkId })
 
 export const permalinkToShortUrl = (permalink) => {
 	if (!permalink) return permalink;
-	const short_url = permalink.replace(site_url + '/', '');
+	const short_url = permalink.replace((actual_site_url || site_url) + '/', '');
 	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 };
 
