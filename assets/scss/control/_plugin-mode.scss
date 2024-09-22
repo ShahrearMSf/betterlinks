@@ -426,7 +426,7 @@
 	.active-status {
 		color: $light;
 	}
-	
+
 	.btl-modal-select--full {
 		.btl-react-select__control {
 			background-color: #36405a !important;
@@ -901,7 +901,12 @@
 		color: #fff;
 	}
 }
-
+.btl-analytic {
+	.btl-analytic-table-wrapper .rdt_Table .rdt_TableCell .btl-parameter-tracking-values {
+		background-color: #36405a;
+		border: 1px solid #525c77;
+	}
+}
 .scheduleweekdayselect {
 	label {
 		border-collapse: collapse;

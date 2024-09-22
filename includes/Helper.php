@@ -415,11 +415,14 @@ class Helper {
 		return false;
 	}
 
-	public static function sanitize_text_or_array_field( $array_or_string ) {
+	public static function sanitize_text_or_array_field( $array_or_string, $key = '' ) {
 
 		$boolean = array( 'true', 'false', '1', '0' );
 		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields' );
 		if ( is_string( $array_or_string ) ) {
+			if( 'link' === $key ) {
+				return esc_url_raw($array_or_string);
+			}
 			$array_or_string = in_array( $array_or_string, $boolean ) || is_bool( $array_or_string ) ? rest_sanitize_boolean( $array_or_string ) : sanitize_text_field( $array_or_string );
 		} elseif ( is_array( $array_or_string ) ) {
 			foreach ( $array_or_string as $key => &$value ) {
