@@ -734,16 +734,21 @@
 
 .btl-gopremium-container {
 	color: $light;
-	.btl-gopremium-title {
-		color: $white;
+	.btl-gopremium {
+		&-title {
+			color: $white;
+		}
+		&-content {
+			p {
+				color: $white;
+			}
+		}
 	}
 }
 
 .btl-docs {
 	.btl-doc {
 		background: #2c3650;
-		.btl-doc__icon {
-		}
 		.btl-doc__title {
 			color: $white;
 		}
