@@ -232,7 +232,8 @@ class Clicks extends Controller {
 
 		$unique_list = $this->get_analytics_unique_list( $from, $to );
 
-		$analytic = get_option( 'betterlinks_analytics_data' );
+		// $analytic = get_option( 'betterlinks_analytics_data' );
+		$analytic = $this->get_analytics_data($from, $to);
 		$analytic = $analytic ? json_decode( $analytic, true ) : array();
 
 		return new \WP_REST_Response(
