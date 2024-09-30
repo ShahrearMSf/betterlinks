@@ -6,6 +6,7 @@ import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
 import ManageTags from './ManageTags';
 import CustomDomain from './CustomDomain';
+import QuickSetup from './QuickSetup';
 
 const renderSwitch = (param) => {
 	// window.scrollTo(0, 0);
@@ -22,6 +23,8 @@ const renderSwitch = (param) => {
 			return <CustomDomain />;
 		case 'betterlinks-settings':
 			return <Settings />;
+		case 'betterlinks-quick-setup':
+			return <QuickSetup />;
 		default:
 			return;
 	}

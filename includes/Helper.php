@@ -94,6 +94,10 @@ class Helper {
 				'title'      => __( 'Settings', 'betterlinks' ),
 				'capability' => 'manage_options',
 			),
+			BETTERLINKS_PLUGIN_SLUG . '-quick-setup'    => array(
+				'title'      => __( 'Quick Setup', 'betterlinks' ),
+				'capability' => 'manage_options',
+			),
 		);
 		
 		if( !empty( $enable_custom_domain_menu ) ){
