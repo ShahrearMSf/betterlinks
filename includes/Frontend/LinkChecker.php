@@ -65,13 +65,16 @@ class LinkChecker {
         }
 
         private function check_hrefs($href) {
+            // error_log( print_r( $this->link, true ) );
             if( !empty( $this->link['uncloaked'] ) ){
                 if( $href !== $this->link['target_url'] ){
                     $href = $this->link['target_url'];
                 }
             }else {
                 $short_url = site_url('/');
-                $short_url .= !empty( $this->settings->prefix ) ? $this->settings->prefix . '/' . $this->link['short_url'] : $this->link['short_url'];
+                // error_log( print_r( $this->link['short_url'], true ) );
+                // $short_url .= !empty( $this->settings->prefix ) ? $this->settings->prefix . '/' . $this->link['short_url'] : $this->link['short_url'];
+                $short_url .= $this->link['short_url'];
                 if( $href !== $short_url) {
                     $href = $short_url;
                 }
