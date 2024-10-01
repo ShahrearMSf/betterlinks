@@ -306,6 +306,8 @@ export const Link = (props) => {
 	};
 
 	const submitLinkHandler = (values, actions) => {
+		console.info(values);
+		return;
 		const { setSubmitting, setFieldError } = actions;
 		setSubmitting(false);
 
