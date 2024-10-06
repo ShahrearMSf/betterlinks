@@ -11,5 +11,6 @@ import autoLinkSettings from './autolinksettings.reducers';
 import password from './password.reducers';
 import analytics from './analytics.reducers';
 import metaTags from './metaTags.reducers';
+import quickSetup from './quick-setup.reducers';
 
-export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas, favouriteSort, autoLinkSettings, password, analytics, metaTags });
+export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas, favouriteSort, autoLinkSettings, password, analytics, metaTags, quickSetup });

@@ -10,8 +10,12 @@ import Configuration from './Configuration';
 import Migration from './Migration';
 import CreateLink from './CreateLinks';
 import Finish from './Finish';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { SetupContext } from 'pages/QuickSetup';
+import { add_top_loader, generateSlug, remove_top_loader, shortURLUniqueCheck } from 'utils/helper';
+import { connect } from 'react-redux';
+import { update_quick_setup } from 'redux/actions/quick-setup.actions';
+import { bindActionCreators } from 'redux';
 
 function getSteps() {
 	return [__('Getting Started', 'betterlinks'), __('Configuration', 'betterlinks'), __('Migration', 'betterlinks'), __('Create Link', 'betterlinks'), __('Finish', 'betterlinks')];
@@ -20,7 +24,58 @@ function getSteps() {
 const setupStepComponents = [<GettingStarted />, <Configuration />, <Migration />, <CreateLink />, <Finish />];
 const SetupCanvas = () => {
 	const steps = getSteps();
-	const { activeStep, setActiveStep } = useContext(SetupContext);
+	const { activeStep, setActiveStep, clientConsent, update_option, settings, linkOptions, setLinkOptions, errors, setErrors, add_new_link, terms } = useContext(SetupContext);
+
+	const submitLinkHandler = (values) => {
+		const regex = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/;
+		if (regex.test(values.link_title)) {
+			setErrors((prev) => ({
+				...prev,
+				link_title: __('Please ensure the link title does not contain any script.', 'betterlinks'),
+			}));
+			return;
+		}
+		onSubmit(values);
+	};
+
+	const onSubmit = (values) => {
+		const { short_url } = values;
+		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
+		shortURLUniqueCheck(values.short_url, values.ID, () => {}).then((isDuplicate) => {
+			if (!isDuplicate) {
+				if (!values.cat_id) {
+					const { ID } = terms.terms?.filter((item) => item.term_slug == 'uncategorized')[0];
+					values.cat_id = ID;
+				}
+				if (!values.link_slug) {
+					values.link_slug = generateSlug(values.link_title);
+				}
+				if (isNaN(values?.cat_id)) {
+					values.cat_slug = generateSlug(values.cat_id);
+				}
+				values.wildcards = Number(values.short_url.includes('*'));
+				if (values.cat_id) {
+					const link_title = values.link_title.trim();
+					if (link_title) {
+						values.link_title = link_title;
+						// cinfo;
+						add_new_link(values)
+							.then((response) => {
+								console.info(response);
+								if (response?.data) {
+									// setLinkOptions((prev) => ({
+									// 	...prev,
+									// 	isCreated: true,
+									// }));
+									setErrors({ isCreated: true });
+								}
+							})
+							.catch((error) => console.log('---error (submitHandler)--', { error }));
+					}
+				}
+			}
+		});
+	};
 
 	return (
 		<>
@@ -43,31 +98,31 @@ const SetupCanvas = () => {
 					<MobileStepper variant="dots" steps={steps.length} position="static" activeStep={activeStep} />
 					{activeStep > 0 ? (
 						<div>
-							<button disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
-								Back
-							</button>
-							{activeStep !== steps.length - 1 && (
-								<button
-									className="button button-primary"
-									onClick={() => {
-										if (activeStep !== steps.length - 1) {
-											setActiveStep(activeStep + 1);
-										}
-									}}
-								>
-									Skip
+							{(activeStep !== 1 || !clientConsent) && (
+								<button className="button" disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
+									Back
 								</button>
 							)}
-
 							<button
 								className="button button-primary"
 								onClick={() => {
+									if (activeStep === 1) {
+										update_option(settings);
+										setLinkOptions({
+											...settings,
+											...linkOptions,
+										});
+									}
+									if (activeStep === 3) {
+										submitLinkHandler(linkOptions, setErrors);
+									}
+
 									if (activeStep !== steps.length - 1) {
 										setActiveStep(activeStep + 1);
 									}
 								}}
 							>
-								{activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')}
 							</button>
 						</div>
 					) : (
@@ -78,5 +133,10 @@ const SetupCanvas = () => {
 		</>
 	);
 };
-
-export default SetupCanvas;
+const mapStateToProps = (state) => ({
+	isCreate: state.
+});
+const mapDispatchToProps = (dispatch) => ({
+	update_quick_setup: bindActionCreators(update_quick_setup, dispatch),
+});
+export default connect()(SetupCanvas);

@@ -1,13 +1,21 @@
 import { __ } from '@wordpress/i18n';
 import { SetupContext } from 'pages/QuickSetup';
 import { useContext, useState } from 'react';
+import { makeRequest } from 'utils/helper';
 
 const GettingStarted = () => {
-	const { setActiveStep } = useContext(SetupContext);
+	const { setActiveStep, setClientConsent } = useContext(SetupContext);
 	const [show, setShow] = useState(false);
 	const showHideUserNotice = (e) => {
 		e.preventDefault();
 		setShow(!show);
+	};
+	const handleClientConsent = async (opt_in) => {
+		const res = await makeRequest({
+			action: 'betterlinks__client_consent',
+			opt_in_value: opt_in,
+		});
+		setClientConsent(res.data?.success);
 	};
 	return (
 		<>
@@ -43,10 +51,25 @@ const GettingStarted = () => {
 							</span>
 						</span>
 					</p>
-					<button className="button button-primary" onClick={() => setActiveStep(1)}>
+					<button
+						className="button button-primary"
+						onClick={() => {
+							handleClientConsent('yes');
+							setActiveStep(1);
+						}}
+					>
 						{__('Proceed to Next Step', 'betterlinks')}
 					</button>
-					<a href="#">{__('Skip This Step', 'betterlinks')}</a>
+					<a
+						href="#"
+						onClick={(e) => {
+							e.preventDefault();
+							handleClientConsent('no'); //
+							setActiveStep(1);
+						}}
+					>
+						{__('Skip This Step', 'betterlinks')}
+					</a>
 				</div>
 			</div>
 		</>

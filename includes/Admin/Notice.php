@@ -198,7 +198,8 @@ class Notice {
 			[ $this->opt_in_tracker, 'notice' ],
 			[
 				'classes'     => 'updated put-dismiss-notice',
-				'start'       => $notices->strtotime( '+25 day' ),
+				// 'start'       => $notices->strtotime( '+25 day' ),
+				'start'       => $notices->time(),
 				'refresh'     => BETTERLINKS_VERSION,
 				'dismissible' => true,
 				'do_action'   => 'wpdeveloper_notice_clicked_for_betterlinks',
@@ -221,7 +222,7 @@ class Notice {
 				'dismissible' => true,
 				'refresh'     => BETTERLINKS_VERSION,
 				"expire"      => strtotime( '11:59:59pm 2nd December, 2023' ),
-				'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
+				'display_if'  => !is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
 			]
 		);
 

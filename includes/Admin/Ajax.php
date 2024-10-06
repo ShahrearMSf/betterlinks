@@ -2,6 +2,7 @@
 
 namespace BetterLinks\Admin;
 
+use BetterLinks\Admin\WPDev\PluginUsageTracker;
 use BetterLinks\Cron;
 use BetterLinks\Helper;
 
@@ -84,6 +85,9 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks__check_fbs_link', array( $this, 'check_fbs_link' ) );
 		add_action( 'wp_ajax_betterlinks__create_fbs_link', array( $this, 'create_fbs_link' ) );
 		add_action( 'wp_ajax_betterlinks__update_fbs_link', array( $this, 'update_fbs_link' ) );
+
+		// Client Consent
+		add_action( 'wp_ajax_betterlinks__client_consent', array( $this, 'client_consent' ) );
 	}
 
 	public function update_fbs_link() {
@@ -1137,5 +1141,25 @@ class Ajax {
 			wp_send_json_success( $data );
 		}
 		wp_die( "You don't have permission to do this." );
+	}
+
+	public function client_consent() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+		$opt_in_value = isset( $_POST['opt_in_value'] ) ? sanitize_text_field( $_POST['opt_in_value'] ) : 'no';
+		$opt_in = PluginUsageTracker::get_instance( BETTERLINKS_PLUGIN_FILE, [
+			'opt_in'       => true,
+			'goodbye_form' => true,
+			'item_id'      => '720bbe6537bffcb73f37',
+		] );
+
+		$opt_in->opt_in($opt_in_value, 'betterlinks');
+		
+		update_option('betterlinks_quick_setup_step', 1);
+		wp_send_json_success([
+			'result' => $opt_in_value 
+		]);
 	}
 }

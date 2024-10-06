@@ -22,6 +22,14 @@ const RedirectType = (props) => {
 		if (option == null) {
 			return props.setFieldValue(field.name, '');
 		}
+		// for quick setup wizard only
+		if (!!props?.isQuickSetup) {
+			props?.setSettings((prev) => ({
+				...prev,
+				redirect_type: props.isMulti ? option.map((item) => item.value) : option.value,
+			}));
+		}
+		// for quick setup wizard only
 		return props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value);
 	};
 

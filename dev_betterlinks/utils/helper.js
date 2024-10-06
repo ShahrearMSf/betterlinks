@@ -30,6 +30,7 @@ export const {
 	betterlinks_settings,
 	is_fbs_enabled,
 	prefix,
+	betterlinks_quick_setup_step = false,
 } = window.betterLinksGlobal;
 
 export const API = axios.create({

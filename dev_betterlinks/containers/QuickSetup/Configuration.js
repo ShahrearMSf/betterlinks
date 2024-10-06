@@ -10,6 +10,14 @@ import { is_pro_enabled, site_url } from 'utils/helper';
 const Configuration = () => {
 	const { settings, setSettings, modal } = useContext(SetupContext);
 	const { setUpgradeToProModal, openUpgradeToProModal } = modal;
+
+	const handleOptions = (props, key) => {
+		props.setFieldValue(key, !props.values?.[key]);
+		setSettings((prev) => ({
+			...prev,
+			[key]: !props.values?.[key],
+		}));
+	};
 	return (
 		<>
 			<div className="configuration">
@@ -18,7 +26,7 @@ const Configuration = () => {
 					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
 				</div>
 				<div className="option">
-					<Formik initialValues={{ ...settings }} onSubmit={(values) => console.info(values)}>
+					<Formik initialValues={{ ...settings }} onSubmit={(values) => {}}>
 						{(props) => (
 							<Form>
 								<div className="btl-tab-panel-inner">
@@ -26,7 +34,14 @@ const Configuration = () => {
 										<label className="btl-form-label">{__('Link Options', 'betterlinks')}</label>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field block">
-												<Field className="btl-check" name="nofollow" type="checkbox" onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)} />
+												<Field
+													className="btl-check"
+													name="nofollow"
+													type="checkbox"
+													onChange={() => {
+														handleOptions(props, 'nofollow');
+													}}
+												/>
 												<span className="text">
 													{__('No Follow', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -36,7 +51,14 @@ const Configuration = () => {
 												</span>
 											</label>
 											<label className="btl-checkbox-field block">
-												<Field className="btl-check" name="sponsored" type="checkbox" onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)} />
+												<Field
+													className="btl-check"
+													name="sponsored"
+													type="checkbox"
+													onChange={() => {
+														handleOptions(props, 'sponsored');
+													}}
+												/>
 												<span className="text">
 													{__('Sponsored', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -46,12 +68,7 @@ const Configuration = () => {
 												</span>
 											</label>
 											<label className="btl-checkbox-field block">
-												<Field
-													className="btl-check"
-													name="param_forwarding"
-													type="checkbox"
-													onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
-												/>
+												<Field className="btl-check" name="param_forwarding" type="checkbox" onChange={() => handleOptions(props, 'param_forwarding')} />
 												<span className="text">
 													{__('Parameter Forwarding', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -61,7 +78,7 @@ const Configuration = () => {
 												</span>
 											</label>
 											<label className="btl-checkbox-field block">
-												<Field className="btl-check" name="track_me" type="checkbox" onChange={() => props.setFieldValue('track_me', !props.values.track_me)} />
+												<Field className="btl-check" name="track_me" type="checkbox" onChange={() => handleOptions(props, 'track_me')} />
 												<span className="text">
 													{__('Tracking', 'betterlinks')}
 													<div className="btl-tooltip">
@@ -76,7 +93,19 @@ const Configuration = () => {
 										<label className="btl-form-label">{__('Link Prefix', 'betterlinks')}</label>
 										<div className="link-options__body" style={{ flexDirection: 'column' }}>
 											<div style={{ maxWidth: '200px' }}>
-												<Field className="btl-text-field" name="prefix" value={props.values?.prefix ?? 'go'} type="text" />
+												<Field
+													className="btl-text-field"
+													name="prefix"
+													value={props.values?.prefix ?? 'go'}
+													type="text"
+													onChange={(option) => {
+														props.setFieldValue('prefix', option.target.value);
+														setSettings((prev) => ({
+															...prev,
+															prefix: option.target.value,
+														}));
+													}}
+												/>
 											</div>
 											<div className="short-description">
 												<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
@@ -109,13 +138,15 @@ const Configuration = () => {
 											defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 											setFieldValue={props.setFieldValue}
 											isMulti={false}
+											isQuickSetup={true}
+											setSettings={setSettings}
 										/>
 									</span>
 									<span className="btl-form-group">
 										<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field block">
-												<Field className="btl-check" name="wildcards" type="checkbox" onChange={() => props.setFieldValue('wildcards', !props.values.wildcards)} />
+												<Field className="btl-check" name="wildcards" type="checkbox" onChange={() => handleOptions(props, 'wildcards')} />
 												<span className="text">
 													{__('Use Wildcards?', 'betterlinks')}
 													<div className="btl-tooltip">

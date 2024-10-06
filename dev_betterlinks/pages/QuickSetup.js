@@ -5,22 +5,25 @@ import Topbar from 'containers/TopBar';
 import { createContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { add_new_link } from 'redux/actions/links.actions';
+import { update_option } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { betterlinks_settings, formatDate, generateShortURL } from 'utils/helper';
+import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, generateShortURL } from 'utils/helper';
 
 export const SetupContext = createContext('quick-setup');
 
 const QuickSetup = (props) => {
-	const [activeStep, setActiveStep] = useState(0);
+	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 3 : 0);
+	const [clientConsent, setClientConsent] = useState(+betterlinks_quick_setup_step);
 	const [settings, setSettings] = useState({ ...betterlinks_settings });
 	const [migrationSettings, setMigrationSettings] = useState({
 		simple301redirects: false,
 		thirstyaffliates: false,
 		prettylinks: false,
 	});
-	const [linkOptions, setLinkOptions] = useState(getInitialValues(settings));
+	const [linkOptions, setLinkOptions] = useState(getInitialValues());
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-
+	const [errors, setErrors] = useState({ isCreated: false });
 	useEffect(() => {
 		if (Object.keys(props.terms).length === 0) {
 			props.fetch_terms_data();
@@ -36,7 +39,25 @@ const QuickSetup = (props) => {
 	const modal = { isOpenUpgradeToProModal, setUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal };
 
 	// all settings
-	const value = { activeStep, setActiveStep, settings, setSettings, migrationSettings, setMigrationSettings, linkOptions, setLinkOptions, modal, terms: props?.terms };
+	const value = {
+		activeStep,
+		setActiveStep,
+		settings,
+		setSettings,
+		migrationSettings,
+		setMigrationSettings,
+		linkOptions,
+		getInitialValues,
+		setLinkOptions,
+		modal,
+		terms: props?.terms,
+		clientConsent,
+		setClientConsent,
+		update_option: props?.update_option,
+		add_new_link: props?.add_new_link,
+		errors,
+		setErrors,
+	};
 	return (
 		<SetupContext.Provider value={value}>
 			<Topbar label={__('BetterLinks Quick Setup', 'betterlinks')} />
@@ -51,6 +72,8 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
 	fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
+	update_option: bindActionCreators(update_option, dispatch),
+	add_new_link: bindActionCreators(add_new_link, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(QuickSetup);
 
@@ -60,18 +83,18 @@ const getInitialValues = (settings) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: generateShortURL(settings, null),
+		short_url: '',
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
-		redirect_type: settings?.redirect_type || '307',
+		// redirect_type: settings?.redirect_type || '307',
 		cat_id: null,
-		sponsored: !!settings?.sponsored,
-		track_me: !!settings?.track_me,
-		nofollow: !!settings?.nofollow,
-		uncloaked: !!settings?.uncloaked,
-		param_forwarding: !!settings?.param_forwarding,
+		// sponsored: !!settings?.sponsored,
+		// track_me: !!settings?.track_me,
+		// nofollow: !!settings?.nofollow,
+		// uncloaked: !!settings?.uncloaked,
+		// param_forwarding: !!settings?.param_forwarding,
 	};
 };

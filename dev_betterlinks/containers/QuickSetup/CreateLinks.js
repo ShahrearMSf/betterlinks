@@ -1,10 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { Field, Form, Formik } from 'formik';
 import { SetupContext } from 'pages/QuickSetup';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { redirectType } from 'utils/data';
 import {
 	add_top_loader,
+	formatDate,
 	generateShortURL,
 	generateSlug,
 	is_pro_enabled,
@@ -27,10 +28,9 @@ const CreateLink = () => {
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
 	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
 	const { setUpgradeToProModal, openUpgradeToProModal } = modal;
-
-	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, linkOptions);
+	const [options, setOptions] = useState(linkOptions);
+	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, options);
 	const openUTMModal = () => {
-		// setModalIsOpen(true);
 		setModalUTMIsOpen(true);
 	};
 	const closeUTMModal = () => {
@@ -47,49 +47,65 @@ const CreateLink = () => {
 	};
 	const handleTitleChange = (setFieldValue, title, short_url = null) => {
 		setFieldValue('link_title', title);
-		if (!data) {
-			let shortURL = generateShortURL(settings.settings, short_url || title);
-			if (shortURL.length > 0) {
-				setFieldValue('short_url', shortURL);
-				setSlugIsExists(false);
-			}
+		let shortURL = generateShortURL(settings, short_url || title);
+		if (shortURL.length > 0) {
+			setFieldValue('short_url', shortURL);
+			setSlugIsExists(false);
+			return shortURL;
 		}
+		return '';
+	};
+
+	const submitLinkHandler = (values, actions) => {
+		const { setSubmitting, setFieldError } = actions;
+		setSubmitting(false);
+
+		const regex = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/;
+		if (regex.test(values.link_title)) {
+			setFieldError('link_title', __('Please ensure the link title does not contain any script.', 'betterlinks'));
+			return;
+		}
+		onSubmit(values);
 	};
 
 	const onSubmit = (values) => {
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
+		console.info(values.short_url);
 		shortURLUniqueCheck(values.short_url, values.ID, setSlugIsExists).then((isDuplicate) => {
-			if (!isDuplicate) {
-				if (!values.cat_id) {
-					const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
-					values.cat_id = ID;
-				}
-				if (!values.link_slug) {
-					values.link_slug = generateSlug(values.link_title);
-				}
-				if (isNaN(values?.cat_id)) {
-					values.cat_slug = generateSlug(values.cat_id);
-				}
-				values.wildcards = Number(values.short_url.includes('*'));
-				if (values.cat_id) {
-					const link_title = values.link_title.trim();
-					if (link_title) {
-						values.link_title = link_title;
-						// submitHandler(values)
-						// 	.then((response) => {
-						// 		if (response?.data) {
-						// 			setShowLinkModal(false);
-						// 		}
-						// 		remove_top_loader(document);
-						// 	})
-						// 	.catch((error) => console.log('---error (submitHandler)--', { error }));
-						// add_top_loader(document);
-					}
-				}
-			}
+			console.info(isDuplicate);
+			// if (!isDuplicate) {
+			// 	if (!values.cat_id) {
+			// 		const { ID } = terms.filter((item) => item.term_slug == 'uncategorized')[0];
+			// 		values.cat_id = ID;
+			// 	}
+			// 	if (!values.link_slug) {
+			// 		values.link_slug = generateSlug(values.link_title);
+			// 	}
+			// 	if (isNaN(values?.cat_id)) {
+			// 		values.cat_slug = generateSlug(values.cat_id);
+			// 	}
+			// 	values.wildcards = Number(values.short_url.includes('*'));
+			// 	if (values.cat_id) {
+			// 		const link_title = values.link_title.trim();
+			// 		if (link_title) {
+			// 			values.link_title = link_title;
+			// 			// cinfo
+			// 			// submitHandler(values)
+			// 			// 	.then((response) => {
+			// 			// 		if (response?.data) {
+			// 			// 			setShowLinkModal(false);
+			// 			// 		}
+			// 			// 		remove_top_loader(document);
+			// 			// 	})
+			// 			// 	.catch((error) => console.log('---error (submitHandler)--', { error }));
+			// 			// add_top_loader(document);
+			// 		}
+			// 	}
+			// }
 		});
 	};
+
 	return (
 		<>
 			<div className="create-links">
@@ -98,7 +114,7 @@ const CreateLink = () => {
 					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
 				</div>
 				<div className="option">
-					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', linkOptions)} onSubmit={() => {}}>
+					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={submitLinkHandler}>
 						{(props) => {
 							const { errors } = props;
 							return (
@@ -143,7 +159,13 @@ const CreateLink = () => {
 															name="link_title"
 															disabled={isDisableLinkFormEditView}
 															onChange={(e) => {
-																handleTitleChange(props.setFieldValue, e.target.value);
+																const short_url = handleTitleChange(props.setFieldValue, e.target.value);
+																props.setFieldValue('short_url', short_url);
+																setLinkOptions((prev) => ({
+																	...prev,
+																	link_title: e.target.value,
+																	short_url,
+																}));
 															}}
 															required
 														/>
@@ -171,6 +193,8 @@ const CreateLink = () => {
 													disabled={isDisableLinkFormEditView}
 													isMulti={false}
 													enable_password={false}
+													isQuickSetup={true}
+													setLinkOptions={setLinkOptions}
 												/>
 											</div>
 											<div className="btl-modal-form-group btl-has-utm-button">
@@ -184,6 +208,10 @@ const CreateLink = () => {
 													onChange={(e) => {
 														const target_url = e.target.value.replace(/\s+/g, '');
 														props.setFieldValue('target_url', target_url);
+														setLinkOptions((prev) => ({
+															...prev,
+															target_url,
+														}));
 														// const willUpdateTitle = '' === props.values?.link_title;
 														// fetchTargetURL(target_url, props.setFieldValue, willUpdateTitle, props.values?.link_title);
 													}}
@@ -219,7 +247,12 @@ const CreateLink = () => {
 															id="short_url"
 															name="short_url"
 															onChange={(e) => {
-																props.setFieldValue('short_url', e.target.value.replace(/\s+/g, '-'));
+																const short_url = e.target.value.replace(/\s+/g, '-');
+																props.setFieldValue('short_url', short_url);
+																setLinkOptions((prev) => ({
+																	...prev,
+																	short_url,
+																}));
 																setSlugIsExists(false);
 															}}
 															disabled={isDisableLinkFormEditView}
@@ -248,7 +281,13 @@ const CreateLink = () => {
 															className="btl-check"
 															name="nofollow"
 															type="checkbox"
-															onChange={() => props.setFieldValue('nofollow', !props.values.nofollow)}
+															onChange={() => {
+																props.setFieldValue('nofollow', !props.values.nofollow);
+																setLinkOptions((prev) => ({
+																	...prev,
+																	nofollow: !props.values.nofollow,
+																}));
+															}}
 															disabled={isDisableLinkFormEditView}
 														/>
 														<span className="text">
@@ -264,7 +303,13 @@ const CreateLink = () => {
 															className="btl-check"
 															name="sponsored"
 															type="checkbox"
-															onChange={() => props.setFieldValue('sponsored', !props.values.sponsored)}
+															onChange={() => {
+																props.setFieldValue('sponsored', !props.values.sponsored);
+																setLinkOptions((prev) => ({
+																	...prev,
+																	sponsored: !props.values.sponsored,
+																}));
+															}}
 															disabled={isDisableLinkFormEditView}
 														/>
 														<span className="text">
@@ -280,7 +325,13 @@ const CreateLink = () => {
 															className="btl-check"
 															name="param_forwarding"
 															type="checkbox"
-															onChange={() => props.setFieldValue('param_forwarding', !props.values.param_forwarding)}
+															onChange={() => {
+																props.setFieldValue('param_forwarding', !props.values.param_forwarding);
+																setLinkOptions((prev) => ({
+																	...prev,
+																	param_forwarding: !props.values.param_forwarding,
+																}));
+															}}
 															disabled={isDisableLinkFormEditView}
 														/>
 														<span className="text">
@@ -296,7 +347,13 @@ const CreateLink = () => {
 															className="btl-check"
 															name="track_me"
 															type="checkbox"
-															onChange={() => props.setFieldValue('track_me', !props.values.track_me)}
+															onChange={() => {
+																props.setFieldValue('track_me', !props.values.track_me);
+																setLinkOptions((prev) => ({
+																	...prev,
+																	track_me: !props.values.track_me,
+																}));
+															}}
 															disabled={isDisableLinkFormEditView}
 														/>
 														<span className="text">

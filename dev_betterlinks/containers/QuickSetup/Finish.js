@@ -1,7 +1,11 @@
 import { __ } from '@wordpress/i18n';
+import { useContext } from 'react';
 import { plugin_root_url } from 'utils/helper';
+import { SetupContext } from 'pages/QuickSetup';
 
 const Finish = () => {
+	const { errors } = useContext(SetupContext);
+	console.info(errors);
 	return (
 		<>
 			<div className="finish">

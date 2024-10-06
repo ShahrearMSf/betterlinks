@@ -6,11 +6,41 @@
 		background-color: #fff;
 		display: flex;
 		justify-content: space-between;
+		border-top: 1px solid rgb(234, 236, 240);
+		padding: 20px;
+
+		> div:has(button) {
+			display: flex;
+			column-gap: 10px;
+
+			button.button {
+				padding: 12px 20px;
+				font-size: 14px;
+				font-weight: 500;
+				line-height: 24px;
+			}
+		}
+	}
+
+	.header {
+		h3 {
+			font-size: 28px;
+			font-weight: 600;
+			color: rgba(29, 41, 57, 1);
+		}
+		p {
+			font-size: 16px;
+			line-height: 24px;
+			font-weight: 400;
+			margin-bottom: 20px;
+			width: 700px;
+			color: rgba(102, 112, 133, 1);
+		}
 	}
 
 	.btl-setup-steps {
 		background-color: rgba(255, 255, 255, 1);
-		padding: 30px 0 20px 0;
+		padding: 30px 30px 20px 20px;
 
 		.getting-started {
 			display: flex;
@@ -21,17 +51,7 @@
 			> iframe {
 				border-radius: 8px;
 			}
-			h3 {
-				font-size: 28px;
-				font-weight: 600;
-			}
-			p {
-				font-size: 16px;
-				line-height: 24px;
-				font-weight: 400;
-				margin-bottom: 20px;
-				width: 700px;
-			}
+
 			.actions {
 				border: 2px dashed rgb(234, 236, 240);
 				width: 728px;
@@ -88,7 +108,18 @@
 			}
 		}
 		.configuration {
+			// .header {
+			// 	h3 {
+			// 	}
+			// }
 			.option {
+				> form {
+					.btl-tab-panel-inner {
+						box-shadow: unset;
+						padding: 0;
+						margin-top: 35px;
+					}
+				}
 				.btl-form-group {
 					> label {
 						min-width: 170px;
@@ -133,9 +164,16 @@
 				.ReactModal__Content {
 					padding: 0 !important;
 					width: 100%;
+					display: flex;
+					justify-content: center;
 
 					.btl-entry-content {
-						justify-content: space-between;
+						// justify-content: space-between;
+						width: 100%;
+
+						.btl-entry-content-left {
+							width: 60%;
+						}
 					}
 				}
 			}
