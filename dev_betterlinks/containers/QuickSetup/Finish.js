@@ -1,12 +1,16 @@
 import { __ } from '@wordpress/i18n';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { plugin_root_url } from 'utils/helper';
 import { SetupContext } from 'pages/QuickSetup';
 import { connect } from 'react-redux';
+import { update_quick_setup } from 'redux/actions/quick-setup.actions';
+import { bindActionCreators } from 'redux';
 
 const Finish = (props) => {
-	console.info(props);
 	const { errors } = useContext(SetupContext);
+	useEffect(() => {
+		props.update_quick_setup({ isCreated: false });
+	}, [])
 	return (
 		<>
 			<div className="finish">
@@ -22,7 +26,10 @@ const Finish = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		isCreate: state.quickSetup?.isCreated,
+		isCreated: state.quickSetup?.isCreated,
 	};
 };
-export default connect(mapStateToProps, null)(Finish);
+const mapDispatchToProps = (dispatch) => ({
+	update_quick_setup: bindActionCreators(update_quick_setup, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Finish);

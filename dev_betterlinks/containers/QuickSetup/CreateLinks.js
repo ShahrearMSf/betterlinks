@@ -10,6 +10,7 @@ import {
 	generateSlug,
 	is_pro_enabled,
 	modalCustomSmallStyles,
+	modalCustomStyles,
 	plugin_root_url,
 	remove_top_loader,
 	shortURLUniqueCheck,
@@ -21,8 +22,12 @@ import UTMBuilder from 'components/UTMBuilder';
 import Copy from 'components/Copy';
 import Category from 'components/Terms/Category';
 import ProBadge from 'components/Badge/ProBadge';
+import { connect } from 'react-redux';
+import { useUpgradeProModal } from 'utils/customHooks';
+import { bindActionCreators } from 'redux';
+import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 
-const CreateLink = () => {
+const CreateLink = (props) => {
 	const { linkOptions, setLinkOptions, modal, terms, settings } = useContext(SetupContext);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
@@ -56,54 +61,8 @@ const CreateLink = () => {
 		return '';
 	};
 
-	const submitLinkHandler = (values, actions) => {
-		const { setSubmitting, setFieldError } = actions;
-		setSubmitting(false);
-
-		const regex = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/;
-		if (regex.test(values.link_title)) {
-			setFieldError('link_title', __('Please ensure the link title does not contain any script.', 'betterlinks'));
-			return;
-		}
-		onSubmit(values);
-	};
-
-	const onSubmit = (values) => {
-		const { short_url } = values;
-		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
-		console.info(values.short_url);
-		shortURLUniqueCheck(values.short_url, values.ID, setSlugIsExists).then((isDuplicate) => {
-			console.info(isDuplicate);
-			// if (!isDuplicate) {
-			// 	if (!values.cat_id) {
-			// 		const { ID } = terms.filter((item) => item.term_slug == 'uncategorized')[0];
-			// 		values.cat_id = ID;
-			// 	}
-			// 	if (!values.link_slug) {
-			// 		values.link_slug = generateSlug(values.link_title);
-			// 	}
-			// 	if (isNaN(values?.cat_id)) {
-			// 		values.cat_slug = generateSlug(values.cat_id);
-			// 	}
-			// 	values.wildcards = Number(values.short_url.includes('*'));
-			// 	if (values.cat_id) {
-			// 		const link_title = values.link_title.trim();
-			// 		if (link_title) {
-			// 			values.link_title = link_title;
-			// 			// cinfo
-			// 			// submitHandler(values)
-			// 			// 	.then((response) => {
-			// 			// 		if (response?.data) {
-			// 			// 			setShowLinkModal(false);
-			// 			// 		}
-			// 			// 		remove_top_loader(document);
-			// 			// 	})
-			// 			// 	.catch((error) => console.log('---error (submitHandler)--', { error }));
-			// 			// add_top_loader(document);
-			// 		}
-			// 	}
-			// }
-		});
+	const closeDuplicateLinkModal = () => {
+		props.update_quick_setup({ duplicateLink: false });
 	};
 
 	return (
@@ -114,6 +73,15 @@ const CreateLink = () => {
 					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
 				</div>
 				<div className="option">
+					{props?.duplicateLink && (
+						<Modal isOpen={props.duplicateLink} onRequestClose={closeDuplicateLinkModal} style={modalCustomSmallStyles} ariaHideApp={false}>
+							<span className="btl-close-modal" onClick={closeDuplicateLinkModal}>
+								<i className="btl btl-cancel" />
+							</span>
+							<h3>{__('Duplicate Link', 'betterlinks')}</h3>
+							<p>{__('The short URL you entered already exists. Please enter a different short URL.', 'betterlinks')}</p>
+						</Modal>
+					)}
 					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => {}}>
 						{(props) => {
 							const { errors } = props;
@@ -384,7 +352,7 @@ const CreateLink = () => {
 															</span>
 														</label>
 													)}
-													{betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field, ...settings })}
+													{/* {betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field, ...settings })} */}
 												</div>
 											</div>
 										</div>
@@ -398,5 +366,10 @@ const CreateLink = () => {
 		</>
 	);
 };
-
-export default CreateLink;
+const mapStateToProps = (state) => ({
+	duplicateLink: state.quickSetup?.duplicateLink,
+});
+const mapDispatchToProps = (dispatch) => ({
+	update_quick_setup: bindActionCreators(update_quick_setup, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(CreateLink);

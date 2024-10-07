@@ -137,6 +137,7 @@ function links(state = {}, action) {
 		case ADD_NEW_LINK: {
 			let newState = state;
 			const newPayload = payload?.data;
+			console.info(newPayload);
 			if (newPayload?.cat_data?.is_newly_created) {
 				newState = {
 					...newState,

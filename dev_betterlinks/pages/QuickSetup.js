@@ -5,7 +5,7 @@ import Topbar from 'containers/TopBar';
 import { createContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { add_new_link } from 'redux/actions/links.actions';
+import { add_new_link, fetch_links_data } from 'redux/actions/links.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, generateShortURL } from 'utils/helper';
@@ -27,6 +27,9 @@ const QuickSetup = (props) => {
 	useEffect(() => {
 		if (Object.keys(props.terms).length === 0) {
 			props.fetch_terms_data();
+		}
+		if(!props.links.links) {
+			props.fetch_links_data();
 		}
 	}, []);
 
@@ -69,11 +72,13 @@ const QuickSetup = (props) => {
 
 const mapStateToProps = (state) => ({
 	terms: state.terms,
+	links: state.links,
 });
 const mapDispatchToProps = (dispatch) => ({
 	fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	update_option: bindActionCreators(update_option, dispatch),
 	add_new_link: bindActionCreators(add_new_link, dispatch),
+	fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(QuickSetup);
 

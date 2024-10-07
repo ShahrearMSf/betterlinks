@@ -178,6 +178,15 @@
 				}
 			}
 		}
+
+		.finish {
+			.header {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+			}
+		}
 	}
 
 	.MuiStepper-root {

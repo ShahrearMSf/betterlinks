@@ -10,12 +10,13 @@ import Configuration from './Configuration';
 import Migration from './Migration';
 import CreateLink from './CreateLinks';
 import Finish from './Finish';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { SetupContext } from 'pages/QuickSetup';
 import { add_top_loader, generateSlug, remove_top_loader, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
+import { add_new_link } from 'redux/actions/links.actions';
 
 function getSteps() {
 	return [__('Getting Started', 'betterlinks'), __('Configuration', 'betterlinks'), __('Migration', 'betterlinks'), __('Create Link', 'betterlinks'), __('Finish', 'betterlinks')];
@@ -24,7 +25,13 @@ function getSteps() {
 const setupStepComponents = [<GettingStarted />, <Configuration />, <Migration />, <CreateLink />, <Finish />];
 const SetupCanvas = (props) => {
 	const steps = getSteps();
-	const { activeStep, setActiveStep, clientConsent, update_option, settings, linkOptions, setLinkOptions, errors, setErrors, add_new_link, terms } = useContext(SetupContext);
+	const { activeStep, setActiveStep, clientConsent, update_option, settings, linkOptions, setLinkOptions, errors, setErrors, terms } = useContext(SetupContext);
+
+	useEffect(() => {
+		if( props.isCreated) {
+			setActiveStep(4);
+		}
+	}, [props.isCreated])
 
 	const submitLinkHandler = (values) => {
 		const regex = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/;
@@ -58,19 +65,19 @@ const SetupCanvas = (props) => {
 					const link_title = values.link_title.trim();
 					if (link_title) {
 						values.link_title = link_title;
-						// cinfo;
-						add_new_link(values)
+					
+						props.add_new_link(values)
 							.then((response) => {
 								if (response?.data) {
-									console.info(response.data);
 									props.update_quick_setup({ isCreated: true });
-									// setErrors({ isCreated: true });
+									setErrors({ isCreated: true });
 								}
 							})
 							.catch((error) => console.log('---error (submitHandler)--', { error }));
 					}
 				}
 			}
+			props.update_quick_setup({ duplicateLink: isDuplicate})
 		});
 	};
 
@@ -112,11 +119,12 @@ const SetupCanvas = (props) => {
 									}
 									if (activeStep === 3) {
 										submitLinkHandler(linkOptions, setErrors);
+										return;
 									}
 
-									// if (activeStep !== steps.length - 1) {
-									// 	setActiveStep(activeStep + 1);
-									// }
+									if (activeStep !== steps.length - 1) {
+										setActiveStep(activeStep + 1);
+									}
 								}}
 							>
 								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')}
@@ -137,6 +145,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => ({
 	update_quick_setup: bindActionCreators(update_quick_setup, dispatch),
+	add_new_link: bindActionCreators(add_new_link, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetupCanvas);
 // export default SetupCanvas;

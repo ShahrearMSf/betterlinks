@@ -1,6 +1,7 @@
 const initialState = {
 	isCreated: false,
 };
+// const initialState = {};
 
 function quickSetup(state = initialState, { type, payload }) {
 	switch (type) {
@@ -10,10 +11,7 @@ function quickSetup(state = initialState, { type, payload }) {
 		case 'UPDATE_OPTIONS': {
 			return {
 				...state,
-				quickSetup: {
-					...state.quickSetup,
-					...payload,
-				},
+				...payload,
 			};
 		}
 		default:
