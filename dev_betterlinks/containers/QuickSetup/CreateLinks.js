@@ -114,7 +114,7 @@ const CreateLink = () => {
 					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
 				</div>
 				<div className="option">
-					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={submitLinkHandler}>
+					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => {}}>
 						{(props) => {
 							const { errors } = props;
 							return (

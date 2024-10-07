@@ -2,10 +2,11 @@ import { __ } from '@wordpress/i18n';
 import { useContext } from 'react';
 import { plugin_root_url } from 'utils/helper';
 import { SetupContext } from 'pages/QuickSetup';
+import { connect } from 'react-redux';
 
-const Finish = () => {
+const Finish = (props) => {
+	console.info(props);
 	const { errors } = useContext(SetupContext);
-	console.info(errors);
 	return (
 		<>
 			<div className="finish">
@@ -19,4 +20,9 @@ const Finish = () => {
 	);
 };
 
-export default Finish;
+const mapStateToProps = (state) => {
+	return {
+		isCreate: state.quickSetup?.isCreated,
+	};
+};
+export default connect(mapStateToProps, null)(Finish);

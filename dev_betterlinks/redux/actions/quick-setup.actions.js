@@ -2,8 +2,10 @@
 export const QUICK_SETUP = 'QUICK_SETUP';
 
 export const update_quick_setup = (data) => (dispatch) => {
+	console.info(data);
 	dispatch({
-		type: CHANGE_LINKS_VIEW,
+		type: 'UPDATE_OPTIONS',
 		payload: data,
 	});
+	console.info('update_quick_setup');
 };

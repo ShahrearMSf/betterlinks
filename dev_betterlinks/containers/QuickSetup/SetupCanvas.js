@@ -22,7 +22,7 @@ function getSteps() {
 }
 
 const setupStepComponents = [<GettingStarted />, <Configuration />, <Migration />, <CreateLink />, <Finish />];
-const SetupCanvas = () => {
+const SetupCanvas = (props) => {
 	const steps = getSteps();
 	const { activeStep, setActiveStep, clientConsent, update_option, settings, linkOptions, setLinkOptions, errors, setErrors, add_new_link, terms } = useContext(SetupContext);
 
@@ -61,13 +61,10 @@ const SetupCanvas = () => {
 						// cinfo;
 						add_new_link(values)
 							.then((response) => {
-								console.info(response);
 								if (response?.data) {
-									// setLinkOptions((prev) => ({
-									// 	...prev,
-									// 	isCreated: true,
-									// }));
-									setErrors({ isCreated: true });
+									console.info(response.data);
+									props.update_quick_setup({ isCreated: true });
+									// setErrors({ isCreated: true });
 								}
 							})
 							.catch((error) => console.log('---error (submitHandler)--', { error }));
@@ -117,9 +114,9 @@ const SetupCanvas = () => {
 										submitLinkHandler(linkOptions, setErrors);
 									}
 
-									if (activeStep !== steps.length - 1) {
-										setActiveStep(activeStep + 1);
-									}
+									// if (activeStep !== steps.length - 1) {
+									// 	setActiveStep(activeStep + 1);
+									// }
 								}}
 							>
 								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')}
@@ -133,10 +130,13 @@ const SetupCanvas = () => {
 		</>
 	);
 };
-const mapStateToProps = (state) => ({
-	isCreate: state.
-});
+const mapStateToProps = (state) => {
+	return {
+		isCreated: state.quickSetup?.isCreated,
+	};
+};
 const mapDispatchToProps = (dispatch) => ({
 	update_quick_setup: bindActionCreators(update_quick_setup, dispatch),
 });
-export default connect()(SetupCanvas);
+export default connect(mapStateToProps, mapDispatchToProps)(SetupCanvas);
+// export default SetupCanvas;

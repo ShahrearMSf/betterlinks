@@ -1,6 +1,7 @@
 const initialState = {
 	isCreated: false,
 };
+
 function quickSetup(state = initialState, { type, payload }) {
 	switch (type) {
 		case 'GET_OPTIONS': {
