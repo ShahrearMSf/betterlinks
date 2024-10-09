@@ -31,6 +31,11 @@ export const {
 	is_fbs_enabled,
 	prefix,
 	betterlinks_quick_setup_step = false,
+	migratable_plugins = {
+		simple301redirects: false,
+		thirstyaffliates: false,
+		prettylinks: false,
+	}
 } = window.betterLinksGlobal;
 
 export const API = axios.create({

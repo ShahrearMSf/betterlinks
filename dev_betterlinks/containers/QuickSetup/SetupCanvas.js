@@ -1,8 +1,6 @@
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import { __ } from '@wordpress/i18n';
 import GettingStarted from './GettingStarted';
@@ -10,33 +8,82 @@ import Configuration from './Configuration';
 import Migration from './Migration';
 import CreateLink from './CreateLinks';
 import Finish from './Finish';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { SetupContext } from 'pages/QuickSetup';
-import { add_top_loader, generateSlug, remove_top_loader, shortURLUniqueCheck } from 'utils/helper';
+import { CONFIGURATION, CREATE_LINK, FINISH, getStepCount, GETTING_STARTED, migratePluginsData, MIGRATION } from './quicksetup.helper';
+import { generateSlug, makeRequest, migratable_plugins, route_path, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
 import { add_new_link } from 'redux/actions/links.actions';
+import { useHistory } from 'react-router-dom';
 
 function getSteps() {
+	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
+	if (!isMigrationExists) {
+		return [__('Getting Started', 'betterlinks'), __('Configuration', 'betterlinks'), __('Create Link', 'betterlinks'), __('Finish', 'betterlinks')];
+	}
 	return [__('Getting Started', 'betterlinks'), __('Configuration', 'betterlinks'), __('Migration', 'betterlinks'), __('Create Link', 'betterlinks'), __('Finish', 'betterlinks')];
 }
 
-const setupStepComponents = [<GettingStarted />, <Configuration />, <Migration />, <CreateLink />, <Finish />];
+const getSetupStepComponents = (component) => {
+	const components = {
+		0: <GettingStarted />,
+		1: <Configuration />,
+		2: <Migration />,
+		3: <CreateLink />,
+		4: <Finish />,
+	};
+	return components[component];
+};
+// const setupStepComponents = getSetupStepComponents();
 const SetupCanvas = (props) => {
+	const history = useHistory();
 	const steps = getSteps();
 	const { activeStep, setActiveStep, clientConsent, update_option, settings, linkOptions, setLinkOptions, errors, setErrors, terms } = useContext(SetupContext);
-
+	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
 	useEffect(() => {
-		if( props.isCreated) {
+		if (props.isCreated) {
 			setActiveStep(4);
 		}
-	}, [props.isCreated])
+	}, [props.isCreated, activeStep]);
 
-	const submitLinkHandler = (values) => {
+	// Refactored to handle different steps with a switch-case for clarity
+	const handleStepChange = () => {
+		switch (activeStep) {
+			case 1:
+				update_option(settings);
+				setLinkOptions({
+					...settings,
+					...linkOptions,
+				});
+				setActiveStep(isMigrationExists ? 2 : 3);
+				break;
+			case 2: {
+				migratePluginsData();
+				setActiveStep(3);
+				break;
+			}
+			case 3:
+				submitLinkHandler(linkOptions, setErrors);
+				setActiveStep(4);
+				break;
+			case 4:
+				completeSetup();
+				break;
+			default:
+				// if (activeStep !== steps.length - 1) {
+				// 	setActiveStep(activeStep + 1);
+				// }
+				break;
+		}
+	};
+
+	// Extracted submit logic into a separate function for better readability
+	const submitLinkHandler = (values, setErrorCallback) => {
 		const regex = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/;
 		if (regex.test(values.link_title)) {
-			setErrors((prev) => ({
+			setErrorCallback((prev) => ({
 				...prev,
 				link_title: __('Please ensure the link title does not contain any script.', 'betterlinks'),
 			}));
@@ -65,8 +112,9 @@ const SetupCanvas = (props) => {
 					const link_title = values.link_title.trim();
 					if (link_title) {
 						values.link_title = link_title;
-					
-						props.add_new_link(values)
+
+						props
+							.add_new_link(values)
 							.then((response) => {
 								if (response?.data) {
 									props.update_quick_setup({ isCreated: true });
@@ -77,8 +125,19 @@ const SetupCanvas = (props) => {
 					}
 				}
 			}
-			props.update_quick_setup({ duplicateLink: isDuplicate})
+			props.update_quick_setup({ duplicateLink: isDuplicate });
 		});
+	};
+
+	const completeSetup = async () => {
+		const res = await makeRequest({
+			action: 'betterlinks__complete_setup',
+		});
+		const data = res.data?.data;
+		if (data?.result === 'complete') {
+			history.push(route_path + 'admin.php?page=betterlinks');
+			history.go(0);
+		}
 	};
 
 	return (
@@ -95,38 +154,24 @@ const SetupCanvas = (props) => {
 						);
 					})}
 				</Stepper>
-				<div className="btl-setup-steps">{setupStepComponents[activeStep]}</div>
+				<div className="btl-setup-steps">{getSetupStepComponents(activeStep)}</div>
 
 				<div className="btl-setup-slider">
 					<div></div>
 					<MobileStepper variant="dots" steps={steps.length} position="static" activeStep={activeStep} />
 					{activeStep > 0 ? (
 						<div>
+							{activeStep === 3 && (
+								<button className="button" disabled={activeStep === 0} onClick={() => setActiveStep(4)}>
+									Skip
+								</button>
+							)}
 							{(activeStep !== 1 || !clientConsent) && (
 								<button className="button" disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
 									Back
 								</button>
 							)}
-							<button
-								className="button button-primary"
-								onClick={() => {
-									if (activeStep === 1) {
-										update_option(settings);
-										setLinkOptions({
-											...settings,
-											...linkOptions,
-										});
-									}
-									if (activeStep === 3) {
-										submitLinkHandler(linkOptions, setErrors);
-										return;
-									}
-
-									if (activeStep !== steps.length - 1) {
-										setActiveStep(activeStep + 1);
-									}
-								}}
-							>
+							<button className="button button-primary" onClick={handleStepChange}>
 								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')}
 							</button>
 						</div>

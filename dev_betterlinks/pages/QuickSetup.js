@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { CONFIGURATION, GETTING_STARTED } from 'containers/QuickSetup/quicksetup.helper';
 import SetupCanvas from 'containers/QuickSetup/SetupCanvas';
 import Topbar from 'containers/TopBar';
 import { createContext, useEffect, useState } from 'react';
@@ -8,19 +9,15 @@ import { bindActionCreators } from 'redux';
 import { add_new_link, fetch_links_data } from 'redux/actions/links.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, generateShortURL } from 'utils/helper';
+import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, migratable_plugins } from 'utils/helper';
 
 export const SetupContext = createContext('quick-setup');
 
 const QuickSetup = (props) => {
-	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 3 : 0);
+	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 2 : 0);
 	const [clientConsent, setClientConsent] = useState(+betterlinks_quick_setup_step);
 	const [settings, setSettings] = useState({ ...betterlinks_settings });
-	const [migrationSettings, setMigrationSettings] = useState({
-		simple301redirects: false,
-		thirstyaffliates: false,
-		prettylinks: false,
-	});
+	const [migrationSettings, setMigrationSettings] = useState(migratable_plugins);
 	const [linkOptions, setLinkOptions] = useState(getInitialValues());
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [errors, setErrors] = useState({ isCreated: false });
@@ -28,7 +25,7 @@ const QuickSetup = (props) => {
 		if (Object.keys(props.terms).length === 0) {
 			props.fetch_terms_data();
 		}
-		if(!props.links.links) {
+		if (!props.links.links) {
 			props.fetch_links_data();
 		}
 	}, []);

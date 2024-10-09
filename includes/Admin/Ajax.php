@@ -86,8 +86,9 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks__create_fbs_link', array( $this, 'create_fbs_link' ) );
 		add_action( 'wp_ajax_betterlinks__update_fbs_link', array( $this, 'update_fbs_link' ) );
 
-		// Client Consent
+		// Quick Setu
 		add_action( 'wp_ajax_betterlinks__client_consent', array( $this, 'client_consent' ) );
+		add_action( 'wp_ajax_betterlinks__complete_setup', array( $this, 'complete_setup' ) );
 	}
 
 	public function update_fbs_link() {
@@ -1160,6 +1161,17 @@ class Ajax {
 		update_option('betterlinks_quick_setup_step', 1);
 		wp_send_json_success([
 			'result' => $opt_in_value 
+		]);
+	}
+
+	public function complete_setup() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+		$is_update = update_option('betterlinks_quick_setup_step', 'complete');
+		wp_send_json_success([
+			'result' => (bool) $is_update ? 'complete' : 'error' 
 		]);
 	}
 }

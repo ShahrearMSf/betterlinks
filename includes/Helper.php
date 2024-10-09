@@ -94,12 +94,16 @@ class Helper {
 				'title'      => __( 'Settings', 'betterlinks' ),
 				'capability' => 'manage_options',
 			),
-			BETTERLINKS_PLUGIN_SLUG . '-quick-setup'    => array(
-				'title'      => __( 'Quick Setup', 'betterlinks' ),
-				'capability' => 'manage_options',
-			),
 		);
 		
+
+		if( get_option( 'betterlinks_quick_setup_step' ) !== 'complete' ){
+			$menu_items[BETTERLINKS_PLUGIN_SLUG . '-quick-setup'] = array(
+				'title'      => __( 'Quick Setup', 'betterlinks' ),
+				'capability' => 'manage_options',
+			);
+		}
+
 		if( !empty( $enable_custom_domain_menu ) ){
 			$before = array_splice( $menu_items, 0, 2 );
 			$inserted = array(
@@ -689,5 +693,13 @@ class Helper {
 	public static function isJson( $string ) {
 		json_decode( $string );
 		return json_last_error() === JSON_ERROR_NONE;
+	}
+
+	public static function get_migratable_plugins() {
+		return [
+			'simple301redirects' => defined('SIMPLE301REDIRECTS_VERSION') && !get_option('betterlinks_notice_s301r_migrate'),
+			'thirstyaffiliates' => class_exists('ThirstyAffiliates') && !get_option('betterlinks_notice_ta_migrate'),
+			'prettylinks' => defined('PRLI_VERSION'),
+		];
 	}
 }
