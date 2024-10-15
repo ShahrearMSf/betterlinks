@@ -247,13 +247,14 @@ class Clicks extends Controller {
 	public function get_items( $request ) {
 		$request = $request->get_params();
 
-		$from = $this->sanitize_date( $request['from'] ) ? $request['from'] : '';
-		$to = $this->sanitize_date( $request['to'] ) ? $request['to'] : '';
+		$from = isset($request['from']) && $this->sanitize_date( $request['from'] ) ? $request['from'] : '';
+		$to = isset($request['to']) && $this->sanitize_date( $request['to'] ) ? $request['to'] : '';
 
 		if( empty( $from ) || empty( $to ) ) {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
+					'data' => [],
 					'message' => __( "Invalid date range provided.", 'betterlinks' ),
 				),
 				400
