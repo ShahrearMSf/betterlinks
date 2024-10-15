@@ -158,7 +158,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 2.1.8 - 09/10/2024 =
+= 2.1.8 - 15/10/2024 =
 
 - Improved: Security Enhancement
 - Few minor bug fixes & improvement
