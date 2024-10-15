@@ -40,7 +40,9 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 					{__('UTM Builder', 'betterlinks')}
 					<div className="btl-tooltip">
 						<span className="dashicons dashicons-info-outline"></span>
-						<span className="btl-tooltiptext">{__('Add Campaign Parameters to Track Custom Campaigns', 'betterlinks')}</span>
+						<span className="btl-tooltiptext" style={{ width: '220px' }}>
+							{__('Add Campaign Parameters to Track Custom Campaigns', 'betterlinks')}
+						</span>
 					</div>
 				</h3>
 				<div className="btl-modal-utm-builder__body">
