@@ -877,7 +877,7 @@ trait Query {
 
 			return json_decode( current( $results )->meta_value );
 		}
-		return;
+		return false;
 	}
 
 	public static function add_link_meta( $link_id, $meta_key, $meta_value ) {
