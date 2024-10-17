@@ -697,8 +697,8 @@ class Helper {
 
 	public static function get_migratable_plugins() {
 		return [
-			'simple301redirects' => defined('SIMPLE301REDIRECTS_VERSION') && !get_option('betterlinks_notice_s301r_migrate'),
-			'thirstyaffiliates' => class_exists('ThirstyAffiliates') && !get_option('betterlinks_notice_ta_migrate'),
+			'simple301redirects' => defined('SIMPLE301REDIRECTS_VERSION'),
+			'thirstyaffiliates' => class_exists('ThirstyAffiliates'),
 			'prettylinks' => defined('PRLI_VERSION'),
 		];
 	}

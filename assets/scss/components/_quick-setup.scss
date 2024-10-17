@@ -1,11 +1,16 @@
 .btl-quick-setup {
 	width: 1000px;
 	margin: 0 auto;
-
+	.skip {
+		&:focus {
+			box-shadow: none;
+		}
+	}
 	.btl-setup-slider {
 		background-color: #fff;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		border-top: 1px solid rgb(234, 236, 240);
 		padding: 20px;
 
@@ -154,6 +159,67 @@
 
 					.plugin-check {
 						cursor: pointer;
+					}
+					> div.left-side {
+						display: flex;
+						align-items: center;
+
+						.badge {
+							margin-left: 10px;
+							display: flex;
+							align-items: center;
+							column-gap: 5px;
+							border-width: 0.8px;
+							border-style: solid;
+							border-radius: 10px;
+							padding: 6px 8px;
+
+							.MuiSvgIcon-root {
+								font-size: 1rem;
+							}
+							span {
+								font-size: 12px;
+								font-weight: 500;
+								line-height: 13px;
+								color: rgba(25, 40, 93, 1);
+							}
+
+							&.completed {
+								background-color: rgba(236, 253, 236, 1);
+								border-color: rgba(185, 231, 184, 1);
+								.MuiSvgIcon-root {
+									fill: rgba(22, 189, 19, 1);
+								}
+							}
+							&.in-progress {
+								background-color: rgba(239, 246, 255, 1);
+								border-color: rgba(184, 201, 229, 1);
+								.MuiSvgIcon-root {
+									fill: rgba(59, 130, 246, 1);
+								}
+							}
+							&.failed {
+								background-color: rgba(255, 239, 239, 1);
+								border-color: rgba(229, 184, 184, 1);
+								.MuiSvgIcon-root {
+									fill: rgba(220, 38, 38, 1);
+								}
+							}
+						}
+					}
+					> div.right-side {
+						.button {
+							background-color: rgba(255, 232, 232, 1);
+							border-color: rgba(255, 169, 169, 1);
+							color: rgba(220, 38, 38, 1);
+							display: flex;
+							align-items: center;
+							column-gap: 4px;
+
+							> .MuiSvgIcon-root {
+								font-size: 15px;
+							}
+						}
 					}
 				}
 			}

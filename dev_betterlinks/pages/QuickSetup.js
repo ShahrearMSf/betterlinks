@@ -21,6 +21,13 @@ const QuickSetup = (props) => {
 	const [linkOptions, setLinkOptions] = useState(getInitialValues());
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [errors, setErrors] = useState({ isCreated: false });
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [modalConfirm, setModalConfirm] = useState(false);
+	const [migrationStatus, setMigrationStatus] = useState({
+		simple301redirects: '',
+		thirstyaffiliates: '',
+		prettylinks: '',
+	});
 	useEffect(() => {
 		if (Object.keys(props.terms).length === 0) {
 			props.fetch_terms_data();
@@ -57,6 +64,12 @@ const QuickSetup = (props) => {
 		add_new_link: props?.add_new_link,
 		errors,
 		setErrors,
+		modalIsOpen,
+		setModalIsOpen,
+		modalConfirm,
+		setModalConfirm,
+		migrationStatus,
+		setMigrationStatus,
 	};
 	return (
 		<SetupContext.Provider value={value}>

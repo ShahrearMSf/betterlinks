@@ -11,12 +11,13 @@ import Finish from './Finish';
 import { useContext, useEffect } from 'react';
 import { SetupContext } from 'pages/QuickSetup';
 import { CONFIGURATION, CREATE_LINK, FINISH, getStepCount, GETTING_STARTED, migratePluginsData, MIGRATION } from './quicksetup.helper';
-import { generateSlug, makeRequest, migratable_plugins, route_path, shortURLUniqueCheck } from 'utils/helper';
+import { generateSlug, makeRequest, migratable_plugins, modalCustomSmallStyles, route_path, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
 import { add_new_link } from 'redux/actions/links.actions';
 import { useHistory } from 'react-router-dom';
+import ConfirmationModal from './ConfirmationModal';
 
 function getSteps() {
 	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
@@ -27,6 +28,16 @@ function getSteps() {
 }
 
 const getSetupStepComponents = (component) => {
+	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
+	if (!isMigrationExists) {
+		const components = {
+			0: <GettingStarted />,
+			1: <Configuration />,
+			2: <CreateLink />,
+			3: <Finish />,
+		};
+		return components[component];
+	}
 	const components = {
 		0: <GettingStarted />,
 		1: <Configuration />,
@@ -40,13 +51,34 @@ const getSetupStepComponents = (component) => {
 const SetupCanvas = (props) => {
 	const history = useHistory();
 	const steps = getSteps();
-	const { activeStep, setActiveStep, clientConsent, update_option, settings, linkOptions, setLinkOptions, errors, setErrors, terms } = useContext(SetupContext);
+	const {
+		activeStep,
+		setActiveStep,
+		clientConsent,
+		update_option,
+		settings,
+		linkOptions,
+		setLinkOptions,
+		errors,
+		setErrors,
+		terms,
+		migrationSettings,
+		setModalIsOpen,
+		modalConfirm,
+		setModalConfirm,
+		migrationStatus,
+		setMigrationStatus,
+	} = useContext(SetupContext);
+
 	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
 	useEffect(() => {
 		if (props.isCreated) {
 			setActiveStep(4);
 		}
-	}, [props.isCreated, activeStep]);
+		if (modalConfirm) {
+			migratePluginsData(migrationSettings, setMigrationStatus);
+		}
+	}, [props.isCreated, activeStep, modalConfirm]);
 
 	// Refactored to handle different steps with a switch-case for clarity
 	const handleStepChange = () => {
@@ -60,8 +92,9 @@ const SetupCanvas = (props) => {
 				setActiveStep(isMigrationExists ? 2 : 3);
 				break;
 			case 2: {
-				migratePluginsData();
-				setActiveStep(3);
+				setModalIsOpen(true);
+				// migratePluginsData();
+				// setActiveStep(3);
 				break;
 			}
 			case 3:
@@ -72,9 +105,6 @@ const SetupCanvas = (props) => {
 				completeSetup();
 				break;
 			default:
-				// if (activeStep !== steps.length - 1) {
-				// 	setActiveStep(activeStep + 1);
-				// }
 				break;
 		}
 	};
@@ -142,6 +172,7 @@ const SetupCanvas = (props) => {
 
 	return (
 		<>
+			<ConfirmationModal />
 			<div className="btl-quick-setup">
 				<Stepper activeStep={activeStep} connector={<span className="dashicons dashicons-arrow-right-alt2" />}>
 					{steps.map((label, index) => {
@@ -157,15 +188,24 @@ const SetupCanvas = (props) => {
 				<div className="btl-setup-steps">{getSetupStepComponents(activeStep)}</div>
 
 				<div className="btl-setup-slider">
-					<div></div>
+					<div>
+						{[2, 3].includes(activeStep) && (
+							<a
+								className="skip"
+								href="#"
+								disabled={activeStep === 0}
+								onClick={(e) => {
+									e.preventDefault();
+									setActiveStep(activeStep + 1);
+								}}
+							>
+								Skip
+							</a>
+						)}
+					</div>
 					<MobileStepper variant="dots" steps={steps.length} position="static" activeStep={activeStep} />
 					{activeStep > 0 ? (
 						<div>
-							{activeStep === 3 && (
-								<button className="button" disabled={activeStep === 0} onClick={() => setActiveStep(4)}>
-									Skip
-								</button>
-							)}
 							{(activeStep !== 1 || !clientConsent) && (
 								<button className="button" disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
 									Back
