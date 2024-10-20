@@ -1,5 +1,15 @@
 const initialState = {
 	isCreated: false,
+	ta: {
+		links: true,
+		clicks: true,
+	},
+	pl: {
+		links: true,
+	},
+	s3r: {
+		links: true,
+	},
 };
 // const initialState = {};
 

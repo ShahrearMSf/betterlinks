@@ -17,7 +17,6 @@ import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
 import { add_new_link } from 'redux/actions/links.actions';
 import { useHistory } from 'react-router-dom';
-import ConfirmationModal from './ConfirmationModal';
 
 function getSteps() {
 	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
@@ -172,7 +171,6 @@ const SetupCanvas = (props) => {
 
 	return (
 		<>
-			<ConfirmationModal />
 			<div className="btl-quick-setup">
 				<Stepper activeStep={activeStep} connector={<span className="dashicons dashicons-arrow-right-alt2" />}>
 					{steps.map((label, index) => {

@@ -4,11 +4,13 @@ import { useContext, useEffect } from 'react';
 import { migratable_plugins } from 'utils/helper';
 import Checkbox from '@material-ui/core/Checkbox';
 import { MigrationStatusIcon } from './icons';
+import ConfirmationModal from './ConfirmationModal';
+import { connect } from 'react-redux';
 
-const Migration = () => {
+const Migration = (props) => {
 	const { migrationSettings, setMigrationSettings, migrationStatus } = useContext(SetupContext);
 	const { simple301redirects, thirstyaffiliates, prettylinks } = migrationSettings;
-
+	console.info(props);
 	const handleShowHide = (type) => {
 		setMigrationSettings((prev) => {
 			return {
@@ -20,6 +22,7 @@ const Migration = () => {
 	return (
 		<>
 			<div className="migration">
+				<ConfirmationModal />
 				<div className="header">
 					<h3>{__('Migration', 'betterlinks')}</h3>
 					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
@@ -50,7 +53,10 @@ const Migration = () => {
 	);
 };
 
-export default Migration;
+const mapStateToProps = (state) => ({
+	quickSetup: state.quickSetup,
+});
+export default connect(mapStateToProps, null)(Migration);
 
 const Plugin = ({ title, show = false, onClick, status = '' }) => {
 	const buttonText = {

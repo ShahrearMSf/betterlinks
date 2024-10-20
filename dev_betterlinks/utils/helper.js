@@ -35,7 +35,7 @@ export const {
 		simple301redirects: false,
 		thirstyaffliates: false,
 		prettylinks: false,
-	}
+	},
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
