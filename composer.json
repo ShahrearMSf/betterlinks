@@ -14,7 +14,7 @@
 	],
 	"require": {
 		"a5hleyrich/wp-background-processing": "^1.0",
-		"priyomukul/wp-notice": "v2.x-dev",
+		"priyomukul/wp-notice": "v3.x-dev",
 		"matomo/device-detector": "^6.1"
 	},
 	"autoload": {
