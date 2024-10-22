@@ -13,7 +13,7 @@ import { SetupContext } from 'pages/QuickSetup';
 import { CONFIGURATION, CREATE_LINK, FINISH, getStepCount, GETTING_STARTED, migratePluginsData, MIGRATION } from './quicksetup.helper';
 import { generateSlug, makeRequest, migratable_plugins, modalCustomSmallStyles, route_path, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';
-import { update_quick_setup } from 'redux/actions/quick-setup.actions';
+import { update_migration_result, update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
 import { add_new_link } from 'redux/actions/links.actions';
 import { useHistory } from 'react-router-dom';
@@ -75,7 +75,7 @@ const SetupCanvas = (props) => {
 			setActiveStep(4);
 		}
 		if (modalConfirm) {
-			migratePluginsData(migrationSettings, setMigrationStatus);
+			migratePluginsData(migrationSettings, setMigrationStatus, props.update_migration_result);
 		}
 	}, [props.isCreated, activeStep, modalConfirm]);
 
@@ -92,13 +92,10 @@ const SetupCanvas = (props) => {
 				break;
 			case 2: {
 				setModalIsOpen(true);
-				// migratePluginsData();
-				// setActiveStep(3);
 				break;
 			}
 			case 3:
 				submitLinkHandler(linkOptions, setErrors);
-				setActiveStep(4);
 				break;
 			case 4:
 				completeSetup();
@@ -146,8 +143,8 @@ const SetupCanvas = (props) => {
 							.add_new_link(values)
 							.then((response) => {
 								if (response?.data) {
-									props.update_quick_setup({ isCreated: true });
-									setErrors({ isCreated: true });
+									props.update_quick_setup({ isCreated: true, createdLink: response.data?.data || null });
+									setActiveStep(4);
 								}
 							})
 							.catch((error) => console.log('---error (submitHandler)--', { error }));
@@ -224,10 +221,15 @@ const SetupCanvas = (props) => {
 const mapStateToProps = (state) => {
 	return {
 		isCreated: state.quickSetup?.isCreated,
+		duplicateLink: state.quickSetup?.duplicateLink,
+		ta: state.quickSetup?.ta,
+		pl: state.quickSetup?.pl,
+		s3r: state.quickSetup?.s3r,
 	};
 };
 const mapDispatchToProps = (dispatch) => ({
 	update_quick_setup: bindActionCreators(update_quick_setup, dispatch),
+	update_migration_result: bindActionCreators(update_migration_result, dispatch),
 	add_new_link: bindActionCreators(add_new_link, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetupCanvas);

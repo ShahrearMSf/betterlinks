@@ -18,17 +18,21 @@ export const getStepCount = (active) => {
 	return indexes[active];
 };
 
-export const migratePluginsData = async (plugins, setMigrationStatus) => {
+export const migratePluginsData = async (plugins, setMigrationStatus, update_migration_result) => {
 	// function
 	Object.entries(plugins).forEach((plugin) => {
 		const [key, value] = plugin;
 		if (value) {
-			onSubmitHandler(key, setMigrationStatus);
+			onSubmitHandler(key, setMigrationStatus, update_migration_result);
 		}
 	});
 };
-
-const onSubmitHandler = (mode, setMigrationStatus) => {
+const pluginMigrationMode = {
+	prettylinks: 'pl',
+	simple301redirects: 's3r',
+	thirstyaffiliates: 'ta',
+};
+const onSubmitHandler = (mode, setMigrationStatus, update_migration_result) => {
 	let form_data = new FormData();
 	if (mode === 'prettylinks') {
 		form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
@@ -43,18 +47,19 @@ const onSubmitHandler = (mode, setMigrationStatus) => {
 		...prev,
 		[mode]: 'in-progress',
 	}));
+	// const
 	axios.post(ajaxurl, form_data).then(
 		(response) => {
 			if (response.data) {
 				// btl_prettylinks_migration_running_in_background - pretty links
-
-				console.info(response.data.data);
 				setMigrationStatus((prev) => ({
 					...prev,
 					[mode]: 'complete',
 				}));
+				update_migration_result({
+					[pluginMigrationMode[mode]]: response.data.data,
+				});
 				return response.data;
-				// setMigrateRes(response.data.data);
 			}
 			setMigrationStatus((prev) => ({
 				...prev,

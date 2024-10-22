@@ -540,7 +540,7 @@ class Ajax {
 			wp_die( "You don't have permission to do this." );
 		}
 		try {
-			$simple_301_redirects = get_option( '301_redirects' );
+			$simple_301_redirects = get_option( '301_redirects', [] );
 			$migrator             = new \BetterLinks\Tools\Migration\S301ROneClick();
 			$resutls              = $migrator->run_importer( array_reverse( $simple_301_redirects ) );
 			do_action( 'betterlinks/admin/after_import_data' );

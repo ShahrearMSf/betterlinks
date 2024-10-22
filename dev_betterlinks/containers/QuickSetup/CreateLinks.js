@@ -180,8 +180,6 @@ const CreateLink = (props) => {
 															...prev,
 															target_url,
 														}));
-														// const willUpdateTitle = '' === props.values?.link_title;
-														// fetchTargetURL(target_url, props.setFieldValue, willUpdateTitle, props.values?.link_title);
 													}}
 													placeholder=""
 													disabled={isDisableLinkFormEditView}
@@ -231,12 +229,12 @@ const CreateLink = (props) => {
 												</div>
 												{slugIsExists == true && <div className="errorlog">{__('Already Exists', 'betterlinks')}</div>}
 											</div>
-											<div className="btl-modal-form-group">
+											{/* <div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="catId">
 													{__('Category', 'betterlinks')}
 												</label>
 												<Category catId={parseInt(linkOptions.cat_id)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
-											</div>
+											</div> */}
 										</div>
 										<div className="btl-entry-content-right">
 											<div className="link-options link-options--open">
