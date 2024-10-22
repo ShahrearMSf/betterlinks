@@ -242,7 +242,7 @@ class Notice {
 
 		// halloween notice 
 		$crown_icon = self::ASSET_URL . 'images/crown.svg';
-		$b_message            = "<p style='margin-top: 0px; margin-bottom: 0px;'>🎃 Get <strong>25% OFF</strong> on all BetterLinks PRO plans this Halloween and manage your WordPress links like magic.</p><a style='display: inline-flex;column-gap:5px;' class='button button-primary' href='https://betterlinks.io/halloween-2024' target='_blank'><img style='width:15px;' src='{$crown_icon}'/>Upgrade to pro</a>";
+		$b_message            = "<p style='margin-top: 0px; margin-bottom: 0px;'>🎃 Get <strong>25% OFF</strong> on all BetterLinks PRO plans this Halloween and manage your WordPress links like magic.</p><a style='display: inline-flex;align-items:center;column-gap:5px;' class='button button-primary' href='https://betterlinks.io/halloween-2024' target='_blank'><img style='width:15px;' src='{$crown_icon}'/>Upgrade to pro</a>";
 		$halloween_notice = [
 			'thumbnail' => self::ASSET_URL . 'images/full-logo.svg',
 			'html'      => $b_message,
