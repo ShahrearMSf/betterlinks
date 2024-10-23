@@ -14,6 +14,7 @@ import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, migrata
 export const SetupContext = createContext('quick-setup');
 
 const QuickSetup = (props) => {
+	console.info(migratable_plugins);
 	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 2 : 0);
 	const [clientConsent, setClientConsent] = useState(+betterlinks_quick_setup_step);
 	const [settings, setSettings] = useState({ ...betterlinks_settings });

@@ -92,6 +92,7 @@ const SetupCanvas = (props) => {
 				break;
 			case 2: {
 				setModalIsOpen(true);
+				setModalConfirm(true);
 				break;
 			}
 			case 3:

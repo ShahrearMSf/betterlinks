@@ -20,33 +20,20 @@ const ConfirmationModal = ({ quickSetup }) => {
 	const { results } = quickSetup;
 	const { pl, ta, s3r } = results;
 	const isMigrationCompleted = Object.values(migrationStatus).every(Boolean);
+	console.info(migrationStatus);
 	return (
 		<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomSmallStyles} ariaHideApp={false} parentSelector={() => document.querySelector('.migration')}>
-			<div>
+			<div className="btl-manage-tags-form">
 				<span className="btl-close-modal" onClick={closeModal}>
 					<i className="btl btl-cancel" />
 				</span>
 				<div className="btl-confirmation-alert">
-					<h3 className="btl-modal-utm-builder__title" style={{ textAlign: 'center' }}>
-						{__('Are you sure to do this task?', 'betterlinks')}
+					<h3 className="btl-modal-utm-builder__title" style={{ textAlign: 'center', fontSize: '22px' }}>
+						{__('Migration Logs', 'betterlinks')}
 					</h3>
-					<div className="btl-confirmation-buttons">
-						{!isMigrationCompleted && (
-							<>
-								<button type="button" onClick={confirmModal}>
-									{__('Yes', 'betterlinks')}
-								</button>
-								<button type="button" onClick={closeModal}>
-									{__('Cancel', 'betterlinks')}
-								</button>
-							</>
-						)}
-						{isMigrationCompleted && (
-							<button type="button" onClick={() => setActiveStep(3)}>
-								{__('Next Step', 'betterlinks')}
-							</button>
-						)}
-					</div>
+					<p style={{ textAlign: 'center', fontSize: '16px' }}>
+						{__('Scan your entire website’s Links in posts and pages to get real-time link status-active links, Broken Links', 'betterlinks')}
+					</p>
 					{(results.pl || results.ta || results.s3r) && (
 						<div className="btl-migration-logs">
 							{ta && (
@@ -86,6 +73,10 @@ const ConfirmationModal = ({ quickSetup }) => {
 							)}
 						</div>
 					)}
+					<div className="next-tab-confirmation">
+						<button className="button">Cancel</button>
+						<button className="button button-primary">Continue</button>
+					</div>
 				</div>
 			</div>
 		</Modal>
