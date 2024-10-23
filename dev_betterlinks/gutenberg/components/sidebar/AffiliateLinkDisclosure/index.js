@@ -20,7 +20,7 @@ const { subscribe } = wp.data;
 const { PluginDocumentSettingPanel, store: editStore } = wp.editPost;
 
 const AffiliateLinkDisclosure = ({ enableAffiliateDisclosure }) => {
-	const [isChecked, setChecked] = useState(true);
+	const [isChecked, setChecked] = useState(false);
 	const [postId, setPostId] = useState(null);
 	const [affiliateLinkOptions, setAffiliateLinkOptions] = useState({});
 	const [affiliatePosition, setAffiliatePosition] = useState(affiliateLinkOptions?.affiliate_link_position);
