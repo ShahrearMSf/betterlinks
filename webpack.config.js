@@ -9,6 +9,7 @@ const config = {
 		'betterlinks-gutenberg.core.min': './dev_betterlinks/gutenberg/index.js',
 		'betterlinks-cle.core.min': './dev_betterlinks/betterlinks-cle.js',
 		'betterlinks-intflboards.core.min': './dev_betterlinks/integration/index.js',
+		'betterlinks.app.core.min': './dev_betterlinks/betterlinks.app.js',
 	},
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),

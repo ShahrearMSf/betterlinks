@@ -36,8 +36,10 @@ export const betterlinksFormat = {
 		url: 'href',
 		target: 'target',
 		rel: 'rel',
+		dataLinkId: 'data-link-id',
 	},
-	edit: ({ isActive, value, onChange, activeAttributes }) => {
+	edit: (props) => {
+		const { isActive, value, onChange, activeAttributes } = props;
 		const [isVisible, setIsVisible] = useState(false);
 		const [searchedText, setSearchedText] = useState('');
 		const [matchedLinks, setMatchedLinks] = useState([]);
@@ -51,10 +53,10 @@ export const betterlinksFormat = {
 		const [linkData, setLinkData] = useState(null);
 		//👇 this state is only for the '<Link />' component's gutenberg implementation
 		const [isSubmittingForGutenberg, setIsSubmittingForGutenberg] = useState(false);
+		const [insertedLinkData, setInsertedLinkData] = useState(null);
 
 		const matchedLinksUl = useRef(null);
 		const searchFieldRef = useRef(null);
-
 		useEffect(() => {
 			const matchedLinksDomUl = matchedLinksUl?.current;
 			if (!matchedLinksDomUl && selectedIndex === null) return () => {};
@@ -101,6 +103,20 @@ export const betterlinksFormat = {
 				close();
 			};
 		}, [value.start, value.end]);
+
+		useEffect(() => {
+			const { dataLinkId, url = '' } = activeAttributes;
+			let foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.ID === dataLinkId);
+
+			if (!foundLink && !url.startsWith(site_url)) {
+				foundLink = (betterlinksGutenStore?.getState()?.links?.links || []).find((item) => item.target_url === url);
+			}
+			setInsertedLinkData(foundLink);
+
+			return () => {
+				setInsertedLinkData(null);
+			};
+		}, [activeAttributes]);
 
 		const onClick = () => {
 			setIsVisible(true);
@@ -162,9 +178,10 @@ export const betterlinksFormat = {
 				setIsLinkInvalid(true);
 				return false;
 			}
+			setInsertedLinkData(foundLink);
 			const link = '1' === foundLink?.uncloaked ? foundLink.target_url : newText;
 			const withHttp = /^https?\:\/\//i.test(link) ? link : `http://${link}`;
-			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow });
+			const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!foundLink?.sponsored, noFollow: !!foundLink?.nofollow, linkId: foundLink?.ID });
 			if (isCollapsed(value) && !isActive) {
 				// Scenario: we don't have any selected text && even the cursor isn't on
 				const toInsert = applyFormat(create({ text: withHttp }), linkFormat, 0, withHttp.length);
@@ -377,6 +394,7 @@ export const betterlinksFormat = {
 											setShowLinkModal={setShowLinkModal}
 											setLinkData={setLinkData}
 											close={close}
+											insertedLinkData={insertedLinkData}
 										/>
 									)}
 								</>
@@ -403,10 +421,11 @@ export const betterlinksFormat = {
 												true
 											)(betterlinksGutenStore.dispatch)
 												.then((res) => {
-													const inputUrl = `${site_url}/${values.short_url}`;
+													const inputUrl = '1' === insertedLinkData?.uncloaked ? insertedLinkData.target_url : `${site_url}/${values.short_url}`;
 													setLinkNewTab(linkNewTab);
 													const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
-													const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow });
+													setInsertedLinkData(values);
+													const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, linkId: values?.ID });
 													onChange(applyFormat(value, linkFormat));
 													reset();
 													setIsSubmittingForGutenberg(false);

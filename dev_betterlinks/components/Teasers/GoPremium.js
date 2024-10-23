@@ -1,16 +1,17 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import PropTypes from 'prop-types';
+import { plugin_root_url } from 'utils/helper';
 
-const propTypes = {};
-
-export default function GoPremium(props) {
+export default function GoPremium() {
 	return (
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
 				<div className="btl-tab-panel-inner">
 					<div className="btl-gopremium-container">
-						<h3 className="btl-gopremium-title">{__('Why upgrade to Premium Version?', 'betterlinks')}</h3>
+						<h3 className="btl-gopremium-title">
+							{__('Why upgrade to ', 'betterlinks')}
+							<span className="btl-gopremium-focus-text btl-text-orange">Premium Version?</span>
+						</h3>
 						<div className="btl-gopremium-content">
 							<p>
 								{__(
@@ -18,9 +19,16 @@ export default function GoPremium(props) {
 									'betterlinks'
 								)}
 							</p>
-							<p>{__('You will also get world class support from our dedicated team, 24/7.', 'betterlinks')}</p>
-							<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank" className="button-primary btn-save-settings">
-								{__('Get Premium Version', 'betterlinks')}
+						</div>
+						<div className="btl-gopremium-footer">
+							<p>
+								<img src={plugin_root_url + '/assets/images/support.svg'} alt="support icon" />
+								{__('World class support from our ', 'betterlinks')}
+								<span className="btl-gopremium-focus-text btl-text-orange">{__(' dedicated team, 24/7.', 'betterlinks')}</span>
+							</p>
+							<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank" title={__('Upgrade to PRO', 'betterlinks')}>
+								<img src={plugin_root_url + '/assets/images/crown.svg'} alt="crown icon" />
+								{__('Upgrade to PRO', 'betterlinks')}
 							</a>
 						</div>
 					</div>
@@ -29,5 +37,3 @@ export default function GoPremium(props) {
 		</React.Fragment>
 	);
 }
-
-GoPremium.propTypes = propTypes;

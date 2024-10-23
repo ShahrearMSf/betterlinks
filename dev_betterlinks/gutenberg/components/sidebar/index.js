@@ -9,6 +9,7 @@ import {
 	edit_link_expire_option,
 	fetch_link_by_permalink,
 	fetch_link_for_permalink,
+	edit_link_misc,
 } from 'redux/actions/gutenbergredirectlink.actions';
 import { add_new_link, edit_link } from 'redux/actions/links.actions';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
@@ -656,6 +657,7 @@ const CustomSidebarComponent = (props) => {
 			const terms = betterlinksGutenStore?.getState()?.terms?.terms || [];
 			const values = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {};
 			const freeParams = { ...(betterlinksGutenStore?.getState()?.gutenbergredirectlink?.linkData || {}) };
+			const misc = betterlinksGutenStore?.getState()?.gutenbergredirectlink?.misc || {};
 
 			delete freeParams.expire;
 			delete freeParams.link_status;
@@ -724,13 +726,18 @@ const CustomSidebarComponent = (props) => {
 							.then(() => {})
 							.catch((error) => console.error(error));
 					} else {
+						if (misc?.short_url) return;
+						edit_link_misc({ short_url: params.short_url });
 						add_new_link(
 							params,
 							true,
 							true
 						)(betterlinksGutenStore.dispatch)
 							.then((data) => {})
-							.catch((error) => console.error(error));
+							.catch((error) => {
+								delete misc?.short_url;
+								console.error(error);
+							});
 					}
 				}
 			}

@@ -29,6 +29,7 @@ import {
 	FETCH_LINK_BY_PERMALINK,
 	EDIT_GUTENBERG_AUTO_LINK,
 	EDIT_GUTENBERG_AFFILIATE_DISCLOSURE,
+	UPDATE_GUTENSTORE_MISC,
 } from 'redux/actions/actionstrings';
 
 export const fetch_link_for_permalink = () => {
@@ -330,6 +331,13 @@ export const edit_gutenberg_auto_link = (payload) => {
 export const edit_link_expire_option = (payload) => {
 	betterlinksGutenStore.dispatch({
 		type: EDIT_LINK_EXPIRE_OPTION,
+		payload,
+	});
+};
+
+export const edit_link_misc = (payload) => {
+	betterlinksGutenStore.dispatch({
+		type: UPDATE_GUTENSTORE_MISC,
 		payload,
 	});
 };
