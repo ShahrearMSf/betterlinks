@@ -196,34 +196,34 @@ const UpgradePopup = () => {
 			<Card sx={{ minWidth: 275 }}>
 				<CardContent>
 					<Typography variant="h5" color="text.secondary" gutterBottom>
-						{__('Get BetterLinks PRO & Reveal In-Depth Analytics 🔒', 'betterlinks')}
+						{__('Get BetterLinks PRO & Scan All Your Website Links 🔗', 'betterlinks')}
 					</Typography>
 					<Typography variant="p" color="text.secondary" gutterBottom>
-						{__('Track your links with detailed analytics, dynamic infographics, insights on OS,', 'betterlinks')}
+						{__("Scan your entire website's links in posts and pages to get the real-time ", 'betterlinks')}
 						<br />
-						{__(' browser,top medium - social, search platforms and more.', 'betterlinks')}
+						{__('link status - active links, broken links, 403 forbidden and more', 'betterlinks')}
 					</Typography>
 					<List>
 						{[
 							<div className="btl-graphteaser-icon">
-								<Stepper />
-								<p>{__('Track your top-performing link Click Sources', 'betterlinks')}</p>
+								<span>🔍</span>
+								<p>{__("Conduct a thorough scan of your website's links", 'betterlinks')}</p>
 							</div>,
 							<div className="btl-graphteaser-icon">
 								<Link />
-								<p>{__('Access exclusive click data for Better Insights', 'betterlinks')}</p>
+								<p>{__('Pinpoint active and broken links with precision', 'betterlinks')}</p>
 							</div>,
 							<div className="btl-graphteaser-icon">
-								<Analytics />
-								<p>{__('Measure the performance of your shortened links', 'betterlinks')}</p>
+								<span>🚫</span>
+								<p>{__('Identify 403 forbidden and other error codes', 'betterlinks')}</p>
 							</div>,
 							<div className="btl-graphteaser-icon">
-								<Eye />
-								<p>{__('Identify your most-clicked links for optimal strategy', 'betterlinks')}</p>
+								<span>🔄</span>
+								<p>{__('Keep track of all website link status in real time', 'betterlinks')}</p>
 							</div>,
 							<div className="btl-graphteaser-icon">
-								<Selector />
-								<p>{__('Get detailed individual click stats at your fingertips', 'betterlinks')}</p>
+								<span>🛠️</span>
+								<p>{__('Update broken links & maintain website integrity', 'betterlinks')}</p>
 							</div>,
 						].map((item) => (
 							<ListItem disableGutters>
