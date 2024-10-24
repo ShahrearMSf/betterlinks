@@ -20,7 +20,7 @@ const ConfirmationModal = ({ quickSetup }) => {
 	const { results } = quickSetup;
 	const { pl, ta, s3r } = results;
 	const isMigrationCompleted = Object.values(migrationStatus).every(Boolean);
-	console.info(migrationStatus);
+	console.info(isMigrationCompleted);
 	return (
 		<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomSmallStyles} ariaHideApp={false} parentSelector={() => document.querySelector('.migration')}>
 			<div className="btl-manage-tags-form">
@@ -74,8 +74,19 @@ const ConfirmationModal = ({ quickSetup }) => {
 						</div>
 					)}
 					<div className="next-tab-confirmation">
-						<button className="button">Cancel</button>
-						<button className="button button-primary">Continue</button>
+						<button className="button" onClick={closeModal}>
+							{__('Cancel', 'betterlinks')}
+						</button>
+						<button
+							className="button button-primary"
+							disabled={!isMigrationCompleted}
+							onClick={() => {
+								setActiveStep(3);
+								setModalIsOpen(false);
+							}}
+						>
+							{__('Continue', 'betterlinks')}
+						</button>
 					</div>
 				</div>
 			</div>

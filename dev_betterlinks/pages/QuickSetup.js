@@ -25,9 +25,9 @@ const QuickSetup = (props) => {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [modalConfirm, setModalConfirm] = useState(false);
 	const [migrationStatus, setMigrationStatus] = useState({
-		simple301redirects: '',
-		thirstyaffiliates: '',
-		prettylinks: '',
+		...(migratable_plugins?.simple301redirects && { simple301redirects: '' }),
+		...(migratable_plugins?.thirstyaffiliates && { thirstyaffiliates: '' }),
+		...(migratable_plugins?.prettylinks && { prettylinks: '' }),
 	});
 	useEffect(() => {
 		if (Object.keys(props.terms).length === 0) {
