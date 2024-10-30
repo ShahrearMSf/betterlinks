@@ -1,15 +1,24 @@
-import React, { Suspense } from 'react';
-import ManageLinks from 'pages/ManageLinks';
-import Analytics from 'pages/Analytics';
-import Settings from 'pages/Settings';
-import KeywordsLinking from 'pages/KeywordsLinking';
+import React, { Suspense, lazy } from 'react';
+// import ManageLinks from 'pages/ManageLinks';
+// import Analytics from 'pages/Analytics';
+// import Settings from 'pages/Settings';
+// import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
-import ManageTags from './ManageTags';
-import CustomDomain from './CustomDomain';
-import QuickSetup from './QuickSetup';
+import ChartLoader from 'containers/Clicks/ChartLoader';
+import { plugin_root_url } from 'utils/helper';
+// import ManageTags from './ManageTags';
+// import CustomDomain from './CustomDomain';
+// import QuickSetup from './QuickSetup';
+
+const ManageLinks = lazy(() => import('pages/ManageLinks'));
+const Analytics = lazy(() => import('pages/Analytics'));
+const Settings = lazy(() => import('pages/Settings'));
+const KeywordsLinking = lazy(() => import('pages/KeywordsLinking'));
+const ManageTags = lazy(() => import('pages/ManageTags'));
+const CustomDomain = lazy(() => import('pages/CustomDomain'));
+const QuickSetup = lazy(() => import('pages/QuickSetup'));
 
 const renderSwitch = (param) => {
-	// window.scrollTo(0, 0);
 	switch (param) {
 		case 'betterlinks':
 			return <ManageLinks />;
@@ -29,7 +38,13 @@ const renderSwitch = (param) => {
 			return;
 	}
 };
-
+const Loading = () => {
+	return (
+		<div className="betterlinks-loading" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+			<img style={{ width: '100px', height: '100px' }} src={`${plugin_root_url}assets/images/dark-mode-loader.gif`} />
+		</div>
+	);
+};
 const Dashboard = ({ notice }) => {
 	return (
 		<React.Fragment>
@@ -40,7 +55,7 @@ const Dashboard = ({ notice }) => {
 					</p>
 				</div>
 			)}
-			<Suspense fallback="">{renderSwitch(betterLinksQuery.get('page'))}</Suspense>
+			<Suspense fallback={<Loading />}>{renderSwitch(betterLinksQuery.get('page'))}</Suspense>
 		</React.Fragment>
 	);
 };
