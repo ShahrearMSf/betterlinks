@@ -9,7 +9,7 @@ import Migration from './Migration';
 import CreateLink from './CreateLinks';
 import Finish from './Finish';
 import { useContext, useEffect } from 'react';
-import { SetupContext } from 'pages/QuickSetup';
+import { SetupContext } from 'index';
 import { migratePluginsData } from './quicksetup.helper';
 import { generateSlug, makeRequest, migratable_plugins, route_path, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';

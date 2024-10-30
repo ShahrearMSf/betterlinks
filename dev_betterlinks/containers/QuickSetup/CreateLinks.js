@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { Field, Form, Formik } from 'formik';
-import { SetupContext } from 'pages/QuickSetup';
+import { SetupContext } from 'index';
 import { useContext, useState } from 'react';
 import { redirectType } from 'utils/data';
 import { generateShortURL, is_pro_enabled, modalCustomSmallStyles, plugin_root_url, site_url } from 'utils/helper';

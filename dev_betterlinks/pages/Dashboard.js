@@ -4,19 +4,19 @@ import React, { Suspense, lazy } from 'react';
 // import Settings from 'pages/Settings';
 // import KeywordsLinking from 'pages/KeywordsLinking';
 import { __ } from '@wordpress/i18n';
-import ChartLoader from 'containers/Clicks/ChartLoader';
 import { plugin_root_url } from 'utils/helper';
 // import ManageTags from './ManageTags';
 // import CustomDomain from './CustomDomain';
 // import QuickSetup from './QuickSetup';
 
-const ManageLinks = lazy(() => import('pages/ManageLinks'));
-const Analytics = lazy(() => import('pages/Analytics'));
-const Settings = lazy(() => import('pages/Settings'));
-const KeywordsLinking = lazy(() => import('pages/KeywordsLinking'));
-const ManageTags = lazy(() => import('pages/ManageTags'));
-const CustomDomain = lazy(() => import('pages/CustomDomain'));
-const QuickSetup = lazy(() => import('pages/QuickSetup'));
+const ManageLinks = lazy(() => import(/* webpackChunkName: "ManageLinks" */ 'pages/ManageLinks'));
+const Analytics = lazy(() => import(/* webpackChunkName: "Analytics" */ 'pages/Analytics'));
+const Settings = lazy(() => import(/* webpackChunkName: "Settings" */ 'pages/Settings'));
+const KeywordsLinking = lazy(() => import(/* webpackChunkName: "KeywordsLinking" */ 'pages/KeywordsLinking'));
+const ManageTags = lazy(() => import(/* webpackChunkName: "ManageTags" */ 'pages/ManageTags'));
+const CustomDomain = lazy(() => import(/* webpackChunkName: "CustomDomain" */ 'pages/CustomDomain'));
+const QuickSetup = lazy(() => import(/* webpackChunkName: "QuickSetup" */ './QuickSetup'));
+// const QuickSetup = lazy(() => )
 
 const renderSwitch = (param) => {
 	switch (param) {

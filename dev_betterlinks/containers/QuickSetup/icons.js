@@ -1,5 +1,3 @@
-const { plugin_root_url } = require('utils/helper');
-
 const InProgress = () => {
 	return (
 		<svg className="MuiSvgIcon-root jss360" focusable="false" viewBox="0 0 24 24" aria-hidden="true">

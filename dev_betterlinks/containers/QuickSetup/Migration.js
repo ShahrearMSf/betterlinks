@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { SetupContext } from 'pages/QuickSetup';
+import { SetupContext } from 'index';
 import { useContext, useEffect } from 'react';
 import { migratable_plugins } from 'utils/helper';
 import Checkbox from '@material-ui/core/Checkbox';

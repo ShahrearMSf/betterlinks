@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { SetupContext } from 'pages/QuickSetup';
+import { SetupContext } from 'index';
 import { useContext, useState } from 'react';
 import { makeRequest } from 'utils/helper';
 

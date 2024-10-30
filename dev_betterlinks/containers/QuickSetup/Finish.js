@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useContext, useEffect, useState } from 'react';
 import { copyToClipboard, plugin_root_url, site_url } from 'utils/helper';
-import { SetupContext } from 'pages/QuickSetup';
+import { SetupContext } from 'index';
 import { connect } from 'react-redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
@@ -51,12 +51,12 @@ const Finish = (props) => {
 									}}
 								>
 									<span className="icon">
-										{!copy && <img width={15} src="http://wakanda.test/wp-content/plugins/betterlinks/assets/images/copy-icon-1.svg" alt="icon" />}
+										{!copy && <img width={15} src={plugin_root_url + '/assets/images/copy-icon-1.svg'} alt="icon" />}
 										{copy && <span className="dashicons dashicons-yes" />}
 									</span>
 								</button>
 								<a href={`${site_url}/${props.createdLink.short_url}`} target="_blank" className="dashicons dashicons">
-									<img width={15} src="http://wakanda.test/wp-content/plugins/betterlinks/assets/images/icons/target.svg" />
+									<img width={15} src={plugin_root_url + '/assets/images/icons/target.svg'} />
 								</a>
 							</div>
 						</div>

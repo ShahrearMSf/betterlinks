@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { CONFIGURATION, GETTING_STARTED } from 'containers/QuickSetup/quicksetup.helper';
 import SetupCanvas from 'containers/QuickSetup/SetupCanvas';
 import Topbar from 'containers/TopBar';
+import { SetupContext } from 'index';
 import { createContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -10,8 +10,6 @@ import { add_new_link, fetch_links_data } from 'redux/actions/links.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, migratable_plugins } from 'utils/helper';
-
-export const SetupContext = createContext('quick-setup');
 
 const QuickSetup = (props) => {
 	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 1 : 0);
@@ -72,11 +70,13 @@ const QuickSetup = (props) => {
 		setMigrationStatus,
 	};
 	return (
-		<SetupContext.Provider value={value}>
-			<Topbar label={__('BetterLinks Quick Setup', 'betterlinks')} />
-			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<SetupCanvas />
-		</SetupContext.Provider>
+		<>
+			<SetupContext.Provider value={value}>
+				<Topbar label={__('BetterLinks Quick Setup', 'betterlinks')} />
+				<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+				<SetupCanvas />
+			</SetupContext.Provider>
+		</>
 	);
 };
 
@@ -104,12 +104,8 @@ const getInitialValues = (settings) => {
 		link_date_gmt: currentDate,
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
-		redirect_type: settings?.redirect_type || '307',
+		// redirect_type: settings?.redirect_type || '307',
 		cat_id: null,
-		sponsored: !!settings?.sponsored,
-		track_me: !!settings?.track_me,
-		nofollow: !!settings?.nofollow,
-		uncloaked: !!settings?.uncloaked,
-		param_forwarding: !!settings?.param_forwarding,
+		...settings,
 	};
 };
