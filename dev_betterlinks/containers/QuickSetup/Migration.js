@@ -23,7 +23,7 @@ const Migration = () => {
 				<ConfirmationModal />
 				<div className="header">
 					<h3>{__('Migration', 'betterlinks')}</h3>
-					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
+					<p>{__('Already using another link management tool? Let’s import existing links and data to BetterLinks without facing any hassle.', 'betterlinks')}</p>
 				</div>
 				<div className="option">
 					{migratable_plugins.simple301redirects && (

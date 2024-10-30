@@ -20,19 +20,19 @@ const GettingStarted = () => {
 	return (
 		<>
 			<div className="getting-started">
+				<h3>{__('Getting Started', 'betterlinks')}</h3>
+				<p>{__('Easily get started with the easy setup wizard and complete setting up to streamline website link management strategy.', 'betterlinks')}</p>
+
 				<iframe
-					width={300}
-					height={172}
-					src="https://www.youtube-nocookie.com/embed/IcZ6WqzCSgg?si=3It8I3UPiloh6qfk"
+					width={450}
+					height={258}
+					src="https://www.youtube-nocookie.com/embed/ZJqBrFhQC1A"
 					title="YouTube video player"
 					frameBorder={0}
 					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 					referrerPolicy="strict-origin-when-cross-origin"
 					allowFullScreen
 				/>
-
-				<h3>{__('Getting Started', 'betterlinks')}</h3>
-				<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
 
 				<div className="actions">
 					<p>

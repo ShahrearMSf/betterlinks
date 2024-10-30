@@ -414,7 +414,6 @@ class Ajax {
 		$total_links_clicks    = get_transient( 'betterlinks_migration_data_prettylinks' );
 		$should_migrate_links  = ! ( strpos( $type, 'links' ) === false );
 		$should_migrate_clicks = ! ( strpos( $type, 'clicks' ) === false );
-		// error_log( print_r( 'migrating prettylinks', true ) );
 		$installer = new \BetterLinks\Installer();
 		if ( $should_migrate_links && ! empty( $total_links_clicks['links_count'] ) ) {
 			$links_count = absint( $total_links_clicks['links_count'] );

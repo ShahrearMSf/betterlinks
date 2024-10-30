@@ -1,40 +1,27 @@
 import { __ } from '@wordpress/i18n';
 import { Field, Form, Formik } from 'formik';
 import { SetupContext } from 'pages/QuickSetup';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { redirectType } from 'utils/data';
-import {
-	add_top_loader,
-	formatDate,
-	generateShortURL,
-	generateSlug,
-	is_pro_enabled,
-	modalCustomSmallStyles,
-	modalCustomStyles,
-	plugin_root_url,
-	remove_top_loader,
-	shortURLUniqueCheck,
-	site_url,
-} from 'utils/helper';
+import { generateShortURL, is_pro_enabled, modalCustomSmallStyles, plugin_root_url, site_url } from 'utils/helper';
 import Select from 'components/Select';
 import Modal from 'react-modal';
 import UTMBuilder from 'components/UTMBuilder';
 import Copy from 'components/Copy';
-import Category from 'components/Terms/Category';
 import ProBadge from 'components/Badge/ProBadge';
 import { connect } from 'react-redux';
-import { useUpgradeProModal } from 'utils/customHooks';
 import { bindActionCreators } from 'redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 
 const CreateLink = (props) => {
-	const { linkOptions, setLinkOptions, modal, terms, settings } = useContext(SetupContext);
+	const { linkOptions, setLinkOptions, modal, settings } = useContext(SetupContext);
 	const [slugIsExists, setSlugIsExists] = useState(false);
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
 	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
 	const { setUpgradeToProModal, openUpgradeToProModal } = modal;
-	const [options, setOptions] = useState(linkOptions);
+	const [options, setOptions] = useState({ ...linkOptions, ...settings });
 	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, options);
+
 	const openUTMModal = () => {
 		setModalUTMIsOpen(true);
 	};
@@ -70,17 +57,30 @@ const CreateLink = (props) => {
 			<div className="create-links">
 				<div className="header">
 					<h3>{__('Create Link', 'betterlinks')}</h3>
-					<p>{__('Lorem ipsum dolor sit amet consectetur. Amet vulputate ante ipsum maecenas diam vestibulum potenti augue.', 'betterlinks')}</p>
+					<p>
+						{__(
+							'Let’s create a new link in seconds! Just set the slug, choose redirect rules, pick a category, adjust link options, and start tracking right away.',
+							'betterlinks'
+						)}
+					</p>
 				</div>
 				<div className="option">
 					{props?.duplicateLink && (
-						<Modal isOpen={props.duplicateLink} onRequestClose={closeDuplicateLinkModal} style={modalCustomSmallStyles} ariaHideApp={false}>
-							<span className="btl-close-modal" onClick={closeDuplicateLinkModal}>
-								<i className="btl btl-cancel" />
-							</span>
-							<h3>{__('Duplicate Link', 'betterlinks')}</h3>
-							<p>{__('The short URL you entered already exists. Please enter a different short URL.', 'betterlinks')}</p>
-						</Modal>
+						<div className="duplicate-link-modal">
+							<Modal
+								isOpen={props.duplicateLink}
+								onRequestClose={closeDuplicateLinkModal}
+								style={modalCustomSmallStyles}
+								ariaHideApp={false}
+								parentSelector={() => document.querySelector('.create-links .option')}
+							>
+								<span className="btl-close-modal" onClick={closeDuplicateLinkModal}>
+									<i className="btl btl-cancel" />
+								</span>
+								<h3>{__('Duplicate Link', 'betterlinks')}</h3>
+								<p>{__('The short URL you entered is already exists. Please enter a different short URL.', 'betterlinks')}</p>
+							</Modal>
+						</div>
 					)}
 					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => {}}>
 						{(props) => {

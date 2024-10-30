@@ -10,8 +10,8 @@ import CreateLink from './CreateLinks';
 import Finish from './Finish';
 import { useContext, useEffect } from 'react';
 import { SetupContext } from 'pages/QuickSetup';
-import { CONFIGURATION, CREATE_LINK, FINISH, getStepCount, GETTING_STARTED, migratePluginsData, MIGRATION } from './quicksetup.helper';
-import { generateSlug, makeRequest, migratable_plugins, modalCustomSmallStyles, route_path, shortURLUniqueCheck } from 'utils/helper';
+import { migratePluginsData } from './quicksetup.helper';
+import { generateSlug, makeRequest, migratable_plugins, route_path, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';
 import { update_migration_result, update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
@@ -46,7 +46,7 @@ const getSetupStepComponents = (component) => {
 	};
 	return components[component];
 };
-// const setupStepComponents = getSetupStepComponents();
+
 const SetupCanvas = (props) => {
 	const history = useHistory();
 	const steps = getSteps();
@@ -88,15 +88,23 @@ const SetupCanvas = (props) => {
 					...settings,
 					...linkOptions,
 				});
-				setActiveStep(isMigrationExists ? 2 : 3);
+				setActiveStep(2);
 				break;
 			case 2: {
-				setModalIsOpen(true);
-				setModalConfirm(true);
+				if (isMigrationExists) {
+					setModalIsOpen(true);
+					setModalConfirm(true);
+				} else {
+					submitLinkHandler(linkOptions, setErrors);
+				}
 				break;
 			}
 			case 3:
-				submitLinkHandler(linkOptions, setErrors);
+				if (isMigrationExists) {
+					submitLinkHandler(linkOptions, setErrors);
+				} else {
+					completeSetup();
+				}
 				break;
 			case 4:
 				completeSetup();
@@ -145,7 +153,7 @@ const SetupCanvas = (props) => {
 							.then((response) => {
 								if (response?.data) {
 									props.update_quick_setup({ isCreated: true, createdLink: response.data?.data || null });
-									setActiveStep(4);
+									setActiveStep(isMigrationExists ? 4 : 3);
 								}
 							})
 							.catch((error) => console.log('---error (submitHandler)--', { error }));
@@ -167,6 +175,8 @@ const SetupCanvas = (props) => {
 		}
 	};
 
+	const buttonName = ['Save Settings', isMigrationExists && 'Migrate', 'Create Link'].filter(Boolean);
+
 	return (
 		<>
 			<div className="btl-quick-setup">
@@ -185,13 +195,14 @@ const SetupCanvas = (props) => {
 
 				<div className="btl-setup-slider">
 					<div>
-						{[2, 3].includes(activeStep) && (
+						{[2, 3].includes(activeStep) && (activeStep != 3 || isMigrationExists) && (
 							<a
 								className="skip"
 								href="#"
 								disabled={activeStep === 0}
 								onClick={(e) => {
 									e.preventDefault();
+									// if (!isMigrationExists && 3 == activeStep) return;
 									setActiveStep(activeStep + 1);
 								}}
 							>
@@ -208,7 +219,8 @@ const SetupCanvas = (props) => {
 								</button>
 							)}
 							<button className="button button-primary" onClick={handleStepChange}>
-								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')}
+								{/* {activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')} */}
+								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : buttonName[activeStep - 1]}
 							</button>
 						</div>
 					) : (

@@ -24,6 +24,9 @@ export const migratePluginsData = async (plugins, setMigrationStatus, update_mig
 		const [key, value] = plugin;
 		if (value) {
 			onSubmitHandler(key, setMigrationStatus, update_migration_result);
+			if ('prettylinks' === key) {
+				onSubmitHandler(key, setMigrationStatus, update_migration_result, 'clicks');
+			}
 		}
 	});
 };
@@ -32,7 +35,7 @@ const pluginMigrationMode = {
 	simple301redirects: 's3r',
 	thirstyaffiliates: 'ta',
 };
-const onSubmitHandler = (mode, setMigrationStatus, update_migration_result) => {
+const onSubmitHandler = (mode, setMigrationStatus, update_migration_result, type = 'links') => {
 	let form_data = new FormData();
 	if (mode === 'prettylinks') {
 		form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
@@ -42,7 +45,7 @@ const onSubmitHandler = (mode, setMigrationStatus, update_migration_result) => {
 		form_data.append('action', 'betterlinks/admin/run_thirstyaffiliates_migration');
 	}
 	form_data.append('security', betterlinks_nonce);
-	form_data.append('type', 'links');
+	form_data.append('type', type);
 	setMigrationStatus((prev) => ({
 		...prev,
 		[mode]: 'in-progress',

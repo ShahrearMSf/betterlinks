@@ -12,11 +12,10 @@ const RedirectType = (props) => {
 		if (field?.value === 'pro') {
 			setThisFieldValue(selectValue?.value, false);
 			props.setFieldValue(field.name, selectValue?.value);
-			props.setUpgradeToProModal(true);
 		} else {
 			setSelectValue((props.value || []).find((item) => item.value == field.value));
 		}
-	}, [field.value, props.value]);
+	}, []);
 
 	const onChange = (option) => {
 		if (option == null) {
@@ -24,13 +23,22 @@ const RedirectType = (props) => {
 		}
 		// for quick setup wizard only
 		if (!!props?.isQuickSetup) {
+			if (option?.value === 'pro') {
+				props.setUpgradeToProModal(true);
+				setThisFieldValue(selectValue?.value, field.value);
+				props.setFieldValue(field.name, field.value);
+			} else {
+				props.setFieldValue(field.name, option?.value);
+				setSelectValue((props.value || []).find((item) => item.value == option.value));
+			}
+
 			props?.setSettings((prev) => ({
 				...prev,
-				redirect_type: props.isMulti ? option.map((item) => item.value) : option.value,
+				redirect_type: props.isMulti ? option.map((item) => item.value) : option.value !== 'pro' ? option.value : field.value,
 			}));
 		}
 		// for quick setup wizard only
-		return props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value);
+		return props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value !== 'pro' ? option.value : field.value);
 	};
 
 	return (
