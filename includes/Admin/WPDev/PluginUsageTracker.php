@@ -1,6 +1,8 @@
 <?php
 namespace BetterLinks\Admin\WPDev;
 
+use BetterLinks\Helper;
+
 /**
  * WPInsights_Betterlinks
  * This class is responsible for data sending to insights.
@@ -405,6 +407,9 @@ class PluginUsageTracker {
         if ( $theme->Version ) {
             $body['theme_version'] = sanitize_text_field( $theme->Version );
         }
+
+        $body['optional_data'] = array_merge( Helper::get_link_count(), Helper::get_password_protected_link_count() ); 
+        
         return $body;
     }
 
