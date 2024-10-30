@@ -7,6 +7,7 @@
 		}
 	}
 	.btl-setup-slider {
+		position: relative;
 		background-color: #fff;
 		display: flex;
 		justify-content: space-between;
@@ -23,7 +24,32 @@
 				font-size: 14px;
 				font-weight: 500;
 				line-height: 24px;
+				box-shadow: unset;
+
+				&:not(.button-primary) {
+					background: rgba(252, 252, 253, 1);
+					color: rgba(25, 40, 93, 1);
+					border: 1px solid rgba(234, 236, 240, 1);
+					transition: border 0.3s ease-out;
+
+					&:hover {
+						border: 1px solid rgb(193, 196, 201);
+					}
+				}
+
+				&.button-primary {
+					transition: background 0.3s ease-out;
+
+					&:hover {
+						background: linear-gradient(202deg, #295ffa 0, #003be2 100%);
+					}
+				}
 			}
+		}
+
+		.MuiPaper-root {
+			position: absolute;
+			inset: 40%;
 		}
 	}
 
@@ -45,7 +71,7 @@
 
 	.btl-setup-steps {
 		background-color: rgba(255, 255, 255, 1);
-		padding: 30px 30px 20px 20px;
+		padding: 20px;
 
 		.getting-started {
 			display: flex;
@@ -55,6 +81,21 @@
 
 			> iframe {
 				border-radius: 8px;
+				margin-top: 30px;
+				margin-bottom: 30px;
+			}
+
+			> h3 {
+				font-size: 28px;
+				line-height: 33px;
+				font-weight: 500;
+				margin: 15px 0;
+			}
+			> p {
+				font-weight: 400;
+				font-size: 16px;
+				line-height: 24px;
+				width: 66%;
 			}
 
 			.actions {
@@ -81,7 +122,7 @@
 							display: grid;
 							transition: grid-template-rows 0.2s ease-in;
 							font-weight: 400;
-							font-size: 14px;
+							font-size: 12px;
 
 							&.hide {
 								grid-template-rows: 0fr;
@@ -257,7 +298,7 @@
 
 		.create-links {
 			.option {
-				.ReactModal__Content {
+				> .ReactModal__Content {
 					padding: 0 !important;
 					width: 100%;
 					display: flex;
@@ -272,10 +313,18 @@
 						}
 					}
 				}
+
+				.ReactModalPortal {
+					.ReactModal__Content {
+						padding: 30px !important;
+						width: 500px;
+					}
+				}
 			}
 		}
 
 		.finish {
+			position: relative;
 			.header {
 				display: flex;
 				flex-direction: column;
@@ -314,5 +363,220 @@
 	.migration-options {
 		display: flex;
 		column-gap: 20px;
+	}
+	.btl-shortened-url {
+		box-sizing: border-box;
+		width: 600px;
+		height: 55px;
+		border: 1px solid #87b2ff;
+		padding: 6px 20px;
+		border-radius: 8px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		> div {
+			display: flex;
+			column-gap: 5px;
+
+			> button,
+			> a {
+				width: 32px;
+				height: 32px;
+				background-color: #e6efff;
+				border-radius: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				cursor: pointer;
+				border: 0;
+
+				> span {
+					margin-top: 4px;
+				}
+			}
+		}
+
+		> span {
+			color: #2673ff;
+			font-weight: 500;
+			font-size: 18px;
+			line-height: 28px;
+		}
+	}
+
+	#confetti {
+		left: 0;
+		position: fixed;
+		right: 0;
+		top: -160px;
+		z-index: 10000;
+	}
+	#confetti .ball {
+		animation-iteration-count: 1 !important;
+		-webkit-animation-iteration-count: 1 !important;
+		border-radius: 50%;
+		cursor: default;
+		display: inline-block;
+		height: 10px;
+		user-select: none;
+		-webkit-user-select: none;
+		width: 10px;
+	}
+	@-webkit-keyframes falling-left {
+		0% {
+			-webkit-transform: translate3d(0, 0, 0);
+			opacity: 1;
+		}
+		10% {
+			opacity: 0;
+		}
+		20% {
+			opacity: 1;
+		}
+		30% {
+			opacity: 0;
+		}
+		40% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		60% {
+			opacity: 1;
+		}
+		70% {
+			opacity: 0;
+		}
+		80% {
+			opacity: 1;
+		}
+		90% {
+			opacity: 0;
+		}
+		100% {
+			-webkit-transform: translate3d(0, 120vh, 0);
+			opacity: 1;
+		}
+	}
+	@keyframes falling-left {
+		0% {
+			-webkit-transform: translate3d(0, 0, 0);
+			opacity: 1;
+		}
+		10% {
+			opacity: 0;
+		}
+		20% {
+			opacity: 1;
+		}
+		30% {
+			opacity: 0;
+		}
+		40% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		60% {
+			opacity: 1;
+		}
+		70% {
+			opacity: 0;
+		}
+		80% {
+			opacity: 1;
+		}
+		90% {
+			opacity: 0;
+		}
+		100% {
+			-webkit-transform: translate3d(0, 120vh, 0);
+			opacity: 1;
+		}
+	}
+	#confetti .ball:nth-child(2n) {
+		-webkit-animation: falling-left linear;
+		animation: falling-left linear;
+	}
+	@-webkit-keyframes falling-right {
+		0% {
+			-webkit-transform: translate3d(0, 0, 0);
+			opacity: 0;
+		}
+		10% {
+			opacity: 1;
+		}
+		20% {
+			opacity: 0;
+		}
+		30% {
+			opacity: 1;
+		}
+		40% {
+			opacity: 0;
+		}
+		50% {
+			opacity: 1;
+		}
+		60% {
+			opacity: 0;
+		}
+		70% {
+			opacity: 1;
+		}
+		80% {
+			opacity: 0;
+		}
+		90% {
+			opacity: 1;
+		}
+		100% {
+			-webkit-transform: translate3d(0, 120vh, 0);
+			opacity: 0;
+		}
+	}
+	@keyframes falling-right {
+		0% {
+			-webkit-transform: translate3d(0, 0, 0);
+			opacity: 1;
+		}
+		10% {
+			opacity: 0;
+		}
+		20% {
+			opacity: 1;
+		}
+		30% {
+			opacity: 0;
+		}
+		40% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		60% {
+			opacity: 1;
+		}
+		70% {
+			opacity: 0;
+		}
+		80% {
+			opacity: 1;
+		}
+		90% {
+			opacity: 0;
+		}
+		100% {
+			-webkit-transform: translate3d(0, 120vh, 0);
+			opacity: 0;
+		}
+	}
+	#confetti .ball:nth-of-type(2n + 1) {
+		-webkit-animation: falling-right linear;
+		animation: falling-right linear;
 	}
 }
