@@ -7,118 +7,173 @@ use BetterLinks\Admin\Cache;
 trait Query {
 
 
-    public static function insert_link($item, $is_update = false)
-    {
-        global $wpdb;
-        if ($is_update) {
-            $defaults = self::get_link_by_ID($item['ID']);
-            $item = wp_parse_args($item, current($defaults));
-            $link_data_array = array(
-                'link_author' => $item['link_author'], 'link_date' => $item['link_date'], 'link_date_gmt' => $item['link_date_gmt'], 'link_title' => $item['link_title'], 'link_slug' => $item['link_slug'], 'link_note' => $item['link_note'], 'link_status' => $item['link_status'], 'nofollow' => $item['nofollow'], 'sponsored' => $item['sponsored'], 'track_me' => $item['track_me'], 'param_forwarding' => $item['param_forwarding'], 'param_struct' => $item['param_struct'], 'redirect_type' => $item['redirect_type'], 'target_url' => $item['target_url'], 'short_url' => $item['short_url'], 'link_order' => $item['link_order'], 'link_modified' => $item['link_modified'], 'link_modified_gmt' => $item['link_modified_gmt'], 'wildcards' => $item['wildcards'], 'expire' => $item['expire'], 'dynamic_redirect' => $item['dynamic_redirect']
-            );
-            $link_data_place_array = array(
-                '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
-            );
-            if (isset($item['favorite'])) {
-                $link_data_array['favorite'] = $item['favorite'];
-                $link_data_place_array[] = '%s';
-            }
-            if(isset($item['uncloaked'])){
-                $link_data_array['uncloaked'] = $item['uncloaked'];
-                $link_data_place_array[] = '%s';
-            }
-            $wpdb->update(
-                "{$wpdb->prefix}betterlinks",
-                $link_data_array,
-                array('ID' => $item['ID']),
-                $link_data_place_array,
-                array('%d')
-            );
-            do_action('betterlinks/after_update_link', $item['ID'], $item);
-            return $item['ID'];
-        } else {
-            $betterlinks = self::get_link_by_short_url($item['short_url']);
-            if (count($betterlinks) === 0) {
-                $initial_defaults_arr = array(
-                    'link_author' => get_current_user_id(),
-                    'link_date' => current_time('mysql'),
-                    'link_date_gmt' => current_time('mysql', 1),
-                    'link_title' => '',
-                    'link_slug' => '',
-                    'link_note' => '',
-                    'link_status' => 'publish',
-                    'nofollow' => '',
-                    'sponsored' => '',
-                    'track_me' => '',
-                    'param_forwarding' => '',
-                    'param_struct' => '',
-                    'redirect_type' => '',
-                    'target_url' => '',
-                    'short_url' => '',
-                    'link_order' => '',
-                    'link_modified' => current_time('mysql'),
-                    'link_modified_gmt' => current_time('mysql', 1),
-                    'wildcards' => '',
-                    'expire' => '',
-                    'dynamic_redirect' => '',
-                );
-                if (isset($item['favorite'])) {
-                    $initial_defaults_arr['favorite'] = '';
-                }
-                $defaults = apply_filters('betterlinks/insert_link_default_args', $initial_defaults_arr);
-                $item = wp_parse_args($item, $defaults);
-                $column_names = "link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect";
-                $column_placeholders = "%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s";
-                $query_value_array = array(
-                    $item['link_author'], $item['link_date'], $item['link_date_gmt'], $item['link_title'], $item['link_slug'], $item['link_note'], $item['link_status'], $item['nofollow'], $item['sponsored'], $item['track_me'], $item['param_forwarding'], $item['param_struct'], $item['redirect_type'], $item['target_url'], $item['short_url'], $item['link_order'], $item['link_modified'], $item['link_modified_gmt'], $item['wildcards'], $item['expire'], $item['dynamic_redirect']
-                );
-                if(isset($item['favorite'])){
-                    $column_names .= ",favorite";
-                    $column_placeholders .= ", %s";
-                    $query_value_array[] = $item['favorite'];
-                }
-                if(isset($item['uncloaked'])){
-                    $column_names .= ",uncloaked";
-                    $column_placeholders .= ", %s";
-                    $query_value_array[] = $item['uncloaked'];
-                }
-                $query_string = "INSERT INTO {$wpdb->prefix}betterlinks ( {$column_names} ) VALUES ( {$column_placeholders} )";
-                $wpdb->query( $wpdb->prepare( $query_string, $query_value_array ) );
-                do_action('betterlinks/after_insert_link', $wpdb->insert_id, $item);
-                return $wpdb->insert_id;
-            }
-        }
-        return;
-    }
-    public static function delete_link($ID)
-    {
-        global $wpdb;
-        $wpdb->delete("{$wpdb->prefix}betterlinks", array('ID' => $ID), array('%d'));
-        $wpdb->delete("{$wpdb->prefix}betterlinks_clicks", array('link_id' => $ID), array('%d'));
-        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array('link_id' => $ID), array('%d'));
-    }
-    public static function remove_terms_relationships_by_link_ID($ID)
-    {
-        global $wpdb;
-        $wpdb->delete("{$wpdb->prefix}betterlinks_terms_relationships", array('link_id' => $ID), array('%d'));
-    }
-    public static function get_prepare_all_links()
-    {
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $analytic = get_option('betterlinks_analytics_data');
-        $analytic = $analytic ? json_decode($analytic, true) : [];
+	public static function insert_link( $item, $is_update = false ) {
+		global $wpdb;
+		if ( $is_update ) {
+			$defaults              = self::get_link_by_ID( $item['ID'] );
+			$item                  = wp_parse_args( $item, current( $defaults ) );
+			$link_data_array       = array(
+				'link_author'       => $item['link_author'],
+				'link_date'         => $item['link_date'],
+				'link_date_gmt'     => $item['link_date_gmt'],
+				'link_title'        => $item['link_title'],
+				'link_slug'         => $item['link_slug'],
+				'link_note'         => $item['link_note'],
+				'link_status'       => $item['link_status'],
+				'nofollow'          => $item['nofollow'],
+				'sponsored'         => $item['sponsored'],
+				'track_me'          => $item['track_me'],
+				'param_forwarding'  => $item['param_forwarding'],
+				'param_struct'      => $item['param_struct'],
+				'redirect_type'     => $item['redirect_type'],
+				'target_url'        => $item['target_url'],
+				'short_url'         => $item['short_url'],
+				'link_order'        => $item['link_order'],
+				'link_modified'     => $item['link_modified'],
+				'link_modified_gmt' => $item['link_modified_gmt'],
+				'wildcards'         => $item['wildcards'],
+				'expire'            => $item['expire'],
+				'dynamic_redirect'  => $item['dynamic_redirect'],
+			);
+			$link_data_place_array = array(
+				'%d',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%d',
+				'%s',
+				'%s',
+			);
+			if ( isset( $item['favorite'] ) ) {
+				$link_data_array['favorite'] = $item['favorite'];
+				$link_data_place_array[]     = '%s';
+			}
+			if ( isset( $item['uncloaked'] ) ) {
+				$link_data_array['uncloaked'] = $item['uncloaked'];
+				$link_data_place_array[]      = '%s';
+			}
+			$wpdb->update(
+				"{$wpdb->prefix}betterlinks",
+				$link_data_array,
+				array( 'ID' => $item['ID'] ),
+				$link_data_place_array,
+				array( '%d' )
+			);
+			do_action( 'betterlinks/after_update_link', $item['ID'], $item );
+			return $item['ID'];
+		} else {
+			$betterlinks = self::get_link_by_short_url( $item['short_url'] );
+			if ( count( $betterlinks ) === 0 ) {
+				$initial_defaults_arr = array(
+					'link_author'       => get_current_user_id(),
+					'link_date'         => current_time( 'mysql' ),
+					'link_date_gmt'     => current_time( 'mysql', 1 ),
+					'link_title'        => '',
+					'link_slug'         => '',
+					'link_note'         => '',
+					'link_status'       => 'publish',
+					'nofollow'          => '',
+					'sponsored'         => '',
+					'track_me'          => '',
+					'param_forwarding'  => '',
+					'param_struct'      => '',
+					'redirect_type'     => '',
+					'target_url'        => '',
+					'short_url'         => '',
+					'link_order'        => '',
+					'link_modified'     => current_time( 'mysql' ),
+					'link_modified_gmt' => current_time( 'mysql', 1 ),
+					'wildcards'         => '',
+					'expire'            => '',
+					'dynamic_redirect'  => '',
+				);
+				if ( isset( $item['favorite'] ) ) {
+					$initial_defaults_arr['favorite'] = '';
+				}
+				$defaults            = apply_filters( 'betterlinks/insert_link_default_args', $initial_defaults_arr );
+				$item                = wp_parse_args( $item, $defaults );
+				$column_names        = 'link_author,link_date,link_date_gmt,link_title,link_slug,link_note,link_status,nofollow,sponsored,track_me,param_forwarding,param_struct,redirect_type,target_url,short_url,link_order,link_modified,link_modified_gmt,wildcards,expire,dynamic_redirect';
+				$column_placeholders = '%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s';
+				$query_value_array   = array(
+					$item['link_author'],
+					$item['link_date'],
+					$item['link_date_gmt'],
+					$item['link_title'],
+					$item['link_slug'],
+					$item['link_note'],
+					$item['link_status'],
+					$item['nofollow'],
+					$item['sponsored'],
+					$item['track_me'],
+					$item['param_forwarding'],
+					$item['param_struct'],
+					$item['redirect_type'],
+					$item['target_url'],
+					$item['short_url'],
+					$item['link_order'],
+					$item['link_modified'],
+					$item['link_modified_gmt'],
+					$item['wildcards'],
+					$item['expire'],
+					$item['dynamic_redirect'],
+				);
+				if ( isset( $item['favorite'] ) ) {
+					$column_names        .= ',favorite';
+					$column_placeholders .= ', %s';
+					$query_value_array[]  = $item['favorite'];
+				}
+				if ( isset( $item['uncloaked'] ) ) {
+					$column_names        .= ',uncloaked';
+					$column_placeholders .= ', %s';
+					$query_value_array[]  = $item['uncloaked'];
+				}
+				$query_string = "INSERT INTO {$wpdb->prefix}betterlinks ( {$column_names} ) VALUES ( {$column_placeholders} )";
+				$wpdb->query( $wpdb->prepare( $query_string, $query_value_array ) );
+				do_action( 'betterlinks/after_insert_link', $wpdb->insert_id, $item );
+				return $wpdb->insert_id;
+			}
+		}
+		return;
+	}
+	public static function delete_link( $ID ) {
+		global $wpdb;
+		$wpdb->delete( "{$wpdb->prefix}betterlinks", array( 'ID' => $ID ), array( '%d' ) );
+		$wpdb->delete( "{$wpdb->prefix}betterlinks_clicks", array( 'link_id' => $ID ), array( '%d' ) );
+		$wpdb->delete( "{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ) );
+	}
+	public static function remove_terms_relationships_by_link_ID( $ID ) {
+		global $wpdb;
+		$wpdb->delete( "{$wpdb->prefix}betterlinks_terms_relationships", array( 'link_id' => $ID ), array( '%d' ) );
+	}
+	public static function get_prepare_all_links() {
+		global $wpdb;
+		$prefix   = $wpdb->prefix;
+		$analytic = get_option( 'betterlinks_analytics_data' );
+		$analytic = $analytic ? json_decode( $analytic, true ) : array();
 
 		// pull all broken links logs
 		$broken_links = get_option( 'betterlinkspro_broken_links_logs' );
 		$broken_links = $broken_links ? json_decode( $broken_links, true ) : array();
 
 		$settings = Cache::get_json_settings();
-		
-		$fbs_category_query = apply_filters('betterlinks__intlfbs_filter_category_from_dashboard', '', $settings);
-		
-		$results = $wpdb->get_results(
-			"SELECT
+
+		$fbs_category_query = apply_filters( 'betterlinks__intlfbs_filter_category_from_dashboard', '', $settings );
+
+		$query = "SELECT
             bt.ID as cat_id,
             bt.term_name,
             bt.term_slug,
@@ -147,7 +202,10 @@ trait Query {
             LEFT JOIN  {$prefix}betterlinks as bl ON bl.ID = btr.link_id
             -- WHERE bt.term_type = 'category'
 			{$fbs_category_query}
-            ORDER BY bl.link_order ASC;",
+            ORDER BY bl.link_order ASC;";
+
+		$results = $wpdb->get_results(
+			$query,
 			OBJECT
 		);
 		$results = \BetterLinks\Helper::parse_link_response( $results, $analytic, $broken_links );
@@ -535,6 +593,9 @@ trait Query {
 		} elseif ( isset( $item['link_id'] ) ) {
 			$betterlinks = self::get_link_by_ID( $item['link_id'] );
 		}
+		if( empty( $betterlinks ) ){
+			return;
+		}
 		$is_analytics_ip_enabled = isset( $item['ip'] ) && isset( $item['host'] );
 		$addedPlaceholderString  = $is_analytics_ip_enabled ? ' created_at_gmt, rotation_target_url, ip, host ' : ' created_at_gmt, rotation_target_url ';
 		$addedDbColumnsString    = $is_analytics_ip_enabled ? ' %s, %s, %s, %s ' : ' %s, %s ';
@@ -547,21 +608,21 @@ trait Query {
 		$query         = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os,device, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
 		$db_data_array = array(
 			current( $betterlinks )['ID'],
-			$item['browser'],
-			$item['os'],
-			$item['device'],
-			$item['referer'],
-			$item['uri'],
+			isset( $item['browser'] ) ? $item['browser'] : '',
+			isset( $item['os'] ) ? $item['os'] : '',
+			isset( $item['device'] ) ? $item['device'] : '',
+			isset( $item['referer'] ) ? $item['referer'] : '',
+			isset( $item['uri'] ) ? $item['uri'] : '',
 			isset( $item['click_count'] ) ? $item['click_count'] : 0,
-			$item['visitor_id'],
-			$item['click_order'],
-			$item['created_at'],
-			$item['created_at_gmt'],
-			$item['rotation_target_url'],
+			isset( $item['visitor_id'] ) ? $item['visitor_id'] : '',
+			isset( $item['click_order'] ) ? $item['click_order'] : '',
+			isset( $item['created_at']) ? $item['created_at'] : '',
+			isset( $item['created_at_gmt']) ? $item['created_at_gmt'] : '',
+			isset( $item['rotation_target_url']) ? $item['rotation_target_url'] : '',
 		);
 		if ( $is_analytics_ip_enabled ) {
-			$db_data_array[] = $item['ip'];
-			$db_data_array[] = $item['host'];
+			$db_data_array[] = isset( $item['ip'] ) ? $item['ip'] : '';
+			$db_data_array[] = isset( $item['host'] ) ? $item['host'] : '';
 		}
 		// $db_data_array[] = isset($item['device']) ? $item['device'] : '';
 		if ( $is_extra_data_tracking_compatible ) {
@@ -816,7 +877,7 @@ trait Query {
 
 			return json_decode( current( $results )->meta_value );
 		}
-		return;
+		return false;
 	}
 
 	public static function add_link_meta( $link_id, $meta_key, $meta_value ) {

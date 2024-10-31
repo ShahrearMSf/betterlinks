@@ -5,6 +5,7 @@ namespace BetterLinks\Admin;
 use BetterLinks\Admin\WPDev\PluginUsageTracker;
 use BetterLinks\Cron;
 use BetterLinks\Helper;
+use BetterLinks\Link\Utils;
 
 class Ajax {
 
@@ -89,6 +90,9 @@ class Ajax {
 		// Quick Setu
 		add_action( 'wp_ajax_betterlinks__client_consent', array( $this, 'client_consent' ) );
 		add_action( 'wp_ajax_betterlinks__complete_setup', array( $this, 'complete_setup' ) );
+		// js analytics tracking
+		add_action( 'wp_ajax_nopriv_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
+		add_action( 'wp_ajax_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
 	}
 
 	public function update_fbs_link() {
@@ -350,8 +354,18 @@ class Ajax {
 
 		$from = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : '';
 		$to   = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
+
+		if( ! strtotime( $from ) || ! strtotime( $to ) ){
+			wp_send_json_error( [
+				'message' => __( "Invalid date range provided.", 'betterlinks' ),
+			], 400 );
+		}
+
 		global $wpdb;
-		$query   = "SELECT id,link_id,ip,created_at FROM {$wpdb->prefix}betterlinks_clicks WHERE created_at BETWEEN '{$from} 00:00:00' AND '{$to} 00:00:00'";
+		$query   = $wpdb->prepare(
+			"SELECT id,link_id,ip,created_at FROM {$wpdb->prefix}betterlinks_clicks WHERE created_at BETWEEN %s AND %s",
+			 $from .  ' 00:00:00', $to . ' 23:59:59');
+
 		$results = $wpdb->get_results( $query );
 		wp_send_json(
 			array(
@@ -1171,6 +1185,27 @@ class Ajax {
 		$is_update = update_option('betterlinks_quick_setup_step', 'complete');
 		wp_send_json_success([
 			'result' => (bool) $is_update ? 'complete' : 'error' 
+		]);
+	}
+	
+	public function js_analytics_tracking() {
+		global $wpdb;
+
+		$searchKey = !empty( $_POST['target_url'] ) ? 'target_url' : 'ID';
+		$searchValue = (isset( $_POST['target_url'] ) ? sanitize_url($_POST['target_url']) : '');
+		$searchValue = (empty( $searchValue ) && isset( $_POST['linkId'] ) ? sanitize_text_field( $_POST['linkId'] ) : '');
+		$location = isset( $_POST['location'] ) ? esc_url_raw( $_POST['location'] ) : '';
+		$query = $wpdb->prepare( "select short_url from {$wpdb->prefix}betterlinks where {$searchKey}=%s", $searchValue );
+		$short_url = $wpdb->get_row( $query, ARRAY_A );
+		$short_url = current( $short_url );
+		$utils = new Utils();
+		$data = $utils->get_slug_raw($short_url);
+		$data['skip_password_protection'] = true;
+		$data['location'] = $location;
+		Helper::init_tracking($data, $utils);
+
+		wp_send_json([
+			'data' => true
 		]);
 	}
 }

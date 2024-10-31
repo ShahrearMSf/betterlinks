@@ -6,7 +6,7 @@ const { Popover } = wp.components;
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
 import { is_pro_enabled, site_url as site_link } from 'utils/helper';
 
-export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close }) => {
+export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, setIsChangeLink, setShowLinkModal, setLinkData, close, insertedLinkData }) => {
 	const site_url = is_pro_enabled && localStorage.getItem('btl_custom_domain') ? localStorage.getItem('btl_custom_domain') : site_link;
 	const { url } = activeAttributes;
 	const [islinkNotFound, setIslinkNotFound] = useState(false);
@@ -34,13 +34,13 @@ export const LinkPreview = ({ reset, activeAttributes, value, removeBtlFormat, s
 	const handleEditBetterLink = () => {
 		const siteUrlWithoutHttp = site_url.replace(/https?\:\/\//, '').toLowerCase();
 		const siteUrlRegex = new RegExp(siteUrlWithoutHttp, 'gi');
-		const justShortlink = url
+		const link = insertedLinkData?.short_url || url;
+		const justShortlink = link
 			.trim()
 			.replace(/https?\:\/\//gi, '')
 			.replace(siteUrlRegex, '')
 			.replace(/\/+$/, '')
 			.replace(/^\/+/, '');
-
 		const allLinksArr = betterlinksGutenStore?.getState()?.links?.links || [];
 		const foundLink = allLinksArr.find((item) => item.short_url === justShortlink);
 		if (foundLink) {
