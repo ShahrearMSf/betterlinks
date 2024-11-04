@@ -1,14 +1,13 @@
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import MobileStepper from '@material-ui/core/MobileStepper';
 import { __ } from '@wordpress/i18n';
 import GettingStarted from './GettingStarted';
 import Configuration from './Configuration';
 import Migration from './Migration';
 import CreateLink from './CreateLinks';
 import Finish from './Finish';
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { SetupContext } from 'index';
 import { migratePluginsData } from './quicksetup.helper';
 import { generateSlug, makeRequest, migratable_plugins, route_path, shortURLUniqueCheck } from 'utils/helper';
@@ -58,16 +57,15 @@ const SetupCanvas = (props) => {
 		settings,
 		linkOptions,
 		setLinkOptions,
-		errors,
 		setErrors,
 		terms,
 		migrationSettings,
 		setModalIsOpen,
 		modalConfirm,
 		setModalConfirm,
-		migrationStatus,
 		setMigrationStatus,
 	} = useContext(SetupContext);
+	const [isNextDisabled, setNextDisabled] = useState(false);
 
 	const isMigrationExists = Object.values(migratable_plugins).some((plugin) => plugin);
 	useEffect(() => {
@@ -126,7 +124,6 @@ const SetupCanvas = (props) => {
 		}
 		onSubmit(values);
 	};
-
 	const onSubmit = (values) => {
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
@@ -175,7 +172,18 @@ const SetupCanvas = (props) => {
 		}
 	};
 
-	const buttonName = ['Save Settings', isMigrationExists && 'Migrate', 'Create Link'].filter(Boolean);
+	useEffect(() => {
+		if (isMigrationExists && 2 == activeStep) {
+			const isNextDisabled = !Object.keys(migratable_plugins)
+				.filter((item) => migratable_plugins[item])
+				.some((item) => migrationSettings[item]);
+			setNextDisabled(isNextDisabled);
+		} else if ((isMigrationExists && 3 == activeStep) || (!isMigrationExists && 2 == activeStep)) {
+			setNextDisabled('' == linkOptions.link_title || '' == linkOptions.target_url);
+		} else {
+			setNextDisabled(false);
+		}
+	}, [activeStep, migrationSettings, linkOptions.link_title, linkOptions.target_url]);
 
 	return (
 		<>
@@ -202,25 +210,30 @@ const SetupCanvas = (props) => {
 								disabled={activeStep === 0}
 								onClick={(e) => {
 									e.preventDefault();
-									// if (!isMigrationExists && 3 == activeStep) return;
 									setActiveStep(activeStep + 1);
 								}}
 							>
-								Skip
+								{__('Skip This Step', 'betterlinks')}
 							</a>
 						)}
 					</div>
-					<MobileStepper variant="dots" steps={steps.length} position="static" activeStep={activeStep} />
 					{activeStep > 0 ? (
 						<div>
 							{(activeStep !== 1 || !clientConsent) && (
 								<button className="button" disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
-									Back
+									<span className="dashicons dashicons-arrow-left-alt2" />
+									{__('Back', 'betterlinks')}
 								</button>
 							)}
-							<button className="button button-primary" onClick={handleStepChange}>
-								{/* {activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : __('Continue', 'betterlinks')} */}
-								{activeStep === steps.length - 1 ? __('Finish', 'betterlinks') : buttonName[activeStep - 1]}
+							<button className="button button-primary" onClick={handleStepChange} disabled={isNextDisabled}>
+								{activeStep === steps.length - 1 ? (
+									__('Finish', 'betterlinks')
+								) : (
+									<>
+										{__('Next', 'betterlinks')}
+										<span className="dashicons dashicons-arrow-right-alt2" />
+									</>
+								)}
 							</button>
 						</div>
 					) : (
