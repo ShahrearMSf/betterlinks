@@ -8,6 +8,7 @@ import { sortFavourite } from 'redux/actions/favouritesort.actions';
 import DeleteClicks from 'containers/DeleteClicks';
 
 import PropTypes from 'prop-types';
+import ProBadge from 'components/Badge/ProBadge';
 
 const propTypes = {
 	label: PropTypes.string,
@@ -44,7 +45,7 @@ const TopBar = ({ is_pro = false, render = () => {}, ...props }) => {
 				<div className="topbar__logo">
 					<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 					<span className="topbar__logo__text">{props.label}</span>
-					{is_pro && <span class="pro-badge">Pro</span>}
+					{is_pro && <ProBadge />}
 				</div>
 
 				{render()}

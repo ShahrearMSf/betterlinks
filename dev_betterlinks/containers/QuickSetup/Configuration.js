@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import ProBadge from 'components/Badge/ProBadge';
 import RedirectType from 'components/RedirectType';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { Field, Form, Formik } from 'formik';
@@ -138,7 +139,14 @@ const Configuration = () => {
 													...redirectType,
 													{
 														value: is_pro_enabled ? 'cloak' : 'pro',
-														label: __('Cloaked', 'betterlinks'),
+														label: is_pro_enabled ? (
+															__('Cloaked', 'betterlinks')
+														) : (
+															<>
+																{__('Cloaked', 'betterlinks')}
+																<ProBadge />
+															</>
+														),
 													},
 												]}
 												defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
@@ -167,7 +175,7 @@ const Configuration = () => {
 											'BetterLinksQuickSetupConfig',
 											<span className="btl-form-group btl-form-group--teaser">
 												<label className="btl-form-label" onClick={openUpgradeToProModal}>
-													{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+													{__('Force HTTPS', 'betterlinks')} <ProBadge />
 												</label>
 												<div className="link-options__body">
 													<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>

@@ -239,7 +239,7 @@ const CreateLink = (props) => {
 										<div className="btl-entry-content-right">
 											<div className="link-options link-options--open">
 												<button className="link-options__head" type="button">
-													<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+													<h4 className="link-options__head--title">{__('Link Options', 'betterlinks')}</h4>
 												</button>
 												<div className="link-options__body">
 													<label className="btl-checkbox-field">
@@ -330,7 +330,7 @@ const CreateLink = (props) => {
 															</div>
 														</span>
 													</label>
-													{!is_pro_enabled && (
+													{/* {!is_pro_enabled && (
 														<label className="btl-checkbox-field link-options--teasers" onClick={() => openUpgradeToProModal()}>
 															<Field
 																disabled={true}
@@ -349,7 +349,7 @@ const CreateLink = (props) => {
 																</div>
 															</span>
 														</label>
-													)}
+													)} */}
 													{/* {betterLinksHooks.applyFilters('linkOptionsBasic', null, { ...props, isDisableLinkFormEditView, Field, ...settings })} */}
 												</div>
 											</div>
