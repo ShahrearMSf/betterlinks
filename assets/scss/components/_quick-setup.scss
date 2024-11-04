@@ -20,11 +20,13 @@
 			column-gap: 10px;
 
 			button.button {
-				padding: 12px 20px;
-				font-size: 14px;
+				padding: 8px 15px;
+				font-size: 13px;
 				font-weight: 500;
 				line-height: 24px;
 				box-shadow: unset;
+				display: flex;
+				align-items: center;
 
 				&:not(.button-primary) {
 					background: rgba(252, 252, 253, 1);
@@ -44,6 +46,11 @@
 						background: linear-gradient(202deg, #295ffa 0, #003be2 100%);
 					}
 				}
+
+				> span.dashicons {
+					font-size: 17px;
+					line-height: 1.2em;
+				}
 			}
 		}
 
@@ -55,12 +62,12 @@
 
 	.header {
 		h3 {
-			font-size: 28px;
+			font-size: 22px;
 			font-weight: 600;
 			color: rgba(29, 41, 57, 1);
 		}
 		p {
-			font-size: 16px;
+			font-size: 15px;
 			line-height: 24px;
 			font-weight: 400;
 			margin-bottom: 20px;
@@ -86,20 +93,21 @@
 			}
 
 			> h3 {
-				font-size: 28px;
+				font-size: 24px;
 				line-height: 33px;
 				font-weight: 500;
 				margin: 15px 0;
 			}
 			> p {
 				font-weight: 400;
-				font-size: 16px;
+				font-size: 14px;
 				line-height: 24px;
 				width: 66%;
 			}
 
 			.actions {
-				border: 2px dashed rgb(234, 236, 240);
+				background-color: #f7f9fc;
+				border-radius: 8px;
 				width: 728px;
 				margin: 0 auto;
 				padding: 20px;
@@ -143,9 +151,9 @@
 					}
 				}
 				button {
-					width: 200px;
-					padding: 12px 20px;
-					font-size: 14px;
+					width: 170px;
+					padding: 10px 0;
+					font-size: 13px;
 					font-weight: 500;
 				}
 				.hide {
@@ -154,10 +162,6 @@
 			}
 		}
 		.configuration {
-			// .header {
-			// 	h3 {
-			// 	}
-			// }
 			.option {
 				> form {
 					.btl-tab-panel-inner {
@@ -170,6 +174,26 @@
 					> label {
 						min-width: 170px;
 						padding-top: 0;
+						font-size: 13px;
+					}
+
+					> .link-options__body {
+						input {
+							font-size: 14px;
+						}
+						.btl-checkbox-field {
+							span.text {
+								padding-left: 30px;
+								font-size: 14px;
+								&:before {
+									font-size: 20px;
+								}
+							}
+						}
+
+						.short-description {
+							font-size: 12px;
+						}
 					}
 				}
 			}
@@ -310,6 +334,43 @@
 
 						.btl-entry-content-left {
 							width: 60%;
+
+							.btl-modal-form-group {
+								.btl-modal-form-label {
+									font-size: 14px;
+								}
+								.btl-modal-form-control {
+									min-height: 45px;
+									padding: 0 10px;
+									font-size: 14px;
+								}
+								.btl-modal-select--full {
+									.btl-react-select__single-value {
+										font-size: 14px;
+									}
+								}
+								.btl-link-field-copyable {
+									height: 45px;
+									span,
+									input {
+										font-size: 14px;
+									}
+								}
+							}
+						}
+						.btl-entry-content-right {
+							.link-options__body {
+								.btl-checkbox-field {
+									span.text {
+										font-size: 14px;
+										padding-left: 30px;
+
+										&:before {
+											font-size: 20px;
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -578,5 +639,21 @@
 	#confetti .ball:nth-of-type(2n + 1) {
 		-webkit-animation: falling-right linear;
 		animation: falling-right linear;
+	}
+
+	.btl-tooltip {
+		.dashicons-info-outline {
+			font-size: 14px;
+			margin-left: 0 !important;
+		}
+
+		.btl-tooltiptext {
+			width: 220px;
+			font-size: 13px;
+			text-align: left;
+		}
+	}
+	.btl-react-select__single-value {
+		font-size: 14px !important;
 	}
 }

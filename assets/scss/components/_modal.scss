@@ -4,7 +4,7 @@
 }
 .ReactModal__Content {
 	&:not(:has(.btl-manage-tags-form)) {
-		padding: 60px !important;
+		padding: 40px !important;
 	}
 	& {
 		width: 60%;
@@ -837,26 +837,88 @@
 
 	.btl-,
 	.betterlinks-upgradetopro {
-		text-align: center;
-		h3 {
-			color: rgba(0, 0, 0, 0.65);
-			font-weight: 600;
-			font-size: 27px;
+		$text-primary: #19285d;
+		$brand-color: #114bee;
+
+		.pro-crown {
+			width: 55px;
+			height: 55px;
+			background-color: #fef0c7;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
-		p {
-			a {
-				color: #e64942;
+		.heading {
+			font-size: 24px;
+			font-weight: 600;
+			line-height: 29px;
+			color: $text-primary;
+			margin: 10px 0;
+		}
+		.description {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 25px;
+			color: #475467;
+		}
+		a:focus {
+			box-shadow: none;
+		}
+		.feature-section {
+			background-color: #f7f9fc;
+			padding: 10px 15px;
+			border: 1px solid #edf1f7;
+			border-radius: 8px;
+			margin: 10px 0;
+			> p {
+				color: $text-primary;
+				font-size: 16px;
+				line-height: 20px;
 				font-weight: 600;
+				margin: 0 0 15px 0;
+			}
+			> a {
+				display: block;
+				text-align: right;
+				color: $brand-color;
+			}
+			.features {
+				display: flex;
+				flex-wrap: wrap;
+				row-gap: 10px;
+				margin: 10px 0;
+
+				.feature {
+					width: 50%;
+					display: flex;
+					column-gap: 10px;
+
+					> span.dashicons {
+						background-color: #e1ebff;
+						width: 20px;
+						height: 20px;
+						font-size: 13px;
+						border-radius: 50%;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					}
+				}
 			}
 		}
-		.btn-close {
-			background: #e64942;
-			color: #fff;
-			padding: 10px 20px;
-			border: 0;
-			border-radius: 4px;
-			cursor: pointer;
-			float: right;
+		.upgrade-links {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+
+			> a {
+				background-color: $brand-color;
+				box-shadow: 0px 1px 2px 0px #1018280d;
+				padding: 10px 15px;
+				border: 1px solid $brand-color;
+				border-radius: 4px;
+			}
 		}
 	}
 	.betterlinks-preview-modal {
