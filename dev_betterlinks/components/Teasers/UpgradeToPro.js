@@ -1,6 +1,5 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 
@@ -26,19 +25,53 @@ export default function UpgradeToPro({ isOpenModal, closeModal }) {
 	return (
 		<React.Fragment>
 			<Modal isOpen={isOpenModal} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
+				<span className="btl-close-modal" onClick={closeModal}>
+					<i className="btl btl-cancel" />
+				</span>
 				<div className="betterlinks-upgradetopro">
-					<img src={plugin_root_url + 'assets/images/exclamation.svg'} alt="icon" style={{ opacity: 0.5 }} />
-					<h3>{__('Opps...', 'betterlinks')}</h3>
-					<p>
-						{__('You need to', 'betterlinks')} <strong>{__('upgrade', 'betterlinks')}</strong> {__('to the', 'betterlinks')}{' '}
-						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank">
-							{__('Premium', 'betterlinks')}
-						</a>{' '}
-						{__('Version to use this feature', 'betterlinks')}
-					</p>
-					<button className="btn-close" onClick={closeModal}>
-						{__('Close', 'betterlinks')}
-					</button>
+					<div className="pro-crown">
+						<img src={plugin_root_url + 'assets/images/crown1.png'} alt="icon" />
+					</div>
+					<p className="heading">{__('Upgrade to use this feature', 'betterlinks')}</p>
+					<p className="description">{__('After turning on the Internal Knowledge Base option in BetterDocs, you’ll have all the features you.', 'betterlinks')}</p>
+
+					<div className="feature-section">
+						<p>{__('Here’s what’s inside inside BetterDocs Pro.', 'betterlinks')}</p>
+						<div className="features">
+							<div className="feature">
+								<span className="dashicons dashicons-yes" />
+								<span>{__('Easy Link Migration', 'betterlinks')}</span>
+							</div>
+							<div className="feature">
+								<span className="dashicons dashicons-yes" />
+								<span>{__('Easy Link Migration', 'betterlinks')}</span>
+							</div>
+							<div className="feature">
+								<span className="dashicons dashicons-yes" />
+								<span>{__('Easy Link Migration', 'betterlinks')}</span>
+							</div>
+							<div className="feature">
+								<span className="dashicons dashicons-yes" />
+								<span>{__('Easy Link Migration', 'betterlinks')}</span>
+							</div>
+							<div className="feature">
+								<span className="dashicons dashicons-yes" />
+								<span>{__('Easy Link Migration', 'betterlinks')}</span>
+							</div>
+							<div className="feature">
+								<span className="dashicons dashicons-yes" />
+								<span>{__('Easy Link Migration', 'betterlinks')}</span>
+							</div>
+						</div>
+						<a href="https://betterlinks.io/features/" target="_blank">
+							{__('See More amazing worthy features', 'betterlinks')}
+						</a>
+					</div>
+					<div className="upgrade-links">
+						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank" className="button button-primary">
+							{__('Upgrade to PRO', 'betterlinks')}
+						</a>
+					</div>
 				</div>
 			</Modal>
 		</React.Fragment>
