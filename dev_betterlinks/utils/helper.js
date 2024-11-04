@@ -458,7 +458,7 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow, linkId })
 
 	if (linkNewTab) {
 		attributes.target = '_blank';
-		rel = 'noreferrer noopener ';
+		rel = 'noopener ';
 	}
 
 	if (sponsored) {
