@@ -59,6 +59,12 @@ class Notice {
 	public function remove_admin_notice() {
 		$current_screen = get_current_screen();
 		$dashboard_notice = get_option('betterlinks_dashboard_notice');
+
+		if( !empty( strpos( $current_screen->id, 'betterlinks-quick-setup' ) ) ){
+			remove_all_actions('admin_notices');
+			return;
+		}
+		
 		if( 0 === strpos($current_screen->id, "toplevel_page_betterlinks") || 0 === strpos($current_screen->id, "betterlinks_page_") ){
 			if( BETTERLINKS_MENU_NOTICE !== $dashboard_notice ) {
 				add_action('admin_notices', array($this, 'new_feature_notice'), -1);

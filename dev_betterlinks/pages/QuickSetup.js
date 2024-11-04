@@ -72,7 +72,6 @@ const QuickSetup = (props) => {
 	return (
 		<>
 			<SetupContext.Provider value={value}>
-				<Topbar label={__('BetterLinks Quick Setup', 'betterlinks')} />
 				<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 				<SetupCanvas />
 			</SetupContext.Provider>
