@@ -654,8 +654,7 @@ export const Link = (props) => {
 													</button>
 													<div className="link-options__body">
 														{/* Dynamic Redirects teaser */}
-														<DynamicRedirectsTeaser openUpgradeToProModal={openUpgradeToProModal} />
-														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
+														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', <DynamicRedirectsTeaser openUpgradeToProModal={openUpgradeToProModal} />, props)}
 													</div>
 												</div>
 												{/* Customize Link Preview */}
