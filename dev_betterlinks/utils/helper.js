@@ -196,6 +196,7 @@ export const modalCustomStyles = {
 export const modalCustomSmallStyles = {
 	overlay: {
 		background: 'rgba(35, 40, 45, 0.62)',
+		zIndex: '999999',
 	},
 	content: {
 		top: '50%',
