@@ -127,11 +127,11 @@ const SetupCanvas = (props) => {
 	const onSubmit = (values) => {
 		const { short_url } = values;
 		values.short_url = short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
-		shortURLUniqueCheck(values.short_url, values.ID, () => {}).then((isDuplicate) => {
+		shortURLUniqueCheck(values?.short_url, values?.ID, () => {}).then((isDuplicate) => {
 			if (!isDuplicate) {
 				if (!values.cat_id) {
-					const { ID } = terms.terms?.filter((item) => item.term_slug == 'uncategorized')[0];
-					values.cat_id = ID;
+					const cat = terms?.terms?.find((item) => item?.term_slug == 'uncategorized');
+					values.cat_id = cat?.ID || 1;
 				}
 				if (!values.link_slug) {
 					values.link_slug = generateSlug(values.link_title);
