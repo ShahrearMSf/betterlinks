@@ -8,7 +8,6 @@ import Select from 'components/Select';
 import Modal from 'react-modal';
 import UTMBuilder from 'components/UTMBuilder';
 import Copy from 'components/Copy';
-import ProBadge from 'components/Badge/ProBadge';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
@@ -57,12 +56,7 @@ const CreateLink = (props) => {
 			<div className="create-links">
 				<div className="header">
 					<h3>{__('Create Link', 'betterlinks')}</h3>
-					<p>
-						{__(
-							'Let’s create a new link in seconds! Just set the slug, choose redirect rules, pick a category, adjust link options, and start tracking right away.',
-							'betterlinks'
-						)}
-					</p>
+					<p>{__('Let’s create a new link in seconds! Just set the slug, choose redirect rules, adjust link options and start tracking right away.', 'betterlinks')}</p>
 				</div>
 				<div className="option">
 					{props?.duplicateLink && (

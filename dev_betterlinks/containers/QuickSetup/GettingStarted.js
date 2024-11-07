@@ -21,7 +21,7 @@ const GettingStarted = () => {
 		<>
 			<div className="getting-started">
 				<h3>{__('Getting Started', 'betterlinks')}</h3>
-				<p>{__('Easily get started with the easy setup wizard and complete setting up to streamline website link management strategy.', 'betterlinks')}</p>
+				<p>{__("Easily get started with the easy setup wizard and complete setting up to streamline website's link management strategy.", 'betterlinks')}</p>
 
 				<iframe
 					width={450}
