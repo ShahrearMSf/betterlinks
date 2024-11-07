@@ -428,7 +428,7 @@
 	.btl-shortened-url {
 		box-sizing: border-box;
 		width: 600px;
-		height: 55px;
+		min-height: 55px;
 		border: 1px solid #87b2ff;
 		padding: 6px 20px;
 		border-radius: 8px;
