@@ -175,10 +175,11 @@ if (!class_exists('BetterLinks')) {
         }
 
         public function quick_setup() {
+            if( 'complete' === get_option('betterlinks_quick_setup_step') ) return;
             if( get_option( 'betterlinks_quick_setup' ) && is_admin() ) {
                 delete_option( 'betterlinks_quick_setup' );
 
-                $redirect_url = admin_url('admin.php?page=betterlinks-quick-setup');;
+                $redirect_url = admin_url('admin.php?page=betterlinks-quick-setup');
                 wp_safe_redirect($redirect_url);
                 exit;
             }
