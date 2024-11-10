@@ -115,8 +115,7 @@ const Configuration = () => {
 													/>
 												</div>
 												<div className="short-description">
-													<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-													{__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
+													<span className="dashicons dashicons-info-outline" /> {__('The prefix will be added before your Shortened URL’s slug eg.', 'betterlinks')}
 													{betterLinksHooks.applyFilters('site_url', site_url)}
 													{props.values.prefix && (
 														<>

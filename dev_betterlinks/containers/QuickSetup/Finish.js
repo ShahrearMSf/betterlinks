@@ -1,34 +1,61 @@
 import { __ } from '@wordpress/i18n';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { copyToClipboard, plugin_root_url, site_url } from 'utils/helper';
-import { SetupContext } from 'index';
 import { connect } from 'react-redux';
 import { update_quick_setup } from 'redux/actions/quick-setup.actions';
 import { bindActionCreators } from 'redux';
+import confetti from 'canvas-confetti';
 
 const Finish = (props) => {
 	const [copy, setCopy] = useState(false);
 	useEffect(() => {
+		window.scrollTo(0, 0);
 		props.update_quick_setup({ isCreated: false, duplicateLink: false });
-		const confetti = document.getElementById('confetti');
-		if (props.createdLink && Object.keys(props.createdLink).length) {
-			// confetti
-			let flakes = '',
-				randomColor;
-			for (let i = 0, len = 400; i < len; i++) {
-				randomColor = Math.floor(Math.random() * 16777215).toString(16);
-				flakes += '<div class="ball" style="background: #' + randomColor;
-				flakes += '; animation-duration: ' + 3 + 's; animation-delay: ';
-				flakes += Math.random() * 2 + 0 + 's;"></div>';
-			}
-			confetti.innerHTML = flakes;
-			let clearConfetti = setTimeout(() => {
-				confetti.innerHTML = '';
-				clearTimeout(clearConfetti);
-			}, 10000);
-		}
-	}, []);
+		let timer = setTimeout(() => {
+			runConfetti();
+		}, 150);
 
+		return () => {
+			clearTimeout(timer);
+		};
+	}, []);
+	const runConfetti = () => {
+		var count = 500;
+		var defaults = {
+			origin: { y: 0.5, x: 0.55 },
+		};
+
+		function fire(particleRatio, opts) {
+			confetti({
+				...defaults,
+				...opts,
+				particleCount: Math.floor(count * particleRatio),
+			});
+		}
+
+		fire(0.25, {
+			spread: 26,
+			startVelocity: 55,
+		});
+		fire(0.2, {
+			spread: 60,
+		});
+		fire(0.35, {
+			spread: 100,
+			decay: 0.91,
+			scalar: 0.8,
+		});
+		fire(0.1, {
+			spread: 120,
+			startVelocity: 25,
+			decay: 0.92,
+			scalar: 1.2,
+		});
+		fire(0.1, {
+			spread: 120,
+			startVelocity: 45,
+		});
+	};
 	return (
 		<>
 			<div className="finish">
