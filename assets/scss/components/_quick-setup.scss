@@ -1,6 +1,7 @@
 .btl-quick-setup {
 	width: 1000px;
 	margin: 0 auto;
+
 	.skip {
 		&:focus {
 			box-shadow: none;
@@ -71,6 +72,7 @@
 			line-height: 24px;
 			font-weight: 400;
 			margin-bottom: 20px;
+			margin-left: 0;
 			width: 700px;
 			color: rgba(102, 112, 133, 1);
 		}
@@ -193,9 +195,19 @@
 
 						.short-description {
 							font-size: 12px;
-							background-color: transparent;
-							padding: 0;
-							margin-bottom: 15px;
+							display: flex;
+							align-items: center;
+							background-color: #ebf1ff;
+							border-radius: 8px;
+							column-gap: 4px;
+							padding: 12px;
+							margin-top: 8px;
+
+							.dashicons {
+								font-size: 15px;
+								color: #335cff;
+								line-height: 1.2rem;
+							}
 						}
 					}
 				}
