@@ -282,6 +282,33 @@
 	h3 {
 		color: $white;
 	}
+	.pro-crown {
+		background-color: #2c3650;
+	}
+	.heading {
+		color: $white;
+	}
+	.description {
+		color: $light;
+	}
+	.feature-section {
+		background-color: $dark-mood-darken;
+		border-color: $secondary-darken;
+
+		> p {
+			color: $light;
+		}
+
+		> a {
+			color: $dark-mode-link;
+		}
+
+		.feature {
+			span.dashicons {
+				background-color: $dark !important;
+			}
+		}
+	}
 }
 .btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type='text'],
 .btl-entry-content .btl-entry-content-right .link-options--dynamic-redirect .link-options--teasers input[type='checkbox'] {
@@ -289,4 +316,7 @@
 	color: #fff;
 	border-color: #36405a;
 	opacity: 0.3;
+}
+.pro-badge-new > svg {
+	fill: #252525;
 }

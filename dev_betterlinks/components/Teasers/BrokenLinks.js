@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import { plugin_root_url } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import ProBadge from 'components/Badge/ProBadge';
 
 const propTypes = {};
 
@@ -33,7 +34,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Enable Scheduled Scan', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
@@ -45,7 +46,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Frequency', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<Select className="btl-select" classNamePrefix="btl" isDisabled />
@@ -54,7 +55,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Day', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<div className="scheduleweekdayselect">
@@ -70,7 +71,7 @@ export default function BrokenLinks(props) {
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Time', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<TextField disabled />
@@ -108,7 +109,7 @@ export default function BrokenLinks(props) {
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Enable Reporting', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
@@ -120,7 +121,7 @@ export default function BrokenLinks(props) {
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Reporting Email', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
@@ -131,7 +132,7 @@ export default function BrokenLinks(props) {
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
 									<label className="btl-form-label">
 										{__('Reporting Email Subject', 'betterlinks')}
-										<span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+										<ProBadge />
 									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">

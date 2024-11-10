@@ -31,6 +31,12 @@ export const {
 	betterlinks_settings,
 	is_fbs_enabled,
 	prefix,
+	betterlinks_quick_setup_step = false,
+	migratable_plugins = {
+		simple301redirects: false,
+		thirstyaffliates: false,
+		prettylinks: false,
+	},
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -190,6 +196,7 @@ export const modalCustomStyles = {
 export const modalCustomSmallStyles = {
 	overlay: {
 		background: 'rgba(35, 40, 45, 0.62)',
+		zIndex: '999999',
 	},
 	content: {
 		top: '50%',
@@ -452,7 +459,7 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow, linkId })
 
 	if (linkNewTab) {
 		attributes.target = '_blank';
-		rel = 'noreferrer noopener ';
+		rel = 'noopener ';
 	}
 
 	if (sponsored) {

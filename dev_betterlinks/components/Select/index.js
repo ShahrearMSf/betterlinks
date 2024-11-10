@@ -6,7 +6,7 @@ const Select = (props) => {
 	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
 	const isCloakDisabled = ['cloak', 'pro'].includes(field.value) && !is_pro_enabled;
 	const defaultValue = isCloakDisabled ? '307' : field.value;
-	
+
 	if (isCloakDisabled) {
 		setThisFieldValue('307');
 	}
@@ -14,6 +14,12 @@ const Select = (props) => {
 	const onChange = (option) => {
 		if (option == null) {
 			return props.setFieldValue(field.name, '');
+		}
+		if (!!props?.isQuickSetup) {
+			props?.setLinkOptions((prev) => ({
+				...prev,
+				redirect_type: props.isMulti ? option.map((item) => item.value) : option.value,
+			}));
 		}
 		return props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value);
 	};
