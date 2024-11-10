@@ -12,6 +12,7 @@ import { update_option } from 'redux/actions/settings.actions';
 import { redirectType } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
+import ProBadge from 'components/Badge/ProBadge';
 const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
@@ -157,7 +158,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 											...redirectType,
 											{
 												value: is_pro_enabled ? 'cloak' : 'pro',
-												label: __('Cloaked', 'betterlinks'),
+												label: is_pro_enabled ? (
+													__('Cloaked', 'betterlinks')
+												) : (
+													<>
+														{__('Cloaked', 'betterlinks')}
+														<ProBadge />
+													</>
+												),
 											},
 										]}
 										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
@@ -377,7 +385,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
 										<label className="btl-form-label">
-											{__('Force HTTPS', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+											{__('Force HTTPS', 'betterlinks')} <ProBadge />
 										</label>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
@@ -412,7 +420,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 									</span> */}
 									<span className="btl-form-group btl-form-group--teaser btl-form-group-uncloaked-categories">
 										<label className="btl-form-label">
-											{__('Uncloak Categories', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+											{__('Uncloak Categories', 'betterlinks')} <ProBadge />
 										</label>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>

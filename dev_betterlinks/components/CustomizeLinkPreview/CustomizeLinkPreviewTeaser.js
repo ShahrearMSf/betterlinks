@@ -3,6 +3,7 @@ import Note from './Note';
 import { is_pro_enabled } from 'utils/helper';
 import CustomizePreviewContainr from './CustomizePreviewContainer';
 import { teaserDescription, teaserTitle } from './data';
+import ProBadge from 'components/Badge/ProBadge';
 
 const CustomizeLinkPreviewTeaser = ({ openUpgradeToProModal }) => {
 	if (is_pro_enabled) return null;
@@ -11,9 +12,7 @@ const CustomizeLinkPreviewTeaser = ({ openUpgradeToProModal }) => {
 			<div className="btl-modal-customize-link-preview">
 				<h3 className="btl-modal-customize-link-preview__title">
 					{__('Customize Link Preview', 'betterlinks')}
-					<span className="pro-badge" onClick={openUpgradeToProModal}>
-						{__('Pro', 'betterlinks')}
-					</span>
+					<ProBadge />
 				</h3>
 
 				<div className="btl-modal-customize-link-preview__body">

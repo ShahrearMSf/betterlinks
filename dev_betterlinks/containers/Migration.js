@@ -23,6 +23,7 @@ const Migration = (props) => {
 	const [thirstyAffiliatesRes, setThirstyAffiliatesRes] = useState({});
 	const [migrateRes, setMigrateRes] = useState({});
 	let history = useHistory();
+	const { redirect = true } = props;
 	useEffect(() => {
 		if (props.mode === 'simple301redirects') {
 			setDataIsFetch(true);
@@ -93,8 +94,10 @@ const Migration = (props) => {
 
 	function closeModal() {
 		setIsOpen(false);
-		history.push(route_path + 'admin.php?page=betterlinks');
-		history.go(0);
+		if (redirect) {
+			history.push(route_path + 'admin.php?page=betterlinks');
+			history.go(0);
+		}
 	}
 
 	return (

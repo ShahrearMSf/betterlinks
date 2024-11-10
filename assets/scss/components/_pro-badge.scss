@@ -1,0 +1,22 @@
+.btl-entry-content span.text,
+.link-options__head--title,
+.btl-form-label,
+.react-tabs__tab,
+.btl-modal-customize-link-preview__title,
+.btl-modal-select-need-pro-teaser .btl-react-select__menu-list .btl-react-select__option {
+	&:has(.pro-badge-new) {
+		position: relative;
+		display: flex !important;
+		align-items: center;
+		column-gap: 5px;
+
+		> span.pro-badge-new {
+			display: inherit;
+			cursor: pointer;
+		}
+	}
+}
+
+.ReactModal__Content:has(.betterlinks-upgradetopro) {
+	padding: 40px !important;
+}

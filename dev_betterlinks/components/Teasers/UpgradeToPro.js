@@ -1,6 +1,5 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 
@@ -13,32 +12,58 @@ const customStyles = {
 		left: '50%',
 		right: 'auto',
 		bottom: 'auto',
-		maxWidth: '400px',
+		maxWidth: '525px',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -50%)',
 	},
 };
 
 const propTypes = {};
-
+const features = [
+	__('Custom Domain', 'betterlinks'),
+	__('Broken Link Checker', 'betterlinks'),
+	__('External Tracking', 'betterlinks'),
+	__('Auto-Link Creation', 'betterlinks'),
+	__('Customize Link Preview', 'betterlinks'),
+	__('Auto-Link Keywords', 'betterlinks'),
+	__('Password Protected Redirect', 'betterlinks'),
+	__('Insights with Individual Analytics', 'betterlinks'),
+];
 export default function UpgradeToPro({ isOpenModal, closeModal }) {
 	if (is_pro_enabled) return '';
 	return (
 		<React.Fragment>
 			<Modal isOpen={isOpenModal} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
+				<span className="btl-close-modal" onClick={closeModal}>
+					<i className="btl btl-cancel" />
+				</span>
 				<div className="betterlinks-upgradetopro">
-					<img src={plugin_root_url + 'assets/images/exclamation.svg'} alt="icon" style={{ opacity: 0.5 }} />
-					<h3>{__('Opps...', 'betterlinks')}</h3>
-					<p>
-						{__('You need to', 'betterlinks')} <strong>{__('upgrade', 'betterlinks')}</strong> {__('to the', 'betterlinks')}{' '}
-						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank">
-							{__('Premium', 'betterlinks')}
-						</a>{' '}
-						{__('Version to use this feature', 'betterlinks')}
-					</p>
-					<button className="btn-close" onClick={closeModal}>
-						{__('Close', 'betterlinks')}
-					</button>
+					<div className="pro-crown">
+						<img src={plugin_root_url + 'assets/images/crown1.png'} alt="icon" />
+					</div>
+					<p className="heading">{__('Upgrade for Exclusive Benefits', 'betterlinks')}</p>
+					<p className="description">{__('Explore link management capabilities with advanced features designed for peak performance.', 'betterlinks')}</p>
+
+					<div className="feature-section">
+						<p>{__('Here’s what’s inside BetterLinks Pro.', 'betterlinks')}</p>
+						<div className="features">
+							{features.map((feature) => (
+								<div className="feature">
+									<span className="dashicons dashicons-yes" />
+									<span>{feature}</span>
+								</div>
+							))}
+						</div>
+						<a href="https://betterlinks.io/features/" target="_blank">
+							{__('See More amazing features', 'betterlinks')}
+						</a>
+					</div>
+					<div className="upgrade-links">
+						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank" className="button button-primary">
+							<img src={plugin_root_url + 'assets/images/crown.svg'} alt="Crown" />
+							{__('Upgrade to PRO', 'betterlinks')}
+						</a>
+					</div>
 				</div>
 			</Modal>
 		</React.Fragment>

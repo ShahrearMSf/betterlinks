@@ -8,6 +8,7 @@ import { sortFavourite } from 'redux/actions/favouritesort.actions';
 import DeleteClicks from 'containers/DeleteClicks';
 
 import PropTypes from 'prop-types';
+import ProBadge from 'components/Badge/ProBadge';
 
 const propTypes = {
 	label: PropTypes.string,
@@ -44,7 +45,7 @@ const TopBar = ({ is_pro = false, render = () => {}, ...props }) => {
 				<div className="topbar__logo">
 					<img src={plugin_root_url + `assets/images/logo-large${isDarkMode ? '-white' : ''}.svg`} alt="logo" />
 					<span className="topbar__logo__text">{props.label}</span>
-					{is_pro && <span class="pro-badge">Pro</span>}
+					{is_pro && <ProBadge />}
 				</div>
 
 				{render()}
@@ -53,7 +54,11 @@ const TopBar = ({ is_pro = false, render = () => {}, ...props }) => {
 				{currentPage === 'betterlinks' && (
 					<React.Fragment>
 						<div className="btl-view-control">
-							<button className={`btl-link-view-toggler btl-sortby-fav ${sortByFav ? 'active' : ''}`} onClick={() => props.sortFavourite(!sortByFav)}>
+							<button
+								title={__('Favorite Links', 'betterlinks')}
+								className={`btl-link-view-toggler btl-sortby-fav ${sortByFav ? 'active' : ''}`}
+								onClick={() => props.sortFavourite(!sortByFav)}
+							>
 								<svg xmlns="http://www.w3.org/2000/svg" className="favorite-svg" viewBox="0 0 512 512" xmlSpace="preserve">
 									<path
 										className="fav-icon-svg-path"
@@ -61,17 +66,25 @@ const TopBar = ({ is_pro = false, render = () => {}, ...props }) => {
 									/>
 								</svg>
 							</button>
-							<button className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`} onClick={() => props.linksView('list')}>
+							<button
+								title={__('List View', 'betterlinks')}
+								className={`btl-link-view-toggler ${props.activity.linksView == 'list' ? 'active' : ''}`}
+								onClick={() => props.linksView('list')}
+							>
 								<i className="btl btl-list"></i>
 							</button>
-							<button className={`btl-link-view-toggler ${props.activity.linksView == 'grid' ? 'active' : ''}`} onClick={() => props.linksView('grid')}>
+							<button
+								title={__('Grid View', 'betterlinks')}
+								className={`btl-link-view-toggler ${props.activity.linksView == 'grid' ? 'active' : ''}`}
+								onClick={() => props.linksView('grid')}
+							>
 								<i className="btl btl-grid"></i>
 							</button>
 						</div>
 					</React.Fragment>
 				)}
 				{propsForAnalytics?.isResetAnalytics && <DeleteClicks propsForAnalytics={propsForAnalytics} />}
-				<label className="theme-mood-button" htmlFor="theme-mood">
+				<label className="theme-mood-button" htmlFor="theme-mood" title={__('Theme Mode', 'betterlinks')}>
 					<input type="checkbox" name="theme-mood" id="theme-mood" value={isDarkMode} onChange={() => darkModeHandler(!isDarkMode)} checked={isDarkMode} />
 					<span className="theme-mood">
 						<span className="icon">

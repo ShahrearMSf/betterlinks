@@ -1077,3 +1077,60 @@
 		}
 	}
 }
+.pro-badge-new {
+	> svg {
+		fill: $dark;
+	}
+}
+
+.btl-quick-setup {
+	.MuiPaper-root {
+		background-color: $dark-mood-darken;
+		color: $light;
+
+		.MuiTypography-root {
+			color: $light;
+		}
+	}
+	.MuiStepper-root {
+		border-color: $dark;
+	}
+	.btl-setup-steps {
+		background-color: $dark-mood-darken;
+		.header {
+			h3,
+			p {
+				color: $light;
+			}
+		}
+		.option {
+			.btl-tab-panel-inner {
+				background-color: $dark-mood-darken;
+			}
+		}
+	}
+	.btl-setup-slider {
+		background-color: $dark-mood-darken;
+		color: $light;
+		border-color: $dark;
+
+		a.skip {
+			color: $dark-mode-link;
+		}
+
+		> div {
+			.button:not(.button-primary),
+			.button[disabled] {
+				background-color: #36405a !important;
+				color: $light !important;
+			}
+		}
+	}
+
+	.finish {
+		.btl-short-url-copy-button,
+		.dashicons {
+			background-color: $light-darken;
+		}
+	}
+}

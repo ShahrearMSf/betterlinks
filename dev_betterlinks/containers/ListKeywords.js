@@ -67,11 +67,12 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			selector: 'short_url',
 			sortable: false,
 			cell: (row) => {
-				const data = links.filter((item) => item.value == row.link_id);
+				const data = links.find((item) => item.value == row.link_id);
+				if (!data?.value) return;
 				return (
 					<div>
-						{data.length > 0 ? (
-							<LinkCopyUrl shortUrl={data[0].label} />
+						{data?.label ? (
+							<LinkCopyUrl shortUrl={data.label} />
 						) : (
 							<span style={{ fontWeight: 'bold', color: 'red' }}>{__('No link selected or link may be deleted.', 'betterlinks')}</span>
 						)}
