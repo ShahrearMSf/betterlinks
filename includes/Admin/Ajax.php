@@ -404,8 +404,9 @@ class Ajax {
 		}
 		// give betterlinks a lot of time to properly set the migration work for background.
 		set_time_limit( 300 );
+		$re_run = isset( $_POST['re_run'] ) ? $_POST['re_run'] : false;
 
-		if ( Helper::btl_get_option( 'btl_prettylink_migration_should_not_start_in_background' ) ) {
+		if ( empty($re_run) && Helper::btl_get_option( 'btl_prettylink_migration_should_not_start_in_background' ) ) {
 			// preventing multiple migration call to prevent duplicate datas from migrating.
 			wp_send_json_error( array( 'duplicate_migration_detected__so_prevented_it_here' => true ) );
 		}
