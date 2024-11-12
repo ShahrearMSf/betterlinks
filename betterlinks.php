@@ -149,6 +149,12 @@ if (!class_exists('BetterLinks')) {
         {
             $GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
             $GLOBALS['betterlinks_settings'] = Cache::get_json_settings();
+            $auto_create_link_settings = get_option( BETTERLINKS_PRO_AUTO_LINK_CREATE_OPTION_NAME, array() );
+            if ( is_string( $auto_create_link_settings ) ) {
+                $auto_create_link_settings = json_decode( $auto_create_link_settings, true );
+            }
+            $GLOBALS['betterlinks_settings'] = array_merge( Cache::get_json_settings(), $auto_create_link_settings );
+
         }
 
         public function run_migrator()
