@@ -14,6 +14,7 @@ export const {
 	plugin_root_url,
 	plugin_root_path,
 	site_url,
+	actual_site_url,
 	route_path,
 	exists_links_json,
 	exists_clicks_json,
@@ -30,6 +31,12 @@ export const {
 	betterlinks_settings,
 	is_fbs_enabled,
 	prefix,
+	betterlinks_quick_setup_step = false,
+	migratable_plugins = {
+		simple301redirects: false,
+		thirstyaffliates: false,
+		prettylinks: false,
+	},
 } = window.betterLinksGlobal;
 
 export const API = axios.create({
@@ -189,6 +196,7 @@ export const modalCustomStyles = {
 export const modalCustomSmallStyles = {
 	overlay: {
 		background: 'rgba(35, 40, 45, 0.62)',
+		zIndex: '999999',
 	},
 	content: {
 		top: '50%',
@@ -445,13 +453,13 @@ export const makeAllLinksArr = (store) =>
 		: // if all links are not fetched properly then return false
 		  false;
 
-export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
+export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow, linkId }) => {
 	const attributes = { url };
 	let rel = '';
 
 	if (linkNewTab) {
 		attributes.target = '_blank';
-		rel = 'noreferrer noopener ';
+		rel = 'noopener ';
 	}
 
 	if (sponsored) {
@@ -466,6 +474,10 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 		attributes.rel = rel;
 	}
 
+	if (linkId) {
+		attributes['data-link-id'] = linkId;
+	}
+
 	const result = {
 		type: 'betterlinks/link-format',
 		attributes,
@@ -475,7 +487,7 @@ export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow }) => {
 
 export const permalinkToShortUrl = (permalink) => {
 	if (!permalink) return permalink;
-	const short_url = permalink.replace(site_url + '/', '');
+	const short_url = permalink.replace((actual_site_url || site_url) + '/', '');
 	return short_url.substring(0, short_url.length - +(short_url.lastIndexOf('/') == short_url.length - 1));
 };
 
@@ -647,24 +659,24 @@ const ParameterItem = ({ type, item, style = {} }) => {
 	if (!item) return;
 	const parameterStyles = {
 		root: {
-			display: 'flex',
-			alignItems: 'flex-start',
-			backgroundColor: 'rgb(240, 242, 247)',
-			padding: '8px 12px 8px 12px',
-			borderRadius: '8px',
-			fontSize: '12px',
-			fontWeight: '400',
+			// display: 'flex',
+			// alignItems: 'flex-start',
+			// backgroundColor: 'rgb(240, 242, 247)',
+			// padding: '8px 12px 8px 12px',
+			// borderRadius: '8px',
+			// fontSize: '12px',
+			// fontWeight: '400',
 			...style?.root,
 		},
 		type: {
-			fontSize: '12px',
-			fontWeight: '500',
+			// fontSize: '12px',
+			// fontWeight: '500',
 			...style?.type,
 		},
 	};
 	return (
 		<>
-			<span style={parameterStyles.root}>
+			<span className="btl-parameter-tracking-values" style={parameterStyles.root}>
 				<span style={parameterStyles.type}>{type}: &nbsp;</span> <span>{item}</span>
 			</span>
 		</>

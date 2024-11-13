@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Link } from 'react-router-dom';
-import { route_path, plugin_root_url, betterlinks_custom_domain_menu } from 'utils/helper';
+import { route_path, plugin_root_url, betterlinks_custom_domain_menu, betterlinks_quick_setup_step } from 'utils/helper';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_settings_data } from 'redux/actions/settings.actions';
@@ -81,6 +81,11 @@ const Navbar = (props) => {
 					{betterLinksHooks.applyFilters('isShowSettingsMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-settings' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks-settings'}>{__('Settings', 'betterlinks')}</Link>
+						</li>
+					)}
+					{betterLinksHooks.applyFilters('isShowSettingsMenu', true) && betterlinks_quick_setup_step !== 'complete' && (
+						<li className={`wp-first-item ${currentPage == 'betterlinks-quick-setup' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-quick-setup'}>{__('Quick Setup', 'betterlinks')}</Link>
 						</li>
 					)}
 				</ul>

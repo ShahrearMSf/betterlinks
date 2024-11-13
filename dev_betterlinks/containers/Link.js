@@ -38,6 +38,7 @@ import LinkFields from 'components/CustomFields/LinkFields';
 import FetchedTitleConfirmation from 'components/Link/FetchedTitleConfirmation';
 import AdvanceOptionTeaser from 'components/Teasers/Link/AdvanceOptionTeaser';
 import DynamicRedirectsTeaser from 'components/Teasers/Link/DynamicRedirectsTeaser';
+import ProBadge from 'components/Badge/ProBadge';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -613,9 +614,9 @@ export const Link = (props) => {
 															onChange={() => openUpgradeToProModal()}
 															onClick={() => openUpgradeToProModal()}
 														/>
-														<span className="text">
+														<span className="text btl-text">
 															{__('Uncloak', 'betterlinks')}
-															<span class="pro-badge">Pro</span>
+															<ProBadge />
 															<div className="btl-tooltip">
 																<span className="dashicons dashicons-info-outline"></span>
 																<span className="btl-tooltiptext">{__('This will uncloak your link', 'betterlinks')}</span>
@@ -631,7 +632,7 @@ export const Link = (props) => {
 												<div className={`link-options link-options--advanced ${isOpenLinkPanel.advanced ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('advanced')}>
 														<h4 className="link-options__head--title">
-															{__('Advanced', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
+															{__('Advanced', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
 														</h4>
 														<i className="btl btl-angle-arrow-down" />
 													</button>
@@ -642,7 +643,7 @@ export const Link = (props) => {
 												<div className={`link-options link-options--dynamic-redirect ${isOpenLinkPanel.dynamicRedirect ? 'link-options--open' : ''}`}>
 													<button className="link-options__head" type="button" onClick={() => togglePanel('dynamicRedirect')}>
 														<h4 className="link-options__head--title">
-															{__('Dynamic Redirects', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}{' '}
+															{__('Dynamic Redirects', 'betterlinks')} {!is_pro_enabled && <ProBadge />}{' '}
 															{is_pro_enabled && props.values.dynamic_redirect && props.values.dynamic_redirect.type && props.values.dynamic_redirect.type !== 'none' ? (
 																<span className="status">{__('ON', 'betterlinks')}</span>
 															) : (
@@ -653,8 +654,7 @@ export const Link = (props) => {
 													</button>
 													<div className="link-options__body">
 														{/* Dynamic Redirects teaser */}
-														<DynamicRedirectsTeaser openUpgradeToProModal={openUpgradeToProModal} />
-														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', null, props)}
+														{betterLinksHooks.applyFilters('linkOptionsDynamicRedirect', <DynamicRedirectsTeaser openUpgradeToProModal={openUpgradeToProModal} />, props)}
 													</div>
 												</div>
 												{/* Customize Link Preview */}
@@ -678,7 +678,7 @@ export const Link = (props) => {
 														<div className={`link-options link-options--auto-link-keywords`}>
 															<button className="link-options__head" type="button" onClick={() => openUpgradeToProModal()}>
 																<h4 className="link-options__head--title">
-																	{__('Auto-Link Keywords', 'betterlinks')} <span className="pro-badge">{__('Pro', 'betterlinks')}</span>
+																	{__('Auto-Link Keywords', 'betterlinks')} <ProBadge />
 																</h4>
 															</button>
 														</div>

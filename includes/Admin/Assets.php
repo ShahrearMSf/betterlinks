@@ -2,6 +2,8 @@
 
 namespace BetterLinks\Admin;
 
+use BetterLinks\Helper;
+
 class Assets
 {
     public function __construct()
@@ -77,7 +79,9 @@ class Assets
                 'betterlinks_settings' => $betterlinks_settings,
                 'betterlinks_auth' => defined('AUTH_KEY') ? md5(\AUTH_KEY) : null,
                 'betterlinks_date_format' => get_option( 'date_format' ),
-                'is_fbs_enabled' => defined('FLUENT_BOARDS')
+                'is_fbs_enabled' => defined('FLUENT_BOARDS'),
+                'betterlinks_quick_setup_step' => get_option( 'betterlinks_quick_setup_step', false ),
+                'migratable_plugins' => Helper::get_migratable_plugins()
             ]);
 
             $menu_notice = get_option('betterlinks_menu_notice', 0);
@@ -146,6 +150,7 @@ class Assets
             'plugin_root_url' => BETTERLINKS_PLUGIN_ROOT_URI,
             'plugin_root_path' => BETTERLINKS_ROOT_DIR_PATH,
             'site_url' => apply_filters('betterlinks/site_url', site_url()),
+            'actual_site_url' => site_url(),
             'route_path' => parse_url(admin_url(), PHP_URL_PATH),
             'is_pro_enabled' => apply_filters('betterlinks/pro_enabled', false),
             'prefix' => $prefix,

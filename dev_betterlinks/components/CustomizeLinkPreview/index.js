@@ -8,6 +8,7 @@ import { useUpgradeProModal } from 'utils/customHooks';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import Note from './Note';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import ProBadge from 'components/Badge/ProBadge';
 
 const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handleToggle }) => {
 	const { enable_customize_meta_tags } = settings.settings;
@@ -50,7 +51,7 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 					}}
 				>
 					<h4 className="link-options__head--title">
-						{__('Customize Link Preview', 'betterlinks')} {!is_pro_enabled && <span className="pro-badge">{__('Pro', 'betterlinks')}</span>}
+						{__('Customize Link Preview', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
 					</h4>{' '}
 					{is_pro_enabled && <i className="btl btl-angle-arrow-down" />}
 				</button>
@@ -105,8 +106,14 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 							</div>
 						)}
 						<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-						<CustomizeLinkPreviewTeaser openUpgradeToProModal={openUpgradeToProModal} />
-						{betterLinksHooks.applyFilters('linkOptionsOptimizeMetaTags', null, { ...form, ...settings, metaTag, Note, closeModal, ReactTabs })}
+						{betterLinksHooks.applyFilters('linkOptionsOptimizeMetaTags', <CustomizeLinkPreviewTeaser openUpgradeToProModal={openUpgradeToProModal} />, {
+							...form,
+							...settings,
+							metaTag,
+							Note,
+							closeModal,
+							ReactTabs,
+						})}
 					</Modal>
 				</>
 			</div>

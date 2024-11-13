@@ -734,16 +734,21 @@
 
 .btl-gopremium-container {
 	color: $light;
-	.btl-gopremium-title {
-		color: $white;
+	.btl-gopremium {
+		&-title {
+			color: $white;
+		}
+		&-content {
+			p {
+				color: $white;
+			}
+		}
 	}
 }
 
 .btl-docs {
 	.btl-doc {
 		background: #2c3650;
-		.btl-doc__icon {
-		}
 		.btl-doc__title {
 			color: $white;
 		}
@@ -985,7 +990,12 @@
 		color: #fff;
 	}
 }
-
+.btl-analytic {
+	.btl-analytic-table-wrapper .rdt_Table .rdt_TableCell .btl-parameter-tracking-values {
+		background-color: #36405a;
+		border: 1px solid #525c77;
+	}
+}
 .scheduleweekdayselect {
 	label {
 		border-collapse: collapse;
@@ -1148,6 +1158,63 @@
 					color: #485474;
 				}
 			}
+		}
+	}
+}
+.pro-badge-new {
+	> svg {
+		fill: $dark;
+	}
+}
+
+.btl-quick-setup {
+	.MuiPaper-root {
+		background-color: $dark-mood-darken;
+		color: $light;
+
+		.MuiTypography-root {
+			color: $light;
+		}
+	}
+	.MuiStepper-root {
+		border-color: $dark;
+	}
+	.btl-setup-steps {
+		background-color: $dark-mood-darken;
+		.header {
+			h3,
+			p {
+				color: $light;
+			}
+		}
+		.option {
+			.btl-tab-panel-inner {
+				background-color: $dark-mood-darken;
+			}
+		}
+	}
+	.btl-setup-slider {
+		background-color: $dark-mood-darken;
+		color: $light;
+		border-color: $dark;
+
+		a.skip {
+			color: $dark-mode-link;
+		}
+
+		> div {
+			.button:not(.button-primary),
+			.button[disabled] {
+				background-color: #36405a !important;
+				color: $light !important;
+			}
+		}
+	}
+
+	.finish {
+		.btl-short-url-copy-button,
+		.dashicons {
+			background-color: $light-darken;
 		}
 	}
 }

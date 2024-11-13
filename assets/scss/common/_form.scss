@@ -15,7 +15,7 @@
 		padding-right: 20px;
 		padding-top: 8px;
 		padding-bottom: 8px;
-		min-width: 210px;
+		min-width: 250px;
 		@media screen and (max-width: 650px) {
 			margin-bottom: 5px;
 			text-align: center;
@@ -26,6 +26,18 @@
 				content: '*';
 				margin-left: 2px;
 				color: $danger;
+			}
+		}
+
+		&:has(.pro-badge-new) {
+			position: relative;
+			display: flex;
+			align-items: center;
+			column-gap: 5px;
+
+			> span.pro-badge-new {
+				display: inherit;
+				cursor: pointer;
 			}
 		}
 	}

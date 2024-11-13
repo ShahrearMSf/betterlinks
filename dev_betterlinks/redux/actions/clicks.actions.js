@@ -190,11 +190,11 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 			form_data.append('from', params.from);
 			form_data.append('to', params.to);
 		}
-		params.setLoading(true);
+		setLoading(true);
 		await axios.post(ajaxurl, form_data).then(
 			(response) => {
 				if (response.data) {
-					params.setLoading(false);
+					setLoading(false);
 					dispatch({
 						type: FETCH_CLICKS_DATA,
 						payload: response.data,

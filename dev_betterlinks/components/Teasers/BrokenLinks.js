@@ -5,8 +5,6 @@ import TextField from '@material-ui/core/TextField';
 import { plugin_root_url, pro_version_check } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { useUpgradeProModal } from 'utils/customHooks';
-import Note from 'components/CustomizeLinkPreview/Note';
 
 const propTypes = {};
 
@@ -35,7 +33,10 @@ function Teaser(props) {
 						<Formik>
 							<Form>
 								<div className="btl-role-item btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Enable Scheduled Scan', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Enable Scheduled Scan', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
 											<Field type="checkbox" className="btl-check" disabled />
@@ -44,13 +45,19 @@ function Teaser(props) {
 									</div>
 								</div>
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Frequency', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Frequency', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<Select className="btl-select" classNamePrefix="btl" isDisabled />
 									</div>
 								</div>
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Day', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Day', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<div className="scheduleweekdayselect">
 											{weekOption.map((day, index) => (
@@ -63,7 +70,10 @@ function Teaser(props) {
 									</div>
 								</div>
 								<div className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Time', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Time', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<TextField disabled />
 									</div>
@@ -98,7 +108,10 @@ function Teaser(props) {
 						<Formik>
 							<Form>
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Enable Reporting', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Enable Reporting', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
 											<Field type="checkbox" className="btl-check" disabled />
@@ -107,7 +120,10 @@ function Teaser(props) {
 									</div>
 								</span>
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Reporting Email', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Reporting Email', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
 											<Field type="text" className="btl-form-control" disabled />
@@ -115,7 +131,10 @@ function Teaser(props) {
 									</div>
 								</span>
 								<span className="btl-form-group" onClick={() => openUpgradeToProModal()}>
-									<label className="btl-form-label">{__('Reporting Email Subject', 'betterlinks')}</label>
+									<label className="btl-form-label">
+										{__('Reporting Email Subject', 'betterlinks')}
+										<ProBadge />
+									</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
 											<Field type="text" className="btl-form-control" disabled />

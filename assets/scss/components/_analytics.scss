@@ -869,6 +869,21 @@ $breakpoint-phone: 560px;
 			> div {
 				font-size: 12px;
 			}
+
+			.btl-parameter-tracking-values {
+				display: flex;
+				align-items: flex-start;
+				background-color: rgb(240, 242, 247);
+				padding: 8px 12px 8px 12px;
+				border-radius: 8px;
+				font-size: 12px;
+				font-weight: 400;
+
+				> span {
+					font-size: 12px;
+					font-weight: 500;
+				}
+			}
 		}
 		.rdt_TableCol_Sortable {
 			color: $dark;

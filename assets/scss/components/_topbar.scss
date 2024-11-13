@@ -41,6 +41,7 @@
 
 			.theme-mood-button {
 				height: 35px;
+				cursor: pointer;
 
 				.theme-mood span.icon {
 					height: 25px;
@@ -131,6 +132,8 @@
 		height: 40px;
 		border: 1px solid $light-darken;
 		border-radius: 50px;
+		cursor: pointer;
+
 		input#theme-mood {
 			display: none;
 		}

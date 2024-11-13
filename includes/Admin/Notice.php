@@ -59,14 +59,16 @@ class Notice {
 	public function remove_admin_notice() {
 		$current_screen = get_current_screen();
 		$dashboard_notice = get_option('betterlinks_dashboard_notice');
-		if( 0 === strpos($current_screen->id, "toplevel_page_betterlinks") || 0 === strpos($current_screen->id, "betterlinks_page_") ){
-			remove_all_actions( 'user_admin_notices' );
-			remove_all_actions( 'admin_notices' );
 
+		if( !empty( strpos( $current_screen->id, 'betterlinks-quick-setup' ) ) ){
+			remove_all_actions('admin_notices');
+			return;
+		}
+		
+		if( 0 === strpos($current_screen->id, "toplevel_page_betterlinks") || 0 === strpos($current_screen->id, "betterlinks_page_") ){
 			if( BETTERLINKS_MENU_NOTICE !== $dashboard_notice ) {
-				add_action('admin_notices', array($this, 'new_feature_notice'));
+				add_action('admin_notices', array($this, 'new_feature_notice'), -1);
 			}
-			
             // To showing notice in BetterLinks page
 			add_action( 'admin_notices', function () {
 				do_action('btl_admin_notices');
@@ -75,7 +77,7 @@ class Notice {
 				Notice\Simple301::init();
 				Notice\ThirstyAffiliates::init();
 				// Remove OLD notice from 1.0.0 (if other WPDeveloper plugin has notice)
-				NoticeRemover::get_instance( '1.0.0' );
+				// NoticeRemover::get_instance( '1.0.0' );
 			} );
 		}
 	}
@@ -128,7 +130,7 @@ class Notice {
 			'styles' => self::ASSET_URL . 'css/betterlinks-admin-notice.css',
 			'priority'       => 5
 		] );
-
+		
 		global $betterlinks;
 		$current_user = wp_get_current_user();
 		$total_links  = ( is_array( $betterlinks ) && isset( $betterlinks['links'] ) ? count( $betterlinks['links'] ) : 0 );
@@ -198,7 +200,8 @@ class Notice {
 			[ $this->opt_in_tracker, 'notice' ],
 			[
 				'classes'     => 'updated put-dismiss-notice',
-				'start'       => $notices->strtotime( '+25 day' ),
+				// 'start'       => $notices->strtotime( '+25 day' ),
+				'start'       => $notices->time(),
 				'refresh'     => BETTERLINKS_VERSION,
 				'dismissible' => true,
 				'do_action'   => 'wpdeveloper_notice_clicked_for_betterlinks',
@@ -206,46 +209,79 @@ class Notice {
 			]
 		);
 
-		$b_message            = '<p style="margin-top: 0; margin-bottom: 10px;">Black Friday Sale: <strong>Supercharge your link management</strong> with advanced features & enjoy up to 40% savings 🔗</p><a class="button button-primary" href="https://wpdeveloper.com/upgrade/betterlinks-bfcm" target="_blank">Upgrade to pro</a> <button data-dismiss="true" class="dismiss-btn button button-link">I don’t want to save money</button>';
-		$_black_friday_notice = [
+		// $b_message            = '<p style="margin-top: 0; margin-bottom: 10px;">Black Friday Sale: <strong>Supercharge your link management</strong> with advanced features & enjoy up to 40% savings 🔗</p><a class="button button-primary" href="https://wpdeveloper.com/upgrade/betterlinks-bfcm" target="_blank">Upgrade to pro</a> <button data-dismiss="true" class="dismiss-btn button button-link">I don’t want to save money</button>';
+		// $_black_friday_notice = [
+		// 	'thumbnail' => self::ASSET_URL . 'images/full-logo.svg',
+		// 	'html'      => $b_message,
+		// ];
+
+		// $notices->add(
+		// 	'black_friday_notice',
+		// 	$_black_friday_notice,
+		// 	[
+		// 		'start'       => $notices->time(),
+		// 		'recurrence'  => false,
+		// 		'dismissible' => true,
+		// 		'refresh'     => BETTERLINKS_VERSION,
+		// 		"expire"      => strtotime( '11:59:59pm 2nd December, 2023' ),
+		// 		'display_if'  => !is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
+		// 	]
+		// );
+
+		// $b_message            = '<p style="margin-top: 0; margin-bottom: 10px;"><strong>4<sup>th</sup> Anniversary Sale:</strong> Supercharge your link management with advanced features & enjoy up to <strong>30% savings</strong></p><a class="button button-primary" href="https://betterlinks.io/4th-birthday-sale" target="_blank">Upgrade to pro</a> <button data-dismiss="true" class="dismiss-btn button button-campaign">I don’t want to save money</button>';
+		// $_black_friday_notice = [
+		// 	'thumbnail' => self::ASSET_URL . 'images/full-logo.svg',
+		// 	'html'      => $b_message,
+		// ];
+
+		// $notices->add(
+		// 	'betterlinks_4th_year',
+		// 	$_black_friday_notice,
+		// 	[
+		// 		'start'       => $notices->time(),
+		// 		'recurrence'  => false,
+		// 		'dismissible' => true,
+		// 		'refresh'     => BETTERLINKS_VERSION,
+		// 		"expire"      => strtotime( '11:59:59pm 19th September, 2024' ),
+		// 		'display_if'  => ! is_array( $notices->is_installed( 'betterlinks-pro/betterlinks-pro.php' ) )
+		// 	]
+		// );
+
+		// halloween notice 
+		$crown_icon = self::ASSET_URL . 'images/crown.svg';
+		$b_message            = "<p style='margin-top: 0px; margin-bottom: 0px;'>🎃 Get <strong>25% OFF</strong> on all BetterLinks PRO plans this Halloween and manage your WordPress links like magic.</p><a style='display: inline-flex;align-items:center;column-gap:5px;' class='button button-primary' href='https://betterlinks.io/halloween-2024' target='_blank'><img style='width:15px;' src='{$crown_icon}'/>Upgrade to pro</a>";
+		$halloween_notice = [
 			'thumbnail' => self::ASSET_URL . 'images/full-logo.svg',
 			'html'      => $b_message,
 		];
 
 		$notices->add(
-			'black_friday_notice',
-			$_black_friday_notice,
+			'betterlinks_halloween',
+			$halloween_notice,
 			[
 				'start'       => $notices->time(),
 				'recurrence'  => false,
 				'dismissible' => true,
 				'refresh'     => BETTERLINKS_VERSION,
-				"expire"      => strtotime( '11:59:59pm 2nd December, 2023' ),
-				'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
-			]
-		);
-
-		$b_message            = '<p style="margin-top: 0; margin-bottom: 10px;"><strong>4<sup>th</sup> Anniversary Sale:</strong> Supercharge your link management with advanced features & enjoy up to <strong>30% savings</strong></p><a class="button button-primary" href="https://betterlinks.io/4th-birthday-sale" target="_blank">Upgrade to pro</a> <button data-dismiss="true" class="dismiss-btn button button-campaign">I don’t want to save money</button>';
-		$_black_friday_notice = [
-			'thumbnail' => self::ASSET_URL . 'images/full-logo.svg',
-			'html'      => $b_message,
-		];
-
-		$notices->add(
-			'betterlinks_4th_year',
-			$_black_friday_notice,
-			[
-				'start'       => $notices->time(),
-				'recurrence'  => false,
-				'dismissible' => true,
-				'refresh'     => BETTERLINKS_VERSION,
-				"expire"      => strtotime( '11:59:59pm 19th September, 2024' ),
+				"expire"      => strtotime( '11:59:59pm 3rd November, 2024' ),
 				'display_if'  => ! is_array( $notices->is_installed( 'betterlinks-pro/betterlinks-pro.php' ) )
+				// 'display_if'  => ! is_plugin_active('betterlinks-pro/betterlinks-pro.php')
 			]
 		);
 
 		self::$cache_bank->create_account( $notices );
 		self::$cache_bank->calculate_deposits( $notices );
+
+        if ( method_exists( self::$cache_bank, 'clear_notices_in_' ) ) {
+            self::$cache_bank->clear_notices_in_( [
+                'toplevel_page_betterlinks',
+                'betterlinks_page_betterlinks-keywords-linking',
+                'betterlinks_page_betterlinks-manage-tags',
+                'betterlinks_page_betterlinks-custom-domain',
+                'betterlinks_page_betterlinks-analytics',
+                'betterlinks_page_betterlinks-settings',
+            ], $notices, true );
+        }
 	}
 
 }

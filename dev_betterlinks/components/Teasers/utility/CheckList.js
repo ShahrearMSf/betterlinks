@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import ProBadge from 'components/Badge/ProBadge';
 import PropTypes from 'prop-types';
 
 const propTypes = {
@@ -10,7 +11,7 @@ export default function CheckList({ title = '', is_pro = false, ...props }) {
 		<div className="btl-role-item btl-form-group" {...props}>
 			<label className="btl-form-label">
 				{title}
-				{is_pro && <span class="pro-badge">Pro</span>}
+				{is_pro && <ProBadge />}
 			</label>
 			<div className="link-options__body">
 				<label className="btl-checkbox-field">
