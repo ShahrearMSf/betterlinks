@@ -200,7 +200,8 @@ body {
 	margin-left: 10px;
 	.btl-tooltiptext {
 		visibility: hidden;
-		width: 220px;
+		width: max-content;
+		max-width: 220px;
 		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 		font-size: 14px;
 		color: #fff;
