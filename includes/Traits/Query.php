@@ -1003,7 +1003,7 @@ trait Query {
 			FROM {$wpdb->prefix}betterlinks as links left join {$wpdb->prefix}betterlinkmeta as meta on links.id=meta.link_id;";
 
 		$count = $wpdb->get_row( $query, ARRAY_A );
-		return $count;
+		return is_array( $count ) ? $count : [];
 	}
 	public static function get_password_protected_link_count(){
 		if( ! apply_filters('betterlinks/pro_enabled', false) ){
@@ -1015,6 +1015,23 @@ trait Query {
 		global $wpdb;
 		$query = "SELECT COUNT(*) AS password_protected, SUM(status) AS active_password_protected FROM {$wpdb->prefix}betterlinks_password;";
 		$count = $wpdb->get_row( $query, ARRAY_A );
-		return $count;
+		return is_array( $count ) ? $count : [];
+	}
+
+	public static function get_prettylinks_data() {
+		$links_count  = self::get_prettylinks_links_count();
+		$clicks_count = self::get_prettylinks_clicks_count();
+		set_transient(
+			'betterlinks_migration_data_prettylinks',
+			array(
+				'links_count'  => $links_count,
+				'clicks_count' => $clicks_count,
+			),
+			60 * 5
+		);
+		return array(
+			'links_count'  => $links_count,
+			'clicks_count' => $clicks_count,
+		);
 	}
 }
