@@ -39,6 +39,15 @@ const Teaser = () => {
 					</div>
 				</div>
 			</div>
+			<span className="btl-form-group btl-form-group--teaser btl-form-group-autolink-keyword-icon">
+				<label className="btl-form-label">{__('Disable Auto-Link Keywords', 'betterlinks')}</label>
+				<div className="link-options__body">
+					<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+						<input className="btl-check" name="disable_autolink" type="checkbox" disabled={true} />
+						<span className="text" />
+					</label>
+				</div>
+			</span>
 			<span className="btl-form-group">
 				<label className="btl-form-label">{__('HTML Options', 'betterlinks')}</label>
 				<div className="link-options__body">
