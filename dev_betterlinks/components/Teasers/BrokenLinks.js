@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import { plugin_root_url, pro_version_check } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { useUpgradeProModal } from 'utils/customHooks';
+import ProBadge from 'components/Badge/ProBadge';
 
 const propTypes = {};
 
@@ -14,7 +16,7 @@ export default function BrokenLinks() {
 
 function Teaser(props) {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
-	const is_pro_updated = pro_version_check('2.1.1');
+	const is_pro_updated = pro_version_check('2.1.5');
 	return (
 		<React.Fragment>
 			{!is_pro_updated && (

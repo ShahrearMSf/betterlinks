@@ -31,7 +31,7 @@ const Teaser = () => {
 					<div className="btl-broken-link-checker-wrapper btl-fullsite">
 						<div className="btl-broken-link-checker btl-broken-link-checker-wrapper-left" style={{ width: '55%' }}>
 							<div>
-								<h4>{__('Select Post Type and Scan Url', 'betterlinks')}</h4>
+								<h4>{__('Choose Post Type and Scan URL', 'betterlinks')}</h4>
 								<Settings />
 								<div className="btl-link-scan-btn-group">
 									<button onClick={openUpgradeToProModal} className="btl-link-scan-btn btl-filled-button" style={{ cursor: 'pointer' }}>

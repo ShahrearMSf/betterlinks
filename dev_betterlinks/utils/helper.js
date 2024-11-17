@@ -627,11 +627,11 @@ export const getDataset = (data, uniqueIpCount) => {
 
 	const dataset = [
 		{
-			name: __('Clicks', 'betterlinks') + `<span> ${clicksCount || ''}</span>`,
+			name: __('Clicks', 'betterlinks') + `<span> - ${clicksCount || ''}</span>`,
 			data: clicks?.reverse?.(),
 		},
 		{
-			name: __('Unique Clicks', 'betterlinks') + `<span> ${uniqueIpCount || ''}</span>`,
+			name: __('Unique Clicks', 'betterlinks') + `<span> - ${uniqueIpCount || ''}</span>`,
 			data: uniqueClicks,
 		},
 	];

@@ -51,7 +51,7 @@ export const teaserFLCLinks = [
 
 export const columns = [
 	{
-		name: __('Link', 'betterlinks-pro'),
+		name: __('Link', 'betterlinks'),
 		selector: 'link',
 		sortable: false,
 		width: '300px',
@@ -69,7 +69,7 @@ export const columns = [
 		},
 	},
 	{
-		name: __('Link Label', 'betterlinks-pro'),
+		name: __('Link Label', 'betterlinks'),
 		selector: 'title',
 		sortable: false,
 		width: '200px',
@@ -86,7 +86,7 @@ export const columns = [
 		},
 	},
 	{
-		name: __('Status', 'betterlinks-pro'),
+		name: __('Status', 'betterlinks'),
 		selector: 'status',
 		sortable: false,
 		cell: (row) => {
@@ -111,7 +111,7 @@ export const columns = [
 		},
 	},
 	{
-		name: __('Post', 'betterlinks-pro'),
+		name: __('Post Title', 'betterlinks'),
 		selector: 'post_name',
 		sortable: false,
 		cell: (row) => {
@@ -123,23 +123,23 @@ export const columns = [
 		},
 	},
 	{
-		name: __('Post Type', 'betterlinks-pro'),
+		name: __('Post Type', 'betterlinks'),
 		selector: 'post_type',
 		sortable: false,
 	},
 	{
-		name: __('Actions', 'betterlinks-pro'),
+		name: __('Actions', 'betterlinks'),
 		selector: 'actions',
 		sortable: false,
 		cell: (row) => {
 			const preventClick = (e) => e.preventDefault();
 			return (
 				<div className="btl-action-btns">
-					<a title={row.post_name} onClick={preventClick} style={{ cursor: 'not-allowed' }}>
+					<a title={`Edit - ${row.post_name}`} onClick={preventClick} style={{ cursor: 'not-allowed' }}>
 						<span className="btl btl-edit" />
 					</a>
 					&nbsp;
-					<a style={{ marginLeft: '5px', cursor: 'not-allowed' }} onClick={preventClick}>
+					<a title={`Preview - ${row.post_name}`} style={{ marginLeft: '5px', cursor: 'not-allowed' }} onClick={preventClick}>
 						<span className="btl btl-visit-url" />
 					</a>
 				</div>
