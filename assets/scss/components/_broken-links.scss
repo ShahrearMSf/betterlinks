@@ -529,6 +529,7 @@
 		.rdt_Table {
 			.rdt_TableHead {
 				.rdt_TableHeadRow {
+					justify-content: space-between;
 					.rdt_TableCol {
 						&:nth-child(1) {
 							min-width: 300px;
@@ -550,72 +551,75 @@
 				}
 			}
 			.rdt_TableBody {
-				.rdt_TableRow .rdt_TableCell {
-					padding-left: 15px;
-					padding-right: 15px;
+				.rdt_TableRow {
+					justify-content: space-between;
+					.rdt_TableCell {
+						padding-left: 15px;
+						padding-right: 15px;
 
-					> div,
-					> div span {
-						font-size: 12px !important;
-					}
-					// .betterlinks-broken-links-status-column {
-					// 	padding: 8px;
-					// 	border-radius: 20px;
-					// 	font-size: 12px;
-					// 	&.btl-danger {
-					// 		background-color: rgba(255, 95, 116, 0.15);
-					// 		color: $danger;
-					// 	}
-					// 	&.btl-danger2 {
-					// 		background-color: rgba(255, 95, 116, 0.15);
-					// 		color: $danger;
-					// 	}
-					// 	&.btl-success {
-					// 		background-color: rgb(8, 244, 34);
-					// 		color: $light;
-					// 	}
-					// }
-					&:nth-child(1) {
-						min-width: 300px;
-						.dnd-link-button {
-							span {
-								position: relative;
-								z-index: 1;
+						> div,
+						> div span {
+							font-size: 12px !important;
+						}
+						// .betterlinks-broken-links-status-column {
+						// 	padding: 8px;
+						// 	border-radius: 20px;
+						// 	font-size: 12px;
+						// 	&.btl-danger {
+						// 		background-color: rgba(255, 95, 116, 0.15);
+						// 		color: $danger;
+						// 	}
+						// 	&.btl-danger2 {
+						// 		background-color: rgba(255, 95, 116, 0.15);
+						// 		color: $danger;
+						// 	}
+						// 	&.btl-success {
+						// 		background-color: rgb(8, 244, 34);
+						// 		color: $light;
+						// 	}
+						// }
+						&:nth-child(1) {
+							min-width: 300px;
+							.dnd-link-button {
+								span {
+									position: relative;
+									z-index: 1;
+								}
+								&:focus {
+									outline: none;
+								}
 							}
-							&:focus {
-								outline: none;
+						}
+						&:nth-child(3) {
+							min-width: 100px;
+							padding-left: 0;
+							justify-content: flex-start;
+						}
+						&:nth-child(2) {
+							// max-width: initial;
+							> div {
+								width: 80%;
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+							}
+							button.btl-short-url-copy-button {
+								border: none;
+								padding: 0;
+								background: transparent;
+								line-height: normal;
+								margin-top: 5px;
 							}
 						}
-					}
-					&:nth-child(3) {
-						min-width: 100px;
-						padding-left: 0;
-						justify-content: flex-start;
-					}
-					&:nth-child(2) {
-						// max-width: initial;
-						> div {
-							width: 80%;
-							display: flex;
-							justify-content: space-between;
-							align-items: center;
+						&:nth-child(4) {
+							// justify-content: flex-start;
+							// min-width: 200px;
+							// max-width: 230px;
 						}
-						button.btl-short-url-copy-button {
-							border: none;
-							padding: 0;
-							background: transparent;
-							line-height: normal;
-							margin-top: 5px;
+						&:last-child {
+							// max-width: 100px;
+							min-width: 100px;
 						}
-					}
-					&:nth-child(4) {
-						justify-content: flex-start;
-						min-width: 200px;
-						max-width: 230px;
-					}
-					&:last-child {
-						// max-width: 100px;
-						min-width: 100px;
 					}
 				}
 			}

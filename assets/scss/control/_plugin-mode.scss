@@ -247,28 +247,6 @@
 	}
 	.btl-analytics-chart {
 		border-color: #252f47;
-
-		.btl-analytics-chart-overlay {
-			background-color: rgba(54, 64, 90, 0.7);
-
-			.btl-graphteaser-icon {
-				svg path {
-					stroke: #fff;
-				}
-			}
-
-			.MuiPaper-root {
-				background-color: #252f47;
-
-				.MuiCardContent-root {
-					h5,
-					span,
-					ul > li span {
-						color: $white;
-					}
-				}
-			}
-		}
 	}
 	.btl-analytics-filter,
 	.btl-analytic-table-wrapper,
@@ -1215,6 +1193,28 @@
 		.btl-short-url-copy-button,
 		.dashicons {
 			background-color: $light-darken;
+		}
+	}
+}
+
+.btl-analytics-chart-overlay {
+	background-color: rgba(54, 64, 90, 0.7);
+
+	.btl-graphteaser-icon {
+		svg path {
+			stroke: #fff;
+		}
+	}
+
+	.MuiPaper-root {
+		background-color: #252f47;
+
+		.MuiCardContent-root {
+			h5,
+			span,
+			ul > li span {
+				color: $white;
+			}
 		}
 	}
 }
