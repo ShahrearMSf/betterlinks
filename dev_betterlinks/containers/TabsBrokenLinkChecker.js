@@ -2,8 +2,9 @@ import { __ } from '@wordpress/i18n';
 import ProBadge from 'components/Badge/ProBadge';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { is_pro_enabled } from 'utils/helper';
-import BrokenLinks from 'components/Teasers/BrokenLinks';
-import FullSiteLinkChecker from 'components/Teasers/FullSiteLinkChecker.js';
+const BrokenLinks = lazy(() => import(/* webpackChunkName: "broken-links" */ 'components/Teasers/BrokenLinks'));
+const FullSiteLinkChecker = lazy(() => import(/* webpackChunkName: "full-site-link-scanner" */ 'components/Teasers/FullSiteLinkChecker.js'));
+import { lazy } from 'react';
 
 const TabsBrokenLinkChecker = () => {
 	const tabList = [
