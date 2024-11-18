@@ -88,6 +88,7 @@ export const columns = [
 	{
 		name: __('Status', 'betterlinks'),
 		selector: 'status',
+		width: '150px',
 		sortable: false,
 		cell: (row) => {
 			let label = 'Broken Link';
@@ -113,6 +114,7 @@ export const columns = [
 	{
 		name: __('Post Title', 'betterlinks'),
 		selector: 'post_name',
+		width: '300px',
 		sortable: false,
 		cell: (row) => {
 			return (
@@ -125,11 +127,13 @@ export const columns = [
 	{
 		name: __('Post Type', 'betterlinks'),
 		selector: 'post_type',
+		width: '100px',
 		sortable: false,
 	},
 	{
 		name: __('Actions', 'betterlinks'),
 		selector: 'actions',
+		width: '100px',
 		sortable: false,
 		cell: (row) => {
 			const preventClick = (e) => e.preventDefault();

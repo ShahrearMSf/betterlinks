@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { is_pro_enabled } from 'utils/helper';
 
 const ProBadge = () => {
+	if (is_pro_enabled) return null;
 	return (
 		<span className="pro-badge-new">
 			<svg width={54} height={24} viewBox="0 0 54 24" fill="none" xmlns="http://www.w3.org/2000/svg">
