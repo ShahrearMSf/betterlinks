@@ -1204,6 +1204,9 @@
 		svg path {
 			stroke: #fff;
 		}
+		> p {
+			color: $light;
+		}
 	}
 
 	.MuiPaper-root {
