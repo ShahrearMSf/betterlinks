@@ -7,6 +7,7 @@ const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursd
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { useUpgradeProModal } from 'utils/customHooks';
 import ProBadge from 'components/Badge/ProBadge';
+import Note from 'components/CustomizeLinkPreview/Note';
 
 const propTypes = {};
 
@@ -16,12 +17,12 @@ export default function BrokenLinks() {
 
 function Teaser(props) {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
-	const is_pro_updated = pro_version_check('2.1.5');
+	const is_pro_updated = pro_version_check('2.2');
 	return (
 		<React.Fragment>
 			{!is_pro_updated && (
 				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, padding: '5px', fontSize: '12px' }}>
-					<Note note="In this update, we've relocated the BetterLinks Broken Link Checker. To access it from the new location, please update the BetterLinks Pro plugin to at least v2.1.1. If you haven’t updated yet, you can still find the Broken Link Checker on the settings page." />
+					<Note note="In this update, we've relocated the BetterLinks Broken Link Checker. To access it from the new location, please update the BetterLinks Pro plugin to at least v2.2. If you haven’t updated yet, you can still find the Broken Link Checker on the settings page." />
 				</div>
 			)}
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />

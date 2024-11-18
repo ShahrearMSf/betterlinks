@@ -17,12 +17,12 @@ import { UpgradeToProSpecial } from '../UpgradeToProSpecial';
 
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
-	const is_pro_updated = pro_version_check('2.1.5');
+	const is_pro_updated = pro_version_check('2.2');
 	return (
 		<>
 			{!is_pro_updated && (
 				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, marginBottom: '10px', padding: '10px', fontSize: '12px' }}>
-					<Note note="To utilize the Full Site Link Scanner Feature, please update the BetterLinks Pro plugin to at least v2.1.1." />
+					<Note note="To utilize the Full Site Link Scanner Feature, please update the BetterLinks Pro plugin to at least v2.2." />
 				</div>
 			)}
 			<div style={{ position: 'relative' }}>
