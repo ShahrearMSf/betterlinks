@@ -97,8 +97,8 @@ class Notice {
 				%s
 				</p>
 		</div>", 
-		__('📣 NEW: BetterLinks Pro 2.1 is here, with new ', 'betterlinks'),
-		__('Parameter Tracking', 'betterlinks'),
+		__('📣 NEW: BetterLinks Pro 2.2 is here, with new ', 'betterlinks'),
+		__('Full Site Link Scanner', 'betterlinks'),
 		__('feature & more! Check out the ', 'betterlinks'),
 		__('Changelog', 'betterlinks'),
 		__(' for more details 🎉', 'betterlinks')
