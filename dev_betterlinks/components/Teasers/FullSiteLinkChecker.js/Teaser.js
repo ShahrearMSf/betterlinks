@@ -4,19 +4,20 @@ import UpgradeToPro from '../UpgradeToPro';
 import { useUpgradeProModal } from 'utils/customHooks';
 import DataTable from 'react-data-table-component';
 import { columns, teaserFLCLinks } from './teaser.data';
-import { plugin_root_url, is_pro_enabled, pro_version_check } from 'utils/helper';
+import { plugin_root_url, pro_version_check } from 'utils/helper';
 
-import { List, ListItem, ListItemText, Box, CardContent, Card, CircularProgress, Typography } from '@material-ui/core';
-import { ReactComponent as Stepper } from '../../../../assets/images/teasers/stepper.svg';
+import { List, ListItem, ListItemText, Box, CircularProgress, Typography } from '@material-ui/core';
 import { ReactComponent as Link } from '../../../../assets/images/teasers/link.svg';
-import { ReactComponent as Analytics } from '../../../../assets/images/teasers/analytics.svg';
-import { ReactComponent as Eye } from '../../../../assets/images/teasers/eye.svg';
-import { ReactComponent as Selector } from '../../../../assets/images/teasers/selector.svg';
+import { ReactComponent as Magnifer } from '../../../../assets/images/Magnifer.svg';
+import { ReactComponent as BarChart } from '../../../../assets/images/bar-chart.svg';
+import { ReactComponent as BrokenLinks } from '../../../../assets/images/broken-links.svg';
+
 import Note from 'components/CustomizeLinkPreview/Note';
+import { UpgradeToProSpecial } from '../UpgradeToProSpecial';
 
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
-	const is_pro_updated = pro_version_check('2.1.1');
+	const is_pro_updated = pro_version_check('2.1.5');
 	return (
 		<>
 			{!is_pro_updated && (
@@ -26,7 +27,44 @@ const Teaser = () => {
 			)}
 			<div style={{ position: 'relative' }}>
 				<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-				<UpgradePopup />
+				<UpgradeToProSpecial
+					description={__('Scan your entire website’s Links in posts and pages to get real-time link status-active links, Broken Links, 403 forbidden and more', 'betterlinks')}
+				>
+					<List>
+						{[
+							<div className="btl-graphteaser-icon">
+								<span>
+									<Magnifer />
+								</span>
+								<p>{__("Conduct a thorough scan of your website's links", 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<Link />
+								<p>{__('Pinpoint active and broken links with precision', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<span>🚫</span>
+								<p>{__('Identify 403 forbidden and other error codes', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<span>
+									<BarChart />
+								</span>
+								<p>{__('Keep track of all website link status in real time', 'betterlinks')}</p>
+							</div>,
+							<div className="btl-graphteaser-icon">
+								<span>
+									<BrokenLinks />
+								</span>
+								<p>{__('Update broken links & maintain website integrity', 'betterlinks')}</p>
+							</div>,
+						].map((item) => (
+							<ListItem disableGutters>
+								<ListItemText primary={item} />
+							</ListItem>
+						))}
+					</List>
+				</UpgradeToProSpecial>
 				<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
 					<div className="btl-broken-link-checker-wrapper btl-fullsite">
 						<div className="btl-broken-link-checker btl-broken-link-checker-wrapper-left" style={{ width: '55%' }}>
@@ -185,59 +223,6 @@ const Settings = () => {
 					</div>
 				</span>
 			</form>
-		</div>
-	);
-};
-
-const UpgradePopup = () => {
-	if (is_pro_enabled) return null;
-	return (
-		<div className="btl-analytics-chart-overlay" style={{ zIndex: '10' }}>
-			<Card sx={{ minWidth: 275 }}>
-				<CardContent>
-					<Typography variant="h5" color="text.secondary" gutterBottom>
-						{__('Get BetterLinks PRO & Scan All Your Website Links 🔗', 'betterlinks')}
-					</Typography>
-					<Typography variant="p" color="text.secondary" gutterBottom>
-						{__("Scan your entire website's links in posts and pages to get the real-time ", 'betterlinks')}
-						<br />
-						{__('link status - active links, broken links, 403 forbidden and more', 'betterlinks')}
-					</Typography>
-					<List>
-						{[
-							<div className="btl-graphteaser-icon">
-								<span>🔍</span>
-								<p>{__("Conduct a thorough scan of your website's links", 'betterlinks')}</p>
-							</div>,
-							<div className="btl-graphteaser-icon">
-								<Link />
-								<p>{__('Pinpoint active and broken links with precision', 'betterlinks')}</p>
-							</div>,
-							<div className="btl-graphteaser-icon">
-								<span>🚫</span>
-								<p>{__('Identify 403 forbidden and other error codes', 'betterlinks')}</p>
-							</div>,
-							<div className="btl-graphteaser-icon">
-								<span>🔄</span>
-								<p>{__('Keep track of all website link status in real time', 'betterlinks')}</p>
-							</div>,
-							<div className="btl-graphteaser-icon">
-								<span>🛠️</span>
-								<p>{__('Update broken links & maintain website integrity', 'betterlinks')}</p>
-							</div>,
-						].map((item) => (
-							<ListItem disableGutters>
-								<ListItemText primary={item} />
-							</ListItem>
-						))}
-					</List>
-					<div className="analytics-upgrade-btn">
-						<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank">
-							{__('Upgrade To BetterLinks PRO', 'betterlinks')}
-						</a>
-					</div>
-				</CardContent>
-			</Card>
 		</div>
 	);
 };
