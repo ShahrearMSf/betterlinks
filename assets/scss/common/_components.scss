@@ -86,6 +86,7 @@
 			// transform: translate(4px, 43px);
 			width: 100%;
 			bottom: -10%;
+			left: 0;
 
 			a {
 				display: flex;
@@ -101,12 +102,14 @@
 				position: relative;
 				text-decoration: none;
 				width: 256px;
-				background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+				// background: linear-gradient(202deg, #2961ff 0, #003be2 100%);
+				background-color: #ff9437;
 				border-radius: 8px;
 				box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
 
 				&:hover {
-					background: linear-gradient(202deg, #2058f2 0, #0238cd 100%);
+					// background: linear-gradient(202deg, #2058f2 0, #0238cd 100%);
+					background-color: #f88420;
 				}
 
 				&:focus {
