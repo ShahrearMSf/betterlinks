@@ -72,7 +72,7 @@ const Teaser = () => {
 								<h4>{__('Choose Post Type and Scan URL', 'betterlinks')}</h4>
 								<Settings />
 								<div className="btl-link-scan-btn-group">
-									<button onClick={openUpgradeToProModal} className="btl-link-scan-btn btl-filled-button" style={{ cursor: 'pointer' }}>
+									<button onClick={openUpgradeToProModal} className="btl-link-scan-btn btl-filled-button" style={{ cursor: 'not-allowed' }} disabled>
 										{__('Start New Scan', 'betterlinks')}
 									</button>
 
