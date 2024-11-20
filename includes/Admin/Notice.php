@@ -87,7 +87,7 @@ class Notice {
 	"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/parameter-tracking-with-betterlinks/' style='display: inline-block'>
+				<a target='_blank' href='https://betterlinks.io/docs/full-site-link-scanner-in-betterlinks/' style='display: inline-block'>
 					%s
 				</a>
 				%s
