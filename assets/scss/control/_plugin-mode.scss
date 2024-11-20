@@ -915,6 +915,9 @@
 							}
 						}
 					}
+					div.btl-action-btns a > span {
+						color: #a9adb4;
+					}
 					.btl-link-title {
 						color: $white;
 					}
@@ -1220,4 +1223,8 @@
 			}
 		}
 	}
+}
+
+.btl-notes.notice {
+	background-color: #2c3650;
 }
