@@ -66,6 +66,7 @@ class Notice {
 		}
 		
 		if( 0 === strpos($current_screen->id, "toplevel_page_betterlinks") || 0 === strpos($current_screen->id, "betterlinks_page_") ){
+			remove_all_actions('admin_notices');
 			if( BETTERLINKS_MENU_NOTICE !== $dashboard_notice ) {
 				add_action('admin_notices', array($this, 'new_feature_notice'), -1);
 			}
@@ -77,7 +78,7 @@ class Notice {
 				Notice\Simple301::init();
 				Notice\ThirstyAffiliates::init();
 				// Remove OLD notice from 1.0.0 (if other WPDeveloper plugin has notice)
-				// NoticeRemover::get_instance( '1.0.0' );
+				NoticeRemover::get_instance( '1.0.0' );
 			} );
 		}
 	}
