@@ -7,7 +7,7 @@ import { subDays } from 'date-fns';
 import { dateI18n } from '@wordpress/date';
 import LinkCopyUrl from 'components/LinkCopyUrl';
 import LinksFilter from 'components/LinksFilter';
-import { linksFilterData, insertOverlayElement, analytic, get_tags, betterlinks_date_format } from 'utils/helper';
+import { linksFilterData, insertOverlayElement, analytic, get_tags, betterlinks_date_format, paginationPerPageCount } from 'utils/helper';
 import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
 import { fetch_settings_data, fetch_tracking_settings } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
@@ -284,7 +284,7 @@ const ListCanvas = (props) => {
 						selectableRowsVisibleOnly
 						onSelectedRowsChange={(e) => onSelectedRowsChange(e)}
 						clearSelectedRows={toggledClearRows}
-						paginationRowsPerPageOptions={[10, 30, 50, 100, 200]}
+						paginationRowsPerPageOptions={paginationPerPageCount}
 					/>
 				) : (
 					<TableLoader />

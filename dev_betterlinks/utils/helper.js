@@ -957,3 +957,5 @@ export const sortByClicksTag = (type = '', tags, tag_analytics) => {
 	}
 	return sortedTags;
 };
+
+export const paginationPerPageCount = [10, 30, 50, 100, 200, 500];
