@@ -200,9 +200,7 @@ const Settings = () => {
 						{__('Post Types', 'betterlinks-pro')}
 						<div className="btl-tooltip">
 							<span className="dashicons dashicons-info-outline" style={{ display: 'inline', fontSize: '16px' }} />
-							<span className="btl-tooltiptext">
-								{__("Select those post types where you don't want betterlinks' autolink keywords feature to take effect.", 'betterlinks-pro')}
-							</span>
+							<span className="btl-tooltiptext">{__('Select the post types on which you want to perform the Link Scan', 'betterlinks-pro')}</span>
 						</div>
 					</label>
 					<div className="btl-form-field">
