@@ -36,7 +36,7 @@ if (!class_exists('BetterLinks')) {
             $this->Installer = new BetterLinks\Installer();
             register_activation_hook(__FILE__, [$this, 'activate']);
             register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-            add_action('init', [$this, 'on_plugins_loaded']);
+            add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
             add_action('betterlinks_loaded', [$this, 'init_plugin']);
             add_action('admin_init', [$this, 'run_migrator']);
             add_action('admin_init', [$this, 'do_the_works_if_failed_during_activation'], 100);
