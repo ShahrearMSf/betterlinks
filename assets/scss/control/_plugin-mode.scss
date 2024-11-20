@@ -917,6 +917,13 @@
 					}
 					div.btl-action-btns a > span {
 						color: #a9adb4;
+
+						> svg {
+							fill: #a9adb4;
+						}
+					}
+					.btl-broken-link-table-action button svg {
+						fill: #a9adb4;
 					}
 					.btl-link-title {
 						color: $white;

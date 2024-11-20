@@ -377,7 +377,6 @@
 					}
 				}
 				&:nth-child(4) {
-					// padding-left: 25px;
 					.btl-short-url-wrapper {
 						width: 290px;
 						.btl-short-url {
@@ -434,6 +433,11 @@
 						letter-spacing: -0.65px;
 						display: flex;
 						align-items: center;
+
+						> svg {
+							width: 12px;
+							fill: #4e5260;
+						}
 					}
 					.btl-delete-button {
 						color: $danger;
@@ -534,17 +538,10 @@
 						&:nth-child(1) {
 							min-width: 300px;
 						}
-						// &:nth-child(2) {
-						// 	max-width: initial;
-						// }
 						&:nth-child(3) {
 							min-width: 100px;
 						}
-						&:nth-child(4) {
-							min-width: 200px;
-						}
 						&:last-child {
-							// max-width: 100px;
 							min-width: 100px;
 						}
 					}
@@ -561,23 +558,6 @@
 						> div span {
 							font-size: 12px !important;
 						}
-						// .betterlinks-broken-links-status-column {
-						// 	padding: 8px;
-						// 	border-radius: 20px;
-						// 	font-size: 12px;
-						// 	&.btl-danger {
-						// 		background-color: rgba(255, 95, 116, 0.15);
-						// 		color: $danger;
-						// 	}
-						// 	&.btl-danger2 {
-						// 		background-color: rgba(255, 95, 116, 0.15);
-						// 		color: $danger;
-						// 	}
-						// 	&.btl-success {
-						// 		background-color: rgb(8, 244, 34);
-						// 		color: $light;
-						// 	}
-						// }
 						&:nth-child(1) {
 							min-width: 300px;
 							.dnd-link-button {
@@ -611,13 +591,7 @@
 								margin-top: 5px;
 							}
 						}
-						&:nth-child(4) {
-							// justify-content: flex-start;
-							// min-width: 200px;
-							// max-width: 230px;
-						}
 						&:last-child {
-							// max-width: 100px;
 							min-width: 100px;
 						}
 					}

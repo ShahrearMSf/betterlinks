@@ -169,7 +169,6 @@
 				background-color: #eff4fc;
 				min-height: 45px;
 				height: 45px;
-				// border-color: rgba(217, 225, 244, 1);
 			}
 		}
 	}
@@ -273,6 +272,11 @@
 						> span {
 							font-size: 10px !important;
 							color: rgba(78, 82, 96, 1);
+
+							> svg {
+								width: 10px;
+								fill: #4e5260;
+							}
 						}
 					}
 				}
