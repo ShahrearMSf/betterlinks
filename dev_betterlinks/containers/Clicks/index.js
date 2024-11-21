@@ -21,7 +21,7 @@ const Clicks = (props) => {
 	const [_, setMediumLoading] = useState(false);
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
-	const { clicks, unique_list, referer: top_referer, devices, os, browser, medium } = props.clicks;
+	const { clicks, unique_list, unique_count, referer: top_referer, devices, os, browser, medium } = props.clicks;
 	const { darkMode, analyticsTab } = props.activity;
 
 	useEffect(() => {
@@ -44,6 +44,7 @@ const Clicks = (props) => {
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<Graph
 				data={analyticsData(clicks || { total_count: [], unique_count: [] })}
+				uniqueIpCount={unique_count}
 				customDateFilter={customDateFilter}
 				setCustomDateFilter={setCustomDateFilter}
 				chartLoading={chartLoading}

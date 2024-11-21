@@ -21,7 +21,7 @@ const customStyles = {
 const propTypes = {};
 const features = [
 	__('Custom Domain', 'betterlinks'),
-	__('Broken Link Checker', 'betterlinks'),
+	__('Link Scanner', 'betterlinks'),
 	__('External Tracking', 'betterlinks'),
 	__('Auto-Link Creation', 'betterlinks'),
 	__('Customize Link Preview', 'betterlinks'),

@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 import TextField from '@material-ui/core/TextField';
-import { plugin_root_url } from 'utils/helper';
+import { plugin_root_url, pro_version_check } from 'utils/helper';
 const weekOption = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
+import { useUpgradeProModal } from 'utils/customHooks';
 import ProBadge from 'components/Badge/ProBadge';
+import Note from 'components/CustomizeLinkPreview/Note';
 
 const propTypes = {};
 
-export default function BrokenLinks(props) {
-	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
-	const openUpgradeToProModal = () => {
-		setUpgradeToProModal(true);
-	};
+export default function BrokenLinks() {
+	return betterLinksHooks.applyFilters('betterLinksSettingsBrokenLinkChecker', <Teaser />);
+}
 
-	const closeUpgradeToProModal = () => {
-		setUpgradeToProModal(false);
-	};
+function Teaser(props) {
+	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const is_pro_updated = pro_version_check('2.2');
 	return (
 		<React.Fragment>
+			{!is_pro_updated && (
+				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, padding: '5px', fontSize: '12px' }}>
+					<Note note="In this update, we've relocated the BetterLinks Broken Link Checker. To access it from the new location, please update the BetterLinks Pro plugin to at least v2.2. If you haven’t updated yet, you can still find the Broken Link Checker on the settings page." />
+				</div>
+			)}
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-tab-panel-inner btl-broken-links-panel btl-broken-links-panel-disabled">
 				<div className="btl-broken-link-checker-wrapper">
-					<div className="btl-broken-link-checker">
+					<div className="btl-broken-link-checker" style={{ width: '55%' }}>
 						<h3>{__('Scheduled Scan', 'betterlinks')}</h3>
 						<p>
 							{__('Enable', 'betterlinks')} <strong>{__('“Scheduled Scan”', 'betterlinks')}</strong> {__('to automatically scan broken links on your website.', 'betterlinks')}
@@ -114,7 +118,7 @@ export default function BrokenLinks(props) {
 									<div className="link-options__body">
 										<label className="btl-checkbox-field">
 											<Field type="checkbox" className="btl-check" disabled />
-											<sapan className="text"></sapan>
+											<span className="text" />
 										</label>
 									</div>
 								</span>

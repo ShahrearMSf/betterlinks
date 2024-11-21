@@ -115,7 +115,7 @@ const Graph = (props) => {
 				position: 'top',
 			},
 		},
-		series: getDataset(props.data),
+		series: getDataset(props.data, props.uniqueIpCount),
 	};
 
 	return (

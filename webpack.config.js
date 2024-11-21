@@ -14,6 +14,7 @@ const config = {
 	output: {
 		path: path.resolve(__dirname, 'assets/js'),
 		filename: '[name].js',
+		chunkFilename: '[name].[chunkhash].js',
 	},
 	plugins: [...defaultConfig.plugins, new CleanWebpackPlugin()],
 };

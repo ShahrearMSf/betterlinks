@@ -11,7 +11,7 @@ const Navbar = (props) => {
 	const { menuNotice, settings, page } = props;
 	const currentPage = page;
 
-	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowCustomDomainMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
+	const shouldShowSubmenu = ['isShowManageTagsMenu', 'isShowSettingsMenu', 'isShowCustomDomainMenu', 'isShowLinkScannerMenu', 'isShowAnalyticsMenu', 'isShowKeywordsLinkingMenu'].some((item, i) =>
 		betterLinksHooks.applyFilters(item, i !== 2)
 	);
 	let rootLinks = 'betterlinks';
@@ -71,6 +71,11 @@ const Navbar = (props) => {
 					{betterLinksHooks.applyFilters('isShowAnalyticsMenu', true) && (
 						<li className={`wp-first-item ${currentPage == 'betterlinks-analytics' ? 'current' : ''}`}>
 							<Link to={route_path + 'admin.php?page=betterlinks-analytics'}>{__('Analytics', 'betterlinks')}</Link>
+						</li>
+					)}
+					{betterLinksHooks.applyFilters('isShowLinkScannerMenu', true) && (
+						<li className={`wp-first-item ${currentPage == 'betterlinks-link-scanner' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-link-scanner'}>{__('Link Scanner', 'betterlinks')}</Link>
 						</li>
 					)}
 					{betterLinksHooks.applyFilters('isShowSettingsMenu', true) && (

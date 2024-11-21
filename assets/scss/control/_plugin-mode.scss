@@ -247,28 +247,6 @@
 	}
 	.btl-analytics-chart {
 		border-color: #252f47;
-
-		.btl-analytics-chart-overlay {
-			background-color: rgba(54, 64, 90, 0.7);
-
-			.btl-graphteaser-icon {
-				svg path {
-					stroke: #fff;
-				}
-			}
-
-			.MuiPaper-root {
-				background-color: #252f47;
-
-				.MuiCardContent-root {
-					h5,
-					span,
-					ul > li span {
-						color: $white;
-					}
-				}
-			}
-		}
 	}
 	.btl-analytics-filter,
 	.btl-analytic-table-wrapper,
@@ -786,6 +764,93 @@
 			color: #fff !important;
 		}
 	}
+
+	.btl-fullsite {
+		.btl-broken-link-checker-wrapper-left {
+			background-color: inherit;
+			border-color: #6e7178;
+			h4 {
+				color: $light;
+			}
+		}
+		.btl-broken-link-checker-wrapper-right {
+			.btl-flc-scan-details,
+			.MuiBox-root > .MuiTypography-caption {
+				color: $light;
+			}
+			.btl-flc-scan-details {
+				.btl-flc-scanned-count {
+					> div {
+						background-color: #36405a;
+						border-color: #6e7178;
+						color: $light;
+					}
+				}
+			}
+		}
+	}
+	&.btl-broken-links-table-wrapper--fullsite {
+		.btl-subheader-form {
+			button.button {
+				background-color: #36405a;
+				border-color: #6e7178;
+				color: $light;
+			}
+			.btl-subheader-form-input {
+				input,
+				.btl-react-select__control {
+					background-color: #36405a;
+					border-color: #6e7178;
+					color: $light;
+
+					&::placeholder {
+						color: $light;
+					}
+				}
+
+				.btl-react-select__value-container > div {
+					color: $light;
+
+					.btl-react-select__input > input {
+						height: 30px;
+					}
+				}
+			}
+		}
+
+		.btl-broken-links-table {
+			.rdt_Table {
+				.rdt_TableHeadRow,
+				.rdt_TableRow {
+					border-color: #6e7178;
+
+					.rdt_TableCell {
+						.betterlinks-broken-links-status-column.link-label:has(span.btl-no-status) {
+							background-color: #36405a;
+							border: 1px solid #e99c85;
+						}
+					}
+				}
+				> div:nth-child(2):has(:not(.rdt_TableBody)) {
+					background-color: transparent;
+					border-color: #6e7178;
+					color: $light;
+
+					.btl-no-data-found {
+						svg {
+							stroke: #6e7178;
+							* {
+								fill: #36405a;
+							}
+						}
+					}
+				}
+				// {
+
+				// }
+			}
+		}
+	}
 }
 
 .btl-broken-links-table-wrapper {
@@ -851,7 +916,21 @@
 						color: $light;
 						a {
 							color: $success-lighten;
+
+							& > span {
+								color: $light;
+							}
 						}
+					}
+					div.btl-action-btns a > span {
+						color: #a9adb4;
+
+						> svg {
+							fill: #a9adb4;
+						}
+					}
+					.btl-broken-link-table-action button svg {
+						fill: #a9adb4;
 					}
 					.btl-link-title {
 						color: $white;
@@ -1131,6 +1210,31 @@
 		.btl-short-url-copy-button,
 		.dashicons {
 			background-color: $light-darken;
+		}
+	}
+}
+
+.btl-analytics-chart-overlay {
+	background-color: rgba(54, 64, 90, 0.7);
+
+	.btl-graphteaser-icon {
+		svg path {
+			stroke: #fff;
+		}
+		> p {
+			color: $light;
+		}
+	}
+
+	.MuiPaper-root {
+		background-color: #252f47;
+
+		.MuiCardContent-root {
+			h5,
+			span,
+			ul > li span {
+				color: $white;
+			}
 		}
 	}
 }

@@ -19,13 +19,14 @@ import CompatibilityNotice from 'components/Teasers/CompatibilityNotice';
 const SingleClicks = (props) => {
 	const [isOpenUpgradeToProModal, _, closeUpgradeToProModal] = useUpgradeProModal();
 	const { customDateFilter, setCustomDateFilter } = props?.propsForAnalytics || {};
-	const { id, clicks } = props;
+	const { clicks } = props;
 	const { individual_clicks } = clicks;
 	const [loading, setLoading] = useState(false);
 	const { darkMode, analyticsTab } = props.activity;
 	const { settings } = props.settings;
 	const { analytics } = props.analytics;
 
+	const id = betterLinksQuery.get('id');
 	useEffect(() => {
 		window.scrollTo(0, is_pro_enabled ? 0 : 270);
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
@@ -39,19 +40,33 @@ const SingleClicks = (props) => {
 		if (!clicks) {
 			props.fetch_clicks_data({ from: pastDate, to: currentDate, setLoading });
 		}
-		if (!individual_clicks?.[id]) {
-			props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading });
-		}
+	}, []);
+
+	useEffect(() => {
+		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
+		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
+		const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');
+		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
+		pastDate = from || formatDate(pastDate, 'yyyy-mm-dd');
+
+		props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading });
 	}, [id]);
 
 	const columns = useCallback(getColumns(analytics, analyticsTab, id), [analytics]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
+	const uniqueIpCount = [...new Set(individual_clicks?.[id]?.analytics.map((item) => item.ip))].length;
 	return (
 		<div className="btl-analytic">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			{individual_clicks?.[id] ? (
-				<Graph data={analyticsData(individual_clicks?.[id].graph_data)} customDateFilter={customDateFilter} setCustomDateFilter={setCustomDateFilter} setLoading={setLoading} />
+				<Graph
+					data={analyticsData(individual_clicks?.[id].graph_data)}
+					customDateFilter={customDateFilter}
+					setCustomDateFilter={setCustomDateFilter}
+					setLoading={setLoading}
+					uniqueIpCount={uniqueIpCount}
+				/>
 			) : (
 				<ChartLoader />
 			)}

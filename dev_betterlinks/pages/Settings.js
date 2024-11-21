@@ -17,6 +17,7 @@ import Docs from 'components/Docs';
 import TabsOptions from 'containers/TabsOptions';
 import { is_pro_enabled, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
+import TabsBrokenLinkChecker from 'containers/TabsBrokenLinkChecker';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -35,7 +36,6 @@ const Settings = (props) => {
 		__('Advanced Options', 'betterlinks'),
 		__('Tools', 'betterlinks'),
 		__('Role Management', 'betterlinks'),
-		__('Broken Link Checker', 'betterlinks'),
 		__('Go Premium', 'betterlinks'),
 	]);
 	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
@@ -51,7 +51,6 @@ const Settings = (props) => {
 		/>,
 		<TabsTools query={query} />,
 		<RoleManagement />,
-		<BrokenLinks />,
 		<GoPremium />,
 	]);
 	useEffect(() => {
