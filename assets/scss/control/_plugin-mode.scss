@@ -823,6 +823,13 @@
 				.rdt_TableHeadRow,
 				.rdt_TableRow {
 					border-color: #6e7178;
+
+					.rdt_TableCell {
+						.betterlinks-broken-links-status-column.link-label:has(span.btl-no-status) {
+							background-color: #36405a;
+							border: 1px solid #e99c85;
+						}
+					}
 				}
 				> div:nth-child(2):has(:not(.rdt_TableBody)) {
 					background-color: transparent;
