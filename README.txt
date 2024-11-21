@@ -80,6 +80,7 @@ https://www.youtube.com/watch?v=ZJqBrFhQC1A
 - Customize Link Preview [PRO]
 - Custom Scripts [PRO]
 - Custom Domain [PRO]
+- Full Site Link Scanner [PRO]
 
 [ALL FEATURES](https://betterlinks.io/features/) | [DOCUMENTATION](https://betterlinks.io/docs/) | [PRICING](https://betterlinks.io/#pricing)
 
