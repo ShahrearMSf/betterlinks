@@ -849,3 +849,7 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 		}
 	}
 }
+
+.ReactModal__Body--open.modal-open .supports-drag-drop:has(> .media-modal) {
+	z-index: 999999;
+}
