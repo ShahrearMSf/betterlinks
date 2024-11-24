@@ -36,7 +36,7 @@ if (!class_exists('BetterLinks')) {
             $this->Installer = new BetterLinks\Installer();
             register_activation_hook(__FILE__, [$this, 'activate']);
             register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-            add_action('plugins_loaded', [$this, 'on_plugins_loaded']);
+            add_action('init', [$this, 'on_plugins_loaded']);
             add_action('betterlinks_loaded', [$this, 'init_plugin']);
             add_action('admin_init', [$this, 'run_migrator']);
             add_action('admin_init', [$this, 'do_the_works_if_failed_during_activation'], 100);
@@ -149,6 +149,11 @@ if (!class_exists('BetterLinks')) {
         {
             $GLOBALS['betterlinks'] = BetterLinks\Helper::get_links();
             $GLOBALS['betterlinks_settings'] = Cache::get_json_settings();
+            $auto_create_link_settings = defined('BETTERLINKS_PRO_AUTO_LINK_CREATE_OPTION_NAME') ? get_option( BETTERLINKS_PRO_AUTO_LINK_CREATE_OPTION_NAME, array() ) : array();
+            if ( is_string( $auto_create_link_settings ) ) {
+                $auto_create_link_settings = json_decode( $auto_create_link_settings, true );
+            }
+            $GLOBALS['betterlinks_settings'] = array_merge( Cache::get_json_settings(), $auto_create_link_settings );
         }
 
         public function run_migrator()
