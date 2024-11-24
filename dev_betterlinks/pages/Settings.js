@@ -11,13 +11,11 @@ import TabsGeneral from 'containers/TabsGeneral';
 import TabsTools from 'containers/TabsTools';
 import Migration from 'containers/Migration';
 import RoleManagement from 'components/Teasers/RoleManagement';
-import BrokenLinks from 'components/Teasers/BrokenLinks';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
 import TabsOptions from 'containers/TabsOptions';
 import { is_pro_enabled, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import TabsBrokenLinkChecker from 'containers/TabsBrokenLinkChecker';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -87,7 +85,7 @@ const Settings = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
-			<Tabs defaultIndex={currentTab == 'true' ? 2 : 2}>
+			<Tabs defaultIndex={currentTab == 'true' ? 2 : 0}>
 				<TabList>
 					{tabList.map((item, index) => (
 						<Tab key={index}>{item}</Tab>
