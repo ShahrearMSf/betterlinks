@@ -6,7 +6,7 @@ import FilterComponent from '../FilterComponent';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
-import { betterlinks_nonce, formatDate } from 'utils/helper';
+import { betterlinks_nonce, formatDate, paginationPerPageCount } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.actions';
 import { getData } from '../clicks.helper';
 
@@ -79,6 +79,9 @@ const DataList = (props) => {
 			subHeaderComponent={subHeaderComponentMemo}
 			persistTableHead
 			defaultSortFieldId="name"
+			paginationRowsPerPageOptions={paginationPerPageCount}
+			onChangeRowsPerPage={(rpp) => localStorage.setItem('btlAnalyticsRowsPerPage', rpp)}
+			paginationPerPage={+localStorage.getItem('btlAnalyticsRowsPerPage') || 10}
 		/>
 	);
 };

@@ -16,6 +16,7 @@ const KeywordsLinking = lazy(() => import(/* webpackChunkName: "KeywordsLinking"
 const ManageTags = lazy(() => import(/* webpackChunkName: "ManageTags" */ 'pages/ManageTags'));
 const CustomDomain = lazy(() => import(/* webpackChunkName: "CustomDomain" */ 'pages/CustomDomain'));
 const QuickSetup = lazy(() => import(/* webpackChunkName: "QuickSetup" */ './QuickSetup'));
+const LinkScanner = lazy(() => import(/* webpackChunkName: "LinkScanner" */ './LinkScanner'));
 // const QuickSetup = lazy(() => )
 
 const renderSwitch = (param) => {
@@ -30,6 +31,8 @@ const renderSwitch = (param) => {
 			return <ManageTags />;
 		case 'betterlinks-custom-domain':
 			return <CustomDomain />;
+		case 'betterlinks-link-scanner':
+			return <LinkScanner />;
 		case 'betterlinks-settings':
 			return <Settings />;
 		case 'betterlinks-quick-setup':
