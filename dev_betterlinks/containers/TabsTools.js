@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { nonce, betterlinks_nonce, migratable_plugins } from 'utils/helper';
-import { onSubmitHandler } from './QuickSetup/quicksetup.helper';
 
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
