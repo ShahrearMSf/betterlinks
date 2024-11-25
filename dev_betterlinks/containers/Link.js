@@ -323,6 +323,12 @@ export const Link = (props) => {
 		}
 		if ('duplicate' === type) {
 			delete values.ID;
+			delete values.analytic;
+			delete values.favorite;
+			values.link_date = currentDate;
+			values.link_date_gmt = currentDate;
+			values.link_modified = currentDate;
+			values.link_modified_gmt = currentDate;
 		}
 		onSubmit(values);
 	};

@@ -107,7 +107,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
-			width: '150px',
+			width: '200px',
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction
