@@ -1038,4 +1038,11 @@ trait Query {
 			'clicks_count' => $clicks_count,
 		);
 	}
+
+	public static function used_features_by_client() {
+		return [
+			'betterlinks_broken_link_scanner' => !empty( get_option( 'betterlinkspro_broken_links_logs', [] ) ),
+			'fullsite_link_scanner' => !empty( get_option('betterlinkspro_fullsite_broken_links_logs_cleared', 0) ) || !empty( get_option( 'betterlinkspro_fullsite_broken_links_logs', [] ) )
+		];
+	}
 }
