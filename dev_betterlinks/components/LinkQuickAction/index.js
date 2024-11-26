@@ -100,7 +100,7 @@ const LinkQuickAction = ({
 					)}
 					<div className="btl-tooltip">
 						<Link catId={parseInt(catId)} catName={catName} data={data} submitHandler={addNewLink} type="duplicate" />
-						<span className="btl-tooltiptext">{__('Duplicate Link', 'betterlinks')}</span>
+						<span className="btl-tooltiptext">{__('Create Duplicate', 'betterlinks')}</span>
 					</div>
 				</>
 			) : (
