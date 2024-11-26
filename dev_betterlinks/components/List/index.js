@@ -15,6 +15,7 @@ const List = (props) => {
 		term_name,
 		edit_link,
 		delete_link,
+		add_new_link,
 		favouriteSort: { sortByFav },
 	} = props;
 
@@ -45,6 +46,7 @@ const List = (props) => {
 								catName={term_name}
 								submitLinkHandler={edit_link}
 								deleteLinkHandler={delete_link}
+								addNewLink={add_new_link}
 								data={item}
 								isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowViewLink', true)}
 								isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}

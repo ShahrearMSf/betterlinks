@@ -61,6 +61,7 @@ export const Link = (props) => {
 		setShowLinkModal = () => {},
 		searchFieldRef,
 		linkNewTab,
+		type = '',
 	} = props;
 
 	//👇 slight tweaks to use <Link /> component inside gutenberg start
@@ -320,6 +321,15 @@ export const Link = (props) => {
 			setFieldError('custom_tracking_scripts', true);
 			return;
 		}
+		if ('duplicate' === type) {
+			delete values.ID;
+			delete values.analytic;
+			delete values.favorite;
+			values.link_date = currentDate;
+			values.link_date_gmt = currentDate;
+			values.link_modified = currentDate;
+			values.link_modified_gmt = currentDate;
+		}
 		onSubmit(values);
 	};
 
@@ -330,7 +340,7 @@ export const Link = (props) => {
 			{data ? (
 				<button onClick={openModal} className={`dnd-link-button ${isFetchTerms ? 'btl-rotating' : ''}`}>
 					<span style={{ textDecoration: 'underline', cursor: 'pointer' }}>{props.children}</span>
-					{!props.children && <span className="icon">{!isFetchTerms ? <i className="btl btl-edit"></i> : <i className="btl btl-reload"></i>}</span>}
+					{!props.children && <span className="icon">{!isFetchTerms ? <i className={`btl btl-${'' === type ? 'edit' : 'copy'}`}></i> : <i className="btl btl-reload"></i>}</span>}
 				</button>
 			) : (
 				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
@@ -510,7 +520,7 @@ export const Link = (props) => {
 											<div className="btl-modal-form-group btl-modal-form-group-submit">
 												<label className="btl-modal-form-label"></label>
 												<button type="submit" className="btl-modal-submit-button">
-													{data ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
+													{data && '' === type ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 												</button>
 											</div>
 										)}

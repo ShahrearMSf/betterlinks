@@ -19,7 +19,7 @@ class InnerList extends React.Component {
 		return nextProps.lists !== this.props.lists;
 	}
 	render() {
-		const { lists, settings, edit_link, delete_link, catId } = this.props;
+		const { lists, settings, edit_link, delete_link, add_new_link, catId } = this.props;
 		return lists.map(
 			(list, index) =>
 				!!list.link_title && (
@@ -27,6 +27,7 @@ class InnerList extends React.Component {
 						is_allow_qr={settings && settings.is_allow_qr}
 						edit_link={edit_link}
 						delete_link={delete_link}
+						add_new_link={add_new_link}
 						catId={catId}
 						key={`cat-${catId}-item-${index}`}
 						item={list}
@@ -53,7 +54,7 @@ const CatWrap = memo(({ ind, el, provided, props }) => {
 			<CatHeader catId={parseInt(ind)} catName={el.term_name} catSlug={el.term_slug} />
 			<div ref={provided.innerRef} className="dnd-category-body-wrap" {...provided.droppableProps}>
 				<div className="category-body">
-					<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} catId={ind} lists={lists} />
+					<InnerList settings={props.settings.settings} edit_link={props.edit_link} delete_link={props.delete_link} add_new_link={props.add_new_link} catId={ind} lists={lists} />
 					{provided.placeholder}
 				</div>
 				<div className="category-footer">

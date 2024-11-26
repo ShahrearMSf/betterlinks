@@ -22,6 +22,10 @@ const CustomizeLinkPreview = ({ openAccordion, form, settings, metaTag, __handle
 
 	const customStyles = {
 		...modalCustomStyles,
+		overlay: {
+			...modalCustomStyles.overlay,
+			zIndex: '999999',
+		},
 		content: {
 			...modalCustomStyles.content,
 			maxWidth: '1000px',

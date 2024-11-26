@@ -11,13 +11,11 @@ import TabsGeneral from 'containers/TabsGeneral';
 import TabsTools from 'containers/TabsTools';
 import Migration from 'containers/Migration';
 import RoleManagement from 'components/Teasers/RoleManagement';
-import BrokenLinks from 'components/Teasers/BrokenLinks';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
 import TabsOptions from 'containers/TabsOptions';
 import { is_pro_enabled, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import TabsBrokenLinkChecker from 'containers/TabsBrokenLinkChecker';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);

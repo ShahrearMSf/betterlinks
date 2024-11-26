@@ -6,6 +6,7 @@ import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 const customStyles = {
 	overlay: {
 		background: 'rgba(35, 40, 45, 0.62)',
+		zIndex: '999999',
 	},
 	content: {
 		top: '50%',

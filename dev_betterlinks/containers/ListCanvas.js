@@ -107,7 +107,7 @@ const getLinksListViewColumnData = (props) => {
 			name: __('Action', 'betterlinks'),
 			selector: '',
 			sortable: false,
-			width: '150px',
+			width: '200px',
 			cell: (row) => (
 				<div className="btl-list-view-action-wrapper">
 					<LinkQuickAction
@@ -118,6 +118,7 @@ const getLinksListViewColumnData = (props) => {
 						catId={parseInt(row.cat_id)}
 						submitLinkHandler={props.edit_link}
 						deleteLinkHandler={props.delete_link}
+						addNewLink={props.add_new_link}
 						data={row}
 						isShowEditLink={betterLinksHooks.applyFilters('betterLinksIsShowViewLink', true)}
 						isShowDeleteLink={betterLinksHooks.applyFilters('betterLinksIsShowDeleteLink', true)}

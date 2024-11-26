@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import { nonce, betterlinks_nonce } from 'utils/helper';
+import { nonce, betterlinks_nonce, migratable_plugins } from 'utils/helper';
+
 const TabsTools = ({ query }) => {
 	const [importerMode, setImporterMode] = useState('default');
 	const [taPrefix, setTaPrefix] = useState('');
@@ -26,6 +27,42 @@ const TabsTools = ({ query }) => {
 			);
 		}
 	}, []);
+
+	const onSubmitHandler = (mode, type = 'links') => {
+		let form_data = new FormData();
+		if (mode === 'prettylinks') {
+			form_data.append('action', 'betterlinks/admin/run_prettylinks_migration');
+			form_data.append('re_run', true);
+		} else if (mode === 'simple301redirects') {
+			form_data.append('action', 'betterlinks/admin/run_simple301redirects_migration');
+		} else if (mode === 'thirstyaffiliates') {
+			form_data.append('action', 'betterlinks/admin/run_thirstyaffiliates_migration');
+		}
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('type', type);
+		return axios.post(ajaxurl, form_data).then(
+			(response) => {
+				return response;
+			},
+			(error) => {
+				return error;
+			}
+		);
+	};
+
+	const handleMigration = async (e) => {
+		e.preventDefault();
+		if ('default' !== importerMode) {
+			const res = await onSubmitHandler(importerMode, 'links');
+			const data = res.data?.data;
+			if (data?.['btl_prettylinks_migration_running_in_background']) {
+				setImportResponse({ btl_prettylinks_migration_running_in_background: 'PrettyLinks migration running in background' });
+				return;
+			}
+			setImportResponse(data);
+		}
+	};
+
 	return (
 		<React.Fragment>
 			<div className="btl-tab-inner-divider">
@@ -94,12 +131,31 @@ const TabsTools = ({ query }) => {
 								<label htmlFor="upload">{__('Choose the File You Want to Import', 'betterlinks')}</label>
 								<input type="file" id="upload_file" name="upload_file" size="25" required />
 							</p>
-							<p className="submit">
+							<p className="submit" style={{ display: 'flex', alignItems: 'center', columnGap: '5px' }}>
 								<input type="submit" name="submit" id="submit" className="button button-primary" value={__('Import File', 'betterlinks')} disabled="" />
+								{'default' !== importerMode && migratable_plugins?.[importerMode] && (
+									<>
+										{__('Or', 'betterlinks')}
+										<input type="button" className="button button-primary" value={__('Migrate from Database', 'betterlinks')} onClick={handleMigration} />
+									</>
+								)}
 							</p>
 						</div>
 					</form>
-					<div id="response">{Object.entries(importResponse).map(([index, item]) => item.map((childItem, chiildIndex) => <div key={chiildIndex}>{childItem}</div>))}</div>
+					<div id="response">
+						{Object.keys(importResponse).length > 0 && (
+							<div className="btl-migration-logs">
+								<div className="btl-migration-logs__item">
+									{Object.entries(importResponse).map(([index, item]) => {
+										if (Array.isArray(item)) {
+											return item?.map((childItem, chiildIndex) => <span key={chiildIndex}>{childItem}</span>);
+										}
+										return <span key={index}>{item}</span>;
+									})}
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</React.Fragment>

@@ -32,6 +32,7 @@ const LinkQuickAction = ({
 	catName,
 	submitLinkHandler,
 	deleteLinkHandler,
+	addNewLink,
 }) => {
 	const [isCopyUrl, setCopyUrl] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
@@ -97,6 +98,10 @@ const LinkQuickAction = ({
 							<span className="btl-tooltiptext">{__('Delete', 'betterlinks')}</span>
 						</button>
 					)}
+					<div className="btl-tooltip">
+						<Link catId={parseInt(catId)} catName={catName} data={data} submitHandler={addNewLink} type="duplicate" />
+						<span className="btl-tooltiptext">{__('Create Duplicate', 'betterlinks')}</span>
+					</div>
 				</>
 			) : (
 				<div className="btl-confirm-message">

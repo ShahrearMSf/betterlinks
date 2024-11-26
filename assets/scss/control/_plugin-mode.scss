@@ -302,10 +302,6 @@
 	.rdt_Table {
 		background: #252f47;
 		color: $white;
-		> div {
-			background: #252f47;
-			color: white;
-		}
 		.rdt_TableCol_Sortable {
 			div {
 				color: $white;
@@ -387,8 +383,16 @@
 		background: #252f47;
 		color: $light;
 	}
+	.submit {
+		color: $white;
+	}
 	#response {
 		color: #fff;
+		.btl-migration-logs {
+			background-color: #252f47;
+			color: white;
+			box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+		}
 	}
 }
 .btl-tab-panel-inner .btl-tab-panel-header {
@@ -1236,5 +1240,11 @@
 				color: $white;
 			}
 		}
+	}
+}
+.rdt_Table {
+	> div {
+		background: #252f47;
+		color: white;
 	}
 }
