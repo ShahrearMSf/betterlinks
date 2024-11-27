@@ -1,10 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import ProBadge from 'components/Badge/ProBadge';
 import RedirectType from 'components/RedirectType';
-import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { Field, Form, Formik } from 'formik';
 import { SetupContext } from 'index';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { redirectType } from 'utils/data';
 import { is_pro_enabled, site_url } from 'utils/helper';
 

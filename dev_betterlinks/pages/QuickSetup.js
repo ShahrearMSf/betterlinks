@@ -1,9 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import SetupCanvas from 'containers/QuickSetup/SetupCanvas';
-import Topbar from 'containers/TopBar';
 import { SetupContext } from 'index';
-import { createContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { add_new_link, fetch_links_data } from 'redux/actions/links.actions';
@@ -14,7 +13,14 @@ import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, migrata
 const QuickSetup = (props) => {
 	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 1 : 0);
 	const [clientConsent, setClientConsent] = useState(+betterlinks_quick_setup_step);
-	const [settings, setSettings] = useState(betterlinks_settings);
+	const [settings, setSettings] = useState({
+		...betterlinks_settings,
+		redirect_type: betterlinks_settings?.redirect_type || '307',
+		nofollow: betterlinks_settings?.nofollow || true,
+		track_me: betterlinks_settings?.track_me || true,
+		prefix: betterlinks_settings?.prefix || 'go',
+		is_allow_gutenberg: betterlinks_settings?.is_allow_gutenberg || true,
+	});
 	const [migrationSettings, setMigrationSettings] = useState(migratable_plugins);
 	const [linkOptions, setLinkOptions] = useState(getInitialValues(settings));
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
