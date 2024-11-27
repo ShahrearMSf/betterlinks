@@ -143,10 +143,10 @@ const TabsTools = ({ query }) => {
 						</div>
 					</form>
 					<div id="response">
-						{Object.keys(importResponse).length > 0 && (
+						{Object.keys(importResponse || {}).length > 0 && (
 							<div className="btl-migration-logs">
 								<div className="btl-migration-logs__item">
-									{Object.entries(importResponse).map(([index, item]) => {
+									{Object.entries(importResponse || {}).map(([index, item]) => {
 										if (Array.isArray(item)) {
 											return item?.map((childItem, chiildIndex) => <span key={chiildIndex}>{childItem}</span>);
 										}
