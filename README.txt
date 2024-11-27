@@ -161,7 +161,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 = 2.2.1 - 27/11/2024 =
 
-- Fixed: Fatal Erorr on Plugin activation 
+- Fixed: Fatal Error on Plugin activation 
 - Fixed: Quick Setup default configuration value
 - Fixed: Prevent unwanted duplicate link creation with Quick Link Creation Feature
 - Few minor bug fixes & improvements
