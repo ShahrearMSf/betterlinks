@@ -31,6 +31,7 @@ jsconfig.json
 *.lock
 gulpfile.js
 *.pot~~
+.editorconfig
 
 vendor/priyomukul/wp-notice/composer.json
 vendor/priyomukul/wp-notice/.gitignore
