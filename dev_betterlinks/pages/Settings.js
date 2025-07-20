@@ -73,6 +73,9 @@ const Settings = (props) => {
 						post_default_cat: settings.enable_auto_link && settings.post_shortlinks && settings.post_default_cat,
 						page_shortlinks: settings.enable_auto_link && settings.page_shortlinks,
 						page_default_cat: settings.enable_auto_link && settings.page_shortlinks && settings.page_default_cat,
+						custom_post_type_shortlinks: settings.enable_auto_link && settings.custom_post_type_shortlinks,
+						custom_post_type_default_cat: settings.enable_auto_link && settings.custom_post_type_shortlinks && settings.custom_post_type_default_cat,
+						custom_post_types_selection: settings.enable_auto_link && settings.custom_post_type_shortlinks && settings.custom_post_types_selection,
 					});
 				}
 			});
