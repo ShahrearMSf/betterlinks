@@ -147,7 +147,7 @@ const CustomSidebarComponent = (props) => {
 			setTimeout(() => {
 				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
 			}, 500);
-			return () => {};
+			return () => { };
 		}
 		get_link_by_permalink.then((data) => {
 			// storing fetched autolink data for gutenberg subscribe
@@ -178,7 +178,7 @@ const CustomSidebarComponent = (props) => {
 			setTimeout(() => {
 				document?.body?.classList?.remove('betterlinks-guten-link-data-not-rendered-in-sidebar');
 			}, 500);
-			return () => {};
+			return () => { };
 		}
 		resultOfFetchPermalink
 			.then(() => {
@@ -437,12 +437,12 @@ const CustomSidebarComponent = (props) => {
 							options={
 								is_pro_enabled
 									? [
-											...redirectType,
-											{
-												value: 'cloak',
-												label: __('Cloaked', 'betterlinks'),
-											},
-									  ]
+										...redirectType,
+										{
+											value: 'cloak',
+											label: __('Cloaked', 'betterlinks'),
+										},
+									]
 									: redirectType
 							}
 							value={getDefaultRedirectType(redirectMode)}
@@ -723,7 +723,7 @@ const CustomSidebarComponent = (props) => {
 							params,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then(() => {})
+							.then(() => { })
 							.catch((error) => console.error(error));
 					} else {
 						if (misc?.short_url) return;
@@ -733,7 +733,7 @@ const CustomSidebarComponent = (props) => {
 							true,
 							true
 						)(betterlinksGutenStore.dispatch)
-							.then((data) => {})
+							.then((data) => { })
 							.catch((error) => {
 								delete misc?.short_url;
 								console.error(error);
