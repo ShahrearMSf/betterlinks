@@ -2,6 +2,7 @@
 &.btl-tab-panel-inner:has(.btl-fullsite) {
 	padding: 0;
 }
+
 .btl-fullsite {
 	// Material-ui modified styles
 
@@ -14,13 +15,14 @@
 		flex-direction: column;
 		align-items: center;
 
-		> div {
+		>div {
 			h4 {
 				font-weight: 500;
 				font-size: 20px;
 				text-align: center;
 			}
-			> div form span {
+
+			>div form span {
 				&.btl-form-group {
 					display: flex;
 					flex-direction: column;
@@ -51,14 +53,15 @@
 			max-width: 460px;
 			padding: 10px;
 
-			> div {
+			>div {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 
-				> * {
+				>* {
 					font-size: 16px;
 				}
+
 				p {
 					.btl-flc-round-pointer {
 						width: 13px;
@@ -69,9 +72,11 @@
 						&.blue {
 							background-color: rgba(73, 76, 223, 1);
 						}
+
 						&.green {
 							background-color: rgba(50, 188, 107, 1);
 						}
+
 						&.yellow {
 							background-color: rgba(255, 187, 12, 1);
 						}
@@ -82,7 +87,8 @@
 					margin-top: 30px;
 					column-gap: 10px;
 					user-select: none;
-					> div {
+
+					>div {
 						border-radius: 6px;
 						border-width: 1px;
 						border-style: solid;
@@ -93,20 +99,24 @@
 								border-color: rgba(134, 216, 133, 1);
 								background-color: rgba(247, 255, 247, 1);
 							}
+
 							&--broken {
 								background-color: rgba(255, 248, 245, 1);
 								border-color: rgba(233, 156, 133, 1);
 							}
+
 							&--forbidden {
 								background-color: rgba(255, 253, 247, 1);
 								border-color: rgba(255, 230, 130, 1);
 							}
 						}
+
 						span {
 							display: flex;
 							column-gap: 5px;
 							font-size: 14px;
 						}
+
 						p {
 							font-size: 20px;
 							font-weight: bold;
@@ -122,21 +132,25 @@
 		.MuiCircularProgress-root {
 			transition: ease all 0.5s;
 		}
+
 		.btl-flc-circle-progressbar {
 			z-index: 2;
-			> svg circle {
+
+			>svg circle {
 				stroke-linecap: round;
 				color: rgba(38, 115, 255, 1);
 			}
 		}
+
 		.flc-background-circle {
 			position: absolute;
 			z-index: 1;
 
-			> svg circle {
+			>svg circle {
 				color: rgba(236, 239, 245, 1);
 			}
 		}
+
 		.MuiTypography-caption {
 			font-size: 36px;
 			font-weight: 500;
@@ -160,6 +174,7 @@
 			width: 100%;
 		}
 	}
+
 	.btl-form-field {
 		.btl-modal-select--full {
 			min-width: 300px;
@@ -172,36 +187,42 @@
 			}
 		}
 	}
+
 	.btl-spin {
 		-webkit-animation: btl-spin 2s infinite linear;
 		animation: btl-spin 2s infinite linear;
 	}
+
 	@-webkit-keyframes btl-spin {
 		0% {
 			-webkit-transform: rotate(0deg);
 			transform: rotate(0deg);
 		}
+
 		100% {
 			-webkit-transform: rotate(359deg);
 			transform: rotate(359deg);
 		}
 	}
+
 	@keyframes btl-spin {
 		0% {
 			-webkit-transform: rotate(0deg);
 			transform: rotate(0deg);
 		}
+
 		100% {
 			-webkit-transform: rotate(359deg);
 			transform: rotate(359deg);
 		}
 	}
 }
+
 &.btl-broken-links-table-wrapper--fullsite {
-	> header {
+	>header {
 		.btl-subheader-form {
 			.btl-subheader-form-input {
-				> input[type='text'] {
+				>input[type='text'] {
 					width: 300px;
 					height: 45px;
 					background-color: #f2f5fc;
@@ -218,6 +239,7 @@
 					.btl-react-select__control {
 						background-color: #f2f5fc;
 						border: 1px solid rgba(217, 225, 244, 1);
+
 						.btl-react-select__value-container {
 							height: 42px;
 						}
@@ -232,7 +254,7 @@
 		}
 	}
 
-	> .btl-broken-links-table {
+	>.btl-broken-links-table {
 		.rdt_TableRow {
 			margin-bottom: 0 !important;
 			border-width: 0 0 1px 0 !important;
@@ -246,9 +268,11 @@
 					color: rgb(38, 115, 255);
 					font-weight: 600;
 				}
-				> a {
+
+				>a {
 					text-decoration: none;
-					> span {
+
+					>span {
 						color: rgba(38, 115, 255, 1);
 					}
 				}
@@ -269,11 +293,11 @@
 						justify-content: center;
 						align-items: center;
 
-						> span {
+						>span {
 							font-size: 10px !important;
 							color: rgba(78, 82, 96, 1);
 
-							> svg {
+							>svg {
 								width: 10px;
 								fill: #4e5260;
 							}
@@ -302,6 +326,7 @@
 							cursor: not-allowed;
 							user-select: none;
 						}
+
 						span {
 							&.btl-no-status {
 								font-size: 10px !important;
@@ -312,9 +337,11 @@
 					&.btl-success {
 						border-color: rgba(134, 216, 133, 1);
 					}
+
 					&.btl-danger {
 						border-color: rgba(215, 206, 89, 1);
 					}
+
 					&.btl-danger2 {
 						border-color: rgba(233, 156, 133, 1);
 					}
@@ -353,6 +380,7 @@
 	.btl-broken-link-checker-wrapper-left {
 		flex: auto !important;
 	}
+
 	.btl-broken-link-checker-wrapper-right {
 		justify-content: center !important;
 	}
