@@ -25,6 +25,9 @@ const Teaser = () => {
 					<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
 					<CheckList title={__('Page Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
 					<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
+					<CheckList title={__('Custom Post Type Shortlinks', 'betterlinks')} onClick={openUpgradeToProModal} />
+					<SelectTeaser title={__('BetterLinks Category')} onClick={openUpgradeToProModal} />
+					<SelectTeaser title={__('Select Custom Post Types')} onClick={openUpgradeToProModal} />
 				</Form>
 			</Formik>
 		</>
