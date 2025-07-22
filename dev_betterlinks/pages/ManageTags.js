@@ -299,7 +299,14 @@ const ManageTags = (props) => {
 
 	return (
 		<>
-			<TopBar label={__('Manage Terms', 'betterlinks')} />
+			<TopBar
+				label={activeTabIndex === 0 ? __('Manage Tags', 'betterlinks') : __('Manage Categories', 'betterlinks')}
+				render={() => (
+					activeTabIndex === 0 ?
+						<AddNewTags tags={tags} /> :
+						<AddNewCategories categories={categories} />
+				)}
+			/>
 			<Tabs selectedIndex={activeTabIndex} onSelect={handleTabChange}>
 				<TabList>
 					<Tab>{__('Tags Analytics', 'betterlinks')}</Tab>
@@ -307,17 +314,11 @@ const ManageTags = (props) => {
 				</TabList>
 				<TabPanel>
 					<div style={{ marginTop: '20px' }}>
-						<div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-							<AddNewTags tags={tags} />
-						</div>
 						<TagsAnalytics />
 					</div>
 				</TabPanel>
 				<TabPanel>
 					<div style={{ marginTop: '20px' }}>
-						<div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-							<AddNewCategories categories={categories} />
-						</div>
 						<CategoriesAnalytics />
 					</div>
 				</TabPanel>
