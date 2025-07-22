@@ -300,7 +300,7 @@ const ManageTags = (props) => {
 	return (
 		<>
 			<TopBar label={__('Manage Terms', 'betterlinks')} />
-			<Tabs>
+			<Tabs selectedIndex={activeTabIndex} onSelect={handleTabChange}>
 				<TabList>
 					<Tab>{__('Tags Analytics', 'betterlinks')}</Tab>
 					<Tab>{__('Categories Analytics', 'betterlinks')}</Tab>
