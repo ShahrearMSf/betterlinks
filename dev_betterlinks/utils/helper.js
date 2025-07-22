@@ -69,7 +69,7 @@ export const reorder = (list, startIndex, endIndex) => {
 		}, [])
 	);
 	axios.post(ajaxurl, form_data).then(
-		(response) => {},
+		(response) => { },
 		(error) => {
 			console.log(error);
 		}
@@ -134,7 +134,7 @@ export const move = (source, destination, droppableSource, droppableDestination)
 		}, [])
 	);
 	axios.post(ajaxurl, form_data).then(
-		(response) => {},
+		(response) => { },
 		(error) => {
 			console.log(error);
 		}
@@ -436,22 +436,22 @@ export const trimmed = (str) => (typeof str === 'string' ? str : '').trim();
 export const parseLinksForKeywordsListing = (data) =>
 	data?.links
 		? Object.values(data.links)
-				.reduce((acc, curr) => [...acc, ...curr.lists], [])
-				.map((item) => ({ value: item.ID, label: item.short_url }))
+			.reduce((acc, curr) => [...acc, ...curr.lists], [])
+			.map((item) => ({ value: item.ID, label: item.short_url }))
 		: [];
 
 export const parseLinksForUpdateModal = (data) =>
 	data.links
 		? Object.values(data.links)
-				.reduce((acc, curr) => [...acc, ...curr.lists], [])
-				.map((item) => ({ value: item.ID, label: item.link_title }))
+			.reduce((acc, curr) => [...acc, ...curr.lists], [])
+			.map((item) => ({ value: item.ID, label: item.link_title }))
 		: [];
 
 export const makeAllLinksArr = (store) =>
 	store?.getState()?.links?.links
 		? Object.values(store?.getState()?.links?.links).reduce((acc, curr) => [...acc, ...(curr?.lists || [])], [])
 		: // if all links are not fetched properly then return false
-		  false;
+		false;
 
 export const makeLinkFormat = ({ url, linkNewTab, sponsored, noFollow, linkId }) => {
 	const attributes = { url };
@@ -956,6 +956,20 @@ export const sortByClicksTag = (type = '', tags, tag_analytics) => {
 		sortedTags = _.reverse(sortedTags);
 	}
 	return sortedTags;
+};
+
+export const sortByClicksCategory = (type = '', categories, category_analytics) => {
+	const [analyticsType, sortType] = type.split('-');
+	if (!analyticsType || !sortType) return categories;
+
+	let sortedCategories = _.orderBy(categories, (item) => {
+		return +category_analytics[analyticsType][item.id] || 0;
+	});
+
+	if ('desc' === sortType) {
+		sortedCategories = _.reverse(sortedCategories);
+	}
+	return sortedCategories;
 };
 
 export const paginationPerPageCount = [10, 30, 50, 100, 200, 500];

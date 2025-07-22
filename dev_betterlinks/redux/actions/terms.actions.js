@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API, namespace, betterlinks_nonce, makeRequest } from 'utils/helper';
-import { ADD_TERM, DELETE_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_TERMS_DATA, UPDATE_TERM } from 'redux/actions/actionstrings';
+import { ADD_TERM, DELETE_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_CATEGORIES, FETCH_TERMS_DATA, UPDATE_TERM } from 'redux/actions/actionstrings';
 
 export const delete_tag = (params) => async (dispatch) => {
 	params.map(async (item) => {
@@ -58,6 +58,21 @@ export const fetch_all_tags = () => async (dispatch) => {
 		if (res?.data) {
 			dispatch({
 				type: FETCH_TAGS,
+				payload: res.data,
+			});
+		}
+	} catch (error) {
+		console.log({ error: error.message });
+	}
+};
+
+export const fetch_all_categories = () => async (dispatch) => {
+	try {
+		const res = await API.get(namespace + 'terms/categories');
+
+		if (res?.data) {
+			dispatch({
+				type: FETCH_CATEGORIES,
 				payload: res.data,
 			});
 		}
