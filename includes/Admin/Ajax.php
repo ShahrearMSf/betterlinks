@@ -998,14 +998,37 @@ class Ajax {
 		$days_older_than = isset( $_REQUEST['days_older_than'] ) ? sanitize_text_field( $_REQUEST['days_older_than'] ) : false;
 		$from            = isset( $_REQUEST['from'] ) ? sanitize_text_field( $_REQUEST['from'] ) : date( 'Y-m-d', strtotime( ' - 30 days' ) );
 		$to              = isset( $_REQUEST['to'] ) ? sanitize_text_field( $_REQUEST['to'] ) : date( 'Y-m-d' );
+		$link_id         = isset( $_REQUEST['link_id'] ) ? intval( $_REQUEST['link_id'] ) : null;
 		$query           = '';
+		
 		if ( $days_older_than !== false ) {
+			// Legacy support for days_older_than parameter
 			$range_days_in_seconds           = intval( $days_older_than ) * 24 * 60 * 60;
 			$gmt_timestamp_of_the_range_time = time() - $range_days_in_seconds;
-			$query                           = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d";
-			$query                           = $wpdb->prepare( $query, $gmt_timestamp_of_the_range_time );
+			if ( $link_id !== null ) {
+				$query = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d AND link_id = %d";
+				$query = $wpdb->prepare( $query, $gmt_timestamp_of_the_range_time, $link_id );
+			} else {
+				$query = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d";
+				$query = $wpdb->prepare( $query, $gmt_timestamp_of_the_range_time );
+			}
+		} elseif ( !empty( $from ) && !empty( $to ) ) {
+			// Use date range for deletion
+			if ( $link_id !== null ) {
+				$query = "DELETE FROM {$prefix}betterlinks_clicks WHERE DATE(created_at_gmt) >= %s AND DATE(created_at_gmt) <= %s AND link_id = %d";
+				$query = $wpdb->prepare( $query, $from, $to, $link_id );
+			} else {
+				$query = "DELETE FROM {$prefix}betterlinks_clicks WHERE DATE(created_at_gmt) >= %s AND DATE(created_at_gmt) <= %s";
+				$query = $wpdb->prepare( $query, $from, $to );
+			}
 		} else {
-			$query = "DELETE FROM {$prefix}betterlinks_clicks";
+			// Delete all records as fallback
+			if ( $link_id !== null ) {
+				$query = "DELETE FROM {$prefix}betterlinks_clicks WHERE link_id = %d";
+				$query = $wpdb->prepare( $query, $link_id );
+			} else {
+				$query = "DELETE FROM {$prefix}betterlinks_clicks";
+			}
 		}
 		$count = $wpdb->query( $query );
 		if ( $count === false ) {
