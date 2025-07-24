@@ -27,7 +27,7 @@ const renderSwitch = (param) => {
 			return <KeywordsLinking />;
 		case 'betterlinks-analytics':
 			return <Analytics />;
-		case 'betterlinks-manage-tags':
+		case 'betterlinks-manage-tags-and-categories':
 			return <ManageTags />;
 		case 'betterlinks-custom-domain':
 			return <CustomDomain />;

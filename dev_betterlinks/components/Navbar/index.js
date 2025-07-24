@@ -59,8 +59,8 @@ const Navbar = (props) => {
 						</li>
 					)}
 					{betterLinksHooks.applyFilters('isShowManageTagsMenu', true) && (
-						<li className={`wp-first-item ${currentPage == 'betterlinks-manage-tags' ? 'current' : ''}`}>
-							<Link to={route_path + 'admin.php?page=betterlinks-manage-tags'}>{__('Manage Tags', 'betterlinks')}</Link>
+						<li className={`wp-first-item ${currentPage == 'betterlinks-manage-tags-and-categories' ? 'current' : ''}`}>
+							<Link to={route_path + 'admin.php?page=betterlinks-manage-tags-and-categories'}>{__('Tags & Categories', 'betterlinks')}</Link>
 						</li>
 					)}
 					{betterLinksHooks.applyFilters('isShowCustomDomainMenu', customDomainMenu) && (
