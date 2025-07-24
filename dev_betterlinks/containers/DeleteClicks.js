@@ -6,35 +6,13 @@ import { deleteClicks, formatDate, exists_clicks_json, betterlinks_nonce, delayS
 import { fetchCustomClicksData, fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { dispatch_new_links_data } from 'redux/actions/links.actions';
 import Modal from 'react-modal';
-import Select2 from 'react-select';
+import { DateRangePicker } from 'react-date-range';
+import { subDays } from 'date-fns';
 import axios from 'axios';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { useLocation } from 'react-router-dom';
 
-const deleteClicksOptions = [
-	{
-		label: __('Delete All', 'betterlinks'),
-		value: false,
-	},
-	{
-		label: __('Delete clicks older than 5 days', 'betterlinks'),
-		value: 5,
-	},
-	{
-		label: __('Delete clicks older than 10 days', 'betterlinks'),
-		value: 10,
-	},
-	{
-		label: __('Delete clicks older than 20 days', 'betterlinks'),
-		value: 20,
-	},
-	{
-		label: __('Delete clicks older than 30 days', 'betterlinks'),
-		value: 30,
-	},
-	{
-		label: __('Delete clicks older than 90 days', 'betterlinks'),
-		value: 90,
-	},
-];
 
 const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_clicks_data, propsForAnalytics }) => {
 	const { customDateFilter } = propsForAnalytics || {};
@@ -42,7 +20,13 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [successfulDeletedItemsCount, setSuccessfulDeletedItemsCount] = useState(0);
 	const [deleteStatus, setDeleteStatus] = useState('reset_modal_step_1');
-	const [currentDaysOlderThan, setCurrentDaysOlderThan] = useState(deleteClicksOptions[0]);
+	const [resetDateFilter, setResetDateFilter] = useState([
+		{
+			startDate: subDays(new Date(), 30),
+			endDate: new Date(),
+			key: 'selection',
+		},
+	]);
 	const [confirmationText, setConfirmationText] = useState('');
 
 	// Refresh Stats button states
@@ -65,7 +49,13 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 		clearTimeout(timeOutIdToClear);
 		setDeleteStatus('reset_modal_step_1');
 		setModalIsOpen(false);
-		setCurrentDaysOlderThan(deleteClicksOptions[0]);
+		setResetDateFilter([
+			{
+				startDate: subDays(new Date(), 30),
+				endDate: new Date(),
+				key: 'selection',
+			},
+		]);
 		setConfirmationText('');
 	};
 
@@ -80,12 +70,13 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 			return;
 		}
 
-		if (!customDateFilter) return;
-		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
-		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
+		if (!resetDateFilter || !resetDateFilter[0]) return;
+		const from = formatDate(resetDateFilter[0].startDate, 'yyyy-mm-dd');
+		const to = formatDate(resetDateFilter[0].endDate, 'yyyy-mm-dd');
 		setDeleteStatus('deleting');
-		const daysOlderThan = currentDaysOlderThan.value === false ? false : currentDaysOlderThan.value;
-		deleteClicks(daysOlderThan, from, to)
+
+		// Use the selected date range instead of days older than
+		deleteClicks(false, from, to, linkId)
 			.then((res) => {
 				const timeoutId = setTimeout(() => {
 					close();
@@ -120,7 +111,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 	};
 
 	const handleDeleteOptionsChange = (value) => {
-		setCurrentDaysOlderThan(value);
+		setResetDateFilter([value.selection]);
+	};
+
+	const handleApplyDateRange = () => {
+		setDeleteStatus('reset_modal_step_2');
+		setConfirmationText(''); // Clear confirmation text when moving to step 2
 	};
 
 	const handleConfirmationTextChange = (e) => {
@@ -169,6 +165,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 		);
 	};
 
+	const location = useLocation();
+	const params = new URLSearchParams(location.search);
+	const linkId = params.get('id');
+
 	const isResetButtonEnabled = confirmationText.trim() === 'RESET CLICKS';
 	return (
 		<div className="btl-analytic-reset-wrapeer btl-btn-groups betterlinks">
@@ -184,7 +184,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 				)}
 			</div>
 			<button className="button-secondary-gray btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
-				Reset
+				{linkId ? 'Reset Link Clicks' : 'Reset'}
 			</button>
 			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
 				<div className="btl-reset-modal-popup-wrapper ">
@@ -193,19 +193,30 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					</span>
 					{deleteStatus === 'reset_modal_step_1' && (
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
-							<h2>Pick the range of BetterLinks Analytics that you want to reset.</h2>
-							<div className="select_apply">
-								<Select2
-									className={`btl-modal-select--full `}
-									classNamePrefix="btl-react-select"
+							<div className="btl-compact-date-picker">
+								<div className="btl-date-picker-title">{linkId ? 'Select Date Range for Link Clicks' : 'Select Date Range'}</div>
+								<DateRangePicker
 									onChange={handleDeleteOptionsChange}
-									options={deleteClicksOptions}
-									value={currentDaysOlderThan}
-									isMulti={false}
+									showSelectionPreview={true}
+									moveRangeOnFirstSelection={false}
+									months={2}
+									ranges={resetDateFilter}
+									direction="horizontal"
+									showMonthAndYearPickers={true}
+									showDateDisplay={false}
+									rangeColors={['#007cba']}
+									color="#007cba"
+									staticRanges={[]}
+									inputRanges={[]}
 								/>
-								<button className="button-primary btl-btn-reset-analytics btl-btn-reset-apply-1" onClick={handleResetButtonClick2}>
-									Apply
-								</button>
+								<div className="btl-date-picker-actions">
+									<button
+										className="button-primary btl-apply-date-range"
+										onClick={handleApplyDateRange}
+									>
+										Apply Date Range
+									</button>
+								</div>
 							</div>
 						</div>
 					)}
@@ -213,8 +224,8 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
 							<h2>This Action Cannot be undone. Are you sure you want to continue?</h2>
 							<h4>
-								Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete the clicks data from database and it cannot be restored again.
-								<span style={{ display: 'Block' }}>Click 'cancel' to abort.</span>
+								Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete clicks data {linkId ? `for this specific link ` : ''}from <strong>{resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}</strong> to <strong>{resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}</strong> from the database and it cannot be restored again.
+								<span style={{ display: 'Block' }}>Click 'Go Back' to change the date range.</span>
 							</h4>
 							<input
 								type="text"
@@ -238,7 +249,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 									Reset Clicks
 								</button>
 								<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
-									Cancel
+									Go Back
 								</button>
 							</div>
 						</div>
@@ -246,17 +257,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
 					{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
 						<h2>
-							Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record Deleted!!!
+							Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record{successfulDeletedItemsCount !== 1 ? 's' : ''} {linkId ? 'for this link ' : ''}deleted!!!
 						</h2>
 					)}
 					{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
 						<h2>
-							{currentDaysOlderThan?.value === false && "You don't have any clicks data"}
-							{currentDaysOlderThan?.value === 5 && "You don't have clicks data older than 5 days"}
-							{currentDaysOlderThan?.value === 10 && "You don't have clicks data older than 10 days"}
-							{currentDaysOlderThan?.value === 20 && "You don't have clicks data older than 20 days"}
-							{currentDaysOlderThan?.value === 30 && "You don't have clicks data older than 30 days"}
-							{currentDaysOlderThan?.value === 90 && "You don't have clicks data older than 90 days"}
+							No clicks data found {linkId ? 'for this link ' : ''}in the selected date range ({resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} - {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })})
 						</h2>
 					)}
 					{deleteStatus === 'failed' && <h2>Failed!!</h2>}

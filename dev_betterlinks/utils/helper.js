@@ -77,7 +77,7 @@ export const reorder = (list, startIndex, endIndex) => {
 
 	return result;
 };
-export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(new Date(), 30), 'yyyy-mm-dd'), to = formatDate(new Date(), 'yyyy-mm-dd')) => {
+export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(new Date(), 30), 'yyyy-mm-dd'), to = formatDate(new Date(), 'yyyy-mm-dd'), linkId = null) => {
 	const form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/reset_analytics');
 	form_data.append('security', betterlinks_nonce);
@@ -86,6 +86,9 @@ export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(ne
 	}
 	form_data.append('from', from);
 	form_data.append('to', to);
+	if (linkId !== null) {
+		form_data.append('link_id', linkId);
+	}
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
 			return response;
