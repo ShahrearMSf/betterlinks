@@ -66,7 +66,12 @@ const Clicks = (props) => {
 				}}
 			/>
 			<div className="btl-analytic-table-wrapper">
-				<AnalyticsList analyticsTab={analyticsTab} unique_list={unique_list} loading={loading} />
+				<AnalyticsList
+					analyticsTab={analyticsTab}
+					unique_list={unique_list}
+					loading={loading}
+					customDateFilter={customDateFilter}
+				/>
 			</div>
 		</div>
 	);

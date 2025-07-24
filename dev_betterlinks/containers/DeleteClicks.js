@@ -2,16 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { deleteClicks, formatDate } from 'utils/helper';
-import { fetchCustomClicksData } from 'redux/actions/clicks.actions';
+import { deleteClicks, formatDate, exists_clicks_json, betterlinks_nonce, delayStatusChanged } from 'utils/helper';
+import { fetchCustomClicksData, fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { dispatch_new_links_data } from 'redux/actions/links.actions';
 import Modal from 'react-modal';
 import Select2 from 'react-select';
+import axios from 'axios';
 
 const deleteClicksOptions = [
 	{
 		label: __('Delete All', 'betterlinks'),
 		value: false,
+	},
+	{
+		label: __('Delete clicks older than 5 days', 'betterlinks'),
+		value: 5,
+	},
+	{
+		label: __('Delete clicks older than 10 days', 'betterlinks'),
+		value: 10,
+	},
+	{
+		label: __('Delete clicks older than 20 days', 'betterlinks'),
+		value: 20,
 	},
 	{
 		label: __('Delete clicks older than 30 days', 'betterlinks'),
@@ -23,13 +36,19 @@ const deleteClicksOptions = [
 	},
 ];
 
-const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsForAnalytics }) => {
+const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_clicks_data, propsForAnalytics }) => {
 	const { customDateFilter } = propsForAnalytics || {};
 	const [timeOutIdToClear, setTimeOutIdToClear] = useState(0);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [successfulDeletedItemsCount, setSuccessfulDeletedItemsCount] = useState(0);
 	const [deleteStatus, setDeleteStatus] = useState('reset_modal_step_1');
 	const [currentDaysOlderThan, setCurrentDaysOlderThan] = useState(deleteClicksOptions[0]);
+	const [confirmationText, setConfirmationText] = useState('');
+
+	// Refresh Stats button states
+	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
+	const [fastClicksButtonText, setFastClicksButtonText] = useState(__('Active Now', 'betterlinks'));
+	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 
 	useEffect(() => {
 		if (modalIsOpen) {
@@ -47,14 +66,25 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 		setDeleteStatus('reset_modal_step_1');
 		setModalIsOpen(false);
 		setCurrentDaysOlderThan(deleteClicksOptions[0]);
+		setConfirmationText('');
 	};
 
 	const handleConfirmDelete = () => {
+		// Check if confirmation text matches "Reset Clicks" exactly (case-sensitive)
+		if (confirmationText.trim() !== 'RESET CLICKS') {
+			// Focus the input field if text doesn't match
+			const inputElement = document.querySelector('.btl-confirmation-input');
+			if (inputElement) {
+				inputElement.focus();
+			}
+			return;
+		}
+
 		if (!customDateFilter) return;
 		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
 		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
 		setDeleteStatus('deleting');
-		const daysOlderThan = currentDaysOlderThan?.value || false;
+		const daysOlderThan = currentDaysOlderThan.value === false ? false : currentDaysOlderThan.value;
 		deleteClicks(daysOlderThan, from, to)
 			.then((res) => {
 				const timeoutId = setTimeout(() => {
@@ -86,14 +116,74 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 
 	const handleResetButtonClick2 = () => {
 		setDeleteStatus('reset_modal_step_2');
+		setConfirmationText(''); // Clear confirmation text when moving to step 2
 	};
 
 	const handleDeleteOptionsChange = (value) => {
 		setCurrentDaysOlderThan(value);
 	};
+
+	const handleConfirmationTextChange = (e) => {
+		setConfirmationText(e.target.value);
+	};
+
+	// Refresh Stats functionality
+	const writeClicksJSONHandler = () => {
+		setFastClicksButtonText(__('Activating...', 'betterlinks'));
+		axios.post(`${ajaxurl}?action=betterlinks/admin/write_json_clicks&security=${betterlinks_nonce}`).then(
+			(response) => {
+				if (response.data) {
+					delayStatusChanged(null, __('Activated!', 'betterlinks'), __('Active Now', 'betterlinks'), setFastClicksButtonText);
+					setTimeout(() => {
+						setFastClicksStatus(true);
+					}, 1500);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
+
+	const analyticClicksHandler = () => {
+		setCacheButtonText(__('Refreshing...', 'betterlinks'));
+		axios.post(`${ajaxurl}?action=betterlinks/admin/analytics&security=${betterlinks_nonce}`).then(
+			(response) => {
+				if (response.data) {
+					delayStatusChanged(null, __('Done!', 'betterlinks'), __('Refresh Stats', 'betterlinks'), setCacheButtonText);
+					// update analytic data with current date filter
+					if (customDateFilter && customDateFilter[0]) {
+						const filterDate = {
+							from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'),
+							to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd')
+						};
+						fetch_clicks_data(filterDate);
+					} else {
+						fetch_clicks_data({});
+					}
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
+
+	const isResetButtonEnabled = confirmationText.trim() === 'RESET CLICKS';
 	return (
-		<div className="btl-analytic-reset-wrapeer betterlinks">
-			<button className="button-primary btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
+		<div className="btl-analytic-reset-wrapeer btl-btn-groups betterlinks">
+			<div className="status">
+				{!fastClicksStatus ? (
+					<button type="button" onClick={writeClicksJSONHandler} className="btl-refresh-btn button button-primary">
+						{fastClicksButtonText}
+					</button>
+				) : (
+					<button type="button" onClick={analyticClicksHandler} className="btl-refresh-btn button button-primary">
+						{cacheButtonText}
+					</button>
+				)}
+			</div>
+			<button className="button-secondary-gray btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
 				Reset
 			</button>
 			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
@@ -126,8 +216,25 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 								Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete the clicks data from database and it cannot be restored again.
 								<span style={{ display: 'Block' }}>Click 'cancel' to abort.</span>
 							</h4>
+							<input
+								type="text"
+								placeholder="Type 'RESET CLICKS'"
+								required
+								className="btl-modal-form-control btl-confirmation-input"
+								style={{ marginBottom: '20px', textAlign: 'center', width: 'auto' }}
+								value={confirmationText}
+								onChange={handleConfirmationTextChange}
+							/>
 							<div className="btl-btn-reset-popup-step-2-buttons">
-								<button className="button-primary btl-btn-reset-apply-2" onClick={handleConfirmDelete}>
+								<button
+									className={`button-danger btl-btn-reset-apply-2 ${!isResetButtonEnabled ? 'disabled' : ''}`}
+									onClick={handleConfirmDelete}
+									disabled={!isResetButtonEnabled}
+									style={{
+										opacity: isResetButtonEnabled ? 1 : 0.6,
+										cursor: isResetButtonEnabled ? 'pointer' : 'not-allowed'
+									}}
+								>
 									Reset Clicks
 								</button>
 								<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
@@ -145,6 +252,9 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, propsFor
 					{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
 						<h2>
 							{currentDaysOlderThan?.value === false && "You don't have any clicks data"}
+							{currentDaysOlderThan?.value === 5 && "You don't have clicks data older than 5 days"}
+							{currentDaysOlderThan?.value === 10 && "You don't have clicks data older than 10 days"}
+							{currentDaysOlderThan?.value === 20 && "You don't have clicks data older than 20 days"}
 							{currentDaysOlderThan?.value === 30 && "You don't have clicks data older than 30 days"}
 							{currentDaysOlderThan?.value === 90 && "You don't have clicks data older than 90 days"}
 						</h2>
@@ -161,6 +271,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
 		dispatch_new_links_data: bindActionCreators(dispatch_new_links_data, dispatch),
+		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
 	};
 };
 
