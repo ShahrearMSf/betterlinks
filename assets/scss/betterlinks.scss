@@ -968,3 +968,24 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 		border: none !important;
 	}
 }
+
+.btl-compact-date-picker {
+	position: relative;
+
+	.btl-date-picker-title {
+		//color: #0d0c0c;
+		position: absolute;
+		padding: 8px;
+	}
+
+	.btl-date-picker-actions {
+		position: absolute;
+		bottom: 0;
+		left: 40%;
+		padding: 8px;
+	}
+}
+
+.rdrDefinedRangesWrapper {
+	//display: none; //to hide preset date picker in reset date picker
+}
