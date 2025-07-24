@@ -996,11 +996,11 @@ class Ajax {
 		global $wpdb;
 		$prefix          = $wpdb->prefix;
 		$days_older_than = isset( $_REQUEST['days_older_than'] ) ? sanitize_text_field( $_REQUEST['days_older_than'] ) : false;
-		$from            = isset( $request['from'] ) ? sanitize_text_field( $request['from'] ) : date( 'Y-m-d', strtotime( ' - 30 days' ) );
-		$to              = isset( $request['to'] ) ? sanitize_text_field( $request['to'] ) : date( 'Y-m-d' );
+		$from            = isset( $_REQUEST['from'] ) ? sanitize_text_field( $_REQUEST['from'] ) : date( 'Y-m-d', strtotime( ' - 30 days' ) );
+		$to              = isset( $_REQUEST['to'] ) ? sanitize_text_field( $_REQUEST['to'] ) : date( 'Y-m-d' );
 		$query           = '';
-		if ( $days_older_than ) {
-			$range_days_in_seconds           = $days_older_than * 24 * 60 * 60;
+		if ( $days_older_than !== false ) {
+			$range_days_in_seconds           = intval( $days_older_than ) * 24 * 60 * 60;
 			$gmt_timestamp_of_the_range_time = time() - $range_days_in_seconds;
 			$query                           = "DELETE FROM {$prefix}betterlinks_clicks WHERE UNIX_TIMESTAMP(created_at_gmt) < %d";
 			$query                           = $wpdb->prepare( $query, $gmt_timestamp_of_the_range_time );
