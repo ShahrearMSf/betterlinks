@@ -2,16 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { deleteClicks, formatDate, exists_clicks_json, betterlinks_nonce, delayStatusChanged } from 'utils/helper';
+import { deleteClicks, formatDate, exists_clicks_json, betterlinks_nonce, delayStatusChanged, plugin_root_url } from 'utils/helper';
 import { fetchCustomClicksData, fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { dispatch_new_links_data } from 'redux/actions/links.actions';
 import Modal from 'react-modal';
-import { DateRangePicker } from 'react-date-range';
+import { DateRangePicker, defaultStaticRanges } from 'react-date-range';
 import { subDays } from 'date-fns';
 import axios from 'axios';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { useLocation } from 'react-router-dom';
+
+// Create custom static ranges including default ones plus "Delete All"
+const customStaticRanges = [
+	...defaultStaticRanges,
+	{
+		label: 'Delete All',
+		range: () => ({
+			startDate: new Date('2000-01-01'), // Very early date to capture all data
+			endDate: new Date() // Current date
+		}),
+		isSelected: (range) => {
+			const deleteAllRange = new Date('2000-01-01');
+			const today = new Date();
+			return (
+				range.startDate.toDateString() === deleteAllRange.toDateString() &&
+				range.endDate.toDateString() === today.toDateString()
+			);
+		}
+	}
+];
 
 
 const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_clicks_data, propsForAnalytics }) => {
@@ -80,7 +100,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 			.then((res) => {
 				const timeoutId = setTimeout(() => {
 					close();
-				}, 3000);
+				}, 444000);
 				setTimeOutIdToClear(timeoutId);
 				if (res?.data?.success) {
 					setSuccessfulDeletedItemsCount(res?.data?.data?.count);
@@ -121,6 +141,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 
 	const handleConfirmationTextChange = (e) => {
 		setConfirmationText(e.target.value);
+	};
+
+	const closeDatePicker = () => {
+		close();
 	};
 
 	// Refresh Stats functionality
@@ -194,7 +218,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					{deleteStatus === 'reset_modal_step_1' && (
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
 							<div className="btl-compact-date-picker">
-								<div className="btl-date-picker-title">{linkId ? 'Select Date Range for Link Clicks' : 'Select Date Range'}</div>
+								<div className="btl-date-picker-title">{linkId ? 'Select Date Range for Link Clicks' : 'Pick the range of BetterLinks Analytics that you want to reset.'}</div>
+								<button onClick={closeDatePicker} className="btn-date-range-close">
+									<span className="dashicons dashicons-no-alt" />
+								</button>
 								<DateRangePicker
 									onChange={handleDeleteOptionsChange}
 									showSelectionPreview={true}
@@ -203,10 +230,10 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 									ranges={resetDateFilter}
 									direction="horizontal"
 									showMonthAndYearPickers={true}
-									showDateDisplay={false}
+									showDateDisplay={true}
 									rangeColors={['#007cba']}
 									color="#007cba"
-									staticRanges={[]}
+									staticRanges={customStaticRanges}
 									inputRanges={[]}
 								/>
 								<div className="btl-date-picker-actions">
@@ -214,7 +241,14 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 										className="button-primary btl-apply-date-range"
 										onClick={handleApplyDateRange}
 									>
-										Apply Date Range
+										<img width={10} height={12} src={plugin_root_url + '/assets/images/icons/delete.svg'} />
+										Reset Click
+									</button>
+									<button
+										className="button-primary btl-cancel-date-range"
+										onClick={closeDatePicker}
+									>
+										Cancel
 									</button>
 								</div>
 							</div>
@@ -224,12 +258,13 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
 							<h2>This Action Cannot be undone. Are you sure you want to continue?</h2>
 							<h4>
-								Clicking <span style={{ fontWeight: 700 }}>Reset Clicks</span> will permanently delete clicks data {linkId ? `for this specific link ` : ''}from <strong>{resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}</strong> to <strong>{resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}</strong> from the database and it cannot be restored again.
-								<span style={{ display: 'Block' }}>Click 'Go Back' to change the date range.</span>
+								Clicking <strong>Reset Clicks</strong> will permanently delete the clicks data from database and it cannot be restored again
 							</h4>
+							<span className='btl-confirmation-text'>
+								*type the word “RESET CLICKS”
+							</span>
 							<input
 								type="text"
-								placeholder="Type 'RESET CLICKS'"
 								required
 								className="btl-modal-form-control btl-confirmation-input"
 								style={{ marginBottom: '20px', textAlign: 'center', width: 'auto' }}
@@ -246,7 +281,8 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 										cursor: isResetButtonEnabled ? 'pointer' : 'not-allowed'
 									}}
 								>
-									Reset Clicks
+									<img width={10} height={12} src={plugin_root_url + '/assets/images/icons/delete.svg'} />
+									Delete
 								</button>
 								<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
 									Go Back
@@ -256,13 +292,24 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					)}
 					{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
 					{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
-						<h2>
-							Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record{successfulDeletedItemsCount !== 1 ? 's' : ''} {linkId ? 'for this link ' : ''}deleted!!!
-						</h2>
+						// <h2>
+						// 	Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record{successfulDeletedItemsCount !== 1 ? 's' : ''} {linkId ? 'for this link ' : ''}deleted!!!
+						// </h2>
+						<div className='btl-reset-finish-modal'>
+							<img width={90} height={90} src={plugin_root_url + '/assets/images/icons/completed.svg'} />
+							<span className='btl-reset-finish-modal-title'>Click data has been successfully deleted</span>
+							<span className='btl-reset-finish-modal-description'>Click data has been successfully deleted for {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}.</span>
+							<button
+								className="button-primary btl-cancel-finish-date-range"
+								onClick={closeDatePicker}
+							>
+								Back to Analytics
+							</button>
+						</div>
 					)}
 					{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
 						<h2>
-							No clicks data found {linkId ? 'for this link ' : ''}in the selected date range ({resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} - {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })})
+							No clicks data found {linkId ? 'for this link ' : ''}in the selected date range {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}
 						</h2>
 					)}
 					{deleteStatus === 'failed' && <h2>Failed!!</h2>}
