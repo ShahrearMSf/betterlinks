@@ -196,20 +196,26 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 	const isResetButtonEnabled = confirmationText.trim() === 'RESET CLICKS';
 	return (
 		<div className="btl-analytic-reset-wrapeer btl-btn-groups betterlinks">
-			<div className="status">
-				{!fastClicksStatus ? (
-					<button type="button" onClick={writeClicksJSONHandler} className="btl-refresh-btn button button-primary">
-						{fastClicksButtonText}
-					</button>
-				) : (
-					<button type="button" onClick={analyticClicksHandler} className="btl-refresh-btn button button-primary">
-						{cacheButtonText}
-					</button>
-				)}
-			</div>
 			<button className="button-secondary-gray btl-reset-analytics-initial-button" onClick={handleResetButtonClick1}>
 				{linkId ? 'Reset Link Clicks' : 'Reset'}
 			</button>
+			<div className="status btl-refresh-btn">
+				{!fastClicksStatus ? (
+					<>
+						<button type="button" onClick={writeClicksJSONHandler} className="btl-refresh-btn button button-primary">
+							{fastClicksButtonText}
+						</button>
+					</>
+				) : (
+					<>
+						<img width={18} height={18} src={plugin_root_url + '/assets/images/icons/refresh.svg'} alt="Refresh" />
+						<button type="button" onClick={analyticClicksHandler} className="btl-refresh-btn button button-primary">
+							{cacheButtonText}
+						</button>
+					</>
+				)}
+			</div>
+
 			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
 				<div className="btl-reset-modal-popup-wrapper ">
 					<span className="btl-close-modal" onClick={close}>
@@ -297,7 +303,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 						// </h2>
 						<div className='btl-reset-finish-modal'>
 							<img width={90} height={90} src={plugin_root_url + '/assets/images/icons/completed.svg'} />
-							<span className='btl-reset-finish-modal-title'>Click data has been successfully deleted</span>
+							<span className='btl-reset-finish-modal-title'>{successfulDeletedItemsCount} Click data has been successfully deleted</span>
 							<span className='btl-reset-finish-modal-description'>Click data has been successfully deleted for {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}.</span>
 							<button
 								className="button-primary btl-cancel-finish-date-range"
