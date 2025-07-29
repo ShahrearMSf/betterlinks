@@ -314,9 +314,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 						</div>
 					)}
 					{deleteStatus === 'success' && successfulDeletedItemsCount === 0 && (
-						<h2>
-							No clicks data found {linkId ? 'for this link ' : ''}in the selected date range {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}
-						</h2>
+						<div className='btl-reset-not-found-wrapper'>
+							<img width={90} height={90} src={plugin_root_url + '/assets/images/icons/not-found.svg'} />
+							<h2 className='btl-reset-not-found-modal-title'>
+								No clicks data found {linkId ? 'for this link ' : ''}in the selected date range {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}
+							</h2>
+						</div>
 					)}
 					{deleteStatus === 'failed' && <h2>Failed!!</h2>}
 				</div>
