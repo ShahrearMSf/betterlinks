@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { deleteClicks, formatDate, exists_clicks_json, betterlinks_nonce, delayStatusChanged, plugin_root_url } from 'utils/helper';
-import { fetchCustomClicksData, fetch_clicks_data } from 'redux/actions/clicks.actions';
+import { fetchCustomClicksData, fetch_clicks_data, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
 import { dispatch_new_links_data } from 'redux/actions/links.actions';
 import Modal from 'react-modal';
 import { DateRangePicker, defaultStaticRanges } from 'react-date-range';
@@ -34,7 +34,7 @@ const customStaticRanges = [
 ];
 
 
-const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_clicks_data, propsForAnalytics }) => {
+const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_clicks_data, get_chart_data, get_graph_data, get_medium_data, propsForAnalytics }) => {
 	const { customDateFilter } = propsForAnalytics || {};
 	const [timeOutIdToClear, setTimeOutIdToClear] = useState(0);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -175,11 +175,19 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					if (customDateFilter && customDateFilter[0]) {
 						const filterDate = {
 							from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'),
-							to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd')
+							to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd'),
+							setLoading: () => { }
 						};
 						fetch_clicks_data(filterDate);
+						get_chart_data(filterDate);
+						get_graph_data(filterDate);
+						get_medium_data(filterDate);
 					} else {
-						fetch_clicks_data({});
+						const defaultParams = { setLoading: () => { } };
+						fetch_clicks_data(defaultParams);
+						get_chart_data(defaultParams);
+						get_graph_data(defaultParams);
+						get_medium_data(defaultParams);
 					}
 				}
 			},
@@ -334,6 +342,9 @@ const mapDispatchToProps = (dispatch) => {
 		fetchCustomClicksData: bindActionCreators(fetchCustomClicksData, dispatch),
 		dispatch_new_links_data: bindActionCreators(dispatch_new_links_data, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
+		get_chart_data: bindActionCreators(get_chart_data, dispatch),
+		get_graph_data: bindActionCreators(get_graph_data, dispatch),
+		get_medium_data: bindActionCreators(get_medium_data, dispatch),
 	};
 };
 
