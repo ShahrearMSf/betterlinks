@@ -424,7 +424,7 @@ label.extra_info_keywords>input#keywords {
 // react select design break fix: Disable Auto-link keywords for Post Types start
 .betterlinks-body .btl-form-group.btl-general-tab-settings-react-select {
 	.btl-modal-select--full {
-		width: auto !important;
+		// width: auto !important;
 		min-width: 260px;
 	}
 
