@@ -33,7 +33,7 @@ const CategoryModal = ({ open, errorMsg, closeModal, __handleChange, __handleSub
                                 <div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
                                     <div className="btl-modal-form-group">
                                         <label className="btl-modal-form-label" htmlFor="categories">
-                                            {__('Category okh', 'betterlinks')}
+                                            {__('Category', 'betterlinks')}
                                             <span style={{ color: '#f97272', marginLeft: '2px' }}>*</span>
                                         </label>
                                         <div style={{ width: '100%' }}>
