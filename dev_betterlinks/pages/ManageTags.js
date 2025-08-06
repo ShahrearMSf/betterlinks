@@ -11,6 +11,7 @@ import DataTable from 'react-data-table-component';
 import TableLoader from 'components/Loader/TableLoader';
 import TagQuickAction from 'containers/AddNewTags/TagQuickAction';
 import CategoryQuickAction from 'containers/AddNewCategories/CategoryQuickAction';
+import PermissionModal from 'components/PermissionModal';
 import Select from 'react-select';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { is_extra_data_tracking_compatible, route_path, sortByClicksTag, sortByClicksCategory, sortFunction } from 'utils/helper';
@@ -330,8 +331,26 @@ const ManageTags = (props) => {
 const TagActions = (props) => {
 	const [bulkAction, setBulkAction] = useState({});
 	const [warning, setWarning] = useState(false);
+	const [showPermissionModal, setShowPermissionModal] = useState(false);
+
+	// Check if user has permission to manage tags and categories
+	const hasPermission = () => {
+		// Check if betterLinksProGlobal exists (pro version with role management)
+		if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
+			return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
+		}
+		// Fallback for free version - only admins can manage
+		return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
+	};
+
 	const handleDeleteTags = (bulkActionData) => {
 		if (bulkAction.value !== 'delete') return setWarning(true);
+
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
+
 		setWarning(false);
 		const selectedTags = bulkActionData.selectedRows.map((item) => ({ tag_id: item.id || item.ID }));
 		props.delete_tag(selectedTags, bulkAction);
@@ -362,6 +381,11 @@ const TagActions = (props) => {
 				)}
 				{props.children}
 			</div>
+			<PermissionModal
+				isOpen={showPermissionModal}
+				onClose={() => setShowPermissionModal(false)}
+				title={__('Bulk Delete Tags Permission Required', 'betterlinks')}
+			/>
 		</React.Fragment>
 	);
 };
@@ -369,8 +393,26 @@ const TagActions = (props) => {
 const CategoryActions = (props) => {
 	const [bulkAction, setBulkAction] = useState({});
 	const [warning, setWarning] = useState(false);
+	const [showPermissionModal, setShowPermissionModal] = useState(false);
+
+	// Check if user has permission to manage tags and categories
+	const hasPermission = () => {
+		// Check if betterLinksProGlobal exists (pro version with role management)
+		if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
+			return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
+		}
+		// Fallback for free version - only admins can manage
+		return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
+	};
+
 	const handleDeleteCategories = (bulkActionData) => {
 		if (bulkAction.value !== 'delete') return setWarning(true);
+
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
+
 		setWarning(false);
 		const selectedCategories = bulkActionData.selectedRows.map((item) => ({ tag_id: item.id || item.ID }));
 		props.delete_tag(selectedCategories, bulkAction);
@@ -401,6 +443,11 @@ const CategoryActions = (props) => {
 				)}
 				{props.children}
 			</div>
+			<PermissionModal
+				isOpen={showPermissionModal}
+				onClose={() => setShowPermissionModal(false)}
+				title={__('Bulk Delete Categories Permission Required', 'betterlinks')}
+			/>
 		</React.Fragment>
 	);
 };
