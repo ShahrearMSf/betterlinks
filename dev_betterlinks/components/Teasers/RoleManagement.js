@@ -100,9 +100,10 @@ export default class RoleManagement extends React.Component {
 									<label className="btl-form-label">
 										{/* <span style={{ display: 'block' }}>{__('Who can Mark Links', 'betterlinks')}</span> */}
 										<span>
-											{__('Who can Mark Links as \n Favorite/Unfavorite?', 'betterlinks')}
-											<ProBadge />
+											{__('Who can Mark Links as', 'betterlinks')} <br />
+											{__('Favorite/Unfavorite?', 'betterlinks')}
 										</span>
+										<ProBadge />
 									</label>
 									<div className="editFavorite link-options__body" onClick={() => this.openModal()}>
 										{Object.entries(roles).map(([key, value], index) => (
