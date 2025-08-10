@@ -4,8 +4,8 @@ Donate link: https://wpdeveloper.com
 Tags: affiliate links, cloaking, link shortener, short links, redirects
 Requires at least: 5.0
 Tested up to: 6.7
-Requires PHP: 7.0
-Stable tag: 2.2.2
+Requires PHP: 7.4
+Stable tag: 2.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -26,6 +26,7 @@ Want to make your brand stand out? [BetterLinks](https://betterlinks.io/) brings
 - Enhance your affiliate marketing strategies
 - Manage your links directly in Gutenberg & Elementor
 - Manage your tags and check the performance of your links associated to each tag
+- Manage your Categories and check the performance of your links associated to each Category
 - Reduce link load time with optimized queries
 - Monitor marketing campaigns with UTM Builder
 - Prevent bot traffic and clicks with Bot Blocker
@@ -158,6 +159,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+= 2.3.0 - 10/08/2025 =
+
+- Added: Support for Category Management
+- Few minor bug fixes & improvements
 
 = 2.2.2 - 19/12/2024 =
 

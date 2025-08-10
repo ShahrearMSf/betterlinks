@@ -76,7 +76,7 @@ const ManageTags = (props) => {
 						<div>
 							<button className="dnd-link-button btl-tooltip">
 								<span className="btl-tooltiptext">
-									Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
+									Total Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
 								</span>
 								{total_clicks > 0 ? (
 									<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + row.id}>
@@ -205,7 +205,7 @@ const ManageTags = (props) => {
 						<div>
 							<button className="dnd-link-button btl-tooltip">
 								<span className="btl-tooltiptext">
-									Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
+									Total Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
 								</span>
 								{total_clicks > 0 ? (
 									<Link to={route_path + 'admin.php?page=betterlinks-analytics&category_id=' + row.id}>
@@ -309,8 +309,8 @@ const ManageTags = (props) => {
 			/>
 			<Tabs selectedIndex={activeTabIndex} onSelect={handleTabChange}>
 				<TabList>
-					<Tab>{__('Tags Analytics', 'betterlinks')}</Tab>
-					<Tab>{__('Categories Analytics', 'betterlinks')}</Tab>
+					<Tab>{__('Tags', 'betterlinks')}</Tab>
+					<Tab>{__('Categories', 'betterlinks')}</Tab>
 				</TabList>
 				<TabPanel>
 					<div style={{ marginTop: '20px' }}>
