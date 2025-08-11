@@ -227,7 +227,7 @@ const ManageTags = (props) => {
 				sortable: false,
 				cell: (row) => {
 					return (
-						<CategoryQuickAction delete_tag={() => props.delete_tag([{ tag_id: row.id || row.ID }])}>
+						<CategoryQuickAction row={row} delete_tag={() => props.delete_tag([{ tag_id: row.id || row.ID }])}>
 							<AddNewCategories categories={categories || []} icon={true} row={row} />
 						</CategoryQuickAction>
 					);
@@ -285,6 +285,7 @@ const ManageTags = (props) => {
 						persistTableHead
 						selectableRows
 						selectableRowsVisibleOnly
+						selectableRowsDisabled={(row) => row.id == 1 || row.ID == 1} // Disable selection for default category
 						onSelectedRowsChange={(e) => setBulkActionData(e)}
 						clearSelectedRows={toggledClearRows}
 					/>
@@ -372,8 +373,23 @@ const CategoryActions = (props) => {
 	const handleDeleteCategories = (bulkActionData) => {
 		if (bulkAction.value !== 'delete') return setWarning(true);
 		setWarning(false);
-		const selectedCategories = bulkActionData.selectedRows.map((item) => ({ tag_id: item.id || item.ID }));
-		props.delete_tag(selectedCategories, bulkAction);
+
+		// Filter out the default 'Uncategorized' category (ID: 1) from bulk delete
+		const selectedCategories = bulkActionData.selectedRows
+			.filter((item) => (item.id != 1 && item.ID != 1)) // Exclude default category
+			.map((item) => ({ tag_id: item.id || item.ID }));
+
+		// If all selected categories were the default category, show a warning
+		if (selectedCategories.length === 0 && bulkActionData.selectedRows.length > 0) {
+			setWarning(true);
+			// You might want to show a specific warning message for this case
+			return;
+		}
+
+		if (selectedCategories.length > 0) {
+			props.delete_tag(selectedCategories, bulkAction);
+		}
+
 		setBulkAction({});
 		return props.setToggledClearRows();
 	};

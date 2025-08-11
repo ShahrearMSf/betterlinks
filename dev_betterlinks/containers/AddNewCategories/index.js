@@ -11,8 +11,14 @@ const AddNewCategories = (props) => {
     const [errorMsg, setErrorMsg] = useState('');
     const { categories, icon = false, row = {}, children } = props;
 
+    // Check if this is the default 'Uncategorized' category (ID: 1)
+    const isDefaultCategory = row && (row.id == 1 || row.ID == 1);
+
     const openModal = () => {
-        setOpen(true);
+        // Prevent opening modal for default category
+        if (!isDefaultCategory) {
+            setOpen(true);
+        }
     };
     const closeModal = () => {
         setOpen(false);
@@ -46,9 +52,14 @@ const AddNewCategories = (props) => {
     return (
         <>
             {(categories || []).length > 0 && icon ? (
-                <ActionButton type="edit" label={__('Edit Category', 'betterlinks')} onClickHandler={openModal}>
-                    {children}
-                </ActionButton>
+                isDefaultCategory ? (
+                    // For default category, just show the children (category name) without edit button
+                    <>{children}</>
+                ) : (
+                    <ActionButton type="edit" label={__('Edit Category', 'betterlinks')} onClickHandler={openModal}>
+                        {children}
+                    </ActionButton>
+                )
             ) : (
                 <div className="btl-create-autolinks btl-create-categories">
                     <button className="btl-create-autolink-button btl-create-categories-button" onClick={openModal}>
