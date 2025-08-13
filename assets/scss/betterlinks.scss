@@ -242,12 +242,12 @@ body {
 	position: relative;
 	display: inline-block;
 	line-height: 1;
-	margin-left: 10px;
+	margin-left: 0px !important;
 
 	.btl-tooltiptext {
 		visibility: hidden;
 		width: max-content;
-		max-width: 220px;
+		// max-width: max-content;
 		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 		font-size: 14px;
 		color: #fff;

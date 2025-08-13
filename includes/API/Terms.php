@@ -261,6 +261,28 @@ class Terms extends Controller
 		delete_transient(BETTERLINKS_CACHE_LINKS_NAME);
 		$request = $request->get_params();
 
+		// Check if trying to delete the default 'Uncategorized' category (ID: 1)
+		// This can come as either cat_id or tag_id parameter
+		$term_id_to_delete = null;
+		if (isset($request['cat_id'])) {
+			$term_id_to_delete = $request['cat_id'];
+		} elseif (isset($request['tag_id'])) {
+			$term_id_to_delete = $request['tag_id'];
+		}
+
+		if ($term_id_to_delete && ($term_id_to_delete == 1 || $term_id_to_delete === '1')) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'data'    => array(
+						'message' => __('Cannot delete the default "Uncategorized" category.', 'betterlinks'),
+						'term_id' => $term_id_to_delete,
+					),
+				),
+				403 // Forbidden status code
+			);
+		}
+
 		$this->delete_term($request);
 		return new \WP_REST_Response(
 			array(

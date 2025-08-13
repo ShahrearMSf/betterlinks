@@ -165,7 +165,7 @@ trait Terms {
 		if ( isset( $args['cat_id'] ) && $args['cat_id'] != 1 ) {
 			\BetterLinks\Helper::delete_term_and_update_term_relationships( $args['cat_id'] );
 		}
-		if ( isset( $args['tag_id'] ) && '' !== $args['tag_id'] ) {
+		if ( isset( $args['tag_id'] ) && '' !== $args['tag_id'] && $args['tag_id'] != 1 ) {
 			\BetterLinks\Helper::delete_term_and_update_term_relationships( $args['tag_id'] );
 		}
 	}

@@ -8,11 +8,18 @@ export const delete_tag = (params) => async (dispatch) => {
 			const res = await API.delete(namespace + 'terms', {
 				params: item,
 			});
+
+			// Only dispatch success action if the API response is successful
 			if (res.data.success) {
 				dispatch({
 					type: DELETE_TERM,
 					payload: res.data?.data,
 				});
+			} else {
+				// Handle API error response (e.g., trying to delete default category)
+				//console.error('Failed to delete term:', res.data.data?.message || 'Unknown error');
+				// You could also dispatch an error action here if needed
+				// dispatch({ type: 'DELETE_TERM_ERROR', payload: res.data });
 			}
 		} catch (error) {
 			console.log('error is: ', error.message);

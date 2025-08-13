@@ -39,13 +39,13 @@ const CategoryQuickAction = ({ row, delete_tag, children }) => {
                                 className="dnd-link-button"
                                 disabled
                                 style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                                title={__('Edit Category', 'betterlinks')}
+                                title={__("Default Category can't be edited.", 'betterlinks')}
                             >
                                 <span className="icon">
                                     <i className="btl btl-edit"></i>
                                 </span>
                             </button>
-                            <span className="btl-tooltiptext">{__('Edit Category', 'betterlinks')}</span>
+                            <span className="btl-tooltiptext">{__("Default Category can't be edited.", 'betterlinks')}</span>
                         </div>
                     ) : (
                         children
@@ -59,13 +59,13 @@ const CategoryQuickAction = ({ row, delete_tag, children }) => {
                                 className="dnd-link-button"
                                 disabled
                                 style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                                title={__('Delete Category', 'betterlinks')}
+                                title={__("Default Category can't be deleted.", 'betterlinks')}
                             >
                                 <span className="icon">
                                     <i className="btl btl-delete"></i>
                                 </span>
                             </button>
-                            <span className="btl-tooltiptext">{__('Delete Category', 'betterlinks')}</span>
+                            <span className="btl-tooltiptext">{__("Default Category can't be deleted.", 'betterlinks')}</span>
                         </div>
                     ) : (
                         <ActionButton

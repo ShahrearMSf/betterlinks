@@ -48,32 +48,32 @@ export const onDragEnd = (result) => async (dispatch) => {
 };
 export const fetch_links_data =
 	(forGutenbergStore = false) =>
-	async (dispatch) => {
-		try {
-			const res = await API.get(namespace + 'links', {
-				params: {},
-			});
-			if (!res?.data?.data) {
-				throw new Error('rest api not working properly for fetch_links_data');
-			}
-			// console.warn({ data: res.data.data });
-			dispatch({
-				type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
-				payload: res.data,
-			});
-		} catch (e) {
-			makeRequest({
-				action: 'betterlinks/admin/get_all_links',
-			}).then((response) => {
-				if (response.data) {
-					dispatch({
-						type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
-						payload: response.data.data,
-					});
+		async (dispatch) => {
+			try {
+				const res = await API.get(namespace + 'links', {
+					params: {},
+				});
+				if (!res?.data?.data) {
+					throw new Error('rest api not working properly for fetch_links_data');
 				}
-			});
-		}
-	};
+				// console.warn({ data: res.data.data });
+				dispatch({
+					type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
+					payload: res.data,
+				});
+			} catch (e) {
+				makeRequest({
+					action: 'betterlinks/admin/get_all_links',
+				}).then((response) => {
+					if (response.data) {
+						dispatch({
+							type: forGutenbergStore ? FETCH_WITHOUT_CATEGORY_INITIAL_DATA : FETCH_INITIAL_DATA,
+							payload: response.data.data,
+						});
+					}
+				});
+			}
+		};
 
 export const dispatch_new_links_data = (payload) => async (dispatch) => {
 	dispatch({
@@ -159,14 +159,23 @@ export const delete_cat = (params) => async (dispatch) => {
 		const res = await API.delete(namespace + 'terms', {
 			params: params,
 		});
-		dispatch({
-			type: DELETE_CAT,
-			payload: res.data,
-		});
-		dispatch({
-			type: DELETE_TERM,
-			payload: res.data?.data,
-		});
+
+		// Only dispatch success actions if the API response is successful
+		if (res.data.success) {
+			dispatch({
+				type: DELETE_CAT,
+				payload: res.data,
+			});
+			dispatch({
+				type: DELETE_TERM,
+				payload: res.data?.data,
+			});
+		} else {
+			// Handle API error response (e.g., trying to delete default category)
+			//console.error('Failed to delete category:', res.data.data?.message || 'Unknown error');
+			// You could also dispatch an error action here if needed
+			// dispatch({ type: 'DELETE_CAT_ERROR', payload: res.data });
+		}
 	} catch (e) {
 		makeRequest({
 			action: 'betterlinks/admin/delete_term',
@@ -188,84 +197,11 @@ export const delete_cat = (params) => async (dispatch) => {
 
 export const add_new_link =
 	(formData, forGutenbergStore = false, isThisInstantGutenbergRedirectLink = false) =>
-	async (dispatch) => {
-		try {
-			const res = await API.post(namespace + 'links', {
-				params: formData,
-			});
-			const { cat_data, tags_data = [], ID } = res?.data?.data;
-
-			// Adding new password for the link
-			if (formData?.enable_password && '' !== formData?.password) {
-				add_new_password({
-					link_id: ID,
-					password: formData.password,
-					status: formData.enable_password,
-					allow_contact: formData.allow_visitor_contact,
-				})(dispatch);
-			}
-
-			if (formData.old_enable_meta_tags !== formData.enable_meta_tags || (formData.enable_meta_tags && '' !== formData.meta_title)) {
-				add_meta_tags({
-					link_id: ID,
-					meta_title: formData.meta_title,
-					meta_description: formData.meta_description,
-					meta_image: formData.meta_image || '',
-					status: !!formData.enable_meta_tags,
-				})(dispatch);
-			}
-
-			if (cat_data?.is_newly_created) {
-				dispatch({
-					type: ADD_TERM,
-					payload: cat_data,
+		async (dispatch) => {
+			try {
+				const res = await API.post(namespace + 'links', {
+					params: formData,
 				});
-			}
-			for (const tagItem of tags_data) {
-				if (tagItem?.is_newly_created) {
-					dispatch({
-						type: ADD_TERM,
-						payload: tagItem,
-					});
-				}
-			}
-			if (res.data.success) {
-				dispatch({
-					type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
-					payload: res.data,
-				});
-				if (isThisInstantGutenbergRedirectLink) {
-					const originalResponseData = res.data?.data;
-					const clonedResponseData = {
-						...(originalResponseData || {}),
-					};
-
-					delete clonedResponseData.expire;
-					delete clonedResponseData.link_status;
-					delete clonedResponseData.dynamic_redirect;
-
-					dispatch({
-						type: EDIT_GUTENBERG_LINK,
-						payload: clonedResponseData,
-					});
-
-					dispatch({
-						type: EDIT_LINK_EXPIRE_OPTION,
-						payload:
-							typeof originalResponseData?.expire === 'object'
-								? originalResponseData.expire
-								: typeof originalResponseData?.expire === 'string'
-								? getJsonString(originalResponseData.expire)
-								: {},
-					});
-				}
-			}
-			return res;
-		} catch (e) {
-			return makeRequest({
-				action: 'betterlinks/admin/create_link',
-				...formData,
-			}).then((res) => {
 				const { cat_data, tags_data = [], ID } = res?.data?.data;
 
 				// Adding new password for the link
@@ -274,6 +210,7 @@ export const add_new_link =
 						link_id: ID,
 						password: formData.password,
 						status: formData.enable_password,
+						allow_contact: formData.allow_visitor_contact,
 					})(dispatch);
 				}
 
@@ -301,7 +238,7 @@ export const add_new_link =
 						});
 					}
 				}
-				if (res.data) {
+				if (res.data.success) {
 					dispatch({
 						type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
 						payload: res.data,
@@ -311,6 +248,7 @@ export const add_new_link =
 						const clonedResponseData = {
 							...(originalResponseData || {}),
 						};
+
 						delete clonedResponseData.expire;
 						delete clonedResponseData.link_status;
 						delete clonedResponseData.dynamic_redirect;
@@ -326,89 +264,35 @@ export const add_new_link =
 								typeof originalResponseData?.expire === 'object'
 									? originalResponseData.expire
 									: typeof originalResponseData?.expire === 'string'
-									? getJsonString(originalResponseData.expire)
-									: {},
+										? getJsonString(originalResponseData.expire)
+										: {},
 						});
 					}
 				}
-			});
-		}
-	};
-export const edit_link =
-	(item, forGutenbergStore = false) =>
-	async (dispatch) => {
-		try {
-			const res = await API.put(namespace + 'links/' + item.ID, {
-				params: item,
-			});
+				return res;
+			} catch (e) {
+				return makeRequest({
+					action: 'betterlinks/admin/create_link',
+					...formData,
+				}).then((res) => {
+					const { cat_data, tags_data = [], ID } = res?.data?.data;
 
-			const { cat_data, tags_data = [], ID } = res?.data?.data;
-
-			if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
-				add_new_password({
-					link_id: ID,
-					password: item.password,
-					status: item.enable_password,
-					allow_contact: item.allow_visitor_contact,
-				})(dispatch);
-			}
-
-			if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
-				add_meta_tags({
-					link_id: ID,
-					meta_title: item.meta_title,
-					meta_description: item.meta_description,
-					meta_image: item.meta_image || '',
-					status: !!item.enable_meta_tags,
-				})(dispatch);
-			}
-
-			if (cat_data?.is_newly_created) {
-				dispatch({
-					type: ADD_TERM,
-					payload: cat_data,
-				});
-			}
-			for (const tagItem of tags_data) {
-				if (tagItem?.is_newly_created) {
-					dispatch({
-						type: ADD_TERM,
-						payload: tagItem,
-					});
-				}
-			}
-			dispatch({
-				type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
-				payload: res?.data?.data,
-			});
-			edit_gutenberg_auto_link({ link_update: null });
-			!forGutenbergStore && fetch_links_password()(dispatch);
-			return res;
-		} catch (e) {
-			return makeRequest({
-				action: 'betterlinks/admin/update_link',
-				...item,
-			}).then((response) => {
-				if (response.data) {
-					const { cat_data, tags_data = [], ID } = response?.data?.data;
-
-					// if (res?.data?.data?.enable_password != item?.enable_password) {
-					if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
+					// Adding new password for the link
+					if (formData?.enable_password && '' !== formData?.password) {
 						add_new_password({
 							link_id: ID,
-							password: item.password,
-							status: item.enable_password,
-							allow_contact: item.allow_visitor_contact,
+							password: formData.password,
+							status: formData.enable_password,
 						})(dispatch);
 					}
 
-					if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
+					if (formData.old_enable_meta_tags !== formData.enable_meta_tags || (formData.enable_meta_tags && '' !== formData.meta_title)) {
 						add_meta_tags({
 							link_id: ID,
-							meta_title: item.meta_title,
-							meta_description: item.meta_description,
-							meta_image: item.meta_image || '',
-							status: !!item.enable_meta_tags,
+							meta_title: formData.meta_title,
+							meta_description: formData.meta_description,
+							meta_image: formData.meta_image || '',
+							status: !!formData.enable_meta_tags,
 						})(dispatch);
 					}
 
@@ -426,15 +310,140 @@ export const edit_link =
 							});
 						}
 					}
-					dispatch({
-						type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
-						payload: response.data.data,
-					});
-					fetch_links_password()(dispatch);
+					if (res.data) {
+						dispatch({
+							type: forGutenbergStore ? ADD_NEW_LINK_FOR_GUTEN_STORE : ADD_NEW_LINK,
+							payload: res.data,
+						});
+						if (isThisInstantGutenbergRedirectLink) {
+							const originalResponseData = res.data?.data;
+							const clonedResponseData = {
+								...(originalResponseData || {}),
+							};
+							delete clonedResponseData.expire;
+							delete clonedResponseData.link_status;
+							delete clonedResponseData.dynamic_redirect;
+
+							dispatch({
+								type: EDIT_GUTENBERG_LINK,
+								payload: clonedResponseData,
+							});
+
+							dispatch({
+								type: EDIT_LINK_EXPIRE_OPTION,
+								payload:
+									typeof originalResponseData?.expire === 'object'
+										? originalResponseData.expire
+										: typeof originalResponseData?.expire === 'string'
+											? getJsonString(originalResponseData.expire)
+											: {},
+							});
+						}
+					}
+				});
+			}
+		};
+export const edit_link =
+	(item, forGutenbergStore = false) =>
+		async (dispatch) => {
+			try {
+				const res = await API.put(namespace + 'links/' + item.ID, {
+					params: item,
+				});
+
+				const { cat_data, tags_data = [], ID } = res?.data?.data;
+
+				if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
+					add_new_password({
+						link_id: ID,
+						password: item.password,
+						status: item.enable_password,
+						allow_contact: item.allow_visitor_contact,
+					})(dispatch);
 				}
-			});
-		}
-	};
+
+				if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
+					add_meta_tags({
+						link_id: ID,
+						meta_title: item.meta_title,
+						meta_description: item.meta_description,
+						meta_image: item.meta_image || '',
+						status: !!item.enable_meta_tags,
+					})(dispatch);
+				}
+
+				if (cat_data?.is_newly_created) {
+					dispatch({
+						type: ADD_TERM,
+						payload: cat_data,
+					});
+				}
+				for (const tagItem of tags_data) {
+					if (tagItem?.is_newly_created) {
+						dispatch({
+							type: ADD_TERM,
+							payload: tagItem,
+						});
+					}
+				}
+				dispatch({
+					type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
+					payload: res?.data?.data,
+				});
+				edit_gutenberg_auto_link({ link_update: null });
+				!forGutenbergStore && fetch_links_password()(dispatch);
+				return res;
+			} catch (e) {
+				return makeRequest({
+					action: 'betterlinks/admin/update_link',
+					...item,
+				}).then((response) => {
+					if (response.data) {
+						const { cat_data, tags_data = [], ID } = response?.data?.data;
+
+						// if (res?.data?.data?.enable_password != item?.enable_password) {
+						if (item?.old_enable_password !== item?.enable_password || item?.password || item?.old_allow_visitor_contact !== item?.allow_visitor_contact) {
+							add_new_password({
+								link_id: ID,
+								password: item.password,
+								status: item.enable_password,
+								allow_contact: item.allow_visitor_contact,
+							})(dispatch);
+						}
+
+						if (item.old_enable_meta_tags !== item.enable_meta_tags || (item.enable_meta_tags && '' !== item.meta_title)) {
+							add_meta_tags({
+								link_id: ID,
+								meta_title: item.meta_title,
+								meta_description: item.meta_description,
+								meta_image: item.meta_image || '',
+								status: !!item.enable_meta_tags,
+							})(dispatch);
+						}
+
+						if (cat_data?.is_newly_created) {
+							dispatch({
+								type: ADD_TERM,
+								payload: cat_data,
+							});
+						}
+						for (const tagItem of tags_data) {
+							if (tagItem?.is_newly_created) {
+								dispatch({
+									type: ADD_TERM,
+									payload: tagItem,
+								});
+							}
+						}
+						dispatch({
+							type: forGutenbergStore ? EDIT_LINK_FOR_GUTENBERG : EDIT_LINK,
+							payload: response.data.data,
+						});
+						fetch_links_password()(dispatch);
+					}
+				});
+			}
+		};
 export const handle_link_favorite = (item) => async (dispatch) => {
 	try {
 		const res = await API.put(namespace + 'links_favorite/' + item.ID, {
