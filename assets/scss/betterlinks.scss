@@ -242,7 +242,7 @@ body {
 	position: relative;
 	display: inline-block;
 	line-height: 1;
-	margin-left: 10px;
+	margin-left: 0px !important;
 
 	.btl-tooltiptext {
 		visibility: hidden;
