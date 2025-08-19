@@ -6,39 +6,50 @@ import { is_pro_enabled } from 'utils/helper';
 
 const RedirectType = (props) => {
 	const [field, , { setValue: setThisFieldValue }] = useField(props.name);
-	const [selectValue, setSelectValue] = useState(field?.value != 'cloak' && is_pro_enabled ? field : { label: __('307 (Temporary)', 'betterlinks'), value: '307' });
+	const [selectValue, setSelectValue] = useState(null);
 
 	useEffect(() => {
-		if (field?.value === 'pro') {
-			setThisFieldValue(selectValue?.value, false);
-			props.setFieldValue(field.name, selectValue?.value);
+		// Find the current selected option from the available options
+		const currentOption = (props.value || []).find((item) => item.value === field.value);
+		if (currentOption) {
+			setSelectValue(currentOption);
 		} else {
-			setSelectValue((props.value || []).find((item) => item.value == field.value));
+			// If current field value is not found in options (like 'cloak' when pro is disabled),
+			// set it to the default value
+			const defaultOption = (props.value || []).find((item) => item.value === (props.defaultValue || '307'));
+			if (defaultOption) {
+				setSelectValue(defaultOption);
+				setThisFieldValue(defaultOption.value, false);
+				props.setFieldValue(field.name, defaultOption.value);
+			}
 		}
-	}, []);
+	}, [field.value, props.value, props.defaultValue]);
 
 	const onChange = (option) => {
 		if (option == null) {
 			return props.setFieldValue(field.name, '');
 		}
+
+		// Handle 'pro' option click (show upgrade modal)
+		if (option?.value === 'pro') {
+			props.setUpgradeToProModal && props.setUpgradeToProModal(true);
+			return; // Don't change the value
+		}
+
+		// Update the selected value
+		setSelectValue(option);
+
 		// for quick setup wizard only
 		if (!!props?.isQuickSetup) {
-			if (option?.value === 'pro') {
-				props.setUpgradeToProModal(true);
-				setThisFieldValue(selectValue?.value, field.value);
-				props.setFieldValue(field.name, field.value);
-			} else {
-				props.setFieldValue(field.name, option?.value);
-				setSelectValue((props.value || []).find((item) => item.value == option.value));
-			}
-
+			props.setFieldValue(field.name, option?.value);
 			props?.setSettings((prev) => ({
 				...prev,
-				redirect_type: props.isMulti ? option.map((item) => item.value) : option.value !== 'pro' ? option.value : field.value,
+				redirect_type: props.isMulti ? option.map((item) => item.value) : option.value,
 			}));
+		} else {
+			// for normal settings
+			props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value);
 		}
-		// for quick setup wizard only
-		return props.setFieldValue(field.name, props.isMulti ? option.map((item) => item.value) : option.value !== 'pro' ? option.value : field.value);
 	};
 
 	return (
@@ -48,7 +59,6 @@ const RedirectType = (props) => {
 				classNamePrefix="btl-react-select"
 				id={field.id}
 				name={field.name}
-				defaultValue={props.value && props.value.filter((item) => item.value == (props.defaultValue || '307'))}
 				onChange={onChange}
 				options={props.value}
 				value={selectValue}
