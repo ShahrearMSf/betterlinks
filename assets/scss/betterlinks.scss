@@ -242,12 +242,12 @@ body {
 	position: relative;
 	display: inline-block;
 	line-height: 1;
-	margin-left: 0px !important;
+	margin-left: 10px !important;
 
 	.btl-tooltiptext {
 		visibility: hidden;
 		width: max-content;
-		// max-width: max-content;
+		max-width: 225px;
 		background: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 		font-size: 14px;
 		color: #fff;
@@ -324,6 +324,12 @@ span.btl-expire-status-dot {
 .betterlinks-body .dnd-link-button.btl-tooltip.btl-expire-status-dot-parent,
 .betterlinks-body .btl-list-view .rdt_Table .rdt_TableBody .rdt_TableRow .rdt_TableCell .dnd-link-button.btl-tooltip.btl-expire-status-dot-parent {
 	margin-right: 10px;
+}
+
+.btl-list-view {
+	.jUqXlf {
+		margin-left: -9px !important;
+	}
 }
 
 span.btl-expire-status-dot.publish {

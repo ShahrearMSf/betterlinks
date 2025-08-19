@@ -54,7 +54,9 @@ const AddNewCategories = (props) => {
             {(categories || []).length > 0 && icon ? (
                 isDefaultCategory ? (
                     // For default category, just show the children (category name) without edit button
-                    <>{children}</>
+                    <ActionButton type="not" label={__("Default Category can't be edited", 'betterlinks')}>
+                        {children}
+                    </ActionButton>
                 ) : (
                     <ActionButton type="edit" label={__('Edit Category', 'betterlinks')} onClickHandler={openModal}>
                         {children}
