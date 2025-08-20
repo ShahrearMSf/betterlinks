@@ -1,21 +1,115 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { plugin_root_url } from 'utils/helper';
+import { plugin_root_url, betterlinks_settings } from 'utils/helper';
 
 const propTypes = {};
 
-export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler }) {
+export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler, categoryId = 1 }) {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
+
+	// Get UTM defaults based on category
+	const getUTMDefaults = (currentCategoryId) => {
+		// Safety check for betterlinks_settings
+		if (!betterlinks_settings || typeof betterlinks_settings !== 'object') {
+			console.log('UTM Builder - betterlinks_settings not available');
+			return {};
+		}
+
+		const globalTemplatesRaw = betterlinks_settings.global_utm_templates || [];
+		const globalDefaults = betterlinks_settings.global_utm_defaults || {};
+
+		// Handle both array and single object formats
+		const globalTemplates = Array.isArray(globalTemplatesRaw) ? globalTemplatesRaw : [globalTemplatesRaw];
+
+		// Find template for the current category (default to 1 if no categoryId)
+		const catId = parseInt(currentCategoryId) || 1;
+
+		console.log('UTM Builder - Looking for category:', catId);
+		console.log('UTM Builder - Available templates:', globalTemplates);
+		console.log('UTM Builder - Raw templates:', globalTemplatesRaw);
+
+		const categoryTemplate = globalTemplates.find(template => {
+			console.log('UTM Builder - Checking template:', template);
+			console.log('UTM Builder - Template categories:', template.categories);
+
+			// Handle both string and integer category IDs
+			if (template.categories && Array.isArray(template.categories)) {
+				return template.categories.some(templateCatId => {
+					const templateCatIdInt = parseInt(templateCatId);
+					const currentCatIdInt = parseInt(catId);
+					console.log('UTM Builder - Comparing:', templateCatIdInt, 'with', currentCatIdInt);
+					return templateCatIdInt === currentCatIdInt;
+				});
+			}
+			return false;
+		});
+
+		console.log('UTM Builder - Found template:', categoryTemplate);
+
+		// If category template exists, use it; otherwise use global defaults
+		if (categoryTemplate) {
+			const templateDefaults = {
+				utm_source: categoryTemplate.utm_source || '',
+				utm_medium: categoryTemplate.utm_medium || '',
+				utm_campaign: categoryTemplate.utm_campaign || '',
+				utm_term: categoryTemplate.utm_term || '',
+				utm_content: categoryTemplate.utm_content || ''
+			};
+			console.log('UTM Builder - Using template defaults:', templateDefaults);
+			return templateDefaults;
+		}
+
+		console.log('UTM Builder - Using global defaults:', globalDefaults);
+		return globalDefaults;
+	};
+	console.log('UTM Builder - Current categoryId:', categoryId);
+	const utmDefaults = getUTMDefaults(categoryId);
+
 	const [UTMBuilderState, setUTMBuilderState] = useState({
-		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : '',
-		utm_medium: parseUrl.query.utm_medium ? parseUrl.query.utm_medium : '',
-		utm_campaign: parseUrl.query.utm_campaign ? parseUrl.query.utm_campaign : '',
-		utm_term: parseUrl.query.utm_term ? parseUrl.query.utm_term : '',
-		utm_content: parseUrl.query.utm_content ? parseUrl.query.utm_content : '',
+		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : (utmDefaults.utm_source || ''),
+		utm_medium: parseUrl.query.utm_medium ? parseUrl.query.utm_medium : (utmDefaults.utm_medium || ''),
+		utm_campaign: parseUrl.query.utm_campaign ? parseUrl.query.utm_campaign : (utmDefaults.utm_campaign || ''),
+		utm_term: parseUrl.query.utm_term ? parseUrl.query.utm_term : (utmDefaults.utm_term || ''),
+		utm_content: parseUrl.query.utm_content ? parseUrl.query.utm_content : (utmDefaults.utm_content || ''),
 	});
+
+	// Update UTM fields when categoryId changes
+	useEffect(() => {
+		console.log('UTM Builder - useEffect triggered, categoryId:', categoryId);
+
+		const newDefaults = getUTMDefaults(categoryId);
+		const currentParseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
+
+		console.log('UTM Builder - Category changed:', categoryId);
+		console.log('UTM Builder - New defaults:', newDefaults);
+
+		// Update UTM fields: URL params > existing values > template defaults
+		setUTMBuilderState(prevState => {
+			console.log('UTM Builder - Previous state:', prevState);
+
+			// Check if we have any template defaults to apply
+			const hasTemplateDefaults = Object.values(newDefaults).some(value => value && value.trim() !== '');
+
+			if (hasTemplateDefaults) {
+				const newState = {
+					utm_source: currentParseUrl.query.utm_source || newDefaults.utm_source || prevState.utm_source || '',
+					utm_medium: currentParseUrl.query.utm_medium || newDefaults.utm_medium || prevState.utm_medium || '',
+					utm_campaign: currentParseUrl.query.utm_campaign || newDefaults.utm_campaign || prevState.utm_campaign || '',
+					utm_term: currentParseUrl.query.utm_term || newDefaults.utm_term || prevState.utm_term || '',
+					utm_content: currentParseUrl.query.utm_content || newDefaults.utm_content || prevState.utm_content || '',
+				};
+
+				console.log('UTM Builder - New state with template:', newState);
+				return newState;
+			}
+
+			console.log('UTM Builder - No template defaults, keeping current state');
+			return prevState;
+		});
+	}, [categoryId, targetUrl]);
 
 	const UTMSaveValueHandler = () => {
 		const rawURL = queryString.exclude(targetUrl, ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']);

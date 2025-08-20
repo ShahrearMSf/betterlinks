@@ -76,7 +76,7 @@ const CreateLink = (props) => {
 							</Modal>
 						</div>
 					)}
-					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => {}}>
+					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => { }}>
 						{(props) => {
 							const { errors } = props;
 							return (
@@ -90,10 +90,11 @@ const CreateLink = (props) => {
 												<>
 													{betterLinksHooks.applyFilters(
 														'linksUTMBuilderField',
-														<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
+														<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} categoryId={props.values.cat_id} />,
 														props.values.target_url,
 														props.setFieldValue,
-														closeUTMModal
+														closeUTMModal,
+														props.values.cat_id
 													)}
 												</>
 											) : (

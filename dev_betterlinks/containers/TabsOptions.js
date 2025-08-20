@@ -12,10 +12,12 @@ import CustomFields from './CustomFields';
 import { tabList } from 'utils/data';
 import FluentBoardSettings from 'components/FluentBoardSettings';
 import AutoLinkKeywords from 'components/Teasers/AutoLinkKeywords';
+import UTMBuilderGlobalSettings from 'components/UTMBuilderGlobalSettings';
 
 const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
+		<UTMBuilderGlobalSettings settings={settings} />,
 		<CreateLinkExternally settings={settings} terms={terms} />,
 		is_fbs_enabled && <FluentBoardSettings settings={settings} terms={terms} />,
 		<ExternalAnalytics trackingSettings={trackingSettings} />,

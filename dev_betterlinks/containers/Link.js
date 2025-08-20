@@ -58,7 +58,7 @@ export const Link = (props) => {
 
 		//👇 these flowwowing props will be passed from the component's gutenberg call
 		betterlinksGutenStore,
-		setShowLinkModal = () => {},
+		setShowLinkModal = () => { },
 		searchFieldRef,
 		linkNewTab,
 		type = '',
@@ -126,8 +126,8 @@ export const Link = (props) => {
 	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
 	const objForGutenTargetBlank = betterlinksGutenStore
 		? {
-				openInNewTab: linkNewTab,
-		  }
+			openInNewTab: linkNewTab,
+		}
 		: {};
 
 	const initialValues = {
@@ -367,10 +367,11 @@ export const Link = (props) => {
 											<React.Fragment>
 												{betterLinksHooks.applyFilters(
 													'linksUTMBuilderField',
-													<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} />,
+													<UTMBuilder targetUrl={props.values.target_url} saveValueHandler={props.setFieldValue} closeModalHandler={closeUTMModal} categoryId={props.values.cat_id} />,
 													props.values.target_url,
 													props.setFieldValue,
-													closeUTMModal
+													closeUTMModal,
+													props.values.cat_id
 												)}
 											</React.Fragment>
 										) : (
@@ -505,7 +506,13 @@ export const Link = (props) => {
 											<label className="btl-modal-form-label" htmlFor="catId">
 												{__('Category', 'betterlinks')}
 											</label>
-											<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
+											<Category
+												catId={parseInt(catId)}
+												data={terms}
+												fieldName="cat_id"
+												setFieldValue={props.setFieldValue}
+												disabled={isDisableLinkFormEditView}
+											/>
 										</div>
 										<div className="btl-modal-form-group">
 											<label className="btl-modal-form-label" htmlFor="tags">
