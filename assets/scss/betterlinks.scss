@@ -327,8 +327,12 @@ span.btl-expire-status-dot {
 }
 
 .btl-list-view {
-	.jUqXlf {
-		margin-left: -9px !important;
+	#column-categories {
+		margin-left: 9px !important;
+	}
+
+	#column-tags {
+		margin-left: 9px !important;
 	}
 }
 
