@@ -2,24 +2,45 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { plugin_root_url, betterlinks_settings } from 'utils/helper';
+import { plugin_root_url, betterlinks_settings, API, namespace } from 'utils/helper';
 
 const propTypes = {};
 
 export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler, categoryId = 1 }) {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const [currentSettings, setCurrentSettings] = useState(betterlinks_settings || {});
+	const [isLoadingSettings, setIsLoadingSettings] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
+	console.log('utm up ss - ', currentSettings)
+	// Fetch updated settings from API
+	const fetchUpdatedSettings = async () => {
+		try {
+			setIsLoadingSettings(true);
+			// Try REST API first
+			const res = await API.get(namespace + 'settings');
+			const payload = JSON.parse(res.data.data);
+			setCurrentSettings(payload);
+			console.log('UTM Builder - Settings updated successfully');
+			return payload;
+		} catch (error) {
+			console.log('Failed to fetch updated settings:', error);
+			// Fallback to current settings if API fails
+			return currentSettings;
+		} finally {
+			setIsLoadingSettings(false);
+		}
+	};
 
-	// Get UTM defaults based on category
-	const getUTMDefaults = (currentCategoryId) => {
-		// Safety check for betterlinks_settings
-		if (!betterlinks_settings || typeof betterlinks_settings !== 'object') {
-			console.log('UTM Builder - betterlinks_settings not available');
+	// Get UTM defaults based on category and current settings
+	const getUTMDefaults = (currentCategoryId, settingsToUse = currentSettings) => {
+		// Safety check for settings
+		if (!settingsToUse || typeof settingsToUse !== 'object') {
+			console.log('UTM Builder - settings not available');
 			return {};
 		}
 
-		const globalTemplatesRaw = betterlinks_settings.global_utm_templates || [];
-		const globalDefaults = betterlinks_settings.global_utm_defaults || {};
+		const globalTemplatesRaw = settingsToUse.global_utm_templates || [];
+		const globalDefaults = settingsToUse.global_utm_defaults || {};
 
 		// Handle both array and single object formats
 		const globalTemplates = Array.isArray(globalTemplatesRaw) ? globalTemplatesRaw : [globalTemplatesRaw];
@@ -76,11 +97,27 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		utm_content: parseUrl.query.utm_content ? parseUrl.query.utm_content : (utmDefaults.utm_content || ''),
 	});
 
+	// Fetch updated settings when component mounts
+	useEffect(() => {
+		const loadSettings = async () => {
+			const updatedSettings = await fetchUpdatedSettings();
+			// Update UTM state with new defaults after settings are loaded
+			const newDefaults = getUTMDefaults(categoryId, updatedSettings);
+
+			setUTMBuilderState(prevState => ({
+				utm_source: parseUrl.query.utm_source || newDefaults.utm_source || prevState.utm_source || '',
+				utm_medium: parseUrl.query.utm_medium || newDefaults.utm_medium || prevState.utm_medium || '',
+				utm_campaign: parseUrl.query.utm_campaign || newDefaults.utm_campaign || prevState.utm_campaign || '',
+				utm_term: parseUrl.query.utm_term || newDefaults.utm_term || prevState.utm_term || '',
+				utm_content: parseUrl.query.utm_content || newDefaults.utm_content || prevState.utm_content || '',
+			}));
+		};
+		loadSettings();
+	}, []);
+
 	// Update UTM fields when categoryId changes
 	useEffect(() => {
-		console.log('UTM Builder - useEffect triggered, categoryId:', categoryId);
-
-		const newDefaults = getUTMDefaults(categoryId);
+		const newDefaults = getUTMDefaults(categoryId, currentSettings);
 		const currentParseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
 
 		console.log('UTM Builder - Category changed:', categoryId);
@@ -109,7 +146,7 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 			console.log('UTM Builder - No template defaults, keeping current state');
 			return prevState;
 		});
-	}, [categoryId, targetUrl]);
+	}, [categoryId, targetUrl, currentSettings]);
 
 	const UTMSaveValueHandler = () => {
 		const rawURL = queryString.exclude(targetUrl, ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']);
