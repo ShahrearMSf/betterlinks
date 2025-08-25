@@ -6,6 +6,7 @@ import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import CustomizeMetaTags from 'components/Teasers/CustomizeMetaTags';
 import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import PasswordProtection from 'components/Teasers/PasswordProtection';
+import ShortLinkGenerator from 'components/ShortLinkGenerator';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { is_fbs_enabled, is_pro_enabled } from 'utils/helper';
 import CustomFields from './CustomFields';
@@ -24,6 +25,7 @@ const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, track
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 		<AutoLinkKeywords settings={settings} postdatas={postdatas} />,
+		<ShortLinkGenerator />,
 	].filter(Boolean);
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);

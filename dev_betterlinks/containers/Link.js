@@ -58,7 +58,7 @@ export const Link = (props) => {
 
 		//👇 these flowwowing props will be passed from the component's gutenberg call
 		betterlinksGutenStore,
-		setShowLinkModal = () => {},
+		setShowLinkModal = () => { },
 		searchFieldRef,
 		linkNewTab,
 		type = '',
@@ -126,8 +126,8 @@ export const Link = (props) => {
 	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
 	const objForGutenTargetBlank = betterlinksGutenStore
 		? {
-				openInNewTab: linkNewTab,
-		  }
+			openInNewTab: linkNewTab,
+		}
 		: {};
 
 	const initialValues = {
