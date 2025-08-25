@@ -160,7 +160,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 2.3.0 - 21/08/2025 =
+= 2.3.0 - 25/08/2025 =
 
 - Added: Support for Category Management
 - Few minor bug fixes & improvements
