@@ -85,7 +85,7 @@ if (!class_exists('BetterLinks')) {
              */
             define('BETTERLINKS_VERSION', '2.3.0');
             define('BETTERLINKS_DB_VERSION', '1.6.7');
-            define('BETTERLINKS_MENU_NOTICE', '8');
+            define('BETTERLINKS_MENU_NOTICE', '9');
             define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
             define('BETTERLINKS_PLUGIN_FILE', __FILE__);
             define('BETTERLINKS_PLUGIN_BASENAME', plugin_basename(__FILE__));

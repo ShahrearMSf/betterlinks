@@ -93,17 +93,21 @@ class Notice {
 					%s
 				</a>
 				%s
-				<a target='_blank' href='https://betterlinks.io/changelog/'>
+				<a target='_blank' href='https://betterlinks.io/docs/auto-link-creation-for-custom-post-type/' style='display: inline-block'>
 					%s
 				</a>
 				%s
+				<a target='_blank' href='https://betterlinks.io/changelog/'>
+					%s
+				</a>
 				</p>
 		</div>",
-			__( 'NEW: BetterLinks 2.3 is here, with ', 'betterlinks' ),
+			__( 'NEW: BetterLinks 2.3 is here with ', 'betterlinks' ),
 			__( 'Category Management', 'betterlinks' ),
-			__( 'feature & more! Check out the ', 'betterlinks' ),
-			__( 'Changelog', 'betterlinks' ),
-			__( ' for more details', 'betterlinks' )
+			__( '&', 'betterlinks' ),
+			__( 'Auto Link Creation for Custom Post Types!', 'betterlinks' ),
+			__( ' See the', 'betterlinks' ),
+			__( 'full Changelog.', 'betterlinks' ),
 		);
 	}
 
