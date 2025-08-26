@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { makeRequest, betterlinks_nonce } from '../../utils/helper';
+import { makeRequest, betterlinks_nonce, prefix, site_url } from '../../utils/helper';
 import Select from 'react-select';
 
 const ShortLinkGenerator = () => {
@@ -35,6 +35,7 @@ const ShortLinkGenerator = () => {
     const [selectedBetterlinkCategory, setSelectedBetterlinkCategory] = useState(null);
     const [betterlinkTags, setBetterlinkTags] = useState([]);
     const [selectedBetterlinkTags, setSelectedBetterlinkTags] = useState([]);
+    const [linkPrefix, setLinkPrefix] = useState(prefix || 'go');
 
     // Load post types on mount
     useEffect(() => {
@@ -204,7 +205,8 @@ const ShortLinkGenerator = () => {
             collision_handling: collisionHandling,
             custom_tags: customTags,
             betterlink_category: selectedBetterlinkCategory ? selectedBetterlinkCategory.value : null,
-            betterlink_tags: selectedBetterlinkTags.map(tag => tag.value)
+            betterlink_tags: selectedBetterlinkTags.map(tag => tag.value),
+            link_prefix: linkPrefix
         };
 
         try {
@@ -444,13 +446,16 @@ const ShortLinkGenerator = () => {
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
                                                 <label>{__('Description Length', 'betterlinks')}</label>
-                                                <input
-                                                    type="number"
-                                                    value={descriptionLength}
-                                                    onChange={(e) => setDescriptionLength(parseInt(e.target.value))}
-                                                    min="0"
-                                                    max="500"
-                                                />
+                                                <div>
+                                                    <input
+                                                        className="btl-text-field"
+                                                        type="number"
+                                                        value={descriptionLength}
+                                                        onChange={(e) => setDescriptionLength(parseInt(e.target.value))}
+                                                        min="0"
+                                                        max="500"
+                                                    />
+                                                </div>
                                                 <p className="btl-helper-text">{__('Characters to include from post excerpt/content', 'betterlinks')}</p>
                                             </div>
                                         </div>
@@ -469,6 +474,30 @@ const ShortLinkGenerator = () => {
                                     </div>
 
                                     <div className="btl-form-row">
+                                        <div className="btl-form-col">
+                                            <div className="btl-bulk-link-form-group">
+                                                <label>{__('Link Prefix', 'betterlinks')}</label>
+                                                <div>
+                                                    <input
+                                                        className="btl-text-field"
+                                                        type="text"
+                                                        value={linkPrefix}
+                                                        onChange={(e) => setLinkPrefix(e.target.value)}
+                                                        placeholder="go"
+                                                    />
+                                                </div>
+                                                <p className="btl-helper-text">
+                                                    {__('The prefix will be added before your shortened URL\'s slug eg. ', 'betterlinks')}
+                                                    {site_url}
+                                                    {linkPrefix && (
+                                                        <>
+                                                            /<strong>{linkPrefix}</strong>
+                                                        </>
+                                                    )}
+                                                    {__('/your-link-name', 'betterlinks')}
+                                                </p>
+                                            </div>
+                                        </div>
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
                                                 <label>{__('Shortened URL Type', 'betterlinks')}</label>
@@ -565,8 +594,8 @@ const ShortLinkGenerator = () => {
 
                     {/* Action Buttons */}
                     <div className="btl-form-actions">
-                        <div className="btl-actions-group">
-                            <button
+                        {/* <div className="btl-actions-group"> */}
+                        {/* <button
                                 type="button"
                                 className="btl-btn btl-btn-secondary"
                                 onClick={handleCountPosts}
@@ -580,30 +609,35 @@ const ShortLinkGenerator = () => {
                                 ) : (
                                     __('Count Posts', 'betterlinks')
                                 )}
-                            </button>
+                            </button> */}
 
-                            <button
-                                className="btl-btn btl-btn-primary"
-                                onClick={handleGenerate}
-                                disabled={!selectedPostType || isLoading || generationInProgress || (postCount === 0 && postCount !== null)}
-                            >
-                                {isLoading || generationInProgress ? (
-                                    <>
-                                        <span className="btl-spinner"></span>
-                                        {__('Generating...', 'betterlinks')}
-                                    </>
-                                ) : (
-                                    __('Generate Short Links', 'betterlinks')
-                                )}
-                            </button>
-                        </div>
+                        <button
+                            className="btl-btn btl-btn-primary"
+                            onClick={handleGenerate}
+                            disabled={!selectedPostType || isLoading || generationInProgress || (postCount === 0 && postCount !== null)}
+                        >
+                            {isLoading || generationInProgress ? (
+                                <>
+                                    <span className="btl-spinner"></span>
+                                    {__('Generating...', 'betterlinks')}
+                                </>
+                            ) : (
+                                <>
+                                    {__('Generate Short Links', 'betterlinks')}
+                                    {postCount !== null && postCount > 0 && (
+                                        <> ({postCount})</>
+                                    )}
+                                </>
+                            )}
+                        </button>
+                        {/* </div> */}
 
-                        {postCount !== null && (
+                        {/* {postCount !== null && (
                             <div className="btl-post-count">
                                 <span className="btl-count-label">{__('Posts found:', 'betterlinks')}</span>
                                 <span className="btl-count-value">{postCount}</span>
                             </div>
-                        )}
+                        )} */}
                     </div>
 
                     {/* Confirmation Modal */}
@@ -618,6 +652,7 @@ const ShortLinkGenerator = () => {
                                         <p><strong>{__('Tags:', 'betterlinks')}</strong> {selectedTags.map(tag => tag.label).join(', ')}</p>
                                     )}
                                     <p><strong>{__('Redirect Type:', 'betterlinks')}</strong> {redirectType}</p>
+                                    <p><strong>{__('Link Prefix:', 'betterlinks')}</strong> {linkPrefix}</p>
                                     {selectedBetterlinkCategory && (
                                         <p><strong>{__('BetterLink Category:', 'betterlinks')}</strong> {selectedBetterlinkCategory.label}</p>
                                     )}

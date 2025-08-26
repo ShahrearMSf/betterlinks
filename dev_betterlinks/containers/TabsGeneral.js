@@ -138,9 +138,9 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
 										{!fastClicksStatus
 											? __(
-													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
-													'betterlinks'
-											  )
+												"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
+												'betterlinks'
+											)
 											: __("Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data", 'betterlinks')}
 									</div>
 								</div>

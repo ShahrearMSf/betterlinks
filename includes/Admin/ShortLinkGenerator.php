@@ -748,6 +748,9 @@ class ShortLinkGenerator
         $filters['slug_length'] = isset($data['slug_length']) ? max(3, min(50, intval($data['slug_length']))) : 10;
         $collision_handling = isset($data['collision_handling']) ? $data['collision_handling'] : 'append';
         $filters['collision_handling'] = in_array($collision_handling, ['append', 'regenerate', 'skip']) ? $collision_handling : 'append';
+        
+        // Link prefix configuration
+        $filters['link_prefix'] = isset($data['link_prefix']) ? sanitize_text_field($data['link_prefix']) : Helper::get_settings('prefix');
 
         // Category assignment - simplified to only BetterLink category
         $filters['betterlink_category'] = isset($data['betterlink_category']) ? intval($data['betterlink_category']) : 0;
@@ -1120,6 +1123,12 @@ class ShortLinkGenerator
             case 'random':
                 $base_slug = $this->generate_random_slug($filters['slug_length']);
                 break;
+        }
+
+        // Apply prefix if available
+        $prefix = $filters['link_prefix'] ?? '';
+        if (!empty($prefix)) {
+            $base_slug = $prefix . '/' . $base_slug;
         }
 
         return $this->ensure_unique_slug($base_slug, $filters['collision_handling']);
