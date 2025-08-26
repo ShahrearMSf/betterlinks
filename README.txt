@@ -1,5 +1,5 @@
 === BetterLinks – An Advanced Plugin for Affiliate Links, Link Shortening, Link Tracking, Link Branding & Marketing ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hrrarya
+Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, cloaking, link shortener, short links, redirects
 Requires at least: 5.0
