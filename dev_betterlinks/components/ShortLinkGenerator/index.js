@@ -25,22 +25,22 @@ const ShortLinkGenerator = () => {
     // Advanced filters
     const [descriptionLength, setDescriptionLength] = useState(150);
     const [redirectType, setRedirectType] = useState('301');
-    const [targetUrlSource, setTargetUrlSource] = useState('permalink');
     const [customFieldKey, setCustomFieldKey] = useState('');
     const [manualPattern, setManualPattern] = useState('');
     const [slugType, setSlugType] = useState('existing');
     const [slugLength, setSlugLength] = useState(10);
     const [collisionHandling, setCollisionHandling] = useState('append');
-    const [categoryAssignment, setCategoryAssignment] = useState('same');
-    const [customCategory, setCustomCategory] = useState('');
     const [customTags, setCustomTags] = useState([]);
     const [betterlinkCategories, setBetterlinkCategories] = useState([]);
     const [selectedBetterlinkCategory, setSelectedBetterlinkCategory] = useState(null);
+    const [betterlinkTags, setBetterlinkTags] = useState([]);
+    const [selectedBetterlinkTags, setSelectedBetterlinkTags] = useState([]);
 
     // Load post types on mount
     useEffect(() => {
         loadPostTypes();
         loadBetterlinkCategories();
+        loadBetterlinkTags();
     }, []);
 
     // Update categories when post type changes
@@ -120,6 +120,21 @@ const ShortLinkGenerator = () => {
         }
     };
 
+    const loadBetterlinkTags = async () => {
+        try {
+            const response = await makeRequest({
+                action: 'betterlinks/admin/get_betterlink_tags',
+                security: betterlinks_nonce
+            });
+
+            if (response.data && response.data.success) {
+                setBetterlinkTags(response.data.data);
+            }
+        } catch (error) {
+            console.error('Error loading BetterLink tags:', error);
+        }
+    };
+
     const updatePostCount = async () => {
         if (!selectedPostType) {
             setPostCount(null);
@@ -181,16 +196,15 @@ const ShortLinkGenerator = () => {
             include_existing: includeExisting,
             description_length: descriptionLength,
             redirect_type: redirectType,
-            target_url_source: targetUrlSource,
+            target_url_source: 'permalink',
             custom_field_key: customFieldKey,
             manual_pattern: manualPattern,
             slug_type: slugType,
             slug_length: slugLength,
             collision_handling: collisionHandling,
-            category_assignment: categoryAssignment,
-            custom_category: customCategory,
             custom_tags: customTags,
-            betterlink_category: selectedBetterlinkCategory ? selectedBetterlinkCategory.value : null
+            betterlink_category: selectedBetterlinkCategory ? selectedBetterlinkCategory.value : null,
+            betterlink_tags: selectedBetterlinkTags.map(tag => tag.value)
         };
 
         try {
@@ -262,12 +276,6 @@ const ShortLinkGenerator = () => {
         { value: '307', label: __('307 (Temporary)', 'betterlinks') }
     ];
 
-    const targetUrlSourceOptions = [
-        { value: 'permalink', label: __('Post Permalink', 'betterlinks') },
-        { value: 'custom_field', label: __('Custom Field', 'betterlinks') },
-        { value: 'manual_pattern', label: __('Manual Pattern', 'betterlinks') }
-    ];
-
     const slugTypeOptions = [
         { value: 'existing', label: __('Existing Slug', 'betterlinks') },
         { value: 'title', label: __('Suggest From Title', 'betterlinks') },
@@ -278,12 +286,6 @@ const ShortLinkGenerator = () => {
         { value: 'append', label: __('Append Increment (-2, -3...)', 'betterlinks') },
         { value: 'regenerate', label: __('Regenerate', 'betterlinks') },
         { value: 'skip', label: __('Skip and Report', 'betterlinks') }
-    ];
-
-    const categoryAssignmentOptions = [
-        { value: 'same', label: __('Same as Post Category', 'betterlinks') },
-        { value: 'custom', label: __('Custom Category', 'betterlinks') },
-        { value: 'betterlink', label: __('Betterlink Category', 'betterlinks') }
     ];
 
     return (
@@ -469,18 +471,6 @@ const ShortLinkGenerator = () => {
                                     <div className="btl-form-row">
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
-                                                <label>{__('Target URL Source', 'betterlinks')}</label>
-                                                <Select
-                                                    value={targetUrlSourceOptions.find(opt => opt.value === targetUrlSource)}
-                                                    onChange={(option) => setTargetUrlSource(option.value)}
-                                                    options={targetUrlSourceOptions}
-                                                    isClearable={false}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
                                                 <label>{__('Shortened URL Type', 'betterlinks')}</label>
                                                 <Select
                                                     value={slugTypeOptions.find(opt => opt.value === slugType)}
@@ -491,32 +481,6 @@ const ShortLinkGenerator = () => {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {targetUrlSource === 'custom_field' && (
-                                        <div className="btl-bulk-link-form-group">
-                                            <label>{__('Custom Field Key', 'betterlinks')}</label>
-                                            <input
-                                                type="text"
-                                                value={customFieldKey}
-                                                onChange={(e) => setCustomFieldKey(e.target.value)}
-                                                placeholder={__('Enter meta key...', 'betterlinks')}
-                                            />
-                                            <p className="btl-helper-text">{__('The custom field key to use as target URL', 'betterlinks')}</p>
-                                        </div>
-                                    )}
-
-                                    {targetUrlSource === 'manual_pattern' && (
-                                        <div className="btl-bulk-link-form-group">
-                                            <label>{__('Manual Pattern', 'betterlinks')}</label>
-                                            <input
-                                                type="text"
-                                                value={manualPattern}
-                                                onChange={(e) => setManualPattern(e.target.value)}
-                                                placeholder={__('e.g., https://example.com/{post_slug}', 'betterlinks')}
-                                            />
-                                            <p className="btl-helper-text">{__('Use {post_slug}, {post_id}, or {post_title} as placeholders', 'betterlinks')}</p>
-                                        </div>
-                                    )}
 
                                     {(slugType === 'title' || slugType === 'random') && (
                                         <div className="btl-form-row">
@@ -557,47 +521,42 @@ const ShortLinkGenerator = () => {
                                     <div className="btl-form-row">
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
-                                                <label>{__('Category Assignment', 'betterlinks')}</label>
+                                                <label>{__('BetterLink Category', 'betterlinks')}</label>
                                                 <Select
-                                                    value={categoryAssignmentOptions.find(opt => opt.value === categoryAssignment)}
-                                                    onChange={(option) => setCategoryAssignment(option.value)}
-                                                    options={categoryAssignmentOptions}
-                                                    isClearable={false}
+                                                    value={selectedBetterlinkCategory}
+                                                    onChange={setSelectedBetterlinkCategory}
+                                                    options={betterlinkCategories}
+                                                    placeholder={__('Select BetterLink category...', 'betterlinks')}
+                                                    isClearable={true}
+                                                    isLoading={betterlinkCategories.length === 0}
+                                                    isSearchable={true}
+                                                    noOptionsMessage={({ inputValue }) =>
+                                                        inputValue ? __('No categories found', 'betterlinks') : __('No categories available', 'betterlinks')
+                                                    }
                                                 />
+                                                <p className="btl-helper-text">{__('Choose a BetterLink category for generated links', 'betterlinks')}</p>
                                             </div>
                                         </div>
-
-                                        {categoryAssignment === 'custom' && (
-                                            <div className="btl-form-col">
-                                                <div className="btl-bulk-link-form-group">
-                                                    <label>{__('Custom Category', 'betterlinks')}</label>
-                                                    <input
-                                                        type="text"
-                                                        value={customCategory}
-                                                        onChange={(e) => setCustomCategory(e.target.value)}
-                                                        placeholder={__('Enter category name...', 'betterlinks')}
-                                                    />
-                                                    <p className="btl-helper-text">{__('Category name for all generated links', 'betterlinks')}</p>
-                                                </div>
+                                        <div className="btl-form-col">
+                                            <div className="btl-bulk-link-form-group">
+                                                <label>{__('BetterLink Tags', 'betterlinks')}</label>
+                                                <Select
+                                                    value={selectedBetterlinkTags}
+                                                    onChange={setSelectedBetterlinkTags}
+                                                    options={betterlinkTags}
+                                                    placeholder={__('Select BetterLink tags...', 'betterlinks')}
+                                                    isClearable={true}
+                                                    isLoading={betterlinkTags.length === 0}
+                                                    isSearchable={true}
+                                                    isMulti={true}
+                                                    closeMenuOnSelect={false}
+                                                    noOptionsMessage={({ inputValue }) =>
+                                                        inputValue ? __('No tags found', 'betterlinks') : __('No tags available', 'betterlinks')
+                                                    }
+                                                />
+                                                <p className="btl-helper-text">{__('Choose BetterLink tags for generated links', 'betterlinks')}</p>
                                             </div>
-                                        )}
-
-                                        {categoryAssignment === 'betterlink' && (
-                                            <div className="btl-form-col">
-                                                <div className="btl-bulk-link-form-group">
-                                                    <label>{__('BetterLink Category', 'betterlinks')}</label>
-                                                    <Select
-                                                        value={selectedBetterlinkCategory}
-                                                        onChange={setSelectedBetterlinkCategory}
-                                                        options={betterlinkCategories}
-                                                        placeholder={__('Select BetterLink category...', 'betterlinks')}
-                                                        isClearable={true}
-                                                        isLoading={betterlinkCategories.length === 0}
-                                                    />
-                                                    <p className="btl-helper-text">{__('Choose a BetterLink category for all generated links', 'betterlinks')}</p>
-                                                </div>
-                                            </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -659,11 +618,11 @@ const ShortLinkGenerator = () => {
                                         <p><strong>{__('Tags:', 'betterlinks')}</strong> {selectedTags.map(tag => tag.label).join(', ')}</p>
                                     )}
                                     <p><strong>{__('Redirect Type:', 'betterlinks')}</strong> {redirectType}</p>
-                                    {categoryAssignment === 'betterlink' && selectedBetterlinkCategory && (
+                                    {selectedBetterlinkCategory && (
                                         <p><strong>{__('BetterLink Category:', 'betterlinks')}</strong> {selectedBetterlinkCategory.label}</p>
                                     )}
-                                    {categoryAssignment === 'custom' && customCategory && (
-                                        <p><strong>{__('Custom Category:', 'betterlinks')}</strong> {customCategory}</p>
+                                    {selectedBetterlinkTags.length > 0 && (
+                                        <p><strong>{__('BetterLink Tags:', 'betterlinks')}</strong> {selectedBetterlinkTags.map(tag => tag.label).join(', ')}</p>
                                     )}
                                     <p className="btl-count">
                                         <strong>{__('Generate short links for', 'betterlinks')} {postCount} {__('posts', 'betterlinks')}</strong>

@@ -569,6 +569,11 @@ class ShortLinkGenerator
                 'password' => ''
             ];
 
+            // Add BetterLink tags if specified
+            if (!empty($filters['betterlink_tags'])) {
+                $raw_link_data['tags_id'] = $filters['betterlink_tags'];
+            }
+
             // Add Pro fields if Pro plugin is active
             if (defined('BETTERLINKS_PRO_VERSION')) {
                 $raw_link_data['expire'] = [
@@ -600,10 +605,6 @@ class ShortLinkGenerator
             // Use the trait's insert_link method which handles categories automatically
             $result = $this->insert_link($link_data);
 
-            // Debug logging
-            error_log('BetterLinks: Trait insert_link returned: ' . print_r($result, true));
-            error_log('BetterLinks: Link data sent: ' . print_r($link_data, true));
-
             if ($result && isset($result['ID'])) {
                 $link_id = $result['ID'];
 
@@ -611,6 +612,8 @@ class ShortLinkGenerator
                 if (!empty($filters['custom_tags'])) {
                     $this->insert_custom_tags($link_id, $filters['custom_tags']);
                 }
+
+                // Note: BetterLink tags are handled automatically by the insert_link method via tags_id parameter
 
                 return [
                     'success' => true,
@@ -683,120 +686,12 @@ class ShortLinkGenerator
     private function get_betterlinks_category_id($post_id, $filters = [])
     {
         // Check if a specific BetterLink category was selected
-        if (isset($filters['category_assignment']) && $filters['category_assignment'] === 'betterlink' && !empty($filters['betterlink_category'])) {
+        if (!empty($filters['betterlink_category'])) {
             return intval($filters['betterlink_category']);
-        }
-
-        // Check if custom category was specified
-        if (isset($filters['category_assignment']) && $filters['category_assignment'] === 'custom' && !empty($filters['custom_category'])) {
-            return $this->create_or_get_betterlink_category($filters['custom_category']);
-        }
-
-        // For 'same' option, create/get BetterLink category based on post's actual categories
-        if (isset($filters['category_assignment']) && $filters['category_assignment'] === 'same') {
-            return $this->get_post_categories_for_betterlink($post_id);
         }
 
         // Default fallback to "Uncategorized" category ID 1
         return 1;
-    }
-
-    /**
-     * Get post categories for BetterLink assignment (handles multiple taxonomies)
-     */
-    private function get_post_categories_for_betterlink($post_id)
-    {
-        $post = get_post($post_id);
-        if (!$post) {
-            return 1; // Default to Uncategorized
-        }
-
-        // Get all taxonomies for this post type
-        $taxonomies = get_object_taxonomies($post->post_type, 'objects');
-        
-        error_log("Post ID $post_id, Post Type: {$post->post_type}");
-        error_log("Available taxonomies: " . print_r(array_keys($taxonomies), true));
-        
-        // Collect all categories from hierarchical taxonomies
-        $all_categories = [];
-        
-        foreach ($taxonomies as $taxonomy) {
-            // Only process hierarchical taxonomies (categories, not tags)
-            if ($taxonomy->hierarchical) {
-                $terms = wp_get_post_terms($post_id, $taxonomy->name, ['fields' => 'all']);
-                
-                if (!is_wp_error($terms) && !empty($terms)) {
-                    error_log("Found terms in taxonomy {$taxonomy->name}: " . print_r(wp_list_pluck($terms, 'name'), true));
-                    foreach ($terms as $term) {
-                        $all_categories[] = $term->name;
-                    }
-                }
-            }
-        }
-
-        // If no categories found, try the default category taxonomy
-        if (empty($all_categories)) {
-            $wp_categories = wp_get_post_categories($post_id, ['fields' => 'all']);
-            if (!empty($wp_categories)) {
-                foreach ($wp_categories as $category) {
-                    $all_categories[] = $category->name;
-                }
-            }
-        }
-
-        // If still no categories, return default
-        if (empty($all_categories)) {
-            return 1;
-        }
-
-        // Remove duplicates and create/get all categories
-        $all_categories = array_unique($all_categories);
-        error_log("Final categories to create: " . print_r($all_categories, true));
-        
-        $created_category_ids = [];
-        
-        foreach ($all_categories as $category_name) {
-            $category_id = $this->create_or_get_betterlink_category($category_name);
-            if ($category_id && $category_id > 0) {
-                $created_category_ids[] = $category_id;
-            }
-        }
-
-        // Return the first created category ID, or default if none created
-        return !empty($created_category_ids) ? $created_category_ids[0] : 1;
-    }
-
-    /**
-     * Create or get existing BetterLink category by name
-     */
-    private function create_or_get_betterlink_category($category_name)
-    {
-        if (empty($category_name)) {
-            return 1; // Default to Uncategorized
-        }
-
-        $category_name = trim($category_name);
-        $category_slug = sanitize_title($category_name);
-
-        // Check if category already exists
-        $existing_categories = $this->get_all_categories();
-        foreach ($existing_categories as $category) {
-            if (strtolower($category['term_name']) === strtolower($category_name) || 
-                $category['term_slug'] === $category_slug) {
-                return intval($category['id']);
-            }
-        }
-
-        // Create new category
-        $term_data = [
-            'term_name' => $category_name,
-            'term_slug' => $category_slug,
-            'term_type' => 'category'
-        ];
-
-        $term_id = \BetterLinks\Helper::insert_term($term_data);
-        
-        return $term_id ?: 1; // Return term ID or fallback to Uncategorized
     }
 
     /**
@@ -854,10 +749,19 @@ class ShortLinkGenerator
         $collision_handling = isset($data['collision_handling']) ? $data['collision_handling'] : 'append';
         $filters['collision_handling'] = in_array($collision_handling, ['append', 'regenerate', 'skip']) ? $collision_handling : 'append';
 
-        // Category assignment
-        $filters['category_assignment'] = isset($data['category_assignment']) ? sanitize_text_field($data['category_assignment']) : 'same';
-        $filters['custom_category'] = isset($data['custom_category']) ? sanitize_text_field($data['custom_category']) : '';
+        // Category assignment - simplified to only BetterLink category
         $filters['betterlink_category'] = isset($data['betterlink_category']) ? intval($data['betterlink_category']) : 0;
+        
+        // BetterLink tags assignment
+        $filters['betterlink_tags'] = [];
+        if (isset($data['betterlink_tags'])) {
+            if (is_string($data['betterlink_tags'])) {
+                $decoded_tags = json_decode($data['betterlink_tags'], true);
+                $filters['betterlink_tags'] = is_array($decoded_tags) ? array_map('intval', $decoded_tags) : [];
+            } else if (is_array($data['betterlink_tags'])) {
+                $filters['betterlink_tags'] = array_map('intval', $data['betterlink_tags']);
+            }
+        }
         
         // Handle custom_tags - they might come as JSON string from FormData
         $filters['custom_tags'] = [];
@@ -1534,6 +1438,8 @@ class ShortLinkGenerator
             add_post_meta($link_id, '_betterlinks_custom_tag', sanitize_text_field($tag_name));
         }
     }
+
+
 
     /**
      * Generate random slug
