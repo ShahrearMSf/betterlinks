@@ -5,6 +5,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
+import CategorySelect from 'components/CategorySelect';
 import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
@@ -24,6 +25,10 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 
 	useEffect(() => {
 		if (is_pro_enabled && !terms?.terms) {
+			fetch_terms_data();
+		}
+		// Always fetch terms data for category dropdown
+		if (!terms?.terms || terms.terms.length === 0) {
 			fetch_terms_data();
 		}
 	}, []);
@@ -138,9 +143,9 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										<b style={{ fontWeight: 700 }}>{__('Note: ')}</b>
 										{!fastClicksStatus
 											? __(
-													"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
-													'betterlinks'
-											  )
+												"If it's enabled, before a link is redirected, the click data will be saved in the json file in 1 hour time interval. Otherwise, it will be directly inserted into the database",
+												'betterlinks'
+											)
 											: __("Analytics data is updated within 1 hour interval. Hit the 'Refresh Stats' button to instantly update your analytics data", 'betterlinks')}
 									</div>
 								</div>
@@ -171,6 +176,44 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										defaultValue={settings.redirect_type == 'cloak' && !is_pro_enabled ? '307' : settings.redirect_type}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}
+									/>
+								</span>
+							)}
+
+							{settings && (
+								<span className="btl-form-group">
+									<label className="btl-form-label">{__('Default Category', 'betterlinks')}</label>
+									<CategorySelect
+										name="default_category"
+										options={
+											terms?.terms ? [
+												// Add "Uncategorized" as the first option if it doesn't exist
+												{
+													value: '1',
+													label: __('Uncategorized', 'betterlinks')
+												},
+												// Add all available categories
+												...terms.terms
+													.filter(term => term.term_type === 'category' && term.ID !== '1')
+													.map(term => ({
+														value: term.ID,
+														label: term.term_name
+													}))
+											] : [
+												// Show loading state when terms are not loaded yet
+												{
+													value: '1',
+													label: __('Uncategorized', 'betterlinks')
+												},
+												{
+													value: 'loading',
+													label: __('Loading...', 'betterlinks'),
+													isDisabled: true
+												}
+											]
+										}
+										defaultValue={settings.default_category || '1'}
+										setFieldValue={props.setFieldValue}
 									/>
 								</span>
 							)}

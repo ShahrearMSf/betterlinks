@@ -58,7 +58,7 @@ export const Link = (props) => {
 
 		//👇 these flowwowing props will be passed from the component's gutenberg call
 		betterlinksGutenStore,
-		setShowLinkModal = () => {},
+		setShowLinkModal = () => { },
 		searchFieldRef,
 		linkNewTab,
 		type = '',
@@ -126,8 +126,8 @@ export const Link = (props) => {
 	//👇 this variable 'objForGutenTargetBlank' added to handle the 'open in new tab' option in gutenberg format
 	const objForGutenTargetBlank = betterlinksGutenStore
 		? {
-				openInNewTab: linkNewTab,
-		  }
+			openInNewTab: linkNewTab,
+		}
 		: {};
 
 	const initialValues = {
@@ -141,10 +141,11 @@ export const Link = (props) => {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		redirect_type: '307',
-		cat_id: catId ? catId : null,
+		cat_id: catId || settings?.settings?.default_category || null,
 		...settings.settings,
 		...objForGutenTargetBlank,
 	};
+
 	const initialUpdateValues = {
 		...settings.settings,
 		link_modified: currentDate,
@@ -218,8 +219,20 @@ export const Link = (props) => {
 		shortURLUniqueCheck(values.short_url, values.ID, setSlugIsExists).then((isDuplicate) => {
 			if (!isDuplicate) {
 				if (!values.cat_id) {
-					const { ID } = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
-					values.cat_id = ID;
+					// Priority: 1) Contextual category (catId), 2) Default category setting, 3) Fallback to uncategorized
+					if (catId) {
+						// Category-specific link creation - use the contextual category
+						values.cat_id = catId;
+					} else {
+						// Global link creation - use default category setting
+						const defaultCategoryId = settings?.settings?.default_category;
+						if (defaultCategoryId) {
+							values.cat_id = defaultCategoryId;
+						} else {
+							const uncategorizedTerm = terms.terms.filter((item) => item.term_slug == 'uncategorized')[0];
+							values.cat_id = uncategorizedTerm ? uncategorizedTerm.ID : 1;
+						}
+					}
 				}
 				if (!values.link_slug) {
 					values.link_slug = generateSlug(values.link_title);
@@ -505,7 +518,13 @@ export const Link = (props) => {
 											<label className="btl-modal-form-label" htmlFor="catId">
 												{__('Category', 'betterlinks')}
 											</label>
-											<Category catId={parseInt(catId)} data={terms} fieldName="cat_id" setFieldValue={props.setFieldValue} disabled={isDisableLinkFormEditView} />
+											<Category
+												catId={parseInt(catId || settings?.settings?.default_category || 1)}
+												data={terms}
+												fieldName="cat_id"
+												setFieldValue={props.setFieldValue}
+												disabled={isDisableLinkFormEditView}
+											/>
 										</div>
 										<div className="btl-modal-form-group">
 											<label className="btl-modal-form-label" htmlFor="tags">
