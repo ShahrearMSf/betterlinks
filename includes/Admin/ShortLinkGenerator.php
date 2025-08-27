@@ -756,10 +756,12 @@ class ShortLinkGenerator
         $filters['betterlink_category'] = isset($data['betterlink_category']) ? intval($data['betterlink_category']) : 0;
         
         // BetterLink tags assignment
-        $filters['betterlink_tags'] = [];
+          $filters['betterlink_tags'] = [];
         if (isset($data['betterlink_tags'])) {
             if (is_string($data['betterlink_tags'])) {
-                $decoded_tags = json_decode($data['betterlink_tags'], true);
+                // Handle escaped quotes in JSON string
+                $cleaned_json = stripslashes($data['betterlink_tags']);
+                $decoded_tags = json_decode($cleaned_json, true);
                 $filters['betterlink_tags'] = is_array($decoded_tags) ? array_map('intval', $decoded_tags) : [];
             } else if (is_array($data['betterlink_tags'])) {
                 $filters['betterlink_tags'] = array_map('intval', $data['betterlink_tags']);
