@@ -110,7 +110,7 @@ const getInitialValues = (settings) => {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		// redirect_type: settings?.redirect_type || '307',
-		cat_id: null,
+		cat_id: settings?.default_category || '1', // Default to "Uncategorized" (ID: 1)
 		...settings,
 	};
 };

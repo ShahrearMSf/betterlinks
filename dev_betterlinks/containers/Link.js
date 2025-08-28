@@ -141,7 +141,7 @@ export const Link = (props) => {
 		link_modified: currentDate,
 		link_modified_gmt: currentDate,
 		redirect_type: '307',
-		cat_id: catId || settings?.settings?.default_category || null,
+		cat_id: catId || settings?.settings?.default_category || '1', // Default to "Uncategorized" (ID: 1)
 		...settings.settings,
 		...objForGutenTargetBlank,
 	};

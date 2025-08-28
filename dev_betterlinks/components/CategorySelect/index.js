@@ -8,24 +8,63 @@ const CategorySelect = (props) => {
     const [selectValue, setSelectValue] = useState(null);
 
     useEffect(() => {
-        // Find the current selected option from the available options
-        const currentOption = (props.options || []).find((item) => item.value === field.value);
-        if (currentOption) {
-            setSelectValue(currentOption);
+        // Ensure we have options before proceeding
+        if (!props.options || props.options.length === 0) {
+            return;
+        }
+
+        // Skip if we only have loading option
+        if (props.options.length === 1 && props.options[0].value === 'loading') {
+            return;
+        }
+
+        // If field value exists, find the current selected option
+        if (field.value) {
+            const currentOption = props.options.find((item) => item.value === field.value);
+            if (currentOption) {
+                setSelectValue(currentOption);
+                return;
+            }
+        }
+
+        // If no field value or field value not found in options, set default to "Uncategorized" (ID: 1)
+        const defaultValue = props.defaultValue || '1';
+        const defaultOption = props.options.find((item) => item.value === defaultValue);
+
+        if (defaultOption) {
+            setSelectValue(defaultOption);
+            setThisFieldValue(defaultValue, false);
+            props.setFieldValue(field.name, defaultValue);
         } else {
-            // If current field value is not found in options, set it to the default value
-            const defaultOption = (props.options || []).find((item) => item.value === (props.defaultValue || '1'));
-            if (defaultOption) {
-                setSelectValue(defaultOption);
-                setThisFieldValue(defaultOption.value, false);
-                props.setFieldValue(field.name, defaultOption.value);
+            // Fallback: if "Uncategorized" option is not found, select the first available option
+            const firstOption = props.options[0];
+            if (firstOption && firstOption.value !== 'loading') {
+                setSelectValue(firstOption);
+                setThisFieldValue(firstOption.value, false);
+                props.setFieldValue(field.name, firstOption.value);
             }
         }
     }, [field.value, props.options, props.defaultValue]);
 
     const onChange = (option) => {
+        // Prevent selecting the loading option
+        if (option && option.value === 'loading') {
+            return;
+        }
+
         if (option == null) {
-            return props.setFieldValue(field.name, '1'); // Default to 'Uncategorized' (ID: 1)
+            // When option is cleared, default to 'Uncategorized' (ID: 1)
+            const defaultValue = '1';
+            const defaultOption = (props.options || []).find((item) => item.value === defaultValue);
+
+            if (defaultOption) {
+                setSelectValue(defaultOption);
+                props.setFieldValue(field.name, defaultValue);
+            } else {
+                // Fallback if "Uncategorized" is not found
+                props.setFieldValue(field.name, defaultValue);
+            }
+            return;
         }
 
         // Update the selected value
@@ -46,7 +85,12 @@ const CategorySelect = (props) => {
                 options={props.options}
                 value={selectValue}
                 isMulti={false}
-                placeholder={__('Select a category...', 'betterlinks')}
+                placeholder={
+                    props.options && props.options.length === 1 && props.options[0].value === 'loading'
+                        ? __('Loading...', 'betterlinks')
+                        : __('Select a category...', 'betterlinks')
+                }
+                isLoading={props.options && props.options.length === 1 && props.options[0].value === 'loading'}
             />
         </React.Fragment>
     );

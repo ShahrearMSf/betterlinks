@@ -187,12 +187,12 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										name="default_category"
 										options={
 											terms?.terms ? [
-												// Add "Uncategorized" as the first option if it doesn't exist
+												// Always ensure "Uncategorized" is the first option
 												{
 													value: '1',
 													label: __('Uncategorized', 'betterlinks')
 												},
-												// Add all available categories
+												// Add all other available categories (excluding Uncategorized to avoid duplicates)
 												...terms.terms
 													.filter(term => term.term_type === 'category' && term.ID !== '1')
 													.map(term => ({
@@ -200,11 +200,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 														label: term.term_name
 													}))
 											] : [
-												// Show loading state when terms are not loaded yet
-												{
-													value: '1',
-													label: __('Uncategorized', 'betterlinks')
-												},
+												// Show loading state while categories are being fetched
 												{
 													value: 'loading',
 													label: __('Loading...', 'betterlinks'),
