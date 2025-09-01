@@ -1,0 +1,384 @@
+.btl-utm-template-modal {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px 30px;
+        border-bottom: 1px solid #e1e4e8;
+        background: #f8f9fa;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: #23282d;
+    }
+
+    &__body {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+    }
+
+    &__footer {
+        padding: 20px 30px;
+        border-top: 1px solid #e1e4e8;
+        background: #f8f9fa;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+        }
+    }
+}
+
+.btl-utm-template-fields {
+    .btl-utm-field-group {
+        margin-bottom: 24px;
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #23282d;
+            font-size: 14px;
+        }
+
+        .btl-form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: #fff;
+
+            &:focus {
+                outline: none;
+                border-color: #0073aa;
+                box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+            }
+
+            &::placeholder {
+                color: #999;
+            }
+        }
+
+        &.btl-utm-field-full {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .btl-utm-field-description {
+        color: #666;
+        font-size: 13px;
+        line-height: 1.4;
+        margin-top: 8px;
+    }
+
+    .btl-utm-field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .btl-utm-global-form {
+        margin-top: 20px;
+    }
+
+    // React Select Custom Styles
+    .btl-react-select-container {
+        .btl-react-select__control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-height: 46px;
+            transition: all 0.2s ease;
+            box-shadow: none;
+
+            &:hover {
+                border-color: #999;
+            }
+
+            &--is-focused {
+                border-color: #0073aa;
+                box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+            }
+        }
+
+        .btl-react-select__value-container {
+            padding: 8px 16px;
+        }
+
+        .btl-react-select__placeholder {
+            color: #999;
+        }
+
+        .btl-react-select__multi-value {
+            background-color: #0073aa;
+            border-radius: 4px;
+
+            .btl-react-select__multi-value__label {
+                color: white;
+                padding: 3px 6px;
+            }
+
+            .btl-react-select__multi-value__remove {
+                color: white;
+                border-radius: 0 4px 4px 0;
+
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.2);
+                    color: white;
+                }
+            }
+        }
+
+        .btl-react-select__menu {
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .btl-react-select__option {
+            &--is-focused {
+                background-color: #f0f7ff;
+            }
+
+            &--is-selected {
+                background-color: #0073aa;
+            }
+        }
+    }
+}
+
+// Close modal button styling to match existing pattern
+.btl-close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .btl {
+        font-size: 14px;
+        color: #666;
+    }
+}
+
+// Dark Mode Support
+.betterlinks-dark-mode {
+    .btl-utm-template-modal {
+        background: #2c3e50;
+        color: #ffffff;
+
+        &__header {
+            background: #34495e;
+            border-bottom-color: #3a4a5c;
+        }
+
+        &__title {
+            color: #ffffff;
+        }
+
+        &__footer {
+            background: #34495e;
+            border-top-color: #3a4a5c;
+        }
+    }
+
+    .btl-close-modal {
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btl {
+            color: #bdc3c7;
+        }
+    }
+
+    .btl-utm-template-fields {
+        .btl-utm-field-group {
+            label {
+                color: #ffffff;
+            }
+
+            .btl-form-control {
+                background: #34495e;
+                border-color: #4a5f7a;
+                color: #ffffff;
+
+                &:focus {
+                    border-color: #3498db;
+                    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+                }
+
+                &::placeholder {
+                    color: #95a5a6;
+                }
+            }
+        }
+
+        .btl-utm-field-description {
+            color: #bdc3c7;
+        }
+
+        // React Select Dark Mode
+        .btl-react-select-container {
+            .btl-react-select__control {
+                background: #34495e;
+                border-color: #4a5f7a;
+
+                &:hover {
+                    border-color: #5a6f8a;
+                }
+
+                &--is-focused {
+                    border-color: #3498db;
+                    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+                }
+            }
+
+            .btl-react-select__value-container {
+                color: #ffffff;
+            }
+
+            .btl-react-select__placeholder {
+                color: #95a5a6;
+            }
+
+            .btl-react-select__single-value {
+                color: #ffffff;
+            }
+
+            .btl-react-select__input {
+                color: #ffffff;
+            }
+
+            .btl-react-select__multi-value {
+                background-color: #3498db;
+
+                .btl-react-select__multi-value__label {
+                    color: white;
+                }
+
+                .btl-react-select__multi-value__remove {
+                    color: white;
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+            }
+
+            .btl-react-select__menu {
+                background: #34495e;
+                border-color: #4a5f7a;
+            }
+
+            .btl-react-select__option {
+                color: #ffffff;
+
+                &--is-focused {
+                    background-color: #3a4a5c;
+                }
+
+                &--is-selected {
+                    background-color: #3498db;
+                }
+            }
+
+            .btl-react-select__dropdown-indicator,
+            .btl-react-select__clear-indicator {
+                color: #95a5a6;
+
+                &:hover {
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .btl-utm-template-modal {
+        margin: 20px;
+        max-height: calc(100vh - 40px);
+
+        &__header,
+        &__body,
+        &__footer {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        &__body {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    }
+
+    .btl-utm-template-fields {
+        .btl-utm-field-row {
+            gap: 16px;
+        }
+
+        .btl-utm-field-group {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .btl-utm-template-modal {
+        margin: 10px;
+        max-height: calc(100vh - 20px);
+
+        &__header {
+            padding: 16px 15px;
+
+            &__title {
+                font-size: 18px;
+            }
+        }
+
+        &__body {
+            padding: 20px 15px;
+        }
+
+        &__footer {
+            padding: 15px;
+        }
+    }
+}

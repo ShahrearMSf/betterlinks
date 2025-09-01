@@ -5,7 +5,7 @@ import { update_option } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { saveSettingsHandler, makeRequest, betterlinks_nonce } from 'utils/helper';
-import CreatableSelect from 'react-select/creatable';
+import UTMTemplateModal from './UTMTemplateModal';
 import './style.scss';
 
 const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
@@ -13,6 +13,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const [utmTemplates, setUtmTemplates] = useState([]);
 	const [activeTemplate, setActiveTemplate] = useState(null);
 	const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [terms, setTerms] = useState([]);
 	const [templateForm, setTemplateForm] = useState({
 		template_name: '',
@@ -60,17 +61,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		const updatedTemplates = [...utmTemplates, newTemplate];
 		setUtmTemplates(updatedTemplates);
 
-		// Reset form
-		setTemplateForm({
-			template_name: '',
-			utm_source: '',
-			utm_medium: '',
-			utm_campaign: '',
-			utm_term: '',
-			utm_content: '',
-			categories: [1] // Default to Uncategorized
-		});
-		setIsCreatingTemplate(false);
+		// Reset form and close modal
+		closeModal();
 	};
 
 	const handleTemplateUpdate = () => {
@@ -83,7 +75,11 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		);
 
 		setUtmTemplates(updatedTemplates);
-		setActiveTemplate(null);
+		// Reset form and close modal
+		closeModal();
+	};
+
+	const resetTemplateForm = () => {
 		setTemplateForm({
 			template_name: '',
 			utm_source: '',
@@ -93,6 +89,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 			utm_content: '',
 			categories: [1]
 		});
+		// Don't reset isCreatingTemplate and activeTemplate here - let the caller decide
 	};
 
 	const handleTemplateDelete = (templateIndex) => {
@@ -104,15 +101,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 			if (activeTemplate && activeTemplate.template_index === templateIndex) {
 				setActiveTemplate(null);
-				setTemplateForm({
-					template_name: '',
-					utm_source: '',
-					utm_medium: '',
-					utm_campaign: '',
-					utm_term: '',
-					utm_content: '',
-					categories: [1]
-				});
+				resetTemplateForm();
 			}
 		}
 	};
@@ -121,32 +110,24 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setActiveTemplate(template);
 		setTemplateForm({ ...template });
 		setIsCreatingTemplate(false);
+		setIsModalOpen(true);
 	};
 
-	const getCategoryOptions = () => {
-		if (!terms || terms.length === 0) return [];
-
-		return terms
-			.filter(term => term.term_type === 'category')
-			.map(term => ({
-				value: parseInt(term.ID),
-				label: term.term_name
-			}));
+	const openCreateModal = () => {
+		setActiveTemplate(null);
+		resetTemplateForm();
+		setIsCreatingTemplate(true);
+		setIsModalOpen(true);
 	};
 
-	const getSelectedCategories = () => {
-		if (!templateForm.categories || !terms || terms.length === 0) return [];
-
-		return templateForm.categories.map(catId => {
-			const category = terms.find(term => parseInt(term.ID) === parseInt(catId));
-			return category ? { value: parseInt(category.ID), label: category.term_name } : null;
-		}).filter(Boolean);
+	const closeModal = () => {
+		setIsModalOpen(false);
+		resetTemplateForm();
+		setIsCreatingTemplate(false);
+		setActiveTemplate(null);
 	};
 
-	const handleCategoryChange = (selectedOptions) => {
-		const categoryIds = selectedOptions ? selectedOptions.map(option => option.value) : [1]; // Default to Uncategorized if empty
-		setTemplateForm({ ...templateForm, categories: categoryIds });
-	};
+
 
 	return (
 		<Formik
@@ -168,222 +149,84 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 					<div className="btl-utm-global-settings">
 						{/* Template Management Section */}
 						<div className="btl-utm-templates-section">
-							<h3>{__('UTM Templates & Category Assignment', 'betterlinks')}</h3>
-							<div className="btl-utm-templates-header">
-								<div className="btl-utm-templates-list">
-									<label>{__('Existing Templates', 'betterlinks')}</label>
-									<select
-										value={activeTemplate?.template_index || ''}
-										onChange={(e) => {
-											const template = utmTemplates.find(t => t.template_index == e.target.value);
-											if (template) handleTemplateSelect(template);
-										}}
-										className="btl-form-control"
-									>
-										<option value="">{__('Select a template...', 'betterlinks')}</option>
-										{utmTemplates.map(template => (
-											<option key={template.template_index} value={template.template_index}>
-												{template.template_name}
-											</option>
-										))}
-									</select>
-								</div>
-								<button
+							<div className="btl-utm-templates-wrapper">
+								<h3>{__('UTM Templates & Category Assignment', 'betterlinks')}</h3>
+								<div
 									type="button"
-									className="button-secondary"
-									onClick={() => {
-										setIsCreatingTemplate(true);
-										setActiveTemplate(null);
-										setTemplateForm({
-											template_name: '',
-											utm_source: '',
-											utm_medium: '',
-											utm_campaign: '',
-											utm_term: '',
-											utm_content: '',
-											categories: [1] // Default to Uncategorized
-										});
-									}}
+									className="btl-utm-templates-crt-btn"
+									onClick={openCreateModal}
 								>
 									{__('Create New Template', 'betterlinks')}
-								</button>
+								</div>
 							</div>
 
-							{/* Template Form */}
-							{(isCreatingTemplate || activeTemplate) && (
-								<div className="btl-utm-template-form">
-									<h4>
-										{isCreatingTemplate
-											? __('Create New UTM Template', 'betterlinks')
-											: __('Edit UTM Template', 'betterlinks')
-										}
-									</h4>
-
-									<div className="btl-utm-template-fields">
-										<div className="btl-utm-field-group">
-											<label>{__('Template Name', 'betterlinks')}</label>
-											<input
-												type="text"
-												value={templateForm.template_name}
-												onChange={(e) => setTemplateForm({ ...templateForm, template_name: e.target.value })}
-												placeholder={__('Enter template name...', 'betterlinks')}
-												className="btl-form-control"
-											/>
-										</div>
-
-										<div className="btl-utm-field-group">
-											<label>{__('Assign to Categories', 'betterlinks')}</label>
-											<CreatableSelect
-												isMulti
-												value={getSelectedCategories()}
-												onChange={handleCategoryChange}
-												options={getCategoryOptions()}
-												className="btl-react-select-container"
-												classNamePrefix="btl-react-select"
-												placeholder={__('Select categories...', 'betterlinks')}
-											/>
-											<div className="short-description">
-												{__('Select which categories should use this UTM template. If no category is selected, it will apply to "Uncategorized" links.', 'betterlinks')}
-											</div>
-										</div>
-
-										<div className="btl-utm-global-form">
-											<div className="btl-utm-field-group">
-												<label>{__('UTM Source', 'betterlinks')}</label>
-												<input
-													type="text"
-													value={templateForm.utm_source}
-													onChange={(e) => setTemplateForm({ ...templateForm, utm_source: e.target.value })}
-													placeholder={__('e.g: Twitter, Facebook', 'betterlinks')}
-													className="btl-form-control"
-												/>
-											</div>
-
-											<div className="btl-utm-field-group">
-												<label>{__('UTM Medium', 'betterlinks')}</label>
-												<input
-													type="text"
-													value={templateForm.utm_medium}
-													onChange={(e) => setTemplateForm({ ...templateForm, utm_medium: e.target.value })}
-													placeholder={__('e.g: social, email, cpc', 'betterlinks')}
-													className="btl-form-control"
-												/>
-											</div>
-
-											<div className="btl-utm-field-group">
-												<label>{__('UTM Campaign', 'betterlinks')}</label>
-												<input
-													type="text"
-													value={templateForm.utm_campaign}
-													onChange={(e) => setTemplateForm({ ...templateForm, utm_campaign: e.target.value })}
-													placeholder={__('e.g: summer_sale', 'betterlinks')}
-													className="btl-form-control"
-												/>
-											</div>
-
-											<div className="btl-utm-field-group">
-												<label>{__('UTM Term', 'betterlinks')}</label>
-												<input
-													type="text"
-													value={templateForm.utm_term}
-													onChange={(e) => setTemplateForm({ ...templateForm, utm_term: e.target.value })}
-													placeholder={__('e.g: paid keywords', 'betterlinks')}
-													className="btl-form-control"
-												/>
-											</div>
-
-											<div className="btl-utm-field-group">
-												<label>{__('UTM Content', 'betterlinks')}</label>
-												<input
-													type="text"
-													value={templateForm.utm_content}
-													onChange={(e) => setTemplateForm({ ...templateForm, utm_content: e.target.value })}
-													placeholder={__('e.g: text AD name', 'betterlinks')}
-													className="btl-form-control"
-												/>
-											</div>
-										</div>
-
-										<div className="btl-utm-template-actions">
-											{isCreatingTemplate ? (
-												<button type="button" className="button-primary" onClick={handleTemplateCreate}>
-													{__('Create Template', 'betterlinks')}
-												</button>
-											) : (
-												<button type="button" className="button-primary" onClick={handleTemplateUpdate}>
-													{__('Update Template', 'betterlinks')}
-												</button>
-											)}
-
-											{activeTemplate && (
-												<button
-													type="button"
-													className="button-secondary button-danger"
-													onClick={() => handleTemplateDelete(activeTemplate.template_index)}
-												>
-													{__('Delete Template', 'betterlinks')}
-												</button>
-											)}
-
-											<button
-												type="button"
-												className="button-secondary"
-												onClick={() => {
-													setIsCreatingTemplate(false);
-													setActiveTemplate(null);
-													setTemplateForm({
-														template_name: '',
-														utm_source: '',
-														utm_medium: '',
-														utm_campaign: '',
-														utm_term: '',
-														utm_content: '',
-														categories: [1]
-													});
-												}}
-											>
-												{__('Cancel', 'betterlinks')}
-											</button>
-										</div>
-									</div>
-								</div>
-							)}
+							{/* UTM Template Modal */}
+							<UTMTemplateModal
+								isOpen={isModalOpen}
+								onClose={closeModal}
+								isCreatingTemplate={isCreatingTemplate}
+								activeTemplate={activeTemplate}
+								templateForm={templateForm}
+								setTemplateForm={setTemplateForm}
+								terms={terms}
+								handleTemplateCreate={handleTemplateCreate}
+								handleTemplateUpdate={handleTemplateUpdate}
+								handleTemplateDelete={handleTemplateDelete}
+							/>
 
 							{/* Templates List */}
 							{utmTemplates.length > 0 && (
 								<div className="btl-utm-templates-list-display">
 									<h4>{__('Configured Templates', 'betterlinks')}</h4>
-									<div className="btl-utm-templates-grid">
+									<div className="btl-utm-templates-list">
 										{utmTemplates.map(template => (
-											<div key={template.template_index} className="btl-utm-template-card">
-												<h5>{template.template_name}</h5>
-												<div className="btl-utm-template-info">
-													<p><strong>{__('Categories:', 'betterlinks')}</strong> {
-														template.categories && template.categories.length > 0
-															? template.categories.map(catId => {
-																const category = terms?.find(term => parseInt(term.ID) === parseInt(catId));
-																return category ? category.term_name : 'Unknown';
-															}).join(', ')
-															: __('Uncategorized', 'betterlinks')
-													}</p>
-													<p><strong>{__('UTM Source:', 'betterlinks')}</strong> {template.utm_source || '-'}</p>
-													<p><strong>{__('UTM Medium:', 'betterlinks')}</strong> {template.utm_medium || '-'}</p>
-													<p><strong>{__('UTM Campaign:', 'betterlinks')}</strong> {template.utm_campaign || '-'}</p>
+											<div key={template.template_index} className="btl-utm-template-item">
+												<div className="btl-utm-template-content">
+													<h5 className="btl-utm-template-name">{template.template_name}</h5>
+													<span className="btl-utm-template-categories">
+														{__('Categories:', 'betterlinks')} {
+															template.categories && template.categories.length > 0
+																? template.categories.map(catId => {
+																	const category = terms?.find(term => parseInt(term.ID) === parseInt(catId));
+																	return category ? category.term_name : 'Unknown';
+																}).join(', ')
+																: __('Uncategorized', 'betterlinks')
+														}
+													</span>
 												</div>
 												<div className="btl-utm-template-actions">
 													<button
 														type="button"
-														className="button-secondary button-small"
-														onClick={() => handleTemplateSelect(template)}
+														className="btl-utm-action-btn btl-utm-copy-btn"
+														onClick={() => {
+															// Copy template functionality can be added here
+															console.log('Copy template:', template);
+														}}
+														title={__('Copy Template', 'betterlinks')}
 													>
-														{__('Edit', 'betterlinks')}
+														<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="currentColor" />
+														</svg>
 													</button>
 													<button
 														type="button"
-														className="button-secondary button-small button-danger"
-														onClick={() => handleTemplateDelete(template.template_index)}
+														className="btl-utm-action-btn btl-utm-edit-btn"
+														onClick={() => handleTemplateSelect(template)}
+														title={__('Edit Template', 'betterlinks')}
 													>
-														{__('Delete', 'betterlinks')}
+														<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path d="M3 17.25V21H6.75L17.81 9.94L14.06 6.19L3 17.25ZM20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C17.98 2.9 17.35 2.9 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04Z" fill="currentColor" />
+														</svg>
+													</button>
+													<button
+														type="button"
+														className="btl-utm-action-btn btl-utm-delete-btn"
+														onClick={() => handleTemplateDelete(template.template_index)}
+														title={__('Delete Template', 'betterlinks')}
+													>
+														<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor" />
+														</svg>
 													</button>
 												</div>
 											</div>
