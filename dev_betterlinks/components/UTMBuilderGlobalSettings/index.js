@@ -61,6 +61,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		const updatedTemplates = [...utmTemplates, newTemplate];
 		setUtmTemplates(updatedTemplates);
 
+		// Save to settings
+		const updatedSettings = {
+			...settings,
+			global_utm_templates: updatedTemplates
+		};
+		saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
+
 		// Reset form and close modal
 		closeModal();
 	};
@@ -75,6 +82,14 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		);
 
 		setUtmTemplates(updatedTemplates);
+
+		// Save to settings
+		const updatedSettings = {
+			...settings,
+			global_utm_templates: updatedTemplates
+		};
+		saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
+
 		// Reset form and close modal
 		closeModal();
 	};
@@ -98,6 +113,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 				template.template_index !== templateIndex
 			);
 			setUtmTemplates(updatedTemplates);
+
+			// Save to settings
+			const updatedSettings = {
+				...settings,
+				global_utm_templates: updatedTemplates
+			};
+			saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
 
 			if (activeTemplate && activeTemplate.template_index === templateIndex) {
 				setActiveTemplate(null);
@@ -234,16 +256,6 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 									</div>
 								</div>
 							)}
-						</div>
-
-						{/* Save Button */}
-						<div className="btl-form-group" style={{ marginTop: '30px', flexDirection: 'column', gap: '10px', alignItems: 'flex-start' }}>
-							<div className="short-description" style={{ marginTop: '10px' }}>
-								{__('Save your UTM templates and category assignments. These will be automatically applied when creating new links based on their category.', 'betterlinks')}
-							</div>
-							<button className="button-primary btn-save-settings" type="submit">
-								{formSubmitText}
-							</button>
 						</div>
 					</div>
 				</Form>

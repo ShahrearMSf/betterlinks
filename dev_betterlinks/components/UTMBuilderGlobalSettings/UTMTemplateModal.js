@@ -179,6 +179,27 @@ const UTMTemplateModal = ({
                                 />
                             </div>
                         </div>
+                        {/* Add 2 Checkbox setting Here */}
+                        <div className="btl-utm-field-group">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={templateForm.utm_enable_to_rewrite_existing_utm_template}
+                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_enable_to_rewrite_existing_utm_template: e.target.checked })}
+                                />
+                                {__('Enable to Rewrite Existing UTM Template', 'betterlinks')}
+                            </label>
+                        </div>
+                        <div className="btl-utm-field-group">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={templateForm.utm_auto_apply_new_link}
+                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_auto_apply_new_link: e.target.checked })}
+                                />
+                                {__('Automatically Apply UTM to New Links', 'betterlinks')}
+                            </label>
+                        </div>
                     </div>
                 </div>
 
