@@ -334,6 +334,64 @@ export const Link = (props) => {
 			setFieldError('custom_tracking_scripts', true);
 			return;
 		}
+
+		// Validate and filter dynamic redirect data
+		if (values?.dynamic_redirect && values.dynamic_redirect.type && values.dynamic_redirect.type !== 'none') {
+			const { type, value, extra } = values.dynamic_redirect;
+
+			// Helper function to filter valid entries based on type
+			const filterValidEntries = (type, value) => {
+				if (!value || !Array.isArray(value)) return [];
+
+				switch (type) {
+					case 'rotation':
+						return value.filter(item => item.link && item.link.trim() !== '' && item.weight > 0);
+					case 'geographic':
+						return value.filter(item =>
+							item.link && item.link.trim() !== '' &&
+							item.country && (Array.isArray(item.country) ? item.country.length > 0 : item.country.trim() !== '')
+						);
+					case 'technology':
+						return value.filter(item => item.link && item.link.trim() !== '');
+					case 'time':
+						return value.filter(item =>
+							item.link && item.link.trim() !== '' &&
+							item.start_date && item.end_date
+						);
+					default:
+						return value;
+				}
+			};
+
+			const filteredValue = filterValidEntries(type, value);
+
+			// Validate dynamic redirect settings
+			if (filteredValue.length === 0) {
+				setFieldError('dynamic_redirect', __('At least one valid entry is required for dynamic redirect.', 'betterlinks'));
+				return;
+			}
+
+			if (type === 'rotation' && extra?.rotation_mode === 'weighted') {
+				const totalWeight = filteredValue.reduce((acc, item) => acc + (item.weight || 0), 0);
+				if (totalWeight !== 100) {
+					setFieldError('dynamic_redirect', __('Your Rotation URLs must add up to 100% in total', 'betterlinks'));
+					return;
+				}
+			}
+
+			if (type === 'time') {
+				for (let item of filteredValue) {
+					if (item.start_date && item.end_date && item.start_date > item.end_date) {
+						setFieldError('dynamic_redirect', __('Your Time Period Redirect start time must come before the end time.', 'betterlinks'));
+						return;
+					}
+				}
+			}
+
+			// Update values with filtered data
+			values.dynamic_redirect.value = filteredValue;
+		}
+
 		if ('duplicate' === type) {
 			delete values.ID;
 			delete values.analytic;
