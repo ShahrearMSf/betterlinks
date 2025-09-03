@@ -5,13 +5,29 @@ import { bindActionCreators } from 'redux';
 import { add_new_tag } from 'redux/actions/terms.actions';
 import TagModal from './TagModal';
 import ActionButton from 'components/ActionButton';
+import PermissionModal from 'components/PermissionModal';
 
 const AddNewTags = (props) => {
 	const [open, setOpen] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
+	const [showPermissionModal, setShowPermissionModal] = useState(false);
 	const { tags, icon = false, row = {}, children } = props;
 
+	// Check if user has permission to manage tags and categories
+	const hasPermission = () => {
+		// Check if betterLinksProGlobal exists (pro version with role management)
+		if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
+			return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
+		}
+		// Fallback for free version - only admins can manage
+		return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
+	};
+
 	const openModal = () => {
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
 		setOpen(true);
 	};
 	const closeModal = () => {
@@ -29,6 +45,10 @@ const AddNewTags = (props) => {
 	};
 
 	const __handleSubmit = (values, actions) => {
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
 		if ('' === values.term_slug) {
 			return setErrorMsg(__("Tag field can't be empty", 'betterlinks'));
 		}
@@ -57,6 +77,11 @@ const AddNewTags = (props) => {
 				</div>
 			)}
 			<TagModal open={open} errorMsg={errorMsg} closeModal={closeModal} __handleChange={__handleChange} __handleSubmit={__handleSubmit} row={row} />
+			<PermissionModal
+				isOpen={showPermissionModal}
+				onClose={() => setShowPermissionModal(false)}
+				title={__('Manage Tags Permission Required', 'betterlinks')}
+			/>
 		</>
 	);
 };
