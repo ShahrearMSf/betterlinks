@@ -22,6 +22,29 @@ const App = (props) => {
 	const [menuNotice, setMenuNotice] = useState(menu_notice !== localStorage.getItem('betterlinks__admin_menu_notice'));
 	const [dashboardNotice, setDashboardNotice] = useState(menu_notice !== localStorage.getItem('betterlinks__admin_dashboard_notice'));
 
+	// Remove sticky-menu class from body when on BetterLinks pages
+	useEffect(() => {
+		const body = document.body;
+
+		// Function to remove sticky-menu class if it exists
+		const removeStickyMenuClass = () => {
+			if (body.classList.contains('sticky-menu')) {
+				body.classList.remove('sticky-menu');
+			}
+		};
+
+		// Remove it immediately
+		removeStickyMenuClass();
+
+		// Also check and remove it periodically in case something else adds it back
+		const intervalId = setInterval(removeStickyMenuClass, 1000);
+
+		// Cleanup function
+		return () => {
+			clearInterval(intervalId);
+		};
+	}, []);
+
 	const getResponse = async () => {
 		try {
 			const res = await API.get(namespace);
