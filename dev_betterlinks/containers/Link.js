@@ -374,7 +374,7 @@ export const Link = (props) => {
 			if (type === 'rotation' && extra?.rotation_mode === 'weighted') {
 				const totalWeight = filteredValue.reduce((acc, item) => acc + (item.weight || 0), 0);
 				if (totalWeight !== 100) {
-					setFieldError('dynamic_redirect', __('Your Rotation URLs must add up to 100% in total', 'betterlinks'));
+					setFieldError('dynamic_redirect', __('Dynamic Redirect won’t activate until the Rotation URLs add up to 100', 'betterlinks'));
 					return;
 				}
 			}
