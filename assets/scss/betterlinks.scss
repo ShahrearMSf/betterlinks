@@ -72,6 +72,27 @@ body {
 			color: $white;
 		}
 
+		// Permission Modal Dark Mode Support
+		.btl-permission-modal {
+			background: #1f283d !important;
+		}
+
+		.btl-modal-content {
+			background-color: #1f283d !important;
+		}
+
+		.btl-permission-text {
+			color: $white !important;
+		}
+
+		.btl-permission-sub-text {
+			color: #d0d5dd !important;
+		}
+
+		.btl-modal-close {
+			color: $white !important;
+		}
+
 		.btl-analytic-table-wrapper {
 			.btl-analytic-link-name i.btl-analytics {
 				border: 1px solid $white;
@@ -961,4 +982,140 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 
 .ReactModal__Body--open.modal-open .supports-drag-drop:has(> .media-modal) {
 	z-index: 9999999;
+}
+
+/* Permission Modal Styles */
+.btl-modal-overlay {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	z-index: 999999 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.btl-permission-modal {
+	position: relative !important;
+	top: auto !important;
+	left: auto !important;
+	right: auto !important;
+	bottom: auto !important;
+	margin: 0 !important;
+	transform: none !important;
+	background: #fff !important;
+	border-radius: 8px !important;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+	outline: none !important;
+	padding: 0 !important;
+	max-width: 450px !important;
+	width: 90% !important;
+	border: none !important;
+	overflow: visible !important;
+}
+
+.btl-modal-header {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+	display: flex !important;
+	justify-content: end !important;
+	align-items: center !important;
+	border-bottom: none !important;
+}
+
+.btl-modal-header h2 {
+	margin: 0 !important;
+	font-size: 18px !important;
+	font-weight: 600 !important;
+	color: #333 !important;
+}
+
+.btl-modal-close {
+	background: none !important;
+	border: none !important;
+	font-size: 24px !important;
+	cursor: pointer !important;
+	color: #666 !important;
+	padding: 0 !important;
+	width: 24px !important;
+	height: 24px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 4px !important;
+}
+
+.ReactModal__Content.ReactModal__Content--after-open.btl-permission-modal.btl-permission-modal-expanded {
+	padding: 0 !important;
+	max-width: 871px !important;
+}
+
+.btl-modal-content {
+	padding: 67px 125px !important;
+	text-align: center !important;
+}
+
+.btl-permission-message {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: center !important;
+}
+
+.btl-permission-icon {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.btl-permission-message p {
+	margin: 0 !important;
+	font-size: 16px !important;
+	color: #333 !important;
+	line-height: 1.5 !important;
+}
+
+.btl-permission-text {
+	font-weight: 600;
+	font-size: 24px;
+	line-height: 130%;
+	letter-spacing: 0px;
+	text-align: center;
+	margin-bottom: 24px;
+	margin-top: 32px;
+	color: #252525;
+
+}
+
+.btl-permission-sub-text {
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 140%;
+	letter-spacing: 0px;
+	text-align: center;
+	color: #666B78;
+	margin-bottom: 42px;
+}
+
+.btl-modal-footer {
+	padding: 0 24px 24px 24px !important;
+	display: flex !important;
+	justify-content: center !important;
+}
+
+.btl-modal-footer .button {
+	padding: 8px 16px !important;
+	background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 28px;
+	text-align: center;
+
+	&:hover {
+		background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
+	}
+
 }

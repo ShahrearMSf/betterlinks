@@ -114,7 +114,7 @@ function DndCanvas(props) {
 										{(provided, snapshot) => <CatWrap ind={ind} el={el} provided={provided} snapshot={snapshot} props={props} />}
 									</Droppable>
 								))}
-						{betterLinksHooks.applyFilters('betterLinksIsShowWriteCat', true) && !sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
+						{!sortByFav && <CreateCategory createCatHandler={props.add_new_cat} />}
 					</DragDropContext>
 				</div>
 			) : (

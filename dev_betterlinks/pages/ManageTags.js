@@ -336,12 +336,21 @@ const TagActions = (props) => {
 
 	// Check if user has permission to manage tags and categories
 	const hasPermission = () => {
-		// Check if betterLinksProGlobal exists (pro version with role management)
-		if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
-			return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
+		// Always allow administrators regardless of plugin state
+		const isAdmin = window.betterLinksGlobal?.user_can_manage_options ||
+			window.betterLinksProGlobal?.user_can_manage_options;
+
+		if (isAdmin) {
+			return true;
 		}
-		// Fallback for free version - only admins can manage
-		return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
+
+		// For non-admin users, check role-based permissions only if pro plugin is active
+		if (window.betterLinksProGlobal?.user_can_manage_tags_categories) {
+			return window.betterLinksProGlobal.user_can_manage_tags_categories;
+		}
+
+		// Default deny
+		return false;
 	};
 
 	const handleDeleteTags = (bulkActionData) => {
@@ -398,12 +407,21 @@ const CategoryActions = (props) => {
 
 	// Check if user has permission to manage tags and categories
 	const hasPermission = () => {
-		// Check if betterLinksProGlobal exists (pro version with role management)
-		if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
-			return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
+		// Always allow administrators regardless of plugin state
+		const isAdmin = window.betterLinksGlobal?.user_can_manage_options ||
+			window.betterLinksProGlobal?.user_can_manage_options;
+
+		if (isAdmin) {
+			return true;
 		}
-		// Fallback for free version - only admins can manage
-		return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
+
+		// For non-admin users, check role-based permissions only if pro plugin is active
+		if (window.betterLinksProGlobal?.user_can_manage_tags_categories) {
+			return window.betterLinksProGlobal.user_can_manage_tags_categories;
+		}
+
+		// Default deny
+		return false;
 	};
 
 	const handleDeleteCategories = (bulkActionData) => {

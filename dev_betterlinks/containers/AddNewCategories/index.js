@@ -13,13 +13,16 @@ const AddNewCategories = (props) => {
     const [showPermissionModal, setShowPermissionModal] = useState(false);
     const { categories, icon = false, row = {}, children } = props;
 
+    // Check if this is the default 'Uncategorized' category (ID: 1)
+    const isDefaultCategory = row && (row.id == 1 || row.ID == 1);
+
     // Check if user has permission to manage tags and categories
     const hasPermission = () => {
         // Check if betterLinksProGlobal exists (pro version with role management)
         if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
             return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
         }
-        // Fallback for free version - only admins can manage
+        // Fallback for free version - only admins can manage 
         return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
     };
 
@@ -66,9 +69,16 @@ const AddNewCategories = (props) => {
     return (
         <>
             {(categories || []).length > 0 && icon ? (
-                <ActionButton type="edit" label={__('Edit Category', 'betterlinks')} onClickHandler={openModal}>
-                    {children}
-                </ActionButton>
+                isDefaultCategory ? (
+                    // For default category, just show the children (category name) without edit button
+                    <ActionButton type="not" label={__("Default Category can't be edited", 'betterlinks')}>
+                        {children}
+                    </ActionButton>
+                ) : (
+                    <ActionButton type="edit" label={__('Edit Category', 'betterlinks')} onClickHandler={openModal}>
+                        {children}
+                    </ActionButton>
+                )
             ) : (
                 <div className="btl-create-autolinks btl-create-categories">
                     <button className="btl-create-autolink-button btl-create-categories-button" onClick={openModal}>
