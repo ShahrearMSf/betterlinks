@@ -1,12 +1,15 @@
 .btl-form-group {
 	display: flex;
 	align-items: center;
+
 	&--top {
 		align-items: flex-start;
 	}
+
 	@media screen and (max-width: 650px) {
 		flex-direction: column;
 	}
+
 	.btl-form-label {
 		font-size: 16px;
 		line-height: 1.6;
@@ -15,12 +18,14 @@
 		padding-right: 20px;
 		padding-top: 8px;
 		padding-bottom: 8px;
-		min-width: 250px;
+		min-width: 235px;
+
 		@media screen and (max-width: 650px) {
 			margin-bottom: 5px;
 			text-align: center;
 			padding-right: 0;
 		}
+
 		&.btl-required {
 			&:after {
 				content: '*';
@@ -35,7 +40,7 @@
 			align-items: center;
 			column-gap: 5px;
 
-			> span.pro-badge-new {
+			>span.pro-badge-new {
 				display: inherit;
 				cursor: pointer;
 			}
@@ -51,30 +56,37 @@
 		width: 100%;
 		max-width: 400px;
 		border: 1px solid $light;
+
 		&:focus {
 			border: 1px solid $light-darken;
 			outline: none;
 			box-shadow: none;
 		}
 	}
+
 	textarea.btl-form-control {
 		padding-top: 15px;
 		height: 80px;
 	}
+
 	.btl-select {
 		width: 300px;
+
 		.btl-react-select__control {
 			background-color: $light;
 			min-height: 50px;
 			border: 1px solid $light;
 			border-radius: 5px;
+
 			.btl-react-select__value-container {
 				padding-left: 15px;
+
 				.btl-react-select__single-value {
 					font-size: 16px;
 					font-weight: 500;
 					margin-left: 0;
 				}
+
 				.btl-react-select__input {
 					input {
 						box-shadow: none;
@@ -83,17 +95,21 @@
 					}
 				}
 			}
+
 			&.btl-react-select__control--is-focused {
 				box-shadow: none;
 				background-color: #fff;
 			}
 		}
 	}
+
 	&:not(:last-child) {
 		margin-bottom: 20px;
 	}
+
 	.active-status {
 		margin: 0 10px;
+
 		&:before {
 			content: '';
 			display: inline-block;
@@ -102,48 +118,58 @@
 			border-radius: 10px;
 			margin-right: 5px;
 		}
+
 		&.Active {
 			&:before {
 				background: #26c17c;
 			}
 		}
+
 		&.Disable {
 			&:before {
 				background: #ff4343;
 			}
 		}
 	}
+
 	.btl-modal-select {
 		width: 300px;
+
 		.btl-react-select__control {
 			background-color: #fafafa;
 			height: 50px;
 			border: 1px solid #ebebeb;
 			border-radius: 5px;
+
 			.btl-react-select__value-container {
 				padding-left: 15px;
+
 				.btl-react-select__single-value {
 					font-size: 16px;
 					font-weight: 500;
 					margin-left: 0;
 				}
+
 				.btl-react-select__input {
 					input {
 						box-shadow: none;
 					}
 				}
 			}
+
 			&.btl-react-select__control--is-focused {
 				box-shadow: none;
 				background-color: #fff;
 			}
 		}
 	}
+
 	.btl-modal-select--full {
 		@extend .btl-modal-select;
 		width: 200px;
 	}
 }
+
 .btl-cle {
 	.btl-form-group {
 		.btl-form-label {
@@ -154,6 +180,7 @@
 
 	.btl-cle-select-teaser {
 		margin-bottom: 20px;
+
 		.btl-form-group .btl-form-label {
 			min-width: 148px;
 		}
@@ -161,10 +188,12 @@
 
 	.btl-cle-select {
 		margin-bottom: 20px;
+
 		.btl-form-group .btl-form-label {
 			min-width: 185px;
 		}
 	}
+
 	.btl-cle-dragable-section {
 		display: flex;
 		column-gap: 5px;
@@ -177,27 +206,33 @@
 		margin-bottom: 20px;
 	}
 }
+
 .btl-checkbox-field {
 	display: flex;
 	cursor: pointer;
 	min-height: 24px;
 	align-items: center;
+
 	input[type='checkbox'] {
 		min-height: 15px;
 		min-width: 15px;
 		margin-top: 0;
 	}
+
 	&.block {
 		display: inline-block;
 		margin-right: 20px;
 		min-height: 20px;
+
 		.btl-tooltip {
 			margin-left: 5px;
 		}
 	}
+
 	.btl-check {
 		display: none;
 	}
+
 	.text {
 		padding-left: 40px;
 		position: relative;
@@ -205,6 +240,7 @@
 		font-weight: 500;
 		font-size: 16px;
 		min-height: 24px;
+
 		&:before {
 			position: absolute;
 			font-family: 'better-links';
@@ -217,17 +253,20 @@
 			padding-top: 3px;
 		}
 	}
-	.btl-check:checked + .text:before {
+
+	.btl-check:checked+.text:before {
 		content: '\e90e';
 		color: $success;
 	}
-	.btl-check:disabled + .text:before {
+
+	.btl-check:disabled+.text:before {
 		background: #e4e4e4;
 		color: #e4e4e4;
 		box-shadow: inset 0 2px 4px rgb(0 0 0 / 4%);
 		cursor: initial;
 	}
 }
+
 .btl-create-category-submit {
 	height: 44px;
 	display: flex;
@@ -244,11 +283,13 @@
 	border-radius: 5px;
 	margin-bottom: 5px;
 	transition: box-shadow 0.2s ease;
+
 	&:focus {
 		border: none;
 		outline: none;
 		box-shadow: none;
 	}
+
 	&:hover {
 		box-shadow: 0 5px 10px rgba(#003be2, 0.15);
 	}
@@ -256,6 +297,7 @@
 
 .dropdown {
 	position: relative;
+
 	.dropdown-menu {
 		position: absolute;
 		top: calc(100% + 10px);
@@ -265,16 +307,20 @@
 		box-shadow: 0 10px 22px rgba($dark, 0.18);
 		width: 110px;
 		z-index: 999;
+
 		ul {
 			margin: 0;
 			list-style: none;
+
 			li {
 				margin: 0;
+
 				&:not(:last-child) {
 					border-bottom: 1px solid $light-darken;
 				}
 			}
 		}
+
 		.link {
 			border: none;
 			outline: none;
@@ -287,30 +333,36 @@
 			color: $secondary;
 			cursor: pointer;
 			font-weight: 500;
+
 			&:hover {
 				color: $dark;
 			}
+
 			&.delete {
 				&:hover {
 					color: $danger;
 				}
 			}
 		}
+
 		.btl-confirm-message {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			padding: 10px;
+
 			.action-text {
 				margin-top: 0;
 				margin-bottom: 10px;
 				color: $secondary;
 				font-weight: 500;
 			}
+
 			.action-set {
 				display: flex;
 				width: 100%;
 				justify-content: space-between;
+
 				.action {
 					padding: 3px 5px;
 					border: 0;
@@ -326,9 +378,11 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
+
 					&.yes {
 						background: $success-lighten;
 					}
+
 					&.no {
 						background: $danger;
 					}
@@ -346,9 +400,11 @@
 
 .btl-external-analytics-container {
 	margin-bottom: 20px;
+
 	.btl-form-control {
 		background: #fafafa;
 		border: 1px solid #ebebeb;
+
 		&:disabled {
 			background: #e4e4e4;
 			cursor: initial;
@@ -389,7 +445,8 @@ span.pro-badge {
 	.btl-form-label {
 		padding-right: 16px;
 	}
-	& > div.btl-form-field {
+
+	&>div.btl-form-field {
 		margin-top: 5px;
 	}
 }
@@ -400,4 +457,5 @@ span.pro-badge {
 .btl-form-group.btl-form-group--make-center .link-options__body {
 	margin-top: -5px;
 }
+
 //  fix: 'Random URL Slug' & 'Case Sensitivity' option not aligned - end
