@@ -160,22 +160,246 @@ export const generateTitleToSlug = (value) => {
 		.replace(/[^a-z0-9-/-]/g, '');
 };
 
-export const generateShortURL = (settings, title) => {
+export const generateShortURL = (settings, title, targetUrl) => {
 	if (settings) {
 		let shortURL = settings.prefix && settings.prefix.length > 0 ? settings.prefix + '/' : '';
-		if (settings.is_random_string && title === null) {
-			return shortURL + generateRandomSlug();
+
+		// Handle new URL generation types
+		if (settings.url_slug_generation_type) {
+			switch (settings.url_slug_generation_type) {
+				case 'random_string':
+					return shortURL + generateRandomString();
+				case 'random_number':
+					return shortURL + generateRandomNumber();
+				case 'random_mixed':
+					return shortURL + generateRandomMixed();
+				case 'from_title':
+					return title ? shortURL + generateFromTitle(title) : shortURL + generateRandomMixed();
+				case 'from_url':
+					return targetUrl ? shortURL + generateFromUrl(targetUrl) : shortURL + generateRandomMixed();
+				default:
+					return shortURL + generateRandomMixed();
+			}
 		}
-		if (!settings.is_random_string && title) {
-			return shortURL + generateTitleToSlug(title);
+
+		// Legacy support for old is_random_string setting
+		// This ensures backward compatibility for existing users
+		if (settings.hasOwnProperty('is_random_string')) {
+			if (settings.is_random_string && title === null) {
+				return shortURL + generateRandomSlug();
+			}
+			if (!settings.is_random_string && title) {
+				return shortURL + generateTitleToSlug(title);
+			}
 		}
-		return '';
+
+		// Default fallback
+		return shortURL + generateRandomMixed();
 	}
 	return '';
 };
 
 export const generateRandomSlug = (length = 3) => {
 	return Math.random().toString(20).substr(2, length) + new Date().getMilliseconds();
+};
+
+// New URL generation functions
+export const generateRandomString = (length = Math.floor(Math.random() * 5) + 6) => {
+	const chars = 'abcdefghijklmnopqrstuvwxyz';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+};
+
+export const generateRandomNumber = (length = Math.floor(Math.random() * 5) + 6) => {
+	const chars = '0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+};
+
+export const generateRandomMixed = (length = Math.floor(Math.random() * 5) + 6) => {
+	const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+};
+
+export const generateFromTitle = (title) => {
+	if (!title) return generateRandomMixed();
+
+	// Clean and process the title to create a user-friendly slug
+	let slug = title
+		.trim()
+		.toLowerCase()
+		// Remove common stop words for better readability
+		.replace(/\b(the|a|an|and|or|but|in|on|at|to|for|of|with|by|from|up|about|into|through|during|before|after|above|below|between|among|against|across|toward|towards|under|over)\b/gi, '')
+		.replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+		.replace(/\s+/g, '-') // Replace spaces with hyphens
+		.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+		.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+	// Split into words and keep the most meaningful ones
+	let words = slug.split('-').filter(word => word.length > 0);
+
+	// Allow 3-4 meaningful words for better readability
+	if (words.length > 4) {
+		// Keep first 4 words, but prefer longer/more meaningful words
+		words = words
+			.sort((a, b) => b.length - a.length) // Sort by length (longer words first)
+			.slice(0, 4) // Take top 4 words
+			.sort((a, b) => title.toLowerCase().indexOf(a) - title.toLowerCase().indexOf(b)); // Restore original order
+	}
+
+	slug = words.join('-');
+
+	// If still too long (over 25 chars), intelligently truncate
+	if (slug.length > 25) {
+		// Try to keep first 3 words
+		if (words.length > 3) {
+			words = words.slice(0, 3);
+			slug = words.join('-');
+		}
+
+		// If still too long, truncate but try to end at a word boundary
+		if (slug.length > 20) {
+			let truncated = slug.substring(0, 18);
+			let lastDash = truncated.lastIndexOf('-');
+			if (lastDash > 8) {
+				slug = truncated.substring(0, lastDash);
+			} else {
+				slug = truncated;
+			}
+		}
+	}
+
+	// Ensure minimum length of 3 characters for readability
+	if (slug.length < 3) {
+		// Use first few characters of original title if slug is too short
+		let fallback = title
+			.toLowerCase()
+			.replace(/[^a-z0-9]/g, '')
+			.substring(0, 8);
+		slug = fallback || generateRandomMixed(6);
+	}
+
+	return slug || generateRandomMixed();
+};
+
+export const generateFromUrl = (targetUrl) => {
+	if (!targetUrl) return generateRandomMixed();
+
+	try {
+		const url = new URL(targetUrl);
+		let pathParts = url.pathname.split('/').filter(part => part.length > 0);
+
+		let slug = '';
+
+		if (pathParts.length > 0) {
+			// Get multiple relevant path segments for better context
+			let relevantParts = [];
+
+			// Start from the end and work backwards, skipping pure numbers and very short segments
+			for (let i = pathParts.length - 1; i >= 0 && relevantParts.length < 3; i--) {
+				let part = pathParts[i];
+
+				// Clean the part first
+				let cleanPart = part
+					.toLowerCase()
+					// Remove common file extensions
+					.replace(/\.(html|htm|php|aspx|jsp|cfm|pdf|doc|docx)$/i, '')
+					// Remove URL parameters and fragments
+					.split('?')[0].split('#')[0]
+					// Clean up the slug
+					.replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+					.replace(/\s+/g, '-') // Replace spaces with hyphens
+					.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+					.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+				// Include this part if it's meaningful (not just numbers and longer than 2 chars)
+				if (cleanPart.length > 2 && !cleanPart.match(/^\d+$/)) {
+					relevantParts.unshift(cleanPart); // Add to beginning to maintain order
+				}
+			}
+
+			// Join the relevant parts
+			if (relevantParts.length > 0) {
+				slug = relevantParts.join('-');
+			}
+
+			// If no meaningful parts found, use the last segment anyway
+			if (!slug && pathParts.length > 0) {
+				slug = pathParts[pathParts.length - 1]
+					.toLowerCase()
+					.replace(/\.(html|htm|php|aspx|jsp|cfm)$/i, '')
+					.split('?')[0].split('#')[0]
+					.replace(/[^a-z0-9\s-]/g, '')
+					.replace(/\s+/g, '-')
+					.replace(/-+/g, '-')
+					.replace(/^-|-$/g, '');
+			}
+		} else {
+			// If no meaningful path, generate from domain name
+			let domainParts = url.hostname
+				.replace(/^www\./, '') // Remove www prefix
+				.split('.');
+
+			// Use the main domain part (usually the first part before TLD)
+			slug = domainParts[0]
+				.toLowerCase()
+				.replace(/[^a-z0-9-]/g, '') // Remove special characters except hyphens
+				.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+				.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+		}
+
+		// Remove common stop words for better readability
+		slug = slug.replace(/\b(page|post|article|blog|news|category|tag|product|item|detail|view|show|index|home|main|default)\b/gi, '')
+			.replace(/-+/g, '-') // Clean up multiple hyphens
+			.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+		// Intelligent truncation for better readability - allow up to 25 characters
+		if (slug.length > 25) {
+			// Split by hyphens and try to keep meaningful parts
+			let parts = slug.split('-').filter(part => part.length > 0);
+			if (parts.length > 3) {
+				// Keep first 3 parts
+				parts = parts.slice(0, 3);
+				slug = parts.join('-');
+			} else if (slug.length > 20) {
+				// Truncate but try to end at a word boundary
+				let truncated = slug.substring(0, 18);
+				let lastDash = truncated.lastIndexOf('-');
+				if (lastDash > 8) {
+					slug = truncated.substring(0, lastDash);
+				} else {
+					slug = truncated;
+				}
+			}
+		}
+
+		// Ensure minimum length for readability
+		if (slug.length < 3) {
+			// Fallback to a portion of the domain name
+			let fallback = url.hostname
+				.replace(/^www\./, '')
+				.replace(/\./g, '')
+				.toLowerCase()
+				.replace(/[^a-z0-9]/g, '')
+				.substring(0, 10);
+			slug = fallback || generateRandomMixed();
+		}
+
+		return slug || generateRandomMixed();
+	} catch (error) {
+		// If URL parsing fails, return random mixed
+		return generateRandomMixed();
+	}
 };
 
 export const modalCustomStyles = {

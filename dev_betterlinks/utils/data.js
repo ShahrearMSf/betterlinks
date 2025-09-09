@@ -41,6 +41,29 @@ export const affiliateLinkPosition = [
 	},
 ];
 
+export const urlGenerationTypes = [
+	{
+		value: 'random_string',
+		label: __('Random Strings Only', 'betterlinks'),
+	},
+	{
+		value: 'random_number',
+		label: __('Random Numbers Only', 'betterlinks'),
+	},
+	{
+		value: 'random_mixed',
+		label: __('Random Characters & Numbers Mixed', 'betterlinks'),
+	},
+	{
+		value: 'from_title',
+		label: __('Generate From Link Title', 'betterlinks'),
+	},
+	{
+		value: 'from_url',
+		label: __('Generate From Target URL', 'betterlinks'),
+	},
+];
+
 // Advanced Option Feature List
 export const tabList = [
 	{

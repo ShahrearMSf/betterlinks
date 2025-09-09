@@ -36,15 +36,25 @@ const CreateLink = (props) => {
 			openUpgradeToProModal();
 		}
 	};
-	const handleTitleChange = (setFieldValue, title, short_url = null) => {
+	const handleTitleChange = (setFieldValue, title, short_url = null, targetUrl = null) => {
 		setFieldValue('link_title', title);
-		let shortURL = generateShortURL(settings, short_url || title);
+		let shortURL = generateShortURL(settings, short_url || title, targetUrl);
 		if (shortURL.length > 0) {
 			setFieldValue('short_url', shortURL);
 			setSlugIsExists(false);
 			return shortURL;
 		}
 		return '';
+	};
+
+	const handleTargetUrlChange = (setFieldValue, targetUrl, title = null) => {
+		if (settings.url_slug_generation_type === 'from_url') {
+			let shortURL = generateShortURL(settings, title, targetUrl);
+			if (shortURL.length > 0) {
+				setFieldValue('short_url', shortURL);
+				setSlugIsExists(false);
+			}
+		}
 	};
 
 	const closeDuplicateLinkModal = () => {
@@ -76,7 +86,7 @@ const CreateLink = (props) => {
 							</Modal>
 						</div>
 					)}
-					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => {}}>
+					<Formik initialValues={betterLinksHooks.applyFilters('linkFormInitialValues', options)} onSubmit={() => { }}>
 						{(props) => {
 							const { errors } = props;
 							return (
@@ -121,7 +131,7 @@ const CreateLink = (props) => {
 															name="link_title"
 															disabled={isDisableLinkFormEditView}
 															onChange={(e) => {
-																const short_url = handleTitleChange(props.setFieldValue, e.target.value);
+																const short_url = handleTitleChange(props.setFieldValue, e.target.value, null, props.values?.target_url);
 																props.setFieldValue('short_url', short_url);
 																setLinkOptions((prev) => ({
 																	...prev,
@@ -174,6 +184,8 @@ const CreateLink = (props) => {
 															...prev,
 															target_url,
 														}));
+														// Handle URL-based slug generation
+														handleTargetUrlChange(props.setFieldValue, target_url, props.values?.link_title);
 													}}
 													placeholder=""
 													disabled={isDisableLinkFormEditView}

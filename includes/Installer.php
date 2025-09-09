@@ -161,7 +161,8 @@ class Installer extends \WP_Background_Process
                 'force_https'   	    => false,
                 'prefix'                => 'go',
                 'is_allow_qr'           => false,
-                'is_random_string'      => false,
+                'is_random_string'      => false, // Legacy setting - keep for backward compatibility
+                'url_slug_generation_type' => 'random_mixed', // New setting
                 'is_autolink_icon'      => false,
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
