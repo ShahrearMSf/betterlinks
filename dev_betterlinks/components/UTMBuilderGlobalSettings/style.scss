@@ -148,17 +148,8 @@
 				color: #23282d;
 			}
 
-			&.btl-utm-copy-btn:hover {
+			&.btl-utm-btn-ac:hover {
 				color: #0073aa;
-			}
-
-			&.btl-utm-edit-btn:hover {
-				color: #0073aa;
-			}
-
-			&.btl-utm-delete-btn:hover {
-				color: #dc3545;
-				background: #ffeaea;
 			}
 
 			svg {
@@ -278,7 +269,6 @@
 			z-index: 1;
 			bottom: 125%;
 			left: 50%;
-			margin-left: -140px;
 			opacity: 0;
 			transition: opacity 0.3s;
 			font-size: 12px;
@@ -347,7 +337,7 @@
 
 		.btl-utm-templates-list {
 			.btl-utm-template-item {
-				background: #2c3e50;
+				background: #37405a;
 
 				&:hover {
 					background: #34495e;

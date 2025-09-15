@@ -14,7 +14,7 @@ const utmTemplateModalStyles = {
         padding: '0',
         border: 'none',
         borderRadius: '12px',
-        background: 'transparent',
+        background: '#F9FAFB',
     },
 };
 
@@ -39,7 +39,8 @@ const UTMTemplateModal = ({
             .filter(term => term.term_type === 'category')
             .map(term => ({
                 value: parseInt(term.ID),
-                label: `${term.term_name} (${term.link_count || 0} links)`
+                label: term.term_name
+                //label: `${term.term_name} (${term.link_count || 0} links)`
             }));
     };
 
@@ -50,7 +51,8 @@ const UTMTemplateModal = ({
             const category = terms.find(term => parseInt(term.ID) === parseInt(catId));
             return category ? {
                 value: parseInt(category.ID),
-                label: `${category.term_name} (${category.link_count || 0} links)`
+                label: category.term_name
+                //label: `${category.term_name} (${category.link_count || 0} links)`
             } : null;
         }).filter(Boolean);
     };
@@ -140,10 +142,8 @@ const UTMTemplateModal = ({
             ariaHideApp={false}
             className="btl-utm-template-modal-override"
         >
-            <span className="btl-close-modal" onClick={onClose}>
-                <span className="btl btl-cancel" />
-            </span>
             <div className="btl-utm-template-modal">
+                {/* Header with close button */}
                 <div className="btl-utm-template-modal__header">
                     <h3 className="btl-utm-template-modal__title">
                         {isCreatingTemplate
@@ -151,23 +151,36 @@ const UTMTemplateModal = ({
                             : __('Edit UTM Template', 'betterlinks')
                         }
                     </h3>
+                    <button className="btl-utm-close-modal" onClick={onClose} aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
                 </div>
 
                 <div className="btl-utm-template-modal__body">
                     <div className="btl-utm-template-fields">
+                        {/* Template Name */}
                         <div className="btl-utm-field-group">
-                            <label>{__('Template Name', 'betterlinks')}</label>
+                            <label className="btl-field-label">{__('Template Name', 'betterlinks')}</label>
                             <input
                                 type="text"
                                 value={templateForm.template_name}
                                 onChange={(e) => setTemplateForm({ ...templateForm, template_name: e.target.value })}
                                 placeholder={__('Enter template name...', 'betterlinks')}
-                                className="btl-form-control"
+                                className="btl-form-input"
                             />
                         </div>
 
+                        {/* Assign to Categories */}
                         <div className="btl-utm-field-group">
-                            <label>{__('Assign to Categories', 'betterlinks')}</label>
+                            <label className="btl-field-label">
+                                {__('Assign to Categories', 'betterlinks')}
+                                <div className="btl-tooltip">
+                                    <span className="dashicons dashicons-info-outline"></span>
+                                    <span className="btl-tooltiptext">{__('Select which categories should use this UTM template. If no category is selected, it will apply to "Uncategorized" links.', 'betterlinks')}</span>
+                                </div>
+                            </label>
                             <CreatableSelect
                                 isMulti
                                 value={getSelectedCategories()}
@@ -177,139 +190,152 @@ const UTMTemplateModal = ({
                                 classNamePrefix="btl-react-select"
                                 placeholder={__('Select categories...', 'betterlinks')}
                             />
-                            <div className="btl-utm-field-description">
-                                {__('Select which categories should use this UTM template. If no category is selected, it will apply to "Uncategorized" links.', 'betterlinks')}
-                            </div>
                             {templateForm.categories && templateForm.categories.length > 0 && (
-                                <div className="btl-utm-selected-categories-info" style={{
-                                    marginTop: '8px',
-                                    padding: '8px 12px',
-                                    backgroundColor: '#f0f8ff',
-                                    border: '1px solid #d6f1ff',
-                                    borderRadius: '4px',
-                                    color: '#2c5282'
-                                }}>
-                                    <strong>
-                                        {__('Total links in selected categories:', 'betterlinks')} {getTotalLinksInSelectedCategories()}
-                                    </strong>
+                                <div className="btl-utm-links-count">
+                                    <span className="btl-links-count-text">
+                                        *{__('Number of BetterLinks Available', 'betterlinks')}: <strong>{getTotalLinksInSelectedCategories()}</strong>
+                                    </span>
                                 </div>
                             )}
                         </div>
 
+                        {/* UTM Parameters */}
                         <div className="btl-utm-global-form">
-                            <div className="btl-utm-field-row">
-                                <div className="btl-utm-field-group">
-                                    <label>{__('UTM Source', 'betterlinks')}</label>
-                                    <input
-                                        type="text"
-                                        value={templateForm.utm_source}
-                                        onChange={(e) => setTemplateForm({ ...templateForm, utm_source: e.target.value })}
-                                        placeholder={__('e.g: Twitter, Facebook', 'betterlinks')}
-                                        className="btl-form-control"
-                                    />
-                                </div>
-
-                                <div className="btl-utm-field-group">
-                                    <label>{__('UTM Medium', 'betterlinks')}</label>
-                                    <input
-                                        type="text"
-                                        value={templateForm.utm_medium}
-                                        onChange={(e) => setTemplateForm({ ...templateForm, utm_medium: e.target.value })}
-                                        placeholder={__('e.g: social, email, cpc', 'betterlinks')}
-                                        className="btl-form-control"
-                                    />
-                                </div>
+                            {/* UTM Source */}
+                            <div className="btl-utm-field-group">
+                                <label className="btl-field-label">{__('UTM Source', 'betterlinks')}</label>
+                                <input
+                                    type="text"
+                                    value={templateForm.utm_source}
+                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_source: e.target.value })}
+                                    placeholder={__('eg: Twitter, Facebook', 'betterlinks')}
+                                    className="btl-form-input"
+                                />
                             </div>
 
-                            <div className="btl-utm-field-row">
-                                <div className="btl-utm-field-group">
-                                    <label>{__('UTM Campaign', 'betterlinks')}</label>
-                                    <input
-                                        type="text"
-                                        value={templateForm.utm_campaign}
-                                        onChange={(e) => setTemplateForm({ ...templateForm, utm_campaign: e.target.value })}
-                                        placeholder={__('e.g: summer_sale', 'betterlinks')}
-                                        className="btl-form-control"
-                                    />
-                                </div>
-
-                                <div className="btl-utm-field-group">
-                                    <label>{__('UTM Term', 'betterlinks')}</label>
-                                    <input
-                                        type="text"
-                                        value={templateForm.utm_term}
-                                        onChange={(e) => setTemplateForm({ ...templateForm, utm_term: e.target.value })}
-                                        placeholder={__('e.g: paid keywords', 'betterlinks')}
-                                        className="btl-form-control"
-                                    />
-                                </div>
+                            {/* UTM Medium */}
+                            <div className="btl-utm-field-group">
+                                <label className="btl-field-label">{__('UTM Medium', 'betterlinks')}</label>
+                                <input
+                                    type="text"
+                                    value={templateForm.utm_medium}
+                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_medium: e.target.value })}
+                                    placeholder={__('e.g. social, email, cpc', 'betterlinks')}
+                                    className="btl-form-input"
+                                />
                             </div>
 
-                            <div className="btl-utm-field-group btl-utm-field-full">
-                                <label>{__('UTM Content', 'betterlinks')}</label>
+                            {/* UTM Campaign */}
+                            <div className="btl-utm-field-group">
+                                <label className="btl-field-label">{__('UTM Campaign', 'betterlinks')}</label>
+                                <input
+                                    type="text"
+                                    value={templateForm.utm_campaign}
+                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_campaign: e.target.value })}
+                                    placeholder={__('eg: summer sale', 'betterlinks')}
+                                    className="btl-form-input"
+                                />
+                            </div>
+
+                            {/* UTM Term */}
+                            <div className="btl-utm-field-group">
+                                <label className="btl-field-label">{__('UTM Term', 'betterlinks')}</label>
+                                <input
+                                    type="text"
+                                    value={templateForm.utm_term}
+                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_term: e.target.value })}
+                                    placeholder={__('e.g: paid keywords', 'betterlinks')}
+                                    className="btl-form-input"
+                                />
+                            </div>
+
+                            {/* UTM Content */}
+                            <div className="btl-utm-field-group">
+                                <label className="btl-field-label">{__('UTM Content', 'betterlinks')}</label>
                                 <input
                                     type="text"
                                     value={templateForm.utm_content}
                                     onChange={(e) => setTemplateForm({ ...templateForm, utm_content: e.target.value })}
-                                    placeholder={__('e.g: text AD name', 'betterlinks')}
-                                    className="btl-form-control"
+                                    placeholder={__('eg: text AD name', 'betterlinks')}
+                                    className="btl-form-input"
                                 />
                             </div>
                         </div>
-                        {/* Add 2 Checkbox setting Here */}
-                        <div className="btl-utm-field-group">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={templateForm.utm_enable_to_rewrite_existing_utm_template}
-                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_enable_to_rewrite_existing_utm_template: e.target.checked })}
-                                />
-                                {__('Enable to Rewrite Existing UTM Template', 'betterlinks')}
-                            </label>
+                        {/* Checkboxes */}
+                        <div className="btl-utm-checkboxes">
+                            <div className="btl-checkbox-group">
+                                <label className="btl-checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={templateForm.utm_enable_to_rewrite_existing_utm_template}
+                                        onChange={(e) => setTemplateForm({ ...templateForm, utm_enable_to_rewrite_existing_utm_template: e.target.checked })}
+                                        className="btl-checkbox-input"
+                                    />
+                                    <span className="btl-checkbox-custom"></span>
+                                    <span className="btl-checkbox-text">
+                                        {__('Overwrite Existing UTM', 'betterlinks')}
+                                        <div className="btl-tooltip">
+                                            <span className="dashicons dashicons-info-outline"></span>
+                                            <span className="btl-tooltiptext">{__('Enable to overwrite existing UTM parameters on links', 'betterlinks')}</span>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div className="btl-checkbox-group">
+                                <label className="btl-checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={templateForm.utm_auto_apply_new_link}
+                                        onChange={(e) => setTemplateForm({ ...templateForm, utm_auto_apply_new_link: e.target.checked })}
+                                        className="btl-checkbox-input"
+                                    />
+                                    <span className="btl-checkbox-custom"></span>
+                                    <span className="btl-checkbox-text">
+                                        {__('Use this UTM for ALL future Links', 'betterlinks')}
+                                        <div className="btl-tooltip">
+                                            <span className="dashicons dashicons-info-outline"></span>
+                                            <span className="btl-tooltiptext">{__('Automatically apply this UTM template to all new links in selected categories', 'betterlinks')}</span>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
                         </div>
-                        <div className="btl-utm-field-group">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={templateForm.utm_auto_apply_new_link}
-                                    onChange={(e) => setTemplateForm({ ...templateForm, utm_auto_apply_new_link: e.target.checked })}
-                                />
-                                {__('Automatically Apply UTM to New Links', 'betterlinks')}
-                            </label>
-                        </div>
+
+                        {/* Add New Field Button */}
+                        {/* <div className="btl-add-field-section">
+                            <button type="button" className="btl-add-field-btn">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" />
+                                    <path d="M8 5.5V10.5M5.5 8H10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                </svg>
+                                {__('Add New Field', 'betterlinks')}
+                            </button>
+                        </div> */}
                     </div>
                 </div>
 
+                {/* Footer */}
                 <div className="btl-utm-template-modal__footer">
                     <div className="btl-utm-template-modal__actions">
                         <button
                             type="button"
-                            className="button-primary"
+                            className="btl-btn btl-btn-primary"
                             onClick={handleSubmit}
                             disabled={isApplying}
                         >
                             {isApplying ? (
-                                __('Applying...', 'betterlinks')
+                                __('Creating...', 'betterlinks')
                             ) : (
                                 isCreatingTemplate
-                                    ? __('Apply & Save UTM Template', 'betterlinks')
-                                    : __('Apply & Update Template', 'betterlinks')
+                                    ? __('Create Template', 'betterlinks')
+                                    : __('Update Template', 'betterlinks')
                             )}
                         </button>
 
-                        {activeTemplate && (
-                            <button
-                                type="button"
-                                className="button-secondary button-danger"
-                                onClick={handleDeleteAndClose}
-                            >
-                                {__('Delete Template', 'betterlinks')}
-                            </button>
-                        )}
-
                         <button
                             type="button"
-                            className="button-secondary"
+                            className="btl-btn btl-btn-secondary"
                             onClick={onClose}
                         >
                             {__('Cancel', 'betterlinks')}

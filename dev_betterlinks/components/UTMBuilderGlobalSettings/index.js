@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import { update_option } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { saveSettingsHandler, makeRequest, betterlinks_nonce } from 'utils/helper';
+import { saveSettingsHandler, makeRequest, betterlinks_nonce, plugin_root_url } from 'utils/helper';
 import UTMTemplateModal from './UTMTemplateModal';
 import './style.scss';
 
@@ -180,13 +180,10 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 						<div className="btl-utm-templates-section">
 							<div className="btl-utm-templates-wrapper">
 								<h3>{__('UTM Templates & Category Assignment', 'betterlinks')}</h3>
-								<div
-									type="button"
-									className="btl-utm-templates-crt-btn"
-									onClick={openCreateModal}
-								>
+								<button className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: 'pointer' }}>
+									<img style={{ marginRight: '8px' }} src={plugin_root_url + 'assets/images/add-icon.svg'} alt="Add icon" />
 									{__('Create New Template', 'betterlinks')}
-								</div>
+								</button>
 							</div>
 
 							{/* UTM Template Modal */}
@@ -226,36 +223,47 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 												<div className="btl-utm-template-actions">
 													<button
 														type="button"
-														className="btl-utm-action-btn btl-utm-copy-btn"
+														className="btl-utm-action-btn btl-utm-btn-ac"
 														onClick={() => {
 															// Copy template functionality can be added here
 															console.log('Copy template:', template);
 														}}
-														title={__('Copy Template', 'betterlinks')}
 													>
-														<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="currentColor" />
-														</svg>
+														<div className="btl-tooltip">
+															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#475467" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+															</svg>
+															<span className="btl-tooltiptext">{__('Copy', 'betterlinks')}</span>
+														</div>
 													</button>
 													<button
 														type="button"
-														className="btl-utm-action-btn btl-utm-edit-btn"
+														className="btl-utm-action-btn btl-utm-btn-ac"
 														onClick={() => handleTemplateSelect(template)}
-														title={__('Edit Template', 'betterlinks')}
+														title={__('Edit', 'betterlinks')}
 													>
-														<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path d="M3 17.25V21H6.75L17.81 9.94L14.06 6.19L3 17.25ZM20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C17.98 2.9 17.35 2.9 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04Z" fill="currentColor" />
-														</svg>
+
+														<div className="btl-tooltip">
+															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#475467" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+															</svg>
+															<span className="btl-tooltiptext">{__('Edit', 'betterlinks')}</span>
+														</div>
+
 													</button>
 													<button
 														type="button"
-														className="btl-utm-action-btn btl-utm-delete-btn"
+														className="btl-utm-action-btn btl-utm-btn-ac"
 														onClick={() => handleTemplateDelete(template.template_index)}
-														title={__('Delete Template', 'betterlinks')}
+														title={__('Delete', 'betterlinks')}
 													>
-														<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor" />
-														</svg>
+
+														<div className="btl-tooltip">
+															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<path d="M3.3335 5.83333H16.6668M8.3335 9.16667V14.1667M11.6668 9.16667V14.1667M4.16683 5.83333L5.00016 15.8333C5.00016 16.2754 5.17576 16.6993 5.48832 17.0118C5.80088 17.3244 6.2248 17.5 6.66683 17.5H13.3335C13.7755 17.5 14.1994 17.3244 14.512 17.0118C14.8246 16.6993 15.0002 16.2754 15.0002 15.8333L15.8335 5.83333M7.50016 5.83333V3.33333C7.50016 3.11232 7.58796 2.90036 7.74424 2.74408C7.90052 2.5878 8.11248 2.5 8.3335 2.5H11.6668C11.8878 2.5 12.0998 2.5878 12.2561 2.74408C12.4124 2.90036 12.5002 3.11232 12.5002 3.33333V5.83333" stroke="#475467" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+															</svg>
+															<span className="btl-tooltiptext">{__('Delete', 'betterlinks')}</span>
+														</div>
 													</button>
 												</div>
 											</div>

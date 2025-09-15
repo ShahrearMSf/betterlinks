@@ -1,45 +1,54 @@
+// UTM Template Modal - Modern Design
 .btl-utm-template-modal {
     background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
 
+    // Header
     &__header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 24px 30px;
-        border-bottom: 1px solid #e1e4e8;
-        background: #f8f9fa;
+        padding: 22px 12px 24px 24px;
+        border-bottom: 1px solid #f1f3f4;
+        background: #F9FAFB;
+        position: relative;
     }
 
     &__title {
         margin: 0;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 600;
-        color: #23282d;
+        color: #1a1a1a;
+        line-height: 1.4;
     }
 
+    // Body
     &__body {
         flex: 1;
-        padding: 30px;
+        padding: 0px 24px;
         overflow-y: auto;
+        background: #F9FAFB;
     }
 
+    // Footer
     &__footer {
-        padding: 20px 30px;
-        border-top: 1px solid #e1e4e8;
-        background: #f8f9fa;
+        padding: 24px 24px;
+        background: #F9FAFB;
     }
 
     &__actions {
         display: flex;
         gap: 12px;
-        justify-content: flex-end;
+        justify-content: flex-start;
 
         @media (max-width: 480px) {
             flex-direction: column;
@@ -47,135 +56,8 @@
     }
 }
 
-.btl-utm-template-fields {
-    .btl-utm-field-group {
-        margin-bottom: 24px;
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #23282d;
-            font-size: 14px;
-        }
-
-        .btl-form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            background: #fff;
-
-            &:focus {
-                outline: none;
-                border-color: #0073aa;
-                box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
-            }
-
-            &::placeholder {
-                color: #999;
-            }
-        }
-
-        &.btl-utm-field-full {
-            grid-column: 1 / -1;
-        }
-    }
-
-    .btl-utm-field-description {
-        color: #666;
-        font-size: 13px;
-        line-height: 1.4;
-        margin-top: 8px;
-    }
-
-    .btl-utm-field-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-
-        @media (max-width: 768px) {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .btl-utm-global-form {
-        margin-top: 20px;
-    }
-
-    // React Select Custom Styles
-    .btl-react-select-container {
-        .btl-react-select__control {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            min-height: 46px;
-            transition: all 0.2s ease;
-            box-shadow: none;
-
-            &:hover {
-                border-color: #999;
-            }
-
-            &--is-focused {
-                border-color: #0073aa;
-                box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
-            }
-        }
-
-        .btl-react-select__value-container {
-            padding: 8px 16px;
-        }
-
-        .btl-react-select__placeholder {
-            color: #999;
-        }
-
-        .btl-react-select__multi-value {
-            background-color: #0073aa;
-            border-radius: 4px;
-
-            .btl-react-select__multi-value__label {
-                color: white;
-                padding: 3px 6px;
-            }
-
-            .btl-react-select__multi-value__remove {
-                color: white;
-                border-radius: 0 4px 4px 0;
-
-                &:hover {
-                    background-color: rgba(255, 255, 255, 0.2);
-                    color: white;
-                }
-            }
-        }
-
-        .btl-react-select__menu {
-            border-radius: 6px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ddd;
-        }
-
-        .btl-react-select__option {
-            &--is-focused {
-                background-color: #f0f7ff;
-            }
-
-            &--is-selected {
-                background-color: #0073aa;
-            }
-        }
-    }
-}
-
-// Close modal button styling to match existing pattern
-.btl-close-modal {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 10;
+// Close Button
+.btl-utm-close-modal {
     background: none;
     border: none;
     padding: 8px;
@@ -185,146 +67,523 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    color: #6b7280;
 
     &:hover {
-        background: rgba(0, 0, 0, 0.05);
+        background: #f3f4f6;
+        color: #374151;
     }
 
-    .btl {
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+// Form Fields
+.btl-utm-template-fields {
+    .btl-utm-field-group {
+        margin-bottom: 24px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .btl-field-label {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #374151;
         font-size: 14px;
-        color: #666;
+        line-height: 1.4;
+    }
+
+    .btl-info-icon {
+        color: #9ca3af;
+        cursor: help;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            color: #6b7280;
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    .btl-form-input {
+        width: 100%;
+        padding: 7px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        background: #FFFFFF;
+        color: #374151;
+
+        &:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        &::placeholder {
+            color: #9ca3af;
+        }
+    }
+
+    .btl-utm-global-form {
+        margin-top: 8px;
+    }
+}
+
+// Links Count Display
+.btl-utm-links-count {
+    margin-top: 8px;
+
+    .btl-links-count-text {
+        font-size: 12px;
+        color: #788597;
+        font-weight: 500;
+
+        strong {
+            font-weight: 600;
+            color: #114BEE;
+        }
+    }
+}
+
+// React Select Custom Styles
+.btl-react-select-container {
+    .btl-react-select__control {
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        min-height: 44px;
+        transition: all 0.2s ease;
+        box-shadow: none;
+        background: #ffffff;
+
+        &:hover {
+            border-color: #9ca3af;
+        }
+
+        &--is-focused {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    }
+
+    .btl-react-select__value-container {
+        padding: 2px 16px;
+    }
+
+    .btl-react-select__placeholder {
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    .btl-react-select__multi-value {
+        background-color: #3b82f6;
+        border-radius: 6px;
+        margin: 2px;
+
+        .btl-react-select__multi-value__label {
+            color: white;
+            padding: 4px 0px 4px 6px;
+            font-size: 13px;
+        }
+
+        .btl-react-select__multi-value__remove {
+            color: white;
+            border-radius: 0 6px 6px 0;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+        }
+    }
+
+    .btl-react-select__menu {
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border: 1px solid #d1d5db;
+        margin-top: 4px;
+    }
+
+    .btl-react-select__option {
+        padding: 12px 16px;
+        font-size: 14px;
+
+        &--is-focused {
+            background-color: #f3f4f6;
+        }
+
+        &--is-selected {
+            background-color: #3b82f6;
+        }
+    }
+
+    .btl-react-select__dropdown-indicator,
+    .btl-react-select__clear-indicator {
+        color: #9ca3af;
+        padding: 8px;
+
+        &:hover {
+            color: #6b7280;
+        }
+    }
+}
+
+// Checkboxes
+.btl-utm-checkboxes {
+    margin-top: 32px;
+}
+
+.btl-checkbox-group {
+    margin-bottom: 16px;
+    position: relative;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.btl-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.btl-checkbox-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btl-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 1px;
+
+    &::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e") no-repeat center center;
+        background-size: contain;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+}
+
+.btl-checkbox-input:checked+.btl-checkbox-custom {
+    background: #3b82f6;
+    border-color: #3b82f6;
+
+    &::after {
+        opacity: 1;
+    }
+}
+
+.btl-checkbox-input:focus+.btl-checkbox-custom {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btl-checkbox-text {
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+}
+
+// Add New Field Button
+.btl-add-field-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #f1f3f4;
+}
+
+.btl-add-field-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    justify-content: center;
+
+    &:hover {
+        border-color: #9ca3af;
+        color: #374151;
+        background: #f9fafb;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+// Buttons
+.btl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-height: 44px;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &-primary {
+        background: #3b82f6;
+        color: #ffffff;
+
+        &:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+    }
+
+    &-secondary {
+        background: #ffffff;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+
+        &:hover:not(:disabled) {
+            background: #f9fafb;
+            color: #374151;
+            border-color: #9ca3af;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+        }
     }
 }
 
 // Dark Mode Support
 .betterlinks-dark-mode {
     .btl-utm-template-modal {
-        background: #2c3e50;
-        color: #ffffff;
+        background: #1f2937;
+        color: #f9fafb;
 
         &__header {
-            background: #34495e;
-            border-bottom-color: #3a4a5c;
+            background: #1f2937;
+            border-bottom-color: #374151;
+        }
+
+        &__body {
+            background: #1f2937;
         }
 
         &__title {
-            color: #ffffff;
+            color: #f9fafb;
         }
 
         &__footer {
-            background: #34495e;
-            border-top-color: #3a4a5c;
+            background: #1f2937;
         }
     }
 
-    .btl-close-modal {
-        &:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+    .btl-utm-close-modal {
+        color: #9ca3af;
 
-        .btl {
-            color: #bdc3c7;
+        &:hover {
+            background: #374151;
+            color: #f3f4f6;
         }
     }
 
     .btl-utm-template-fields {
-        .btl-utm-field-group {
-            label {
-                color: #ffffff;
+        .btl-field-label {
+            color: #f9fafb;
+        }
+
+        .btl-info-icon {
+            color: #6b7280;
+
+            &:hover {
+                color: #9ca3af;
+            }
+        }
+
+        .btl-form-input {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f9fafb;
+
+            &:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             }
 
-            .btl-form-control {
-                background: #34495e;
-                border-color: #4a5f7a;
-                color: #ffffff;
+            &::placeholder {
+                color: #6b7280;
+            }
+        }
+    }
 
-                &:focus {
-                    border-color: #3498db;
-                    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-                }
+    .btl-utm-links-count {
+        .btl-links-count-text {
+            color: #60a5fa;
+        }
+    }
 
-                &::placeholder {
-                    color: #95a5a6;
+    // React Select Dark Mode
+    .btl-react-select-container {
+        .btl-react-select__control {
+            background: #374151;
+            border-color: #4b5563;
+
+            &:hover {
+                border-color: #6b7280;
+            }
+
+            &--is-focused {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+        }
+
+        .btl-react-select__value-container {
+            color: #f9fafb;
+        }
+
+        .btl-react-select__placeholder {
+            color: #6b7280;
+        }
+
+        .btl-react-select__single-value {
+            color: #f9fafb;
+        }
+
+        .btl-react-select__input {
+            color: #f9fafb;
+        }
+
+        .btl-react-select__multi-value {
+            background-color: #3b82f6;
+
+            .btl-react-select__multi-value__label {
+                color: white;
+            }
+
+            .btl-react-select__multi-value__remove {
+                color: white;
+
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.2);
                 }
             }
         }
 
-        .btl-utm-field-description {
-            color: #bdc3c7;
+        .btl-react-select__menu {
+            background: #374151;
+            border-color: #4b5563;
         }
 
-        // React Select Dark Mode
-        .btl-react-select-container {
-            .btl-react-select__control {
-                background: #34495e;
-                border-color: #4a5f7a;
+        .btl-react-select__option {
+            color: #f9fafb;
 
-                &:hover {
-                    border-color: #5a6f8a;
-                }
-
-                &--is-focused {
-                    border-color: #3498db;
-                    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-                }
+            &--is-focused {
+                background-color: #4b5563;
             }
 
-            .btl-react-select__value-container {
-                color: #ffffff;
+            &--is-selected {
+                background-color: #3b82f6;
             }
+        }
 
-            .btl-react-select__placeholder {
-                color: #95a5a6;
+        .btl-react-select__dropdown-indicator,
+        .btl-react-select__clear-indicator {
+            color: #6b7280;
+
+            &:hover {
+                color: #9ca3af;
             }
+        }
+    }
 
-            .btl-react-select__single-value {
-                color: #ffffff;
-            }
+    // Dark mode checkboxes
+    .btl-checkbox-custom {
+        background: #374151;
+        border-color: #4b5563;
+    }
 
-            .btl-react-select__input {
-                color: #ffffff;
-            }
+    .btl-checkbox-input:checked+.btl-checkbox-custom {
+        background: #3b82f6;
+        border-color: #3b82f6;
+    }
 
-            .btl-react-select__multi-value {
-                background-color: #3498db;
+    .btl-checkbox-text {
+        color: #f9fafb;
+    }
 
-                .btl-react-select__multi-value__label {
-                    color: white;
-                }
+    // Dark mode add field button
+    .btl-add-field-section {
+        border-top-color: #374151;
+    }
 
-                .btl-react-select__multi-value__remove {
-                    color: white;
+    .btl-add-field-btn {
+        border-color: #4b5563;
+        color: #9ca3af;
 
-                    &:hover {
-                        background-color: rgba(255, 255, 255, 0.2);
-                    }
-                }
-            }
+        &:hover {
+            border-color: #6b7280;
+            color: #f3f4f6;
+            background: #374151;
+        }
+    }
 
-            .btl-react-select__menu {
-                background: #34495e;
-                border-color: #4a5f7a;
-            }
+    // Dark mode buttons
+    .btl-btn {
+        &-secondary {
+            background: #374151;
+            color: #9ca3af;
+            border-color: #4b5563;
 
-            .btl-react-select__option {
-                color: #ffffff;
-
-                &--is-focused {
-                    background-color: #3a4a5c;
-                }
-
-                &--is-selected {
-                    background-color: #3498db;
-                }
-            }
-
-            .btl-react-select__dropdown-indicator,
-            .btl-react-select__clear-indicator {
-                color: #95a5a6;
-
-                &:hover {
-                    color: #ffffff;
-                }
+            &:hover:not(:disabled) {
+                background: #4b5563;
+                color: #f3f4f6;
+                border-color: #6b7280;
             }
         }
     }
@@ -339,46 +598,63 @@
         &__header,
         &__body,
         &__footer {
-            padding-left: 20px;
-            padding-right: 20px;
+            padding-left: 24px;
+            padding-right: 24px;
         }
 
         &__body {
-            padding-top: 20px;
-            padding-bottom: 20px;
+            padding-top: 24px;
+            padding-bottom: 24px;
         }
     }
 
     .btl-utm-template-fields {
-        .btl-utm-field-row {
-            gap: 16px;
-        }
-
         .btl-utm-field-group {
             margin-bottom: 20px;
         }
+    }
+
+    .btl-utm-template-modal__actions {
+        flex-direction: column;
+        gap: 8px;
     }
 }
 
 @media (max-width: 480px) {
     .btl-utm-template-modal {
-        margin: 10px;
-        max-height: calc(100vh - 20px);
+        margin: 16px;
+        max-height: calc(100vh - 32px);
 
         &__header {
-            padding: 16px 15px;
+            padding: 20px 16px;
 
-            &__title {
-                font-size: 18px;
+            .btl-utm-template-modal__title {
+                font-size: 16px;
             }
         }
 
         &__body {
-            padding: 20px 15px;
+            padding: 24px 16px;
         }
 
         &__footer {
-            padding: 15px;
+            padding: 16px;
         }
+    }
+
+    .btl-utm-template-fields {
+        .btl-utm-field-group {
+            margin-bottom: 16px;
+        }
+    }
+
+    .btl-utm-checkboxes {
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+
+    .btl-add-field-section {
+        margin-top: 24px;
+        padding-top: 16px;
     }
 }
