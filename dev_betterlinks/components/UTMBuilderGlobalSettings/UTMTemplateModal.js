@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import { modalCustomStyles } from 'utils/helper';
 import { makeRequest } from 'utils/helper';
-import './UTMTemplateModal.scss';
+import UTMConfirmationModal from './UTMConfirmationModal';
 
 const utmTemplateModalStyles = {
     ...modalCustomStyles,
@@ -31,6 +31,10 @@ const UTMTemplateModal = ({
     handleTemplateDelete,
 }) => {
     const [isApplying, setIsApplying] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalState, setModalState] = useState('confirmation'); // 'confirmation' or 'success'
+    const [modalMessage, setModalMessage] = useState('');
+    const [preventMainModalClose, setPreventMainModalClose] = useState(false);
 
     const getCategoryOptions = () => {
         if (!terms || terms.length === 0) return [];
@@ -71,10 +75,20 @@ const UTMTemplateModal = ({
         setTemplateForm({ ...templateForm, categories: categoryIds });
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
+        // Show confirmation modal before proceeding
+        setModalState('confirmation');
+        setShowModal(true);
+    };
+
+
+
+    const handleConfirmSubmit = async () => {
         setIsApplying(true);
 
         try {
+            let successMsg = '';
+
             // Apply UTM template to existing links if categories are selected
             if (templateForm.categories && templateForm.categories.length > 0) {
                 // Check if at least one UTM parameter is provided
@@ -82,7 +96,8 @@ const UTMTemplateModal = ({
                     templateForm.utm_campaign || templateForm.utm_term || templateForm.utm_content;
 
                 if (!hasUtmData) {
-                    alert(__('Please provide at least one UTM parameter to apply to links.', 'betterlinks'));
+                    setModalMessage(__('Please provide at least one UTM parameter to apply to links.', 'betterlinks'));
+                    setModalState('success');
                     setIsApplying(false);
                     return;
                 }
@@ -102,29 +117,55 @@ const UTMTemplateModal = ({
 
                 if (response?.data?.success) {
                     const { updated_count, skipped_count, total_links } = response.data.data;
-                    alert(
-                        __('UTM template applied successfully!', 'betterlinks') + '\n' +
+                    successMsg = __('UTM template applied successfully!', 'betterlinks') + '\n' +
                         __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
                         __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
-                        __('Total: %d links', 'betterlinks').replace('%d', total_links)
-                    );
+                        __('Total: %d links', 'betterlinks').replace('%d', total_links);
                 } else {
-                    alert(__('Failed to apply UTM template to links.', 'betterlinks'));
+                    successMsg = __('Failed to apply UTM template to links.', 'betterlinks');
                 }
             }
 
-            // Save the template (existing functionality)
+            // Prepare success message for template save
+            if (!successMsg) {
+                successMsg = isCreatingTemplate
+                    ? __('UTM template created successfully!', 'betterlinks')
+                    : __('UTM template updated successfully!', 'betterlinks');
+            }
+
+            // Prevent main modal from closing until user clicks OK on success
+            setPreventMainModalClose(true);
+
+            // Show success state immediately
+            setModalMessage(successMsg);
+            setModalState('success');
+            setIsApplying(false);
+
+        } catch (error) {
+            console.error('Error applying UTM template:', error);
+            setModalMessage(__('An error occurred while applying the UTM template.', 'betterlinks'));
+            setModalState('success');
+            setIsApplying(false);
+        }
+    };
+
+    // Handle success modal OK button click
+    const handleSuccessOk = () => {
+        // Save the template when user clicks OK on success modal
+        try {
             if (isCreatingTemplate) {
                 handleTemplateCreate();
             } else {
                 handleTemplateUpdate();
             }
         } catch (error) {
-            console.error('Error applying UTM template:', error);
-            alert(__('An error occurred while applying the UTM template.', 'betterlinks'));
-        } finally {
-            setIsApplying(false);
+            console.error('Error saving template:', error);
         }
+
+        // Reset states and close modals
+        setPreventMainModalClose(false);
+        setShowModal(false);
+        // The template handlers will close the main modal
     };
 
     const handleDeleteAndClose = () => {
@@ -173,7 +214,7 @@ const UTMTemplateModal = ({
                         </div>
 
                         {/* Assign to Categories */}
-                        <div className="btl-utm-field-group">
+                        <div className="btl-utm-field-group btl-utm-category-select">
                             <label className="btl-field-label">
                                 {__('Assign to Categories', 'betterlinks')}
                                 <div className="btl-tooltip">
@@ -343,6 +384,35 @@ const UTMTemplateModal = ({
                     </div>
                 </div>
             </div>
+
+            {/* Unified Modal */}
+            <UTMConfirmationModal
+                isOpen={showModal}
+                modalState={modalState}
+                onClose={() => {
+                    if (modalState === 'success') {
+                        // When success modal is closed via OK button, save template and close main modal
+                        handleSuccessOk();
+                    } else {
+                        // For confirmation modal, just close
+                        setShowModal(false);
+                    }
+                }}
+                onConfirm={handleConfirmSubmit}
+                isApplying={isApplying}
+                // Confirmation props
+                confirmationTitle={__('Apply Template', 'betterlinks')}
+                confirmationMessage={
+                    templateForm.categories && templateForm.categories.length > 0
+                        ? __('This action will overwrite the current UTM on %d existing URLs.', 'betterlinks').replace('%d', getTotalLinksInSelectedCategories())
+                        : __('This will save the UTM template.')
+                }
+                confirmationSubMessage={__('All future shortlinks created in this category will automatically apply this UTM.', 'betterlinks')}
+                confirmButtonText={__('Apply UTM Template', 'betterlinks')}
+                cancelButtonText={__('Cancel', 'betterlinks')}
+                // Success props
+                successMessage={modalMessage}
+            />
         </Modal>
     );
 };

@@ -1,3 +1,11 @@
+// UTM Builder Component Styles
+// ============================================================================
+
+// Import the new consolidated UTM Builder Global Settings styles
+@import './utm_builder_style';
+
+// Legacy UTM Builder Modal Styles (keeping for backward compatibility)
+// ============================================================================
 .btl-modal-utm-builder {
 	.btl-modal-utm-builder__title {
 		font-size: 22px;
@@ -8,14 +16,17 @@
 		margin-bottom: 30px;
 		display: flex;
 		align-items: center;
+
 		.btl-tooltip {
 			display: flex;
 			margin-left: 5px;
 			color: $secondary-lighten;
 		}
 	}
+
 	.btl-modal-utm-templates {
 		margin-bottom: 20px;
+
 		#savedtemplate,
 		select {
 			min-height: 34px;
@@ -32,14 +43,17 @@
 			padding-right: 30px;
 		}
 	}
+
 	.btl-modal-utm-builder__body {
 		.btl-modal-utm-builder__form-group {
 			display: flex;
 			align-items: flex-start;
+
 			@media screen and (max-width: 650px) {
 				flex-direction: column;
 			}
-			> label {
+
+			>label {
 				width: 120px;
 				font-size: 16px;
 				font-weight: 500;
@@ -48,9 +62,11 @@
 				min-height: 34px;
 				display: flex;
 				align-items: center;
+
 				@media screen and (max-width: 650px) {
 					padding-right: 0;
 				}
+
 				&.btl-required {
 					&:after {
 						content: '*';
@@ -59,24 +75,30 @@
 					}
 				}
 			}
-			> div {
+
+			>div {
 				flex: 1;
+
 				@media screen and (max-width: 650px) {
 					width: 100%;
 				}
-				> label {
+
+				>label {
 					display: inline-flex;
 					align-items: center;
 					margin-right: 20px;
 					margin-bottom: 10px;
-					> input[type='radio'] {
+
+					>input[type='radio'] {
 						margin-bottom: -3px;
 					}
-					> img {
+
+					>img {
 						margin-right: 3px;
 					}
 				}
 			}
+
 			textarea,
 			input[type='text'] {
 				flex: 1;
@@ -89,20 +111,25 @@
 				font-size: 15px;
 				font-weight: 500;
 				outline: none;
+
 				&:focus {
 					background: #fff;
 					box-shadow: 0 10px 15px rgba(#1a163d, 0.06);
 				}
+
 				&:not(:last-child) {
 					margin-right: 10px;
 				}
 			}
+
 			input[type='text'] {
 				height: 35px;
 			}
+
 			textarea {
 				padding: 10px 15px !important;
 			}
+
 			button[type='button'] {
 				min-height: 35px;
 				border: 1px solid $success-lighten;
@@ -116,15 +143,18 @@
 				align-items: center;
 				transition: 0.3s ease-in-out;
 				cursor: pointer;
+
 				&:not(:last-child) {
 					margin-right: 15px;
 				}
+
 				&:hover {
 					box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 					border-color: $success;
 					background: $success;
 				}
 			}
+
 			.template-save-button-wrapper {
 				button[type='button'] {
 					min-height: 35px;
@@ -139,9 +169,11 @@
 					align-items: center;
 					transition: 0.3s ease-in-out;
 					cursor: pointer;
+
 					&:not(:last-child) {
 						margin-right: 15px;
 					}
+
 					&:hover {
 						box-shadow: 0 22px 42px rgba(#003be2, 0.18);
 						border-color: $success;
@@ -149,12 +181,15 @@
 						color: #fff;
 					}
 				}
+
 				.template-save-input-wrapper {
 					display: flex;
 					position: relative;
+
 					input[type='text'] {
 						margin-right: 0 !important;
 					}
+
 					button {
 						position: absolute;
 						right: 0;
@@ -164,6 +199,7 @@
 						font-size: 13px;
 						background-color: #2961ff;
 						color: #fff;
+
 						span {
 							right: 17.5px;
 							top: 14.5px;
@@ -171,13 +207,16 @@
 					}
 				}
 			}
+
 			&:not(:last-child) {
 				margin-bottom: 20px;
+
 				@media screen and (max-width: 650px) {
 					margin-bottom: 10px;
 				}
 			}
 		}
+
 		.btl-modal-utm-builder__form-group-pinterest,
 		.btl-modal-utm-builder__form-group-reddit,
 		.btl-modal-utm-builder__form-group-linkedin,

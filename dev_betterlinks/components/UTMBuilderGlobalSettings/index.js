@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { saveSettingsHandler, makeRequest, betterlinks_nonce, plugin_root_url } from 'utils/helper';
 import UTMTemplateModal from './UTMTemplateModal';
-import './style.scss';
+import '../../../assets/scss/components/_utm_builder_style.scss';
 
 const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
