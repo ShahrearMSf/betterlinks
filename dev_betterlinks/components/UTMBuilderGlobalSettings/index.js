@@ -102,7 +102,9 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 			utm_campaign: '',
 			utm_term: '',
 			utm_content: '',
-			categories: [1]
+			categories: [1],
+			utm_enable_to_rewrite_existing_utm_template: false,
+			utm_auto_apply_new_link: false
 		});
 		// Don't reset isCreatingTemplate and activeTemplate here - let the caller decide
 	};
@@ -130,7 +132,12 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 	const handleTemplateSelect = (template) => {
 		setActiveTemplate(template);
-		setTemplateForm({ ...template });
+		setTemplateForm({
+			...template,
+			// Ensure new fields have default values for existing templates
+			utm_enable_to_rewrite_existing_utm_template: template.utm_enable_to_rewrite_existing_utm_template || false,
+			utm_auto_apply_new_link: template.utm_auto_apply_new_link || false
+		});
 		setIsCreatingTemplate(false);
 		setIsModalOpen(true);
 	};

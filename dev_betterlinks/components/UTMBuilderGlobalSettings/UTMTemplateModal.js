@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
 import { modalCustomStyles } from 'utils/helper';
+import { makeRequest } from 'utils/helper';
 import './UTMTemplateModal.scss';
 
 const utmTemplateModalStyles = {
@@ -29,6 +30,8 @@ const UTMTemplateModal = ({
     handleTemplateUpdate,
     handleTemplateDelete,
 }) => {
+    const [isApplying, setIsApplying] = useState(false);
+
     const getCategoryOptions = () => {
         if (!terms || terms.length === 0) return [];
 
@@ -36,7 +39,7 @@ const UTMTemplateModal = ({
             .filter(term => term.term_type === 'category')
             .map(term => ({
                 value: parseInt(term.ID),
-                label: term.term_name
+                label: `${term.term_name} (${term.link_count || 0} links)`
             }));
     };
 
@@ -45,8 +48,20 @@ const UTMTemplateModal = ({
 
         return templateForm.categories.map(catId => {
             const category = terms.find(term => parseInt(term.ID) === parseInt(catId));
-            return category ? { value: parseInt(category.ID), label: category.term_name } : null;
+            return category ? {
+                value: parseInt(category.ID),
+                label: `${category.term_name} (${category.link_count || 0} links)`
+            } : null;
         }).filter(Boolean);
+    };
+
+    const getTotalLinksInSelectedCategories = () => {
+        if (!templateForm.categories || !terms || terms.length === 0) return 0;
+
+        return templateForm.categories.reduce((total, catId) => {
+            const category = terms.find(term => parseInt(term.ID) === parseInt(catId));
+            return total + (category ? (parseInt(category.link_count) || 0) : 0);
+        }, 0);
     };
 
     const handleCategoryChange = (selectedOptions) => {
@@ -54,13 +69,60 @@ const UTMTemplateModal = ({
         setTemplateForm({ ...templateForm, categories: categoryIds });
     };
 
-    const handleSubmit = () => {
-        if (isCreatingTemplate) {
-            handleTemplateCreate();
-        } else {
-            handleTemplateUpdate();
+    const handleSubmit = async () => {
+        setIsApplying(true);
+
+        try {
+            // Apply UTM template to existing links if categories are selected
+            if (templateForm.categories && templateForm.categories.length > 0) {
+                // Check if at least one UTM parameter is provided
+                const hasUtmData = templateForm.utm_source || templateForm.utm_medium ||
+                    templateForm.utm_campaign || templateForm.utm_term || templateForm.utm_content;
+
+                if (!hasUtmData) {
+                    alert(__('Please provide at least one UTM parameter to apply to links.', 'betterlinks'));
+                    setIsApplying(false);
+                    return;
+                }
+
+                const response = await makeRequest({
+                    action: 'betterlinks/admin/apply_utm_template_to_links',
+                    template_data: {
+                        utm_source: templateForm.utm_source || '',
+                        utm_medium: templateForm.utm_medium || '',
+                        utm_campaign: templateForm.utm_campaign || '',
+                        utm_term: templateForm.utm_term || '',
+                        utm_content: templateForm.utm_content || ''
+                    },
+                    category_ids: templateForm.categories,
+                    rewrite_existing: templateForm.utm_enable_to_rewrite_existing_utm_template || false
+                });
+
+                if (response?.data?.success) {
+                    const { updated_count, skipped_count, total_links } = response.data.data;
+                    alert(
+                        __('UTM template applied successfully!', 'betterlinks') + '\n' +
+                        __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
+                        __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
+                        __('Total: %d links', 'betterlinks').replace('%d', total_links)
+                    );
+                } else {
+                    alert(__('Failed to apply UTM template to links.', 'betterlinks'));
+                }
+            }
+
+            // Save the template (existing functionality)
+            if (isCreatingTemplate) {
+                handleTemplateCreate();
+            } else {
+                handleTemplateUpdate();
+            }
+        } catch (error) {
+            console.error('Error applying UTM template:', error);
+            alert(__('An error occurred while applying the UTM template.', 'betterlinks'));
+        } finally {
+            setIsApplying(false);
         }
-        // Don't close here - parent component will handle it
     };
 
     const handleDeleteAndClose = () => {
@@ -76,6 +138,7 @@ const UTMTemplateModal = ({
             onRequestClose={onClose}
             style={utmTemplateModalStyles}
             ariaHideApp={false}
+            className="btl-utm-template-modal-override"
         >
             <span className="btl-close-modal" onClick={onClose}>
                 <span className="btl btl-cancel" />
@@ -117,6 +180,20 @@ const UTMTemplateModal = ({
                             <div className="btl-utm-field-description">
                                 {__('Select which categories should use this UTM template. If no category is selected, it will apply to "Uncategorized" links.', 'betterlinks')}
                             </div>
+                            {templateForm.categories && templateForm.categories.length > 0 && (
+                                <div className="btl-utm-selected-categories-info" style={{
+                                    marginTop: '8px',
+                                    padding: '8px 12px',
+                                    backgroundColor: '#f0f8ff',
+                                    border: '1px solid #d6f1ff',
+                                    borderRadius: '4px',
+                                    color: '#2c5282'
+                                }}>
+                                    <strong>
+                                        {__('Total links in selected categories:', 'betterlinks')} {getTotalLinksInSelectedCategories()}
+                                    </strong>
+                                </div>
+                            )}
                         </div>
 
                         <div className="btl-utm-global-form">
@@ -209,11 +286,15 @@ const UTMTemplateModal = ({
                             type="button"
                             className="button-primary"
                             onClick={handleSubmit}
+                            disabled={isApplying}
                         >
-                            {isCreatingTemplate
-                                ? __('Create Template', 'betterlinks')
-                                : __('Update Template', 'betterlinks')
-                            }
+                            {isApplying ? (
+                                __('Applying...', 'betterlinks')
+                            ) : (
+                                isCreatingTemplate
+                                    ? __('Apply & Save UTM Template', 'betterlinks')
+                                    : __('Apply & Update Template', 'betterlinks')
+                            )}
                         </button>
 
                         {activeTemplate && (

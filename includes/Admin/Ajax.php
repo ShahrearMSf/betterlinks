@@ -93,6 +93,10 @@ class Ajax {
 		// js analytics tracking
 		add_action( 'wp_ajax_nopriv_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
 		add_action( 'wp_ajax_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
+		
+		// UTM Template Application
+		add_action( 'wp_ajax_betterlinks/admin/apply_utm_template_to_links', array( $this, 'apply_utm_template_to_links' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_links_by_categories', array( $this, 'get_links_by_categories' ) );
 	}
 
 	public function update_fbs_link() {
@@ -1202,5 +1206,182 @@ class Ajax {
 		wp_send_json([
 			'data' => true
 		]);
+	}
+
+	/**
+	 * Get links by categories
+	 */
+	public function get_links_by_categories() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'betterlinks' ) );
+		}
+
+		$category_ids = isset( $_POST['category_ids'] ) ? array_map( 'intval', $_POST['category_ids'] ) : array();
+
+		if ( empty( $category_ids ) ) {
+			wp_send_json_error( __( 'No categories provided.', 'betterlinks' ) );
+		}
+
+		global $wpdb;
+
+		// Get links for the specified categories
+		$placeholders = implode( ',', array_fill( 0, count( $category_ids ), '%d' ) );
+		$query = $wpdb->prepare(
+			"SELECT DISTINCT l.ID, l.short_url, l.target_url, l.link_title 
+			FROM {$wpdb->prefix}betterlinks l
+			INNER JOIN {$wpdb->prefix}betterlinks_terms_relationships tr ON l.ID = tr.link_id
+			WHERE tr.term_id IN ($placeholders)",
+			...$category_ids
+		);
+
+		$links = $wpdb->get_results( $query, ARRAY_A );
+
+		wp_send_json_success( array(
+			'links' => $links,
+			'total' => count( $links )
+		) );
+	}
+
+	/**
+	 * Apply UTM template to links
+	 */
+	public function apply_utm_template_to_links() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'betterlinks' ) );
+		}
+
+		// Parse JSON data that comes from makeRequest
+		$template_data = isset( $_POST['template_data'] ) ? json_decode( stripslashes( $_POST['template_data'] ), true ) : array();
+		$category_ids = isset( $_POST['category_ids'] ) ? json_decode( stripslashes( $_POST['category_ids'] ), true ) : array();
+		$rewrite_existing = isset( $_POST['rewrite_existing'] ) ? filter_var( $_POST['rewrite_existing'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+		// Convert to integers if needed
+		if ( is_array( $category_ids ) ) {
+			$category_ids = array_map( 'intval', $category_ids );
+		}
+
+		if ( empty( $template_data ) || empty( $category_ids ) ) {
+			wp_send_json_error( __( 'Invalid template data or categories.', 'betterlinks' ) );
+		}
+
+		// Sanitize template data
+		$utm_source = sanitize_text_field( $template_data['utm_source'] ?? '' );
+		$utm_medium = sanitize_text_field( $template_data['utm_medium'] ?? '' );
+		$utm_campaign = sanitize_text_field( $template_data['utm_campaign'] ?? '' );
+		$utm_term = sanitize_text_field( $template_data['utm_term'] ?? '' );
+		$utm_content = sanitize_text_field( $template_data['utm_content'] ?? '' );
+
+		global $wpdb;
+
+		// Get links for the specified categories
+		$placeholders = implode( ',', array_fill( 0, count( $category_ids ), '%d' ) );
+		$query = $wpdb->prepare(
+			"SELECT DISTINCT l.ID, l.target_url 
+			FROM {$wpdb->prefix}betterlinks l
+			INNER JOIN {$wpdb->prefix}betterlinks_terms_relationships tr ON l.ID = tr.link_id
+			WHERE tr.term_id IN ($placeholders)",
+			...$category_ids
+		);
+
+		$links = $wpdb->get_results( $query, ARRAY_A );
+		$updated_count = 0;
+		$skipped_count = 0;
+
+		foreach ( $links as $link ) {
+			$target_url = $link['target_url'];
+			$parsed_url = parse_url( $target_url );
+			
+			// Check if URL already has UTM parameters
+			$existing_query = isset( $parsed_url['query'] ) ? $parsed_url['query'] : '';
+			parse_str( $existing_query, $existing_params );
+			
+			$has_utm = false;
+			$utm_params = array( 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content' );
+			foreach ( $utm_params as $param ) {
+				if ( isset( $existing_params[$param] ) ) {
+					$has_utm = true;
+					break;
+				}
+			}
+
+			// Skip if has UTM and rewrite is disabled
+			if ( $has_utm && ! $rewrite_existing ) {
+				$skipped_count++;
+				continue;
+			}
+
+			// Remove existing UTM parameters if rewriting
+			if ( $rewrite_existing ) {
+				foreach ( $utm_params as $param ) {
+					unset( $existing_params[$param] );
+				}
+			}
+
+			// Add new UTM parameters
+			if ( ! empty( $utm_source ) ) {
+				$existing_params['utm_source'] = $utm_source;
+			}
+			if ( ! empty( $utm_medium ) ) {
+				$existing_params['utm_medium'] = $utm_medium;
+			}
+			if ( ! empty( $utm_campaign ) ) {
+				$existing_params['utm_campaign'] = $utm_campaign;
+			}
+			if ( ! empty( $utm_term ) ) {
+				$existing_params['utm_term'] = $utm_term;
+			}
+			if ( ! empty( $utm_content ) ) {
+				$existing_params['utm_content'] = $utm_content;
+			}
+
+			// Rebuild the URL
+			$new_query = http_build_query( $existing_params );
+			$new_url = $parsed_url['scheme'] . '://' . $parsed_url['host'];
+			
+			if ( isset( $parsed_url['port'] ) ) {
+				$new_url .= ':' . $parsed_url['port'];
+			}
+			
+			if ( isset( $parsed_url['path'] ) ) {
+				$new_url .= $parsed_url['path'];
+			}
+			
+			if ( ! empty( $new_query ) ) {
+				$new_url .= '?' . $new_query;
+			}
+			
+			if ( isset( $parsed_url['fragment'] ) ) {
+				$new_url .= '#' . $parsed_url['fragment'];
+			}
+
+			// Update the link in database
+			$result = $wpdb->update(
+				$wpdb->prefix . 'betterlinks',
+				array( 'target_url' => $new_url ),
+				array( 'ID' => $link['ID'] ),
+				array( '%s' ),
+				array( '%d' )
+			);
+
+			if ( $result !== false ) {
+				$updated_count++;
+			}
+		}
+
+		wp_send_json_success( array(
+			'updated_count' => $updated_count,
+			'skipped_count' => $skipped_count,
+			'total_links' => count( $links ),
+			'message' => sprintf(
+				__( 'UTM template applied successfully. Updated: %d, Skipped: %d, Total: %d', 'betterlinks' ),
+				$updated_count,
+				$skipped_count,
+				count( $links )
+			)
+		) );
 	}
 }
