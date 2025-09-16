@@ -156,6 +156,22 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setActiveTemplate(null);
 	};
 
+	const handleTemplateCopy = (template) => {
+		// Create a copy with a new name and preserve all fields including checkboxes
+		const copiedTemplate = {
+			...template,
+			template_name: `${template.template_name} - Copy`,
+			// Preserve checkbox states - ensure they have default values if not set
+			utm_enable_to_rewrite_existing_utm_template: template.utm_enable_to_rewrite_existing_utm_template || false,
+			utm_auto_apply_new_link: template.utm_auto_apply_new_link || false
+		};
+
+		setActiveTemplate(null); // No active template since we're creating a new one
+		setTemplateForm(copiedTemplate);
+		setIsCreatingTemplate(true); // Set as creating since this is a new template
+		setIsModalOpen(true);
+	};
+
 
 
 	return (
@@ -224,10 +240,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 													<button
 														type="button"
 														className="btl-utm-action-btn btl-utm-btn-ac"
-														onClick={() => {
-															// Copy template functionality can be added here
-															console.log('Copy template:', template);
-														}}
+														onClick={() => handleTemplateCopy(template)}
 													>
 														<div className="btl-tooltip">
 															<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -268,6 +281,35 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 												</div>
 											</div>
 										))}
+									</div>
+								</div>
+							)}
+
+							{/* Empty State when no templates exist */}
+							{utmTemplates.length === 0 && (
+								<div className="btl-utm-empty-state">
+									<div className="btl-utm-empty-content">
+										<div className="btl-utm-empty-icon">
+											<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="24" cy="24" r="20" stroke="#D1D5DB" strokeWidth="2" strokeDasharray="4 4" />
+												<path d="M24 16V32M16 24H32" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" />
+											</svg>
+										</div>
+										<h4 className="btl-utm-empty-title">
+											{__('No UTM Templates Found', 'betterlinks')}
+										</h4>
+										<p className="btl-utm-empty-description">
+											{__('Create your first UTM template to automatically apply UTM parameters to your links based on categories. This helps you track the performance of your links across different marketing campaigns.', 'betterlinks')}
+										</p>
+										<button
+											className="btl-utm-empty-cta"
+											onClick={openCreateModal}
+										>
+											<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M8 3.5V12.5M3.5 8H12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+											</svg>
+											{__('Create Your First Template', 'betterlinks')}
+										</button>
 									</div>
 								</div>
 							)}

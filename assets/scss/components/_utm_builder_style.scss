@@ -1237,3 +1237,102 @@ body.betterlinks-dark-mode .ReactModal__Content {
 .ReactModal__Content.ReactModal__Content--after-open.btl-unified-modal-override {
     padding: 0 !important;
 }
+
+// ============================================================================
+// Empty State Styles
+// ============================================================================
+.btl-utm-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: $spacing-xxl;
+    margin-top: $spacing-lg;
+    border: 2px dashed $border-color;
+    border-radius: $border-radius-large;
+    background-color: $background-light;
+
+    .btl-utm-empty-content {
+        text-align: center;
+        max-width: 400px;
+
+        .btl-utm-empty-icon {
+            margin-bottom: $spacing-lg;
+            opacity: 0.8;
+
+            svg {
+                width: 48px;
+                height: 48px;
+                color: $text-muted;
+            }
+        }
+
+        .btl-utm-empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: $text-primary;
+            margin: 0 0 $spacing-sm 0;
+            line-height: 1.4;
+        }
+
+        .btl-utm-empty-description {
+            font-size: 14px;
+            color: $text-secondary;
+            line-height: 1.6;
+            margin: 0 0 $spacing-xl 0;
+        }
+
+        .btl-utm-empty-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: $spacing-xs;
+            background-color: $primary-color;
+            color: white;
+            border: none;
+            border-radius: $border-radius;
+            padding: $spacing-sm $spacing-lg;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: $primary-hover;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(17, 75, 238, 0.2);
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(17, 75, 238, 0.1);
+            }
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+// Dark mode support for empty state
+.betterlinks-dark-mode {
+    .btl-utm-empty-state {
+        background-color: $dark-bg-secondary;
+        border-color: $dark-border;
+
+        .btl-utm-empty-content {
+            .btl-utm-empty-icon svg {
+                color: $dark-text-secondary;
+            }
+
+            .btl-utm-empty-title {
+                color: $dark-text;
+            }
+
+            .btl-utm-empty-description {
+                color: $dark-text-secondary;
+            }
+        }
+    }
+}
