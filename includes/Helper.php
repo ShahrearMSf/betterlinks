@@ -430,7 +430,7 @@ class Helper {
 	public static function sanitize_text_or_array_field( $array_or_string, $key = '' ) {
 
 		$boolean = array( 'true', 'false', '1', '0' );
-		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields' );
+		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields', 'autolink_custom_icon' );
 		if ( is_string( $array_or_string ) ) {
 			if( 'link' === $key ) {
 				return esc_url_raw($array_or_string);
