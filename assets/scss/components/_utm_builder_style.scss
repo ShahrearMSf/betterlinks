@@ -6,7 +6,7 @@
 // ============================================================================
 $primary-color: #114BEE;
 $primary-hover: #2563eb;
-$primary-blue: #3b82f6;
+$primary-blue: #003BE2;
 $secondary-color: #6b7280;
 $success-color: #10b981;
 $danger-color: #dc3545;
@@ -47,7 +47,7 @@ $dark-border: #4b5563;
     cursor: pointer;
 }
 
-@mixin focus-ring($color: $primary-blue) {
+@mixin focus-ring($color: $primary-color) {
     &:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba($color, 0.1);
@@ -110,7 +110,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
         background-color: $primary-color;
         color: #ffffff;
         border: 1px solid $primary-color;
-        @include transition-base;
 
         @media (max-width: 768px) {
             flex-direction: column;
@@ -182,7 +181,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
         background: $background-light;
         border: 1px solid #ECF0FB;
         border-radius: $border-radius;
-        @include transition-base;
+
 
         &:hover {
             background: $background-gray;
@@ -225,7 +224,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
             border-radius: 4px;
             cursor: pointer;
             color: #666;
-            @include transition-base;
+
 
             &:hover {
                 background: #e1e4e8;
@@ -282,7 +281,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
         font-size: 14px;
         background: #ffffff;
         color: $text-secondary;
-        @include transition-base;
+
         @include focus-ring;
 
         &:focus {
@@ -310,7 +309,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
         min-height: 44px;
         box-shadow: none;
         background: #ffffff;
-        @include transition-base;
+
 
         &:hover {
             border-color: $border-color-hover;
@@ -486,7 +485,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
     }
 
     &__title {
-        margin: 0 0 $spacing-xl 0;
+        margin: 0 0 36px 0;
         font-size: 20px;
         font-weight: 600;
         color: $text-primary;
@@ -509,6 +508,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
         font-size: 14px;
         color: $text-muted;
         line-height: 1.5;
+        margin: 24px 60px 44px 60px;
     }
 
     &__success-text {
@@ -520,7 +520,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
     }
 
     &__success-icon {
-        margin: 0 auto $spacing-xl auto;
+        margin: 0 auto 42px auto;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -544,6 +544,61 @@ body.betterlinks-dark-mode .ReactModal__Content {
 }
 
 // ============================================================================
+// UTM Statistics Component
+// ============================================================================
+.btl-utm-statistics {
+    background: #F3F6FF;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 75px;
+    border: 1px solid #D6E1FF;
+
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+
+        &--total {
+            padding-top: 16px;
+        }
+    }
+
+    &__label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #666B78;
+
+        &--total {
+            font-size: 18px;
+            font-weight: 500;
+            color: #374151;
+        }
+    }
+
+    &__value {
+        font-size: 16px;
+        font-weight: 500;
+
+        &--blue {
+            color: #2961FF;
+        }
+
+        &--total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #114BEE;
+        }
+    }
+
+    &__separator {
+        height: 1px;
+        background: #D6E1FF;
+        margin: 8px 0;
+    }
+}
+
+// ============================================================================
 // Modal Close Buttons
 // ============================================================================
 .btl-utm-close-modal,
@@ -555,7 +610,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
     align-items: center;
     justify-content: center;
     color: $text-placeholder;
-    @include transition-base;
 
     &:hover {
         background: #f3f4f6;
@@ -610,7 +664,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
     justify-content: center;
     flex-shrink: 0;
     margin-top: 1px;
-    @include transition-base;
 
     &::after {
         content: '';
@@ -619,7 +672,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
         background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e") no-repeat center center;
         background-size: contain;
         opacity: 0;
-        @include transition-base;
     }
 }
 
@@ -667,7 +719,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
     cursor: pointer;
     width: 100%;
     justify-content: center;
-    @include transition-base;
 
     &:hover {
         border-color: $border-color-hover;
@@ -684,7 +735,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
 // ============================================================================
 // Button System
 // ============================================================================
-.btl-btn {
+.btl-utm-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -697,7 +748,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
     border: none;
     min-height: 44px;
     min-width: 120px;
-    @include transition-base;
 
     &:disabled {
         opacity: 0.6;
@@ -705,7 +755,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
     }
 
     &-primary {
-        background: $primary-blue;
+        background: linear-gradient(180deg, #2961FF 0%, #003BE2 100%);
         color: #ffffff;
 
         &:hover:not(:disabled) {
@@ -717,13 +767,12 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
     &-secondary {
         background: #ffffff;
-        color: $text-muted;
-        border: 1px solid $border-color;
+        color: #114BEE;
+        border: 1px solid #0B45EA;
 
         &:hover:not(:disabled) {
             background: $background-light;
-            color: $text-secondary;
-            border-color: $border-color-hover;
+            color: #114BEE;
         }
 
         @include focus-ring($text-muted);
@@ -753,7 +802,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
     cursor: help;
     display: flex;
     align-items: center;
-    @include transition-base;
 
     &:hover {
         color: $text-muted;
@@ -807,7 +855,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
         opacity: 0;
         font-size: 12px;
         line-height: 1.4;
-        @include transition-base;
 
         &::after {
             content: "";
@@ -948,6 +995,34 @@ body.betterlinks-dark-mode .ReactModal__Content {
         }
     }
 
+    // Dark mode UTM statistics
+    .btl-utm-statistics {
+        background: $dark-bg-secondary;
+        border-color: $dark-border;
+
+        &__label {
+            color: $dark-text-secondary;
+
+            &--total {
+                color: $dark-text;
+            }
+        }
+
+        &__value {
+            &--blue {
+                color: #4F8EFF;
+            }
+
+            &--total {
+                color: #114BEE;
+            }
+        }
+
+        &__separator {
+            background: $dark-border;
+        }
+    }
+
     // Dark mode React Select
     .btl-react-select-container {
         .btl-react-select__control {
@@ -1061,7 +1136,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
     }
 
     .btl-highlight-number {
-        color: #60a5fa;
+        color: #114BEE;
         font-weight: 600;
     }
 
@@ -1121,8 +1196,17 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
     .btl-unified-modal {
         &__title {
-            font-size: 18px;
-            margin-bottom: $spacing-lg;
+            margin: 0 0 6px 0;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 130%;
+        }
+
+        &__subtitle {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 130%;
         }
 
         &__message {
@@ -1206,6 +1290,35 @@ body.betterlinks-dark-mode .ReactModal__Content {
             svg {
                 width: 36px;
                 height: 36px;
+            }
+        }
+    }
+
+    .btl-utm-statistics {
+        padding: $spacing-lg;
+        margin: $spacing-lg 0;
+
+        &__row {
+            padding: 6px 0;
+
+            &--total {
+                padding-top: $spacing-md;
+            }
+        }
+
+        &__label {
+            font-size: 14px;
+
+            &--total {
+                font-size: 16px;
+            }
+        }
+
+        &__value {
+            font-size: 14px;
+
+            &--total {
+                font-size: 16px;
             }
         }
     }

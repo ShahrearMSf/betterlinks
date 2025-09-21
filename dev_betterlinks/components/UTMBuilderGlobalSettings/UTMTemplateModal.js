@@ -15,6 +15,7 @@ const utmTemplateModalStyles = {
         border: 'none',
         borderRadius: '12px',
         background: '#F9FAFB',
+        position: 'absolute',
     },
 };
 
@@ -117,8 +118,7 @@ const UTMTemplateModal = ({
 
                 if (response?.data?.success) {
                     const { updated_count, skipped_count, total_links } = response.data.data;
-                    successMsg = __('UTM template applied successfully!', 'betterlinks') + '\n' +
-                        __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
+                    successMsg = __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
                         __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
                         __('Total: %d links', 'betterlinks').replace('%d', total_links);
                 } else {
@@ -361,7 +361,7 @@ const UTMTemplateModal = ({
                     <div className="btl-utm-template-modal__actions">
                         <button
                             type="button"
-                            className="btl-btn btl-btn-primary"
+                            className="btl-utm-btn btl-utm-btn-primary"
                             onClick={handleSubmit}
                             disabled={isApplying}
                         >
@@ -376,7 +376,7 @@ const UTMTemplateModal = ({
 
                         <button
                             type="button"
-                            className="btl-btn btl-btn-secondary"
+                            className="btl-utm-btn btl-utm-btn-secondary"
                             onClick={onClose}
                         >
                             {__('Cancel', 'betterlinks')}
@@ -401,13 +401,13 @@ const UTMTemplateModal = ({
                 onConfirm={handleConfirmSubmit}
                 isApplying={isApplying}
                 // Confirmation props
-                confirmationTitle={__('Apply Template', 'betterlinks')}
+                confirmationTitle={__('Apply UTM Template', 'betterlinks')}
                 confirmationMessage={
                     templateForm.categories && templateForm.categories.length > 0
-                        ? __('This action will overwrite the current UTM on %d existing URLs.', 'betterlinks').replace('%d', getTotalLinksInSelectedCategories())
+                        ? __('This will overwrite existing UTM settings on %d existing URLs.', 'betterlinks').replace('%d', getTotalLinksInSelectedCategories())
                         : __('This will save the UTM template.')
                 }
-                confirmationSubMessage={__('All future shortlinks created in this category will automatically apply this UTM.', 'betterlinks')}
+                confirmationSubMessage={templateForm.utm_auto_apply_new_link ? __('All new shortlinks in this category will automatically use this template.', 'betterlinks') : ''}
                 confirmButtonText={__('Apply UTM Template', 'betterlinks')}
                 cancelButtonText={__('Cancel', 'betterlinks')}
                 // Success props
