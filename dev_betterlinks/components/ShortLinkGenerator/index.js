@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { makeRequest, betterlinks_nonce, prefix, site_url } from '../../utils/helper';
+
+import { makeRequest, betterlinks_nonce, prefix } from '../../utils/helper';
 import Select from 'react-select';
 
 const ShortLinkGenerator = () => {
@@ -21,6 +21,9 @@ const ShortLinkGenerator = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [generationInProgress, setGenerationInProgress] = useState(false);
     const [generationStatus, setGenerationStatus] = useState(null);
+    const [showCompletionMessage, setShowCompletionMessage] = useState(false);
+    const [simulatedProgress, setSimulatedProgress] = useState(0);
+    const [progressInterval, setProgressInterval] = useState(null);
 
     // Advanced filters
     const [descriptionLength, setDescriptionLength] = useState(150);
@@ -42,6 +45,11 @@ const ShortLinkGenerator = () => {
         loadPostTypes();
         loadBetterlinkCategories();
         loadBetterlinkTags();
+
+        // Cleanup on unmount
+        return () => {
+            clearProgressInterval();
+        };
     }, []);
 
     // Update categories when post type changes
@@ -177,8 +185,12 @@ const ShortLinkGenerator = () => {
     };
 
     const handleGenerate = () => {
-        if (!selectedPostType || selectedCategories.length === 0) {
-            alert(__('Please select a post type and at least one category.', 'betterlinks'));
+        if (!selectedPostType) {
+            alert(__('Please select a post type.', 'betterlinks'));
+            return;
+        }
+        if (postCount === 0) {
+            alert(__('No posts found for the selected criteria. Please adjust your filters.', 'betterlinks'));
             return;
         }
         setShowConfirmation(true);
@@ -187,6 +199,24 @@ const ShortLinkGenerator = () => {
     const confirmGeneration = async () => {
         setShowConfirmation(false);
         setGenerationInProgress(true);
+        setGenerationStatus({
+            progress_percent: 0,
+            processed: 0,
+            total: postCount,
+            successful: 0,
+            failed: 0,
+            status: 'starting',
+            message: __('Initializing bulk generation...', 'betterlinks')
+        });
+        setSimulatedProgress(0);
+        setShowCompletionMessage(false);
+
+        // Start simulated progress for better UX
+        startSimulatedProgress();
+
+        // Auto-configure random slug settings
+        const finalSlugLength = slugType === 'random' ? 8 : slugLength; // Default 8 characters for random
+        const finalCollisionHandling = slugType === 'random' ? 'append' : collisionHandling; // Auto-increment for random
 
         const filters = {
             post_type: selectedPostType.value,
@@ -201,37 +231,72 @@ const ShortLinkGenerator = () => {
             custom_field_key: customFieldKey,
             manual_pattern: manualPattern,
             slug_type: slugType,
-            slug_length: slugLength,
-            collision_handling: collisionHandling,
+            slug_length: finalSlugLength,
+            collision_handling: finalCollisionHandling,
             custom_tags: customTags,
             betterlink_category: selectedBetterlinkCategory ? selectedBetterlinkCategory.value : null,
             betterlink_tags: selectedBetterlinkTags.map(tag => tag.value),
             link_prefix: linkPrefix
         };
 
-        try {
-            const response = await makeRequest({
-                action: 'betterlinks/admin/start_bulk_generation',
-                ...filters,
-                security: betterlinks_nonce
-            });
+        // Add a small delay to show the initialization
+        setTimeout(async () => {
+            try {
+                const response = await makeRequest({
+                    action: 'betterlinks/admin/start_bulk_generation',
+                    ...filters,
+                    security: betterlinks_nonce
+                });
 
-            if (response.data && response.data.success) {
-                // Start polling for progress
-                pollProgress();
-            } else {
+                if (response.data && response.data.success) {
+                    // Start polling for progress after a delay
+                    setTimeout(() => {
+                        pollProgress();
+                    }, 2000);
+                } else {
+                    setGenerationInProgress(false);
+                    clearProgressInterval();
+                    const errorMessage = response.data && response.data.data && response.data.data.message
+                        ? response.data.data.message
+                        : response.data && response.data.message
+                            ? response.data.message
+                            : __('Failed to start generation', 'betterlinks');
+                    alert(errorMessage);
+                }
+            } catch (error) {
                 setGenerationInProgress(false);
-                const errorMessage = response.data && response.data.data && response.data.data.message
-                    ? response.data.data.message
-                    : response.data && response.data.message
-                        ? response.data.message
-                        : __('Failed to start generation', 'betterlinks');
-                alert(errorMessage);
+                clearProgressInterval();
+                console.error('Error starting generation:', error);
+                alert(__('Error starting generation. Please try again.', 'betterlinks'));
             }
-        } catch (error) {
-            setGenerationInProgress(false);
-            console.error('Error starting generation:', error);
-            alert(__('Error starting generation. Please try again.', 'betterlinks'));
+        }, 1500);
+    };
+
+    const startSimulatedProgress = () => {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15; // Random increment between 0-15%
+            if (progress > 85) progress = 85; // Don't go beyond 85% until real data comes
+
+            setSimulatedProgress(progress);
+            setGenerationStatus(prev => ({
+                ...prev,
+                progress_percent: Math.floor(progress),
+                message: progress < 30
+                    ? __('Analyzing posts and preparing data...', 'betterlinks')
+                    : progress < 60
+                        ? __('Creating short links...', 'betterlinks')
+                        : __('Finalizing generation process...', 'betterlinks')
+            }));
+        }, 800); // Update every 800ms for visible progress
+
+        setProgressInterval(interval);
+    };
+
+    const clearProgressInterval = () => {
+        if (progressInterval) {
+            clearInterval(progressInterval);
+            setProgressInterval(null);
         }
     };
 
@@ -245,19 +310,55 @@ const ShortLinkGenerator = () => {
 
                 if (response.data && response.data.success) {
                     const status = response.data.data;
-                    setGenerationStatus(status);
+
+                    // Clear simulated progress once we get real data
+                    clearProgressInterval();
+
+                    // Gradually update to real progress for smooth transition
+                    setGenerationStatus(prev => ({
+                        ...status,
+                        progress_percent: Math.max(status.progress_percent || 0, simulatedProgress)
+                    }));
 
                     if (status.status === 'completed' || status.status === 'cancelled') {
                         clearInterval(interval);
-                        setGenerationInProgress(false);
+
+                        // Show completion with all details
+                        setGenerationStatus({
+                            ...status,
+                            progress_percent: 100,
+                            message: status.status === 'completed'
+                                ? __('Generation completed successfully!', 'betterlinks')
+                                : __('Generation was cancelled.', 'betterlinks')
+                        });
+
+                        // Show completion message for 3 seconds
+                        setShowCompletionMessage(true);
+
+                        setTimeout(() => {
+                            setShowCompletionMessage(false);
+                            setGenerationInProgress(false);
+                            setGenerationStatus(null);
+                            setSimulatedProgress(0);
+
+                            // Reset form to initial state
+                            setSelectedPostType(null);
+                            setSelectedCategories([]);
+                            setSelectedTags([]);
+                            setSelectedBetterlinkCategory(null);
+                            setSelectedBetterlinkTags([]);
+                            setPostCount(null);
+                            setShowAdvanced(false);
+                        }, 3000); // Show success for 3 seconds
                     }
                 }
             } catch (error) {
                 console.error('Error polling progress:', error);
                 clearInterval(interval);
+                clearProgressInterval();
                 setGenerationInProgress(false);
             }
-        }, 2000);
+        }, 3000); // Poll every 3 seconds for real data
     };
 
     const postTypeOptions = postTypes.map(pt => ({
@@ -280,7 +381,6 @@ const ShortLinkGenerator = () => {
 
     const slugTypeOptions = [
         { value: 'existing', label: __('Existing Slug', 'betterlinks') },
-        { value: 'title', label: __('Suggest From Title', 'betterlinks') },
         { value: 'random', label: __('Random', 'betterlinks') }
     ];
 
@@ -292,6 +392,7 @@ const ShortLinkGenerator = () => {
 
     return (
         <div className="btl-short-link-generator">
+
             <div className="btl-header">
                 <h2>{__('Short Link Generator', 'betterlinks')}</h2>
                 <div className="btl-description">
@@ -300,165 +401,121 @@ const ShortLinkGenerator = () => {
             </div>
 
             {!generationInProgress ? (
-                <div className="btl-generator-form">
-                    {/* Step 1: Required Inputs */}
-                    <div className="btl-form-section">
-                        <h3>{__('Required Settings', 'betterlinks')}</h3>
+                <>
+                    <div className="btl-generator-form">
+                        {/* Step 1: Required Inputs */}
+                        <div className="btl-form-section">
+                            <h3>{__('Required Settings:', 'betterlinks')}</h3>
 
-                        <div className="btl-form-row">
-                            <div className="btl-form-col">
-                                <div className="btl-bulk-link-form-group">
-                                    <label>{__('Post Type', 'betterlinks')} *</label>
-                                    <Select
-                                        className="btl-custom-post-select-type"
-                                        value={selectedPostType}
-                                        onChange={setSelectedPostType}
-                                        options={postTypeOptions}
-                                        placeholder={__('Select post type...', 'betterlinks')}
-                                        isLoading={isLoading}
-                                        isClearable={false}
-                                    />
-                                </div>
-                            </div>
-
-                            {selectedPostType && (
+                            <div className="btl-form-row">
                                 <div className="btl-form-col">
                                     <div className="btl-bulk-link-form-group">
-                                        <label>{__('Categories', 'betterlinks')} *</label>
-                                        {categories.length === 0 ? (
-                                            <div className="btl-helper-text">
-                                                {__('This post type has no categories available.', 'betterlinks')}
-                                            </div>
-                                        ) : (
-                                            <Select
-                                                className="btl-custom-post-select-cat"
-                                                value={selectedCategories}
-                                                onChange={setSelectedCategories}
-                                                options={categories}
-                                                placeholder={__('Select categories...', 'betterlinks')}
-                                                isMulti
-                                                isClearable
-                                                closeMenuOnSelect={false}
-                                            />
-                                        )}
+                                        <label>{__('Post Type', 'betterlinks')}*</label>
+                                        <Select
+                                            className="btl-custom-post-select-type"
+                                            value={selectedPostType}
+                                            onChange={setSelectedPostType}
+                                            options={postTypeOptions}
+                                            placeholder={__('Select post type...', 'betterlinks')}
+                                            isLoading={isLoading}
+                                            isClearable={false}
+                                        />
                                     </div>
+                                </div>
+
+                                {selectedPostType && (
+                                    <div className="btl-form-col">
+                                        <div className="btl-bulk-link-form-group">
+                                            <label>{__('Categories', 'betterlinks')}</label>
+                                            {categories.length === 0 ? (
+                                                <div className="btl-helper-text">
+                                                    {__('This post type has no categories available.', 'betterlinks')}
+                                                </div>
+                                            ) : (
+                                                <Select
+                                                    className="btl-custom-post-select-cat"
+                                                    value={selectedCategories}
+                                                    onChange={setSelectedCategories}
+                                                    options={categories}
+                                                    placeholder={__('Select categories...', 'betterlinks')}
+                                                    isMulti
+                                                    isClearable
+                                                    closeMenuOnSelect={false}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* {!selectedPostType && (
+                                <div className="btl-helper-text">
+                                    {__('Please select a post type to see available categories.', 'betterlinks')}
+                                </div>
+                            )} */}
+
+                            {postCount !== null && (
+                                <div className={`btl-post-count ${postCount === 0 ? 'btl-post-count-warning' : ''}`}>
+                                    {postCount === 0
+                                        ? __('No posts found with current filters', 'betterlinks')
+                                        : `${__('Posts found:', 'betterlinks')} ${postCount}`
+                                    }
                                 </div>
                             )}
                         </div>
 
-                        {!selectedPostType && (
-                            <div className="btl-helper-text">
-                                {__('Please select a post type to see available categories.', 'betterlinks')}
+                        {/* Step 2: Advanced Filters */}
+                        <div className="btl-form-section btl-bg-white">
+                            <div
+                                className="btl-accordion-header"
+                                onClick={() => setShowAdvanced(!showAdvanced)}
+                            >
+                                <h3>{__('Advanced Filters', 'betterlinks')}</h3>
+                                <span className={`btl-accordion-arrow ${showAdvanced ? 'open' : ''}`}>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5 7.5L10 12.5L15 7.5" stroke="#19285D" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </span>
                             </div>
-                        )}
 
-                        {postCount > 0 && (
-                            <div className="btl-post-count">
-                                <p><strong>{__('Posts found:', 'betterlinks')} {postCount}</strong></p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Step 2: Advanced Filters */}
-                    <div className="btl-form-section">
-                        <div
-                            className="btl-accordion-header"
-                            onClick={() => setShowAdvanced(!showAdvanced)}
-                        >
-                            <h3>{__('Advanced Filters', 'betterlinks')}</h3>
-                            <span className={`btl-accordion-arrow ${showAdvanced ? 'open' : ''}`}>▼</span>
-                        </div>
-
-                        {showAdvanced && (
-                            <div className="btl-accordion-content">
-                                {/* Post Filtering */}
-                                <div className="btl-subsection">
-                                    <h4>{__('Post Filtering', 'betterlinks')}</h4>
-
-                                    <div className="btl-form-row">
-                                        {tags.length > 0 && (
+                            {showAdvanced && (
+                                <div className="btl-accordion-content">
+                                    {/* Sorting */}
+                                    <div className="btl-subsection">
+                                        <div className="btl-form-row">
                                             <div className="btl-form-col">
                                                 <div className="btl-bulk-link-form-group">
-                                                    <label>{__('Tags', 'betterlinks')}</label>
+                                                    <label>{__('Sorting', 'betterlinks')}</label>
                                                     <Select
-                                                        value={selectedTags}
-                                                        onChange={setSelectedTags}
-                                                        options={tags}
-                                                        placeholder={__('Select tags...', 'betterlinks')}
-                                                        isMulti
-                                                        isClearable
-                                                        closeMenuOnSelect={false}
+                                                        value={sortingOptions.find(opt => opt.value === sorting)}
+                                                        onChange={(option) => setSorting(option.value)}
+                                                        options={sortingOptions}
+                                                        isClearable={false}
+                                                        className="btl-custom-post-select-type"
                                                     />
                                                 </div>
                                             </div>
-                                        )}
 
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
-                                                <label>{__('Post Limit', 'betterlinks')}</label>
-                                                <input
-                                                    type="number"
-                                                    value={postLimit}
-                                                    onChange={(e) => setPostLimit(e.target.value)}
-                                                    placeholder={__('Leave empty for no limit', 'betterlinks')}
-                                                    min="1"
-                                                />
-                                                <p className="btl-helper-text">{__('Maximum number of posts to process', 'betterlinks')}</p>
+                                            <div className="btl-form-col">
+                                                <div className="btl-bulk-link-form-group btl-bulk-existing-links">
+                                                    <div className=" btl-bulk-checkbox-field">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="overwrite-utm"
+                                                            checked={includeExisting}
+                                                            onChange={(e) => setIncludeExisting(e.target.checked)}
+                                                        />
+                                                        <label htmlFor="overwrite-utm">{__('Overwrite Existing UTM', 'betterlinks')}</label>
+                                                    </div>
+                                                    <p className="btl-helper-text">{__('Regenerate links for posts that already have them', 'betterlinks')}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="btl-form-row">
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
-                                                <label>{__('Sorting', 'betterlinks')}</label>
-                                                <Select
-                                                    value={sortingOptions.find(opt => opt.value === sorting)}
-                                                    onChange={(option) => setSorting(option.value)}
-                                                    options={sortingOptions}
-                                                    isClearable={false}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
-                                                <label>&nbsp;</label> {/* Spacer for alignment */}
-                                                <div className="btl-checkbox-field">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={includeExisting}
-                                                        onChange={(e) => setIncludeExisting(e.target.checked)}
-                                                    />
-                                                    <span>{__('Include posts with existing BetterLinks', 'betterlinks')}</span>
-                                                </div>
-                                                <p className="btl-helper-text">{__('Regenerate links for posts that already have them', 'betterlinks')}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Short Link Configuration */}
-                                <div className="btl-subsection">
-                                    <h4>{__('Short Link Configuration', 'betterlinks')}</h4>
-
-                                    <div className="btl-form-row">
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
-                                                <label>{__('Description Length', 'betterlinks')}</label>
-                                                <div>
-                                                    <input
-                                                        className="btl-text-field"
-                                                        type="number"
-                                                        value={descriptionLength}
-                                                        onChange={(e) => setDescriptionLength(parseInt(e.target.value))}
-                                                        min="0"
-                                                        max="500"
-                                                    />
-                                                </div>
-                                                <p className="btl-helper-text">{__('Characters to include from post excerpt/content', 'betterlinks')}</p>
-                                            </div>
-                                        </div>
+                                    {/* Short Link Configuration */}
+                                    <div className="btl-subsection">
+                                        <h4>{__('Short Link Configuration', 'betterlinks')}</h4>
 
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
@@ -468,104 +525,59 @@ const ShortLinkGenerator = () => {
                                                     onChange={(option) => setRedirectType(option.value)}
                                                     options={redirectTypeOptions}
                                                     isClearable={false}
+                                                    className="btl-custom-post-select-type"
                                                 />
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div className="btl-form-row">
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
                                                 <label>{__('Link Prefix', 'betterlinks')}</label>
-                                                <div>
-                                                    <input
-                                                        className="btl-text-field"
-                                                        type="text"
-                                                        value={linkPrefix}
-                                                        onChange={(e) => setLinkPrefix(e.target.value)}
-                                                        placeholder="go"
-                                                    />
-                                                </div>
+                                                <input
+                                                    className="btl-text-field"
+                                                    type="text"
+                                                    value={linkPrefix}
+                                                    onChange={(e) => setLinkPrefix(e.target.value)}
+                                                    placeholder="Go"
+                                                />
                                                 <p className="btl-helper-text">
-                                                    {__('The prefix will be added before your shortened URL\'s slug eg. ', 'betterlinks')}
-                                                    {site_url}
-                                                    {linkPrefix && (
-                                                        <>
-                                                            /<strong>{linkPrefix}</strong>
-                                                        </>
-                                                    )}
-                                                    {__('/your-link-name', 'betterlinks')}
+                                                    {__('The prefix will be added before your shortened URL\'s slug eg. http://localhost:10018/go/your-link-name', 'betterlinks')}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
-                                                <label>{__('Shortened URL Type', 'betterlinks')}</label>
-                                                <Select
-                                                    value={slugTypeOptions.find(opt => opt.value === slugType)}
-                                                    onChange={(option) => setSlugType(option.value)}
-                                                    options={slugTypeOptions}
-                                                    isClearable={false}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    {(slugType === 'title' || slugType === 'random') && (
                                         <div className="btl-form-row">
                                             <div className="btl-form-col">
                                                 <div className="btl-bulk-link-form-group">
-                                                    <label>{__('Short URL Length', 'betterlinks')}</label>
-                                                    <input
-                                                        type="number"
-                                                        value={slugLength}
-                                                        onChange={(e) => setSlugLength(parseInt(e.target.value))}
-                                                        min="3"
-                                                        max="50"
+                                                    <label>{__('Shortened URL Type', 'betterlinks')}</label>
+                                                    <Select
+                                                        value={slugTypeOptions.find(opt => opt.value === slugType)}
+                                                        onChange={(option) => setSlugType(option.value)}
+                                                        options={slugTypeOptions}
+                                                        isClearable={false}
+                                                        className="btl-custom-post-select-type"
                                                     />
-                                                    <p className="btl-helper-text">
-                                                        {slugType === 'title'
-                                                            ? __('Maximum number of words from title', 'betterlinks')
-                                                            : __('Number of characters for random slug', 'betterlinks')
-                                                        }
-                                                    </p>
                                                 </div>
                                             </div>
-
                                             <div className="btl-form-col">
                                                 <div className="btl-bulk-link-form-group">
-                                                    <label>{__('Collision Handling', 'betterlinks')}</label>
+                                                    <label>{__('BetterLink Category', 'betterlinks')}</label>
                                                     <Select
-                                                        value={collisionHandlingOptions.find(opt => opt.value === collisionHandling)}
-                                                        onChange={(option) => setCollisionHandling(option.value)}
-                                                        options={collisionHandlingOptions}
-                                                        isClearable={false}
+                                                        value={selectedBetterlinkCategory}
+                                                        onChange={setSelectedBetterlinkCategory}
+                                                        options={betterlinkCategories}
+                                                        placeholder={__('Select BetterLink category...', 'betterlinks')}
+                                                        isClearable={true}
+                                                        isLoading={betterlinkCategories.length === 0}
+                                                        isSearchable={true}
+                                                        className="btl-custom-post-select-type"
+                                                        noOptionsMessage={({ inputValue }) =>
+                                                            inputValue ? __('No categories found', 'betterlinks') : __('No categories available', 'betterlinks')
+                                                        }
                                                     />
-                                                    <p className="btl-helper-text">{__('What to do when URL already exists', 'betterlinks')}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                    )}
 
-                                    <div className="btl-form-row">
-                                        <div className="btl-form-col">
-                                            <div className="btl-bulk-link-form-group">
-                                                <label>{__('BetterLink Category', 'betterlinks')}</label>
-                                                <Select
-                                                    value={selectedBetterlinkCategory}
-                                                    onChange={setSelectedBetterlinkCategory}
-                                                    options={betterlinkCategories}
-                                                    placeholder={__('Select BetterLink category...', 'betterlinks')}
-                                                    isClearable={true}
-                                                    isLoading={betterlinkCategories.length === 0}
-                                                    isSearchable={true}
-                                                    noOptionsMessage={({ inputValue }) =>
-                                                        inputValue ? __('No categories found', 'betterlinks') : __('No categories available', 'betterlinks')
-                                                    }
-                                                />
-                                                <p className="btl-helper-text">{__('Choose a BetterLink category for generated links', 'betterlinks')}</p>
-                                            </div>
-                                        </div>
                                         <div className="btl-form-col">
                                             <div className="btl-bulk-link-form-group">
                                                 <label>{__('BetterLink Tags', 'betterlinks')}</label>
@@ -573,48 +585,143 @@ const ShortLinkGenerator = () => {
                                                     value={selectedBetterlinkTags}
                                                     onChange={setSelectedBetterlinkTags}
                                                     options={betterlinkTags}
-                                                    placeholder={__('Select BetterLink tags...', 'betterlinks')}
+                                                    placeholder={__('Select BetterLink tags.....', 'betterlinks')}
                                                     isClearable={true}
                                                     isLoading={betterlinkTags.length === 0}
                                                     isSearchable={true}
                                                     isMulti={true}
                                                     closeMenuOnSelect={false}
+                                                    className="btl-custom-post-select-type"
                                                     noOptionsMessage={({ inputValue }) =>
                                                         inputValue ? __('No tags found', 'betterlinks') : __('No tags available', 'betterlinks')
                                                     }
                                                 />
-                                                <p className="btl-helper-text">{__('Choose BetterLink tags for generated links', 'betterlinks')}</p>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+
+                        {/* Confirmation Modal */}
+                        {showConfirmation && (
+                            <div className="btl-modal-overlay btl-fade-in">
+                                <div className="btl-modal btl-modal-professional btl-slide-in">
+                                    <div className="btl-modal-header">
+                                        <div className="btl-modal-icon">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="btl-modal-title">{__('Confirm Bulk Generation', 'betterlinks')}</h3>
+                                        <p className="btl-modal-subtitle">{__('Please review your settings before proceeding', 'betterlinks')}</p>
+                                    </div>
+
+                                    <div className="btl-modal-body">
+                                        <div className="btl-summary-grid">
+                                            <div className="btl-summary-section">
+                                                <h4 className="btl-summary-section-title">{__('Content Selection', 'betterlinks')}</h4>
+                                                <div className="btl-summary-items">
+                                                    <div className="btl-summary-item">
+                                                        <span className="btl-summary-label">{__('Post Type:', 'betterlinks')}</span>
+                                                        <span className="btl-summary-value btl-tag btl-tag-blue">{selectedPostType.label}</span>
+                                                    </div>
+                                                    <div className="btl-summary-item">
+                                                        <span className="btl-summary-label">{__('Categories:', 'betterlinks')}</span>
+                                                        <div className="btl-summary-tags">
+                                                            {selectedCategories.map((cat, index) => (
+                                                                <span key={index} className="btl-tag btl-tag-purple">{cat.label}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    {selectedTags.length > 0 && (
+                                                        <div className="btl-summary-item">
+                                                            <span className="btl-summary-label">{__('Tags:', 'betterlinks')}</span>
+                                                            <div className="btl-summary-tags">
+                                                                {selectedTags.map((tag, index) => (
+                                                                    <span key={index} className="btl-tag btl-tag-gray">{tag.label}</span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="btl-summary-section">
+                                                <h4 className="btl-summary-section-title">{__('Link Configuration', 'betterlinks')}</h4>
+                                                <div className="btl-summary-items">
+                                                    <div className="btl-summary-item">
+                                                        <span className="btl-summary-label">{__('Redirect Type:', 'betterlinks')}</span>
+                                                        <span className="btl-summary-value btl-tag btl-tag-green">{redirectType}</span>
+                                                    </div>
+                                                    <div className="btl-summary-item">
+                                                        <span className="btl-summary-label">{__('Link Prefix:', 'betterlinks')}</span>
+                                                        <span className="btl-summary-value btl-tag btl-tag-orange">{linkPrefix}</span>
+                                                    </div>
+                                                    {selectedBetterlinkCategory && (
+                                                        <div className="btl-summary-item">
+                                                            <span className="btl-summary-label">{__('BetterLink Category:', 'betterlinks')}</span>
+                                                            <span className="btl-summary-value btl-tag btl-tag-teal">{selectedBetterlinkCategory.label}</span>
+                                                        </div>
+                                                    )}
+                                                    {selectedBetterlinkTags.length > 0 && (
+                                                        <div className="btl-summary-item">
+                                                            <span className="btl-summary-label">{__('BetterLink Tags:', 'betterlinks')}</span>
+                                                            <div className="btl-summary-tags">
+                                                                {selectedBetterlinkTags.map((tag, index) => (
+                                                                    <span key={index} className="btl-tag btl-tag-indigo">{tag.label}</span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="btl-generation-summary">
+                                            <div className="btl-generation-count">
+                                                <div className="btl-count-number">{postCount}</div>
+                                                <div className="btl-count-label">{__('Posts to Process', 'betterlinks')}</div>
+                                            </div>
+                                            <div className="btl-generation-estimate">
+                                                <p className="btl-estimate-text">
+                                                    {__('Estimated time:', 'betterlinks')} {Math.ceil(postCount / 10)} {__('minutes', 'betterlinks')}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="btl-modal-footer">
+                                        <button
+                                            className="btl-btn btl-btn-secondary btl-btn-large"
+                                            onClick={() => setShowConfirmation(false)}
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                            {__('Cancel', 'betterlinks')}
+                                        </button>
+                                        <button
+                                            className="btl-btn btl-btn-primary btl-btn-large btl-btn-generate"
+                                            onClick={confirmGeneration}
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13 10V3L4 14H11L11 21L20 10H13Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                            {__('Start Generation', 'betterlinks')}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         )}
                     </div>
-
                     {/* Action Buttons */}
                     <div className="btl-form-actions">
-                        {/* <div className="btl-actions-group"> */}
-                        {/* <button
-                                type="button"
-                                className="btl-btn btl-btn-secondary"
-                                onClick={handleCountPosts}
-                                disabled={isLoading || !selectedPostType || generationInProgress}
-                            >
-                                {countLoading ? (
-                                    <>
-                                        <span className="btl-spinner"></span>
-                                        {__('Counting...', 'betterlinks')}
-                                    </>
-                                ) : (
-                                    __('Count Posts', 'betterlinks')
-                                )}
-                            </button> */}
-
                         <button
                             className="btl-btn btl-btn-primary"
                             onClick={handleGenerate}
-                            disabled={!selectedPostType || isLoading || generationInProgress || (postCount === 0 && postCount !== null)}
+                            disabled={!selectedPostType || isLoading || generationInProgress || postCount === 0}
                         >
                             {isLoading || generationInProgress ? (
                                 <>
@@ -630,76 +737,157 @@ const ShortLinkGenerator = () => {
                                 </>
                             )}
                         </button>
-                        {/* </div> */}
-
-                        {/* {postCount !== null && (
-                            <div className="btl-post-count">
-                                <span className="btl-count-label">{__('Posts found:', 'betterlinks')}</span>
-                                <span className="btl-count-value">{postCount}</span>
-                            </div>
-                        )} */}
                     </div>
-
-                    {/* Confirmation Modal */}
-                    {showConfirmation && (
-                        <div className="btl-modal-overlay">
-                            <div className="btl-modal">
-                                <h3>{__('Confirm Bulk Generation', 'betterlinks')}</h3>
-                                <div className="btl-summary">
-                                    <p><strong>{__('Post Type:', 'betterlinks')}</strong> {selectedPostType.label}</p>
-                                    <p><strong>{__('Categories:', 'betterlinks')}</strong> {selectedCategories.map(cat => cat.label).join(', ')}</p>
-                                    {selectedTags.length > 0 && (
-                                        <p><strong>{__('Tags:', 'betterlinks')}</strong> {selectedTags.map(tag => tag.label).join(', ')}</p>
-                                    )}
-                                    <p><strong>{__('Redirect Type:', 'betterlinks')}</strong> {redirectType}</p>
-                                    <p><strong>{__('Link Prefix:', 'betterlinks')}</strong> {linkPrefix}</p>
-                                    {selectedBetterlinkCategory && (
-                                        <p><strong>{__('BetterLink Category:', 'betterlinks')}</strong> {selectedBetterlinkCategory.label}</p>
-                                    )}
-                                    {selectedBetterlinkTags.length > 0 && (
-                                        <p><strong>{__('BetterLink Tags:', 'betterlinks')}</strong> {selectedBetterlinkTags.map(tag => tag.label).join(', ')}</p>
-                                    )}
-                                    <p className="btl-count">
-                                        <strong>{__('Generate short links for', 'betterlinks')} {postCount} {__('posts', 'betterlinks')}</strong>
-                                    </p>
-                                </div>
-                                <div className="btl-modal-actions">
-                                    <button
-                                        className="btl-btn btl-btn-secondary"
-                                        onClick={() => setShowConfirmation(false)}
-                                    >
-                                        {__('Cancel', 'betterlinks')}
-                                    </button>
-                                    <button
-                                        className="btl-btn btl-btn-primary"
-                                        onClick={confirmGeneration}
-                                    >
-                                        {__('Confirm & Start', 'betterlinks')}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                </>
             ) : (
                 /* Progress Display */
-                <div className="btl-progress-container">
-                    <h3>{__('Generation in Progress', 'betterlinks')}</h3>
+                <div className="btl-progress-container btl-fade-in">
+                    <div className="btl-progress-header">
+                        <div className="btl-progress-icon btl-spinning">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2V6M12 18V22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <div className="btl-progress-text">
+                            <h3 className="btl-progress-title">{__('Generation in Progress', 'betterlinks')}</h3>
+                            <p className="btl-progress-subtitle">{__('Please wait while we create your short links', 'betterlinks')}</p>
+                        </div>
+                    </div>
+
                     {generationStatus && (
-                        <div className="btl-progress">
-                            <div className="btl-progress-bar">
-                                <div
-                                    className="btl-progress-fill"
-                                    style={{ width: `${generationStatus.progress_percent || 0}%` }}
-                                ></div>
+                        <div className="btl-progress-content">
+                            {/* Main Progress Bar */}
+                            <div className="btl-progress-main">
+                                <div className="btl-progress-bar-container">
+                                    <div className="btl-progress-bar">
+                                        <div
+                                            className="btl-progress-fill"
+                                            style={{
+                                                width: `${generationStatus.progress_percent || 0}%`,
+                                                transition: 'width 0.5s ease-in-out'
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <div className="btl-progress-percentage">
+                                        {generationStatus.progress_percent || 0}%
+                                    </div>
+                                </div>
                             </div>
-                            <div className="btl-progress-info">
-                                <p>{__('Progress:', 'betterlinks')} {generationStatus.progress_percent || 0}%</p>
-                                <p>{__('Processed:', 'betterlinks')} {generationStatus.processed || 0} / {generationStatus.total || 0}</p>
-                                <p>{__('Successful:', 'betterlinks')} {generationStatus.successful || 0}</p>
-                                <p>{__('Failed:', 'betterlinks')} {generationStatus.failed || 0}</p>
-                                {generationStatus.message && <p>{generationStatus.message}</p>}
+
+                            {/* Progress Stats */}
+                            <div className="btl-progress-stats">
+                                <div className="btl-stat-card btl-stat-processed">
+                                    <div className="btl-stat-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <div className="btl-stat-content">
+                                        <div className="btl-stat-number">{generationStatus.processed || 0}</div>
+                                        <div className="btl-stat-label">{__('Processed', 'betterlinks')}</div>
+                                    </div>
+                                </div>
+
+                                <div className="btl-stat-card btl-stat-total">
+                                    <div className="btl-stat-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <div className="btl-stat-content">
+                                        <div className="btl-stat-number">{generationStatus.total || 0}</div>
+                                        <div className="btl-stat-label">{__('Total Posts', 'betterlinks')}</div>
+                                    </div>
+                                </div>
+
+                                <div className="btl-stat-card btl-stat-successful">
+                                    <div className="btl-stat-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <div className="btl-stat-content">
+                                        <div className="btl-stat-number">{generationStatus.successful || 0}</div>
+                                        <div className="btl-stat-label">{__('Successful', 'betterlinks')}</div>
+                                    </div>
+                                </div>
+
+                                {(generationStatus.failed || 0) > 0 && (
+                                    <div className="btl-stat-card btl-stat-failed">
+                                        <div className="btl-stat-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18 6L6 18M6 6L18 18" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                        <div className="btl-stat-content">
+                                            <div className="btl-stat-number">{generationStatus.failed || 0}</div>
+                                            <div className="btl-stat-label">{__('Failed', 'betterlinks')}</div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
+
+                            {/* Status Message */}
+                            {generationStatus.message && (
+                                <div className="btl-progress-message">
+                                    <div className="btl-message-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <span className="btl-message-text">{generationStatus.message}</span>
+                                </div>
+                            )}
+
+                            {/* Estimated Time Remaining */}
+                            {generationStatus.progress_percent > 0 && generationStatus.progress_percent < 100 && (
+                                <div className="btl-progress-eta">
+                                    <span className="btl-eta-label">{__('Estimated time remaining:', 'betterlinks')}</span>
+                                    <span className="btl-eta-value">
+                                        {(() => {
+                                            const remainingPercent = 100 - generationStatus.progress_percent;
+                                            const estimatedMinutes = Math.ceil((remainingPercent / 100) * Math.ceil((generationStatus.total || 1) / 10));
+                                            return estimatedMinutes > 0 ? `${estimatedMinutes} ${__('minutes', 'betterlinks')}` : __('Almost done', 'betterlinks');
+                                        })()}
+                                    </span>
+                                </div>
+                            )}
+
+                            {/* Completion Status */}
+                            {(generationStatus.status === 'completed' || generationStatus.status === 'cancelled' || showCompletionMessage) && (
+                                <div className={`btl-completion-notice ${generationStatus.status === 'completed' ? 'btl-success' : 'btl-warning'} btl-fade-in`}>
+                                    <div className="btl-completion-icon">
+                                        {generationStatus.status === 'completed' ? (
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        ) : (
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 9V13M12 17H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <div className="btl-completion-content">
+                                        <h4 className="btl-completion-title">
+                                            {generationStatus.status === 'completed'
+                                                ? __('Generation Completed!', 'betterlinks')
+                                                : __('Generation Cancelled', 'betterlinks')
+                                            }
+                                        </h4>
+                                        <p className="btl-completion-message">
+                                            {generationStatus.status === 'completed'
+                                                ? `${__('Successfully generated', 'betterlinks')} ${generationStatus.successful || 0} ${__('short links', 'betterlinks')}${generationStatus.failed > 0 ? ` (${generationStatus.failed} ${__('failed', 'betterlinks')})` : ''}.`
+                                                : __('The generation process was cancelled.', 'betterlinks')
+                                            }
+                                        </p>
+                                        {showCompletionMessage && (
+                                            <p className="btl-completion-note">
+                                                {__('Form will reset automatically in a few seconds...', 'betterlinks')}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
