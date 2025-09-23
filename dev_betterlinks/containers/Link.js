@@ -282,6 +282,12 @@ export const Link = (props) => {
 	const fetchTargetURL = useCallback(
 		_.debounce(async (target_url, setFieldValue, willUpdate, previousTitle) => {
 			try {
+				// Check if auto title suggestion is enabled
+				const isAutoTitleEnabled = settings?.settings?.enable_auto_title_suggestion !== false;
+				if (!isAutoTitleEnabled) {
+					return;
+				}
+
 				const res = await makeRequest({
 					action: 'betterlinks__fetch_target_url',
 					target_url,
