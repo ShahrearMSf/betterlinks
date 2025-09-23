@@ -350,6 +350,28 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 							</span>
 
 							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Auto Title Suggestion', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="enable_auto_title_suggestion"
+											type="checkbox"
+											checked={props.values.enable_auto_title_suggestion !== false}
+											onChange={() => props.setFieldValue('enable_auto_title_suggestion', !props.values.enable_auto_title_suggestion)}
+										/>
+										<span className="text">
+											{__('Enable Auto Title Suggestion', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('When enabled, the link title will automatically be fetched from the target URL when you enter a URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group">
 								<label className="btl-form-label">{__('Wildcards', 'betterlinks')}</label>
 								<div className="link-options__body">
 									<label className="btl-checkbox-field block">
