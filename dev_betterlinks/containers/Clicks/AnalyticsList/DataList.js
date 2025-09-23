@@ -11,7 +11,7 @@ import { fetch_clicks_data, searchClicksData } from 'redux/actions/clicks.action
 import { getData } from '../clicks.helper';
 
 const DataList = (props) => {
-	const { columns, data, progressPending, id = null, from = null } = props;
+	const { columns, data, progressPending, id = null, from = null, customDateFilter } = props;
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [searchStatus, setSearchStatus] = useState(false);
 	const [isSearching, setSearching] = useState(false);
@@ -43,8 +43,12 @@ const DataList = (props) => {
 		const resetSearch = () => {
 			setSearching(false);
 			setFilterText('');
-			const filterDate = { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') };
-			props.fetch_clicks_data(filterDate);
+			if (customDateFilter && customDateFilter[0]) {
+				const filterDate = { from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'), to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') };
+				props.fetch_clicks_data(filterDate);
+			} else {
+				props.fetch_clicks_data({});
+			}
 		};
 
 		return (

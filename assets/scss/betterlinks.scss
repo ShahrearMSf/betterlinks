@@ -494,8 +494,7 @@ label.extra_info_keywords>input#keywords {
 	}
 
 	button.btl-reset-analytics-initial-button {
-		margin-right: 20px !important;
-		padding: 5px 30px !important;
+		padding: 12px 20px !important;
 	}
 }
 
@@ -601,8 +600,8 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 	}
 
 	.ReactModal__Content {
-		width: 500px;
-		height: 250px;
+		width: 870px;
+		height: 300px;
 		margin: auto;
 		overflow: visible !important;
 		padding: 60px !important;
@@ -795,6 +794,7 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 
 // // Search Icon Css Loader
 .betterlinks-body {
+
 	h1 {
 		font-family: 'Dosis', sans-serif;
 		padding-bottom: 10px;
@@ -1117,5 +1117,194 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	&:hover {
 		background-image: linear-gradient(202deg, #2961ff 0%, #003be2 100%);
 	}
+}
 
+.betterlinks-body {
+	.button-danger {
+		background: #ffffff !important;
+		color: #F97066 !important;
+		border: 1px solid !important;
+		border-color: #F97066 !important;
+		padding: 5px 16px !important;
+		border-radius: 4px !important;
+		font-size: 14px !important;
+
+		img {
+			margin-right: 6px;
+		}
+	}
+
+	.btl-confirmation-text {
+		display: block;
+		font-weight: 400;
+		font-size: 13px;
+		line-height: 140%;
+		letter-spacing: 0px;
+		text-align: center;
+		color: #9DA3B3;
+
+	}
+
+	input.btl-modal-form-control.btl-confirmation-input,
+	input.btl-modal-form-control.btl-confirmation-input:focus {
+		background-color: #DDDDDD;
+	}
+
+	.btl-refresh-btn {
+		padding: 4px 2px !important;
+		margin-right: 16px !important;
+	}
+
+	.btl-btn-groups {
+		display: flex;
+		gap: 16px;
+		align-items: center;
+
+		.btl-refresh-btn {
+			background-image: linear-gradient(to bottom, #2961FF, #003BE2) !important;
+			display: flex;
+			align-items: center;
+			padding-left: 13px !important;
+			border-radius: 4px;
+		}
+	}
+
+	.button-secondary-gray {
+		background: #fff !important;
+		padding: 12px 20px !important;
+		color: #114BEE;
+		border: 1px solid #114BEE !important;
+		font-size: 15px;
+		border-radius: 4px;
+	}
+}
+
+.btl-reset-modal-popup.btl-reset-modal-popup-step-1.betterlinks-body {
+	background-color: #ffffff;
+	border-radius: 8px;
+
+	.btl-compact-date-picker {
+		position: relative;
+
+		.btl-date-picker-title {
+			font-weight: 600;
+			font-size: 24px;
+			line-height: 130%;
+			letter-spacing: 0px;
+			color: #252525;
+			padding: 24px 27.5px;
+			border-bottom: 1px solid #EBEBEB;
+		}
+
+		.btl-date-picker-actions {
+			display: flex;
+			justify-content: flex-end;
+			gap: 16px;
+			height: 42px;
+			padding-right: 16px;
+			padding-bottom: 17px;
+			padding-top: 15px;
+			align-items: center;
+			border-top: 1px solid #EBEBEB;
+
+			button.button-primary.btl-apply-date-range {
+				background: #ffffff;
+				color: #F97066;
+				border: 1px solid;
+				border-color: #F97066;
+				padding: 5px 16px;
+				border-radius: 4px;
+				font-size: 14px;
+
+				img {
+					margin-right: 6px;
+				}
+			}
+
+			button.button-primary.btl-cancel-date-range {
+				border: 1px solid;
+				padding: 5px 16px;
+				border-radius: 4px;
+				font-size: 14px;
+			}
+		}
+
+		.btn-date-range-close {
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 999;
+			border: 0;
+			background: 0 0;
+			outline: 0;
+			color: #b0b2ba;
+			padding: 24px 19px;
+			cursor: pointer;
+		}
+	}
+
+}
+
+.btl-reset-modal-popup-wrapper {
+	.btl-reset-finish-modal {
+		text-align: center;
+	}
+
+	.btl-reset-finish-modal-title {
+		display: block;
+		font-weight: 600;
+		font-size: 24px;
+		line-height: 130%;
+		letter-spacing: 0px;
+		color: #252525;
+		margin-top: 42px;
+		margin-bottom: 24px;
+	}
+
+	.btl-reset-finish-modal-description {
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 140%;
+		letter-spacing: 0px;
+		color: #666B78;
+	}
+
+	.btl-cancel-finish-date-range {
+		border-radius: 4px;
+		padding: 6px 22px;
+		display: block;
+		margin: 42px auto;
+		background-image: linear-gradient(to bottom, #2961FF, #003BE2) !important;
+
+	}
+
+	.btl-reset-not-found-wrapper {
+		text-align: center;
+	}
+
+	.btl-reset-not-found-modal-title {
+		font-weight: 600;
+		font-size: 24px;
+		line-height: 140%;
+		letter-spacing: 0px;
+		text-align: center;
+		padding: 24px 167px;
+		color: #252525;
+	}
+}
+
+.rdrStaticRanges {
+	padding-left: 44px !important;
+}
+
+button.rdrStaticRange {
+	border-bottom: unset !important;
+}
+
+.rdrStaticRangeLabel {
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 20px;
+	letter-spacing: -0.18px;
+	color: #252525;
 }
