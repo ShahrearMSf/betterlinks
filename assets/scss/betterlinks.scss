@@ -1307,4 +1307,11 @@ button.rdrStaticRange {
 	line-height: 20px;
 	letter-spacing: -0.18px;
 	color: #252525;
+
+	.betterlinks_page_betterlinks-settings {
+		.btl-utm-template-modal-override {
+			position: absolute;
+			padding: 0 !important;
+		}
+	}
 }

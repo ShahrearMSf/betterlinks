@@ -1,0 +1,1451 @@
+// ============================================================================
+// UTM Builder Global Settings - Consolidated Styles
+// ============================================================================
+
+// Common Variables & Mixins
+// ============================================================================
+$primary-color: #114BEE;
+$primary-hover: #2563eb;
+$primary-blue: #003BE2;
+$secondary-color: #6b7280;
+$success-color: #10b981;
+$danger-color: #dc3545;
+$danger-hover: #c82333;
+
+$border-color: #d1d5db;
+$border-color-hover: #9ca3af;
+$background-light: #f9fafb;
+$background-gray: #f1f3f4;
+
+$text-primary: #1a1a1a;
+$text-secondary: #374151;
+$text-muted: #6b7280;
+$text-placeholder: #9ca3af;
+
+$border-radius: 8px;
+$border-radius-large: 12px;
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 20px;
+$spacing-xl: 24px;
+$spacing-xxl: 32px;
+
+// Dark mode colors
+$dark-bg: #1f2937;
+$dark-bg-secondary: #374151;
+$dark-bg-tertiary: #4b5563;
+$dark-text: #f9fafb;
+$dark-text-secondary: #9ca3af;
+$dark-border: #4b5563;
+
+// Common mixins
+@mixin button-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+@mixin focus-ring($color: $primary-color) {
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($color, 0.1);
+    }
+}
+
+@mixin transition-base {
+    transition: all 0.2s ease;
+}
+
+// ============================================================================
+// UTM Global Settings Component
+// ============================================================================
+.btl-utm-global-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.btl-utm-field-group.btl-utm-category-select {
+    margin: 18px 0px;
+}
+
+body.betterlinks-dark-mode .ReactModal__Content {
+    .btl-utm-template-fields {
+        margin-top: 18px;
+    }
+}
+
+
+.btl-utm-global-settings {
+    .btl-utm-templates-section {
+        margin-bottom: 30px;
+
+        h3 {
+            margin-bottom: $spacing-lg;
+            color: $text-primary;
+            font-size: 18px;
+        }
+
+        h4 {
+            margin-bottom: 15px;
+            color: $text-primary;
+            font-size: 16px;
+        }
+    }
+
+    .btl-utm-templates-wrapper {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #DEE1E9;
+        padding-bottom: $spacing-sm;
+    }
+
+    .btl-utm-templates-crt-btn {
+        opacity: 1;
+        gap: $spacing-xs;
+        border-radius: $border-radius;
+        padding: 10px $spacing-md;
+        background-color: $primary-color;
+        color: #ffffff;
+        border: 1px solid $primary-color;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    .btl-utm-template-form {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: $border-radius;
+        padding: $spacing-lg;
+        margin-bottom: $spacing-lg;
+
+        h4 {
+            margin-top: 0;
+            margin-bottom: $spacing-lg;
+            color: $text-primary;
+        }
+    }
+
+
+
+    .btl-utm-template-fields {
+        .btl-utm-field-group {
+            margin-bottom: $spacing-lg;
+        }
+    }
+
+    .btl-utm-template-actions {
+        display: flex;
+        gap: 10px;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
+
+        .button-danger {
+            background-color: $danger-color;
+            border-color: $danger-color;
+            color: white;
+
+            &:hover {
+                background-color: $danger-hover;
+                border-color: #bd2130;
+            }
+        }
+    }
+
+    .btl-utm-templates-list-display {
+        margin-top: 30px;
+
+        h4 {
+            margin-bottom: 15px;
+        }
+    }
+
+    .btl-utm-templates-list {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-xs;
+    }
+
+    .btl-utm-template-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px $spacing-md;
+        background: $background-light;
+        border: 1px solid #ECF0FB;
+        border-radius: $border-radius;
+
+
+        &:hover {
+            background: $background-gray;
+        }
+    }
+
+    .btl-utm-template-content {
+        display: flex;
+        align-items: center;
+        gap: $spacing-lg;
+        flex: 1;
+
+        .btl-utm-template-name {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: $text-primary;
+            min-width: 120px;
+        }
+
+        .btl-utm-template-categories {
+            font-size: 14px;
+            color: #666;
+        }
+    }
+
+    .btl-utm-template-actions {
+        display: flex;
+        gap: $spacing-xs;
+        align-items: center;
+
+        .btl-utm-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+
+
+            &:hover {
+                background: #e1e4e8;
+                color: $text-primary;
+            }
+
+            &.btl-utm-btn-ac:hover {
+                color: #0073aa;
+            }
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+
+    .btl-utm-global-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $spacing-lg;
+        margin-bottom: 15px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+// ============================================================================
+// Common Form Elements
+// ============================================================================
+.btl-utm-field-group {
+    display: flex;
+    flex-direction: column;
+
+    label,
+    .btl-field-label {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        margin-bottom: $spacing-xs;
+        color: $text-secondary;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .btl-form-control,
+    .btl-form-input {
+        width: 100%;
+        padding: 7px $spacing-sm;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        font-size: 14px;
+        background: #ffffff;
+        color: $text-secondary;
+
+        @include focus-ring;
+
+        &:focus {
+            border-color: $primary-blue;
+        }
+
+        &::placeholder {
+            color: $text-placeholder;
+            font-style: italic;
+        }
+    }
+
+    .btl-form-input {
+        min-height: 44px;
+    }
+}
+
+// ============================================================================
+// React Select Shared Styles
+// ============================================================================
+.btl-react-select-container {
+    .btl-react-select__control {
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        min-height: 44px;
+        box-shadow: none;
+        background: #ffffff;
+
+
+        &:hover {
+            border-color: $border-color-hover;
+        }
+
+        &--is-focused {
+            border-color: $primary-blue;
+            box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+        }
+    }
+
+    .btl-react-select__value-container {
+        padding: 2px $spacing-md;
+    }
+
+    .btl-react-select__placeholder {
+        color: $text-placeholder;
+        font-size: 14px;
+        font-style: italic;
+    }
+
+    .btl-react-select__single-value {
+        color: $text-secondary;
+    }
+
+    .btl-react-select__input {
+        color: $text-secondary;
+    }
+
+    .btl-react-select__multi-value {
+        background-color: $primary-blue;
+        border-radius: 6px;
+        margin: 2px;
+
+        .btl-react-select__multi-value__label {
+            color: white;
+            padding: 4px 0px 4px 6px;
+            font-size: 13px;
+        }
+
+        .btl-react-select__multi-value__remove {
+            color: white;
+            border-radius: 0 6px 6px 0;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+        }
+    }
+
+    .btl-react-select__menu {
+        border-radius: $border-radius;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border: 1px solid $border-color;
+        margin-top: 4px;
+    }
+
+    .btl-react-select__option {
+        padding: $spacing-sm $spacing-md;
+        font-size: 14px;
+
+        &--is-focused {
+            background-color: #f3f4f6;
+        }
+
+        &--is-selected {
+            background-color: $primary-blue;
+        }
+    }
+
+    .btl-react-select__dropdown-indicator,
+    .btl-react-select__clear-indicator {
+        color: $text-placeholder;
+        padding: $spacing-xs;
+
+        &:hover {
+            color: $text-muted;
+        }
+    }
+}
+
+// ============================================================================
+// UTM Template Modal
+// ============================================================================
+.btl-utm-template-modal {
+    background: #ffffff;
+    border-radius: $border-radius-large;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px $spacing-sm $spacing-xl $spacing-xl;
+        border-bottom: 1px solid $background-gray;
+        background: $background-light;
+        position: relative;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: $text-primary;
+        line-height: 1.4;
+    }
+
+    &__body {
+        flex: 1;
+        padding: 0px $spacing-xl;
+        overflow-y: auto;
+        background: $background-light;
+    }
+
+    &__footer {
+        padding: $spacing-xl;
+        background: $background-light;
+    }
+
+    &__actions {
+        display: flex;
+        gap: $spacing-sm;
+        justify-content: flex-start;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+        }
+    }
+}
+
+// ============================================================================
+// Unified Modal
+// ============================================================================
+.btl-unified-modal {
+    background: #ffffff;
+    border-radius: $border-radius-large;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+
+    &__header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: $spacing-md $spacing-md 0 $spacing-md;
+        position: relative;
+    }
+
+    &__body {
+        padding: 0 $spacing-xxl $spacing-xxl $spacing-xxl;
+    }
+
+    &__content {
+        text-align: center;
+
+        &--success {
+            text-align: center;
+        }
+    }
+
+    &__title {
+        margin: 0 0 36px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: $text-primary;
+        line-height: 1.4;
+    }
+
+    &__message {
+        margin-bottom: $spacing-xxl;
+    }
+
+    &__main-message {
+        margin: 0 0 $spacing-sm 0;
+        font-size: 16px;
+        color: $text-secondary;
+        line-height: 1.5;
+    }
+
+    &__sub-message {
+        margin: 0;
+        font-size: 14px;
+        color: $text-muted;
+        line-height: 1.5;
+        margin: 24px 60px 44px 60px;
+    }
+
+    &__success-text {
+        margin: 0;
+        font-size: 15px;
+        color: $text-secondary;
+        line-height: 1.5;
+        white-space: pre-line;
+    }
+
+    &__success-icon {
+        margin: 0 auto 42px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            width: 48px;
+            height: 48px;
+            filter: drop-shadow(0 2px 8px rgba($success-color, 0.2));
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: $spacing-sm;
+        justify-content: center;
+
+        @media (max-width: 480px) {
+            flex-direction: column;
+        }
+    }
+}
+
+// ============================================================================
+// UTM Statistics Component
+// ============================================================================
+.btl-utm-statistics {
+    background: #F3F6FF;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 75px;
+    border: 1px solid #D6E1FF;
+
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+
+        &--total {
+            padding-top: 16px;
+        }
+    }
+
+    &__label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #666B78;
+
+        &--total {
+            font-size: 18px;
+            font-weight: 500;
+            color: #374151;
+        }
+    }
+
+    &__value {
+        font-size: 16px;
+        font-weight: 500;
+
+        &--blue {
+            color: #2961FF;
+        }
+
+        &--total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #114BEE;
+        }
+    }
+
+    &__separator {
+        height: 1px;
+        background: #D6E1FF;
+        margin: 8px 0;
+    }
+}
+
+// ============================================================================
+// Modal Close Buttons
+// ============================================================================
+.btl-utm-close-modal,
+.btl-unified-close-modal {
+    @include button-reset;
+    padding: $spacing-xs;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-placeholder;
+
+    &:hover {
+        background: #f3f4f6;
+        color: $text-secondary;
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+// ============================================================================
+// Checkbox Components
+// ============================================================================
+.btl-utm-checkboxes {
+    margin-top: $spacing-xxl;
+}
+
+.btl-checkbox-group {
+    margin-bottom: $spacing-md;
+    position: relative;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.btl-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.btl-checkbox-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btl-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid $border-color;
+    border-radius: 4px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+
+    &::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e") no-repeat center center;
+        background-size: contain;
+        opacity: 0;
+    }
+}
+
+.btl-checkbox-input:checked+.btl-checkbox-custom {
+    background: $primary-blue;
+    border-color: $primary-blue;
+
+    &::after {
+        opacity: 1;
+    }
+}
+
+.btl-checkbox-input:focus+.btl-checkbox-custom {
+    box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+}
+
+.btl-checkbox-text {
+    color: $text-secondary;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+}
+
+// ============================================================================
+// Action Buttons
+// ============================================================================
+.btl-add-field-section {
+    margin-top: $spacing-xxl;
+    padding-top: $spacing-xl;
+    border-top: 1px solid $background-gray;
+}
+
+.btl-add-field-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: none;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    padding: $spacing-sm $spacing-md;
+    color: $text-muted;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+
+    &:hover {
+        border-color: $border-color-hover;
+        color: $text-secondary;
+        background: $background-light;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+// ============================================================================
+// Button System
+// ============================================================================
+.btl-utm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-sm $spacing-xl;
+    border-radius: $border-radius;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    min-height: 44px;
+    min-width: 120px;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &-primary {
+        background: linear-gradient(180deg, #2961FF 0%, #003BE2 100%);
+        color: #ffffff;
+
+        &:hover:not(:disabled) {
+            background: $primary-hover;
+        }
+
+        @include focus-ring($primary-blue);
+    }
+
+    &-secondary {
+        background: #ffffff;
+        color: #114BEE;
+        border: 1px solid #0B45EA;
+
+        &:hover:not(:disabled) {
+            background: $background-light;
+            color: #114BEE;
+        }
+
+        @include focus-ring($text-muted);
+    }
+}
+
+// ============================================================================
+// Utility Components
+// ============================================================================
+.btl-utm-links-count {
+    margin-top: $spacing-xs;
+
+    .btl-links-count-text {
+        font-size: 12px;
+        color: #788597;
+        font-weight: 500;
+
+        strong {
+            font-weight: 600;
+            color: $primary-color;
+        }
+    }
+}
+
+.btl-info-icon {
+    color: $text-placeholder;
+    cursor: help;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        color: $text-muted;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.btl-highlight-number {
+    color: $primary-blue;
+    font-weight: 600;
+    background: #EDF2FF;
+    width: 70%;
+    padding: $spacing-xs;
+    border-radius: $border-radius;
+    margin: 7px 60px;
+}
+
+.short-description {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-top: 10px;
+}
+
+.btl-tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+
+    .dashicons {
+        font-size: 16px;
+        color: #666;
+        cursor: help;
+    }
+
+    .btl-tooltiptext {
+        visibility: hidden;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: $spacing-xs;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        opacity: 0;
+        font-size: 12px;
+        line-height: 1.4;
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+    }
+
+    &:hover .btl-tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+// ============================================================================
+// Dark Mode Support
+// ============================================================================
+.betterlinks-dark-mode {
+    .btl-utm-global-settings {
+        .btl-utm-templates-section {
+
+            h3,
+            h4 {
+                color: $dark-text;
+            }
+        }
+
+        .btl-utm-template-form {
+            background: $dark-bg-secondary;
+            border-color: #3a4a5c;
+        }
+
+        .btl-utm-template-item {
+            background: #37405a;
+
+            &:hover {
+                background: $dark-bg-secondary;
+            }
+
+            .btl-utm-template-content {
+                .btl-utm-template-name {
+                    color: $dark-text;
+                }
+
+                .btl-utm-template-categories {
+                    color: #bdc3c7;
+                }
+            }
+
+            .btl-utm-template-actions {
+                .btl-utm-action-btn {
+                    color: #bdc3c7;
+
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.1);
+                        color: $dark-text;
+                    }
+
+                    &.btl-utm-copy-btn:hover,
+                    &.btl-utm-edit-btn:hover {
+                        color: #3498db;
+                    }
+
+                    &.btl-utm-delete-btn:hover {
+                        color: #e74c3c;
+                        background: rgba(231, 76, 60, 0.1);
+                    }
+                }
+            }
+        }
+    }
+
+    // Dark mode form fields
+    .btl-utm-field-group {
+
+        label,
+        .btl-field-label {
+            color: $dark-text;
+        }
+
+        .btl-form-control,
+        .btl-form-input {
+            background: $dark-bg-secondary;
+            border-color: $dark-border;
+            color: $dark-text;
+
+            &:focus {
+                border-color: $primary-blue;
+                box-shadow: 0 0 0 3px rgba($primary-blue, 0.2);
+            }
+
+            &::placeholder {
+                color: #95a5a6;
+            }
+        }
+    }
+
+    // Dark mode modals
+    .btl-utm-template-modal,
+    .btl-unified-modal {
+        background: $dark-bg;
+        color: $dark-text;
+
+        &__header,
+        &__body,
+        &__footer {
+            background: $dark-bg;
+        }
+
+        &__title {
+            color: $dark-text;
+        }
+    }
+
+    .btl-unified-modal {
+        &__main-message {
+            color: $dark-text;
+        }
+
+        &__sub-message,
+        &__success-text {
+            color: $dark-text-secondary;
+        }
+    }
+
+    .btl-utm-close-modal,
+    .btl-unified-close-modal {
+        color: $dark-text-secondary;
+
+        &:hover {
+            background: $dark-bg-secondary;
+            color: #f3f4f6;
+        }
+    }
+
+    // Dark mode UTM statistics
+    .btl-utm-statistics {
+        background: $dark-bg-secondary;
+        border-color: $dark-border;
+
+        &__label {
+            color: $dark-text-secondary;
+
+            &--total {
+                color: $dark-text;
+            }
+        }
+
+        &__value {
+            &--blue {
+                color: #4F8EFF;
+            }
+
+            &--total {
+                color: #114BEE;
+            }
+        }
+
+        &__separator {
+            background: $dark-border;
+        }
+    }
+
+    // Dark mode React Select
+    .btl-react-select-container {
+        .btl-react-select__control {
+            background: $dark-bg-secondary;
+            border-color: $dark-border;
+
+            &:hover {
+                border-color: #5a6f8a;
+            }
+
+            &--is-focused {
+                border-color: $primary-blue;
+                box-shadow: 0 0 0 3px rgba($primary-blue, 0.2);
+            }
+        }
+
+        .btl-react-select__value-container,
+        .btl-react-select__single-value,
+        .btl-react-select__input {
+            color: $dark-text;
+        }
+
+        .btl-react-select__placeholder {
+            color: #95a5a6;
+        }
+
+        .btl-react-select__menu {
+            background: $dark-bg-secondary;
+            border-color: $dark-border;
+        }
+
+        .btl-react-select__option {
+            color: $dark-text;
+
+            &--is-focused {
+                background-color: #3a4a5c;
+            }
+
+            &--is-selected {
+                background-color: $primary-blue;
+            }
+        }
+
+        .btl-react-select__dropdown-indicator,
+        .btl-react-select__clear-indicator {
+            color: #95a5a6;
+
+            &:hover {
+                color: $dark-text;
+            }
+        }
+    }
+
+    // Dark mode checkboxes
+    .btl-checkbox-custom {
+        background: $dark-bg-secondary;
+        border-color: $dark-border;
+    }
+
+    .btl-checkbox-input:checked+.btl-checkbox-custom {
+        background: $primary-blue;
+        border-color: $primary-blue;
+    }
+
+    .btl-checkbox-text {
+        color: $dark-text;
+    }
+
+    // Dark mode buttons and utilities
+    .btl-add-field-section {
+        border-top-color: $dark-bg-secondary;
+    }
+
+    .btl-add-field-btn {
+        border-color: $dark-border;
+        color: $dark-text-secondary;
+
+        &:hover {
+            border-color: #6b7280;
+            color: #f3f4f6;
+            background: $dark-bg-secondary;
+        }
+    }
+
+    .btl-btn {
+        &-secondary {
+            background: $dark-bg-secondary;
+            color: $dark-text-secondary;
+            border-color: $dark-border;
+
+            &:hover:not(:disabled) {
+                background: $dark-bg-tertiary;
+                color: #f3f4f6;
+                border-color: #6b7280;
+            }
+        }
+    }
+
+    .btl-utm-links-count {
+        .btl-links-count-text {
+            color: #60a5fa;
+        }
+    }
+
+    .btl-info-icon {
+        color: #bdc3c7;
+
+        &:hover {
+            color: $dark-text-secondary;
+        }
+    }
+
+    .btl-highlight-number {
+        color: #114BEE;
+        font-weight: 600;
+    }
+
+    .short-description {
+        color: #bdc3c7;
+    }
+
+    .btl-tooltip {
+        .dashicons {
+            color: #bdc3c7;
+        }
+
+        .btl-tooltiptext {
+            background-color: $dark-bg-secondary;
+            color: $dark-text;
+
+            &::after {
+                border-color: $dark-bg-secondary transparent transparent transparent;
+            }
+        }
+    }
+}
+
+// ============================================================================
+// Responsive Design
+// ============================================================================
+@media (max-width: 768px) {
+
+    .btl-utm-template-modal,
+    .btl-unified-modal {
+        margin: $spacing-lg;
+
+        &__body {
+            padding: $spacing-xl;
+        }
+    }
+
+    .btl-utm-template-modal {
+        max-height: calc(100vh - 40px);
+
+        &__header,
+        &__footer {
+            padding-left: $spacing-xl;
+            padding-right: $spacing-xl;
+        }
+
+        &__title {
+            font-size: 18px;
+            margin-bottom: $spacing-lg;
+        }
+
+        &__actions {
+            flex-direction: column;
+            gap: $spacing-xs;
+        }
+    }
+
+    .btl-unified-modal {
+        &__title {
+            margin: 0 0 6px 0;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 130%;
+        }
+
+        &__subtitle {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 130%;
+        }
+
+        &__message {
+            margin-bottom: $spacing-xl;
+        }
+
+        &__success-icon {
+            margin-bottom: $spacing-lg;
+
+            svg {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    }
+
+    .btl-utm-template-fields {
+        .btl-utm-field-group {
+            margin-bottom: $spacing-lg;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+
+    .btl-utm-template-modal,
+    .btl-unified-modal {
+        margin: $spacing-md;
+    }
+
+    .btl-utm-template-modal {
+        max-height: calc(100vh - 32px);
+
+        &__header {
+            padding: $spacing-lg $spacing-md;
+
+            .btl-utm-template-modal__title {
+                font-size: 16px;
+            }
+        }
+
+        &__body {
+            padding: $spacing-xl $spacing-md;
+        }
+
+        &__footer {
+            padding: $spacing-md;
+        }
+    }
+
+    .btl-unified-modal {
+        &__header {
+            padding: $spacing-sm $spacing-sm 0 $spacing-sm;
+        }
+
+        &__body {
+            padding: 0 $spacing-lg $spacing-lg $spacing-lg;
+        }
+
+        &__title {
+            font-size: 16px;
+            margin-bottom: $spacing-md;
+        }
+
+        &__message {
+            margin-bottom: $spacing-lg;
+        }
+
+        &__main-message {
+            font-size: 15px;
+        }
+
+        &__sub-message,
+        &__success-text {
+            font-size: 13px;
+        }
+
+        &__success-icon {
+            margin-bottom: $spacing-md;
+
+            svg {
+                width: 36px;
+                height: 36px;
+            }
+        }
+    }
+
+    .btl-utm-statistics {
+        padding: $spacing-lg;
+        margin: $spacing-lg 0;
+
+        &__row {
+            padding: 6px 0;
+
+            &--total {
+                padding-top: $spacing-md;
+            }
+        }
+
+        &__label {
+            font-size: 14px;
+
+            &--total {
+                font-size: 16px;
+            }
+        }
+
+        &__value {
+            font-size: 14px;
+
+            &--total {
+                font-size: 16px;
+            }
+        }
+    }
+
+    .btl-utm-template-fields {
+        .btl-utm-field-group {
+            margin-bottom: $spacing-md;
+        }
+    }
+
+    .btl-utm-checkboxes {
+        margin-top: $spacing-xl;
+        margin-bottom: $spacing-xl;
+    }
+
+    .btl-add-field-section {
+        margin-top: $spacing-xl;
+        padding-top: $spacing-md;
+    }
+
+    .btl-btn {
+        min-width: 100px;
+        padding: 10px $spacing-lg;
+        font-size: 13px;
+    }
+}
+
+// Modal override for ReactModal
+.ReactModal__Content.ReactModal__Content--after-open.btl-unified-modal-override {
+    padding: 0 !important;
+}
+
+// ============================================================================
+// Empty State Styles
+// ============================================================================
+.btl-utm-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: $spacing-xxl;
+    margin-top: $spacing-lg;
+    border: 2px dashed $border-color;
+    border-radius: $border-radius-large;
+    background-color: $background-light;
+
+    .btl-utm-empty-content {
+        text-align: center;
+        max-width: 400px;
+
+        .btl-utm-empty-icon {
+            margin-bottom: $spacing-lg;
+            opacity: 0.8;
+
+            svg {
+                width: 48px;
+                height: 48px;
+                color: $text-muted;
+            }
+        }
+
+        .btl-utm-empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: $text-primary;
+            margin: 0 0 $spacing-sm 0;
+            line-height: 1.4;
+        }
+
+        .btl-utm-empty-description {
+            font-size: 14px;
+            color: $text-secondary;
+            line-height: 1.6;
+            margin: 0 0 $spacing-xl 0;
+        }
+
+        .btl-utm-empty-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: $spacing-xs;
+            background-color: $primary-color;
+            color: white;
+            border: none;
+            border-radius: $border-radius;
+            padding: $spacing-sm $spacing-lg;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: $primary-hover;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(17, 75, 238, 0.2);
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(17, 75, 238, 0.1);
+            }
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+// Dark mode support for empty state
+.betterlinks-dark-mode {
+    .btl-utm-empty-state {
+        background-color: $dark-bg-secondary;
+        border-color: $dark-border;
+
+        .btl-utm-empty-content {
+            .btl-utm-empty-icon svg {
+                color: $dark-text-secondary;
+            }
+
+            .btl-utm-empty-title {
+                color: $dark-text;
+            }
+
+            .btl-utm-empty-description {
+                color: $dark-text-secondary;
+            }
+        }
+    }
+}
