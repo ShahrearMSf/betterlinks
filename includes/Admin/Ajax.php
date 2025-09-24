@@ -298,8 +298,22 @@ class Ajax {
 
 	public function fetch_target_url() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( "You don't have permission to do this." );
+		
+		// Check if user has permission - either manage_options or role-based permissions
+		$can_fetch_target_url = current_user_can( 'manage_options' );
+		
+		// Allow role-based permissions from BetterLinks Pro
+		if ( ! $can_fetch_target_url ) {
+			$can_fetch_target_url = apply_filters( 'betterlinks_can_fetch_target_url', false );
+		}
+		
+		if ( ! $can_fetch_target_url ) {
+			wp_send_json_error(
+				array(
+					'result'  => false,
+					'message' => __( 'You don\'t have permission to fetch target URL.', 'betterlinks' ),
+				)
+			);
 		}
 
 		$target_url = isset( $_POST['target_url'] ) ? sanitize_url( $_POST['target_url'] ) : '';
