@@ -68,7 +68,9 @@ body {
 		.btl-modal-utm-builder .btl-modal-utm-builder__body .btl-modal-utm-builder__form-group button[type='button'],
 		.btl-modal-utm-builder__title,
 		.btl-analytic-advanced-search h3,
-		.btl-confirmation-alert .btl-confirmation-buttons button:nth-child(2) {
+		.btl-confirmation-alert .btl-confirmation-buttons button:nth-child(2),
+		.btl-reset-finish-modal-title,
+		.btl-reset-finish-modal-description {
 			color: $white;
 		}
 
