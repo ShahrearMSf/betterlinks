@@ -238,6 +238,45 @@ body.betterlinks-dark-mode .ReactModal__Content {
             svg {
                 width: 16px;
                 height: 16px;
+
+                // Light mode - show light icons, hide dark icons
+                .btl-icon-light {
+                    display: block;
+                }
+
+                .btl-icon-dark {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    // Dark mode styles for UTM action buttons
+    body.betterlinks-dark-mode & {
+        .btl-utm-template-actions {
+            .btl-utm-action-btn {
+                color: $dark-text-secondary;
+
+                &:hover {
+                    background: $dark-bg-tertiary;
+                    color: $dark-text;
+                }
+
+                &.btl-utm-btn-ac:hover {
+                    color: #4fc3f7;
+                }
+
+                svg {
+
+                    // Dark mode - hide light icons, show dark icons
+                    .btl-icon-light {
+                        display: none;
+                    }
+
+                    .btl-icon-dark {
+                        display: block;
+                    }
+                }
             }
         }
     }
@@ -649,7 +688,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
 .btl-checkbox-input {
     position: absolute;
-    opacity: 0;
+    opacity: 0 !important;
     pointer-events: none;
 }
 
@@ -694,6 +733,23 @@ body.betterlinks-dark-mode .ReactModal__Content {
     align-items: center;
     gap: 6px;
     font-weight: 400;
+}
+
+// Disabled checkbox styles
+.btl-checkbox-label.btl-checkbox-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    .btl-checkbox-custom {
+        background: #f9fafb;
+        border-color: #e5e7eb;
+        cursor: not-allowed;
+    }
+
+    .btl-checkbox-text {
+        color: #9ca3af;
+        cursor: not-allowed;
+    }
 }
 
 // ============================================================================
@@ -1089,6 +1145,20 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
     .btl-checkbox-text {
         color: $dark-text;
+    }
+
+    // Dark mode disabled checkbox styles
+    .btl-checkbox-label.btl-checkbox-disabled {
+        opacity: 0.5;
+
+        .btl-checkbox-custom {
+            background: $dark-bg-secondary;
+            border-color: $dark-border;
+        }
+
+        .btl-checkbox-text {
+            color: #6b7280;
+        }
     }
 
     // Dark mode buttons and utilities

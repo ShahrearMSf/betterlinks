@@ -1316,6 +1316,7 @@ class Ajax {
 		$template_data = isset( $_POST['template_data'] ) ? json_decode( stripslashes( $_POST['template_data'] ), true ) : array();
 		$category_ids = isset( $_POST['category_ids'] ) ? json_decode( stripslashes( $_POST['category_ids'] ), true ) : array();
 		$rewrite_existing = isset( $_POST['rewrite_existing'] ) ? filter_var( $_POST['rewrite_existing'], FILTER_VALIDATE_BOOLEAN ) : false;
+		$reset_existing = isset( $_POST['reset_existing'] ) ? filter_var( $_POST['reset_existing'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 		// Convert to integers if needed
 		if ( is_array( $category_ids ) ) {
@@ -1366,34 +1367,42 @@ class Ajax {
 				}
 			}
 
-			// Skip if has UTM and rewrite is disabled
-			if ( $has_utm && ! $rewrite_existing ) {
-				$skipped_count++;
-				continue;
-			}
-
-			// Remove existing UTM parameters if rewriting
-			if ( $rewrite_existing ) {
+			// Handle reset existing UTM functionality
+			if ( $reset_existing ) {
+				// Remove all UTM parameters when resetting
 				foreach ( $utm_params as $param ) {
 					unset( $existing_params[$param] );
 				}
-			}
+			} else {
+				// Skip if has UTM and rewrite is disabled
+				if ( $has_utm && ! $rewrite_existing ) {
+					$skipped_count++;
+					continue;
+				}
 
-			// Add new UTM parameters
-			if ( ! empty( $utm_source ) ) {
-				$existing_params['utm_source'] = $utm_source;
-			}
-			if ( ! empty( $utm_medium ) ) {
-				$existing_params['utm_medium'] = $utm_medium;
-			}
-			if ( ! empty( $utm_campaign ) ) {
-				$existing_params['utm_campaign'] = $utm_campaign;
-			}
-			if ( ! empty( $utm_term ) ) {
-				$existing_params['utm_term'] = $utm_term;
-			}
-			if ( ! empty( $utm_content ) ) {
-				$existing_params['utm_content'] = $utm_content;
+				// Remove existing UTM parameters if rewriting
+				if ( $rewrite_existing ) {
+					foreach ( $utm_params as $param ) {
+						unset( $existing_params[$param] );
+					}
+				}
+
+				// Add new UTM parameters
+				if ( ! empty( $utm_source ) ) {
+					$existing_params['utm_source'] = $utm_source;
+				}
+				if ( ! empty( $utm_medium ) ) {
+					$existing_params['utm_medium'] = $utm_medium;
+				}
+				if ( ! empty( $utm_campaign ) ) {
+					$existing_params['utm_campaign'] = $utm_campaign;
+				}
+				if ( ! empty( $utm_term ) ) {
+					$existing_params['utm_term'] = $utm_term;
+				}
+				if ( ! empty( $utm_content ) ) {
+					$existing_params['utm_content'] = $utm_content;
+				}
 			}
 
 			// Rebuild the URL
@@ -1430,16 +1439,25 @@ class Ajax {
 			}
 		}
 
-		wp_send_json_success( array(
-			'updated_count' => $updated_count,
-			'skipped_count' => $skipped_count,
-			'total_links' => count( $links ),
-			'message' => sprintf(
-				__( 'UTM template applied successfully. Updated: %d, Skipped: %d, Total: %d', 'betterlinks' ),
+		$message = $reset_existing
+			? sprintf(
+				__( 'UTM parameters reset successfully. Updated: %d, Skipped: %d, Total: %d', 'betterlinks' ),
 				$updated_count,
 				$skipped_count,
 				count( $links )
 			)
+			: sprintf(
+				__( 'UTM template applied successfully. Updated: %d, Skipped: %d, Total: %d', 'betterlinks' ),
+				$updated_count,
+				$skipped_count,
+				count( $links )
+			);
+
+		wp_send_json_success( array(
+			'updated_count' => $updated_count,
+			'skipped_count' => $skipped_count,
+			'total_links' => count( $links ),
+			'message' => $message
 		) );
 	}
 }
