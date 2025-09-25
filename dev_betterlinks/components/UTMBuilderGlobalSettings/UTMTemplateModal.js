@@ -460,10 +460,11 @@ const UTMTemplateModal = ({
                 confirmationMessage={
                     templateForm.categories && templateForm.categories.length > 0
                         ? (templateForm.utm_enable_to_reset_existing_utm_template
-                            ? __('This will remove all UTM parameters from %d existing URLs.', 'betterlinks').replace('%d', getTotalLinksInSelectedCategories())
-                            : __('This will overwrite existing UTM settings on %d existing URLs.', 'betterlinks').replace('%d', getTotalLinksInSelectedCategories()))
-                        : __('This will save the UTM template.')
+                            ? __('This will remove all UTM parameters from', 'betterlinks')
+                            : templateForm.utm_enable_to_rewrite_existing_utm_template ? __('This will overwrite existing UTM settings on', 'betterlinks') : __('This action will apply UTM values on', 'betterlinks'))
+                        : __('This action will apply UTM values on')
                 }
+                totalLinks={getTotalLinksInSelectedCategories()}
                 confirmationSubMessage={templateForm.utm_auto_apply_new_link ? __('All new shortlinks in this category will automatically use this template.', 'betterlinks') : ''}
                 confirmButtonText={templateForm.utm_enable_to_reset_existing_utm_template ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 cancelButtonText={__('Cancel', 'betterlinks')}

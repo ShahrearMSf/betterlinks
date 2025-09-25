@@ -194,17 +194,73 @@ body.betterlinks-dark-mode .ReactModal__Content {
         gap: $spacing-lg;
         flex: 1;
 
+        .btl-utm-template-header {
+            display: flex;
+            align-items: center;
+            gap: $spacing-sm;
+            min-width: 120px;
+        }
+
         .btl-utm-template-name {
             margin: 0;
             font-size: 16px;
             font-weight: 600;
             color: $text-primary;
-            min-width: 120px;
+            display: flex;
+            align-items: center;
+            gap: $spacing-sm;
         }
 
         .btl-utm-template-categories {
             font-size: 14px;
             color: #666;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+
+            .btl-utm-categories-label {
+                color: #666;
+            }
+
+            .btl-utm-category-tag {
+                display: inline-flex;
+                align-items: center;
+                padding: 2px 8px;
+                background: #d1d6e1;
+                color: #374151;
+                font-size: 12px;
+                font-weight: 500;
+                border-radius: 12px;
+                line-height: 1.2;
+                border: 1px solid transparent;
+                transition: all 0.2s ease;
+
+                // Active category highlighting
+                &.btl-utm-category-active {
+                    background: #d1fae5;
+                    color: #065f46;
+                    border-color: $success-color;
+                    font-weight: 600;
+                }
+            }
+
+            .btl-utm-category-separator {
+                margin: 0 2px;
+                color: #9ca3af;
+            }
+        }
+
+        .btl-utm-active-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            background: $success-color;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 12px;
+            line-height: 1;
         }
     }
 
@@ -434,6 +490,10 @@ body.betterlinks-dark-mode .ReactModal__Content {
 // ============================================================================
 // UTM Template Modal
 // ============================================================================
+.ReactModal__Content.ReactModal__Content--after-open.btl-utm-template-modal-override {
+    padding: 0 !important;
+}
+
 .btl-utm-template-modal {
     background: #ffffff;
     border-radius: $border-radius-large;
@@ -962,6 +1022,10 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
                 .btl-utm-template-categories {
                     color: #bdc3c7;
+
+                    .btl-utm-categories-label {
+                        color: #ffffff;
+                    }
                 }
             }
 

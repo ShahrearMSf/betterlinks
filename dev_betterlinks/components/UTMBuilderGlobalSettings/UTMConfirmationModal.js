@@ -25,6 +25,7 @@ const UTMConfirmationModal = ({
     // Confirmation props
     confirmationTitle,
     confirmationMessage,
+    totalLinks,
     confirmationSubMessage,
     confirmButtonText,
     cancelButtonText,
@@ -37,16 +38,12 @@ const UTMConfirmationModal = ({
 
             <div className="btl-unified-modal__message">
                 <p className="btl-unified-modal__main-message">
-                    {confirmationMessage.includes('existing URLs') ? (
-                        <>
-                            {__('This action will overwrite the current UTM on', 'betterlinks')}{' '}
-                            <div className="btl-highlight-number">
-                                {confirmationMessage.match(/\d+/)?.[0] || '0'} {__('URLs', 'betterlinks')}.
-                            </div>
-                        </>
-                    ) : (
-                        confirmationMessage
-                    )}
+                    <>
+                        {confirmationMessage}{' '}
+                        <div className="btl-highlight-number">
+                            {totalLinks || '0'} {__('URLs', 'betterlinks')}.
+                        </div>
+                    </>
                 </p>
                 {confirmationSubMessage && (
                     <p className="btl-unified-modal__sub-message">{confirmationSubMessage}</p>
