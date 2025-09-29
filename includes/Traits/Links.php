@@ -221,20 +221,50 @@ trait Links
             return null;
         }
 
-        // Find template that applies to this category and has auto-apply enabled
+        // Get last applied templates tracking
+        $last_applied_templates = isset($settings['utm_last_applied_templates']) ? $settings['utm_last_applied_templates'] : [];
+        
+        // Find the most recently applied template for this category
         $matching_template = null;
-        foreach ($utm_templates as $template) {
-            // Check if auto-apply is enabled for this template
-            if (empty($template['utm_auto_apply_new_link'])) {
-                continue;
+        
+        // First, check if there's a last applied template for this category
+        if (isset($last_applied_templates[$category_id])) {
+            $last_applied_template_index = $last_applied_templates[$category_id]['template_index'];
+            
+            // Find the template with this index
+            foreach ($utm_templates as $template) {
+                if (isset($template['template_index']) && 
+                    $template['template_index'] == $last_applied_template_index &&
+                    !empty($template['utm_auto_apply_new_link'])) {
+                    
+                    // Verify this template still applies to the current category
+                    if (isset($template['categories']) && is_array($template['categories'])) {
+                        foreach ($template['categories'] as $template_cat_id) {
+                            if (intval($template_cat_id) === $category_id) {
+                                $matching_template = $template;
+                                break 2;
+                            }
+                        }
+                    }
+                }
             }
+        }
+        
+        // If no last applied template found or it's no longer valid, fall back to finding any template
+        if (!$matching_template) {
+            foreach ($utm_templates as $template) {
+                // Check if auto-apply is enabled for this template
+                if (empty($template['utm_auto_apply_new_link'])) {
+                    continue;
+                }
 
-            // Check if this template applies to the current category
-            if (isset($template['categories']) && is_array($template['categories'])) {
-                foreach ($template['categories'] as $template_cat_id) {
-                    if (intval($template_cat_id) === $category_id) {
-                        $matching_template = $template;
-                        break 2; // Break out of both loops
+                // Check if this template applies to the current category
+                if (isset($template['categories']) && is_array($template['categories'])) {
+                    foreach ($template['categories'] as $template_cat_id) {
+                        if (intval($template_cat_id) === $category_id) {
+                            $matching_template = $template;
+                            break 2; // Break out of both loops
+                        }
                     }
                 }
             }

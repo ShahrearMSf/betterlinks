@@ -11,7 +11,6 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 	const [currentSettings, setCurrentSettings] = useState(betterlinks_settings || {});
 	const [isLoadingSettings, setIsLoadingSettings] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
-	console.log('utm up ss - ', currentSettings)
 	// Fetch updated settings from API
 	const fetchUpdatedSettings = async () => {
 		try {
@@ -20,10 +19,8 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 			const res = await API.get(namespace + 'settings');
 			const payload = JSON.parse(res.data.data);
 			setCurrentSettings(payload);
-			console.log('UTM Builder - Settings updated successfully');
 			return payload;
 		} catch (error) {
-			console.log('Failed to fetch updated settings:', error);
 			// Fallback to current settings if API fails
 			return currentSettings;
 		} finally {
@@ -35,12 +32,12 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 	const getUTMDefaults = (currentCategoryId, settingsToUse = currentSettings) => {
 		// Safety check for settings
 		if (!settingsToUse || typeof settingsToUse !== 'object') {
-			console.log('UTM Builder - settings not available');
 			return {};
 		}
 
 		const globalTemplatesRaw = settingsToUse.global_utm_templates || [];
 		const globalDefaults = settingsToUse.global_utm_defaults || {};
+		const lastAppliedTemplates = settingsToUse.utm_last_applied_templates || {};
 
 		// Handle both array and single object formats
 		const globalTemplates = Array.isArray(globalTemplatesRaw) ? globalTemplatesRaw : [globalTemplatesRaw];
@@ -48,27 +45,33 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		// Find template for the current category (default to 1 if no categoryId)
 		const catId = parseInt(currentCategoryId) || 1;
 
-		console.log('UTM Builder - Looking for category:', catId);
-		console.log('UTM Builder - Available templates:', globalTemplates);
-		console.log('UTM Builder - Raw templates:', globalTemplatesRaw);
 
-		const categoryTemplate = globalTemplates.find(template => {
-			console.log('UTM Builder - Checking template:', template);
-			console.log('UTM Builder - Template categories:', template.categories);
+		// Check if there's a last applied template for this category
+		const lastApplied = lastAppliedTemplates[catId];
+		let categoryTemplate = null;
 
-			// Handle both string and integer category IDs
-			if (template.categories && Array.isArray(template.categories)) {
-				return template.categories.some(templateCatId => {
-					const templateCatIdInt = parseInt(templateCatId);
-					const currentCatIdInt = parseInt(catId);
-					console.log('UTM Builder - Comparing:', templateCatIdInt, 'with', currentCatIdInt);
-					return templateCatIdInt === currentCatIdInt;
-				});
-			}
-			return false;
-		});
+		if (lastApplied) {
+			// Find the last applied template by template_index
+			categoryTemplate = globalTemplates.find(template => 
+				template.template_index === lastApplied.template_index
+			);
+		}
 
-		console.log('UTM Builder - Found template:', categoryTemplate);
+		// If no last applied template found, fall back to finding any template for this category
+		if (!categoryTemplate) {
+			categoryTemplate = globalTemplates.find(template => {
+
+				// Handle both string and integer category IDs
+				if (template.categories && Array.isArray(template.categories)) {
+					return template.categories.some(templateCatId => {
+						const templateCatIdInt = parseInt(templateCatId);
+						const currentCatIdInt = parseInt(catId);
+						return templateCatIdInt === currentCatIdInt;
+					});
+				}
+				return false;
+			});
+		}
 
 		// If category template exists, use it; otherwise use global defaults
 		if (categoryTemplate) {
@@ -79,14 +82,11 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 				utm_term: categoryTemplate.utm_term || '',
 				utm_content: categoryTemplate.utm_content || ''
 			};
-			console.log('UTM Builder - Using template defaults:', templateDefaults);
 			return templateDefaults;
 		}
 
-		console.log('UTM Builder - Using global defaults:', globalDefaults);
 		return globalDefaults;
 	};
-	console.log('UTM Builder - Current categoryId:', categoryId);
 	const utmDefaults = getUTMDefaults(categoryId);
 
 	const [UTMBuilderState, setUTMBuilderState] = useState({
@@ -120,12 +120,9 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		const newDefaults = getUTMDefaults(categoryId, currentSettings);
 		const currentParseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
 
-		console.log('UTM Builder - Category changed:', categoryId);
-		console.log('UTM Builder - New defaults:', newDefaults);
 
 		// Update UTM fields: URL params > existing values > template defaults
 		setUTMBuilderState(prevState => {
-			console.log('UTM Builder - Previous state:', prevState);
 
 			// Check if we have any template defaults to apply
 			const hasTemplateDefaults = Object.values(newDefaults).some(value => value && value.trim() !== '');
@@ -139,11 +136,9 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 					utm_content: currentParseUrl.query.utm_content || newDefaults.utm_content || prevState.utm_content || '',
 				};
 
-				console.log('UTM Builder - New state with template:', newState);
 				return newState;
 			}
 
-			console.log('UTM Builder - No template defaults, keeping current state');
 			return prevState;
 		});
 	}, [categoryId, targetUrl, currentSettings]);

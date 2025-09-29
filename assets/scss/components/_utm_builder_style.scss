@@ -900,7 +900,8 @@ body.betterlinks-dark-mode .ReactModal__Content {
 // ============================================================================
 .btl-utm-links-count {
     margin-top: $spacing-xs;
-
+    display: flex;
+    column-gap: 10px;
     .btl-links-count-text {
         font-size: 12px;
         color: #788597;
@@ -910,6 +911,14 @@ body.betterlinks-dark-mode .ReactModal__Content {
             font-weight: 600;
             color: $primary-color;
         }
+    }
+    .btl-utm-btn-reset {
+        background: transparent;
+        border: 1px solid #ff0000;
+        border-radius: 8px;
+        color: #ff0000;
+        font-size: 12px;
+        cursor: pointer;
     }
 }
 

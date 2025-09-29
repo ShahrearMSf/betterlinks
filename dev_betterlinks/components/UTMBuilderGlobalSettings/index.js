@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { saveSettingsHandler, makeRequest, betterlinks_nonce, plugin_root_url } from 'utils/helper';
 import UTMTemplateModal from './UTMTemplateModal';
+import ConfirmModal from '../PermissionModal/ConfirmModal';
 import '../../../assets/scss/components/_utm_builder_style.scss';
 
 const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
@@ -16,6 +17,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [terms, setTerms] = useState([]);
 	const [lastAppliedTemplates, setLastAppliedTemplates] = useState({}); // Track last applied template per category
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [templateToDelete, setTemplateToDelete] = useState(null);
 	const [templateForm, setTemplateForm] = useState({
 		template_name: '',
 		utm_source: '',
@@ -23,7 +26,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		utm_campaign: '',
 		utm_term: '',
 		utm_content: '',
-		categories: [1], // Default to Uncategorized (ID: 1)
+		categories: [], // No default category
 		utm_enable_to_rewrite_existing_utm_template: false,
 		utm_enable_to_reset_existing_utm_template: false,
 		utm_auto_apply_new_link: false
@@ -179,7 +182,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 			utm_campaign: '',
 			utm_term: '',
 			utm_content: '',
-			categories: [1],
+			categories: [],
 			utm_enable_to_rewrite_existing_utm_template: false,
 			utm_enable_to_reset_existing_utm_template: false,
 			utm_auto_apply_new_link: false
@@ -188,9 +191,14 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	};
 
 	const handleTemplateDelete = (templateIndex) => {
-		if (confirm(__('Are you sure you want to delete this template?', 'betterlinks'))) {
+		setTemplateToDelete(templateIndex);
+		setShowDeleteConfirm(true);
+	};
+
+	const confirmTemplateDelete = () => {
+		if (templateToDelete) {
 			const updatedTemplates = utmTemplates.filter(template =>
-				template.template_index !== templateIndex
+				template.template_index !== templateToDelete
 			);
 			setUtmTemplates(updatedTemplates);
 
@@ -201,11 +209,72 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 			};
 			saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
 
-			if (activeTemplate && activeTemplate.template_index === templateIndex) {
+			if (activeTemplate && activeTemplate.template_index === templateToDelete) {
 				setActiveTemplate(null);
 				resetTemplateForm();
 			}
+
+			// Reset confirmation modal state
+			setTemplateToDelete(null);
+			setShowDeleteConfirm(false);
 		}
+	};
+
+	const confirmTemplateDeleteAndResetParams = async () => {
+		if (templateToDelete) {
+			// First, find the template to get its categories
+			const templateToDeleteObj = utmTemplates.find(template =>
+				template.template_index === templateToDelete
+			);
+
+			if (templateToDeleteObj && templateToDeleteObj.categories && templateToDeleteObj.categories.length > 0) {
+				try {
+					// Reset UTM parameters for links in the template's categories
+					await makeRequest({
+						action: 'betterlinks/admin/apply_utm_template_to_links',
+						template_data: {
+							utm_source: '',
+							utm_medium: '',
+							utm_campaign: '',
+							utm_term: '',
+							utm_content: ''
+						},
+						category_ids: templateToDeleteObj.categories,
+						rewrite_existing: true,
+						reset_existing: true
+					});
+				} catch (error) {
+					console.error('Error resetting UTM parameters:', error);
+				}
+			}
+
+			// Then delete the template (same as confirmTemplateDelete)
+			const updatedTemplates = utmTemplates.filter(template =>
+				template.template_index !== templateToDelete
+			);
+			setUtmTemplates(updatedTemplates);
+
+			// Save to settings
+			const updatedSettings = {
+				...settings,
+				global_utm_templates: updatedTemplates
+			};
+			saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
+
+			if (activeTemplate && activeTemplate.template_index === templateToDelete) {
+				setActiveTemplate(null);
+				resetTemplateForm();
+			}
+
+			// Reset confirmation modal state
+			setTemplateToDelete(null);
+			setShowDeleteConfirm(false);
+		}
+	};
+
+	const cancelTemplateDelete = () => {
+		setTemplateToDelete(null);
+		setShowDeleteConfirm(false);
 	};
 
 	const handleTemplateSelect = (template) => {
@@ -295,6 +364,21 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								handleTemplateDelete={handleTemplateDelete}
 							/>
 
+							{/* Delete Confirmation Modal */}
+							<ConfirmModal
+								isOpen={showDeleteConfirm}
+								onClose={cancelTemplateDelete}
+								onConfirm={confirmTemplateDeleteAndResetParams}
+								onSecondaryConfirm={confirmTemplateDelete}
+								title={__('Delete UTM Template', 'betterlinks')}
+								subtitle={__('Are you sure you want to delete this UTM template? This action cannot be undone.', 'betterlinks')}
+								confirmButtonText={__('Delete and Remove Parameters', 'betterlinks')}
+								secondaryConfirmButtonText={__('Delete and Keep Parameters', 'betterlinks')}
+								showCancelButton={false}
+								cancelButtonText={__('Cancel', 'betterlinks')}
+								isDangerous={true}
+							/>
+
 							{/* Templates List */}
 							{utmTemplates.length > 0 && (
 								<div className="btl-utm-templates-list-display">
@@ -320,7 +404,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															{template.categories && template.categories.length > 0
 																? template.categories.map((catId, index) => {
 																	const category = terms?.find(term => parseInt(term.ID) === parseInt(catId));
-																	const categoryName = category ? category.term_name : 'Unknown';
+																	const categoryName = category ? category.term_name : 'Deleted';
 																	const isActive = isCategoryActiveForTemplate(template, catId);
 																	return (
 																		<span key={catId}>

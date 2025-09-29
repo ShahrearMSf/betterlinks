@@ -72,34 +72,24 @@ const UTMTemplateModal = ({
     };
 
     const handleCategoryChange = (selectedOptions) => {
-        const categoryIds = selectedOptions ? selectedOptions.map(option => option.value) : [1]; // Default to Uncategorized if empty
+        const categoryIds = selectedOptions ? selectedOptions.map(option => option.value) : []; // No default category
         setTemplateForm({ ...templateForm, categories: categoryIds });
     };
 
-    const handleResetExistingChange = (checked) => {
-        if (checked) {
-            // When Reset Existing UTM is checked, uncheck Overwrite Existing UTM
-            setTemplateForm({
-                ...templateForm,
-                utm_enable_to_reset_existing_utm_template: true,
-                utm_enable_to_rewrite_existing_utm_template: false
-            });
-        } else {
-            setTemplateForm({
-                ...templateForm,
-                utm_enable_to_reset_existing_utm_template: false
-            });
+    const handleResetUTMParameters = async () => {
+        if (!templateForm.categories || templateForm.categories.length === 0) {
+            return;
         }
-    };
 
-    const handleOverwriteExistingChange = (checked) => {
-        // Only allow checking if Reset Existing UTM is not checked
-        if (!templateForm.utm_enable_to_reset_existing_utm_template) {
-            setTemplateForm({
-                ...templateForm,
-                utm_enable_to_rewrite_existing_utm_template: checked
-            });
-        }
+        // Show confirmation modal for reset action
+        setModalState('confirmation');
+        setShowModal(true);
+        
+        // Set a flag to indicate this is a reset action
+        setTemplateForm({
+            ...templateForm,
+            utm_enable_to_reset_existing_utm_template: true
+        });
     };
 
     const handleSubmit = () => {
@@ -150,16 +140,31 @@ const UTMTemplateModal = ({
 
                 if (response?.data?.success) {
                     const { updated_count, skipped_count, total_links } = response.data.data;
-                    successMsg = __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
-                        __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
-                        __('Total: %d links', 'betterlinks').replace('%d', total_links);
+                    if (isResetting) {
+                        successMsg = __('UTM parameters reset successfully!', 'betterlinks') + '\n' +
+                            __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
+                            __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
+                            __('Total: %d links', 'betterlinks').replace('%d', total_links);
+                    } else {
+                        successMsg = __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
+                            __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
+                            __('Total: %d links', 'betterlinks').replace('%d', total_links);
+                    }
                 } else {
-                    successMsg = __('Failed to apply UTM template to links.', 'betterlinks');
+                    successMsg = isResetting 
+                        ? __('Failed to reset UTM parameters.', 'betterlinks')
+                        : __('Failed to apply UTM template to links.', 'betterlinks');
                 }
+
+                // Reset the flag after processing
+                setTemplateForm(prev => ({
+                    ...prev,
+                    utm_enable_to_reset_existing_utm_template: false
+                }));
             }
 
-            // Prepare success message for template save
-            if (!successMsg) {
+            // Prepare success message for template save (only when not resetting)
+            if (!successMsg && !templateForm.utm_enable_to_reset_existing_utm_template) {
                 successMsg = isCreatingTemplate
                     ? __('UTM template created successfully!', 'betterlinks')
                     : __('UTM template updated successfully!', 'betterlinks');
@@ -178,26 +183,39 @@ const UTMTemplateModal = ({
             setModalMessage(__('An error occurred while applying the UTM template.', 'betterlinks'));
             setModalState('success');
             setIsApplying(false);
+            
+            // Reset the flag in case of error
+            setTemplateForm(prev => ({
+                ...prev,
+                utm_enable_to_reset_existing_utm_template: false
+            }));
         }
     };
 
     // Handle success modal OK button click
     const handleSuccessOk = () => {
-        // Save the template when user clicks OK on success modal
-        try {
-            if (isCreatingTemplate) {
-                handleTemplateCreate();
-            } else {
-                handleTemplateUpdate();
+        // Only save the template when it's not a reset action
+        if (!templateForm.utm_enable_to_reset_existing_utm_template) {
+            try {
+                if (isCreatingTemplate) {
+                    handleTemplateCreate();
+                } else {
+                    handleTemplateUpdate();
+                }
+            } catch (error) {
+                console.error('Error saving template:', error);
             }
-        } catch (error) {
-            console.error('Error saving template:', error);
         }
 
         // Reset states and close modals
         setPreventMainModalClose(false);
         setShowModal(false);
-        // The template handlers will close the main modal
+        
+        // If it was a reset action, just close the main modal without saving template
+        if (templateForm.utm_enable_to_reset_existing_utm_template) {
+            onClose();
+        }
+        // The template handlers will close the main modal for save actions
     };
 
     const handleDeleteAndClose = () => {
@@ -251,7 +269,7 @@ const UTMTemplateModal = ({
                                 {__('Assign to Categories', 'betterlinks')}
                                 <div className="btl-tooltip">
                                     <span className="dashicons dashicons-info-outline"></span>
-                                    <span className="btl-tooltiptext">{__('Select which categories should use this UTM template. If no category is selected, it will apply to "Uncategorized" links.', 'betterlinks')}</span>
+                                    <span className="btl-tooltiptext">{__('Select which categories should use this UTM template. You must select at least one category for the template to be active.', 'betterlinks')}</span>
                                 </div>
                             </label>
                             <CreatableSelect
@@ -268,6 +286,16 @@ const UTMTemplateModal = ({
                                     <span className="btl-links-count-text">
                                         *{__('Number of BetterLinks Available', 'betterlinks')}: <strong>{getTotalLinksInSelectedCategories()}</strong>
                                     </span>
+                                     {/* Reset UTM Button */}
+                                    {!isCreatingTemplate && (
+                                    <button 
+                                        type="button"
+                                        className="btl-utm-btn-reset"
+                                        onClick={handleResetUTMParameters}
+                                    >
+                                        {__('Reset Existing UTM', 'betterlinks')}
+                                    </button>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -337,13 +365,15 @@ const UTMTemplateModal = ({
                         {/* Checkboxes */}
                         <div className="btl-utm-checkboxes">
                             <div className="btl-checkbox-group">
-                                <label className={`btl-checkbox-label ${templateForm.utm_enable_to_reset_existing_utm_template ? 'btl-checkbox-disabled' : ''}`}>
+                                <label className="btl-checkbox-label">
                                     <input
                                         type="checkbox"
                                         checked={templateForm.utm_enable_to_rewrite_existing_utm_template}
-                                        onChange={(e) => handleOverwriteExistingChange(e.target.checked)}
+                                        onChange={(e) => setTemplateForm({
+                                            ...templateForm,
+                                            utm_enable_to_rewrite_existing_utm_template: e.target.checked
+                                        })}
                                         className="btl-checkbox-input"
-                                        disabled={templateForm.utm_enable_to_reset_existing_utm_template}
                                     />
                                     <span className="btl-checkbox-custom"></span>
                                     <span className="btl-checkbox-text">
@@ -356,27 +386,7 @@ const UTMTemplateModal = ({
                                 </label>
                             </div>
 
-                            {/* Only show Reset Existing UTM when editing, not creating */}
-                            {!isCreatingTemplate && (
-                                <div className="btl-checkbox-group">
-                                    <label className="btl-checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            checked={templateForm.utm_enable_to_reset_existing_utm_template}
-                                            onChange={(e) => handleResetExistingChange(e.target.checked)}
-                                            className="btl-checkbox-input"
-                                        />
-                                        <span className="btl-checkbox-custom"></span>
-                                        <span className="btl-checkbox-text">
-                                            {__('Reset Existing UTM', 'betterlinks')}
-                                            <div className="btl-tooltip">
-                                                <span className="dashicons dashicons-info-outline"></span>
-                                                <span className="btl-tooltiptext">{__('Enable to reset/remove all existing UTM parameters on links in the selected categories', 'betterlinks')}</span>
-                                            </div>
-                                        </span>
-                                    </label>
-                                </div>
-                            )}
+
 
                             <div className="btl-checkbox-group">
                                 <label className="btl-checkbox-label">

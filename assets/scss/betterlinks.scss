@@ -1055,10 +1055,21 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	padding: 0 !important;
 	max-width: 871px !important;
 }
+.ReactModal__Content.ReactModal__Content--after-open.btl-confirmation-modal.btl-confirmation-modal-expanded {
+	padding: 0 !important;
+	max-width: 700px !important;
+}
 
-.btl-modal-content {
+.btl-modal {
+
+	&-content {
 	padding: 67px 125px !important;
 	text-align: center !important;
+	}
+	&-confirm-content {
+	padding: 40px 110px !important;
+	text-align: center !important;
+	}
 }
 
 .btl-permission-message {
