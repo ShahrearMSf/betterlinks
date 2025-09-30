@@ -38,36 +38,61 @@ const UTMTemplateModal = ({
     const [preventMainModalClose, setPreventMainModalClose] = useState(false);
 
     const getCategoryOptions = () => {
-        if (!terms || terms.length === 0) return [];
+        if (!terms || terms.length === 0) {
+            console.log('getCategoryOptions: No terms available');
+            return [];
+        }
 
-        return terms
-            .filter(term => term.term_type === 'category')
+        const categories = terms.filter(term => term.term_type === 'category');
+
+        const options = categories
+            .sort((a, b) => a.term_name.localeCompare(b.term_name))
             .map(term => ({
                 value: parseInt(term.ID),
                 label: term.term_name
                 //label: `${term.term_name} (${term.link_count || 0} links)`
             }));
+
+        return options;
     };
 
     const getSelectedCategories = () => {
-        if (!templateForm.categories || !terms || terms.length === 0) return [];
+        if (!templateForm.categories || !terms || terms.length === 0) {
+            console.log('getSelectedCategories: No categories or terms available');
+            return [];
+        }
 
-        return templateForm.categories.map(catId => {
-            const category = terms.find(term => parseInt(term.ID) === parseInt(catId));
+        const selectedCategories = templateForm.categories.map(catId => {
+            // Try multiple comparison methods to handle data type inconsistencies
+            const category1 = terms.find(term => parseInt(term.ID) === parseInt(catId));
+            const category2 = terms.find(term => String(term.ID) === String(catId));
+            const category3 = terms.find(term => term.ID == catId);
+
+            const category = category1 || category2 || category3;
+
             return category ? {
                 value: parseInt(category.ID),
                 label: category.term_name
                 //label: `${category.term_name} (${category.link_count || 0} links)`
             } : null;
         }).filter(Boolean);
+
+        return selectedCategories;
     };
 
     const getTotalLinksInSelectedCategories = () => {
         if (!templateForm.categories || !terms || terms.length === 0) return 0;
 
         return templateForm.categories.reduce((total, catId) => {
-            const category = terms.find(term => parseInt(term.ID) === parseInt(catId));
-            return total + (category ? (parseInt(category.link_count) || 0) : 0);
+            // Try multiple comparison methods to handle data type inconsistencies
+            const category1 = terms.find(term => parseInt(term.ID) === parseInt(catId));
+            const category2 = terms.find(term => String(term.ID) === String(catId));
+            const category3 = terms.find(term => term.ID == catId);
+
+            const category = category1 || category2 || category3;
+            const linkCount = category ? (parseInt(category.link_count) || 0) : 0;
+
+            return total + linkCount;
         }, 0);
     };
 
@@ -198,8 +223,10 @@ const UTMTemplateModal = ({
         if (!templateForm.utm_enable_to_reset_existing_utm_template) {
             try {
                 if (isCreatingTemplate) {
+                    console.log('handleSuccessOk: Creating template');
                     handleTemplateCreate();
                 } else {
+                    console.log('handleSuccessOk: Updating template');
                     handleTemplateUpdate();
                 }
             } catch (error) {
@@ -208,6 +235,7 @@ const UTMTemplateModal = ({
         }
 
         // Reset states and close modals
+        console.log('handleSuccessOk: Preventing main modal close');
         setPreventMainModalClose(false);
         setShowModal(false);
         
@@ -216,13 +244,6 @@ const UTMTemplateModal = ({
             onClose();
         }
         // The template handlers will close the main modal for save actions
-    };
-
-    const handleDeleteAndClose = () => {
-        if (activeTemplate) {
-            handleTemplateDelete(activeTemplate.template_index);
-        }
-        onClose();
     };
 
     return (
@@ -373,6 +394,7 @@ const UTMTemplateModal = ({
                                             ...templateForm,
                                             utm_enable_to_rewrite_existing_utm_template: e.target.checked
                                         })}
+                                        disabled={!(templateForm.categories && templateForm.categories.length > 0)}
                                         className="btl-checkbox-input"
                                     />
                                     <span className="btl-checkbox-custom"></span>
@@ -386,14 +408,13 @@ const UTMTemplateModal = ({
                                 </label>
                             </div>
 
-
-
                             <div className="btl-checkbox-group">
                                 <label className="btl-checkbox-label">
                                     <input
                                         type="checkbox"
                                         checked={templateForm.utm_auto_apply_new_link}
                                         onChange={(e) => setTemplateForm({ ...templateForm, utm_auto_apply_new_link: e.target.checked })}
+                                        disabled={!(templateForm.categories && templateForm.categories.length > 0)}
                                         className="btl-checkbox-input"
                                     />
                                     <span className="btl-checkbox-custom"></span>

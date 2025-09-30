@@ -195,6 +195,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 												// Add all other available categories (excluding Uncategorized to avoid duplicates)
 												...terms.terms
 													.filter(term => term.term_type === 'category' && term.ID !== '1')
+													.sort((a, b) => a.term_name.localeCompare(b.term_name))
 													.map(term => ({
 														value: term.ID,
 														label: term.term_name

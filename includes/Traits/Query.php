@@ -589,7 +589,7 @@ trait Query {
 
 	public static function get_terms_all_data() {
 		global $wpdb;
-		$query = "SELECT t.*, COALESCE(tr.link_count, 0) as link_count FROM {$wpdb->prefix}betterlinks_terms AS t LEFT JOIN (SELECT term_id, COUNT(term_id) AS link_count FROM {$wpdb->prefix}betterlinks_terms_relationships GROUP BY term_id) AS tr ON t.id=tr.term_id ORDER BY t.term_order ASC, t.term_name ASC";
+		$query = "SELECT t.ID, t.term_name, t.term_slug, t.term_type, t.term_order, COALESCE(tr.link_count, 0) as link_count FROM {$wpdb->prefix}betterlinks_terms AS t LEFT JOIN (SELECT term_id, COUNT(term_id) AS link_count FROM {$wpdb->prefix}betterlinks_terms_relationships GROUP BY term_id) AS tr ON t.ID=tr.term_id ORDER BY t.term_order ASC, t.term_name ASC";
 		$link = $wpdb->get_results( $query, ARRAY_A );
 		return $link;
 	}

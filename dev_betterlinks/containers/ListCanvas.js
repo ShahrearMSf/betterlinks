@@ -184,7 +184,7 @@ const ListCanvas = (props) => {
 		Object.entries(links).reduce(function (total, [key, item]) {
 			total = [...total, { value: key, label: item.term_name }];
 			return total;
-		}, []);
+		}, []).sort((a, b) => a.label.localeCompare(b.label));
 
 	const tags =
 		links &&

@@ -457,6 +457,7 @@ const CustomSidebarComponent = (props) => {
 								value={getDefaultCatID(catId, terms)}
 								options={terms
 									.filter((item) => item.term_type == 'category')
+									.sort((a, b) => a.term_name.localeCompare(b.term_name))
 									.map((item) => ({
 										value: item.ID,
 										label: item.term_name,

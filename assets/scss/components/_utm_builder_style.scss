@@ -243,6 +243,14 @@ body.betterlinks-dark-mode .ReactModal__Content {
                     border-color: $success-color;
                     font-weight: 600;
                 }
+
+                // Deleted category highlighting - should always take priority
+                &.btl-utm-category-deleted {
+                    background: #fee2e2 !important;
+                    color: #dc2626 !important;
+                    border-color: $danger-color !important;
+                    font-weight: 500 !important;
+                }
             }
 
             .btl-utm-category-separator {
@@ -810,6 +818,23 @@ body.betterlinks-dark-mode .ReactModal__Content {
         color: #9ca3af;
         cursor: not-allowed;
     }
+}
+
+// Disabled checkbox styles for input[disabled]
+.btl-checkbox-input:disabled + .btl-checkbox-custom {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+}
+
+.btl-checkbox-input:disabled ~ .btl-checkbox-text {
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.btl-checkbox-label:has(.btl-checkbox-input:disabled) {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 // ============================================================================

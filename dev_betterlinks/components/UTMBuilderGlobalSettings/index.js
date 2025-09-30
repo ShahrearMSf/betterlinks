@@ -95,6 +95,20 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		return lastApplied && lastApplied.template_index === template.template_index;
 	};
 
+	// Helper function to filter out deleted categories
+	const filterValidCategories = (categories) => {
+		if (!categories || !Array.isArray(categories)) return [];
+		
+		return categories.filter(catId => {
+			// Try multiple comparison methods to handle data type inconsistencies
+			const category1 = terms?.find(term => parseInt(term.ID) === parseInt(catId));
+			const category2 = terms?.find(term => String(term.ID) === String(catId));
+			const category3 = terms?.find(term => term.ID == catId);
+			
+			return category1 || category2 || category3;
+		});
+	};
+
 	const handleTemplateCreate = () => {
 		if (!templateForm.template_name.trim()) {
 			alert(__('Please enter a template name', 'betterlinks'));
@@ -104,8 +118,12 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		const templateIndex = Date.now(); // Use timestamp as unique ID
 		const createdAt = new Date().toISOString();
 
+		// Filter out deleted categories before saving
+		const validCategories = filterValidCategories(templateForm.categories);
+
 		const newTemplate = {
 			...templateForm,
+			categories: validCategories, // Use filtered categories
 			template_index: templateIndex,
 			created_at: createdAt
 		};
@@ -113,10 +131,10 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		const updatedTemplates = [...utmTemplates, newTemplate];
 		setUtmTemplates(updatedTemplates);
 
-		// Update last applied templates tracking for each category
+		// Update last applied templates tracking for each valid category
 		const updatedLastApplied = { ...lastAppliedTemplates };
-		if (templateForm.categories && templateForm.categories.length > 0) {
-			templateForm.categories.forEach(categoryId => {
+		if (validCategories && validCategories.length > 0) {
+			validCategories.forEach(categoryId => {
 				updatedLastApplied[categoryId] = {
 					template_index: templateIndex,
 					applied_at: createdAt
@@ -142,18 +160,26 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 		const updatedAt = new Date().toISOString();
 
+		// Filter out deleted categories before saving
+		const validCategories = filterValidCategories(templateForm.categories);
+
 		const updatedTemplates = utmTemplates.map(template =>
 			template.template_index === activeTemplate.template_index
-				? { ...templateForm, template_index: activeTemplate.template_index, updated_at: updatedAt }
+				? { 
+					...templateForm, 
+					categories: validCategories, // Use filtered categories
+					template_index: activeTemplate.template_index, 
+					updated_at: updatedAt 
+				}
 				: template
 		);
 
 		setUtmTemplates(updatedTemplates);
 
-		// Update last applied templates tracking for each category
+		// Update last applied templates tracking for each valid category
 		const updatedLastApplied = { ...lastAppliedTemplates };
-		if (templateForm.categories && templateForm.categories.length > 0) {
-			templateForm.categories.forEach(categoryId => {
+		if (validCategories && validCategories.length > 0) {
+			validCategories.forEach(categoryId => {
 				updatedLastApplied[categoryId] = {
 					template_index: activeTemplate.template_index,
 					applied_at: updatedAt
@@ -279,8 +305,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 	const handleTemplateSelect = (template) => {
 		setActiveTemplate(template);
+		
+		// Filter out deleted categories when loading the template for editing
+		const validCategories = filterValidCategories(template.categories);
+		
 		setTemplateForm({
 			...template,
+			categories: validCategories, // Use filtered categories
 			// Ensure new fields have default values for existing templates
 			utm_enable_to_rewrite_existing_utm_template: template.utm_enable_to_rewrite_existing_utm_template || false,
 			utm_enable_to_reset_existing_utm_template: template.utm_enable_to_reset_existing_utm_template || false,
@@ -305,9 +336,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	};
 
 	const handleTemplateCopy = (template) => {
+		// Filter out deleted categories when copying
+		const validCategories = filterValidCategories(template.categories);
+		
 		// Create a copy with a new name and preserve all fields including checkboxes
 		const copiedTemplate = {
 			...template,
+			categories: validCategories, // Use filtered categories
 			template_name: `${template.template_name} - Copy`,
 			// Preserve checkbox states - ensure they have default values if not set
 			utm_enable_to_rewrite_existing_utm_template: template.utm_enable_to_rewrite_existing_utm_template || false,
@@ -320,7 +355,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setIsModalOpen(true);
 	};
 
-
+	console.log('Fetched terms data:', terms);
 
 	return (
 		<Formik
@@ -403,19 +438,26 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
 															{template.categories && template.categories.length > 0
 																? template.categories.map((catId, index) => {
-																	const category = terms?.find(term => parseInt(term.ID) === parseInt(catId));
+																	// Try multiple comparison methods to handle data type inconsistencies
+																	const category1 = terms?.find(term => parseInt(term.ID) === parseInt(catId));
+																	const category2 = terms?.find(term => String(term.ID) === String(catId));
+																	const category3 = terms?.find(term => term.ID == catId);
+
+																	const category = category1 || category2 || category3;
+
 																	const categoryName = category ? category.term_name : 'Deleted';
 																	const isActive = isCategoryActiveForTemplate(template, catId);
+																	const isDeleted = categoryName === 'Deleted';
 																	return (
 																		<span key={catId}>
-																			<span className={`btl-utm-category-tag ${isActive ? 'btl-utm-category-active' : ''}`}>
+																			<span className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isActive ? 'btl-utm-category-active' : '')}`}>
 																				{categoryName}
 																			</span>
 																			{/* {index < template.categories.length - 1 && <span className="btl-utm-category-separator">, </span>} */}
 																		</span>
 																	);
 																})
-																: <span className="btl-utm-category-tag">{__('Uncategorized', 'betterlinks')}</span>
+																: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
 															}
 														</div>
 													</div>
