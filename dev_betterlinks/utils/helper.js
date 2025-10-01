@@ -711,6 +711,30 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				sortable: false,
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
+			//add user agent here to show
+			{
+				name: (
+					<>
+						{__('User Agent', 'betterlinks')}
+					</>
+				),
+				selector: 'user_agent',
+				width: '300px',
+				sortable: false,
+				cell: (row) => {
+					const isTrackingEnabled = betterlinks_settings?.enable_user_agent_tracking || window.betterLinksGlobal?.betterlinks_settings?.enable_user_agent_tracking;
+					if (!isTrackingEnabled) {
+						return <div style={{ fontStyle: 'italic', color: '#666' }}>Disabled</div>;
+					}
+					return (
+						<div>
+							<div style={{ fontSize: '12px', wordBreak: 'break-all', maxWidth: '280px' }}>
+								{row.user_agent || 'N/A'}
+							</div>
+						</div>
+					);
+				},
+			},
 			{
 				name: __('Timestamp', 'betterlinks'),
 				selector: 'created_at',
@@ -871,16 +895,20 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 
 export const analyticsColumnData = [
 	{
-		name: __('Browser', 'betterlinks'),
+		name: __('BrowseKK', 'betterlinks'),
 		selector: 'browser',
 	},
 	{
-		name: __('Link Name', 'betterlinks'),
+		name: __('Link Name jm', 'betterlinks'),
 		selector: 'name',
 	},
 	{
 		name: __('IP', 'betterlinks'),
 		selector: 'ip',
+	},
+	{
+		name: __('User Agent', 'betterlinks'),
+		selector: 'user_agent',
 	},
 	{
 		name: __('Timestamp', 'betterlinks'),

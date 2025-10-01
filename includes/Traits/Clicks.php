@@ -182,21 +182,43 @@ trait Clicks {
 			return $results;
 		}
 		global $wpdb;
-		$fields = 'ID, link_id, ip, browser, referer, os, device,query_params, created_at';
-
-		$query   = $wpdb->prepare( 
-			"SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id=%s AND created_at BETWEEN %s AND %s ORDER BY created_at DESC",
-			$id,
-			$from . ' 00:00:00',
-			$to . ' 23:59:59'
-		 );
+		
+		// Check if user_agents table exists
+		$user_agents_table_exists = $wpdb->get_var( 
+			$wpdb->prepare( 
+				"SHOW TABLES LIKE %s", 
+				$wpdb->prefix . 'betterlinks_user_agents' 
+			)
+		);
+		
+		if ( $user_agents_table_exists ) {
+			// Include user_agent data if table exists
+			$fields = 'c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at, ua.user_agent';
+			$query   = $wpdb->prepare( 
+				"SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks c 
+				LEFT JOIN {$wpdb->prefix}betterlinks_user_agents ua ON c.user_agent_id = ua.id 
+				WHERE c.link_id=%s AND c.created_at BETWEEN %s AND %s ORDER BY c.created_at DESC",
+				$id,
+				$from . ' 00:00:00',
+				$to . ' 23:59:59'
+			);
+		} else {
+			// Fallback to original query without user_agent if table doesn't exist
+			$fields = 'c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at, NULL as user_agent';
+			$query   = $wpdb->prepare( 
+				"SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks c 
+				WHERE c.link_id=%s AND c.created_at BETWEEN %s AND %s ORDER BY c.created_at DESC",
+				$id,
+				$from . ' 00:00:00',
+				$to . ' 23:59:59'
+			);
+		}
+		
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		set_transient( $transient_key, $results, self::$transient_timeout );
 		return $results;
-	}
-
-	/**
+	}	/**
 	 * Returns individual link details
 	 *
 	 * @param int|string $id link id.

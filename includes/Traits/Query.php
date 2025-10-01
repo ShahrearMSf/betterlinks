@@ -610,10 +610,40 @@ trait Query {
 		$addedPlaceholderString  = $is_analytics_ip_enabled ? ' created_at_gmt, rotation_target_url, ip, host ' : ' created_at_gmt, rotation_target_url ';
 		$addedDbColumnsString    = $is_analytics_ip_enabled ? ' %s, %s, %s, %s ' : ' %s, %s ';
 
+		// Check if user agent tracking is enabled AND column exists
+		$settings = get_option( BETTERLINKS_LINKS_OPTION_NAME, '[]' );
+		if ( is_string( $settings ) ) {
+			$settings = json_decode( $settings, true );
+		}
+		$is_user_agent_tracking_enabled = ! empty( $settings['enable_user_agent_tracking'] );
+		
+		// Check if user_agent_id column exists in clicks table
+		$user_agent_column_exists = $wpdb->get_var( 
+			$wpdb->prepare( 
+				'SELECT `column_name` FROM information_schema.columns WHERE table_schema=%s AND table_name=%s AND column_name="user_agent_id"',
+				DB_NAME,
+				$wpdb->prefix . 'betterlinks_clicks'
+			)
+		);
+		
+		// Handle user agent if tracking is enabled, column exists, and user agent is provided
+		$user_agent_id = null;
+		$should_include_user_agent = $is_user_agent_tracking_enabled && $user_agent_column_exists && isset( $item['user_agent'] );
+		if ( $should_include_user_agent ) {
+			$user_agent_id = self::get_or_insert_user_agent_id( $item['user_agent'] );
+		}
+
 		if ( $is_extra_data_tracking_compatible ) {
 			$addedPlaceholderString .= ', brand_name, model, bot_name, browser_type, os_version, browser_version, language, query_params';
 			$addedDbColumnsString   .= ', %s, %s, %s, %s, %s, %s, %s, %s';
 		}
+		
+		// Add user agent ID to the query only if column exists
+		if ( $should_include_user_agent ) {
+			$addedPlaceholderString .= ', user_agent_id';
+			$addedDbColumnsString   .= ', %s';
+		}
+		
 		if( empty($betterlinks) || empty( current( $betterlinks )['ID'] ) ) return;
 		$query         = "INSERT INTO {$wpdb->prefix}betterlinks_clicks ( link_id, browser, os,device, referer, uri, click_count, visitor_id, click_order, created_at,  $addedPlaceholderString ) VALUES ( %d, %s, %s, %s, %s, %s, %d, %s, %d, %s,  $addedDbColumnsString )";
 		$db_data_array = array(
@@ -645,6 +675,12 @@ trait Query {
 			$db_data_array[] = isset( $item['language'] ) ? $item['language'] : '';
 			$db_data_array[] = isset( $item['query_params'] ) ? $item['query_params'] : '';
 		}
+		
+		// Add user agent ID to data array only if column exists
+		if ( $should_include_user_agent ) {
+			$db_data_array[] = $user_agent_id;
+		}
+		
 		if ( isset( current( $betterlinks )['ID'] ) ) {
 			$wpdb->query(
 				$wpdb->prepare( $query, $db_data_array )
@@ -652,6 +688,60 @@ trait Query {
 			return $wpdb->insert_id;
 		}
 		return;
+	}
+
+	public static function get_or_insert_user_agent_id( $user_agent ) {
+		global $wpdb;
+		
+		if ( empty( $user_agent ) ) {
+			return null;
+		}
+		
+		// Check if user_agents table exists first
+		$user_agents_table_exists = $wpdb->get_var( 
+			$wpdb->prepare( 
+				"SHOW TABLES LIKE %s", 
+				$wpdb->prefix . 'betterlinks_user_agents' 
+			)
+		);
+		
+		if ( ! $user_agents_table_exists ) {
+			return null; // Table doesn't exist, return null gracefully
+		}
+		
+		// First try to get existing user agent ID
+		$existing_id = $wpdb->get_var( 
+			$wpdb->prepare(
+				"SELECT id FROM {$wpdb->prefix}betterlinks_user_agents WHERE user_agent = %s LIMIT 1",
+				$user_agent
+			)
+		);
+		
+		if ( $existing_id ) {
+			return (int) $existing_id;
+		}
+		
+		// Insert new user agent if not exists
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"INSERT IGNORE INTO {$wpdb->prefix}betterlinks_user_agents (user_agent) VALUES (%s)",
+				$user_agent
+			)
+		);
+		
+		if ( $result ) {
+			return (int) $wpdb->insert_id;
+		}
+		
+		// If INSERT IGNORE failed due to race condition, try to get ID again
+		$existing_id = $wpdb->get_var( 
+			$wpdb->prepare(
+				"SELECT id FROM {$wpdb->prefix}betterlinks_user_agents WHERE user_agent = %s LIMIT 1",
+				$user_agent
+			)
+		);
+		
+		return $existing_id ? (int) $existing_id : null;
 	}
 
 	public static function get_linksNips_count() {

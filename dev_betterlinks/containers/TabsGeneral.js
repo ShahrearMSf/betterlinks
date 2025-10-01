@@ -443,6 +443,26 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 									</label>
 								</div>
 							</span>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('User Agent', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="enable_user_agent_tracking"
+											type="checkbox"
+											onChange={() => props.setFieldValue('enable_user_agent_tracking', !props?.values?.enable_user_agent_tracking)}
+										/>
+										<span className="text">
+											{__('Enable User Agent Tracking', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__("This will capture and store user agent information in analytics for detailed browser tracking", 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
 							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
