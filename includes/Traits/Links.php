@@ -228,8 +228,11 @@ trait Links
         $matching_template = null;
         
         // First, check if there's a last applied template for this category
-        if (isset($last_applied_templates[$category_id])) {
-            $last_applied_template_index = $last_applied_templates[$category_id]['template_index'];
+        // Normalize category ID for consistent comparison
+        $normalized_category_id = strval($category_id);
+        
+        if (isset($last_applied_templates[$normalized_category_id])) {
+            $last_applied_template_index = $last_applied_templates[$normalized_category_id]['template_index'];
             
             // Find the template with this index
             foreach ($utm_templates as $template) {
@@ -240,7 +243,9 @@ trait Links
                     // Verify this template still applies to the current category
                     if (isset($template['categories']) && is_array($template['categories'])) {
                         foreach ($template['categories'] as $template_cat_id) {
-                            if (intval($template_cat_id) === $category_id) {
+                            // Normalize both IDs for comparison
+                            $normalized_template_cat_id = strval($template_cat_id);
+                            if ($normalized_template_cat_id === $normalized_category_id) {
                                 $matching_template = $template;
                                 break 2;
                             }
@@ -261,7 +266,9 @@ trait Links
                 // Check if this template applies to the current category
                 if (isset($template['categories']) && is_array($template['categories'])) {
                     foreach ($template['categories'] as $template_cat_id) {
-                        if (intval($template_cat_id) === $category_id) {
+                        // Normalize both IDs for comparison
+                        $normalized_template_cat_id = strval($template_cat_id);
+                        if ($normalized_template_cat_id === $normalized_category_id) {
                             $matching_template = $template;
                             break 2; // Break out of both loops
                         }

@@ -97,6 +97,7 @@ class Ajax {
 		// UTM Template Application
 		add_action( 'wp_ajax_betterlinks/admin/apply_utm_template_to_links', array( $this, 'apply_utm_template_to_links' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_categories', array( $this, 'get_links_by_categories' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_utm_status_counts', array( $this, 'get_utm_status_counts' ) );
 	}
 
 	public function update_fbs_link() {
@@ -1458,6 +1459,76 @@ class Ajax {
 			'skipped_count' => $skipped_count,
 			'total_links' => count( $links ),
 			'message' => $message
+		) );
+	}
+
+	/**
+	 * Get UTM status counts for specified categories
+	 */
+	public function get_utm_status_counts() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'betterlinks' ) );
+		}
+
+		$category_ids = isset( $_POST['category_ids'] ) ? json_decode( stripslashes( $_POST['category_ids'] ), true ) : array();
+
+		// Convert to integers if needed
+		if ( is_array( $category_ids ) ) {
+			$category_ids = array_map( 'intval', $category_ids );
+		}
+
+		if ( empty( $category_ids ) ) {
+			wp_send_json_error( __( 'No categories specified.', 'betterlinks' ) );
+		}
+
+		global $wpdb;
+
+		// Get links for the specified categories
+		$placeholders = implode( ',', array_fill( 0, count( $category_ids ), '%d' ) );
+		$query = $wpdb->prepare(
+			"SELECT DISTINCT l.ID, l.target_url 
+			FROM {$wpdb->prefix}betterlinks l
+			INNER JOIN {$wpdb->prefix}betterlinks_terms_relationships tr ON l.ID = tr.link_id
+			WHERE tr.term_id IN ($placeholders)",
+			...$category_ids
+		);
+
+		$links = $wpdb->get_results( $query, ARRAY_A );
+		
+		$total_links = count( $links );
+		$links_with_utm = 0;
+		$links_without_utm = 0;
+
+		foreach ( $links as $link ) {
+			$target_url = $link['target_url'];
+			$parsed_url = parse_url( $target_url );
+			
+			// Check if URL already has UTM parameters
+			$existing_query = isset( $parsed_url['query'] ) ? $parsed_url['query'] : '';
+			parse_str( $existing_query, $existing_params );
+			
+			$has_utm = false;
+			$utm_params = array( 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content' );
+			foreach ( $utm_params as $param ) {
+				if ( isset( $existing_params[$param] ) && !empty( $existing_params[$param] ) ) {
+					$has_utm = true;
+					break;
+				}
+			}
+
+			if ( $has_utm ) {
+				$links_with_utm++;
+			} else {
+				$links_without_utm++;
+			}
+		}
+
+		wp_send_json_success( array(
+			'total_links' => $total_links,
+			'links_with_utm' => $links_with_utm,
+			'links_without_utm' => $links_without_utm
 		) );
 	}
 }

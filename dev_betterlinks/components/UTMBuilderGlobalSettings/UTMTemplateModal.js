@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import CreatableSelect from 'react-select/creatable';
@@ -36,10 +36,26 @@ const UTMTemplateModal = ({
     const [modalState, setModalState] = useState('confirmation'); // 'confirmation' or 'success'
     const [modalMessage, setModalMessage] = useState('');
     const [preventMainModalClose, setPreventMainModalClose] = useState(false);
+    const [utmStatusCounts, setUtmStatusCounts] = useState({
+        total_links: 0,
+        links_with_utm: 0,
+        links_without_utm: 0
+    });
+
+    // Fetch UTM status counts when categories change
+    useEffect(() => {
+        fetchUtmStatusCounts();
+    }, [templateForm.categories]);
+
+    // Re-fetch counts when rewrite checkbox changes (though counts don't change, this ensures we have fresh data)
+    useEffect(() => {
+        if (templateForm.categories && templateForm.categories.length > 0) {
+            fetchUtmStatusCounts();
+        }
+    }, [templateForm.utm_enable_to_rewrite_existing_utm_template]);
 
     const getCategoryOptions = () => {
         if (!terms || terms.length === 0) {
-            console.log('getCategoryOptions: No terms available');
             return [];
         }
 
@@ -58,7 +74,6 @@ const UTMTemplateModal = ({
 
     const getSelectedCategories = () => {
         if (!templateForm.categories || !terms || terms.length === 0) {
-            console.log('getSelectedCategories: No categories or terms available');
             return [];
         }
 
@@ -96,6 +111,44 @@ const UTMTemplateModal = ({
         }, 0);
     };
 
+    const fetchUtmStatusCounts = async () => {
+        if (!templateForm.categories || templateForm.categories.length === 0) {
+            setUtmStatusCounts({ total_links: 0, links_with_utm: 0, links_without_utm: 0 });
+            return;
+        }
+
+        try {
+            const response = await makeRequest({
+                action: 'betterlinks/admin/get_utm_status_counts',
+                category_ids: templateForm.categories
+            });
+
+            if (response?.data?.success) {
+                setUtmStatusCounts(response.data.data);
+            } else {
+                setUtmStatusCounts({ total_links: 0, links_with_utm: 0, links_without_utm: 0 });
+            }
+        } catch (error) {
+            console.error('Error fetching UTM status counts:', error);
+            setUtmStatusCounts({ total_links: 0, links_with_utm: 0, links_without_utm: 0 });
+        }
+    };
+
+    const getRelevantLinkCount = () => {
+        // If rewrite checkbox is enabled, show all links (since it will apply to all)
+        if (templateForm.utm_enable_to_rewrite_existing_utm_template) {
+            return utmStatusCounts.total_links;
+        }
+        
+        // If it's a reset action, show only links with UTM
+        if (templateForm.utm_enable_to_reset_existing_utm_template) {
+            return utmStatusCounts.links_with_utm;
+        }
+        
+        // For normal apply action, show only links without UTM
+        return utmStatusCounts.links_without_utm;
+    };
+
     const handleCategoryChange = (selectedOptions) => {
         const categoryIds = selectedOptions ? selectedOptions.map(option => option.value) : []; // No default category
         setTemplateForm({ ...templateForm, categories: categoryIds });
@@ -118,6 +171,14 @@ const UTMTemplateModal = ({
     };
 
     const handleSubmit = () => {
+        // Reset any existing reset flag when doing a normal template update/create
+        if (templateForm.utm_enable_to_reset_existing_utm_template) {
+            setTemplateForm(prev => ({
+                ...prev,
+                utm_enable_to_reset_existing_utm_template: false
+            }));
+        }
+        
         // Show confirmation modal before proceeding
         setModalState('confirmation');
         setShowModal(true);
@@ -186,6 +247,9 @@ const UTMTemplateModal = ({
                     ...prev,
                     utm_enable_to_reset_existing_utm_template: false
                 }));
+
+                // Refresh UTM status counts after any UTM operation (apply, update, or reset)
+                await fetchUtmStatusCounts();
             }
 
             // Prepare success message for template save (only when not resetting)
@@ -210,23 +274,26 @@ const UTMTemplateModal = ({
             setIsApplying(false);
             
             // Reset the flag in case of error
+            const wasResetting = templateForm.utm_enable_to_reset_existing_utm_template;
             setTemplateForm(prev => ({
                 ...prev,
                 utm_enable_to_reset_existing_utm_template: false
             }));
+
+            // Refresh UTM status counts even in error case for any UTM operations
+            // This ensures the UI reflects the actual current state
+            await fetchUtmStatusCounts();
         }
     };
 
     // Handle success modal OK button click
-    const handleSuccessOk = () => {
+    const handleSuccessOk = async () => {
         // Only save the template when it's not a reset action
         if (!templateForm.utm_enable_to_reset_existing_utm_template) {
             try {
                 if (isCreatingTemplate) {
-                    console.log('handleSuccessOk: Creating template');
                     handleTemplateCreate();
                 } else {
-                    console.log('handleSuccessOk: Updating template');
                     handleTemplateUpdate();
                 }
             } catch (error) {
@@ -234,8 +301,10 @@ const UTMTemplateModal = ({
             }
         }
 
+        // Refresh UTM status counts for all operations to ensure real-time updates
+        await fetchUtmStatusCounts();
+
         // Reset states and close modals
-        console.log('handleSuccessOk: Preventing main modal close');
         setPreventMainModalClose(false);
         setShowModal(false);
         
@@ -305,10 +374,18 @@ const UTMTemplateModal = ({
                             {templateForm.categories && templateForm.categories.length > 0 && (
                                 <div className="btl-utm-links-count">
                                     <span className="btl-links-count-text">
-                                        *{__('Number of BetterLinks Available', 'betterlinks')}: <strong>{getTotalLinksInSelectedCategories()}</strong>
+                                        *{__('Total BetterLinks', 'betterlinks')}: <strong>{utmStatusCounts.total_links}</strong>
+                                        {utmStatusCounts.total_links > 0 && (
+                                            <>
+                                                {' | '}
+                                                {__('Without UTM', 'betterlinks')}: <strong>{utmStatusCounts.links_without_utm}</strong>
+                                                {' | '}
+                                                {__('With UTM', 'betterlinks')}: <strong>{utmStatusCounts.links_with_utm}</strong>
+                                            </>
+                                        )}
                                     </span>
                                      {/* Reset UTM Button */}
-                                    {!isCreatingTemplate && (
+                                    {!isCreatingTemplate && utmStatusCounts.links_with_utm > 0 && (
                                     <button 
                                         type="button"
                                         className="btl-utm-btn-reset"
@@ -480,8 +557,15 @@ const UTMTemplateModal = ({
                         // When success modal is closed via OK button, save template and close main modal
                         handleSuccessOk();
                     } else {
-                        // For confirmation modal, just close
+                        // For confirmation modal, just close and reset any flags
                         setShowModal(false);
+                        // Reset the reset flag if user cancels the confirmation
+                        if (templateForm.utm_enable_to_reset_existing_utm_template) {
+                            setTemplateForm(prev => ({
+                                ...prev,
+                                utm_enable_to_reset_existing_utm_template: false
+                            }));
+                        }
                     }
                 }}
                 onConfirm={handleConfirmSubmit}
@@ -495,7 +579,7 @@ const UTMTemplateModal = ({
                             : templateForm.utm_enable_to_rewrite_existing_utm_template ? __('This will overwrite existing UTM settings on', 'betterlinks') : __('This action will apply UTM values on', 'betterlinks'))
                         : __('This action will apply UTM values on')
                 }
-                totalLinks={getTotalLinksInSelectedCategories()}
+                totalLinks={getRelevantLinkCount()}
                 confirmationSubMessage={templateForm.utm_auto_apply_new_link ? __('All new shortlinks in this category will automatically use this template.', 'betterlinks') : ''}
                 confirmButtonText={templateForm.utm_enable_to_reset_existing_utm_template ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 cancelButtonText={__('Cancel', 'betterlinks')}

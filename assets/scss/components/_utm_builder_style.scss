@@ -244,6 +244,15 @@ body.betterlinks-dark-mode .ReactModal__Content {
                     font-weight: 600;
                 }
 
+                // Loading state - show while fetching categories
+                &.btl-utm-category-loading {
+                    background: #f3f4f6;
+                    color: #6b7280;
+                    border-color: #d1d5db;
+                    font-style: italic;
+                    opacity: 0.8;
+                }
+
                 // Deleted category highlighting - should always take priority
                 &.btl-utm-category-deleted {
                     background: #fee2e2 !important;

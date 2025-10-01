@@ -16,6 +16,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [terms, setTerms] = useState([]);
+	const [termsLoading, setTermsLoading] = useState(true); // Loading state for terms/categories
 	const [lastAppliedTemplates, setLastAppliedTemplates] = useState({}); // Track last applied template per category
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [templateToDelete, setTemplateToDelete] = useState(null);
@@ -32,6 +33,69 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		utm_auto_apply_new_link: false
 	});
 
+	// Helper function to normalize category ID to string for consistency
+	const normalizeCategoryId = (catId) => {
+		// Handle various data types and edge cases
+		if (catId === null || catId === undefined || catId === '' || catId === 'NaN' || catId === 'undefined' || catId === 'null') {
+			return '1'; // Default to Uncategorized
+		}
+		
+		// Convert to string first
+		const catIdStr = String(catId).toLowerCase();
+		
+		// Special handling for Uncategorized
+		if (catIdStr === '1' || catIdStr === 'uncategorized' || catIdStr === 'true') {
+			return '1';
+		}
+		
+		// Try to parse as number
+		const catIdNum = parseInt(catId);
+		if (!isNaN(catIdNum) && catIdNum > 0) {
+			return String(catIdNum);
+		}
+		
+		// For any other invalid cases, default to Uncategorized
+		return '1';
+	};
+
+	// Helper function to find a category by ID with robust comparison
+	const findCategoryById = (catId) => {
+		if (!terms || !Array.isArray(terms)) return null;
+		
+		// Normalize the input category ID
+		const normalizedCatId = normalizeCategoryId(catId);
+		
+		// Find category using normalized comparison
+		return terms.find(term => {
+			const normalizedTermId = normalizeCategoryId(term.ID);
+			return normalizedTermId === normalizedCatId;
+		});
+	};
+
+	// Helper function to clean up corrupted last applied templates data
+	const cleanupLastAppliedTemplates = (lastAppliedData) => {
+		const cleaned = {};
+		
+		if (!lastAppliedData || typeof lastAppliedData !== 'object') {
+			return cleaned;
+		}
+		
+		Object.keys(lastAppliedData).forEach(categoryId => {
+			const normalizedCategoryId = normalizeCategoryId(categoryId);
+			const templateData = lastAppliedData[categoryId];
+			
+			// Only keep valid template data
+			if (templateData && 
+				typeof templateData === 'object' && 
+				templateData.template_index && 
+				templateData.applied_at) {
+				cleaned[normalizedCategoryId] = templateData;
+			}
+		});
+		
+		return cleaned;
+	};
+
 	useEffect(() => {
 		// Load existing UTM templates from settings
 		const existingTemplates = settings?.global_utm_templates || [];
@@ -39,18 +103,22 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 		// Initialize last applied templates tracking from settings or calculate from existing templates
 		const existingLastApplied = settings?.utm_last_applied_templates || {};
+		
+		// Clean up corrupted data
+		const cleanedLastApplied = cleanupLastAppliedTemplates(existingLastApplied);
 
 		// If no tracking data exists, calculate from existing templates based on timestamps
-		if (Object.keys(existingLastApplied).length === 0 && existingTemplates.length > 0) {
+		if (Object.keys(cleanedLastApplied).length === 0 && existingTemplates.length > 0) {
 			const calculatedLastApplied = {};
 			existingTemplates.forEach(template => {
 				if (template.categories && template.categories.length > 0) {
 					template.categories.forEach(categoryId => {
-						const currentLastApplied = calculatedLastApplied[categoryId];
+						const normalizedCategoryId = normalizeCategoryId(categoryId);
+						const currentLastApplied = calculatedLastApplied[normalizedCategoryId];
 						const templateTimestamp = new Date(template.updated_at || template.created_at || 0).getTime();
 
 						if (!currentLastApplied || templateTimestamp > new Date(currentLastApplied.applied_at || 0).getTime()) {
-							calculatedLastApplied[categoryId] = {
+							calculatedLastApplied[normalizedCategoryId] = {
 								template_index: template.template_index,
 								applied_at: template.updated_at || template.created_at || new Date().toISOString()
 							};
@@ -60,10 +128,12 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 			});
 			setLastAppliedTemplates(calculatedLastApplied);
 		} else {
-			setLastAppliedTemplates(existingLastApplied);
+			// Use the already cleaned data
+			setLastAppliedTemplates(cleanedLastApplied);
 		}
 
 		// Fetch terms/categories using makeRequest
+		setTermsLoading(true); // Start loading
 		const form_data = new FormData();
 		form_data.append('action', 'betterlinks/admin/get_terms');
 		form_data.append('security', betterlinks_nonce);
@@ -76,6 +146,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 			}
 		}).catch((error) => {
 			console.error('Error fetching terms:', error);
+		}).finally(() => {
+			setTermsLoading(false); // End loading regardless of success or failure
 		});
 	}, [settings]);
 
@@ -84,14 +156,16 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		if (!template.categories || template.categories.length === 0) return false;
 
 		return template.categories.some(categoryId => {
-			const lastApplied = lastAppliedTemplates[categoryId];
+			const normalizedCategoryId = normalizeCategoryId(categoryId);
+			const lastApplied = lastAppliedTemplates[normalizedCategoryId];
 			return lastApplied && lastApplied.template_index === template.template_index;
 		});
 	};
 
 	// Helper function to check if a specific category is active for this template
 	const isCategoryActiveForTemplate = (template, categoryId) => {
-		const lastApplied = lastAppliedTemplates[categoryId];
+		const normalizedCategoryId = normalizeCategoryId(categoryId);
+		const lastApplied = lastAppliedTemplates[normalizedCategoryId];
 		return lastApplied && lastApplied.template_index === template.template_index;
 	};
 
@@ -100,12 +174,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		if (!categories || !Array.isArray(categories)) return [];
 		
 		return categories.filter(catId => {
-			// Try multiple comparison methods to handle data type inconsistencies
-			const category1 = terms?.find(term => parseInt(term.ID) === parseInt(catId));
-			const category2 = terms?.find(term => String(term.ID) === String(catId));
-			const category3 = terms?.find(term => term.ID == catId);
-			
-			return category1 || category2 || category3;
+			return findCategoryById(catId) !== null;
 		});
 	};
 
@@ -118,8 +187,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		const templateIndex = Date.now(); // Use timestamp as unique ID
 		const createdAt = new Date().toISOString();
 
-		// Filter out deleted categories before saving
-		const validCategories = filterValidCategories(templateForm.categories);
+		// Filter out deleted categories before saving and normalize IDs
+		const validCategories = filterValidCategories(templateForm.categories).map(catId => normalizeCategoryId(catId));
 
 		const newTemplate = {
 			...templateForm,
@@ -132,10 +201,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setUtmTemplates(updatedTemplates);
 
 		// Update last applied templates tracking for each valid category
-		const updatedLastApplied = { ...lastAppliedTemplates };
+		// Clean up any existing corrupted data and save the normalized version
+		const cleanedExistingData = cleanupLastAppliedTemplates(lastAppliedTemplates);
+		const updatedLastApplied = { ...cleanedExistingData };
 		if (validCategories && validCategories.length > 0) {
 			validCategories.forEach(categoryId => {
-				updatedLastApplied[categoryId] = {
+				const normalizedCategoryId = normalizeCategoryId(categoryId);
+				updatedLastApplied[normalizedCategoryId] = {
 					template_index: templateIndex,
 					applied_at: createdAt
 				};
@@ -160,8 +232,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 		const updatedAt = new Date().toISOString();
 
-		// Filter out deleted categories before saving
-		const validCategories = filterValidCategories(templateForm.categories);
+		// Filter out deleted categories before saving and normalize IDs
+		const validCategories = filterValidCategories(templateForm.categories).map(catId => normalizeCategoryId(catId));
 
 		const updatedTemplates = utmTemplates.map(template =>
 			template.template_index === activeTemplate.template_index
@@ -177,10 +249,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setUtmTemplates(updatedTemplates);
 
 		// Update last applied templates tracking for each valid category
-		const updatedLastApplied = { ...lastAppliedTemplates };
+		// Clean up any existing corrupted data and save the normalized version
+		const cleanedExistingData = cleanupLastAppliedTemplates(lastAppliedTemplates);
+		const updatedLastApplied = { ...cleanedExistingData };
 		if (validCategories && validCategories.length > 0) {
 			validCategories.forEach(categoryId => {
-				updatedLastApplied[categoryId] = {
+				const normalizedCategoryId = normalizeCategoryId(categoryId);
+				updatedLastApplied[normalizedCategoryId] = {
 					template_index: activeTemplate.template_index,
 					applied_at: updatedAt
 				};
@@ -197,7 +272,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
 
 		// Reset form and close modal
-		closeModal();
+		//closeModal();
 	};
 
 	const resetTemplateForm = () => {
@@ -306,8 +381,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const handleTemplateSelect = (template) => {
 		setActiveTemplate(template);
 		
-		// Filter out deleted categories when loading the template for editing
-		const validCategories = filterValidCategories(template.categories);
+		// Filter out deleted categories when loading the template for editing and normalize IDs
+		const validCategories = filterValidCategories(template.categories).map(catId => normalizeCategoryId(catId));
 		
 		setTemplateForm({
 			...template,
@@ -336,8 +411,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	};
 
 	const handleTemplateCopy = (template) => {
-		// Filter out deleted categories when copying
-		const validCategories = filterValidCategories(template.categories);
+		// Filter out deleted categories when copying and normalize IDs
+		const validCategories = filterValidCategories(template.categories).map(catId => normalizeCategoryId(catId));
 		
 		// Create a copy with a new name and preserve all fields including checkboxes
 		const copiedTemplate = {
@@ -355,7 +430,6 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setIsModalOpen(true);
 	};
 
-	console.log('Fetched terms data:', terms);
 
 	return (
 		<Formik
@@ -438,19 +512,26 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
 															{template.categories && template.categories.length > 0
 																? template.categories.map((catId, index) => {
-																	// Try multiple comparison methods to handle data type inconsistencies
-																	const category1 = terms?.find(term => parseInt(term.ID) === parseInt(catId));
-																	const category2 = terms?.find(term => String(term.ID) === String(catId));
-																	const category3 = terms?.find(term => term.ID == catId);
+																	// Use the robust findCategoryById helper function
+																	const category = findCategoryById(catId);
 
-																	const category = category1 || category2 || category3;
+																	// Determine category name based on loading state and category existence
+																	let categoryName;
+																	if (termsLoading) {
+																		categoryName = 'Loading...';
+																	} else if (category) {
+																		categoryName = category.term_name;
+																	} else {
+																		categoryName = 'Deleted';
+																	}
 
-																	const categoryName = category ? category.term_name : 'Deleted';
 																	const isActive = isCategoryActiveForTemplate(template, catId);
 																	const isDeleted = categoryName === 'Deleted';
+																	const isLoading = categoryName === 'Loading...';
+																	
 																	return (
 																		<span key={catId}>
-																			<span className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isActive ? 'btl-utm-category-active' : '')}`}>
+																			<span className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
 																				{categoryName}
 																			</span>
 																			{/* {index < template.categories.length - 1 && <span className="btl-utm-category-separator">, </span>} */}
