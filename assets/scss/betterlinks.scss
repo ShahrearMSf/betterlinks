@@ -219,6 +219,55 @@ body {
 	.pro-badge-new svg {
 		width: 50px;
 	}
+
+	// Dark Mode Styles for Delete Clicks Modal
+	&.betterlinks-delete-clicks-modal-popup-opened {
+		.btl-reset-modal-popup.btl-reset-modal-popup-step-2 {
+			.btl-reset-modal-popup-title {
+				color: #ffffff;
+			}
+			
+			.btl-delete-description {
+				color: #ffffff;
+			}
+			
+			.btl-analytics-dlt-date {
+				color: #ffffff;
+				
+				.btl-date-range {
+					color: #ffffff;
+				}
+			}
+			
+			.btl-delete-count-box {
+				color: #ffffff;
+				background-color: #331e21;
+				border-color: #262020;
+				
+				.btl-delete-count {
+					color: #ffffff;
+				}
+			}
+			
+			.btl-confirmation-section {
+				color: #ffffff;
+			}
+			
+			.btl-confirmation-label {
+				color: #ffffff;
+			}
+			
+			.btl-reset-confirmation-input {
+				background: #36405a;
+				border-color: #36405a;
+				color: #ffffff;
+				
+				&::placeholder {
+					color: #98a2b3;
+				}
+			}
+		}
+	}
 }
 
 .btl-date-range-picker-wrap {
@@ -561,18 +610,55 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 			text-align: center;
 			padding-bottom: 50px;
 
-			h2,
-			h4 {
-				line-height: 1.4;
-			}
-
-			h2 {
+			.btl-reset-modal-popup-title {
+				font-weight: 600;
 				font-size: 24px;
+				line-height: 130%;
+				text-align: center;
+				margin-top: 24px;
+				margin-bottom: 20px;
 			}
-
-			h4 {
-				font-size: 18px;
-				font-weight: 300;
+			.btl-delete-description{
+				font-weight: 400;
+				font-size: 16px;
+				line-height: 150%;
+				text-align: center;
+			}
+			.btl-analytics-dlt-date{
+				font-weight: 500;
+				font-size: 16px;
+				line-height: 150%;
+				text-align: center;
+			}
+			.btl-delete-count-box{
+				opacity: 1;
+				color: #F04438;
+				border-radius: 4px;
+				gap: 10px;
+				border-width: 1px;
+				padding: 8px;
+				background-color: #FFEFEE;
+				border: 1px solid #FFD3CF;
+				margin: 24px 0;
+				.btl-delete-count{
+					font-weight: 600;
+				}
+			}
+			.btl-confirmation-section {
+				margin: 0 16px;
+			}
+			.btl-confirmation-label{
+				font-size: 13px;
+				line-height: 140%;
+				text-align: center;
+				margin-bottom: 8px;
+			}
+			.btl-reset-confirmation-input{
+				font-weight: 400;
+				font-size: 13px;
+				line-height: 140%;
+				text-align: center;
+				margin-bottom: 32px;
 			}
 
 			.btl-btn-reset-popup-step-2-buttons {
@@ -603,7 +689,7 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 
 	.ReactModal__Content {
 		width: 870px;
-		height: 300px;
+		height: 380px;
 		margin: auto;
 		overflow: visible !important;
 		padding: 60px !important;
@@ -1133,18 +1219,35 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 }
 
 .betterlinks-body {
-	.button-danger {
-		background: #ffffff !important;
-		color: #F97066 !important;
-		border: 1px solid !important;
-		border-color: #F97066 !important;
+	.btl-button-danger {
+		background: #F04438 !important;
+		color: #ffffff !important;
+		border: 1px solid #F97066 !important;
 		padding: 5px 16px !important;
 		border-radius: 4px !important;
 		font-size: 14px !important;
-
+		display: flex;
+    	align-items: center;
 		img {
 			margin-right: 6px;
+			color: #ffffff !important;
 		}
+
+		// Disabled state
+		&.disabled,
+		&:disabled {
+			background: #f33333 !important;
+			color: #ffffff !important;
+			border: 1px solid #D0D5DD !important;
+			cursor: not-allowed !important;
+			opacity: 0.6;
+
+		}
+	}
+	.btl-button-cancel{
+		color: #114BEE !important;
+		background: #ffffff !important;
+		border: 1px solid #114BEE !important;
 	}
 
 	.btl-confirmation-text {
@@ -1228,6 +1331,8 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 				padding: 5px 16px;
 				border-radius: 4px;
 				font-size: 14px;
+				display: flex;
+				align-items: center;
 
 				img {
 					margin-right: 6px;

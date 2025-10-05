@@ -29,6 +29,7 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks/admin/short_url_unique_checker', array( $this, 'short_url_unique_checker' ) );
 		add_action( 'wp_ajax_betterlinks/admin/cat_slug_unique_checker', array( $this, 'cat_slug_unique_checker' ) );
 		add_action( 'wp_ajax_betterlinks/admin/reset_analytics', array( $this, 'reset_analytics' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_clicks_count', array( $this, 'get_clicks_count' ) );
 		// prettylinks.
 		add_action( 'wp_ajax_betterlinks/admin/get_prettylinks_data', array( $this, 'get_prettylinks_data' ) );
 		add_action( 'wp_ajax_betterlinks/admin/run_prettylinks_migration', array( $this, 'run_prettylinks_migration' ) );
@@ -1089,6 +1090,50 @@ class Ajax {
 			200
 		);
 	}
+
+	public function get_clicks_count() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! apply_filters( 'betterlinks/api/analytics_items_permissions_check', current_user_can( 'manage_options' ) ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+		global $wpdb;
+		$prefix  = $wpdb->prefix;
+		$from    = isset( $_REQUEST['from'] ) ? sanitize_text_field( $_REQUEST['from'] ) : date( 'Y-m-d', strtotime( ' - 30 days' ) );
+		$to      = isset( $_REQUEST['to'] ) ? sanitize_text_field( $_REQUEST['to'] ) : date( 'Y-m-d' );
+		$link_id = isset( $_REQUEST['link_id'] ) ? intval( $_REQUEST['link_id'] ) : null;
+
+		// Build count query similar to delete query
+		if ( !empty( $from ) && !empty( $to ) ) {
+			if ( $link_id !== null ) {
+				$query = "SELECT COUNT(*) FROM {$prefix}betterlinks_clicks WHERE DATE(created_at_gmt) >= %s AND DATE(created_at_gmt) <= %s AND link_id = %d";
+				$query = $wpdb->prepare( $query, $from, $to, $link_id );
+			} else {
+				$query = "SELECT COUNT(*) FROM {$prefix}betterlinks_clicks WHERE DATE(created_at_gmt) >= %s AND DATE(created_at_gmt) <= %s";
+				$query = $wpdb->prepare( $query, $from, $to );
+			}
+		} else {
+			// Count all records as fallback
+			if ( $link_id !== null ) {
+				$query = "SELECT COUNT(*) FROM {$prefix}betterlinks_clicks WHERE link_id = %d";
+				$query = $wpdb->prepare( $query, $link_id );
+			} else {
+				$query = "SELECT COUNT(*) FROM {$prefix}betterlinks_clicks";
+			}
+		}
+
+		$count = $wpdb->get_var( $query );
+		if ( $count === false ) {
+			wp_send_json_error( array( 'message' => 'Failed to get click count' ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'count' => intval( $count ),
+			),
+			200
+		);
+	}
+
 	public function get_post_types() {
 		$post_types = get_post_types(['public' => true]);
 		wp_send_json_success(

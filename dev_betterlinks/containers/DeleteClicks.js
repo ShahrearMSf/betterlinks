@@ -48,6 +48,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 		},
 	]);
 	const [confirmationText, setConfirmationText] = useState('');
+	const [clickCountToDelete, setClickCountToDelete] = useState(0);
 
 	// Refresh Stats button states
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
@@ -135,8 +136,37 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 	};
 
 	const handleApplyDateRange = () => {
-		setDeleteStatus('reset_modal_step_2');
-		setConfirmationText(''); // Clear confirmation text when moving to step 2
+		// Fetch click count for the selected date range
+		if (!resetDateFilter || !resetDateFilter[0]) return;
+		const from = formatDate(resetDateFilter[0].startDate, 'yyyy-mm-dd');
+		const to = formatDate(resetDateFilter[0].endDate, 'yyyy-mm-dd');
+
+		// Make API call to get count
+		const form_data = new FormData();
+		form_data.append('action', 'betterlinks/admin/get_clicks_count');
+		form_data.append('security', betterlinks_nonce);
+		form_data.append('from', from);
+		form_data.append('to', to);
+		if (linkId !== null) {
+			form_data.append('link_id', linkId);
+		}
+
+		axios.post(ajaxurl, form_data).then(
+			(response) => {
+				if (response.data && response.data.success) {
+					setClickCountToDelete(response.data.data.count || 0);
+				}
+				setDeleteStatus('reset_modal_step_2');
+				setConfirmationText(''); // Clear confirmation text when moving to step 2
+			},
+			(error) => {
+				console.log(error);
+				// Still proceed to step 2 even if count fetch fails
+				setClickCountToDelete(0);
+				setDeleteStatus('reset_modal_step_2');
+				setConfirmationText('');
+			}
+		);
 	};
 
 	const handleConfirmationTextChange = (e) => {
@@ -225,7 +255,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 			</div>
 
 			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
-				<div className="btl-reset-modal-popup-wrapper ">
+				<div className={`btl-reset-modal-popup-wrapper ${deleteStatus === 'reset_modal_step_1' ? 'step-1-active' : ''} ${deleteStatus === 'reset_modal_step_2' ? 'step-2-active' : ''}`}>
 					<span className="btl-close-modal" onClick={close}>
 						<i className="btl btl-cancel"></i>
 					</span>
@@ -255,7 +285,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 										className="button-primary btl-apply-date-range"
 										onClick={handleApplyDateRange}
 									>
-										<img width={10} height={12} src={plugin_root_url + '/assets/images/icons/delete.svg'} />
+										<img width={16} height={16} src={plugin_root_url + '/assets/images/icons/trash-red.svg'} />
 										Reset Click
 									</button>
 									<button
@@ -270,36 +300,42 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					)}
 					{deleteStatus === 'reset_modal_step_2' && (
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
-							<h2>This Action Cannot be undone. Are you sure you want to continue?</h2>
-							<h4>
-								Clicking <strong>Reset Clicks</strong> will permanently delete the clicks data from database and it cannot be restored again
-							</h4>
-							<span className='btl-confirmation-text'>
-								*type the word “RESET CLICKS”
-							</span>
-							<input
-								type="text"
-								required
-								className="btl-modal-form-control btl-confirmation-input"
-								style={{ marginBottom: '20px', textAlign: 'center', width: 'auto' }}
-								value={confirmationText}
-								onChange={handleConfirmationTextChange}
-							/>
+							<img width={48} height={48} src={plugin_root_url + '/assets/images/icons/warning.svg'} alt="Warning" className="btl-warning-icon" />
+							<div className="btl-reset-modal-popup-title">This Action Cannot be Undone</div>
+							<p className="btl-delete-description">
+								You are about to permanently delete click analytics from
+							</p>
+							<div className="btl-analytics-dlt-date">
+								<span className="btl-date-range">{resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} – {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>.
+							</div>
+							<div className="btl-delete-count-box">
+								A total of <strong className="btl-delete-count">{clickCountToDelete.toLocaleString()}</strong> click record{clickCountToDelete !== 1 ? 's' : ''} will be removed.
+							</div>
+							<div className="btl-confirmation-section">
+								<div className="btl-confirmation-label">To confirm, type RESET CLICKS</div>
+								<input
+									type="text"
+									required
+									className="btl-modal-form-control btl-reset-confirmation-input"
+									placeholder="type RESET CLICKS here..."
+									value={confirmationText}
+									onChange={handleConfirmationTextChange}
+								/>
+							</div>
 							<div className="btl-btn-reset-popup-step-2-buttons">
 								<button
-									className={`button-danger btl-btn-reset-apply-2 ${!isResetButtonEnabled ? 'disabled' : ''}`}
+									className="btl-button-cancel btl-btn-reset-cancel"
+									onClick={() => setDeleteStatus('reset_modal_step_1')}
+								>
+									Cancel
+								</button>
+								<button
+									className={`btl-button-danger btl-btn-reset-apply-2 ${!isResetButtonEnabled ? 'disabled' : ''}`}
 									onClick={handleConfirmDelete}
 									disabled={!isResetButtonEnabled}
-									style={{
-										opacity: isResetButtonEnabled ? 1 : 0.6,
-										cursor: isResetButtonEnabled ? 'pointer' : 'not-allowed'
-									}}
 								>
-									<img width={10} height={12} src={plugin_root_url + '/assets/images/icons/delete.svg'} />
+									<img width={14} height={14} src={plugin_root_url + '/assets/images/icons/delete.svg'} alt="Delete" />
 									Delete
-								</button>
-								<button className="button-primary btl-btn-reset-cancel" onClick={() => setDeleteStatus('reset_modal_step_1')}>
-									Go Back
 								</button>
 							</div>
 						</div>
