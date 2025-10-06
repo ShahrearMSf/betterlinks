@@ -20,6 +20,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const [lastAppliedTemplates, setLastAppliedTemplates] = useState({}); // Track last applied template per category
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [templateToDelete, setTemplateToDelete] = useState(null);
+	const [expandedTemplates, setExpandedTemplates] = useState(new Set());
 	const [templateForm, setTemplateForm] = useState({
 		template_name: '',
 		utm_source: '',
@@ -430,6 +431,25 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		setIsModalOpen(true);
 	};
 
+	const toggleTemplateExpansion = (templateIndex) => {
+		const newExpanded = new Set(expandedTemplates);
+		if (newExpanded.has(templateIndex)) {
+			newExpanded.delete(templateIndex);
+		} else {
+			newExpanded.add(templateIndex);
+		}
+		setExpandedTemplates(newExpanded);
+	};
+
+	const isTemplateExpanded = (templateIndex) => {
+		return expandedTemplates.has(templateIndex);
+	};
+
+	const shouldShowExpandButton = (template) => {
+		// Show expand button if title is long or has many categories
+		return template.template_name.length > 25 || (template.categories && template.categories.length > 2);
+	};
+
 
 	return (
 		<Formik
@@ -483,7 +503,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								subtitle={__('Are you sure you want to delete this UTM template? This action cannot be undone.', 'betterlinks')}
 								confirmButtonText={__('Delete and Remove Parameters', 'betterlinks')}
 								secondaryConfirmButtonText={__('Delete and Keep Parameters', 'betterlinks')}
-								showCancelButton={false}
+								showCancelButton={true}
 								cancelButtonText={__('Cancel', 'betterlinks')}
 								isDangerous={true}
 							/>
@@ -496,59 +516,92 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 										{utmTemplates.map(template => {
 											const isActiveTemplate = isTemplateActiveForAnyCategory(template);
 											return (
-												<div key={template.template_index} className="btl-utm-template-item">
+												<div key={template.template_index} className={`btl-utm-template-item ${isTemplateExpanded(template.template_index) ? 'expanded' : ''}`}>
 													<div className="btl-utm-template-content">
-														<div className="btl-utm-template-header">
+														<div 
+															className="btl-utm-template-header"
+															onClick={() => shouldShowExpandButton(template) && toggleTemplateExpansion(template.template_index)}
+															style={{ cursor: shouldShowExpandButton(template) ? 'pointer' : 'default' }}
+														>
 															<h5 className="btl-utm-template-name">
 																{template.template_name}
-																{/* {isActiveTemplate && (
-																	<span className="btl-utm-active-badge">
-																		{__('Active', 'betterlinks')}
-																	</span>
-																)} */}
 															</h5>
-														</div>
-														<div className="btl-utm-template-categories">
-															<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
-															{template.categories && template.categories.length > 0
-																? template.categories.map((catId, index) => {
-																	// Use the robust findCategoryById helper function
-																	const category = findCategoryById(catId);
+															{!isTemplateExpanded(template.template_index) && (
+																<div className="btl-utm-template-categories">
+																	<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
+																	{template.categories && template.categories.length > 0
+																		? template.categories.slice(0, 2).map((catId, index) => {
+																			const category = findCategoryById(catId);
+																			let categoryName;
+																			if (termsLoading) {
+																				categoryName = 'Loading...';
+																			} else if (category) {
+																				categoryName = category.term_name;
+																			} else {
+																				categoryName = 'Deleted';
+																			}
 
-																	// Determine category name based on loading state and category existence
-																	let categoryName;
-																	if (termsLoading) {
-																		categoryName = 'Loading...';
-																	} else if (category) {
-																		categoryName = category.term_name;
-																	} else {
-																		categoryName = 'Deleted';
+																			const isActive = isCategoryActiveForTemplate(template, catId);
+																			const isDeleted = categoryName === 'Deleted';
+																			const isLoading = categoryName === 'Loading...';
+																			
+																			return (
+																				<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
+																					{categoryName}
+																				</span>
+																			);
+																		})
+																		: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
 																	}
-
-																	const isActive = isCategoryActiveForTemplate(template, catId);
-																	const isDeleted = categoryName === 'Deleted';
-																	const isLoading = categoryName === 'Loading...';
-																	
-																	return (
-																		<span key={catId}>
-																			<span className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
-																				{categoryName}
-																			</span>
-																			{/* {index < template.categories.length - 1 && <span className="btl-utm-category-separator">, </span>} */}
+																	{template.categories && template.categories.length > 2 && (
+																		<span className="btl-utm-more-categories">
+																			{template.categories.length - 2} More+
 																		</span>
-																	);
-																})
-																: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
-															}
+																	)}
+																</div>
+															)}
 														</div>
+
+														{isTemplateExpanded(template.template_index) && (
+															<div className="btl-utm-template-categories-expanded">
+																<div className="btl-utm-categories-label">{__('Categories:', 'betterlinks')}</div>
+																<div className="btl-utm-categories-grid">
+																	{template.categories && template.categories.length > 0
+																		? template.categories.map((catId) => {
+																			const category = findCategoryById(catId);
+																			let categoryName;
+																			if (termsLoading) {
+																				categoryName = 'Loading...';
+																			} else if (category) {
+																				categoryName = category.term_name;
+																			} else {
+																				categoryName = 'Deleted';
+																			}
+
+																			const isActive = isCategoryActiveForTemplate(template, catId);
+																			const isDeleted = categoryName === 'Deleted';
+																			const isLoading = categoryName === 'Loading...';
+																			
+																			return (
+																				<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
+																					{categoryName}
+																				</span>
+																			);
+																		})
+																		: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
+																	}
+																</div>
+															</div>
+														)}
 													</div>
+
 													<div className="btl-utm-template-actions">
 														<button
 															type="button"
 															className="btl-utm-action-btn btl-utm-btn-ac"
 															onClick={() => handleTemplateCopy(template)}
 														>
-															<div className="btl-tooltip">
+															<div className="btl-tooltip btl-utm-line">
 																<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 																	<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
 																	<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
@@ -562,15 +615,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															onClick={() => handleTemplateSelect(template)}
 															title={__('Edit', 'betterlinks')}
 														>
-
-															<div className="btl-tooltip">
+															<div className="btl-tooltip btl-utm-line">
 																<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 																	<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
 																	<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
 																</svg>
 																<span className="btl-tooltiptext">{__('Edit', 'betterlinks')}</span>
 															</div>
-
 														</button>
 														<button
 															type="button"
@@ -578,7 +629,6 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															onClick={() => handleTemplateDelete(template.template_index)}
 															title={__('Delete', 'betterlinks')}
 														>
-
 															<div className="btl-tooltip">
 																<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 																	<path d="M3.3335 5.83333H16.6668M8.3335 9.16667V14.1667M11.6668 9.16667V14.1667M4.16683 5.83333L5.00016 15.8333C5.00016 16.2754 5.17576 16.6993 5.48832 17.0118C5.80088 17.3244 6.2248 17.5 6.66683 17.5H13.3335C13.7755 17.5 14.1994 17.3244 14.512 17.0118C14.8246 16.6993 15.0002 16.2754 15.0002 15.8333L15.8335 5.83333M7.50016 5.83333V3.33333C7.50016 3.11232 7.58796 2.90036 7.74424 2.74408C7.90052 2.5878 8.11248 2.5 8.3335 2.5H11.6668C11.8878 2.5 12.0998 2.5878 12.2561 2.74408C12.4124 2.90036 12.5002 3.11232 12.5002 3.33333V5.83333" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
@@ -600,25 +650,24 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								<div className="btl-utm-empty-state">
 									<div className="btl-utm-empty-content">
 										<div className="btl-utm-empty-icon">
-											<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="24" cy="24" r="20" stroke="#D1D5DB" strokeWidth="2" strokeDasharray="4 4" />
-												<path d="M24 16V32M16 24H32" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" />
-											</svg>
+											<img 
+												src={plugin_root_url + 'assets/images/icons/empty-template.svg'} 
+												alt="No UTM Templates" 
+												width="56" 
+												height="56"
+											/>
 										</div>
 										<h4 className="btl-utm-empty-title">
 											{__('No UTM Templates Found', 'betterlinks')}
 										</h4>
 										<p className="btl-utm-empty-description">
-											{__('Create your first UTM template to automatically apply UTM parameters to your links based on categories. This helps you track the performance of your links across different marketing campaigns.', 'betterlinks')}
+											{__('Create your first UTM template to auto-apply parameters to links by category and track campaign performance.', 'betterlinks')}
 										</p>
 										<button
 											className="btl-utm-empty-cta"
 											onClick={openCreateModal}
 										>
-											<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<path d="M8 3.5V12.5M3.5 8H12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-											</svg>
-											{__('Create Your First Template', 'betterlinks')}
+											{__('Create First Template', 'betterlinks')}
 										</button>
 									</div>
 								</div>

@@ -79,6 +79,9 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
 
 .btl-utm-global-settings {
+    .btl-utm-template-item.expanded {
+        align-items: flex-start;
+    }
     .btl-utm-templates-section {
         margin-bottom: 30px;
 
@@ -172,112 +175,333 @@ body.betterlinks-dark-mode .ReactModal__Content {
         flex-direction: column;
         gap: $spacing-xs;
     }
-
+    .expanded .btl-utm-template-content .btl-utm-template-header .btl-utm-template-name {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        max-width: fit-content;
+    }
     .btl-utm-template-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px $spacing-md;
+        padding: 16px;
         background: $background-light;
         border: 1px solid #ECF0FB;
         border-radius: $border-radius;
+        transition: all 0.2s ease;
+        cursor: pointer;
 
+        // &:hover {
+        //     border-color: $border-color-hover;
+        //     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        // }
 
-        &:hover {
-            background: $background-gray;
+        // // When expanded, allow title to show full width
+        // &.expanded {
+        //     cursor: default;
+            
+        //     .btl-utm-template-name {
+        //         white-space: normal;
+        //         overflow: visible;
+        //         text-overflow: unset;
+        //         max-width: none;
+        //     }
+        // }
+
+        // Expanded view specific styles
+        .btl-utm-template-expanded {
+            width: 100%;
+
+            .btl-utm-template-header-expanded {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .btl-utm-template-name-expanded {
+                font-size: 16px;
+                font-weight: 500;
+                color: $text-primary;
+                margin: 0;
+                flex: 1;
+                cursor: pointer;
+
+                &:hover {
+                    color: $text-secondary;
+                }
+            }
+
+            .btl-utm-template-actions-expanded {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .btl-utm-template-separator {
+                height: 1px;
+                background: #E5E7EB;
+                margin: 12px 0;
+            }
+
+            .btl-utm-template-categories-section {
+                .btl-utm-categories-label {
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: $text-muted;
+                    margin-bottom: 8px;
+                    display: block;
+                }
+
+                .btl-utm-template-categories {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-wrap: wrap;
+
+                    .btl-utm-template-category {
+                        display: inline-flex;
+                        align-items: center;
+                        padding: 4px 8px;
+                        background: #EDF2FF;
+                        color: $primary-blue;
+                        border-radius: 6px;
+                        font-size: 12px;
+                        font-weight: 500;
+                        white-space: nowrap;
+
+                        &.btl-utm-category-deleted {
+                            background: #FEF2F2;
+                            color: #DC2626;
+                            text-decoration: line-through;
+                        }
+
+                        &.btl-utm-category-loading {
+                            background: #F3F4F6;
+                            color: $text-muted;
+                        }
+                    }
+                }
+            }
         }
     }
 
     .btl-utm-template-content {
-        display: flex;
-        align-items: center;
-        gap: $spacing-lg;
         flex: 1;
+        min-width: 0; // Allow content to shrink
 
         .btl-utm-template-header {
             display: flex;
             align-items: center;
-            gap: $spacing-sm;
-            min-width: 120px;
-        }
+            gap: $spacing-md;
+            margin-bottom: 0;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
 
-        .btl-utm-template-name {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: $text-primary;
-            display: flex;
-            align-items: center;
-            gap: $spacing-sm;
-        }
+            // &:hover {
+            //     background-color: rgba(0, 0, 0, 0.02);
+            // }
 
-        .btl-utm-template-categories {
-            font-size: 14px;
-            color: #666;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-
-            .btl-utm-categories-label {
-                color: #666;
+            .btl-utm-template-name {
+                font-size: 16px;
+                font-weight: 600;
+                color: $text-primary;
+                margin: 0;
+                line-height: 1.4;
+                flex-shrink: 0;
+                // Default state (collapsed) - truncate
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 200px;
             }
 
-            .btl-utm-category-tag {
-                display: inline-flex;
+            .btl-utm-template-categories {
+                display: flex;
                 align-items: center;
-                padding: 2px 8px;
-                background: #d1d6e1;
-                color: #374151;
-                font-size: 12px;
-                font-weight: 500;
-                border-radius: 12px;
-                line-height: 1.2;
-                border: 1px solid transparent;
-                transition: all 0.2s ease;
+                gap: $spacing-xs;
+                flex-wrap: wrap;
+                flex: 1;
 
-                // Active category highlighting
-                &.btl-utm-category-active {
-                    background: #d1fae5;
-                    color: #065f46;
-                    border-color: $success-color;
-                    font-weight: 600;
+                .btl-utm-categories-label {
+                    font-size: 13px;
+                    color: $text-muted;
+                    font-weight: 500;
+                    white-space: nowrap;
                 }
 
-                // Loading state - show while fetching categories
-                &.btl-utm-category-loading {
-                    background: #f3f4f6;
-                    color: #6b7280;
-                    border-color: #d1d5db;
-                    font-style: italic;
-                    opacity: 0.8;
+                .btl-utm-category-tag {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 4px 8px;
+                    background: #ffffff;
+                    color: #1d2939;
+                    border: 1px solid #e4e9f7;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    white-space: nowrap;
+
+                    &.btl-utm-category-active {
+                        background: green;
+                        color: #ffffff;
+                        border-radius: 4px;
+                    }
+
+                    &.btl-utm-category-deleted {
+                        background: #FEF2F2;
+                        color: #DC2626;
+                    }
+
+                    &.btl-utm-category-loading {
+                        background: #F3F4F6;
+                        color: $text-muted;
+                    }
                 }
 
-                // Deleted category highlighting - should always take priority
-                &.btl-utm-category-deleted {
-                    background: #fee2e2 !important;
-                    color: #dc2626 !important;
-                    border-color: $danger-color !important;
-                    font-weight: 500 !important;
+                .btl-utm-more-categories {
+                    font-size: 12px;
+                    background: #FFFFFF;
+                    color: #1D2939;
+                    border: 1px solid #E4E9F7;
+                    border-radius: 4px;
+                    padding: 4px 8px;
                 }
-            }
-
-            .btl-utm-category-separator {
-                margin: 0 2px;
-                color: #9ca3af;
             }
         }
 
-        .btl-utm-active-badge {
-            display: inline-flex;
+        .btl-utm-template-categories-expanded {
+            display: flex;
+            gap: 10px;
             align-items: center;
-            padding: 2px 8px;
-            background: $success-color;
-            color: white;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 12px;
-            line-height: 1;
+
+            .btl-utm-categories-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: $spacing-xs;
+
+                .btl-utm-category-tag {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 4px 8px;
+                    background: #ffffff;
+                    color: #1d2939;
+                    border: 1px solid #e4e9f7;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    white-space: nowrap;
+
+                    &.btl-utm-category-active {
+                        background: green;
+                        color: #ffffff;
+                        border-radius: 4px;
+                    }
+
+                    &.btl-utm-category-deleted {
+                        background: #FEF2F2;
+                        color: #DC2626;
+                    }
+
+                    &.btl-utm-category-loading {
+                        background: #F3F4F6;
+                        color: $text-muted;
+                    }
+                }
+            }
+        }
+
+        // Expanded view structure styles
+        .btl-utm-template-content-expanded {
+            width: 100%;
+
+            .btl-utm-template-header-expanded {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+
+                .btl-utm-template-name {
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: $text-primary;
+                    margin: 0;
+                    flex: 1;
+                    cursor: pointer;
+                    white-space: normal;
+                    overflow: visible;
+                    text-overflow: unset;
+                    max-width: none;
+
+                    &:hover {
+                        color: $text-secondary;
+                    }
+                }
+
+                .btl-utm-template-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-shrink: 0;
+                }
+            }
+
+            .btl-utm-template-separator {
+                height: 1px;
+                background: #E5E7EB;
+                margin: 12px 0;
+            }
+
+            .btl-utm-template-categories-section {
+                .btl-utm-categories-label {
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: $text-muted;
+                    margin-bottom: 8px;
+                    display: block;
+                }
+
+                .btl-utm-categories-expanded {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+
+                    .btl-utm-category-tag {
+                        display: inline-flex;
+                        align-items: center;
+                        padding: 4px 8px;
+                        background: #ffffff;
+                        color: #1d2939;
+                        border: 1px solid #e4e9f7;
+                        border-radius: 6px;
+                        font-size: 12px;
+                        font-weight: 500;
+                        white-space: nowrap;
+
+                        &.btl-utm-category-active {
+                            background: #FFFFFF;
+                            color: #1D2939;
+                            border: 1px solid #E4E9F7;
+                            border-radius: 4px;
+                        }
+
+                        &.btl-utm-category-deleted {
+                            background: #FEF2F2;
+                            color: #DC2626;
+                            text-decoration: line-through;
+                        }
+
+                        &.btl-utm-category-loading {
+                            background: #F3F4F6;
+                            color: $text-muted;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -285,34 +509,73 @@ body.betterlinks-dark-mode .ReactModal__Content {
         display: flex;
         gap: $spacing-xs;
         align-items: center;
+        flex-shrink: 0;
 
         .btl-utm-action-btn {
+            @include button-reset;
+            // padding: 5%;
+            // border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            color: #666;
-
+            // background: #ffffff;
+            // border: 1px solid $border-color;
+            color: $text-muted;
+            transition: all 0.2s ease;
 
             &:hover {
-                background: #e1e4e8;
-                color: $text-primary;
+                border-color: $border-color-hover;
+                background: $background-light;
+                color: $text-secondary;
+            }
+            .btl-utm-line {
+                border-right: 1px solid #DEDEDE;
+                padding-right: 16px;
+            }
+            .btl-tooltip {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .btl-tooltiptext {
+                    visibility: hidden;
+                    background-color: #333;
+                    color: white;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 4px 8px;
+                    position: absolute;
+                    z-index: 1;
+                    bottom: 125%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    opacity: 0;
+                    font-size: 12px;
+                    line-height: 1.4;
+                    white-space: nowrap;
+                    transition: opacity 0.2s ease;
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        margin-left: -5px;
+                        border-width: 5px;
+                        border-style: solid;
+                        border-color: #333 transparent transparent transparent;
+                    }
+                }
+
+                &:hover .btl-tooltiptext {
+                    visibility: visible;
+                    opacity: 1;
+                }
             }
 
-            &.btl-utm-btn-ac:hover {
-                color: #0073aa;
-            }
-
+            // Light mode (default) - show light icons, hide dark icons
             svg {
-                width: 16px;
-                height: 16px;
-
-                // Light mode - show light icons, hide dark icons
                 .btl-icon-light {
                     display: block;
                 }
@@ -322,9 +585,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
                 }
             }
         }
-    }
-
-    // Dark mode styles for UTM action buttons
+    }    // Dark mode styles for UTM action buttons
     body.betterlinks-dark-mode & {
         .btl-utm-template-actions {
             .btl-utm-action-btn {
@@ -1052,43 +1313,164 @@ body.betterlinks-dark-mode .ReactModal__Content {
         }
 
         .btl-utm-template-item {
-            background: #37405a;
+            background: #1F2937;
+            border-color: #374151;
 
             &:hover {
-                background: $dark-bg-secondary;
+                border-color: #4B5563;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             }
+        }
 
-            .btl-utm-template-content {
+        .btl-utm-template-content {
+            .btl-utm-template-header {
+                // &:hover {
+                //     background-color: rgba(255, 255, 255, 0.05);
+                // }
+
                 .btl-utm-template-name {
-                    color: $dark-text;
+                    color: #F9FAFB;
                 }
 
                 .btl-utm-template-categories {
-                    color: #bdc3c7;
-
                     .btl-utm-categories-label {
-                        color: #ffffff;
+                        color: #9CA3AF;
+                    }
+
+                    .btl-utm-category-tag {
+                        background: #374151;
+                        color: #D1D5DB;
+
+                        &.btl-utm-category-active {
+                            background: #FFFFFF;
+                            color: #1D2939;
+                            border: 1px solid #E4E9F7;
+                            border-radius: 4px;
+                        }
+
+                        &.btl-utm-category-deleted {
+                            background: #7F1D1D;
+                            color: #FCA5A5;
+                        }
+
+                        &.btl-utm-category-loading {
+                            background: #374151;
+                            color: #6B7280;
+                        }
+                    }
+
+                    .btl-utm-more-categories {
+                        color: #9CA3AF;
                     }
                 }
             }
 
-            .btl-utm-template-actions {
-                .btl-utm-action-btn {
-                    color: #bdc3c7;
+            .btl-utm-template-categories-expanded {
+                border-top-color: #374151;
+                .btl-utm-categories-label {
+                    color: #F9FAFB;
+                }
+                .btl-utm-categories-grid {
+                    .btl-utm-category-tag {
+                        background: #374151;
+                        color: #D1D5DB;
+
+                        &.btl-utm-category-active {
+                            background: #FFFFFF;
+                            color: #1D2939;
+                            border: 1px solid #E4E9F7;
+                            border-radius: 4px;
+                        }
+
+                        &.btl-utm-category-deleted {
+                            background: #7F1D1D;
+                            color: #FCA5A5;
+                        }
+
+                        &.btl-utm-category-loading {
+                            background: #374151;
+                            color: #6B7280;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Dark mode styles for expanded view structure
+        .btl-utm-template-content-expanded {
+            .btl-utm-template-header-expanded {
+                .btl-utm-template-name {
+                    color: #F9FAFB;
 
                     &:hover {
-                        background: rgba(255, 255, 255, 0.1);
-                        color: $dark-text;
+                        color: #D1D5DB;
                     }
+                }
+            }
 
-                    &.btl-utm-copy-btn:hover,
-                    &.btl-utm-edit-btn:hover {
-                        color: #3498db;
+            .btl-utm-template-separator {
+                background: #374151;
+            }
+
+            .btl-utm-template-categories-section {
+                .btl-utm-categories-label {
+                    color: #9CA3AF;
+                }
+
+                .btl-utm-categories-expanded {
+                    .btl-utm-category-tag {
+                        background: #374151;
+                        color: #D1D5DB;
+
+                        &.btl-utm-category-active {
+                            background: $primary-blue;
+                            color: white;
+                        }
+
+                        &.btl-utm-category-deleted {
+                            background: #7F1D1D;
+                            color: #FCA5A5;
+                        }
+
+                        &.btl-utm-category-loading {
+                            background: #374151;
+                            color: #6B7280;
+                        }
                     }
+                }
+            }
+        }
 
-                    &.btl-utm-delete-btn:hover {
-                        color: #e74c3c;
-                        background: rgba(231, 76, 60, 0.1);
+        .btl-utm-template-actions {
+            .btl-utm-action-btn {
+                background: #1F2937;
+                border-color: #374151;
+                color: #9CA3AF;
+
+                &:hover {
+                    border-color: #4B5563;
+                    background: #374151;
+                    color: #D1D5DB;
+                }
+
+                &.btl-utm-copy-btn:hover,
+                &.btl-utm-edit-btn:hover {
+                    color: #3498db;
+                }
+
+                &.btl-utm-delete-btn:hover {
+                    color: #e74c3c;
+                    background: rgba(231, 76, 60, 0.1);
+                }
+
+                .btl-tooltip {
+                    .btl-tooltiptext {
+                        background-color: #111827;
+                        color: #F9FAFB;
+
+                        &::after {
+                            border-color: #111827 transparent transparent transparent;
+                        }
                     }
                 }
             }
@@ -1535,66 +1917,75 @@ body.betterlinks-dark-mode .ReactModal__Content {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
-    padding: $spacing-xxl;
+    padding: 60px 40px;
     margin-top: $spacing-lg;
-    border: 2px dashed $border-color;
-    border-radius: $border-radius-large;
-    background-color: $background-light;
+    background-color: #F9FAFB;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
 
     .btl-utm-empty-content {
         text-align: center;
-        max-width: 400px;
+        max-width: 480px;
 
         .btl-utm-empty-icon {
-            margin-bottom: $spacing-lg;
-            opacity: 0.8;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-            svg {
-                width: 48px;
-                height: 48px;
-                color: $text-muted;
+            img {
+                width: 56px;
+                height: 56px;
             }
         }
 
         .btl-utm-empty-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            color: $text-primary;
-            margin: 0 0 $spacing-sm 0;
-            line-height: 1.4;
+            color: #111827;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
         }
 
         .btl-utm-empty-description {
-            font-size: 14px;
-            color: $text-secondary;
-            line-height: 1.6;
-            margin: 0 0 $spacing-xl 0;
+            color: #788597;
+            font-size: 12px;
+            line-height: 140%;
+            text-align: center;
+            padding: 0px 90px;
+            margin-top: 8px;
+            margin-bottom: 24px;
+
         }
 
         .btl-utm-empty-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: $spacing-xs;
-            background-color: $primary-color;
-            color: white;
-            border: none;
-            border-radius: $border-radius;
-            padding: $spacing-sm $spacing-lg;
-            font-size: 14px;
-            font-weight: 500;
+            opacity: 1;
+            border-radius: 4px;
+            gap: 8px;
+            border-width: 1px;
+            padding-top: 10px;
+            padding-right: 16px;
+            padding-bottom: 10px;
+            padding-left: 16px;
+            border: 1px solid #114BEE;
+            color: #114BEE;
+            background-color: #ffffff;
             cursor: pointer;
-            transition: all 0.2s ease;
 
             &:hover {
-                background-color: $primary-hover;
+                background-color: #0F42D4;
+                color: #ffffff;
                 transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(17, 75, 238, 0.2);
+                box-shadow: 0 4px 16px rgba(17, 75, 238, 0.25);
             }
 
             &:focus {
                 outline: none;
                 box-shadow: 0 0 0 3px rgba(17, 75, 238, 0.1);
+            }
+
+            &:active {
+                transform: translateY(0);
             }
 
             svg {
@@ -1608,20 +1999,16 @@ body.betterlinks-dark-mode .ReactModal__Content {
 // Dark mode support for empty state
 .betterlinks-dark-mode {
     .btl-utm-empty-state {
-        background-color: $dark-bg-secondary;
-        border-color: $dark-border;
+        background-color: #1F2937;
+        border-color: #374151;
 
         .btl-utm-empty-content {
-            .btl-utm-empty-icon svg {
-                color: $dark-text-secondary;
-            }
-
             .btl-utm-empty-title {
-                color: $dark-text;
+                color: #F9FAFB;
             }
 
             .btl-utm-empty-description {
-                color: $dark-text-secondary;
+                color: #D1D5DB;
             }
         }
     }

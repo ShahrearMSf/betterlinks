@@ -78,22 +78,35 @@ const ConfirmModal = ({
             appElement={document.getElementById('wpbody') || document.body}
             style={{
                 overlay: {
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                     background: 'rgba(35, 40, 45, 0.62)',
-                    zIndex: 999999
+                    zIndex: 999998,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 },
                 content: {
-                    top: '50%',
-                    left: '50%',
+                    position: 'relative',
+                    top: 'auto',
+                    left: 'auto',
                     right: 'auto',
                     bottom: 'auto',
                     border: 'none',
                     background: isDarkMode ? '#1f283d' : '#fff',
                     borderRadius: '8px',
                     width: '90%',
-                    marginRight: '-50%',
-                    transform: 'translate(-50%, -50%)',
+                    maxWidth: '700px',
+                    margin: '0',
+                    transform: 'none',
                     overflow: 'visible',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                    outline: 'none',
+                    padding: '0',
+                    zIndex: 999999
                 }
             }}
         >
