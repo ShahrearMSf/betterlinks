@@ -42,6 +42,7 @@ const UTMTemplateModal = ({
         links_without_utm: 0
     });
     const [resetTargetCount, setResetTargetCount] = useState(0);
+    const [isResetMode, setIsResetMode] = useState(false); // Track if we're in reset mode
 
     // Fetch UTM status counts when categories change
     useEffect(() => {
@@ -163,18 +164,24 @@ const UTMTemplateModal = ({
         // Store the exact count that will be affected by reset (links with UTM)
         setResetTargetCount(utmStatusCounts.links_with_utm);
 
-        // Show confirmation modal for reset action
-        setModalState('confirmation');
-        setShowModal(true);
-        
+        // Set reset mode flag
+        setIsResetMode(true);
+
         // Set a flag to indicate this is a reset action
         setTemplateForm({
             ...templateForm,
             utm_enable_to_reset_existing_utm_template: true
         });
+
+        // Show confirmation modal for reset action
+        setModalState('confirmation');
+        setShowModal(true);
     };
 
     const handleSubmit = () => {
+        // Clear reset mode when doing a normal template update/create
+        setIsResetMode(false);
+
         // Reset any existing reset flag when doing a normal template update/create
         if (templateForm.utm_enable_to_reset_existing_utm_template) {
             setTemplateForm(prev => ({
@@ -182,7 +189,7 @@ const UTMTemplateModal = ({
                 utm_enable_to_reset_existing_utm_template: false
             }));
         }
-        
+
         // Show confirmation modal before proceeding
         setModalState('confirmation');
         setShowModal(true);
@@ -283,9 +290,8 @@ const UTMTemplateModal = ({
             setModalMessage(__('An error occurred while applying the UTM template.', 'betterlinks'));
             setModalState('success');
             setIsApplying(false);
-            
+
             // Reset the flag in case of error
-            const wasResetting = templateForm.utm_enable_to_reset_existing_utm_template;
             setTemplateForm(prev => ({
                 ...prev,
                 utm_enable_to_reset_existing_utm_template: false
@@ -570,6 +576,7 @@ const UTMTemplateModal = ({
                     } else {
                         // For confirmation modal, just close and reset any flags
                         setShowModal(false);
+                        setIsResetMode(false); // Clear reset mode
                         // Reset the reset flag if user cancels the confirmation
                         if (templateForm.utm_enable_to_reset_existing_utm_template) {
                             setTemplateForm(prev => ({
@@ -582,17 +589,21 @@ const UTMTemplateModal = ({
                 onConfirm={handleConfirmSubmit}
                 isApplying={isApplying}
                 // Confirmation props
-                confirmationTitle={templateForm.utm_enable_to_reset_existing_utm_template ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
+                confirmationTitle={isResetMode ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 confirmationMessage={
-                    templateForm.categories && templateForm.categories.length > 0
-                        ? (templateForm.utm_enable_to_reset_existing_utm_template
+                    isResetMode
+                        ? (templateForm.categories && templateForm.categories.length > 0
                             ? __('This will remove all UTM parameters from', 'betterlinks')
-                            : templateForm.utm_enable_to_rewrite_existing_utm_template ? __('This will overwrite existing UTM settings on', 'betterlinks') : __('This action will apply UTM values on', 'betterlinks'))
-                        : __('This action will apply UTM values on')
+                            : __('This will remove all UTM parameters', 'betterlinks'))
+                        : (templateForm.categories && templateForm.categories.length > 0
+                            ? (templateForm.utm_enable_to_rewrite_existing_utm_template
+                                ? __('This will overwrite existing UTM settings on', 'betterlinks')
+                                : __('This action will apply UTM values on', 'betterlinks'))
+                            : __('This action will apply UTM values', 'betterlinks'))
                 }
                 totalLinks={getRelevantLinkCount()}
-                confirmationSubMessage={templateForm.utm_auto_apply_new_link ? __('All new shortlinks in this category will automatically use this template.', 'betterlinks') : ''}
-                confirmButtonText={templateForm.utm_enable_to_reset_existing_utm_template ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
+                confirmationSubMessage={!isResetMode && templateForm.utm_auto_apply_new_link ? __('All new shortlinks in this category will automatically use this template.', 'betterlinks') : ''}
+                confirmButtonText={isResetMode ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 cancelButtonText={__('Cancel', 'betterlinks')}
                 // Success props
                 successMessage={modalMessage}

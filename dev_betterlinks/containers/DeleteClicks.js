@@ -107,6 +107,26 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					setSuccessfulDeletedItemsCount(res?.data?.data?.count);
 					fetchCustomClicksData({ data: res?.data?.data?.new_clicks_data });
 					dispatch_new_links_data({ data: res?.data?.data?.new_links_data });
+					
+					// Refresh all analytics graphs after successful delete
+					if (customDateFilter && customDateFilter[0]) {
+						const filterDate = {
+							from: formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd'),
+							to: formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd'),
+							setLoading: () => { }
+						};
+						fetch_clicks_data(filterDate);
+						get_chart_data(filterDate);
+						get_graph_data(filterDate);
+						get_medium_data(filterDate);
+					} else {
+						const defaultParams = { setLoading: () => { } };
+						fetch_clicks_data(defaultParams);
+						get_chart_data(defaultParams);
+						get_graph_data(defaultParams);
+						get_medium_data(defaultParams);
+					}
+					
 					setDeleteStatus('success');
 				} else {
 					setDeleteStatus('failed');
@@ -345,7 +365,16 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 						</div>
 					)}
 					
-					{/* {deleteStatus === 'deleting' && <h2>Deleting...</h2>} */}
+					{deleteStatus === 'deleting' && (
+						<div className='btl-reset-deleting-modal'>
+							<img width={90} height={90} src={plugin_root_url + '/assets/images/icons/warning.svg'} alt="Deleting" className="btl-deleting-icon" />
+							<div className='btl-reset-deleting-modal-title'>Processing...</div>
+							<div className='btl-reset-deleting-modal-description'>
+								Deleting click analytics data from <span className="btl-date-range-processing"> {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} </span> .
+							</div>
+							<div className='btl-reset-deleting-modal-processing'> This may take a moment.</div>
+						</div>
+					)}
 					{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
 						// <h2>
 						// 	Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record{successfulDeletedItemsCount !== 1 ? 's' : ''} {linkId ? 'for this link ' : ''}deleted!!!
