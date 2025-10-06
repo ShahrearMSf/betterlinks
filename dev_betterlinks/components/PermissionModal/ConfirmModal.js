@@ -150,7 +150,7 @@ const ConfirmModal = ({
                             className={cancelButtonClass}
                             style={{
                                 backgroundColor: isDarkMode ? '#36405a' : '#f1f1f1',
-                                color: isDarkMode ? '#fff' : '#333',
+                                color: isDarkMode ? '#ffffffff' : '#ffffffff',
                                 border: isDarkMode ? '1px solid #4a5568' : '1px solid #ddd'
                             }}
                         >

@@ -41,6 +41,7 @@ const UTMTemplateModal = ({
         links_with_utm: 0,
         links_without_utm: 0
     });
+    const [resetTargetCount, setResetTargetCount] = useState(0);
 
     // Fetch UTM status counts when categories change
     useEffect(() => {
@@ -159,6 +160,9 @@ const UTMTemplateModal = ({
             return;
         }
 
+        // Store the exact count that will be affected by reset (links with UTM)
+        setResetTargetCount(utmStatusCounts.links_with_utm);
+
         // Show confirmation modal for reset action
         setModalState('confirmation');
         setShowModal(true);
@@ -227,10 +231,12 @@ const UTMTemplateModal = ({
                 if (response?.data?.success) {
                     const { updated_count, skipped_count, total_links } = response.data.data;
                     if (isResetting) {
+                        // For reset operations, use the stored target count to show the exact count from confirmation
+                        const actualResetCount = resetTargetCount;
                         successMsg = __('UTM parameters reset successfully!', 'betterlinks') + '\n' +
-                            __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
+                            __('Updated: %d links', 'betterlinks').replace('%d', actualResetCount) + '\n' +
                             __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
-                            __('Total: %d links', 'betterlinks').replace('%d', total_links);
+                            __('Total: %d links', 'betterlinks').replace('%d', actualResetCount + skipped_count);
                     } else {
                         successMsg = __('Updated: %d links', 'betterlinks').replace('%d', updated_count) + '\n' +
                             __('Skipped: %d links', 'betterlinks').replace('%d', skipped_count) + '\n' +
@@ -247,6 +253,11 @@ const UTMTemplateModal = ({
                     ...prev,
                     utm_enable_to_reset_existing_utm_template: false
                 }));
+
+                // Clear the reset target count after processing
+                if (isResetting) {
+                    setResetTargetCount(0);
+                }
 
                 // Refresh UTM status counts after any UTM operation (apply, update, or reset)
                 await fetchUtmStatusCounts();

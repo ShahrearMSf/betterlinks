@@ -289,7 +289,8 @@ body.betterlinks-dark-mode .ReactModal__Content {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 200px;
+                max-width: 220px;
+                // min-width: 220px;
             }
 
             .btl-utm-template-categories {
@@ -459,10 +460,14 @@ body.betterlinks-dark-mode .ReactModal__Content {
                 background: $background-light;
                 color: $text-secondary;
             }
-            .btl-utm-line {
-                border-right: 1px solid #DEDEDE;
-                padding-right: 16px;
+            
+            @media (min-width: 769px) {
+                .btl-utm-line {
+                    border-right: 1px solid #DEDEDE;
+                    padding-right: 16px;
+                }
             }
+            
             .btl-tooltip {
                 position: relative;
                 display: flex;

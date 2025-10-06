@@ -219,55 +219,6 @@ body {
 	.pro-badge-new svg {
 		width: 50px;
 	}
-
-	// Dark Mode Styles for Delete Clicks Modal
-	&.betterlinks-delete-clicks-modal-popup-opened {
-		.btl-reset-modal-popup.btl-reset-modal-popup-step-2 {
-			.btl-reset-modal-popup-title {
-				color: #ffffff;
-			}
-			
-			.btl-delete-description {
-				color: #ffffff;
-			}
-			
-			.btl-analytics-dlt-date {
-				color: #ffffff;
-				
-				.btl-date-range {
-					color: #ffffff;
-				}
-			}
-			
-			.btl-delete-count-box {
-				color: #ffffff;
-				background-color: #331e21;
-				border-color: #262020;
-				
-				.btl-delete-count {
-					color: #ffffff;
-				}
-			}
-			
-			.btl-confirmation-section {
-				color: #ffffff;
-			}
-			
-			.btl-confirmation-label {
-				color: #ffffff;
-			}
-			
-			.btl-reset-confirmation-input {
-				background: #36405a;
-				border-color: #36405a;
-				color: #ffffff;
-				
-				&::placeholder {
-					color: #98a2b3;
-				}
-			}
-		}
-	}
 }
 
 .btl-date-range-picker-wrap {
@@ -617,18 +568,25 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 				text-align: center;
 				margin-top: 24px;
 				margin-bottom: 20px;
+				color: #1a1a1a; // Light theme text color
 			}
 			.btl-delete-description{
 				font-weight: 400;
 				font-size: 16px;
 				line-height: 150%;
 				text-align: center;
+				color: #374151; // Light theme text color
 			}
 			.btl-analytics-dlt-date{
 				font-weight: 500;
 				font-size: 16px;
 				line-height: 150%;
 				text-align: center;
+				color: #374151; // Light theme text color
+				
+				.btl-date-range {
+					color: #374151; // Light theme text color
+				}
 			}
 			.btl-delete-count-box{
 				opacity: 1;
@@ -652,6 +610,7 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 				line-height: 140%;
 				text-align: center;
 				margin-bottom: 8px;
+				color: #374151; // Light theme text color
 			}
 			.btl-reset-confirmation-input{
 				font-weight: 400;
@@ -697,6 +656,52 @@ body.betterlinks-delete-clicks-modal-popup-opened {
 
 	.ReactModal__Overlay {
 		background-color: rgba(0, 0, 0, 0.5) !important;
+	}
+}
+
+// Dark mode styles for delete clicks modal
+body.betterlinks-dark-mode {
+	&.betterlinks-delete-clicks-modal-popup-opened {
+		.btl-reset-modal-popup.btl-reset-modal-popup-step-2 {
+			// background: #1f2937;
+			color: #f9fafb;
+
+			.btl-reset-modal-popup-title {
+				color: #f9fafb;
+			}
+			
+			.btl-delete-description {
+				color: #d1d5db;
+			}
+			
+			.btl-analytics-dlt-date {
+				color: #d1d5db;
+				
+				.btl-date-range {
+					color: #d1d5db;
+				}
+			}
+			
+			.btl-delete-count-box {
+				color: #fca5a5;
+				background-color: #7f1d1d;
+				border-color: #991b1b;
+			}
+			
+			.btl-confirmation-label {
+				color: #d1d5db;
+			}
+			
+			.btl-reset-confirmation-input {
+				background: #374151;
+				border-color: #4b5563;
+				color: #f9fafb;
+				
+				&::placeholder {
+					color: #9ca3af;
+				}
+			}
+		}
 	}
 }
 

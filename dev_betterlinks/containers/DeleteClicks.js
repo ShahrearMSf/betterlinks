@@ -256,9 +256,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 
 			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
 				<div className={`btl-reset-modal-popup-wrapper ${deleteStatus === 'reset_modal_step_1' ? 'step-1-active' : ''} ${deleteStatus === 'reset_modal_step_2' ? 'step-2-active' : ''}`}>
-					<span className="btl-close-modal" onClick={close}>
-						<i className="btl btl-cancel"></i>
-					</span>
+					{deleteStatus !== 'reset_modal_step_1' && (
+						<span className="btl-close-modal" onClick={close}>
+							<i className="btl btl-cancel"></i>
+						</span>
+					)}
+					
 					{deleteStatus === 'reset_modal_step_1' && (
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-1 betterlinks-body">
 							<div className="btl-compact-date-picker">
@@ -298,6 +301,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 							</div>
 						</div>
 					)}
+					
 					{deleteStatus === 'reset_modal_step_2' && (
 						<div className="btl-reset-modal-popup btl-reset-modal-popup-step-2 betterlinks-body">
 							<img width={48} height={48} src={plugin_root_url + '/assets/images/icons/warning.svg'} alt="Warning" className="btl-warning-icon" />
@@ -340,7 +344,8 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 							</div>
 						</div>
 					)}
-					{deleteStatus === 'deleting' && <h2>Deleting...</h2>}
+					
+					{/* {deleteStatus === 'deleting' && <h2>Deleting...</h2>} */}
 					{deleteStatus === 'success' && successfulDeletedItemsCount !== 0 && (
 						// <h2>
 						// 	Success!!! <span className="success_delete_count">{successfulDeletedItemsCount}</span> clicks record{successfulDeletedItemsCount !== 1 ? 's' : ''} {linkId ? 'for this link ' : ''}deleted!!!
