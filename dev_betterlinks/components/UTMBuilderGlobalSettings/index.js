@@ -517,52 +517,101 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 											const isActiveTemplate = isTemplateActiveForAnyCategory(template);
 											return (
 												<div key={template.template_index} className={`btl-utm-template-item ${isTemplateExpanded(template.template_index) ? 'expanded' : ''}`}>
-													<div className="btl-utm-template-content">
-														<div 
-															className="btl-utm-template-header"
-															onClick={() => shouldShowExpandButton(template) && toggleTemplateExpansion(template.template_index)}
-															style={{ cursor: shouldShowExpandButton(template) ? 'pointer' : 'default' }}
-														>
-															<h5 className="btl-utm-template-name">
-																{template.template_name}
-															</h5>
-															{!isTemplateExpanded(template.template_index) && (
-																<div className="btl-utm-template-categories">
-																	<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
-																	{template.categories && template.categories.length > 0
-																		? template.categories.slice(0, 2).map((catId, index) => {
-																			const category = findCategoryById(catId);
-																			let categoryName;
-																			if (termsLoading) {
-																				categoryName = 'Loading...';
-																			} else if (category) {
-																				categoryName = category.term_name;
-																			} else {
-																				categoryName = 'Deleted';
-																			}
+													<div className="btl-utm-template-row">
+														<div className="btl-utm-template-content">
+															<div
+																className="btl-utm-template-header"
+																onClick={() => shouldShowExpandButton(template) && toggleTemplateExpansion(template.template_index)}
+																style={{ cursor: shouldShowExpandButton(template) ? 'pointer' : 'default' }}
+															>
+																<h5 className="btl-utm-template-name">
+																	{template.template_name}
+																</h5>
+																{!isTemplateExpanded(template.template_index) && (
+																	<div className="btl-utm-template-categories">
+																		<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
+																		{template.categories && template.categories.length > 0
+																			? template.categories.slice(0, 2).map((catId, index) => {
+																				const category = findCategoryById(catId);
+																				let categoryName;
+																				if (termsLoading) {
+																					categoryName = 'Loading...';
+																				} else if (category) {
+																					categoryName = category.term_name;
+																				} else {
+																					categoryName = 'Deleted';
+																				}
 
-																			const isActive = isCategoryActiveForTemplate(template, catId);
-																			const isDeleted = categoryName === 'Deleted';
-																			const isLoading = categoryName === 'Loading...';
-																			
-																			return (
-																				<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
-																					{categoryName}
-																				</span>
-																			);
-																		})
-																		: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
-																	}
-																	{template.categories && template.categories.length > 2 && (
-																		<span className="btl-utm-more-categories">
-																			{template.categories.length - 2} More+
-																		</span>
-																	)}
-																</div>
-															)}
+																				const isActive = isCategoryActiveForTemplate(template, catId);
+																				const isDeleted = categoryName === 'Deleted';
+																				const isLoading = categoryName === 'Loading...';
+
+																				return (
+																					<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
+																						{categoryName}
+																					</span>
+																				);
+																			})
+																			: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
+																		}
+																		{template.categories && template.categories.length > 2 && (
+																			<span className="btl-utm-more-categories">
+																				{template.categories.length - 2} More+
+																			</span>
+																		)}
+																	</div>
+																)}
+															</div>
 														</div>
 
-														{isTemplateExpanded(template.template_index) && (
+														<div className="btl-utm-template-actions">
+															<button
+																type="button"
+																className="btl-utm-action-btn btl-utm-btn-ac"
+																onClick={() => handleTemplateCopy(template)}
+															>
+																<div className="btl-tooltip btl-utm-line">
+																	<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+																		<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+																	</svg>
+																	<span className="btl-tooltiptext">{__('Copy', 'betterlinks')}</span>
+																</div>
+															</button>
+															<button
+																type="button"
+																className="btl-utm-action-btn btl-utm-btn-ac"
+																onClick={() => handleTemplateSelect(template)}
+																title={__('Edit', 'betterlinks')}
+															>
+																<div className="btl-tooltip btl-utm-line">
+																	<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+																		<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+																	</svg>
+																	<span className="btl-tooltiptext">{__('Edit', 'betterlinks')}</span>
+																</div>
+															</button>
+															<button
+																type="button"
+																className="btl-utm-action-btn btl-utm-btn-ac"
+																onClick={() => handleTemplateDelete(template.template_index)}
+																title={__('Delete', 'betterlinks')}
+															>
+																<div className="btl-tooltip">
+																	<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M3.3335 5.83333H16.6668M8.3335 9.16667V14.1667M11.6668 9.16667V14.1667M4.16683 5.83333L5.00016 15.8333C5.00016 16.2754 5.17576 16.6993 5.48832 17.0118C5.80088 17.3244 6.2248 17.5 6.66683 17.5H13.3335C13.7755 17.5 14.1994 17.3244 14.512 17.0118C14.8246 16.6993 15.0002 16.2754 15.0002 15.8333L15.8335 5.83333M7.50016 5.83333V3.33333C7.50016 3.11232 7.58796 2.90036 7.74424 2.74408C7.90052 2.5878 8.11248 2.5 8.3335 2.5H11.6668C11.8878 2.5 12.0998 2.5878 12.2561 2.74408C12.4124 2.90036 12.5002 3.11232 12.5002 3.33333V5.83333" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+																		<path d="M3.3335 5.83333H16.6668M8.3335 9.16667V14.1667M11.6668 9.16667V14.1667M4.16683 5.83333L5.00016 15.8333C5.00016 16.2754 5.17576 16.6993 5.48832 17.0118C5.80088 17.3244 6.2248 17.5 6.66683 17.5H13.3335C13.7755 17.5 14.1994 17.3244 14.512 17.0118C14.8246 16.6993 15.0002 16.2754 15.0002 15.8333L15.8335 5.83333M7.50016 5.83333V3.33333C7.50016 3.11232 7.58796 2.90036 7.74424 2.74408C7.90052 2.5878 8.11248 2.5 8.3335 2.5H11.6668C11.8878 2.5 12.0998 2.5878 12.2561 2.74408C12.4124 2.90036 12.5002 3.11232 12.5002 3.33333V5.83333" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+																	</svg>
+																	<span className="btl-tooltiptext">{__('Delete', 'betterlinks')}</span>
+																</div>
+															</button>
+														</div>
+													</div>
+
+													{isTemplateExpanded(template.template_index) && (
+														<>
+															<div className="btl-utm-template-separator"></div>
 															<div className="btl-utm-template-categories-expanded">
 																<div className="btl-utm-categories-label">{__('Categories:', 'betterlinks')}</div>
 																<div className="btl-utm-categories-grid">
@@ -581,7 +630,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 																			const isActive = isCategoryActiveForTemplate(template, catId);
 																			const isDeleted = categoryName === 'Deleted';
 																			const isLoading = categoryName === 'Loading...';
-																			
+
 																			return (
 																				<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
 																					{categoryName}
@@ -592,52 +641,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 																	}
 																</div>
 															</div>
-														)}
-													</div>
-
-													<div className="btl-utm-template-actions">
-														<button
-															type="button"
-															className="btl-utm-action-btn btl-utm-btn-ac"
-															onClick={() => handleTemplateCopy(template)}
-														>
-															<div className="btl-tooltip btl-utm-line">
-																<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-																	<path d="M3.34333 13.9475C3.08779 13.8018 2.87523 13.5912 2.72715 13.3371C2.57906 13.0829 2.50071 12.7942 2.5 12.5V4.16667C2.5 3.25 3.25 2.5 4.16667 2.5H12.5C13.125 2.5 13.465 2.82083 13.75 3.33333M5.83333 8.05583C5.83333 7.46639 6.06749 6.90109 6.48429 6.48429C6.90109 6.06749 7.46639 5.83333 8.05583 5.83333H15.2775C15.5694 5.83333 15.8584 5.89082 16.128 6.00251C16.3977 6.1142 16.6427 6.27791 16.849 6.48429C17.0554 6.69067 17.2191 6.93567 17.3308 7.20532C17.4425 7.47497 17.5 7.76397 17.5 8.05583V15.2775C17.5 15.5694 17.4425 15.8584 17.3308 16.128C17.2191 16.3977 17.0554 16.6427 16.849 16.849C16.6427 17.0554 16.3977 17.2191 16.128 17.3308C15.8584 17.4425 15.5694 17.5 15.2775 17.5H8.05583C7.76397 17.5 7.47497 17.4425 7.20532 17.3308C6.93567 17.2191 6.69067 17.0554 6.48429 16.849C6.27791 16.6427 6.1142 16.3977 6.00251 16.128C5.89082 15.8584 5.83333 15.5694 5.83333 15.2775V8.05583Z" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-																</svg>
-																<span className="btl-tooltiptext">{__('Copy', 'betterlinks')}</span>
-															</div>
-														</button>
-														<button
-															type="button"
-															className="btl-utm-action-btn btl-utm-btn-ac"
-															onClick={() => handleTemplateSelect(template)}
-															title={__('Edit', 'betterlinks')}
-														>
-															<div className="btl-tooltip btl-utm-line">
-																<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-																	<path d="M5.8335 5.83333H5.00016C4.55814 5.83333 4.13421 6.00893 3.82165 6.32149C3.50909 6.63405 3.3335 7.05797 3.3335 7.5V15C3.3335 15.442 3.50909 15.866 3.82165 16.1785C4.13421 16.4911 4.55814 16.6667 5.00016 16.6667H12.5002C12.9422 16.6667 13.3661 16.4911 13.6787 16.1785C13.9912 15.866 14.1668 15.442 14.1668 15V14.1667M13.3335 4.16667L15.8335 6.66667M16.9877 5.48759C17.3159 5.15938 17.5003 4.71424 17.5003 4.25009C17.5003 3.78594 17.3159 3.34079 16.9877 3.01259C16.6595 2.68438 16.2143 2.5 15.7502 2.5C15.286 2.5 14.8409 2.68438 14.5127 3.01259L7.50016 10.0001V12.5001H10.0002L16.9877 5.48759Z" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-																</svg>
-																<span className="btl-tooltiptext">{__('Edit', 'betterlinks')}</span>
-															</div>
-														</button>
-														<button
-															type="button"
-															className="btl-utm-action-btn btl-utm-btn-ac"
-															onClick={() => handleTemplateDelete(template.template_index)}
-															title={__('Delete', 'betterlinks')}
-														>
-															<div className="btl-tooltip">
-																<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M3.3335 5.83333H16.6668M8.3335 9.16667V14.1667M11.6668 9.16667V14.1667M4.16683 5.83333L5.00016 15.8333C5.00016 16.2754 5.17576 16.6993 5.48832 17.0118C5.80088 17.3244 6.2248 17.5 6.66683 17.5H13.3335C13.7755 17.5 14.1994 17.3244 14.512 17.0118C14.8246 16.6993 15.0002 16.2754 15.0002 15.8333L15.8335 5.83333M7.50016 5.83333V3.33333C7.50016 3.11232 7.58796 2.90036 7.74424 2.74408C7.90052 2.5878 8.11248 2.5 8.3335 2.5H11.6668C11.8878 2.5 12.0998 2.5878 12.2561 2.74408C12.4124 2.90036 12.5002 3.11232 12.5002 3.33333V5.83333" stroke="#475467" className="btl-icon-light" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-																	<path d="M3.3335 5.83333H16.6668M8.3335 9.16667V14.1667M11.6668 9.16667V14.1667M4.16683 5.83333L5.00016 15.8333C5.00016 16.2754 5.17576 16.6993 5.48832 17.0118C5.80088 17.3244 6.2248 17.5 6.66683 17.5H13.3335C13.7755 17.5 14.1994 17.3244 14.512 17.0118C14.8246 16.6993 15.0002 16.2754 15.0002 15.8333L15.8335 5.83333M7.50016 5.83333V3.33333C7.50016 3.11232 7.58796 2.90036 7.74424 2.74408C7.90052 2.5878 8.11248 2.5 8.3335 2.5H11.6668C11.8878 2.5 12.0998 2.5878 12.2561 2.74408C12.4124 2.90036 12.5002 3.11232 12.5002 3.33333V5.83333" stroke="#FFFFFF" className="btl-icon-dark" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-																</svg>
-																<span className="btl-tooltiptext">{__('Delete', 'betterlinks')}</span>
-															</div>
-														</button>
-													</div>
+														</>
+													)}
 												</div>
 											);
 										})}

@@ -182,9 +182,6 @@ body.betterlinks-dark-mode .ReactModal__Content {
         max-width: fit-content;
     }
     .btl-utm-template-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         padding: 16px;
         background: $background-light;
         border: 1px solid #ECF0FB;
@@ -192,97 +189,72 @@ body.betterlinks-dark-mode .ReactModal__Content {
         transition: all 0.2s ease;
         cursor: pointer;
 
-        // &:hover {
-        //     border-color: $border-color-hover;
-        //     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        // }
+        // When expanded, change to column layout
+        &.expanded {
+            .btl-utm-template-row {
+                align-items: flex-start;
+            }
+        }
 
-        // // When expanded, allow title to show full width
-        // &.expanded {
-        //     cursor: default;
-            
-        //     .btl-utm-template-name {
-        //         white-space: normal;
-        //         overflow: visible;
-        //         text-overflow: unset;
-        //         max-width: none;
-        //     }
-        // }
+        // Row wrapper for header and actions
+        .btl-utm-template-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-        // Expanded view specific styles
-        .btl-utm-template-expanded {
+        // Full-width separator (direct child of item)
+        .btl-utm-template-separator {
+            width: calc(100% + 32px);
+            height: 1px;
+            background: #ECF0FB;
+            margin: 12px -16px;
+        }
+
+        // Expanded categories section (direct child of item)
+        .btl-utm-template-categories-expanded {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             width: 100%;
 
-            .btl-utm-template-header-expanded {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                margin-bottom: 12px;
-            }
-
-            .btl-utm-template-name-expanded {
-                font-size: 16px;
+            .btl-utm-categories-label {
+                font-size: 13px;
+                color: $text-muted;
                 font-weight: 500;
-                color: $text-primary;
-                margin: 0;
-                flex: 1;
-                cursor: pointer;
-
-                &:hover {
-                    color: $text-secondary;
-                }
             }
 
-            .btl-utm-template-actions-expanded {
+            .btl-utm-categories-grid {
                 display: flex;
-                align-items: center;
-                gap: 8px;
-                flex-shrink: 0;
-            }
+                flex-wrap: wrap;
+                gap: $spacing-xs;
 
-            .btl-utm-template-separator {
-                height: 1px;
-                background: #E5E7EB;
-                margin: 12px 0;
-            }
-
-            .btl-utm-template-categories-section {
-                .btl-utm-categories-label {
-                    font-size: 13px;
-                    font-weight: 500;
-                    color: $text-muted;
-                    margin-bottom: 8px;
-                    display: block;
-                }
-
-                .btl-utm-template-categories {
-                    display: flex;
+                .btl-utm-category-tag {
+                    display: inline-flex;
                     align-items: center;
-                    gap: 8px;
-                    flex-wrap: wrap;
+                    padding: 4px 8px;
+                    background: #ffffff;
+                    color: #1d2939;
+                    border: 1px solid #e4e9f7;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    white-space: nowrap;
 
-                    .btl-utm-template-category {
-                        display: inline-flex;
-                        align-items: center;
-                        padding: 4px 8px;
-                        background: #EDF2FF;
-                        color: $primary-blue;
-                        border-radius: 6px;
-                        font-size: 12px;
-                        font-weight: 500;
-                        white-space: nowrap;
+                    &.btl-utm-category-active {
+                        background: green;
+                        color: #ffffff;
+                        border-radius: 4px;
+                    }
 
-                        &.btl-utm-category-deleted {
-                            background: #FEF2F2;
-                            color: #DC2626;
-                            text-decoration: line-through;
-                        }
+                    &.btl-utm-category-deleted {
+                        background: #FEF2F2;
+                        color: #DC2626;
+                    }
 
-                        &.btl-utm-category-loading {
-                            background: #F3F4F6;
-                            color: $text-muted;
-                        }
+                    &.btl-utm-category-loading {
+                        background: #F3F4F6;
+                        color: $text-muted;
                     }
                 }
             }
@@ -308,7 +280,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
             .btl-utm-template-name {
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 500;
                 color: $text-primary;
                 margin: 0;
                 line-height: 1.4;
@@ -374,48 +346,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
             }
         }
 
-        .btl-utm-template-categories-expanded {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-
-            .btl-utm-categories-grid {
-                display: flex;
-                flex-wrap: wrap;
-                gap: $spacing-xs;
-
-                .btl-utm-category-tag {
-                    display: inline-flex;
-                    align-items: center;
-                    padding: 4px 8px;
-                    background: #ffffff;
-                    color: #1d2939;
-                    border: 1px solid #e4e9f7;
-                    border-radius: 6px;
-                    font-size: 12px;
-                    font-weight: 500;
-                    white-space: nowrap;
-
-                    &.btl-utm-category-active {
-                        background: green;
-                        color: #ffffff;
-                        border-radius: 4px;
-                    }
-
-                    &.btl-utm-category-deleted {
-                        background: #FEF2F2;
-                        color: #DC2626;
-                    }
-
-                    &.btl-utm-category-loading {
-                        background: #F3F4F6;
-                        color: $text-muted;
-                    }
-                }
-            }
-        }
-
-        // Expanded view structure styles
+        // Expanded view structure styles (legacy - not used)
         .btl-utm-template-content-expanded {
             width: 100%;
 
@@ -452,7 +383,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
             .btl-utm-template-separator {
                 height: 1px;
-                background: #E5E7EB;
+                background: #ECF0FB;
                 margin: 12px 0;
             }
 
@@ -1365,77 +1296,39 @@ body.betterlinks-dark-mode .ReactModal__Content {
                 }
             }
 
-            .btl-utm-template-categories-expanded {
-                border-top-color: #374151;
-                .btl-utm-categories-label {
-                    color: #F9FAFB;
-                }
-                .btl-utm-categories-grid {
-                    .btl-utm-category-tag {
-                        background: #374151;
-                        color: #D1D5DB;
-
-                        &.btl-utm-category-active {
-                            background: #FFFFFF;
-                            color: #1D2939;
-                            border: 1px solid #E4E9F7;
-                            border-radius: 4px;
-                        }
-
-                        &.btl-utm-category-deleted {
-                            background: #7F1D1D;
-                            color: #FCA5A5;
-                        }
-
-                        &.btl-utm-category-loading {
-                            background: #374151;
-                            color: #6B7280;
-                        }
-                    }
-                }
-            }
         }
 
-        // Dark mode styles for expanded view structure
-        .btl-utm-template-content-expanded {
-            .btl-utm-template-header-expanded {
-                .btl-utm-template-name {
-                    color: #F9FAFB;
+        // Dark mode for separator (direct child of item)
+        .btl-utm-template-separator {
+            background: #4B5563;
+        }
 
-                    &:hover {
-                        color: #D1D5DB;
+        // Dark mode for expanded categories (direct child of item)
+        .btl-utm-template-categories-expanded {
+            .btl-utm-categories-label {
+                color: #9CA3AF;
+            }
+
+            .btl-utm-categories-grid {
+                .btl-utm-category-tag {
+                    background: #374151;
+                    color: #D1D5DB;
+
+                    &.btl-utm-category-active {
+                        background: #FFFFFF;
+                        color: #1D2939;
+                        border: 1px solid #E4E9F7;
+                        border-radius: 4px;
                     }
-                }
-            }
 
-            .btl-utm-template-separator {
-                background: #374151;
-            }
+                    &.btl-utm-category-deleted {
+                        background: #7F1D1D;
+                        color: #FCA5A5;
+                    }
 
-            .btl-utm-template-categories-section {
-                .btl-utm-categories-label {
-                    color: #9CA3AF;
-                }
-
-                .btl-utm-categories-expanded {
-                    .btl-utm-category-tag {
+                    &.btl-utm-category-loading {
                         background: #374151;
-                        color: #D1D5DB;
-
-                        &.btl-utm-category-active {
-                            background: $primary-blue;
-                            color: white;
-                        }
-
-                        &.btl-utm-category-deleted {
-                            background: #7F1D1D;
-                            color: #FCA5A5;
-                        }
-
-                        &.btl-utm-category-loading {
-                            background: #374151;
-                            color: #6B7280;
-                        }
+                        color: #6B7280;
                     }
                 }
             }
