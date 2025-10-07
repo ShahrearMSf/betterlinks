@@ -274,7 +274,16 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 				)}
 			</div>
 
-			<Modal isOpen={modalIsOpen} onRequestClose={close} ariaHideApp={false}>
+			<Modal 
+				isOpen={modalIsOpen}
+				onRequestClose={close} 
+				ariaHideApp={false} 
+				className={`${deleteStatus !== 'reset_modal_step_1' ? 'btl-anl-delete-clicks-modal' : ''}`}
+				style={{
+					position: 'absolute',
+					inset: '40px',
+				}}
+			 >
 				<div className={`btl-reset-modal-popup-wrapper ${deleteStatus === 'reset_modal_step_1' ? 'step-1-active' : ''} ${deleteStatus === 'reset_modal_step_2' ? 'step-2-active' : ''}`}>
 					{deleteStatus !== 'reset_modal_step_1' && (
 						<span className="btl-close-modal" onClick={close}>
@@ -367,7 +376,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 					
 					{deleteStatus === 'deleting' && (
 						<div className='btl-reset-deleting-modal'>
-							<img width={90} height={90} src={plugin_root_url + '/assets/images/icons/warning.svg'} alt="Deleting" className="btl-deleting-icon" />
+							<img width={48} height={48} src={plugin_root_url + '/assets/images/icons/warning.svg'} alt="Deleting" className="btl-deleting-icon" />
 							<div className='btl-reset-deleting-modal-title'>Processing...</div>
 							<div className='btl-reset-deleting-modal-description'>
 								Deleting click analytics data from <span className="btl-date-range-processing"> {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} </span> .
@@ -395,7 +404,7 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 						<div className='btl-reset-not-found-wrapper'>
 							<img width={90} height={90} src={plugin_root_url + '/assets/images/icons/not-found.svg'} />
 							<h2 className='btl-reset-not-found-modal-title'>
-								No clicks data found {linkId ? 'for this link ' : ''}in the selected date range {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })}
+								No clicks data found {linkId ? 'for this link ' : ''}in the selected date range <span className="btl-reset-date-range"> {resetDateFilter[0].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} to {resetDateFilter[0].endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })} </span> 
 							</h2>
 						</div>
 					)}

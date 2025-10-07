@@ -1220,7 +1220,7 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 
 .btl-permission-text {
 	font-weight: 600;
-	font-size: 24px;
+	font-size: 20px;
 	line-height: 130%;
 	letter-spacing: 0px;
 	text-align: center;
@@ -1232,7 +1232,7 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 
 .btl-permission-sub-text {
 	font-weight: 400;
-	font-size: 16px;
+	font-size: 14px;
 	line-height: 140%;
 	letter-spacing: 0px;
 	text-align: center;
@@ -1487,13 +1487,16 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 	}
 
 	.btl-reset-not-found-modal-title {
-		font-weight: 600;
+		font-weight: 400;
 		font-size: 24px;
 		line-height: 140%;
 		letter-spacing: 0px;
 		text-align: center;
-		padding: 24px 167px;
+		padding: 24px 40px;
 		color: #252525;
+		.btl-reset-date-range{
+			font-weight: 600;
+		}
 	}
 }
 
@@ -1518,4 +1521,11 @@ button.rdrStaticRange {
 			padding: 0 !important;
 		}
 	}
+}
+
+.ReactModal__Content.ReactModal__Content--after-open.btl-anl-delete-clicks-modal {
+	position: absolute;
+	inset: 40px;
+    background-color: #ffffff;
+    width: 600px;
 }

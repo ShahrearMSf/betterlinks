@@ -501,9 +501,10 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								onSecondaryConfirm={confirmTemplateDelete}
 								title={__('Delete UTM Template', 'betterlinks')}
 								subtitle={__('Are you sure you want to delete this UTM template? This action cannot be undone.', 'betterlinks')}
-								confirmButtonText={__('Delete and Remove Parameters', 'betterlinks')}
-								secondaryConfirmButtonText={__('Delete and Keep Parameters', 'betterlinks')}
-								showCancelButton={true}
+								icon={plugin_root_url + '/assets/images/icons/warning.svg'}
+								confirmButtonText={__('Delete & Remove UTM', 'betterlinks')}
+								secondaryConfirmButtonText={__('Delete Template', 'betterlinks')}
+								showCancelButton={false}
 								cancelButtonText={__('Cancel', 'betterlinks')}
 								isDangerous={true}
 							/>

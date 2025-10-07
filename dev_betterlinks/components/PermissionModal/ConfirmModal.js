@@ -119,8 +119,8 @@ const ConfirmModal = ({
                 <div className="btl-permission-message">
                     <div className="btl-permission-icon">
                         <img 
-                            width={'75px'}
-                            height={'75px'}
+                            width={'48px'}
+                            height={'48px'}
                             src={iconSrc} 
                             alt={isDangerous ? "Warning icon" : "Confirmation icon"} 
                             style={{
