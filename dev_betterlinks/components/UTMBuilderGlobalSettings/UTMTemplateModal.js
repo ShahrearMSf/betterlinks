@@ -305,13 +305,16 @@ const UTMTemplateModal = ({
 
     // Handle success modal OK button click
     const handleSuccessOk = async () => {
-        // Only save the template when it's not a reset action
-        if (!templateForm.utm_enable_to_reset_existing_utm_template) {
+        // Check if this is a reset operation using isResetMode instead of the form flag
+        if (isResetMode) {
+        } else {
+            // This is a template save operation (create or update)
             try {
                 if (isCreatingTemplate) {
                     handleTemplateCreate();
                 } else {
                     handleTemplateUpdate();
+                    
                 }
             } catch (error) {
                 console.error('Error saving template:', error);
@@ -325,10 +328,14 @@ const UTMTemplateModal = ({
         setPreventMainModalClose(false);
         setShowModal(false);
         
+        // Store reset mode state before clearing it
+        const wasResetMode = isResetMode;
+        setIsResetMode(false); // Clear reset mode after success
+        
         // If it was a reset action, just close the main modal without saving template
-        if (templateForm.utm_enable_to_reset_existing_utm_template) {
-            onClose();
-        }
+        // if (wasResetMode) {
+        //     onClose();
+        // }
         // The template handlers will close the main modal for save actions
     };
 

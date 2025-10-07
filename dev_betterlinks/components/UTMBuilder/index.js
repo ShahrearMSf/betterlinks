@@ -49,17 +49,43 @@ export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHand
 		// Check if there's a last applied template for this category
 		const lastApplied = lastAppliedTemplates[catId];
 		let categoryTemplate = null;
+		let activeTemplateFound = false;
 
 		if (lastApplied) {
 			// Find the last applied template by template_index
-			categoryTemplate = globalTemplates.find(template => 
+			const lastAppliedTemplate = globalTemplates.find(template => 
 				template.template_index === lastApplied.template_index
 			);
+			
+			if (lastAppliedTemplate) {
+				// Verify this template still applies to the current category
+				const appliesToCategory = lastAppliedTemplate.categories && 
+					Array.isArray(lastAppliedTemplate.categories) &&
+					lastAppliedTemplate.categories.some(templateCatId => {
+						const templateCatIdInt = parseInt(templateCatId);
+						const currentCatIdInt = parseInt(catId);
+						return templateCatIdInt === currentCatIdInt;
+					});
+				
+				if (appliesToCategory) {
+					activeTemplateFound = true;
+					// If the active template has auto-apply enabled, use it
+					if (lastAppliedTemplate.utm_auto_apply_new_link) {
+						categoryTemplate = lastAppliedTemplate;
+					}
+					// If active template exists but auto-apply is disabled, 
+					// don't use any template (respect user's choice)
+				}
+			}
 		}
 
-		// If no last applied template found, fall back to finding any template for this category
-		if (!categoryTemplate) {
+		// Only fall back to finding any template if there's no active template for this category
+		if (!categoryTemplate && !activeTemplateFound) {
 			categoryTemplate = globalTemplates.find(template => {
+				// Check if auto-apply is enabled for this template
+				if (!template.utm_auto_apply_new_link) {
+					return false;
+				}
 
 				// Handle both string and integer category IDs
 				if (template.categories && Array.isArray(template.categories)) {

@@ -273,7 +273,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		saveSettingsHandler(updatedSettings, update_option, setFormSubmitText);
 
 		// Reset form and close modal
-		//closeModal();
+		closeModal();
 	};
 
 	const resetTemplateForm = () => {

@@ -237,8 +237,7 @@ trait Links
             // Find the template with this index
             foreach ($utm_templates as $template) {
                 if (isset($template['template_index']) && 
-                    $template['template_index'] == $last_applied_template_index &&
-                    !empty($template['utm_auto_apply_new_link'])) {
+                    $template['template_index'] == $last_applied_template_index) {
                     
                     // Verify this template still applies to the current category
                     if (isset($template['categories']) && is_array($template['categories'])) {
@@ -246,7 +245,12 @@ trait Links
                             // Normalize both IDs for comparison
                             $normalized_template_cat_id = strval($template_cat_id);
                             if ($normalized_template_cat_id === $normalized_category_id) {
-                                $matching_template = $template;
+                                // If the active template has auto-apply enabled, use it
+                                if (!empty($template['utm_auto_apply_new_link'])) {
+                                    $matching_template = $template;
+                                }
+                                // If active template exists but auto-apply is disabled, and don't use any template (respect user's choice) and Set a flag to prevent fallback search
+                                $active_template_found = true;
                                 break 2;
                             }
                         }
@@ -255,8 +259,8 @@ trait Links
             }
         }
         
-        // If no last applied template found or it's no longer valid, fall back to finding any template
-        if (!$matching_template) {
+        // Only fall back to finding any template if there's no active template for this category
+        if (!$matching_template && !isset($active_template_found)) {
             foreach ($utm_templates as $template) {
                 // Check if auto-apply is enabled for this template
                 if (empty($template['utm_auto_apply_new_link'])) {
