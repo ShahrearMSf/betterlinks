@@ -597,7 +597,7 @@ input:focus {
 }
 
 .btl-btn-primary {
-    background: #3b82f6;
+    background: #114BEE;
     color: #fff;
 }
 
@@ -1068,10 +1068,8 @@ input:focus {
 
 /* Progress Display */
 .btl-progress-container {
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--border-color, #e1e1e1);
     border-radius: 8px;
-    padding: 24px;
+    // padding: 24px;
     text-align: center;
 }
 
@@ -1632,5 +1630,520 @@ input:focus {
         flex-direction: column;
         text-align: center;
         gap: 12px;
+    }
+}
+
+/* New Progress and Completion Design */
+
+/* Updated Progress Header */
+.btl-progress-main-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1F2937;
+    margin: 0 0 8px 0;
+    text-align: center;
+}
+
+.btl-progress-description {
+    font-size: 16px;
+    color: #6B7280;
+    margin: 0;
+    line-height: 1.5;
+    text-align: center;
+}
+
+[data-theme="dark"] .btl-progress-main-title {
+    color: #F9FAFB;
+}
+
+[data-theme="dark"] .btl-progress-description {
+    color: #D1D5DB;
+}
+
+/* Progress Main Container */
+.btl-progress-main-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    margin: 40px 0;
+}
+
+.btl-progress-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+/* Circular Progress */
+.btl-progress-circle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btl-progress-circle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btl-progress-svg {
+    transform: rotate(-90deg);
+}
+
+.btl-progress-percentage-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.btl-progress-percent-text {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 130%;
+    color: #1D2939;
+}
+
+[data-theme="dark"] .btl-progress-percent-text {
+    color: #60A5FA;
+}
+
+/* Progress Content */
+.btl-progress-content-main {
+    flex: 1;
+}
+
+.btl-progress-content-main .btl-progress-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1F2937;
+    margin: 0 0 8px 0;
+}
+
+.btl-progress-content-main .btl-progress-subtitle {
+    font-size: 16px;
+    color: #6B7280;
+    margin: 0 0 16px 0;
+    line-height: 1.5;
+}
+
+.btl-progress-time-left {
+    text-align: center;
+    gap: 8px;
+    margin-top: 16px;
+    opacity: 1;
+    border-radius: 4px;
+    border-width: 1px;
+    padding: 8px;
+    background-color: #F2F8FF;
+    border: 1px solid #E3F1FF;
+
+}
+
+.btl-time-label {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 120%;
+    color: #003BE2;
+
+}
+
+.btl-time-value {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 120%;
+    color: #003BE2;
+}
+
+[data-theme="dark"] .btl-progress-content-main .btl-progress-title {
+    color: #F9FAFB;
+}
+
+[data-theme="dark"] .btl-progress-content-main .btl-progress-subtitle {
+    color: #D1D5DB;
+}
+
+[data-theme="dark"] .btl-time-label {
+    color: #D1D5DB;
+}
+
+[data-theme="dark"] .btl-time-value {
+    color: #60A5FA;
+}
+
+/* Updated Progress Stats */
+.btl-progress-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 200px;
+}
+
+.btl-progress-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: #F9FAFB;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+}
+
+.btl-progress-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #F3F4F6;
+}
+
+.btl-stat-processed-icon {
+    background: #FFF1DF;
+}
+
+.btl-stat-total-icon {
+    background: #DFF0FF;
+}
+
+.btl-stat-success-icon {
+    background: #DAF9E3;
+}
+
+.btl-progress-stat-content {
+    flex: 1;
+}
+
+.btl-progress-stat-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0;
+    line-height: 1;
+}
+
+.btl-progress-stat-label {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 4px 0 0 0;
+}
+
+[data-theme="dark"] .btl-progress-stat-item {
+    background: #1F2937;
+    border-color: #374151;
+}
+
+[data-theme="dark"] .btl-progress-stat-icon {
+    background: #374151;
+}
+
+[data-theme="dark"] .btl-stat-processed-icon {
+    background: #451A03;
+}
+
+[data-theme="dark"] .btl-stat-total-icon {
+    background: #1E3A8A;
+}
+
+[data-theme="dark"] .btl-stat-success-icon {
+    background: #064E3B;
+}
+
+[data-theme="dark"] .btl-progress-stat-number {
+    color: #F9FAFB;
+}
+
+[data-theme="dark"] .btl-progress-stat-label {
+    color: #D1D5DB;
+}
+
+/* Completion Container */
+.btl-completion-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 40px 0;
+}
+
+.btl-completion-main {
+    background-color: #FDFEFF;
+    border: 1px solid #F0F5F9;
+    color: #F0F5F9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    padding: 24px;
+}
+
+.btl-completion-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.btl-completion-progress-circle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btl-completion-progress-svg {
+    transform: rotate(-90deg);
+}
+
+.btl-completion-percentage-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.btl-completion-percent-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+    line-height: 1;
+}
+
+.btl-completion-progress-fill {
+    animation: fillProgress 1s ease-in-out;
+}
+
+@keyframes fillProgress {
+    from {
+        stroke-dashoffset: 314px; /* 2 * Math.PI * 50 ≈ 314 */
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+[data-theme="dark"] .btl-completion-percent-text {
+    color: #F9FAFB;
+}
+
+.btl-completion-content-main {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.btl-completion-content-main .btl-completion-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 130%;
+    color: #1D2939;
+}
+
+.btl-completion-content-main .btl-completion-subtitle {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 120%;
+    color: #788597;
+}
+
+.btl-completion-time {
+    opacity: 1;
+    border-radius: 4px;
+    gap: 10px;
+    border-width: 1px;
+    padding: 8px;
+    background-color: #F2F8FF;
+    border: 1px solid #E3F1FF;
+    margin-top: 16px;
+    margin-bottom: 35px;
+}
+
+.btl-time-message {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 120%;
+    color: #003BE2;
+}
+
+.btl-completion-ok-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Completion Stats */
+.btl-completion-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 200px;
+}
+
+.btl-completion-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+}
+.btl-stat-processed {
+    background-color: #FFFBF5;
+    border: 1px solid #FAF2E6;
+}
+.btl-stat-total {
+    background-color: #F1F9FF;
+    border: 1px solid #E6F3FF;
+}
+.btl-stat-success {
+    background-color: #EFFFF6;
+    border: 1px solid #E0FCED;
+}
+.btl-completion-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.btl-completion-stat-content {
+    flex: 1;
+    text-align: left;
+}
+
+.btl-completion-stat-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0;
+    line-height: 1;
+}
+
+.btl-completion-stat-label {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 4px 0 0 0;
+}
+
+[data-theme="dark"] .btl-completion-content-main .btl-completion-title {
+    color: #10B981;
+}
+
+[data-theme="dark"] .btl-completion-content-main .btl-completion-subtitle {
+    color: #D1D5DB;
+}
+
+[data-theme="dark"] .btl-time-message {
+    color: #D1D5DB;
+}
+
+[data-theme="dark"] .btl-completion-stat-item {
+    background: #1F2937;
+    border-color: #374151;
+}
+
+[data-theme="dark"] .btl-completion-stat-icon {
+    background: #374151;
+}
+
+[data-theme="dark"] .btl-completion-stat-number {
+    color: #F9FAFB;
+}
+
+[data-theme="dark"] .btl-completion-stat-label {
+    color: #D1D5DB;
+}
+
+/* Responsive Design for New Layout */
+@media (max-width: 768px) {
+    .btl-progress-main-container,
+    .btl-completion-container {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+    
+    .btl-progress-main {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .btl-progress-stats,
+    .btl-completion-stats {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .btl-progress-circle {
+        transform: scale(0.8);
+    }
+    
+    .btl-completion-progress-circle {
+        transform: scale(0.8);
+    }
+    
+    .btl-progress-percent-text {
+        font-size: 28px;
+    }
+    
+    .btl-completion-percent-text {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btl-progress-header {
+        padding: 16px 0;
+        margin-bottom: 24px;
+    }
+    
+    .btl-progress-main-title {
+        font-size: 20px;
+    }
+    
+    .btl-progress-description {
+        font-size: 14px;
+    }
+    
+    .btl-progress-main-container,
+    .btl-completion-container {
+        margin: 24px 0;
+    }
+    
+    .btl-progress-circle {
+        transform: scale(0.7);
+    }
+    
+    .btl-completion-progress-circle {
+        transform: scale(0.7);
+    }
+    
+    .btl-progress-percent-text {
+        font-size: 24px;
+    }
+    
+    .btl-completion-percent-text {
+        font-size: 18px;
+    }
+    
+    .btl-completion-content-main .btl-completion-title {
+        font-size: 20px;
+    }
+    
+    .btl-completion-content-main .btl-completion-subtitle {
+        font-size: 14px;
     }
 }

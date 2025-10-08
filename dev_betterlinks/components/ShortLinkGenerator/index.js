@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 
-import { makeRequest, betterlinks_nonce, prefix } from '../../utils/helper';
+import { makeRequest, betterlinks_nonce, prefix, plugin_root_url } from '../../utils/helper';
 import Select from 'react-select';
 
 const ShortLinkGenerator = () => {
@@ -286,7 +286,7 @@ const ShortLinkGenerator = () => {
                     ? __('Analyzing posts and preparing data...', 'betterlinks')
                     : progress < 60
                         ? __('Creating short links...', 'betterlinks')
-                        : __('Finalizing generation process...', 'betterlinks')
+                        : __('Analyzing posts and preparing data...', 'betterlinks')
             }));
         }, 800); // Update every 800ms for visible progress
 
@@ -332,24 +332,9 @@ const ShortLinkGenerator = () => {
                                 : __('Generation was cancelled.', 'betterlinks')
                         });
 
-                        // Show completion message for 3 seconds
+                        // Show completion message - no auto-dismiss, user must click OK
                         setShowCompletionMessage(true);
-
-                        setTimeout(() => {
-                            setShowCompletionMessage(false);
-                            setGenerationInProgress(false);
-                            setGenerationStatus(null);
-                            setSimulatedProgress(0);
-
-                            // Reset form to initial state
-                            setSelectedPostType(null);
-                            setSelectedCategories([]);
-                            setSelectedTags([]);
-                            setSelectedBetterlinkCategory(null);
-                            setSelectedBetterlinkTags([]);
-                            setPostCount(null);
-                            setShowAdvanced(false);
-                        }, 3000); // Show success for 3 seconds
+                        setShowAdvanced(false);
                     }
                 }
             } catch (error) {
@@ -758,156 +743,216 @@ const ShortLinkGenerator = () => {
             ) : (
                 /* Progress Display */
                 <div className="btl-progress-container btl-fade-in">
-                    <div className="btl-progress-header">
-                        <div className="btl-progress-icon btl-spinning">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2V6M12 18V22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-                        <div className="btl-progress-text">
-                            <h3 className="btl-progress-title">{__('Generation in Progress', 'betterlinks')}</h3>
-                            <p className="btl-progress-subtitle">{__('Please wait while we create your short links', 'betterlinks')}</p>
-                        </div>
-                    </div>
-
                     {generationStatus && (
-                        <div className="btl-progress-content">
-                            {/* Main Progress Bar */}
-                            <div className="btl-progress-main">
-                                <div className="btl-progress-bar-container">
-                                    <div className="btl-progress-bar">
-                                        <div
-                                            className="btl-progress-fill"
-                                            style={{
-                                                width: `${generationStatus.progress_percent || 0}%`,
-                                                transition: 'width 0.5s ease-in-out'
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <div className="btl-progress-percentage">
-                                        {generationStatus.progress_percent || 0}%
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Progress Stats */}
-                            <div className="btl-progress-stats">
-                                <div className="btl-stat-card btl-stat-processed">
-                                    <div className="btl-stat-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                    <div className="btl-stat-content">
-                                        <div className="btl-stat-number">{generationStatus.processed || 0}</div>
-                                        <div className="btl-stat-label">{__('Processed', 'betterlinks')}</div>
-                                    </div>
-                                </div>
-
-                                <div className="btl-stat-card btl-stat-total">
-                                    <div className="btl-stat-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                    <div className="btl-stat-content">
-                                        <div className="btl-stat-number">{generationStatus.total || 0}</div>
-                                        <div className="btl-stat-label">{__('Total Posts', 'betterlinks')}</div>
-                                    </div>
-                                </div>
-
-                                <div className="btl-stat-card btl-stat-successful">
-                                    <div className="btl-stat-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                    <div className="btl-stat-content">
-                                        <div className="btl-stat-number">{generationStatus.successful || 0}</div>
-                                        <div className="btl-stat-label">{__('Successful', 'betterlinks')}</div>
-                                    </div>
-                                </div>
-
-                                {(generationStatus.failed || 0) > 0 && (
-                                    <div className="btl-stat-card btl-stat-failed">
-                                        <div className="btl-stat-icon">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M18 6L6 18M6 6L18 18" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
+                        <>
+                            {/* Check if generation is completed */}
+                            {generationStatus.status === 'completed' ? (
+                                <>
+                                <div className="btl-completion-container btl-fade-in">
+                                    <div className="btl-completion-main">
+                                        {/* Completion Circle */}
+                                        <div className="btl-completion-circle">
+                                            <div className="btl-completion-progress-circle">
+                                                <svg width="64" height="64" viewBox="0 0 120 120" className="btl-completion-progress-svg">
+                                                    {/* Background circle */}
+                                                    <circle
+                                                        cx="60"
+                                                        cy="60"
+                                                        r="50"
+                                                        stroke="#E5E7EB"
+                                                        strokeWidth="12"
+                                                        fill="none"
+                                                    />
+                                                    {/* Completed progress circle - full 100% */}
+                                                    <circle
+                                                        cx="60"
+                                                        cy="60"
+                                                        r="50"
+                                                        stroke="#10B981"
+                                                        strokeWidth="12"
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeDasharray={`${2 * Math.PI * 50}`}
+                                                        strokeDashoffset="0"
+                                                        transform="rotate(-90 60 60)"
+                                                        className="btl-completion-progress-fill"
+                                                    />
+                                                </svg>
+                                                <div className="btl-completion-percentage-display">
+                                                    <span className="btl-completion-percent-text">100%</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="btl-stat-content">
-                                            <div className="btl-stat-number">{generationStatus.failed || 0}</div>
-                                            <div className="btl-stat-label">{__('Failed', 'betterlinks')}</div>
+                                        
+                                        {/* Completion Content */}
+                                        <div className="btl-completion-content-main">
+                                            <div className="btl-completion-title">{__('Generation in Progress', 'betterlinks')}</div>
+                                            <div className="btl-completion-subtitle">
+                                                {`${__('Successfully generated', 'betterlinks')} ${generationStatus.successful || 0} ${__('short links', 'betterlinks')}.`}
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Time Display */}
+                                        <div className="btl-completion-time">
+                                            {generationStatus.message && (
+                                                <div className="btl-time-message">{generationStatus.message}</div>
+                                            )}
+                                        </div>
+                                        
+                                        {/* OK Button */}
+                                    </div>
+                                    
+                                    {/* Statistics on the right */}
+                                    <div className="btl-completion-stats">
+                                        <div className="btl-completion-stat-item btl-stat-processed">
+                                            <div className="btl-completion-stat-icon btl-stat-processed-icon">
+                                                <img src={plugin_root_url + 'assets/images/icons/progress.svg'} alt="" />
+                                            </div>
+                                            <div className="btl-completion-stat-content">
+                                                <div className="btl-completion-stat-number">{generationStatus.processed || 0}</div>
+                                                <div className="btl-completion-stat-label">{__('Processed', 'betterlinks')}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="btl-completion-stat-item btl-stat-total">
+                                            <div className="btl-completion-stat-icon btl-stat-total-icon">
+                                               <img src={plugin_root_url + 'assets/images/icons/layout-list.svg'} alt="" />
+                                            </div>
+                                            <div className="btl-completion-stat-content">
+                                                <div className="btl-completion-stat-number">{generationStatus.total || 0}</div>
+                                                <div className="btl-completion-stat-label">{__('Total Posts', 'betterlinks')}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="btl-completion-stat-item btl-stat-success">
+                                            <div className="btl-completion-stat-icon btl-stat-success-icon">
+                                                <img src={plugin_root_url + 'assets/images/icons/circle-checked.svg'} alt="" />
+                                            </div>
+                                            <div className="btl-completion-stat-content">
+                                                <div className="btl-completion-stat-number">{generationStatus.successful || 0}</div>
+                                                <div className="btl-completion-stat-label">{__('Successful', 'betterlinks')}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                )}
-                            </div>
-
-                            {/* Status Message */}
-                            {generationStatus.message && (
-                                <div className="btl-progress-message">
-                                    <div className="btl-message-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                    <span className="btl-message-text">{generationStatus.message}</span>
                                 </div>
-                            )}
-
-                            {/* Estimated Time Remaining */}
-                            {generationStatus.progress_percent > 0 && generationStatus.progress_percent < 100 && (
-                                <div className="btl-progress-eta">
-                                    <span className="btl-eta-label">{__('Estimated time remaining:', 'betterlinks')}</span>
-                                    <span className="btl-eta-value">
-                                        {(() => {
-                                            const remainingPercent = 100 - generationStatus.progress_percent;
-                                            const estimatedMinutes = Math.ceil((remainingPercent / 100) * Math.ceil((generationStatus.total || 1) / 10));
-                                            return estimatedMinutes > 0 ? `${estimatedMinutes} ${__('minutes', 'betterlinks')}` : __('Almost done', 'betterlinks');
-                                        })()}
-                                    </span>
-                                </div>
-                            )}
-
-                            {/* Completion Status */}
-                            {(generationStatus.status === 'completed' || generationStatus.status === 'cancelled' || showCompletionMessage) && (
-                                <div className={`btl-completion-notice ${generationStatus.status === 'completed' ? 'btl-success' : 'btl-warning'} btl-fade-in`}>
-                                    <div className="btl-completion-icon">
-                                        {generationStatus.status === 'completed' ? (
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        ) : (
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 9V13M12 17H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <div className="btl-completion-content">
-                                        <h4 className="btl-completion-title">
-                                            {generationStatus.status === 'completed'
-                                                ? __('Generation Completed!', 'betterlinks')
-                                                : __('Generation Cancelled', 'betterlinks')
-                                            }
-                                        </h4>
-                                        <p className="btl-completion-message">
-                                            {generationStatus.status === 'completed'
-                                                ? `${__('Successfully generated', 'betterlinks')} ${generationStatus.successful || 0} ${__('short links', 'betterlinks')}${generationStatus.failed > 0 ? ` (${generationStatus.failed} ${__('failed', 'betterlinks')})` : ''}.`
-                                                : __('The generation process was cancelled.', 'betterlinks')
-                                            }
-                                        </p>
-                                        {showCompletionMessage && (
-                                            <p className="btl-completion-note">
-                                                {__('Form will reset automatically in a few seconds...', 'betterlinks')}
+                                </>
+                            ) : (
+                                /* Progress State */
+                                <div className="btl-progress-main-container">
+                                    <div className="btl-progress-main">
+                                        {/* Circular Progress */}
+                                        <div className="btl-progress-circle-container">
+                                            <div className="btl-progress-circle">
+                                                <svg width="64" height="64" viewBox="0 0 200 200" className="btl-progress-svg">
+                                                    {/* Background circle */}
+                                                    <circle
+                                                        cx="100"
+                                                        cy="100"
+                                                        r="80"
+                                                        stroke="#E5E7EB"
+                                                        fill="none"
+                                                    />
+                                                    {/* Progress circle */}
+                                                    <circle
+                                                        cx="100"
+                                                        cy="100"
+                                                        r="80"
+                                                        stroke="#3B82F6"
+                                                        strokeWidth="12"
+                                                        fill="none"
+                                                        strokeLinecap="round"
+                                                        strokeDasharray={`${2 * Math.PI * 80}`}
+                                                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - (generationStatus.progress_percent || 0) / 100)}`}
+                                                        transform="rotate(-90 100 100)"
+                                                        style={{ transition: 'stroke-dashoffset 0.5s ease-in-out' }}
+                                                    />
+                                                </svg>
+                                                <div className="btl-progress-percentage-display">
+                                                    <span className="btl-progress-percent-text">{generationStatus.progress_percent || 0}%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Progress Content */}
+                                        <div className="btl-progress-content-main">
+                                            <h3 className="btl-progress-title">{__('Generation in Progress', 'betterlinks')}</h3>
+                                            <p className="btl-progress-subtitle">
+                                                {generationStatus.message || __('Analyzing posts and preparing data...', 'betterlinks')}
                                             </p>
-                                        )}
+                                            
+                                            {/* Time Left */}
+                                            {generationStatus.progress_percent > 0 && generationStatus.progress_percent < 100 && (
+                                                <div className="btl-progress-time-left">
+                                                    <span className="btl-time-label">{__('Time left:', 'betterlinks')}</span>
+                                                    <span className="btl-time-value">
+                                                        {(() => {
+                                                            const remainingPercent = 100 - generationStatus.progress_percent;
+                                                            const estimatedMinutes = Math.ceil((remainingPercent / 100) * Math.ceil((generationStatus.total || 1) / 10));
+                                                            return estimatedMinutes > 0 ? `${estimatedMinutes} ${__('mins', 'betterlinks')}` : __('Almost done', 'betterlinks');
+                                                        })()}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Statistics on the right */}
+                                    <div className="btl-progress-stats">
+                                        <div className="btl-progress-stat-item btl-stat-processed">
+                                            <div className="btl-progress-stat-icon btl-stat-processed-icon">
+                                                <img src={plugin_root_url + 'assets/images/icons/progress.svg'} alt="" />
+                                            </div>
+                                            <div className="btl-progress-stat-content">
+                                                <div className="btl-progress-stat-number">{generationStatus.processed || 0}</div>
+                                                <div className="btl-progress-stat-label">{__('Processed', 'betterlinks')}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="btl-progress-stat-item btl-stat-total">
+                                            <div className="btl-progress-stat-icon btl-stat-total-icon">
+                                               <img src={plugin_root_url + 'assets/images/icons/layout-list.svg'} alt="" />
+                                            </div>
+                                            <div className="btl-progress-stat-content">
+                                                <div className="btl-progress-stat-number">{generationStatus.total || 0}</div>
+                                                <div className="btl-progress-stat-label">{__('Total Posts', 'betterlinks')}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="btl-progress-stat-item btl-stat-success">
+                                            <div className="btl-progress-stat-icon btl-stat-success-icon">
+                                                <img src={plugin_root_url + 'assets/images/icons/circle-checked.svg'} alt="" />
+                                            </div>
+                                            <div className="btl-progress-stat-content">
+                                                <div className="btl-progress-stat-number">{generationStatus.successful || 0}</div>
+                                                <div className="btl-progress-stat-label">{__('Successful', 'betterlinks')}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
-                        </div>
+                        </>
                     )}
                 </div>
             )}
+            {/* OK Button */}
+            {
+                generationStatus?.status === 'completed' && (
+                <button 
+                    className="btl-btn btl-btn-primary btl-completion-ok-btn"
+                    onClick={() => {
+                        setGenerationInProgress(false);
+                        setGenerationStatus(null);
+                        setShowCompletionMessage(false);
+                        // Reset form if needed
+                        setSelectedPostType(null);
+                        setSelectedCategories([]);
+                        setPostCount(null);
+                    }}
+                >
+                    {__('Okay', 'betterlinks')}
+                </button>
+                )
+            }
         </div>
     );
 };
