@@ -1196,16 +1196,17 @@ input:focus {
 }
 
 .btl-progress-title {
-    font-size: 20px;
     font-weight: 600;
-    color: var(--text-primary, #1d2327);
-    margin: 0 0 4px 0;
+    font-size: 16px;
+    line-height: 130%;
+    color: #1D2939;
 }
 
 .btl-progress-subtitle {
-    font-size: 14px;
-    color: var(--text-secondary, #646970);
-    margin: 0;
+    font-size: 12px;
+    line-height: 120%;
+    color: #788597;
+    margin-bottom: 16px;
 }
 
 [data-theme="dark"] .btl-progress-title {
@@ -1665,15 +1666,19 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 60px;
+    gap: 16px;
     margin: 40px 0;
 }
 
 .btl-progress-main {
+    background-color: #fdfeff;
+    border: 1px solid #f0f5f9;
+    color: #f0f5f9;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    text-align: center;
     flex: 1;
 }
 
@@ -1682,6 +1687,8 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 16px;
+    margin-top: 35px;
 }
 
 .btl-progress-circle {
@@ -1743,6 +1750,7 @@ input:focus {
     padding: 8px;
     background-color: #F2F8FF;
     border: 1px solid #E3F1FF;
+    margin-bottom: 35px;
 
 }
 
@@ -1984,7 +1992,7 @@ input:focus {
 .btl-completion-stats {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
     min-width: 200px;
 }
 
