@@ -952,7 +952,9 @@ export const sortByClicksTag = (type = '', tags, tag_analytics) => {
 	if (!analyticsType || !sortType) return tags;
 
 	let sortedTags = _.orderBy(tags, (item) => {
-		return +tag_analytics[analyticsType][item.id] || 0;
+		// Handle both item.id and item.ID cases
+		const itemId = item.id || item.ID;
+		return +tag_analytics[analyticsType][itemId] || +tag_analytics[analyticsType][String(itemId)] || 0;
 	});
 
 	if ('desc' === sortType) {
@@ -966,7 +968,9 @@ export const sortByClicksCategory = (type = '', categories, category_analytics) 
 	if (!analyticsType || !sortType) return categories;
 
 	let sortedCategories = _.orderBy(categories, (item) => {
-		return +category_analytics[analyticsType][item.id] || 0;
+		// Handle both item.id and item.ID cases
+		const itemId = item.id || item.ID;
+		return +category_analytics[analyticsType][itemId] || +category_analytics[analyticsType][String(itemId)] || 0;
 	});
 
 	if ('desc' === sortType) {

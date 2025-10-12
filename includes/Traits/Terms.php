@@ -3,10 +3,10 @@ namespace BetterLinks\Traits;
 
 trait Terms {
 
-	public function tags_analytic() {
+	public function tags_analytic( $force_refresh = false ) {
 
 		$analytic = get_option( 'btl_tags_analytics', array() );
-		if ( count( $analytic ) > 0 ) {
+		if ( !$force_refresh && count( $analytic ) > 0 ) {
 			return $analytic;
 		}
 		global $wpdb;
@@ -26,17 +26,13 @@ trait Terms {
 			$prepare_total_clicks[ $value['tag_id'] ] = $value['total_click'];
 		}
 
-		$query         = "SELECT t.ID AS tag_id, COUNT(c.ip) AS unique_clicks FROM {$prefix}betterlinks_terms t LEFT JOIN {$prefix}betterlinks_terms_relationships tr ON t.ID=tr.term_id LEFT JOIN {$prefix}betterlinks_clicks c ON tr.link_id=c.link_id WHERE term_type='tags' GROUP BY tag_id, c.ip;";
+		$query         = "SELECT t.ID AS tag_id, COUNT(DISTINCT c.ip) AS unique_clicks FROM {$prefix}betterlinks_terms t LEFT JOIN {$prefix}betterlinks_terms_relationships tr ON t.ID=tr.term_id LEFT JOIN {$prefix}betterlinks_clicks c ON tr.link_id=c.link_id WHERE term_type='tags' GROUP BY t.ID;";
 		$unique_clicks = $wpdb->get_results( $query, ARRAY_A );
 
 		$prepare_unique_clicks = array();
 
 		foreach ( $unique_clicks as $value ) {
-			if ( isset( $prepare_unique_clicks[ $value['tag_id'] ] ) ) {
-				$prepare_unique_clicks[ $value['tag_id'] ] += 1;
-				continue;
-			}
-			$prepare_unique_clicks[ $value['tag_id'] ] = isset( $prepare_total_clicks[ $value['tag_id'] ] ) ? 1 : 0;
+			$prepare_unique_clicks[ $value['tag_id'] ] = intval( $value['unique_clicks'] );
 		}
 
 		$analytic = array(
@@ -53,9 +49,9 @@ trait Terms {
 		return $wpdb->get_results( $query, ARRAY_A );
 	}
 
-	public function categories_analytic() {
+	public function categories_analytic( $force_refresh = false ) {
 		$analytic = get_option( 'btl_categories_analytics', array() );
-		if ( count( $analytic ) > 0 ) {
+		if ( !$force_refresh && count( $analytic ) > 0 ) {
 			return $analytic;
 		}
 		global $wpdb;
@@ -75,17 +71,13 @@ trait Terms {
 			$prepare_total_clicks[ $value['category_id'] ] = $value['total_click'];
 		}
 
-		$query         = "SELECT t.ID AS category_id, COUNT(c.ip) AS unique_clicks FROM {$prefix}betterlinks_terms t LEFT JOIN {$prefix}betterlinks_terms_relationships tr ON t.ID=tr.term_id LEFT JOIN {$prefix}betterlinks_clicks c ON tr.link_id=c.link_id WHERE term_type='category' GROUP BY category_id, c.ip;";
+		$query         = "SELECT t.ID AS category_id, COUNT(DISTINCT c.ip) AS unique_clicks FROM {$prefix}betterlinks_terms t LEFT JOIN {$prefix}betterlinks_terms_relationships tr ON t.ID=tr.term_id LEFT JOIN {$prefix}betterlinks_clicks c ON tr.link_id=c.link_id WHERE term_type='category' GROUP BY t.ID;";
 		$unique_clicks = $wpdb->get_results( $query, ARRAY_A );
 
 		$prepare_unique_clicks = array();
 
 		foreach ( $unique_clicks as $value ) {
-			if ( isset( $prepare_unique_clicks[ $value['category_id'] ] ) ) {
-				$prepare_unique_clicks[ $value['category_id'] ] += 1;
-				continue;
-			}
-			$prepare_unique_clicks[ $value['category_id'] ] = isset( $prepare_total_clicks[ $value['category_id'] ] ) ? 1 : 0;
+			$prepare_unique_clicks[ $value['category_id'] ] = intval( $value['unique_clicks'] );
 		}
 
 		$analytic = array(
