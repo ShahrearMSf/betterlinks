@@ -472,7 +472,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 						{/* Template Management Section */}
 						<div className="btl-utm-templates-section">
 							<div className="btl-utm-templates-wrapper">
-								<h3>{__('UTM Templates & Category Assignment', 'betterlinks')}</h3>
+								<h3>
+									{__('Dynamic UTM Templates', 'betterlinks')}
+									<div className="btl-tooltip">
+										<span className="dashicons dashicons-info-outline"></span>
+										<span className="btl-tooltiptext">{__('Create reusable UTM parameter templates that automatically apply to links based on categories. Track campaign performance with consistent UTM parameters across your links.', 'betterlinks')}</span>
+									</div>
+								</h3>
 								<button className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: 'pointer' }}>
 									<img style={{ marginRight: '8px' }} src={plugin_root_url + 'assets/images/add-icon.svg'} alt="Add icon" />
 									{__('Create New Template', 'betterlinks')}

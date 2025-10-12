@@ -242,14 +242,17 @@ body.betterlinks-dark-mode .ReactModal__Content {
                     white-space: nowrap;
 
                     &.btl-utm-category-active {
-                        background: green;
-                        color: #ffffff;
-                        border-radius: 4px;
+                        background: #d9f9e6;
+                        color: #56b684;
+                        border-radius: 22px;
+                        border: 1px solid green;
                     }
 
                     &.btl-utm-category-deleted {
-                        background: #FEF2F2;
-                        color: #DC2626;
+                        background: #fae3e3;
+                        color: #cb3932;
+                        border: 1px solid #cb444b;
+                        border-radius: 22px;
                     }
 
                     &.btl-utm-category-loading {
@@ -320,14 +323,17 @@ body.betterlinks-dark-mode .ReactModal__Content {
                     white-space: nowrap;
 
                     &.btl-utm-category-active {
-                        background: green;
-                        color: #ffffff;
-                        border-radius: 4px;
+                        background: #d9f9e6;
+                        color: #56b684;
+                        border-radius: 22px;
+                        border: 1px solid green;
                     }
 
                     &.btl-utm-category-deleted {
-                        background: #FEF2F2;
-                        color: #DC2626;
+                        background: #fae3e3;
+                        color: #cb3932;
+                        border: 1px solid #cb444b;
+                        border-radius: 22px;
                     }
 
                     &.btl-utm-category-loading {
@@ -415,16 +421,17 @@ body.betterlinks-dark-mode .ReactModal__Content {
                         white-space: nowrap;
 
                         &.btl-utm-category-active {
-                            background: #FFFFFF;
-                            color: #1D2939;
-                            border: 1px solid #E4E9F7;
-                            border-radius: 4px;
+                            background: #d9f9e6;
+                            color: #56b684;
+                            border-radius: 22px;
+                            border: 1px solid green;
                         }
 
                         &.btl-utm-category-deleted {
-                            background: #FEF2F2;
-                            color: #DC2626;
-                            text-decoration: line-through;
+                            background: #fae3e3;
+                            color: #cb3932;
+                            border: 1px solid #cb444b;
+                            border-radius: 22px;
                         }
 
                         &.btl-utm-category-loading {
@@ -1278,15 +1285,17 @@ body.betterlinks-dark-mode .ReactModal__Content {
                         color: #D1D5DB;
 
                         &.btl-utm-category-active {
-                            background: #FFFFFF;
-                            color: #1D2939;
-                            border: 1px solid #E4E9F7;
-                            border-radius: 4px;
+                            background: #d9f9e6;
+                            color: #56b684;
+                            border-radius: 22px;
+                            border: 1px solid green;
                         }
 
                         &.btl-utm-category-deleted {
-                            background: #7F1D1D;
-                            color: #FCA5A5;
+                            background: #fae3e3;
+                            color: #cb3932;
+                            border: 1px solid #cb444b;
+                            border-radius: 22px;
                         }
 
                         &.btl-utm-category-loading {
@@ -1327,8 +1336,10 @@ body.betterlinks-dark-mode .ReactModal__Content {
                     }
 
                     &.btl-utm-category-deleted {
-                        background: #7F1D1D;
-                        color: #FCA5A5;
+                                              background: #fae3e3;
+                        color: #cb3932;
+                        border: 1px solid #cb444b;
+                        border-radius: 22px;
                     }
 
                     &.btl-utm-category-loading {
