@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import { update_cat, delete_cat } from 'redux/actions/links.actions';
 import { modalCustomSmallStyles } from 'utils/helper';
 import CatForm from 'components/Terms/CatForm';
+import PermissionModal from 'components/PermissionModal';
 
 const propTypes = {
 	catId: PropTypes.number,
@@ -19,11 +20,26 @@ const CatHeader = (props) => {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [isCatAction, setCatAction] = useState(false);
 	const [isDeleteConfirm, setDeleteConfrim] = useState(false);
+	const [showPermissionModal, setShowPermissionModal] = useState(false);
+
+	// Check if user has permission to manage tags and categories
+	const hasPermission = () => {
+		// Check if betterLinksProGlobal exists (pro version with role management)
+		if (window.betterLinksProGlobal && typeof window.betterLinksProGlobal.user_can_manage_tags_categories !== 'undefined') {
+			return window.betterLinksProGlobal.user_can_manage_tags_categories || window.betterLinksProGlobal.user_can_manage_options;
+		}
+		// Fallback for free version - only admins can manage
+		return window.betterLinksGlobal && window.betterLinksGlobal.user_can_manage_options;
+	};
 	const catActionHandler = () => {
 		setDeleteConfrim(false);
 		setCatAction(!isCatAction);
 	};
 	const deleteHandler = () => {
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
 		setCatAction(!isCatAction);
 		setDeleteConfrim(!isDeleteConfirm);
 	};
@@ -32,6 +48,10 @@ const CatHeader = (props) => {
 		setDeleteConfrim(false);
 	};
 	const confirmDelete = () => {
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
 		setDeleteConfrim(false);
 		setDeleteConfrim(false);
 		delete_cat({
@@ -40,6 +60,10 @@ const CatHeader = (props) => {
 	};
 
 	function openModal() {
+		if (!hasPermission()) {
+			setShowPermissionModal(true);
+			return;
+		}
 		setModalIsOpen(true);
 	}
 
@@ -51,7 +75,8 @@ const CatHeader = (props) => {
 		<React.Fragment>
 			<div className="category-head">
 				<h4 className="title">{catName}</h4>
-				{catSlug != 'uncategorized' && betterLinksHooks.applyFilters('isShowCatControl', true) && (
+				{/* && (hasPermission() || betterLinksHooks.applyFilters('isShowCatControl', true) ) */}
+				{catSlug != 'uncategorized'  && (
 					<div className="dropdown">
 						<button className="icon" onClick={() => catActionHandler()}>
 							<i className="btl btl-more"></i>
@@ -95,6 +120,12 @@ const CatHeader = (props) => {
 				</span>
 				<CatForm catId={parseInt(catId)} catName={catName} catSlug={catSlug} submitHandler={update_cat} hideHandler={closeModal} />
 			</Modal>
+
+			<PermissionModal
+				isOpen={showPermissionModal}
+				onClose={() => setShowPermissionModal(false)}
+				title={__('Category Management Permission Required', 'betterlinks')}
+			/>
 		</React.Fragment>
 	);
 };
