@@ -458,7 +458,7 @@ export const Link = (props) => {
 										)}
 									</Modal>
 									<div className="btl-entry-content-left" style={{ marginBottom: '20px' }}>
-										<div className="btl-modal-form-group">
+										<div className="btl-modal-form-group" data-testid="btl-link-title">
 											<label className="btl-modal-form-label btl-required" htmlFor="link_title">
 												{__('Title', 'betterlinks')}
 											</label>
@@ -494,13 +494,13 @@ export const Link = (props) => {
 												)}
 											</div>
 										</div>
-										<div className="btl-modal-form-group">
+										<div className="btl-modal-form-group " data-testid="btl-link-note">
 											<label className="btl-modal-form-label" htmlFor="link_note">
 												{__('Description', 'betterlinks')}
 											</label>
 											<Field className="btl-modal-form-control" component="textarea" id="link_note" name="link_note" disabled={isDisableLinkFormEditView} />
 										</div>
-										<div className="btl-modal-form-group">
+										<div className="btl-modal-form-group" data-testid="btl-redirect-type">
 											<label className="btl-modal-form-label btl-required" htmlFor="redirect_type">
 												{__('Redirect Type', 'betterlinks')}
 											</label>
@@ -522,7 +522,7 @@ export const Link = (props) => {
 												enable_password={props.values?.enable_password}
 											/>
 										</div>
-										<div className="btl-modal-form-group btl-has-utm-button">
+										<div className="btl-modal-form-group btl-has-utm-button" data-testid="btl-target-url">
 											<label className="btl-modal-form-label btl-required" htmlFor="target_url">
 												{__('Target URL', 'betterlinks')}
 											</label>
@@ -544,6 +544,7 @@ export const Link = (props) => {
 												<button
 													type="button"
 													className={`btl-utm-button ${props.values.target_url && (props.values.target_url.includes('utm_source') || props.values.target_url.includes('utm_medium') || props.values.target_url.includes('utm_campaign') || props.values.target_url.includes('utm_term') || props.values.target_url.includes('utm_content')) ? 'btl-utm-button--applied' : 'btl-utm-button--not-applied'}`}
+													data-testid="btl-utm-button"
 													onClick={openUTMModal}
 													disabled={isDisableLinkFormEditView}
 												>
@@ -557,19 +558,19 @@ export const Link = (props) => {
 													)}
 												</button>
 												{!is_pro_enabled ? (
-													<button type="button" className="btl-share-button btl-share-button--locked" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
+													<button type="button" className="btl-share-button btl-share-button--locked" data-testid="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
 														<i className="btl btl-share"></i>
 														<img className="locked" src={plugin_root_url + 'assets/images/lock-round.svg'} alt="icon" />
 													</button>
 												) : (
-													<button type="button" className="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
+													<button type="button" className="btl-share-button" data-testid="btl-share-button" onClick={builtInUTMModalOpenHandler} disabled={isDisableLinkFormEditView}>
 														<i className="btl btl-share"></i>
 													</button>
 												)}
 											</div>
 										</div>
 										<div className="btl-modal-shorturl-wrap">
-											<div className="btl-modal-form-group shorturl">
+											<div className="btl-modal-form-group shorturl" data-testid="btl-short-url">
 												<label className="btl-modal-form-label" htmlFor="short_url">
 													{__('Shortened URL', 'betterlinks')}
 												</label>
@@ -577,6 +578,7 @@ export const Link = (props) => {
 													<span className="btl-static-link">{site_url + '/'}</span>
 													<Field
 														className="btl-dynamic-link"
+														data-testid="btl-short-url"
 														id="short_url"
 														name="short_url"
 														onChange={(e) => {
@@ -591,7 +593,7 @@ export const Link = (props) => {
 											</div>
 											{slugIsExists == true && <div className="errorlog">Already Exists</div>}
 										</div>
-										<div className="btl-modal-form-group">
+										<div className="btl-modal-form-group" data-testid="btl-cat-id">
 											<label className="btl-modal-form-label" htmlFor="catId">
 												{__('Category', 'betterlinks')}
 											</label>
@@ -603,7 +605,7 @@ export const Link = (props) => {
 												disabled={isDisableLinkFormEditView}
 											/>
 										</div>
-										<div className="btl-modal-form-group">
+										<div className="btl-modal-form-group" data-testid="btl-tags-id">
 											<label className="btl-modal-form-label" htmlFor="tags">
 												{__('Tags', 'betterlinks')}
 											</label>
@@ -615,7 +617,7 @@ export const Link = (props) => {
 										{betterLinksHooks.applyFilters('isShowLinkSubmitButton', true, data) && (
 											<div className="btl-modal-form-group btl-modal-form-group-submit">
 												<label className="btl-modal-form-label"></label>
-												<button type="submit" className="btl-modal-submit-button">
+												<button type="submit" className="btl-modal-submit-button" data-testid="btl-submit-button">
 													{data && '' === type ? __('Update', 'betterlinks') : __('Publish', 'betterlinks')}
 												</button>
 											</div>
