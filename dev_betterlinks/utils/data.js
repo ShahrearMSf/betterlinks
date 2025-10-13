@@ -49,7 +49,7 @@ export const tabList = [
 	},
 	{
 		label: __('UTM Builder', 'betterlinks'),
-		type: 'free',
+		type: 'pro',
 	},
 	{
 		label: __('Quick Link Creation', 'betterlinks'),

@@ -34,7 +34,7 @@ $spacing-xxl: 32px;
 // Dark mode colors
 $dark-bg: #1f2937;
 $dark-bg-secondary: #374151;
-$dark-bg-tertiary: #4b5563;
+$dark-bg-tertiary: #f54707;
 $dark-text: #f9fafb;
 $dark-text-secondary: #9ca3af;
 $dark-border: #4b5563;
@@ -56,6 +56,63 @@ $dark-border: #4b5563;
 
 @mixin transition-base {
     transition: all 0.2s ease;
+}
+
+// ============================================================================
+// Demo Template Styles
+// ============================================================================
+.btl-utm-template-demo {
+    opacity: 0.8;
+    position: relative;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+        border-radius: $border-radius;
+    }
+}
+
+.btl-demo-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+// Pro feature wrapper for modal blocking
+.betterlinks-pro-feature-wrapper {
+    position: relative;
+    z-index: 999999;
+}
+
+// UTM Button pro locked state
+.btl-utm-button--pro-locked {
+    background: #f3f4f6 !important;
+    color: #9ca3af !important;
+    cursor: not-allowed !important;
+    border-color: #e5e7eb !important;
+    
+    &:hover {
+        background: #f3f4f6 !important;
+        color: #9ca3af !important;
+        border-color: #e5e7eb !important;
+    }
+    
+    .locked {
+        opacity: 0.7;
+    }
 }
 
 // ============================================================================
@@ -103,6 +160,17 @@ body.betterlinks-dark-mode .ReactModal__Content {
         justify-content: space-between;
         border-bottom: 1px solid #DEE1E9;
         padding-bottom: $spacing-sm;
+        .btl-utm-templates-title {
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 130%;
+            color: #1D2939;
+            display: flex;
+            .btl-tooltip {
+                margin-top: 6px;
+            }
+
+        }
     }
 
     .btl-utm-templates-crt-btn {
@@ -452,13 +520,9 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
         .btl-utm-action-btn {
             @include button-reset;
-            // padding: 5%;
-            // border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            // background: #ffffff;
-            // border: 1px solid $border-color;
             color: $text-muted;
             transition: all 0.2s ease;
 
@@ -530,12 +594,15 @@ body.betterlinks-dark-mode .ReactModal__Content {
         }
     }    // Dark mode styles for UTM action buttons
     body.betterlinks-dark-mode & {
+        .btl-d-title{
+            color: $dark-text;
+        }
         .btl-utm-template-actions {
             .btl-utm-action-btn {
                 color: $dark-text-secondary;
 
                 &:hover {
-                    background: $dark-bg-tertiary;
+                    // background: $dark-bg-tertiary;
                     color: $dark-text;
                 }
 
@@ -1358,7 +1425,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
                 &:hover {
                     border-color: #4B5563;
-                    background: #374151;
+                    // background: #374151;
                     color: #D1D5DB;
                 }
 
@@ -1582,7 +1649,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
             border-color: $dark-border;
 
             &:hover:not(:disabled) {
-                background: $dark-bg-tertiary;
+                // background: $dark-bg-tertiary;
                 color: #f3f4f6;
                 border-color: #6b7280;
             }

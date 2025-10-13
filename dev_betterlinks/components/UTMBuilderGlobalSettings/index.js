@@ -4,7 +4,9 @@ import { Formik, Form, Field } from 'formik';
 import { update_option } from 'redux/actions/settings.actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { saveSettingsHandler, makeRequest, betterlinks_nonce, plugin_root_url } from 'utils/helper';
+import { saveSettingsHandler, makeRequest, betterlinks_nonce, plugin_root_url, is_pro_enabled } from 'utils/helper';
+import { useUpgradeProModal } from 'utils/customHooks';
+import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import UTMTemplateModal from './UTMTemplateModal';
 import ConfirmModal from '../PermissionModal/ConfirmModal';
 import '../../../assets/scss/components/_utm_builder_style.scss';
@@ -21,6 +23,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [templateToDelete, setTemplateToDelete] = useState(null);
 	const [expandedTemplates, setExpandedTemplates] = useState(new Set());
+	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const [templateForm, setTemplateForm] = useState({
 		template_name: '',
 		utm_source: '',
@@ -398,6 +401,10 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 	};
 
 	const openCreateModal = () => {
+		if (!is_pro_enabled) {
+			openUpgradeToProModal();
+			return;
+		}
 		setActiveTemplate(null);
 		resetTemplateForm();
 		setIsCreatingTemplate(true);
@@ -450,36 +457,80 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 		return template.template_name.length > 25 || (template.categories && template.categories.length > 2);
 	};
 
+	// Static demo templates for free users
+	const demoTemplates = [
+		{
+			template_name: "Comprehensive Social Media Campaign Strategy to Boost Brand Awareness, Engagement, and Conversions Across Multiple Platforms Through Targeted Content, Analytics, and Audience-Centric Marketing Approaches",
+			utm_source: "facebook",
+			utm_medium: "social",
+			utm_campaign: "product_launch",
+			utm_term: "new_product",
+			utm_content: "ad_creative_1",
+			categories: [],
+			template_index: "demo_1",
+			created_at: "2025-01-01T00:00:00.000Z"
+		},
+		{
+			template_name: "Email Newsletter",
+			utm_source: "email",
+			utm_medium: "newsletter",
+			utm_campaign: "weekly_update",
+			utm_term: "",
+			utm_content: "header_link",
+			categories: ["1"],
+			template_index: "demo_2",
+			created_at: "2025-01-01T00:00:00.000Z"
+		},
+		{
+			template_name: "Google Ads Campaign",
+			utm_source: "google",
+			utm_medium: "cpc",
+			utm_campaign: "search_ads",
+			utm_term: "keywords",
+			utm_content: "ad_text",
+			categories: ["1"],
+			template_index: "demo_3",
+			created_at: "2025-01-01T00:00:00.000Z"
+		}
+	];
+
+	// Handle demo template actions (show upgrade modal)
+	const handleDemoTemplateAction = () => {
+		openUpgradeToProModal();
+	};
+
 
 	return (
-		<Formik
-			enableReinitialize
-			initialValues={{
-				...settings,
-				global_utm_templates: utmTemplates
-			}}
-			onSubmit={(values) => {
-				const updatedValues = {
-					...values,
+		<>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+			<Formik
+				enableReinitialize
+				initialValues={{
+					...settings,
 					global_utm_templates: utmTemplates
-				};
-				saveSettingsHandler(updatedValues, update_option, setFormSubmitText);
-			}}
-		>
+				}}
+				onSubmit={(values) => {
+					const updatedValues = {
+						...values,
+						global_utm_templates: utmTemplates
+					};
+					saveSettingsHandler(updatedValues, update_option, setFormSubmitText);
+				}}
+			>
 			{() => (
 				<Form>
 					<div className="btl-utm-global-settings">
 						{/* Template Management Section */}
 						<div className="btl-utm-templates-section">
 							<div className="btl-utm-templates-wrapper">
-								<h3>
+								<div className="btl-utm-templates-title btl-d-title">
 									{__('Dynamic UTM Templates', 'betterlinks')}
 									<div className="btl-tooltip">
 										<span className="dashicons dashicons-info-outline"></span>
 										<span className="btl-tooltiptext">{__('Create reusable UTM parameter templates that automatically apply to links based on categories. Track campaign performance with consistent UTM parameters across your links.', 'betterlinks')}</span>
 									</div>
-								</h3>
-								<button className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: 'pointer' }}>
+								</div>
+								<button className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}>
 									<img style={{ marginRight: '8px' }} src={plugin_root_url + 'assets/images/add-icon.svg'} alt="Add icon" />
 									{__('Create New Template', 'betterlinks')}
 								</button>
@@ -514,16 +565,16 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								cancelButtonText={__('Cancel', 'betterlinks')}
 								isDangerous={true}
 							/>
-
 							{/* Templates List */}
-							{utmTemplates.length > 0 && (
+							{(is_pro_enabled ? utmTemplates.length > 0 : true) && (
 								<div className="btl-utm-templates-list-display">
 									<h4>{__('Configured Templates', 'betterlinks')}</h4>
 									<div className="btl-utm-templates-list">
-										{utmTemplates.map(template => {
-											const isActiveTemplate = isTemplateActiveForAnyCategory(template);
+										{(is_pro_enabled ? utmTemplates : demoTemplates).map(template => {
+											const isActiveTemplate = is_pro_enabled ? isTemplateActiveForAnyCategory(template) : false;
+											const isDemoTemplate = !is_pro_enabled;
 											return (
-												<div key={template.template_index} className={`btl-utm-template-item ${isTemplateExpanded(template.template_index) ? 'expanded' : ''}`}>
+												<div key={template.template_index} className={`btl-utm-template-item ${isTemplateExpanded(template.template_index) ? 'expanded' : ''} ${isDemoTemplate ? 'btl-utm-template-demo' : ''}`}>
 													<div className="btl-utm-template-row">
 														<div className="btl-utm-template-content">
 															<div
@@ -539,9 +590,11 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 																		<span className="btl-utm-categories-label">{__('Categories:', 'betterlinks')} </span>
 																		{template.categories && template.categories.length > 0
 																			? template.categories.slice(0, 2).map((catId, index) => {
-																				const category = findCategoryById(catId);
+																				const category = isDemoTemplate ? { term_name: 'Uncategorized' } : findCategoryById(catId);
 																				let categoryName;
-																				if (termsLoading) {
+																				if (isDemoTemplate) {
+																					categoryName = 'Uncategorized';
+																				} else if (termsLoading) {
 																					categoryName = 'Loading...';
 																				} else if (category) {
 																					categoryName = category.term_name;
@@ -549,7 +602,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 																					categoryName = 'Deleted';
 																				}
 
-																				const isActive = isCategoryActiveForTemplate(template, catId);
+																				const isActive = is_pro_enabled ? isCategoryActiveForTemplate(template, catId) : false;
 																				const isDeleted = categoryName === 'Deleted';
 																				const isLoading = categoryName === 'Loading...';
 
@@ -559,7 +612,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 																					</span>
 																				);
 																			})
-																			: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
+																			: <span className="btl-utm-category-tag">{__('Unassigned', 'betterlinks')}</span>
 																		}
 																		{template.categories && template.categories.length > 2 && (
 																			<span className="btl-utm-more-categories">
@@ -575,7 +628,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															<button
 																type="button"
 																className="btl-utm-action-btn btl-utm-btn-ac"
-																onClick={() => handleTemplateCopy(template)}
+																style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}
+																onClick={() => isDemoTemplate ? handleDemoTemplateAction() : handleTemplateCopy(template)}
 															>
 																<div className="btl-tooltip btl-utm-line">
 																	<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -588,7 +642,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															<button
 																type="button"
 																className="btl-utm-action-btn btl-utm-btn-ac"
-																onClick={() => handleTemplateSelect(template)}
+																style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}
+																onClick={() => isDemoTemplate ? handleDemoTemplateAction() : handleTemplateSelect(template)}
 																title={__('Edit', 'betterlinks')}
 															>
 																<div className="btl-tooltip btl-utm-line">
@@ -602,7 +657,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 															<button
 																type="button"
 																className="btl-utm-action-btn btl-utm-btn-ac"
-																onClick={() => handleTemplateDelete(template.template_index)}
+																style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}
+																onClick={() => isDemoTemplate ? handleDemoTemplateAction() : handleTemplateDelete(template.template_index)}
 																title={__('Delete', 'betterlinks')}
 															>
 																<div className="btl-tooltip">
@@ -644,7 +700,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 																				</span>
 																			);
 																		})
-																		: <span className="btl-utm-category-tag">{__('Not Assigned Yet', 'betterlinks')}</span>
+																		: <span className="btl-utm-category-tag">{__('Unassigned', 'betterlinks')}</span>
 																	}
 																</div>
 															</div>
@@ -657,8 +713,8 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								</div>
 							)}
 
-							{/* Empty State when no templates exist */}
-							{utmTemplates.length === 0 && (
+							{/* Empty State when no templates exist - only show for pro users */}
+							{is_pro_enabled && utmTemplates.length === 0 && (
 								<div className="btl-utm-empty-state">
 									<div className="btl-utm-empty-content">
 										<div className="btl-utm-empty-icon">
@@ -689,6 +745,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 				</Form>
 			)}
 		</Formik>
+		</>
 	);
 };
 

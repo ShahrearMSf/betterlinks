@@ -479,7 +479,7 @@ const UTMTemplateModal = ({
                                     type="text"
                                     value={templateForm.utm_content}
                                     onChange={(e) => setTemplateForm({ ...templateForm, utm_content: e.target.value })}
-                                    placeholder={__('eg: text AD name', 'betterlinks')}
+                                    placeholder={__('eg: newsletter', 'betterlinks')}
                                     className="btl-form-input"
                                 />
                             </div>
@@ -520,10 +520,10 @@ const UTMTemplateModal = ({
                                     />
                                     <span className="btl-checkbox-custom"></span>
                                     <span className="btl-checkbox-text">
-                                        {__('Use this UTM for ALL future Links', 'betterlinks')}
+                                        {__('Apply this UTM for ALL future Links', 'betterlinks')}
                                         <div className="btl-tooltip">
                                             <span className="dashicons dashicons-info-outline"></span>
-                                            <span className="btl-tooltiptext">{__('Automatically apply this UTM template to all new links in selected categories', 'betterlinks')}</span>
+                                            <span className="btl-tooltiptext">{__('This UTM template will be auto-applied to all new links in selected categories.', 'betterlinks')}</span>
                                         </div>
                                     </span>
                                 </label>
