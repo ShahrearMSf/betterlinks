@@ -30,6 +30,8 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks/admin/cat_slug_unique_checker', array( $this, 'cat_slug_unique_checker' ) );
 		add_action( 'wp_ajax_betterlinks/admin/reset_analytics', array( $this, 'reset_analytics' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_clicks_count', array( $this, 'get_clicks_count' ) );
+		add_action( 'wp_ajax_betterlinks/admin/backfill_country_data', array( $this, 'backfill_country_data' ) );
+		add_action( 'wp_ajax_betterlinks/admin/clear_analytics_cache', array( $this, 'clear_analytics_cache' ) );
 		// prettylinks.
 		add_action( 'wp_ajax_betterlinks/admin/get_prettylinks_data', array( $this, 'get_prettylinks_data' ) );
 		add_action( 'wp_ajax_betterlinks/admin/run_prettylinks_migration', array( $this, 'run_prettylinks_migration' ) );
@@ -1576,4 +1578,55 @@ class Ajax {
 			'links_without_utm' => $links_without_utm
 		) );
 	}
+
+	/**
+	 * Backfill country data for existing clicks
+	 */
+	public function backfill_country_data() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+		}
+
+		if ( ! wp_verify_nonce( $_POST['security'], 'betterlinks_nonce' ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid nonce' ) );
+		}
+
+		$limit = isset( $_POST['limit'] ) ? intval( $_POST['limit'] ) : 100;
+		$limit = max( 1, min( 500, $limit ) ); // Limit between 1 and 500
+
+		if ( ! class_exists( '\BetterLinks\Services\CountryDetectionService' ) ) {
+			wp_send_json_error( array( 'message' => 'Country detection service not available' ) );
+		}
+
+		$results = \BetterLinks\Services\CountryDetectionService::backfill_country_data( $limit );
+
+		wp_send_json_success( $results );
+	}
+
+	/**
+	 * Clear analytics cache
+	 */
+	public function clear_analytics_cache() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+		}
+
+		if ( ! wp_verify_nonce( $_POST['security'], 'betterlinks_nonce' ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid nonce' ) );
+		}
+
+		global $wpdb;
+
+		// Clear all BetterLinks transients
+		$deleted = $wpdb->query(
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_btl_%' OR option_name LIKE '_transient_timeout_btl_%'"
+		);
+
+		wp_send_json_success( array(
+			'message' => 'Analytics cache cleared successfully',
+			'deleted_transients' => $deleted
+		) );
+	}
+
+
 }

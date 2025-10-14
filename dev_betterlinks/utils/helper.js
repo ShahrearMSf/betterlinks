@@ -252,6 +252,17 @@ export const getBrowser = (agent) => {
 	return browser;
 };
 
+export const getFlagEmoji = (countryCode) => {
+	if (!countryCode || countryCode.length !== 2) return '🌍';
+
+	const codePoints = countryCode
+		.toUpperCase()
+		.split('')
+		.map(char => 127397 + char.charCodeAt());
+
+	return String.fromCodePoint(...codePoints);
+};
+
 export const formatDate = (date = new Date(), format) => {
 	const map = {
 		mm: date.getMonth() + 1,
@@ -712,6 +723,30 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
 			{
+				name: __('Country', 'betterlinks'),
+				selector: 'country_name',
+				sortable: false,
+				width: '180px',
+				cell: (row) => {
+					if (row.country_name && row.country_code) {
+						return (
+							<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+								<span style={{
+									fontSize: '16px',
+									lineHeight: '1'
+								}}>
+									{getFlagEmoji(row.country_code)}
+								</span>
+								<span title={row.country_name}>
+									{row.country_name}
+								</span>
+							</div>
+						);
+					}
+					return <div>-</div>;
+				},
+			},
+			{
 				name: __('Timestamp', 'betterlinks'),
 				selector: 'created_at',
 				sortable: false,
@@ -881,6 +916,10 @@ export const analyticsColumnData = [
 	{
 		name: __('IP', 'betterlinks'),
 		selector: 'ip',
+	},
+	{
+		name: __('Country', 'betterlinks'),
+		selector: 'country_name',
 	},
 	{
 		name: __('Timestamp', 'betterlinks'),

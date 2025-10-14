@@ -188,4 +188,38 @@ trait DBTables
 			$wpdb->query( $sql );
         }
     }
+
+    // adding country columns into betterlinks_clicks table
+    public function modifyBetterLinksClicksTable3() {
+        global $wpdb;
+
+        $check_column_exists_sql = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks_clicks" and column_name="country_code";', DB_NAME, $wpdb->prefix );
+		$result                  = $wpdb->query( $check_column_exists_sql );
+
+        if ( ! $result ) {
+			$table_name = $wpdb->prefix . 'betterlinks_clicks';
+
+            $sql        = "ALTER TABLE {$table_name}
+                ADD COLUMN `country_code` VARCHAR(2) NULL AFTER `query_params`,
+                ADD COLUMN `country_name` VARCHAR(100) NULL AFTER `country_code`,
+                ADD INDEX `idx_country_code` (`country_code`);";
+			$wpdb->query( $sql );
+        }
+    }
+
+    // Create countries lookup table for efficient storage and querying
+    public function createBetterLinksCountriesTable() {
+        $table_name = $this->wpdb->prefix . 'betterlinks_countries';
+        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+            id int(11) unsigned NOT NULL auto_increment,
+            country_code varchar(2) NOT NULL,
+            country_name varchar(100) NOT NULL,
+            created_at datetime NOT NULL default CURRENT_TIMESTAMP,
+            updated_at datetime NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY unique_country_code (country_code),
+            KEY idx_country_name (country_name)
+        ) $this->charset_collate;";
+        dbDelta($sql);
+    }
 }

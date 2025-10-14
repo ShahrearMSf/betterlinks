@@ -182,15 +182,35 @@ trait Clicks {
 			return $results;
 		}
 		global $wpdb;
-		$fields = 'ID, link_id, ip, browser, referer, os, device,query_params, created_at';
 
-		$query   = $wpdb->prepare( 
+		// Check if country columns exist
+		$country_columns_exist = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM information_schema.columns
+			 WHERE table_schema = %s
+			 AND table_name = %s
+			 AND column_name = 'country_code'",
+			DB_NAME,
+			$wpdb->prefix . 'betterlinks_clicks'
+		) );
+
+		$fields = 'ID, link_id, ip, browser, referer, os, device, query_params, created_at';
+		if ( $country_columns_exist ) {
+			$fields .= ', country_code, country_name';
+		}
+
+		$query   = $wpdb->prepare(
 			"SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id=%s AND created_at BETWEEN %s AND %s ORDER BY created_at DESC",
 			$id,
 			$from . ' 00:00:00',
 			$to . ' 23:59:59'
 		 );
+
 		$results = $wpdb->get_results( $query, ARRAY_A );
+
+		// Ensure we always return an array, even if empty
+		if ( ! is_array( $results ) ) {
+			$results = array();
+		}
 
 		set_transient( $transient_key, $results, self::$transient_timeout );
 		return $results;

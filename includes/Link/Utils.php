@@ -168,6 +168,15 @@ class Utils {
 			$IP                 = $this->get_current_client_IP();
 			$click_data['ip']   = $IP;
 			$click_data['host'] = $IP;
+
+			// Get country information for the IP
+			if ( class_exists( '\BetterLinks\Services\CountryDetectionService' ) ) {
+				$country_data = \BetterLinks\Services\CountryDetectionService::get_country_by_ip( $IP );
+				if ( $country_data ) {
+					$click_data['country_code'] = $country_data['country_code'];
+					$click_data['country_name'] = $country_data['country_name'];
+				}
+			}
 		}
 
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
