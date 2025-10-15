@@ -32,6 +32,46 @@ class ShortLinkGenerator
     }
 
     /**
+     * Verify if user has pro access
+     * @return bool
+     */
+    private function verify_pro_access()
+    {
+        return $this->is_pro_enabled() && $this->is_pro_plugin_active() && $this->check_pro_license();
+    }
+
+    /**
+     * Check if pro is enabled via filter
+     * @return bool
+     */
+    private function is_pro_enabled()
+    {
+        return apply_filters('betterlinks/pro_enabled', false);
+    }
+
+    /**
+     * Check if pro plugin is physically active
+     * @return bool
+     */
+    private function is_pro_plugin_active()
+    {
+        return defined('BETTERLINKS_PRO_VERSION') || 
+               is_plugin_active('betterlinks-pro/betterlinks-pro.php') ||
+               class_exists('BetterLinksPro');
+    }
+
+    /**
+     * Additional license checks for pro features
+     * @return bool
+     */
+    private function check_pro_license()
+    {
+        // If pro version is defined, assume license is valid
+        // This can be enhanced with actual license verification
+        return defined('BETTERLINKS_PRO_VERSION');
+    }
+
+    /**
      * Get all post types with their associated taxonomies
      */
     public function get_post_types_with_taxonomies()
@@ -144,6 +184,15 @@ class ShortLinkGenerator
 
             if (!current_user_can('manage_options')) {
                 wp_send_json_error(['message' => __('You don\'t have permission to do this.', 'betterlinks')]);
+                return;
+            }
+
+            // PRO FEATURE CHECK - First priority security
+            if (!$this->verify_pro_access()) {
+                wp_send_json_error([
+                    'message' => __('This feature requires BetterLinks Pro.', 'betterlinks'),
+                    'code' => 'pro_required'
+                ], 403);
                 return;
             }
 
@@ -360,6 +409,15 @@ class ShortLinkGenerator
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error(['message' => __('You don\'t have permission to do this.', 'betterlinks')]);
+            return;
+        }
+
+        // PRO FEATURE CHECK - First priority security
+        if (!$this->verify_pro_access()) {
+            wp_send_json_error([
+                'message' => __('This feature requires BetterLinks Pro.', 'betterlinks'),
+                'code' => 'pro_required'
+            ], 403);
             return;
         }
 
@@ -900,6 +958,20 @@ class ShortLinkGenerator
     {
         // Temporarily disable nonce check for debugging
         // check_ajax_referer('betterlinks_admin_nonce', 'security');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => __('You don\'t have permission to do this.', 'betterlinks')]);
+            return;
+        }
+
+        // PRO FEATURE CHECK - First priority security
+        if (!$this->verify_pro_access()) {
+            wp_send_json_error([
+                'message' => __('This feature requires BetterLinks Pro.', 'betterlinks'),
+                'code' => 'pro_required'
+            ], 403);
+            return;
+        }
 
         if (!current_user_can('manage_options')) {
             wp_send_json_error(['message' => __('You don\'t have permission to do this.', 'betterlinks')]);

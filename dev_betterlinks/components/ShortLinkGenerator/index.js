@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 
-import { makeRequest, betterlinks_nonce, prefix, plugin_root_url } from '../../utils/helper';
+import { makeRequest, betterlinks_nonce, prefix, plugin_root_url, is_pro_enabled } from '../../utils/helper';
+import { useUpgradeProModal } from '../../utils/customHooks';
+import UpgradeToPro from '../Teasers/UpgradeToPro';
 import Select from 'react-select';
 
 const ShortLinkGenerator = () => {
+    // Pro modal state
+    const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+
     const [postTypes, setPostTypes] = useState([]);
     const [selectedPostType, setSelectedPostType] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -256,6 +261,13 @@ const ShortLinkGenerator = () => {
                 } else {
                     setGenerationInProgress(false);
                     clearProgressInterval();
+                    
+                    // Handle pro verification errors specifically
+                    if (response.data && response.data.data && response.data.data.code === 'pro_required') {
+                        openUpgradeToProModal();
+                        return;
+                    }
+                    
                     const errorMessage = response.data && response.data.data && response.data.data.message
                         ? response.data.data.message
                         : response.data && response.data.message
@@ -379,6 +391,241 @@ const ShortLinkGenerator = () => {
 
     return (
         <div className="btl-short-link-generator">
+            {/* Upgrade to Pro Modal */}
+            <UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
+
+            {/* Pro Feature Check */}
+            {!is_pro_enabled ? (
+                <div className="btl-pro-feature-preview">
+                    {/* Static Preview of the Form */}
+                    <div className="btl-pro-form-preview">
+                        <div className="btl-header">
+                            <h2>{__('Short Link Generator', 'betterlinks')}</h2>
+                            <div className="btl-description">
+                                {__('Generate short links in bulk based on your selected filters. This tool will create BetterLinks for posts matching your criteria.', 'betterlinks')}
+                            </div>
+                        </div>
+
+                        <div className="btl-generator-form btl-pro-disabled">
+                            {/* Step 1: Required Inputs */}
+                            <div className="btl-form-section">
+                                <h3>{__('Required Settings:', 'betterlinks')}</h3>
+
+                                <div className="btl-form-row">
+                                    <div className="btl-form-col">
+                                        <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                            <label>{__('Post Type', 'betterlinks')}*</label>
+                                            <Select
+                                                className="btl-custom-post-select-type"
+                                                value={{ value: 'post', label: 'Posts' }}
+                                                options={[
+                                                    { value: 'post', label: 'Posts' },
+                                                    { value: 'page', label: 'Pages' },
+                                                    { value: 'product', label: 'Products' }
+                                                ]}
+                                                placeholder={__('Select post type...', 'betterlinks')}
+                                                isDisabled={true}
+                                                isClearable={false}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="btl-form-col">
+                                        <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                            <label>{__('Categories', 'betterlinks')}</label>
+                                            <Select
+                                                className="btl-custom-post-select-cat"
+                                                value={[
+                                                    { value: 1, label: 'Technology' },
+                                                    { value: 2, label: 'WordPress' }
+                                                ]}
+                                                options={[
+                                                    { value: 1, label: 'Technology' },
+                                                    { value: 2, label: 'WordPress' },
+                                                    { value: 3, label: 'Web Development' }
+                                                ]}
+                                                placeholder={__('Select categories...', 'betterlinks')}
+                                                isMulti
+                                                isDisabled={true}
+                                                isClearable
+                                                closeMenuOnSelect={false}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="btl-post-count" onClick={openUpgradeToProModal}>
+                                    {__('Posts found:', 'betterlinks')} 147
+                                </div>
+                            </div>
+
+                            {/* Step 2: Advanced Filters */}
+                            <div className="btl-form-section btl-bg-white">
+                                <div className="btl-accordion-header">
+                                    <h3>{__('Advanced Filters', 'betterlinks')}</h3>
+                                    <span className="btl-accordion-arrow open">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 7.5L10 12.5L15 7.5" stroke="#19285D" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </span>
+                                </div>
+
+                                <div className="btl-accordion-content">
+                                    {/* Sorting */}
+                                    <div className="btl-subsection">
+                                        <div className="btl-form-row">
+                                            <div className="btl-form-col">
+                                                <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                                    <label>{__('Sorting', 'betterlinks')}</label>
+                                                    <Select
+                                                        value={{ value: 'date_desc', label: __('Created Date (Newest First)', 'betterlinks') }}
+                                                        options={[
+                                                            { value: 'date_desc', label: __('Created Date (Newest First)', 'betterlinks') },
+                                                            { value: 'date_asc', label: __('Created Date (Oldest First)', 'betterlinks') },
+                                                            { value: 'title_asc', label: __('Title (A-Z)', 'betterlinks') },
+                                                            { value: 'title_desc', label: __('Title (Z-A)', 'betterlinks') }
+                                                        ]}
+                                                        isDisabled={true}
+                                                        isClearable={false}
+                                                        className="btl-custom-post-select-type"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="btl-form-col">
+                                                <div className="btl-bulk-link-form-group btl-bulk-existing-links" onClick={openUpgradeToProModal}>
+                                                    <div className="btl-bulk-checkbox-field">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="overwrite-utm-preview"
+                                                            checked={true}
+                                                            disabled={true}
+                                                            readOnly
+                                                        />
+                                                        <label htmlFor="overwrite-utm-preview">{__('Overwrite Existing UTM', 'betterlinks')}</label>
+                                                    </div>
+                                                    <p className="btl-helper-text">{__('Regenerate links for posts that already have them', 'betterlinks')}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Short Link Configuration */}
+                                    <div className="btl-subsection">
+                                        <h4>{__('Short Link Configuration', 'betterlinks')}</h4>
+
+                                        <div className="btl-form-col">
+                                            <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                                <label>{__('Redirect Type', 'betterlinks')}</label>
+                                                <Select
+                                                    value={{ value: '301', label: __('301 (Permanent)', 'betterlinks') }}
+                                                    options={[
+                                                        { value: '301', label: __('301 (Permanent)', 'betterlinks') },
+                                                        { value: '302', label: __('302 (Temporary)', 'betterlinks') },
+                                                        { value: '307', label: __('307 (Temporary)', 'betterlinks') }
+                                                    ]}
+                                                    isDisabled={true}
+                                                    isClearable={false}
+                                                    className="btl-custom-post-select-type"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="btl-form-col">
+                                            <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                                <label>{__('Link Prefix', 'betterlinks')}</label>
+                                                <input
+                                                    className="btl-text-field"
+                                                    type="text"
+                                                    value="go"
+                                                    readOnly
+                                                    placeholder="go"
+                                                    onClick={openUpgradeToProModal}
+                                                />
+                                                <p className="btl-helper-text">
+                                                    {__('The prefix will be added before your shortened URL\'s slug eg. http://localhost:10018/go/your-link-name', 'betterlinks')}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="btl-form-row">
+                                            <div className="btl-form-col">
+                                                <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                                    <label>{__('Shortened URL Type', 'betterlinks')}</label>
+                                                    <Select
+                                                        value={{ value: 'existing', label: __('Existing Slug', 'betterlinks') }}
+                                                        options={[
+                                                            { value: 'existing', label: __('Existing Slug', 'betterlinks') },
+                                                            { value: 'random', label: __('Random', 'betterlinks') }
+                                                        ]}
+                                                        isDisabled={true}
+                                                        isClearable={false}
+                                                        className="btl-custom-post-select-type"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="btl-form-col">
+                                                <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                                    <label>{__('BetterLink Category', 'betterlinks')}</label>
+                                                    <Select
+                                                        value={{ value: 1, label: 'Marketing Links' }}
+                                                        options={[
+                                                            { value: 1, label: 'Marketing Links' },
+                                                            { value: 2, label: 'Product Links' },
+                                                            { value: 3, label: 'Social Media' }
+                                                        ]}
+                                                        placeholder={__('Select BetterLink category...', 'betterlinks')}
+                                                        isDisabled={true}
+                                                        isClearable={true}
+                                                        isSearchable={true}
+                                                        className="btl-custom-post-select-type"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="btl-form-col">
+                                            <div className="btl-bulk-link-form-group" onClick={openUpgradeToProModal}>
+                                                <label>{__('BetterLink Tags', 'betterlinks')}</label>
+                                                <Select
+                                                    value={[
+                                                        { value: 1, label: 'automated' },
+                                                        { value: 2, label: 'bulk-generated' }
+                                                    ]}
+                                                    options={[
+                                                        { value: 1, label: 'automated' },
+                                                        { value: 2, label: 'bulk-generated' },
+                                                        { value: 3, label: 'wordpress' },
+                                                        { value: 4, label: 'content' }
+                                                    ]}
+                                                    placeholder={__('Select BetterLink tags.....', 'betterlinks')}
+                                                    isDisabled={true}
+                                                    isClearable={true}
+                                                    isSearchable={true}
+                                                    isMulti={true}
+                                                    closeMenuOnSelect={false}
+                                                    className="btl-custom-post-select-type"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="btl-form-actions">
+                                <button
+                                    className="btl-btn btl-btn-primary"
+                                    onClick={openUpgradeToProModal}
+                                >
+                                    {__('Generate Short Links', 'betterlinks')} (147)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <>
 
             <div className="btl-header">
                 <h2>{__('Short Link Generator', 'betterlinks')}</h2>
@@ -1049,6 +1296,8 @@ const ShortLinkGenerator = () => {
                 </button>
                 )
             }
+            </>
+            )}
         </div>
     );
 };

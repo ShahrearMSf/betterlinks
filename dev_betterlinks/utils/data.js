@@ -81,6 +81,6 @@ export const tabList = [
 	},
 	{
 		label: __('Short Link Generator', 'betterlinks'),
-		type: 'free',
+		type: 'pro',
 	},
 ].filter(Boolean);
