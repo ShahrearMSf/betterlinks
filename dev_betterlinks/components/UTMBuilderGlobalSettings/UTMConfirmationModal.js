@@ -110,7 +110,8 @@ const UTMConfirmationModal = ({
                 </div>
 
                 <div>
-                    <div className="btl-unified-modal__title">{__('Template applied!', 'betterlinks')}</div>
+                    {/* <div className="btl-unified-modal__title">{__('Template applied!', 'betterlinks')}</div> */}
+                    <div className="btl-unified-modal__title">{ isTemplateOnlyUpdate ? __('Template Updated!', 'betterlinks') : __('Template applied!', 'betterlinks')}</div>
                     {!isTemplateOnlyUpdate && (
                         <div className="btl-unified-modal__subtitle">{__('UTM values applied successfully.', 'betterlinks')}</div>
                     )}

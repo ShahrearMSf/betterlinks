@@ -255,7 +255,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
         border: 1px solid #ECF0FB;
         border-radius: $border-radius;
         transition: all 0.2s ease;
-        cursor: pointer;
+        // cursor: pointer;
 
         // When expanded, change to column layout
         &.expanded {
@@ -876,7 +876,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
         font-weight: 600;
         color: $text-primary;
         line-height: 1.4;
-        margin-top: 16px;
+        margin-bottom: 16px;
     }
 
     &__message {

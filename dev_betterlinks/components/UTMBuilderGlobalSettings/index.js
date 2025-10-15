@@ -77,6 +77,26 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 		});
 	};
 
+	// Helper function to generate tooltip text based on category state
+	const getCategoryTooltipText = (categoryName, isActive, isDeleted, isLoading, isDemoTemplate) => {
+		if (isDemoTemplate) {
+			return __('Demo Category', 'betterlinks');
+		}
+		if (isLoading) {
+			return __('Loading Category', 'betterlinks');
+		}
+		if (isDeleted) {
+			return __('Deleted Category', 'betterlinks');
+		}
+		if (categoryName === __('Unassigned', 'betterlinks')) {
+			return __('Unassigned Category', 'betterlinks');
+		}
+		if (isActive) {
+			return __('Active Category', 'betterlinks');
+		}
+		return __('Inactive Category', 'betterlinks');
+	};
+
 	// Helper function to clean up corrupted last applied templates data
 	const cleanupLastAppliedTemplates = (lastAppliedData) => {
 		const cleaned = {};
@@ -612,14 +632,21 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 																				const isActive = is_pro_enabled ? isCategoryActiveForTemplate(template, catId) : false;
 																				const isDeleted = categoryName === 'Deleted';
 																				const isLoading = categoryName === 'Loading...';
+																				const tooltipText = getCategoryTooltipText(categoryName, isActive, isDeleted, isLoading, isDemoTemplate);
 
 																				return (
-																					<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
-																						{categoryName}
-																					</span>
+																					<div key={catId} className="btl-tooltip">
+																						<span className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
+																							{categoryName}
+																						</span>
+																						<span className="btl-tooltiptext">{tooltipText}</span>
+																					</div>
 																				);
 																			})
-																			: <span className="btl-utm-category-tag">{__('Unassigned', 'betterlinks')}</span>
+																			: <div className="btl-tooltip">
+																				<span className="btl-utm-category-tag">{__('Category Unassigned', 'betterlinks')}</span>
+																				<span className="btl-tooltiptext">{__('Unassigned Category', 'betterlinks')}</span>
+																			  </div>
 																		}
 																		{template.categories && template.categories.length > 2 && (
 																			<span className="btl-utm-more-categories">
@@ -687,9 +714,11 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 																<div className="btl-utm-categories-grid">
 																	{template.categories && template.categories.length > 0
 																		? template.categories.map((catId) => {
-																			const category = findCategoryById(catId);
+																			const category = isDemoTemplate ? { term_name: 'Uncategorized' } : findCategoryById(catId);
 																			let categoryName;
-																			if (termsLoading) {
+																			if (isDemoTemplate) {
+																				categoryName = 'Uncategorized';
+																			} else if (termsLoading) {
 																				categoryName = 'Loading...';
 																			} else if (category) {
 																				categoryName = category.term_name;
@@ -697,17 +726,24 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 																				categoryName = 'Deleted';
 																			}
 
-																			const isActive = isCategoryActiveForTemplate(template, catId);
+																			const isActive = is_pro_enabled ? isCategoryActiveForTemplate(template, catId) : false;
 																			const isDeleted = categoryName === 'Deleted';
 																			const isLoading = categoryName === 'Loading...';
+																			const tooltipText = getCategoryTooltipText(categoryName, isActive, isDeleted, isLoading, isDemoTemplate);
 
 																			return (
-																				<span key={catId} className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
-																					{categoryName}
-																				</span>
+																				<div key={catId} className="btl-tooltip">
+																					<span className={`btl-utm-category-tag ${isDeleted ? 'btl-utm-category-deleted' : (isLoading ? 'btl-utm-category-loading' : (isActive ? 'btl-utm-category-active' : ''))}`}>
+																						{categoryName}
+																					</span>
+																					<span className="btl-tooltiptext">{tooltipText}</span>
+																				</div>
 																			);
 																		})
-																		: <span className="btl-utm-category-tag">{__('Unassigned', 'betterlinks')}</span>
+																		: <div className="btl-tooltip">
+																			<span className="btl-utm-category-tag">{__('Category Unassigned', 'betterlinks')}</span>
+																			<span className="btl-tooltiptext">{__('Unassigned Category', 'betterlinks')}</span>
+																		  </div>
 																	}
 																</div>
 															</div>

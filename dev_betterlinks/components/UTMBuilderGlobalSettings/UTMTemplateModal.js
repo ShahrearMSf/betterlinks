@@ -14,7 +14,6 @@ const utmTemplateModalStyles = {
         padding: '0',
         border: 'none',
         borderRadius: '12px',
-        background: '#F9FAFB',
         position: 'absolute',
     },
 };
@@ -155,7 +154,19 @@ const UTMTemplateModal = ({
 
     const handleCategoryChange = (selectedOptions) => {
         const categoryIds = selectedOptions ? selectedOptions.map(option => option.value) : []; // No default category
-        setTemplateForm({ ...templateForm, categories: categoryIds });
+        
+        // If all categories are cleared, reset UTM status counts and checkbox states
+        if (categoryIds.length === 0) {
+            setUtmStatusCounts({ total_links: 0, links_with_utm: 0, links_without_utm: 0 });
+            setTemplateForm({ 
+                ...templateForm, 
+                categories: categoryIds,
+                utm_enable_to_rewrite_existing_utm_template: false,
+                utm_auto_apply_new_link: false
+            });
+        } else {
+            setTemplateForm({ ...templateForm, categories: categoryIds });
+        }
     };
 
     const handleResetUTMParameters = async () => {
@@ -275,8 +286,8 @@ const UTMTemplateModal = ({
             // Prepare success message for template save (only when not resetting)
             if (!successMsg && !templateForm.utm_enable_to_reset_existing_utm_template) {
                 successMsg = isCreatingTemplate
-                    ? __('UTM template created successfully!', 'betterlinks')
-                    : __('UTM template updated successfully!', 'betterlinks');
+                    ? __('UTM template created successfully.', 'betterlinks')
+                    : __('UTM template updated successfully.', 'betterlinks');
             }
 
             // Prevent main modal from closing until user clicks OK on success

@@ -365,7 +365,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 											{__('Enable Auto Title Suggestion', 'betterlinks')}
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext">{__('When enabled, the link title will automatically be fetched from the target URL when you enter a URL', 'betterlinks')}</span>
+												<span className="btl-tooltiptext">{__('When enabled, the Link Title will automatically be fetched from the target URL', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>
