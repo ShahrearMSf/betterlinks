@@ -1358,6 +1358,9 @@ class Ajax {
 			wp_send_json_error( __( 'You do not have permission to perform this action.', 'betterlinks' ) );
 		}
 
+		// Clear cache to ensure fresh data after updates
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+
 		// Parse JSON data that comes from makeRequest
 		$template_data = isset( $_POST['template_data'] ) ? json_decode( stripslashes( $_POST['template_data'] ), true ) : array();
 		$category_ids = isset( $_POST['category_ids'] ) ? json_decode( stripslashes( $_POST['category_ids'] ), true ) : array();
@@ -1407,7 +1410,7 @@ class Ajax {
 			$has_utm = false;
 			$utm_params = array( 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content' );
 			foreach ( $utm_params as $param ) {
-				if ( isset( $existing_params[$param] ) ) {
+				if ( isset( $existing_params[$param] ) && !empty( $existing_params[$param] ) ) {
 					$has_utm = true;
 					break;
 				}
@@ -1415,6 +1418,11 @@ class Ajax {
 
 			// Handle reset existing UTM functionality
 			if ( $reset_existing ) {
+				// Only process links that have UTM parameters to reset
+				if ( ! $has_utm ) {
+					$skipped_count++;
+					continue;
+				}
 				// Remove all UTM parameters when resetting
 				foreach ( $utm_params as $param ) {
 					unset( $existing_params[$param] );
@@ -1498,6 +1506,15 @@ class Ajax {
 				$skipped_count,
 				count( $links )
 			);
+
+		// Clear cache again after all updates to ensure fresh data
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
+
+		// Regenerate JSON file cache if it exists
+		if ( defined( 'BETTERLINKS_EXISTS_LINKS_JSON' ) && BETTERLINKS_EXISTS_LINKS_JSON ) {
+			$cron = new \BetterLinks\Cron();
+			$cron->write_json_links();
+		}
 
 		wp_send_json_success( array(
 			'updated_count' => $updated_count,

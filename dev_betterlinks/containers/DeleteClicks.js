@@ -345,12 +345,12 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 								A total of <strong className="btl-delete-count">{clickCountToDelete.toLocaleString()}</strong> click record{clickCountToDelete !== 1 ? 's' : ''} will be removed.
 							</div>
 							<div className="btl-confirmation-section">
-								<div className="btl-confirmation-label">To confirm, type RESET CLICKS</div>
+								<div className="btl-confirmation-label">To confirm, type <b>RESET CLICKS</b></div>
 								<input
 									type="text"
 									required
 									className="btl-modal-form-control btl-reset-confirmation-input"
-									placeholder="type RESET CLICKS here..."
+									placeholder="RESET CLICKS"
 									value={confirmationText}
 									onChange={handleConfirmationTextChange}
 								/>

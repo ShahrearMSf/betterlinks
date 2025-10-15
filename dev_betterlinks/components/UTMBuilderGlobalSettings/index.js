@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Formik, Form, Field } from 'formik';
 import { update_option } from 'redux/actions/settings.actions';
+import { fetch_links_data } from 'redux/actions/links.actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { saveSettingsHandler, makeRequest, betterlinks_nonce, plugin_root_url, is_pro_enabled } from 'utils/helper';
@@ -11,7 +12,7 @@ import UTMTemplateModal from './UTMTemplateModal';
 import ConfirmModal from '../PermissionModal/ConfirmModal';
 import '../../../assets/scss/components/_utm_builder_style.scss';
 
-const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
+const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data }) => {
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
 	const [utmTemplates, setUtmTemplates] = useState([]);
 	const [activeTemplate, setActiveTemplate] = useState(null);
@@ -348,6 +349,11 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 						rewrite_existing: true,
 						reset_existing: true
 					});
+
+					// Refresh links data to show updated URLs
+					if (fetch_links_data) {
+						fetch_links_data();
+					}
 				} catch (error) {
 					console.error('Error resetting UTM parameters:', error);
 				}
@@ -548,6 +554,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 								handleTemplateCreate={handleTemplateCreate}
 								handleTemplateUpdate={handleTemplateUpdate}
 								handleTemplateDelete={handleTemplateDelete}
+								fetch_links_data={fetch_links_data}
 							/>
 
 							{/* Delete Confirmation Modal */}
@@ -751,6 +758,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option }) => {
 
 const mapDispatchToProps = (dispatch) => ({
 	update_option: bindActionCreators(update_option, dispatch),
+	fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(UTMBuilderGlobalSettings);

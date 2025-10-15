@@ -30,8 +30,10 @@ const UTMTemplateModal = ({
     handleTemplateCreate,
     handleTemplateUpdate,
     handleTemplateDelete,
+    fetch_links_data,
 }) => {
     const [isApplying, setIsApplying] = useState(false);
+    const [isProcessingOk, setIsProcessingOk] = useState(false); // Track OK button loading in success modal
     const [showModal, setShowModal] = useState(false);
     const [modalState, setModalState] = useState('confirmation'); // 'confirmation' or 'success'
     const [modalMessage, setModalMessage] = useState('');
@@ -232,7 +234,7 @@ const UTMTemplateModal = ({
                     },
                     category_ids: templateForm.categories,
                     rewrite_existing: isResetting ? true : (templateForm.utm_enable_to_rewrite_existing_utm_template || false),
-                    reset_existing: isResetting || false
+                    reset_existing: isResetting ? true : false
                 });
 
                 if (response?.data?.success) {
@@ -305,33 +307,45 @@ const UTMTemplateModal = ({
 
     // Handle success modal OK button click
     const handleSuccessOk = async () => {
-        // Check if this is a reset operation using isResetMode instead of the form flag
-        if (isResetMode) {
-        } else {
-            // This is a template save operation (create or update)
-            try {
-                if (isCreatingTemplate) {
-                    handleTemplateCreate();
-                } else {
-                    handleTemplateUpdate();
-                    
+        setIsProcessingOk(true); // Show loading state on OK button
+
+        try {
+            // Check if this is a reset operation using isResetMode instead of the form flag
+            if (isResetMode) {
+                // For reset operations, refresh the links data to show updated URLs
+                if (fetch_links_data) {
+                    await fetch_links_data();
                 }
-            } catch (error) {
-                console.error('Error saving template:', error);
+            } else {
+                // This is a template save operation (create or update)
+                try {
+                    if (isCreatingTemplate) {
+                        handleTemplateCreate();
+                    } else {
+                        handleTemplateUpdate();
+
+                    }
+                } catch (error) {
+                    console.error('Error saving template:', error);
+                }
             }
+
+            // Refresh UTM status counts for all operations to ensure real-time updates
+            await fetchUtmStatusCounts();
+
+            // Reset states and close modals
+            setPreventMainModalClose(false);
+            setShowModal(false);
+
+            // Store reset mode state before clearing it
+            const wasResetMode = isResetMode;
+            setIsResetMode(false); // Clear reset mode after success
+        } catch (error) {
+            console.error('Error in handleSuccessOk:', error);
+        } finally {
+            setIsProcessingOk(false); // Clear loading state
         }
 
-        // Refresh UTM status counts for all operations to ensure real-time updates
-        await fetchUtmStatusCounts();
-
-        // Reset states and close modals
-        setPreventMainModalClose(false);
-        setShowModal(false);
-        
-        // Store reset mode state before clearing it
-        const wasResetMode = isResetMode;
-        setIsResetMode(false); // Clear reset mode after success
-        
         // If it was a reset action, just close the main modal without saving template
         // if (wasResetMode) {
         //     onClose();
@@ -394,6 +408,9 @@ const UTMTemplateModal = ({
                                 className="btl-react-select-container"
                                 classNamePrefix="btl-react-select"
                                 placeholder={__('Select categories...', 'betterlinks')}
+                                isValidNewOption={() => false}
+                                noOptionsMessage={() => __('Not Found', 'betterlinks')}
+                                formatCreateLabel={() => null}
                             />
                             {templateForm.categories && templateForm.categories.length > 0 && (
                                 <div className="btl-utm-links-count">
@@ -595,6 +612,7 @@ const UTMTemplateModal = ({
                 }}
                 onConfirm={handleConfirmSubmit}
                 isApplying={isApplying}
+                isProcessingOk={isProcessingOk}
                 // Confirmation props
                 confirmationTitle={isResetMode ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 confirmationMessage={

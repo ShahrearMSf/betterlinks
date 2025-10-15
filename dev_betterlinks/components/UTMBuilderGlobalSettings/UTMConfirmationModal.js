@@ -22,6 +22,7 @@ const UTMConfirmationModal = ({
     onClose,
     onConfirm,
     isApplying,
+    isProcessingOk, // Loading state for success modal OK button
     // Confirmation props
     confirmationTitle,
     confirmationMessage,
@@ -95,6 +96,12 @@ const UTMConfirmationModal = ({
 
         const statistics = parseStatistics(successMessage);
 
+        // Check if this is just a template save without applying to links
+        const isTemplateOnlyUpdate = successMessage && (
+            successMessage.includes('UTM template created successfully!') ||
+            successMessage.includes('UTM template updated successfully!')
+        );
+
         return (
             <div className="btl-unified-modal__content btl-unified-modal__content--success">
                 {/* Success Icon */}
@@ -103,8 +110,10 @@ const UTMConfirmationModal = ({
                 </div>
 
                 <div>
-                    <h1 className="btl-unified-modal__title">{__('Template applied!', 'betterlinks')}</h1>
-                    <div className="btl-unified-modal__subtitle">{__('UTM values applied successfully.', 'betterlinks')}</div>
+                    <div className="btl-unified-modal__title">{__('Template applied!', 'betterlinks')}</div>
+                    {!isTemplateOnlyUpdate && (
+                        <div className="btl-unified-modal__subtitle">{__('UTM values applied successfully.', 'betterlinks')}</div>
+                    )}
                 </div>
 
                 <div className="btl-unified-modal__message">
@@ -140,8 +149,9 @@ const UTMConfirmationModal = ({
                         type="button"
                         className="btl-utm-btn btl-utm-btn-primary"
                         onClick={onClose}
+                        disabled={isProcessingOk}
                     >
-                        {__('OK', 'betterlinks')}
+                        {isProcessingOk ? __('Processing...', 'betterlinks') : __('OK', 'betterlinks')}
                     </button>
                 </div>
             </div>
