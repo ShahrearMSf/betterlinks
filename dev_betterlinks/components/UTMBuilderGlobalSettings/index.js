@@ -553,7 +553,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 									{__('Dynamic UTM Templates', 'betterlinks')}
 									<div className="btl-tooltip">
 										<span className="dashicons dashicons-info-outline"></span>
-										<span className="btl-tooltiptext">{__('Create reusable UTM parameter templates that automatically apply to links based on categories. Track campaign performance with consistent UTM parameters across your links.', 'betterlinks')}</span>
+										<span className="btl-tooltiptext">
+											{__('Easily create dynamic and reusable UTM templates for your links. For more info, ', 'betterlinks')}
+											<a href="https://betterlinks.io/docs/Create-Dynamic-UTM-Template-with-BetterLinks" target="_blank" rel="noopener noreferrer">
+												{__('click here', 'betterlinks')}
+											</a>
+											.
+										</span>
 									</div>
 								</div>
 								<button className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}>
@@ -644,13 +650,13 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 																				);
 																			})
 																			: <div className="btl-tooltip">
-																				<span className="btl-utm-category-tag">{__('Category Unassigned', 'betterlinks')}</span>
-																				<span className="btl-tooltiptext">{__('Unassigned Category', 'betterlinks')}</span>
+																				<span className="btl-utm-category-tag">{__('Unassigned', 'betterlinks')}</span>
+																				<span className="btl-tooltiptext">{__('Category not assigned yet.', 'betterlinks')}</span>
 																			  </div>
 																		}
 																		{template.categories && template.categories.length > 2 && (
 																			<span className="btl-utm-more-categories">
-																				{template.categories.length - 2} More+
+																				{template.categories.length - 2} More...
 																			</span>
 																		)}
 																	</div>
@@ -741,7 +747,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 																			);
 																		})
 																		: <div className="btl-tooltip">
-																			<span className="btl-utm-category-tag">{__('Category Unassigned', 'betterlinks')}</span>
+																			<span className="btl-utm-category-tag">{__('Unassigned', 'betterlinks')}</span>
 																			<span className="btl-tooltiptext">{__('Unassigned Category', 'betterlinks')}</span>
 																		  </div>
 																	}

@@ -408,7 +408,7 @@ const UTMTemplateModal = ({
                                 {__('Assign to Categories', 'betterlinks')}
                                 <div className="btl-tooltip">
                                     <span className="dashicons dashicons-info-outline"></span>
-                                    <span className="btl-tooltiptext">{__('Select which categories should use this UTM template. You must select at least one category for the template to be active.', 'betterlinks')}</span>
+                                    <span className="btl-tooltiptext">{__('Select the categories where this UTM template will apply.', 'betterlinks')}</span>
                                 </div>
                             </label>
                             <CreatableSelect
@@ -531,7 +531,7 @@ const UTMTemplateModal = ({
                                         {__('Overwrite Existing UTM', 'betterlinks')}
                                         <div className="btl-tooltip">
                                             <span className="dashicons dashicons-info-outline"></span>
-                                            <span className="btl-tooltiptext">{__('Enable to overwrite existing UTM parameters on links', 'betterlinks')}</span>
+                                            <span className="btl-tooltiptext">{__('Enabling this will overwrite existing UTM parameters for all URLs under the selected categories.', 'betterlinks')}</span>
                                         </div>
                                     </span>
                                 </label>
@@ -551,7 +551,7 @@ const UTMTemplateModal = ({
                                         {__('Apply this UTM for ALL future Links', 'betterlinks')}
                                         <div className="btl-tooltip">
                                             <span className="dashicons dashicons-info-outline"></span>
-                                            <span className="btl-tooltiptext">{__('This UTM template will be auto-applied to all new links in selected categories.', 'betterlinks')}</span>
+                                            <span className="btl-tooltiptext">{__('Enabling this will automatically apply the UTM template to all new URLs in selected categories.', 'betterlinks')}</span>
                                         </div>
                                     </span>
                                 </label>
@@ -643,6 +643,7 @@ const UTMTemplateModal = ({
                 cancelButtonText={__('Cancel', 'betterlinks')}
                 // Success props
                 successMessage={modalMessage}
+                isResetMode={isResetMode}
             />
         </Modal>
     );

@@ -32,6 +32,7 @@ const UTMConfirmationModal = ({
     cancelButtonText,
     // Success props
     successMessage,
+    isResetMode,
 }) => {
     const renderConfirmationContent = () => (
         <div className="btl-unified-modal__content">
@@ -96,12 +97,6 @@ const UTMConfirmationModal = ({
 
         const statistics = parseStatistics(successMessage);
 
-        // Check if this is just a template save without applying to links
-        const isTemplateOnlyUpdate = successMessage && (
-            successMessage.includes('UTM template created successfully!') ||
-            successMessage.includes('UTM template updated successfully!')
-        );
-
         return (
             <div className="btl-unified-modal__content btl-unified-modal__content--success">
                 {/* Success Icon */}
@@ -111,14 +106,12 @@ const UTMConfirmationModal = ({
 
                 <div>
                     {/* <div className="btl-unified-modal__title">{__('Template applied!', 'betterlinks')}</div> */}
-                    <div className="btl-unified-modal__title">{ isTemplateOnlyUpdate ? __('Template Updated!', 'betterlinks') : __('Template applied!', 'betterlinks')}</div>
-                    {!isTemplateOnlyUpdate && (
-                        <div className="btl-unified-modal__subtitle">{__('UTM values applied successfully.', 'betterlinks')}</div>
-                    )}
+                    <div className="btl-unified-modal__title">{ isResetMode? __('UTM reset completed!', 'betterlinks') : totalLinks === 0 ? __('Template Updated!', 'betterlinks') : __('Template applied!', 'betterlinks')}</div>
+                    <div className="btl-unified-modal__subtitle">{ isResetMode ? __('Selected parameters have been reset successfully.', 'betterlinks') : totalLinks > 0 ? __('UTM values applied successfully.', 'betterlinks') : __('UTM template updated successfully.', 'betterlinks')}</div>
                 </div>
 
                 <div className="btl-unified-modal__message">
-                    {statistics ? (
+                    {statistics && (
                         <div className="btl-utm-statistics">
                             <div className="btl-utm-statistics__row">
                                 <span className="btl-utm-statistics__label">{__('Skipped', 'betterlinks')}</span>
@@ -140,8 +133,6 @@ const UTMConfirmationModal = ({
                                 </span>
                             </div>
                         </div>
-                    ) : (
-                        <p className="btl-unified-modal__success-text">{successMessage}</p>
                     )}
                 </div>
 

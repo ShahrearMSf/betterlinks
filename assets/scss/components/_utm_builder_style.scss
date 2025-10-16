@@ -511,7 +511,9 @@ body.betterlinks-dark-mode .ReactModal__Content {
             }
         }
     }
-
+.btl-tooltip:hover .btl-tooltiptext a {
+        color: #ffffff;
+    }
     .btl-utm-template-actions {
         display: flex;
         gap: $spacing-xs;
@@ -548,7 +550,7 @@ body.betterlinks-dark-mode .ReactModal__Content {
                 .btl-tooltiptext {
                     visibility: hidden;
                     background-color: #333;
-                    color: white;
+                    color: #ffffff;
                     text-align: center;
                     border-radius: 6px;
                     padding: 4px 8px;
