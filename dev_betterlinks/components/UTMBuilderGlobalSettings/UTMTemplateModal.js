@@ -43,6 +43,7 @@ const UTMTemplateModal = ({
     });
     const [resetTargetCount, setResetTargetCount] = useState(0);
     const [isResetMode, setIsResetMode] = useState(false); // Track if we're in reset mode
+    const [confirmationCount, setConfirmationCount] = useState(0); // Stable count for confirmation modal
 
     // Fetch UTM status counts when categories change
     useEffect(() => {
@@ -121,17 +122,12 @@ const UTMTemplateModal = ({
     };
 
     const getRelevantLinkCount = () => {
-        // If it's a reset action and we have a stored target count, use that to prevent confusion
-        if (templateForm.utm_enable_to_reset_existing_utm_template && resetTargetCount > 0) {
-            return resetTargetCount;
-        }
-        
         // If rewrite checkbox is enabled, show all links (since it will apply to all)
         if (templateForm.utm_enable_to_rewrite_existing_utm_template) {
             return utmStatusCounts.total_links;
         }
         
-        // If it's a reset action but no stored count, show current links with UTM
+        // If it's a reset action, show only links with UTM
         if (templateForm.utm_enable_to_reset_existing_utm_template) {
             return utmStatusCounts.links_with_utm;
         }
@@ -163,7 +159,9 @@ const UTMTemplateModal = ({
         }
 
         // Store the exact count that will be affected by reset (links with UTM)
-        setResetTargetCount(utmStatusCounts.links_with_utm);
+        const linksWithUtm = utmStatusCounts.links_with_utm;
+        setResetTargetCount(linksWithUtm);
+        setConfirmationCount(linksWithUtm); // Set stable count for confirmation modal
 
         // Set reset mode flag
         setIsResetMode(true);
@@ -182,7 +180,9 @@ const UTMTemplateModal = ({
     const handleSubmit = () => {
         // Clear reset mode when doing a normal template update/create
         setIsResetMode(false);
-        setResetTargetCount(0); // Clear any stored target count
+        
+        // Set confirmation count for non-reset operations
+        setConfirmationCount(getRelevantLinkCount());
 
         // Reset any existing reset flag when doing a normal template update/create
         if (templateForm.utm_enable_to_reset_existing_utm_template) {
@@ -558,7 +558,7 @@ const UTMTemplateModal = ({
                         const wasResetMode = isResetMode;
                         setShowModal(false);
                         setIsResetMode(false); // Clear reset mode
-                        setResetTargetCount(0); // Clear stored target count
+                        setConfirmationCount(0); // Clear confirmation count
                         setPreventMainModalClose(false);
                         
                         // Handle template save operations (non-reset)
@@ -582,7 +582,7 @@ const UTMTemplateModal = ({
                         // For confirmation modal, just close and reset any flags
                         setShowModal(false);
                         setIsResetMode(false); // Clear reset mode
-                        setResetTargetCount(0); // Clear stored target count
+                        setConfirmationCount(0); // Clear confirmation count
                         // Reset the reset flag if user cancels the confirmation
                         if (templateForm.utm_enable_to_reset_existing_utm_template) {
                             setTemplateForm(prev => ({
@@ -607,7 +607,7 @@ const UTMTemplateModal = ({
                                 : __('This action will apply UTM values on', 'betterlinks'))
                             : __('This action will apply UTM values', 'betterlinks'))
                 }
-                totalLinks={getRelevantLinkCount()}
+                totalLinks={confirmationCount}
                 confirmationSubMessage={!isResetMode && templateForm.utm_auto_apply_new_link ? __('All new shortlinks in this category will automatically use this template.', 'betterlinks') : ''}
                 confirmButtonText={isResetMode ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 cancelButtonText={__('Cancel', 'betterlinks')}
