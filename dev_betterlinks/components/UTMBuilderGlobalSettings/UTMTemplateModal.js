@@ -32,7 +32,6 @@ const UTMTemplateModal = ({
     fetch_links_data,
 }) => {
     const [isApplying, setIsApplying] = useState(false);
-    const [isProcessingOk, setIsProcessingOk] = useState(false); // Track OK button loading in success modal
     const [showModal, setShowModal] = useState(false);
     const [modalState, setModalState] = useState('confirmation'); // 'confirmation' or 'success'
     const [modalMessage, setModalMessage] = useState('');
@@ -277,6 +276,10 @@ const UTMTemplateModal = ({
                 // Clear the reset target count after processing
                 if (isResetting) {
                     setResetTargetCount(0);
+                    // For reset operations, refresh the links data to show updated URLs
+                    if (fetch_links_data) {
+                        await fetch_links_data();
+                    }
                 }
 
                 // Refresh UTM status counts after any UTM operation (apply, update, or reset)
@@ -315,55 +318,7 @@ const UTMTemplateModal = ({
             await fetchUtmStatusCounts();
         }
     };
-
-    // Handle success modal OK button click
-    const handleSuccessOk = async () => {
-        setIsProcessingOk(true); // Show loading state on OK button
-
-        try {
-            // Check if this is a reset operation using isResetMode instead of the form flag
-            if (isResetMode) {
-                // For reset operations, refresh the links data to show updated URLs
-                if (fetch_links_data) {
-                    await fetch_links_data();
-                }
-            } else {
-                // This is a template save operation (create or update)
-                try {
-                    if (isCreatingTemplate) {
-                        handleTemplateCreate();
-                    } else {
-                        handleTemplateUpdate();
-
-                    }
-                } catch (error) {
-                    console.error('Error saving template:', error);
-                }
-            }
-
-            // Refresh UTM status counts for all operations to ensure real-time updates
-            await fetchUtmStatusCounts();
-
-            // Reset states and close modals
-            setPreventMainModalClose(false);
-            setShowModal(false);
-
-            // Store reset mode state before clearing it
-            const wasResetMode = isResetMode;
-            setIsResetMode(false); // Clear reset mode after success
-        } catch (error) {
-            console.error('Error in handleSuccessOk:', error);
-        } finally {
-            setIsProcessingOk(false); // Clear loading state
-        }
-
-        // If it was a reset action, just close the main modal without saving template
-        // if (wasResetMode) {
-        //     onClose();
-        // }
-        // The template handlers will close the main modal for save actions
-    };
-
+console.log('getRelevantLinkCount', getRelevantLinkCount());
     return (
         <Modal
             isOpen={isOpen}
@@ -581,7 +536,9 @@ const UTMTemplateModal = ({
                             disabled={isApplying}
                         >
                             {isApplying ? (
-                                __('Creating...', 'betterlinks')
+                                isCreatingTemplate
+                                    ? __('Create Templating...', 'betterlinks')
+                                    : __('Update Templating...', 'betterlinks')
                             ) : (
                                 isCreatingTemplate
                                     ? __('Create Template', 'betterlinks')
@@ -606,8 +563,30 @@ const UTMTemplateModal = ({
                 modalState={modalState}
                 onClose={() => {
                     if (modalState === 'success') {
-                        // When success modal is closed via OK button, save template and close main modal
-                        handleSuccessOk();
+                        // For success modal, close instantly without additional processing
+                        // All processing should have been completed before showing success modal
+                        const wasResetMode = isResetMode;
+                        setShowModal(false);
+                        setIsResetMode(false); // Clear reset mode
+                        setPreventMainModalClose(false);
+                        
+                        // Handle template save operations (non-reset)
+                        if (!wasResetMode) {
+                            try {
+                                if (isCreatingTemplate) {
+                                    handleTemplateCreate();
+                                } else {
+                                    handleTemplateUpdate();
+                                }
+                            } catch (error) {
+                                console.error('Error saving template:', error);
+                            }
+                        }
+                        
+                        // Close main modal if it was a reset operation
+                        if (!wasResetMode) {
+                            onClose();
+                        }
                     } else {
                         // For confirmation modal, just close and reset any flags
                         setShowModal(false);
@@ -623,7 +602,6 @@ const UTMTemplateModal = ({
                 }}
                 onConfirm={handleConfirmSubmit}
                 isApplying={isApplying}
-                isProcessingOk={isProcessingOk}
                 // Confirmation props
                 confirmationTitle={isResetMode ? __('Reset UTM Parameters', 'betterlinks') : __('Apply UTM Template', 'betterlinks')}
                 confirmationMessage={

@@ -22,7 +22,6 @@ const UTMConfirmationModal = ({
     onClose,
     onConfirm,
     isApplying,
-    isProcessingOk, // Loading state for success modal OK button
     // Confirmation props
     confirmationTitle,
     confirmationMessage,
@@ -141,9 +140,8 @@ const UTMConfirmationModal = ({
                         type="button"
                         className="btl-utm-btn btl-utm-btn-primary"
                         onClick={onClose}
-                        disabled={isProcessingOk}
                     >
-                        {isProcessingOk ? __('Processing...', 'betterlinks') : __('OK', 'betterlinks')}
+                        {__('OK', 'betterlinks')}
                     </button>
                 </div>
             </div>
