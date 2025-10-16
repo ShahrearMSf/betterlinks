@@ -97,22 +97,6 @@ const UTMTemplateModal = ({
         return selectedCategories;
     };
 
-    const getTotalLinksInSelectedCategories = () => {
-        if (!templateForm.categories || !terms || terms.length === 0) return 0;
-
-        return templateForm.categories.reduce((total, catId) => {
-            // Try multiple comparison methods to handle data type inconsistencies
-            const category1 = terms.find(term => parseInt(term.ID) === parseInt(catId));
-            const category2 = terms.find(term => String(term.ID) === String(catId));
-            const category3 = terms.find(term => term.ID == catId);
-
-            const category = category1 || category2 || category3;
-            const linkCount = category ? (parseInt(category.link_count) || 0) : 0;
-
-            return total + linkCount;
-        }, 0);
-    };
-
     const fetchUtmStatusCounts = async () => {
         if (!templateForm.categories || templateForm.categories.length === 0) {
             setUtmStatusCounts({ total_links: 0, links_with_utm: 0, links_without_utm: 0 });
@@ -137,12 +121,17 @@ const UTMTemplateModal = ({
     };
 
     const getRelevantLinkCount = () => {
+        // If it's a reset action and we have a stored target count, use that to prevent confusion
+        if (templateForm.utm_enable_to_reset_existing_utm_template && resetTargetCount > 0) {
+            return resetTargetCount;
+        }
+        
         // If rewrite checkbox is enabled, show all links (since it will apply to all)
         if (templateForm.utm_enable_to_rewrite_existing_utm_template) {
             return utmStatusCounts.total_links;
         }
         
-        // If it's a reset action, show only links with UTM
+        // If it's a reset action but no stored count, show current links with UTM
         if (templateForm.utm_enable_to_reset_existing_utm_template) {
             return utmStatusCounts.links_with_utm;
         }
@@ -193,6 +182,7 @@ const UTMTemplateModal = ({
     const handleSubmit = () => {
         // Clear reset mode when doing a normal template update/create
         setIsResetMode(false);
+        setResetTargetCount(0); // Clear any stored target count
 
         // Reset any existing reset flag when doing a normal template update/create
         if (templateForm.utm_enable_to_reset_existing_utm_template) {
@@ -318,7 +308,7 @@ const UTMTemplateModal = ({
             await fetchUtmStatusCounts();
         }
     };
-console.log('getRelevantLinkCount', getRelevantLinkCount());
+
     return (
         <Modal
             isOpen={isOpen}
@@ -568,6 +558,7 @@ console.log('getRelevantLinkCount', getRelevantLinkCount());
                         const wasResetMode = isResetMode;
                         setShowModal(false);
                         setIsResetMode(false); // Clear reset mode
+                        setResetTargetCount(0); // Clear stored target count
                         setPreventMainModalClose(false);
                         
                         // Handle template save operations (non-reset)
@@ -591,6 +582,7 @@ console.log('getRelevantLinkCount', getRelevantLinkCount());
                         // For confirmation modal, just close and reset any flags
                         setShowModal(false);
                         setIsResetMode(false); // Clear reset mode
+                        setResetTargetCount(0); // Clear stored target count
                         // Reset the reset flag if user cancels the confirmation
                         if (templateForm.utm_enable_to_reset_existing_utm_template) {
                             setTemplateForm(prev => ({
