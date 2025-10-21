@@ -126,6 +126,9 @@ $dark-border: #4b5563;
 
 .btl-utm-field-group.btl-utm-category-select {
     margin: 18px 0px;
+    .btl-tooltip .dashicons {
+        margin-top: 5px;
+    }
 }
 
 body.betterlinks-dark-mode .ReactModal__Content {
@@ -655,7 +658,11 @@ body.betterlinks-dark-mode .ReactModal__Content {
         font-size: 14px;
         line-height: 1.4;
     }
-
+    .btl-required:after {
+        content: "*";
+        margin-left: 2px;
+        color: #f97272;
+    }
     .btl-form-control,
     .btl-form-input {
         width: 100%;

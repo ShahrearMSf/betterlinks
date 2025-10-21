@@ -337,13 +337,17 @@ const UTMTemplateModal = ({
                     <div className="btl-utm-template-fields">
                         {/* Template Name */}
                         <div className="btl-utm-field-group">
-                            <label className="btl-field-label">{__('Template Name', 'betterlinks')}</label>
+                            <label className="btl-field-label btl-required">
+                                {__('Template Name', 'betterlinks')}
+                            </label>
                             <input
                                 type="text"
                                 value={templateForm.template_name}
                                 onChange={(e) => setTemplateForm({ ...templateForm, template_name: e.target.value })}
                                 placeholder={__('Enter template name...', 'betterlinks')}
                                 className="btl-form-input"
+                                required
+                                aria-required="true"
                             />
                         </div>
 
@@ -523,7 +527,8 @@ const UTMTemplateModal = ({
                             type="button"
                             className="btl-utm-btn btl-utm-btn-primary"
                             onClick={handleSubmit}
-                            disabled={isApplying}
+                            disabled={isApplying || !(templateForm.template_name && templateForm.template_name.trim().length > 0)}
+                            aria-disabled={isApplying || !(templateForm.template_name && templateForm.template_name.trim().length > 0)}
                         >
                             {isApplying ? (
                                 isCreatingTemplate
