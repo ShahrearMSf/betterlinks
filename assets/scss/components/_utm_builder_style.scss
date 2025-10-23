@@ -1087,8 +1087,13 @@ body.betterlinks-dark-mode .ReactModal__Content {
     color: $text-secondary;
     display: flex;
     align-items: center;
-    gap: 6px;
     font-weight: 400;
+    .btl-tooltip .dashicons {
+        margin-top: 5px;
+    }
+    .dashicons, .dashicons-before:before{
+        width: unset !important;
+    }
 }
 
 // Disabled checkbox styles
