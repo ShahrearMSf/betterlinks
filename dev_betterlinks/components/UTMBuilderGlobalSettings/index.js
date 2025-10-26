@@ -778,7 +778,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 											{__('No UTM Templates Found', 'betterlinks')}
 										</h4>
 										<p className="btl-utm-empty-description">
-											{__('Create your first UTM Template to auto-apply parameters to any URL', 'betterlinks')}
+											{__('Create your first UTM template to auto-apply parameters to links by category and track campaign performance.', 'betterlinks')}
 										</p>
 										<button
 											className="btl-utm-empty-cta"

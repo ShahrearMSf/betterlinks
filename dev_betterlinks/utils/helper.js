@@ -193,6 +193,8 @@ export const modalCustomStyles = {
 		maxWidth: '850px',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -43%)',
+		position: 'absolute',
+		background: '#ffffff',
 	},
 };
 

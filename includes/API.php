@@ -8,6 +8,7 @@ class API {
 		new API\Links();
 		new API\Terms();
 		new API\Clicks();
+		new API\AIBulkLinks();
 	}
 	public static function dispatch_hook() {
 		$self = new self();
