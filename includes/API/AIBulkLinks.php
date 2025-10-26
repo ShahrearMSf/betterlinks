@@ -150,7 +150,7 @@ class AIBulkLinks extends Controller {
 	}
 
 	/**
-	 * Process URLs with AI
+	 * Process URLs with AI to generate links
 	 */
 	public function process_links_with_ai( $request ) {
 		$params = $request->get_params();
