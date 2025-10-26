@@ -139,6 +139,9 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
 
 .btl-utm-global-settings {
+    .ReactModal__Content:not(:has(.btl-manage-categories-form)), .ReactModal__Content:not(:has(.btl-manage-tags-form)) {
+		padding: 0 !important;
+	}
     .btl-utm-template-item.expanded {
         align-items: flex-start;
     }
@@ -1938,10 +1941,9 @@ body.betterlinks-dark-mode .ReactModal__Content {
 
         .btl-utm-empty-description {
             color: #788597;
-            font-size: 12px;
+            font-size: 13px;
             line-height: 140%;
             text-align: center;
-            padding: 0px 90px;
             margin-top: 8px;
             margin-bottom: 24px;
 

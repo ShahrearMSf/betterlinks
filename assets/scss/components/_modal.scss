@@ -22,6 +22,18 @@
 		overflow-y: auto !important;
 	}
 
+	/* Specific override for UTM delete confirmation modal.
+	   The generic rules above use `padding: 40px !important` with
+	   :has() checks which may match before children are rendered and
+	   cause a visible 40px padding flash. Add a more specific rule
+	   (covers both when the class is on the modal content itself and
+	   when it's applied to a parent wrapper) to force padding:0. */
+
+	&.btl-utm-delete-confirm-modal,
+	.btl-utm-delete-confirm-modal & {
+		padding: 0 !important;
+	}
+
 	/* Chrome, Safari, Edge, Opera */
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {

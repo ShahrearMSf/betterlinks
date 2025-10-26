@@ -597,6 +597,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 								showCancelButton={false}
 								cancelButtonText={__('Cancel', 'betterlinks')}
 								isDangerous={true}
+								extraClass="btl-utm-delete-confirm-modal"
 							/>
 							{/* Templates List */}
 							{(is_pro_enabled ? utmTemplates.length > 0 : true) && (
