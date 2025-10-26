@@ -195,6 +195,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 												// Add all other available categories (excluding Uncategorized to avoid duplicates)
 												...terms.terms
 													.filter(term => term.term_type === 'category' && term.ID !== '1')
+													.sort((a, b) => a.term_name.localeCompare(b.term_name))
 													.map(term => ({
 														value: term.ID,
 														label: term.term_name
@@ -343,6 +344,28 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 											<div className="btl-tooltip">
 												<span className="dashicons dashicons-info-outline"></span>
 												<span className="btl-tooltiptext">{__('This will allow you to generate & download QR Code for each of your shortened URL', 'betterlinks')}</span>
+											</div>
+										</span>
+									</label>
+								</div>
+							</span>
+
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('Auto Title Suggestion', 'betterlinks')}</label>
+								<div className="link-options__body">
+									<label className="btl-checkbox-field block">
+										<Field
+											className="btl-check"
+											name="enable_auto_title_suggestion"
+											type="checkbox"
+											checked={props.values.enable_auto_title_suggestion !== false}
+											onChange={() => props.setFieldValue('enable_auto_title_suggestion', !props.values.enable_auto_title_suggestion)}
+										/>
+										<span className="text">
+											{__('Enable Auto Title Suggestion', 'betterlinks')}
+											<div className="btl-tooltip">
+												<span className="dashicons dashicons-info-outline"></span>
+												<span className="btl-tooltiptext">{__('When enabled, the Link Title will automatically be fetched from the target URL', 'betterlinks')}</span>
 											</div>
 										</span>
 									</label>

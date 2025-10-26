@@ -100,7 +100,7 @@
 		align-items: center;
 		cursor: pointer;
 		font-size: 13px;
-		color: $dark;
+		color: #B0B2BA;
 	}
 
 	.btl-entry-content {
@@ -415,7 +415,6 @@
 		}
 	}
 
-
 	.btl-modal-shorturl-wrap {
 		position: relative;
 		margin-bottom: 20px;
@@ -518,7 +517,7 @@
 					width: 35px;
 					height: 25px;
 					border: 1px solid $success;
-					background: rgba($success, 0.1);
+					// background: rgba($success, 0.1);
 					border-radius: 2px;
 					color: $success;
 					font-size: 12px;
@@ -529,6 +528,40 @@
 					box-sizing: border-box;
 					cursor: pointer;
 					outline: none;
+					position: relative;
+					background-color: unset;
+
+					// UTM applied state - green with enhanced styling
+					&.btl-utm-button--applied {
+						border: 1px solid #6FD965;
+						background-color: #E7FFF2;
+						color: #6FD965;
+
+						// Enhanced green background for applied state
+						background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(40, 167, 69, 0.05) 100%);
+						box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1);
+					}
+
+					// Badge styling
+					.btl-utm-badge {
+						position: absolute;
+						top: -8px;
+						right: -7px;
+						width: 16px;
+						height: 16px;
+						border-radius: 50%;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+
+						svg {
+							width: 10px;
+							height: 10px;
+							color: #ffffff;
+							background-color: #ffffff;
+							border-radius: 50%;
+						}
+					}
 				}
 
 				.btl-share-button {
@@ -536,7 +569,7 @@
 					height: 25px;
 					margin-left: 5px;
 					border: 1px solid $success;
-					background: rgba($success, 0.1);
+					background: unset;
 					border-radius: 2px;
 					color: $success;
 					font-size: 12px;

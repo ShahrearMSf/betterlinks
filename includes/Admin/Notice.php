@@ -89,28 +89,22 @@ class Notice {
 			"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/manage-categories/' style='display: inline-block'>
+				<a target='_blank' href='https://betterlinks.io/docs/Create-Dynamic-UTM-Template-with-BetterLinks' style='display: inline-block'>
 					%s
 				</a>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/auto-link-creation-for-custom-post-type/' style='display: inline-block'>
-					%s
-				</a>
+				<a target='_blank' href='https://betterlinks.io/changelog/'>%s</a>
 				%s
-				<a target='_blank' href='https://betterlinks.io/changelog/'>
-					%s
-				</a>
 				</p>
 		</div>",
-			__( 'NEW: BetterLinks 2.3 is here with ', 'betterlinks' ),
-			__( 'Category Management', 'betterlinks' ),
-			__( '&', 'betterlinks' ),
-			__( 'Auto Link Creation for Custom Post Types!', 'betterlinks' ),
-			__( ' See the', 'betterlinks' ),
-			__( 'full Changelog.', 'betterlinks' ),
+			__( 'NEW: BetterLinks Pro 2.4 now includes a powerful new ', 'betterlinks' ),
+			__( 'UTM Builder.', 'betterlinks' ),
+			__( ' Check the full ', 'betterlinks' ),
+			__( 'Changelog', 'betterlinks' ),
+			__( ' for details.', 'betterlinks' ),
 		);
 	}
-
+//NEW: BetterLinks Pro 2.4 now includes a powerful new UTM Builder. Check the full Changelog for details.
 	public function usage_tracker() {
 		$this->opt_in_tracker = PluginUsageTracker::get_instance( BETTERLINKS_PLUGIN_FILE, [
 			'opt_in'       => true,

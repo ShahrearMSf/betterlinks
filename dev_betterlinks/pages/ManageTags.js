@@ -71,8 +71,10 @@ const ManageTags = (props) => {
 				selector: 'link_count',
 				sortable: false,
 				cell: (row) => {
-					const total_clicks = tag_analytics?.['total_clicks']?.[row.id] || 0;
-					const unique_clicks = tag_analytics?.['unique_clicks']?.[row.id] || 0;
+					// Handle both row.id and row.ID and ensure string conversion for proper lookup
+					const tagId = row.id || row.ID;
+					const total_clicks = tag_analytics?.['total_clicks']?.[tagId] || tag_analytics?.['total_clicks']?.[String(tagId)] || 0;
+					const unique_clicks = tag_analytics?.['unique_clicks']?.[tagId] || tag_analytics?.['unique_clicks']?.[String(tagId)] || 0;
 					return (
 						<div>
 							<button className="dnd-link-button btl-tooltip">
@@ -80,7 +82,7 @@ const ManageTags = (props) => {
 									Total Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
 								</span>
 								{total_clicks > 0 ? (
-									<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + row.id}>
+									<Link to={route_path + 'admin.php?page=betterlinks-analytics&tag_id=' + tagId}>
 										{total_clicks}/{unique_clicks}
 									</Link>
 								) : (
@@ -200,8 +202,10 @@ const ManageTags = (props) => {
 				selector: 'link_count',
 				sortable: false,
 				cell: (row) => {
-					const total_clicks = category_analytics?.['total_clicks']?.[row.id] || 0;
-					const unique_clicks = category_analytics?.['unique_clicks']?.[row.id] || 0;
+					// Handle both row.id and row.ID and ensure string conversion for proper lookup
+					const categoryId = row.id || row.ID;
+					const total_clicks = category_analytics?.['total_clicks']?.[categoryId] || category_analytics?.['total_clicks']?.[String(categoryId)] || 0;
+					const unique_clicks = category_analytics?.['unique_clicks']?.[categoryId] || category_analytics?.['unique_clicks']?.[String(categoryId)] || 0;
 					return (
 						<div>
 							<button className="dnd-link-button btl-tooltip">
@@ -209,7 +213,7 @@ const ManageTags = (props) => {
 									Total Clicks: {total_clicks} / Unique Clicks: {unique_clicks}
 								</span>
 								{total_clicks > 0 ? (
-									<Link to={route_path + 'admin.php?page=betterlinks-analytics&category_id=' + row.id}>
+									<Link to={route_path + 'admin.php?page=betterlinks-analytics&category_id=' + categoryId}>
 										{total_clicks}/{unique_clicks}
 									</Link>
 								) : (

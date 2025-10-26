@@ -67,6 +67,7 @@ const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 						data.terms &&
 						data.terms
 							.filter((item) => item.term_type == 'tags')
+							.sort((a, b) => a.term_name.localeCompare(b.term_name))
 							.map((item) => ({
 								value: item.ID,
 								label: item.term_name,

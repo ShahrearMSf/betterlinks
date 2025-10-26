@@ -1,21 +1,173 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import queryString from 'query-string';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { plugin_root_url } from 'utils/helper';
+import { plugin_root_url, betterlinks_settings, API, namespace } from 'utils/helper';
 
 const propTypes = {};
 
-export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler }) {
+export default function UTMBuilder({ targetUrl, saveValueHandler, closeModalHandler, categoryId = 1 }) {
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
+	const [currentSettings, setCurrentSettings] = useState(betterlinks_settings || {});
+	const [isLoadingSettings, setIsLoadingSettings] = useState(false);
 	const parseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
+	// Fetch updated settings from API
+	const fetchUpdatedSettings = async () => {
+		try {
+			setIsLoadingSettings(true);
+			// Try REST API first
+			const res = await API.get(namespace + 'settings');
+			const payload = JSON.parse(res.data.data);
+			setCurrentSettings(payload);
+			return payload;
+		} catch (error) {
+			// Fallback to current settings if API fails
+			return currentSettings;
+		} finally {
+			setIsLoadingSettings(false);
+		}
+	};
+
+	// Get UTM defaults based on category and current settings
+	const getUTMDefaults = (currentCategoryId, settingsToUse = currentSettings) => {
+		// Safety check for settings
+		if (!settingsToUse || typeof settingsToUse !== 'object') {
+			return {};
+		}
+
+		const globalTemplatesRaw = settingsToUse.global_utm_templates || [];
+		const globalDefaults = settingsToUse.global_utm_defaults || {};
+		const lastAppliedTemplates = settingsToUse.utm_last_applied_templates || {};
+
+		// Handle both array and single object formats
+		const globalTemplates = Array.isArray(globalTemplatesRaw) ? globalTemplatesRaw : [globalTemplatesRaw];
+
+		// Find template for the current category (default to 1 if no categoryId)
+		const catId = parseInt(currentCategoryId) || 1;
+
+
+		// Check if there's a last applied template for this category
+		const lastApplied = lastAppliedTemplates[catId];
+		let categoryTemplate = null;
+		let activeTemplateFound = false;
+
+		if (lastApplied) {
+			// Find the last applied template by template_index
+			const lastAppliedTemplate = globalTemplates.find(template => 
+				template.template_index === lastApplied.template_index
+			);
+			
+			if (lastAppliedTemplate) {
+				// Verify this template still applies to the current category
+				const appliesToCategory = lastAppliedTemplate.categories && 
+					Array.isArray(lastAppliedTemplate.categories) &&
+					lastAppliedTemplate.categories.some(templateCatId => {
+						const templateCatIdInt = parseInt(templateCatId);
+						const currentCatIdInt = parseInt(catId);
+						return templateCatIdInt === currentCatIdInt;
+					});
+				
+				if (appliesToCategory) {
+					activeTemplateFound = true;
+					// If the active template has auto-apply enabled, use it
+					if (lastAppliedTemplate.utm_auto_apply_new_link) {
+						categoryTemplate = lastAppliedTemplate;
+					}
+					// If active template exists but auto-apply is disabled, 
+					// don't use any template (respect user's choice)
+				}
+			}
+		}
+
+		// Only fall back to finding any template if there's no active template for this category
+		if (!categoryTemplate && !activeTemplateFound) {
+			categoryTemplate = globalTemplates.find(template => {
+				// Check if auto-apply is enabled for this template
+				if (!template.utm_auto_apply_new_link) {
+					return false;
+				}
+
+				// Handle both string and integer category IDs
+				if (template.categories && Array.isArray(template.categories)) {
+					return template.categories.some(templateCatId => {
+						const templateCatIdInt = parseInt(templateCatId);
+						const currentCatIdInt = parseInt(catId);
+						return templateCatIdInt === currentCatIdInt;
+					});
+				}
+				return false;
+			});
+		}
+
+		// If category template exists, use it; otherwise use global defaults
+		if (categoryTemplate) {
+			const templateDefaults = {
+				utm_source: categoryTemplate.utm_source || '',
+				utm_medium: categoryTemplate.utm_medium || '',
+				utm_campaign: categoryTemplate.utm_campaign || '',
+				utm_term: categoryTemplate.utm_term || '',
+				utm_content: categoryTemplate.utm_content || ''
+			};
+			return templateDefaults;
+		}
+
+		return globalDefaults;
+	};
+	const utmDefaults = getUTMDefaults(categoryId);
+
 	const [UTMBuilderState, setUTMBuilderState] = useState({
-		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : '',
-		utm_medium: parseUrl.query.utm_medium ? parseUrl.query.utm_medium : '',
-		utm_campaign: parseUrl.query.utm_campaign ? parseUrl.query.utm_campaign : '',
-		utm_term: parseUrl.query.utm_term ? parseUrl.query.utm_term : '',
-		utm_content: parseUrl.query.utm_content ? parseUrl.query.utm_content : '',
+		utm_source: parseUrl.query.utm_source ? parseUrl.query.utm_source : (utmDefaults.utm_source || ''),
+		utm_medium: parseUrl.query.utm_medium ? parseUrl.query.utm_medium : (utmDefaults.utm_medium || ''),
+		utm_campaign: parseUrl.query.utm_campaign ? parseUrl.query.utm_campaign : (utmDefaults.utm_campaign || ''),
+		utm_term: parseUrl.query.utm_term ? parseUrl.query.utm_term : (utmDefaults.utm_term || ''),
+		utm_content: parseUrl.query.utm_content ? parseUrl.query.utm_content : (utmDefaults.utm_content || ''),
 	});
+
+	// Fetch updated settings when component mounts
+	useEffect(() => {
+		const loadSettings = async () => {
+			const updatedSettings = await fetchUpdatedSettings();
+			// Update UTM state with new defaults after settings are loaded
+			const newDefaults = getUTMDefaults(categoryId, updatedSettings);
+
+			setUTMBuilderState(prevState => ({
+				utm_source: parseUrl.query.utm_source || newDefaults.utm_source || prevState.utm_source || '',
+				utm_medium: parseUrl.query.utm_medium || newDefaults.utm_medium || prevState.utm_medium || '',
+				utm_campaign: parseUrl.query.utm_campaign || newDefaults.utm_campaign || prevState.utm_campaign || '',
+				utm_term: parseUrl.query.utm_term || newDefaults.utm_term || prevState.utm_term || '',
+				utm_content: parseUrl.query.utm_content || newDefaults.utm_content || prevState.utm_content || '',
+			}));
+		};
+		loadSettings();
+	}, []);
+
+	// Update UTM fields when categoryId changes
+	useEffect(() => {
+		const newDefaults = getUTMDefaults(categoryId, currentSettings);
+		const currentParseUrl = queryString.parseUrl(targetUrl, { parseFragmentIdentifier: true });
+
+
+		// Update UTM fields: URL params > existing values > template defaults
+		setUTMBuilderState(prevState => {
+
+			// Check if we have any template defaults to apply
+			const hasTemplateDefaults = Object.values(newDefaults).some(value => value && value.trim() !== '');
+
+			if (hasTemplateDefaults) {
+				const newState = {
+					utm_source: currentParseUrl.query.utm_source || newDefaults.utm_source || prevState.utm_source || '',
+					utm_medium: currentParseUrl.query.utm_medium || newDefaults.utm_medium || prevState.utm_medium || '',
+					utm_campaign: currentParseUrl.query.utm_campaign || newDefaults.utm_campaign || prevState.utm_campaign || '',
+					utm_term: currentParseUrl.query.utm_term || newDefaults.utm_term || prevState.utm_term || '',
+					utm_content: currentParseUrl.query.utm_content || newDefaults.utm_content || prevState.utm_content || '',
+				};
+
+				return newState;
+			}
+
+			return prevState;
+		});
+	}, [categoryId, targetUrl, currentSettings]);
 
 	const UTMSaveValueHandler = () => {
 		const rawURL = queryString.exclude(targetUrl, ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']);

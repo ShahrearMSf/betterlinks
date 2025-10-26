@@ -166,6 +166,7 @@ class Installer extends \WP_Background_Process
                 'is_autolink_headings'  => true,
                 'is_case_sensitive'     => false,
                 'enable_custom_domain_menu' => true,
+                'enable_auto_title_suggestion' => true,
                 'fbs'        => [
                     'enable_fbs' => true,
                     'cat_id'    => $fbs_cat,

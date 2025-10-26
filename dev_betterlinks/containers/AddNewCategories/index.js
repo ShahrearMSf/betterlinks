@@ -38,10 +38,14 @@ const AddNewCategories = (props) => {
     };
 
     const __handleChange = (e, props) => {
-        const value = e.target.value;
-        const isExist = (categories || []).some((item) => item.term_slug === value);
-        props.setFieldValue('term_slug', value);
-        if (!!isExist) {
+        const value = e.target.value; // Allow user to type spaces normally
+        // Format the slug for validation: trim and convert to lowercase with hyphens
+        const trimmedValue = value.trim();
+        const formattedSlug = trimmedValue.toLowerCase().replace(/\s+/g, '-');
+        const isExist = (categories || []).some((item) => item.term_slug === formattedSlug);
+        // Only set the formatted slug for validation, keep original input for term_name
+        props.setFieldValue('term_slug', formattedSlug);
+        if (!!isExist && trimmedValue !== '') {
             return setErrorMsg(__('Category already exist', 'betterlinks'));
         }
         setErrorMsg('');
@@ -52,13 +56,27 @@ const AddNewCategories = (props) => {
             setShowPermissionModal(true);
             return;
         }
-        if ('' === values.term_slug) {
+        
+        // Trim the category name before validation and submission
+        const trimmedTermName = values.term_name.trim();
+        
+        if ('' === trimmedTermName) {
             return setErrorMsg(__("Category field can't be empty", 'betterlinks'));
         }
+        
+        // Format the final slug from trimmed name
+        const finalFormattedSlug = trimmedTermName.toLowerCase().replace(/\s+/g, '-');
+        
+        // Check if category exists with final trimmed values
+        const isExist = (categories || []).some((item) => item.term_slug === finalFormattedSlug);
+        if (isExist) {
+            return setErrorMsg(__('Category already exist', 'betterlinks'));
+        }
+        
         const data = {
             ID: row?.ID || row?.id || values.term_id,
-            term_name: values.term_slug,
-            term_slug: values.term_slug,
+            term_name: trimmedTermName,
+            term_slug: finalFormattedSlug,
             term_type: 'category',
         };
         props.add_new_tag(data);

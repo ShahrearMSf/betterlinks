@@ -44,6 +44,7 @@ const Category = ({ catId, data, fieldName, setFieldValue, disabled }) => {
 					onChange={onChange}
 					options={data.terms
 						.filter((item) => item.term_type == 'category' && item.term_slug != 'uncategorized')
+						.sort((a, b) => a.term_name.localeCompare(b.term_name))
 						.map((item) => ({
 							value: item.ID,
 							label: item.term_name,

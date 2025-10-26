@@ -41,6 +41,13 @@ const TagClicks = (props) => {
 		};
 	}, [tags])();
 
+	// Calculate unique IP count from tag clicks data
+	const uniqueIpCount = useCallback(() => {
+		if (!tag_clicks?.[tag_id]) return 0;
+		const uniqueIps = [...new Set(tag_clicks[tag_id].map((item) => item.ip))];
+		return uniqueIps.length;
+	}, [tag_clicks, tag_id])();
+
 	const StringLoader = () => (
 		<ContentLoader speed={2} width={'100%'} height={10} viewBox="0 0 300 10" backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
 			<rect x="1" y="2" rx="3" ry="3" width="196" height="13" />
@@ -55,6 +62,7 @@ const TagClicks = (props) => {
 				setCustomDateFilter={setCustomDateFilter}
 				loading={loading}
 				setLoading={setLoading}
+				uniqueIpCount={uniqueIpCount}
 			/>
 			{tagDetails?.tagName && (
 				<div className="btl-single-click-info-header">

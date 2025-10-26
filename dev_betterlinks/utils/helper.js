@@ -77,15 +77,18 @@ export const reorder = (list, startIndex, endIndex) => {
 
 	return result;
 };
-export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(new Date(), 30), 'yyyy-mm-dd'), to = formatDate(new Date(), 'yyyy-mm-dd')) => {
+export const deleteClicks = (daysOlderThan = false, from = formatDate(subDays(new Date(), 30), 'yyyy-mm-dd'), to = formatDate(new Date(), 'yyyy-mm-dd'), linkId = null) => {
 	const form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/reset_analytics');
 	form_data.append('security', betterlinks_nonce);
-	if (daysOlderThan) {
+	if (daysOlderThan !== false) {
 		form_data.append('days_older_than', daysOlderThan);
 	}
 	form_data.append('from', from);
 	form_data.append('to', to);
+	if (linkId !== null) {
+		form_data.append('link_id', linkId);
+	}
 	return axios.post(ajaxurl, form_data).then(
 		(response) => {
 			return response;
@@ -949,7 +952,9 @@ export const sortByClicksTag = (type = '', tags, tag_analytics) => {
 	if (!analyticsType || !sortType) return tags;
 
 	let sortedTags = _.orderBy(tags, (item) => {
-		return +tag_analytics[analyticsType][item.id] || 0;
+		// Handle both item.id and item.ID cases
+		const itemId = item.id || item.ID;
+		return +tag_analytics[analyticsType][itemId] || +tag_analytics[analyticsType][String(itemId)] || 0;
 	});
 
 	if ('desc' === sortType) {
@@ -963,7 +968,9 @@ export const sortByClicksCategory = (type = '', categories, category_analytics) 
 	if (!analyticsType || !sortType) return categories;
 
 	let sortedCategories = _.orderBy(categories, (item) => {
-		return +category_analytics[analyticsType][item.id] || 0;
+		// Handle both item.id and item.ID cases
+		const itemId = item.id || item.ID;
+		return +category_analytics[analyticsType][itemId] || +category_analytics[analyticsType][String(itemId)] || 0;
 	});
 
 	if ('desc' === sortType) {

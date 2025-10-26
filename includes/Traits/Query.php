@@ -589,10 +589,8 @@ trait Query {
 
 	public static function get_terms_all_data() {
 		global $wpdb;
-		$link = $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}betterlinks_terms",
-			ARRAY_A
-		);
+		$query = "SELECT t.ID, t.term_name, t.term_slug, t.term_type, t.term_order, COALESCE(tr.link_count, 0) as link_count FROM {$wpdb->prefix}betterlinks_terms AS t LEFT JOIN (SELECT term_id, COUNT(term_id) AS link_count FROM {$wpdb->prefix}betterlinks_terms_relationships GROUP BY term_id) AS tr ON t.ID=tr.term_id ORDER BY t.term_order ASC, t.term_name ASC";
+		$link = $wpdb->get_results( $query, ARRAY_A );
 		return $link;
 	}
 
@@ -703,7 +701,7 @@ trait Query {
 		global $wpdb;
 		$prefix                          = $wpdb->prefix;
 		$individual_analytics_cache_keys = 'btl_individual_analytics_clicks_|btl_individual_graph_data_';
-		$all_analytics_cache_keys        = 'betterlinks_analytics_data|btl_analytics_unique_list_|btl_analytics_graph_|btl_top_referer_|btl_click_stats_|btl_top_os_|btl_top_browser_|btl_all_referer_|btl_tags_analytics|btl_categories_analytics|btl_analytics_data_|btl_unique_clicks_count_';
+		$all_analytics_cache_keys        = 'betterlinks_analytics_data|btl_analytics_unique_list_|btl_analytics_unique_list_by_tag_|btl_analytics_graph_|btl_analytics_graph_by_tag_|btl_top_referer_|btl_click_stats_|btl_top_os_|btl_top_browser_|btl_all_referer_|btl_tags_analytics|btl_categories_analytics|btl_analytics_data_|btl_unique_clicks_count_';
 		$query                           = "DELETE FROM {$prefix}options WHERE option_name regexp '{$individual_analytics_cache_keys}|{$all_analytics_cache_keys}'";
 
 		$result = $wpdb->query( $query );
