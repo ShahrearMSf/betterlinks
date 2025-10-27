@@ -432,6 +432,8 @@ class AIBulkLinks extends Controller {
 
 	/**
 	 * Suggest categories and tags based on URL and content
+	 * NOTE: This method only SUGGESTS categories and tags, it does NOT create them.
+	 * Categories and tags are created during the publish phase to avoid creating them before publishing.
 	 */
 	private function suggest_categories_and_tags( $url, $title, $description, $enable_ai_category = true, $enable_ai_tag = true, $options = array() ) {
 		// Extract domain and path from URL
@@ -488,19 +490,14 @@ class AIBulkLinks extends Controller {
 		// Remove duplicates and limit to 5 keywords
 		$keywords = array_unique( array_slice( $keywords, 0, 5 ) );
 
-		// Handle category assignment
+		// Handle category assignment - ONLY SUGGEST, DO NOT CREATE
 		$category_name = 'Uncategorized';
 		$cat_id = 1; // Default to Uncategorized
 
 		if ( $enable_ai_category ) {
 			// AI-generated category from keywords
 			$category_name = ! empty( $keywords ) ? $keywords[0] : 'Uncategorized';
-
-			// If category is not Uncategorized, try to find or create it
-			if ( $category_name !== 'Uncategorized' ) {
-				// Use the insert_new_category method which handles both finding and creating
-				$cat_id = Helper::insert_new_category( $category_name );
-			}
+			// NOTE: Do NOT create the category here. It will be created during publish phase.
 		} else {
 			// Use selected category from options
 			if ( ! empty( $options['selected_category'] ) ) {
@@ -514,6 +511,7 @@ class AIBulkLinks extends Controller {
 		}
 
 		// Handle tag assignment - IMPORTANT: Only 1 tag per link
+		// NOTE: Tags are only SUGGESTED here, they will be created during publish phase
 		$tags_string = '';
 
 		if ( $enable_ai_tag ) {
