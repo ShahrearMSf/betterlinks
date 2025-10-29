@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
 import CategorySelect from 'components/CategorySelect';
+import UrlGenerationType from 'components/UrlGenerationType';
 import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { update_option } from 'redux/actions/settings.actions';
-import { redirectType } from 'utils/data';
+import { redirectType, urlGenerationTypes } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
 import ProBadge from 'components/Badge/ProBadge';
@@ -261,19 +262,25 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 								</div>
 							</span>
 
-							<span className="btl-form-group btl-form-group--make-center">
-								<label className="btl-form-label">{__('Random URL Slug', 'betterlinks')}</label>
-								<div className="link-options__body" style={{ flexDirection: 'column' }}>
-									<label className="btl-checkbox-field block" style={{ marginBottom: 0 }}>
-										<Field type="checkbox" className="btl-check" name="is_random_string" />
-										<span className="text">
-											{__('Enable Random URL Slug', 'betterlinks')}
-											<div className="btl-tooltip">
-												<span className="dashicons dashicons-info-outline"></span>
-												<span className="btl-tooltiptext">{__('This will randomly generate strings for your shortened URL', 'betterlinks')}</span>
-											</div>
-										</span>
-									</label>
+							<span className="btl-form-group">
+								<label className="btl-form-label">{__('URL Slug Generation', 'betterlinks')}</label>
+								<div>
+									<UrlGenerationType
+										className="btl-modal-select--full"
+										classNamePrefix="btl-react-select"
+										id="url_slug_generation_type"
+										name="url_slug_generation_type"
+										options={urlGenerationTypes}
+										defaultValue={settings.url_slug_generation_type || 'random_mixed'}
+										setFieldValue={props.setFieldValue}
+										isMulti={false}
+									/>
+									<div className="short-description">
+										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+										{settings.url_slug_generation_type === 'from_title' && __('This will generate user-friendly URL slugs from the link title, removing common words and keeping it readable.', 'betterlinks')}
+										{settings.url_slug_generation_type === 'from_url' && __('This will generate user-friendly URL slugs from the target URL path or domain name, keeping it short and readable.', 'betterlinks')}
+										{(settings.url_slug_generation_type === 'random_string' || settings.url_slug_generation_type === 'random_number' || settings.url_slug_generation_type === 'random_mixed' || !settings.url_slug_generation_type) && __('This will randomly generate URL slugs for your shortened URLs (6-10 characters).', 'betterlinks')}
+									</div>
 								</div>
 							</span>
 
