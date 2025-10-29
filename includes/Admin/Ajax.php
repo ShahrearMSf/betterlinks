@@ -6,6 +6,7 @@ use BetterLinks\Admin\WPDev\PluginUsageTracker;
 use BetterLinks\Cron;
 use BetterLinks\Helper;
 use BetterLinks\Link\Utils;
+use BetterLinks\Cache;
 
 class Ajax {
 
@@ -22,6 +23,9 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_short_url', array( $this, 'get_links_by_short_url' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_permalink', array( $this, 'get_links_by_permalink' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_cat_by_link_id', array( $this, 'get_category_by_link_id' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_betterlink_categories', array( $this, 'get_betterlink_categories' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_betterlink_tags', array( $this, 'get_betterlink_tags' ) );
+		add_action( 'wp_ajax_betterlinks/admin/create_betterlink_category', array( $this, 'create_betterlink_category' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_autolink_create_settings', array( $this, 'get_auto_link_create_settings' ) );
 		add_action( 'wp_ajax_betterlinks/admin/write_json_links', array( $this, 'write_json_links' ) );
 		add_action( 'wp_ajax_betterlinks/admin/write_json_clicks', array( $this, 'write_json_clicks' ) );
@@ -726,6 +730,85 @@ class Ajax {
 		$ID      = ( isset( $_POST['ID'] ) ? sanitize_text_field( $_POST['ID'] ) : '' );
 		$results = Helper::get_terms_by_link_ID_and_term_type( $ID, 'category' );
 		return wp_send_json( $results );
+	}
+
+	public function get_betterlink_categories() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+		
+		$categories = $this->get_all_categories();
+		$formatted_categories = array();
+		
+		foreach ($categories as $category) {
+			$formatted_categories[] = array(
+				'value' => $category['id'],
+				'label' => $category['term_name'],
+				'slug' => $category['term_slug'],
+				'link_count' => isset($category['link_count']) ? $category['link_count'] : 0
+			);
+		}
+		
+		wp_send_json_success($formatted_categories);
+	}
+
+	public function create_betterlink_category() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$category_name = isset($_POST['category_name']) ? sanitize_text_field($_POST['category_name']) : '';
+		
+		if (empty($category_name)) {
+			wp_send_json_error(array('message' => __('Category name is required', 'betterlinks')));
+			return;
+		}
+
+		// Create the category using the existing Helper method
+		$term_data = array(
+			'term_name' => $category_name,
+			'term_slug' => sanitize_title($category_name),
+			'term_type' => 'category'
+		);
+
+		$term_id = Helper::insert_term($term_data);
+		
+		if ($term_id) {
+			// Return the created category data
+			$created_category = array(
+				'id' => $term_id,
+				'term_name' => $category_name,
+				'term_slug' => sanitize_title($category_name),
+				'link_count' => 0
+			);
+			
+			wp_send_json_success($created_category);
+		} else {
+			wp_send_json_error(array('message' => __('Failed to create category', 'betterlinks')));
+		}
+	}
+
+	public function get_betterlink_tags() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+		
+		$tags = $this->get_all_tags();
+		$formatted_tags = array();
+		
+		foreach ($tags as $tag) {
+			$formatted_tags[] = array(
+				'value' => $tag['id'],
+				'label' => $tag['term_name'],
+				'slug' => $tag['term_slug'],
+				'link_count' => isset($tag['link_count']) ? $tag['link_count'] : 0
+			);
+		}
+		
+		wp_send_json_success($formatted_tags);
 	}
 
 	public function get_auto_link_create_settings() {
