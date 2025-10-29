@@ -43,24 +43,24 @@ export const affiliateLinkPosition = [
 
 export const urlGenerationTypes = [
 	{
-		value: 'random_string',
-		label: __('Random Strings Only', 'betterlinks'),
-	},
-	{
-		value: 'random_number',
-		label: __('Random Numbers Only', 'betterlinks'),
-	},
-	{
-		value: 'random_mixed',
-		label: __('Random Characters & Numbers Mixed', 'betterlinks'),
-	},
-	{
 		value: 'from_title',
 		label: __('Generate From Link Title', 'betterlinks'),
 	},
 	{
 		value: 'from_url',
 		label: __('Generate From Target URL', 'betterlinks'),
+	},
+	{
+		value: 'random_string',
+		label: __('Random Strings', 'betterlinks'),
+	},
+	{
+		value: 'random_number',
+		label: __('Random Numbers', 'betterlinks'),
+	},
+	{
+		value: 'random_mixed',
+		label: __('Random Alphanumeric', 'betterlinks'),
 	},
 ];
 
@@ -69,6 +69,10 @@ export const tabList = [
 	{
 		label: __('Custom Fields', 'betterlinks'),
 		type: 'free',
+	},
+	{
+		label: __('Short Link Generator', 'betterlinks'),
+		type: 'pro',
 	},
 	{
 		label: __('UTM Builder', 'betterlinks'),
@@ -104,10 +108,6 @@ export const tabList = [
 	},
 	{
 		label: __('Auto-Link Keywords', 'betterlinks'),
-		type: 'pro',
-	},
-	{
-		label: __('Short Link Generator', 'betterlinks'),
 		type: 'pro',
 	},
 ].filter(Boolean);

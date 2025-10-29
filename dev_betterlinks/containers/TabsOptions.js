@@ -18,6 +18,7 @@ import UTMBuilderGlobalSettings from 'components/UTMBuilderGlobalSettings';
 const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
+		<ShortLinkGenerator />,
 		<UTMBuilderGlobalSettings settings={settings} />,
 		<CreateLinkExternally settings={settings} terms={terms} />,
 		is_fbs_enabled && <FluentBoardSettings settings={settings} terms={terms} />,
@@ -27,7 +28,6 @@ const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, track
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 		<AutoLinkKeywords settings={settings} postdatas={postdatas} />,
-		<ShortLinkGenerator />,
 	].filter(Boolean);
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);

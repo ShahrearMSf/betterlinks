@@ -271,16 +271,13 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										id="url_slug_generation_type"
 										name="url_slug_generation_type"
 										options={urlGenerationTypes}
-										defaultValue={settings.url_slug_generation_type || 'random_mixed'}
+										defaultValue={
+											settings.url_slug_generation_type ||
+											(settings?.is_random_string ? 'random_string' : 'random_mixed')
+										}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}
 									/>
-									<div className="short-description">
-										<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-										{settings.url_slug_generation_type === 'from_title' && __('This will generate user-friendly URL slugs from the link title, removing common words and keeping it readable.', 'betterlinks')}
-										{settings.url_slug_generation_type === 'from_url' && __('This will generate user-friendly URL slugs from the target URL path or domain name, keeping it short and readable.', 'betterlinks')}
-										{(settings.url_slug_generation_type === 'random_string' || settings.url_slug_generation_type === 'random_number' || settings.url_slug_generation_type === 'random_mixed' || !settings.url_slug_generation_type) && __('This will randomly generate URL slugs for your shortened URLs (6-10 characters).', 'betterlinks')}
-									</div>
 								</div>
 							</span>
 

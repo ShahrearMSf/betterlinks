@@ -737,19 +737,19 @@ class Ajax {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		
+
 		$categories = $this->get_all_categories();
 		$formatted_categories = array();
-		
+
 		foreach ($categories as $category) {
 			$formatted_categories[] = array(
-				'value' => $category['id'],
+				'value' => $category['ID'],
 				'label' => $category['term_name'],
 				'slug' => $category['term_slug'],
 				'link_count' => isset($category['link_count']) ? $category['link_count'] : 0
 			);
 		}
-		
+
 		wp_send_json_success($formatted_categories);
 	}
 
@@ -795,19 +795,19 @@ class Ajax {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( "You don't have permission to do this." );
 		}
-		
+
 		$tags = $this->get_all_tags();
 		$formatted_tags = array();
-		
+
 		foreach ($tags as $tag) {
 			$formatted_tags[] = array(
-				'value' => $tag['id'],
+				'value' => $tag['ID'],
 				'label' => $tag['term_name'],
 				'slug' => $tag['term_slug'],
 				'link_count' => isset($tag['link_count']) ? $tag['link_count'] : 0
 			);
 		}
-		
+
 		wp_send_json_success($formatted_tags);
 	}
 

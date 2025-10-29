@@ -424,7 +424,7 @@ class ShortLinkGenerator
         try {
             // Sanitize and validate filters
             $filters = $this->sanitize_generation_filters($_POST);
-            
+
             if (is_wp_error($filters)) {
                 wp_send_json_error(['message' => $filters->get_error_message()]);
                 return;
@@ -432,11 +432,6 @@ class ShortLinkGenerator
 
             // Get posts to generate links for
             $args = $this->build_query_args($filters);
-            
-            // Debug logging for bulk generation
-            error_log('BetterLinks Debug - start_bulk_generation:');
-            error_log('Filters: ' . print_r($filters, true));
-            error_log('Query args: ' . print_r($args, true));
             
             $query = new \WP_Query($args);
             $post_ids = $query->posts;
@@ -562,6 +557,10 @@ class ShortLinkGenerator
 
             // Store report data
             update_option('betterlinks_bulk_generation_report', $report_data);
+
+            // Clear cache after bulk generation completes so new links are fetched
+            $helper = new Helper();
+            $helper->clear_query_cache();
 
             wp_send_json_success([
                 'message' => sprintf(__('Generated %d short links successfully. %d failed.', 'betterlinks'), $successful, $failed),
@@ -811,18 +810,47 @@ class ShortLinkGenerator
         $filters['link_prefix'] = isset($data['link_prefix']) ? sanitize_text_field($data['link_prefix']) : Helper::get_settings('prefix');
 
         // Category assignment - simplified to only BetterLink category
-        $filters['betterlink_category'] = isset($data['betterlink_category']) ? intval($data['betterlink_category']) : 0;
+        $filters['betterlink_category'] = 0;
+        if (isset($data['betterlink_category'])) {
+            $cat_value = $data['betterlink_category'];
+            // Handle both direct values and JSON strings
+            if (is_string($cat_value)) {
+                $cat_value = json_decode($cat_value, true);
+                if (is_array($cat_value) && isset($cat_value['value'])) {
+                    $filters['betterlink_category'] = intval($cat_value['value']);
+                } else {
+                    $filters['betterlink_category'] = intval($cat_value);
+                }
+            } else {
+                $filters['betterlink_category'] = intval($cat_value);
+            }
+        }
         
         // BetterLink tags assignment
-          $filters['betterlink_tags'] = [];
+        $filters['betterlink_tags'] = [];
         if (isset($data['betterlink_tags'])) {
             if (is_string($data['betterlink_tags'])) {
                 // Handle escaped quotes in JSON string
                 $cleaned_json = stripslashes($data['betterlink_tags']);
                 $decoded_tags = json_decode($cleaned_json, true);
-                $filters['betterlink_tags'] = is_array($decoded_tags) ? array_map('intval', $decoded_tags) : [];
+
+                if (is_array($decoded_tags)) {
+                    // Handle array of objects with 'value' property or direct IDs
+                    $filters['betterlink_tags'] = array_map(function($tag) {
+                        if (is_array($tag) && isset($tag['value'])) {
+                            return intval($tag['value']);
+                        }
+                        return intval($tag);
+                    }, $decoded_tags);
+                }
             } else if (is_array($data['betterlink_tags'])) {
-                $filters['betterlink_tags'] = array_map('intval', $data['betterlink_tags']);
+                // Handle array of objects or direct values
+                $filters['betterlink_tags'] = array_map(function($tag) {
+                    if (is_array($tag) && isset($tag['value'])) {
+                        return intval($tag['value']);
+                    }
+                    return intval($tag);
+                }, $data['betterlink_tags']);
             }
         }
         

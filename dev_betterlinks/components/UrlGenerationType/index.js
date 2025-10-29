@@ -35,27 +35,6 @@ const UrlGenerationType = (props) => {
         }
     }, [field.value, props.options, props.defaultValue]);
 
-    const customStyles = {
-        control: (provided, state) => ({
-            ...provided,
-            border: '1px solid #ddd',
-            borderRadius: '3px',
-            minHeight: '40px',
-            boxShadow: state.isFocused ? '0 0 0 1px #0073aa' : 'none',
-            '&:hover': {
-                borderColor: '#aaa',
-            },
-        }),
-        option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isSelected ? '#0073aa' : state.isFocused ? '#f0f0f1' : 'white',
-            color: state.isSelected ? 'white' : '#1d2327',
-        }),
-        menu: (provided) => ({
-            ...provided,
-            zIndex: 9999,
-        }),
-    };
 
     const handleChange = (option) => {
         if (option == null) {
@@ -80,7 +59,7 @@ const UrlGenerationType = (props) => {
             classNamePrefix={props.classNamePrefix}
             isMulti={props.isMulti}
             placeholder={props.placeholder || __('Select option...', 'betterlinks')}
-            styles={customStyles}
+            /* Use default CSS-based styling (no inline style overrides) so appearance matches RedirectType */
             isSearchable={false}
         />
     );
