@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { makeRequest, betterlinks_nonce, prefix, plugin_root_url, is_pro_enabled } from '../../utils/helper';
 import { useUpgradeProModal } from '../../utils/customHooks';
 import UpgradeToPro from '../Teasers/UpgradeToPro';
 import { urlGenerationTypes } from '../../utils/data';
+import { fetch_links_data } from '../../redux/actions/links.actions';
 import Select from 'react-select';
 
-const ShortLinkGenerator = ({ settings }) => {
+const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
     // Pro modal state
     const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
@@ -352,6 +354,11 @@ const ShortLinkGenerator = ({ settings }) => {
                                 : __('Generation was cancelled.', 'betterlinks')
                         });
 
+                        // Refresh links data when generation is completed successfully
+                        if (status.status === 'completed' && fetch_links_data) {
+                            fetch_links_data();
+                        }
+
                         // Show completion message - no auto-dismiss, user must click OK
                         setShowCompletionMessage(true);
                         setShowAdvanced(false);
@@ -656,7 +663,7 @@ const ShortLinkGenerator = ({ settings }) => {
                                     </div>
                                 </div>
 
-                                {selectedPostType && (
+                                {selectedPostType  && categories.length > 0 && (
                                     <div className="btl-form-col">
                                         <div className="btl-bulk-link-form-group">
                                             <label>{__('Categories', 'betterlinks')}</label>
@@ -1073,7 +1080,7 @@ const ShortLinkGenerator = ({ settings }) => {
                                                <img src={plugin_root_url + 'assets/images/icons/layout-list.svg'} alt="" />
                                             </div>
                                             <div className="btl-completion-stat-content">
-                                                <div className="btl-completion-stat-number">{generationStatus.total || 0}</div>
+                                                <div className="btl-completion-stat-number">{postCount || 0}</div>
                                                 <div className="btl-completion-stat-label">{__('Total Posts', 'betterlinks')}</div>
                                             </div>
                                         </div>
@@ -1168,7 +1175,7 @@ const ShortLinkGenerator = ({ settings }) => {
                                                <img src={plugin_root_url + 'assets/images/icons/layout-list.svg'} alt="" />
                                             </div>
                                             <div className="btl-progress-stat-content">
-                                                <div className="btl-progress-stat-number">{generationStatus.total || 0}</div>
+                                                <div className="btl-progress-stat-number">{postCount || 0}</div>
                                                 <div className="btl-progress-stat-label">{__('Total Posts', 'betterlinks')}</div>
                                             </div>
                                         </div>
@@ -1202,6 +1209,10 @@ const ShortLinkGenerator = ({ settings }) => {
                         setSelectedPostType(null);
                         setSelectedCategories([]);
                         setPostCount(null);
+                        // Refresh links data to show newly generated links
+                        if (fetch_links_data) {
+                            fetch_links_data();
+                        }
                     }}
                 >
                     {__('Okay', 'betterlinks')}
@@ -1218,4 +1229,8 @@ const mapStateToProps = (state) => ({
     settings: state.settings?.settings || {},
 });
 
-export default connect(mapStateToProps)(ShortLinkGenerator);
+const mapDispatchToProps = (dispatch) => ({
+    fetch_links_data: bindActionCreators(fetch_links_data, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShortLinkGenerator);

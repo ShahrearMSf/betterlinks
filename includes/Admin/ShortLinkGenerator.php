@@ -425,6 +425,46 @@ class ShortLinkGenerator
     }
 
     /**
+     * Delete existing link for a target URL
+     */
+    private function delete_existing_link_for_target_url($target_url)
+    {
+        if (empty($target_url)) {
+            return false;
+        }
+
+        try {
+            global $wpdb;
+            $link_id = $wpdb->get_var($wpdb->prepare("
+                SELECT ID
+                FROM {$wpdb->prefix}betterlinks
+                WHERE target_url = %s
+                LIMIT 1
+            ", $target_url));
+
+            if ($link_id) {
+                // Delete the link
+                $result = $wpdb->delete(
+                    $wpdb->prefix . 'betterlinks',
+                    ['ID' => $link_id],
+                    ['%d']
+                );
+
+                // Clear cache after deletion
+                $helper = new Helper();
+                $helper->clear_query_cache();
+
+                return $result !== false;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            error_log('BetterLinks: Error deleting existing link: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Start bulk generation process
      */
     public function start_bulk_generation()
@@ -634,7 +674,12 @@ class ShortLinkGenerator
             // Check if link already exists for this post
             $target_url = $this->get_target_url($post, $filters);
             if ($this->link_exists_for_target_url($target_url)) {
-                return ['success' => false, 'message' => 'Link already exists', 'skipped' => true];
+                // Only skip if we're not including existing links
+                if (!$filters['include_existing']) {
+                    return ['success' => false, 'message' => 'Link already exists', 'skipped' => true];
+                }
+                // If include_existing is true, we need to delete the old link first before creating a new one
+                $this->delete_existing_link_for_target_url($target_url);
             }
 
             // Generate link data based on filters
@@ -838,7 +883,14 @@ class ShortLinkGenerator
         }
         $filters['post_limit'] = isset($data['post_limit']) ? max(0, intval($data['post_limit'])) : 0;
         $filters['sorting'] = isset($data['sorting']) ? sanitize_text_field($data['sorting']) : 'date_desc';
-        $filters['include_existing'] = isset($data['include_existing']) ? (bool)$data['include_existing'] : false;
+
+        // Handle boolean value properly - FormData converts false to string "false"
+        $include_existing = isset($data['include_existing']) ? $data['include_existing'] : false;
+        if (is_string($include_existing)) {
+            $filters['include_existing'] = $include_existing === 'true' || $include_existing === '1';
+        } else {
+            $filters['include_existing'] = (bool)$include_existing;
+        }
 
         // Short link configuration
         $filters['description_length'] = isset($data['description_length']) ? max(0, intval($data['description_length'])) : 150;
@@ -1520,17 +1572,43 @@ class ShortLinkGenerator
         }
 
         global $wpdb;
-        
-        // Get posts that already have BetterLinks
+
+        // Get all target URLs for the posts
         $placeholders = implode(',', array_fill(0, count($post_ids), '%d'));
-        $existing_post_ids = $wpdb->get_col($wpdb->prepare(
-            "SELECT DISTINCT target_id FROM {$wpdb->prefix}betterlinks_links 
-             WHERE target_type = 'post' AND target_id IN ($placeholders)",
+        $post_urls = $wpdb->get_col($wpdb->prepare(
+            "SELECT DISTINCT CONCAT(post_type, ':', ID) FROM {$wpdb->prefix}posts
+             WHERE ID IN ($placeholders)",
             ...$post_ids
         ));
 
-        // Return posts that don't have existing links
-        return array_diff($post_ids, $existing_post_ids);
+        if (empty($post_urls)) {
+            return $post_ids;
+        }
+
+        // Get posts that already have BetterLinks by checking target_url
+        $url_placeholders = implode(',', array_fill(0, count($post_ids), '%s'));
+        $existing_urls = $wpdb->get_col($wpdb->prepare(
+            "SELECT DISTINCT target_url FROM {$wpdb->prefix}betterlinks
+             WHERE target_url IN (" . implode(',', array_fill(0, count($post_ids), '%s')) . ")",
+            ...array_map(function($post_id) {
+                return get_permalink($post_id);
+            }, $post_ids)
+        ));
+
+        if (empty($existing_urls)) {
+            return $post_ids;
+        }
+
+        // Filter out posts whose URLs already have links
+        $filtered_post_ids = [];
+        foreach ($post_ids as $post_id) {
+            $post_url = get_permalink($post_id);
+            if (!in_array($post_url, $existing_urls)) {
+                $filtered_post_ids[] = $post_id;
+            }
+        }
+
+        return $filtered_post_ids;
     }
 
     /**
