@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
+import { connect } from 'react-redux';
 
 import { makeRequest, betterlinks_nonce, prefix, plugin_root_url, is_pro_enabled } from '../../utils/helper';
 import { useUpgradeProModal } from '../../utils/customHooks';
 import UpgradeToPro from '../Teasers/UpgradeToPro';
+import { urlGenerationTypes } from '../../utils/data';
 import Select from 'react-select';
 
-const ShortLinkGenerator = () => {
+const ShortLinkGenerator = ({ settings }) => {
     // Pro modal state
     const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
@@ -35,15 +37,25 @@ const ShortLinkGenerator = () => {
     const [redirectType, setRedirectType] = useState('301');
     const [customFieldKey, setCustomFieldKey] = useState('');
     const [manualPattern, setManualPattern] = useState('');
-    const [slugType, setSlugType] = useState('existing');
-    const [slugLength, setSlugLength] = useState(10);
-    const [collisionHandling, setCollisionHandling] = useState('append');
     const [customTags, setCustomTags] = useState([]);
     const [betterlinkCategories, setBetterlinkCategories] = useState([]);
     const [selectedBetterlinkCategory, setSelectedBetterlinkCategory] = useState(null);
     const [betterlinkTags, setBetterlinkTags] = useState([]);
     const [selectedBetterlinkTags, setSelectedBetterlinkTags] = useState([]);
     const [linkPrefix, setLinkPrefix] = useState(prefix || 'go');
+    const [urlSlugGenerationType, setUrlSlugGenerationType] = useState(
+        settings?.url_slug_generation_type ||
+        (settings?.is_random_string ? 'random_string' : 'random_mixed')
+    );
+
+    // Sync URL slug generation type when settings change
+    useEffect(() => {
+        if (settings?.url_slug_generation_type) {
+            setUrlSlugGenerationType(settings.url_slug_generation_type);
+        } else if (settings?.is_random_string !== undefined) {
+            setUrlSlugGenerationType(settings.is_random_string ? 'random_string' : 'random_mixed');
+        }
+    }, [settings?.url_slug_generation_type, settings?.is_random_string]);
 
     // Load post types on mount
     useEffect(() => {
@@ -219,10 +231,6 @@ const ShortLinkGenerator = () => {
         // Start simulated progress for better UX
         startSimulatedProgress();
 
-        // Auto-configure random slug settings
-        const finalSlugLength = slugType === 'random' ? 8 : slugLength; // Default 8 characters for random
-        const finalCollisionHandling = slugType === 'random' ? 'append' : collisionHandling; // Auto-increment for random
-
         const filters = {
             post_type: selectedPostType.value,
             categories: selectedCategories.map(cat => cat.value),
@@ -235,13 +243,11 @@ const ShortLinkGenerator = () => {
             target_url_source: 'permalink',
             custom_field_key: customFieldKey,
             manual_pattern: manualPattern,
-            slug_type: slugType,
-            slug_length: finalSlugLength,
-            collision_handling: finalCollisionHandling,
             custom_tags: customTags,
             betterlink_category: selectedBetterlinkCategory ? parseInt(selectedBetterlinkCategory.value) : 0,
             betterlink_tags: selectedBetterlinkTags && selectedBetterlinkTags.length > 0 ? selectedBetterlinkTags.map(tag => parseInt(tag.value)) : [],
-            link_prefix: linkPrefix
+            link_prefix: linkPrefix,
+            url_slug_generation_type: urlSlugGenerationType
         };
 
         // Add a small delay to show the initialization
@@ -378,16 +384,7 @@ const ShortLinkGenerator = () => {
         { value: '307', label: __('307 (Temporary)', 'betterlinks') }
     ];
 
-    const slugTypeOptions = [
-        { value: 'existing', label: __('Existing Slug', 'betterlinks') },
-        { value: 'random', label: __('Random', 'betterlinks') }
-    ];
 
-    const collisionHandlingOptions = [
-        { value: 'append', label: __('Append Increment (-2, -3...)', 'betterlinks') },
-        { value: 'regenerate', label: __('Regenerate', 'betterlinks') },
-        { value: 'skip', label: __('Skip and Report', 'betterlinks') }
-    ];
 
     return (
         <div className="btl-short-link-generator">
@@ -628,7 +625,7 @@ const ShortLinkGenerator = () => {
             ) : (
                 <>
 
-            <div className="btl-header">
+            <div className="btl-header bl-text-white">
                 <h2>{__('Short Link Generator', 'betterlinks')}</h2>
                 <div className="btl-description">
                     {__('Generate short links in bulk based on your selected filters. This tool will create BetterLinks for posts matching your criteria.', 'betterlinks')}
@@ -648,6 +645,7 @@ const ShortLinkGenerator = () => {
                                         <label>{__('Post Type', 'betterlinks')}*</label>
                                         <Select
                                             className="btl-custom-post-select-type"
+                                            classNamePrefix="btl-react-select"
                                             value={selectedPostType}
                                             onChange={setSelectedPostType}
                                             options={postTypeOptions}
@@ -669,6 +667,7 @@ const ShortLinkGenerator = () => {
                                             ) : (
                                                 <Select
                                                     className="btl-custom-post-select-cat"
+                                                    classNamePrefix="btl-react-select"
                                                     value={selectedCategories}
                                                     onChange={setSelectedCategories}
                                                     options={categories}
@@ -727,6 +726,7 @@ const ShortLinkGenerator = () => {
                                                         options={sortingOptions}
                                                         isClearable={false}
                                                         className="btl-custom-post-select-type"
+                                                        classNamePrefix="btl-react-select"
                                                     />
                                                 </div>
                                             </div>
@@ -761,6 +761,7 @@ const ShortLinkGenerator = () => {
                                                     options={redirectTypeOptions}
                                                     isClearable={false}
                                                     className="btl-custom-post-select-type"
+                                                    classNamePrefix="btl-react-select"
                                                 />
                                             </div>
                                         </div>
@@ -785,11 +786,12 @@ const ShortLinkGenerator = () => {
                                                 <div className="btl-bulk-link-form-group">
                                                     <label>{__('Shortened URL Type', 'betterlinks')}</label>
                                                     <Select
-                                                        value={slugTypeOptions.find(opt => opt.value === slugType)}
-                                                        onChange={(option) => setSlugType(option.value)}
-                                                        options={slugTypeOptions}
+                                                        value={urlGenerationTypes.find(opt => opt.value === urlSlugGenerationType)}
+                                                        onChange={(option) => setUrlSlugGenerationType(option.value)}
+                                                        options={urlGenerationTypes}
                                                         isClearable={false}
                                                         className="btl-custom-post-select-type"
+                                                        classNamePrefix="btl-react-select"
                                                     />
                                                 </div>
                                             </div>
@@ -805,6 +807,7 @@ const ShortLinkGenerator = () => {
                                                         isLoading={betterlinkCategories.length === 0}
                                                         isSearchable={true}
                                                         className="btl-custom-post-select-type"
+                                                        classNamePrefix="btl-react-select"
                                                         noOptionsMessage={({ inputValue }) =>
                                                             inputValue ? __('No categories found', 'betterlinks') : __('No categories available', 'betterlinks')
                                                         }
@@ -827,6 +830,7 @@ const ShortLinkGenerator = () => {
                                                     isMulti={true}
                                                     closeMenuOnSelect={false}
                                                     className="btl-custom-post-select-type"
+                                                    classNamePrefix="btl-react-select"
                                                     noOptionsMessage={({ inputValue }) =>
                                                         inputValue ? __('No tags found', 'betterlinks') : __('No tags available', 'betterlinks')
                                                     }
@@ -977,7 +981,7 @@ const ShortLinkGenerator = () => {
                             {isLoading || generationInProgress ? (
                                 <>
                                     <span className="btl-spinner"></span>
-                                    {__('Generating...', 'betterlinks')}
+                                    {__('Loading...', 'betterlinks')}
                                 </>
                             ) : (
                                 <>
@@ -1210,4 +1214,8 @@ const ShortLinkGenerator = () => {
     );
 };
 
-export default ShortLinkGenerator;
+const mapStateToProps = (state) => ({
+    settings: state.settings?.settings || {},
+});
+
+export default connect(mapStateToProps)(ShortLinkGenerator);

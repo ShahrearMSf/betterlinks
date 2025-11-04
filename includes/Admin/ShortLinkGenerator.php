@@ -401,6 +401,30 @@ class ShortLinkGenerator
     }
 
     /**
+     * Check if a link already exists for a target URL
+     */
+    private function link_exists_for_target_url($target_url)
+    {
+        if (empty($target_url)) {
+            return false;
+        }
+
+        try {
+            global $wpdb;
+            $count = $wpdb->get_var($wpdb->prepare("
+                SELECT COUNT(*)
+                FROM {$wpdb->prefix}betterlinks
+                WHERE target_url = %s
+            ", $target_url));
+
+            return $count > 0;
+        } catch (Exception $e) {
+            // If there's an error, assume no existing link to be safe
+            return false;
+        }
+    }
+
+    /**
      * Start bulk generation process
      */
     public function start_bulk_generation()
@@ -462,6 +486,7 @@ class ShortLinkGenerator
                 'processed' => 0,
                 'successful' => 0,
                 'failed' => 0,
+                'skipped' => 0,
                 'progress_percent' => 0,
                 'errors' => []
             ]);
@@ -469,13 +494,14 @@ class ShortLinkGenerator
             // Generate short links for each post
             $successful = 0;
             $failed = 0;
+            $skipped = 0;
             $errors = [];
             $report_data = [];
 
             foreach ($post_ids as $index => $post_id) {
                 try {
                     $result = $this->create_short_link_for_post($post_id, $filters);
-                    
+
                     if ($result['success']) {
                         $successful++;
                         $report_data[] = [
@@ -486,6 +512,21 @@ class ShortLinkGenerator
                             'link_id' => $result['link_id'],
                             'status' => 'success',
                             'error' => '',
+                            'category' => $this->get_post_categories_string($post_id),
+                            'tags' => $this->get_post_tags_string($post_id),
+                            'created_at' => current_time('mysql')
+                        ];
+                    } else if (!empty($result['skipped'])) {
+                        // Link already exists, skip this post
+                        $skipped++;
+                        $report_data[] = [
+                            'post_id' => $post_id,
+                            'post_title' => get_the_title($post_id),
+                            'post_url' => get_permalink($post_id),
+                            'short_url' => '',
+                            'link_id' => '',
+                            'status' => 'skipped',
+                            'error' => $result['message'],
                             'category' => $this->get_post_categories_string($post_id),
                             'tags' => $this->get_post_tags_string($post_id),
                             'created_at' => current_time('mysql')
@@ -510,7 +551,7 @@ class ShortLinkGenerator
                     // Update progress
                     $processed = $index + 1;
                     $progress_percent = round(($processed / count($post_ids)) * 100, 2);
-                    
+
                     update_option('betterlinks_bulk_generation_status', [
                         'status' => 'running',
                         'started_at' => get_option('betterlinks_bulk_generation_status')['started_at'],
@@ -518,6 +559,7 @@ class ShortLinkGenerator
                         'processed' => $processed,
                         'successful' => $successful,
                         'failed' => $failed,
+                        'skipped' => $skipped,
                         'progress_percent' => $progress_percent,
                         'errors' => $errors
                     ]);
@@ -526,7 +568,7 @@ class ShortLinkGenerator
                     $failed++;
                     $error_msg = 'Post ID ' . $post_id . ': ' . $e->getMessage();
                     $errors[] = $error_msg;
-                    
+
                     $report_data[] = [
                         'post_id' => $post_id,
                         'post_title' => get_the_title($post_id),
@@ -551,6 +593,7 @@ class ShortLinkGenerator
                 'processed' => count($post_ids),
                 'successful' => $successful,
                 'failed' => $failed,
+                'skipped' => $skipped,
                 'progress_percent' => 100,
                 'errors' => $errors
             ]);
@@ -563,10 +606,11 @@ class ShortLinkGenerator
             $helper->clear_query_cache();
 
             wp_send_json_success([
-                'message' => sprintf(__('Generated %d short links successfully. %d failed.', 'betterlinks'), $successful, $failed),
+                'message' => sprintf(__('Generated %d short links successfully. %d failed. %d skipped (already exist).', 'betterlinks'), $successful, $failed, $skipped),
                 'queued' => count($post_ids),
                 'successful' => $successful,
-                'failed' => $failed
+                'failed' => $failed,
+                'skipped' => $skipped
             ]);
 
         } catch (Exception $e) {
@@ -587,9 +631,14 @@ class ShortLinkGenerator
                 return ['success' => false, 'message' => 'Post not found'];
             }
 
+            // Check if link already exists for this post
+            $target_url = $this->get_target_url($post, $filters);
+            if ($this->link_exists_for_target_url($target_url)) {
+                return ['success' => false, 'message' => 'Link already exists', 'skipped' => true];
+            }
+
             // Generate link data based on filters
             $link_title = $post->post_title;
-            $target_url = $this->get_target_url($post, $filters);
             
             // Generate unique slug based on configuration
             $link_slug = $this->generate_short_url($post, $filters);
@@ -799,13 +848,10 @@ class ShortLinkGenerator
         $filters['custom_field_key'] = isset($data['custom_field_key']) ? sanitize_text_field($data['custom_field_key']) : '';
         $filters['manual_pattern'] = isset($data['manual_pattern']) ? sanitize_text_field($data['manual_pattern']) : '';
 
-        // Shortened URL configuration
-        $slug_type = isset($data['slug_type']) ? $data['slug_type'] : 'existing';
-        $filters['slug_type'] = in_array($slug_type, ['existing', 'title', 'random']) ? $slug_type : 'existing';
-        $filters['slug_length'] = isset($data['slug_length']) ? max(3, min(50, intval($data['slug_length']))) : 10;
-        $collision_handling = isset($data['collision_handling']) ? $data['collision_handling'] : 'append';
-        $filters['collision_handling'] = in_array($collision_handling, ['append', 'regenerate', 'skip']) ? $collision_handling : 'append';
-        
+        // URL slug generation type
+        $url_slug_generation_type = isset($data['url_slug_generation_type']) ? $data['url_slug_generation_type'] : 'random_mixed';
+        $filters['url_slug_generation_type'] = in_array($url_slug_generation_type, ['from_title', 'from_url', 'random_string', 'random_number', 'random_mixed']) ? $url_slug_generation_type : 'random_mixed';
+
         // Link prefix configuration
         $filters['link_prefix'] = isset($data['link_prefix']) ? sanitize_text_field($data['link_prefix']) : Helper::get_settings('prefix');
 
@@ -1014,6 +1060,7 @@ class ShortLinkGenerator
                 'processed' => 0,
                 'successful' => 0,
                 'failed' => 0,
+                'skipped' => 0,
                 'progress_percent' => 100,
                 'errors' => []
             ]);
@@ -1033,11 +1080,12 @@ class ShortLinkGenerator
             $status['eta_seconds'] = 0;
 
             // Create summary message
-            if ($status['successful'] > 0 || $status['failed'] > 0) {
+            if ($status['successful'] > 0 || $status['failed'] > 0 || $status['skipped'] > 0) {
                 $status['message'] = sprintf(
-                    __('Generation completed! Created %d short links successfully. %d failed.', 'betterlinks'),
+                    __('Generation completed! Created %d short links successfully. %d failed. %d skipped (already exist).', 'betterlinks'),
                     $status['successful'],
-                    $status['failed']
+                    $status['failed'],
+                    $status['skipped']
                 );
             } else {
                 $status['message'] = __('Generation completed.', 'betterlinks');
@@ -1211,20 +1259,45 @@ class ShortLinkGenerator
     {
         $base_slug = '';
 
-        switch ($filters['slug_type']) {
-            case 'existing':
-                $base_slug = $post->post_name;
-                break;
-            case 'title':
-                $base_slug = sanitize_title($post->post_title);
-                if ($filters['slug_length'] > 0) {
-                    $words = explode('-', $base_slug);
-                    $base_slug = implode('-', array_slice($words, 0, $filters['slug_length']));
-                }
-                break;
-            case 'random':
-                $base_slug = $this->generate_random_slug($filters['slug_length']);
-                break;
+        // First, check if we should use url_slug_generation_type (new method)
+        if (!empty($filters['url_slug_generation_type'])) {
+            switch ($filters['url_slug_generation_type']) {
+                case 'from_title':
+                    $base_slug = $this->generate_from_title($post->post_title);
+                    break;
+                case 'from_url':
+                    $target_url = get_permalink($post->ID);
+                    $base_slug = $this->generate_from_url($target_url);
+                    break;
+                case 'random_string':
+                    $base_slug = $this->generate_random_string();
+                    break;
+                case 'random_number':
+                    $base_slug = $this->generate_random_number();
+                    break;
+                case 'random_mixed':
+                    $base_slug = $this->generate_random_mixed();
+                    break;
+                default:
+                    $base_slug = $this->generate_random_mixed();
+            }
+        } else {
+            // Fallback to old slug_type method for backward compatibility
+            switch ($filters['slug_type']) {
+                case 'existing':
+                    $base_slug = $post->post_name;
+                    break;
+                case 'title':
+                    $base_slug = sanitize_title($post->post_title);
+                    if ($filters['slug_length'] > 0) {
+                        $words = explode('-', $base_slug);
+                        $base_slug = implode('-', array_slice($words, 0, $filters['slug_length']));
+                    }
+                    break;
+                case 'random':
+                    $base_slug = $this->generate_random_slug($filters['slug_length']);
+                    break;
+            }
         }
 
         // Apply prefix if available
@@ -1560,11 +1633,126 @@ class ShortLinkGenerator
         $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
         $slug = '';
         $max = strlen($characters) - 1;
-        
+
         for ($i = 0; $i < $length; $i++) {
             $slug .= $characters[wp_rand(0, $max)];
         }
-        
+
         return $slug;
+    }
+
+    /**
+     * Generate random string (letters only)
+     */
+    private function generate_random_string($length = 8)
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyz';
+        $slug = '';
+        $max = strlen($characters) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $slug .= $characters[wp_rand(0, $max)];
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Generate random number
+     */
+    private function generate_random_number($length = 8)
+    {
+        $characters = '0123456789';
+        $slug = '';
+        $max = strlen($characters) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $slug .= $characters[wp_rand(0, $max)];
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Generate random mixed (alphanumeric)
+     */
+    private function generate_random_mixed($length = 8)
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $slug = '';
+        $max = strlen($characters) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $slug .= $characters[wp_rand(0, $max)];
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Generate slug from title
+     */
+    private function generate_from_title($title)
+    {
+        if (empty($title)) {
+            return $this->generate_random_mixed();
+        }
+
+        // Clean and process the title to create a user-friendly slug
+        $slug = sanitize_title($title);
+
+        // Remove common stop words
+        $stop_words = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'up', 'about', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'between', 'among', 'against', 'across', 'toward', 'towards', 'under', 'over'];
+
+        $words = explode('-', $slug);
+        $filtered_words = array_filter($words, function($word) use ($stop_words) {
+            return !in_array(strtolower($word), $stop_words);
+        });
+
+        $slug = implode('-', $filtered_words);
+
+        // Limit length
+        if (strlen($slug) > 20) {
+            $slug = substr($slug, 0, 20);
+        }
+
+        return !empty($slug) ? $slug : $this->generate_random_mixed();
+    }
+
+    /**
+     * Generate slug from URL
+     */
+    private function generate_from_url($url)
+    {
+        if (empty($url)) {
+            return $this->generate_random_mixed();
+        }
+
+        try {
+            $parsed_url = wp_parse_url($url);
+            $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+
+            // Get the last part of the path
+            $path_parts = array_filter(explode('/', $path));
+
+            if (!empty($path_parts)) {
+                $slug = end($path_parts);
+                // Remove file extension if present
+                $slug = preg_replace('/\.[^.]+$/', '', $slug);
+                // Sanitize
+                $slug = sanitize_title($slug);
+
+                if (strlen($slug) > 20) {
+                    $slug = substr($slug, 0, 20);
+                }
+
+                return !empty($slug) ? $slug : $this->generate_random_mixed();
+            }
+        } catch (Exception $e) {
+            // If URL parsing fails, return random mixed
+            return $this->generate_random_mixed();
+        }
+
+        return $this->generate_random_mixed();
     }
 }
