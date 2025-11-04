@@ -490,3 +490,50 @@ export const delete_link = (params) => async (dispatch) => {
 		});
 	});
 };
+
+export const bulk_assign_category = (params) => async (dispatch) => {
+	let data = [];
+	if (Array.isArray(params)) {
+		data = params;
+	} else {
+		data = [params];
+	}
+
+	// Update all links
+	const updatePromises = data.map((item) => {
+		const { ID, cat_id } = item;
+		return makeRequest({
+			action: 'betterlinks/admin/update_link',
+			ID,
+			cat_id,
+		});
+	});
+
+	// Wait for all updates to complete, then fetch fresh data
+	Promise.all(updatePromises).then(() => {
+		// Fetch fresh links data after all updates are done
+		try {
+			API.get(namespace + 'links', {
+				params: {},
+			}).then((res) => {
+				if (res?.data?.data) {
+					dispatch({
+						type: FETCH_INITIAL_DATA,
+						payload: res.data,
+					});
+				}
+			});
+		} catch (e) {
+			makeRequest({
+				action: 'betterlinks/admin/get_all_links',
+			}).then((response) => {
+				if (response.data) {
+					dispatch({
+						type: FETCH_INITIAL_DATA,
+						payload: response.data.data,
+					});
+				}
+			});
+		}
+	});
+};
