@@ -1,15 +1,17 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import _ from 'lodash';
+import _, { unset } from 'lodash';
 import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
 import { Badge, Tooltip } from '@material-ui/core';
+import { useState } from 'react';
 
 export const {
 	betterlinks_nonce,
 	nonce,
 	rest_url,
+	ajaxurl,
 	namespace,
 	plugin_root_url,
 	plugin_root_path,
@@ -697,7 +699,172 @@ const ParameterItem = ({ type, item, style = {} }) => {
 	);
 };
 
-export const getColumns = (analytics, analyticsTab, id = null) => {
+/**
+ * CountryFetchCell Component
+ * Displays a button to fetch country data for existing clicks without country information
+ * When country is fetched, all clicks with the same IP within the same link are updated
+ */
+const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
+	const [loading, setLoading] = useState(false);
+	const [status, setStatus] = useState('idle'); // idle, loading, success, failed
+
+	const handleFetchCountry = async () => {
+		if (!row.ip) {
+			return;
+		}
+
+		setLoading(true);
+		setStatus('loading');
+
+		try {
+			// First, fetch country data from the API
+			const response = await fetch(
+				`${rest_url}betterlinks/v1/geolocation/fetch-by-ip?ip=${encodeURIComponent(row.ip)}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-WP-Nonce': nonce,
+					},
+				}
+			);
+
+			const data = await response.json();
+
+			if (data.success && data.data) {
+				// Now save the country data to the database via AJAX
+				// Use bulk update to update all clicks with the same IP within this link
+				const formData = new FormData();
+				formData.append('action', 'betterlinks/admin/update_clicks_country_by_ip');
+				formData.append('security', betterlinks_nonce);
+				formData.append('link_id', linkId);
+				formData.append('ip', row.ip);
+				formData.append('country_code', data.data.country_code);
+				formData.append('country_name', data.data.country_name);
+
+				const ajaxResponse = await fetch(ajaxurl, {
+					method: 'POST',
+					body: formData,
+				});
+
+				const ajaxData = await ajaxResponse.json();
+
+				if (ajaxData.success) {
+					setStatus('success');
+					// Update the row data
+					row.country_code = data.data.country_code;
+					row.country_name = data.data.country_name;
+
+					// Trigger callback to refresh table data
+					// The transient cache has been cleared on the backend, so fresh data will be fetched
+					if (onCountryUpdated) {
+						onCountryUpdated(row.ip, data.data);
+					}
+				} else {
+					setStatus('failed');
+				}
+			} else {
+				setStatus('failed');
+			}
+		} catch (error) {
+			console.error('Error fetching country:', error);
+			setStatus('failed');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getButtonContent = () => {
+		switch (status) {
+			case 'loading':
+				return __('Fetching...', 'betterlinks');
+			case 'success':
+				return countryData ? countryData.country_name : __('Fetched', 'betterlinks');
+			case 'failed':
+				return __('Failed', 'betterlinks');
+			default:
+				return <img width={18} height={18} src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'} alt="Refresh" />;
+		}
+	};
+
+	const getButtonStyle = () => {
+		let bgColor = '#fff';
+		let textColor = '#333';
+		let borderColor = '#ccc';
+
+		if (status === 'success') {
+			bgColor = '#d4edda';
+			textColor = '#155724';
+			borderColor = '#c3e6cb';
+		} else if (status === 'failed') {
+			bgColor = '#f8d7da';
+			textColor = '#721c24';
+			borderColor = '#f5c6cb';
+		}
+
+		const baseStyles = {
+			padding: '4px 8px',
+			fontSize: '12px',
+			borderRadius: '3px',
+			color: textColor,
+			border: 'unset',
+			backgroundColor: 'unset',
+			cursor: loading || status === 'success' ? 'not-allowed' : 'pointer',
+			opacity: loading || status === 'success' ? 0.7 : 1,
+			transition: 'all 0.3s ease',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+		};
+
+		// Add specific styles for the default state with icon
+		if (status === 'idle') {
+			return {
+				...baseStyles,
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				padding: '6px',
+			};
+		}
+
+		return {
+			...baseStyles,
+			maxWidth: '150px',
+		};
+	};
+
+	// Show country if row has country data
+	if (row.country_name && row.country_code) {
+		return (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+				<span style={{
+					fontSize: '16px',
+					lineHeight: '1'
+				}}>
+					{getFlagEmoji(row.country_code)}
+				</span>
+				<span title={row.country_name}>
+					{row.country_name}
+				</span>
+			</div>
+		);
+	}
+
+	return (
+		<button
+			className="btl-fetch-country-btn"
+			onClick={handleFetchCountry}
+			disabled={loading}
+			title={status === 'idle' ? __('Fetch Country', 'betterlinks') : row.ip}
+			style={getButtonStyle()}
+		>
+			{getButtonContent()}
+		</button>
+	);
+};
+
+export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated = null) => {
 	if (!!id) {
 		const isProUpdated = pro_version_check('2.1.0');
 		const singleColumn = [
@@ -742,6 +909,10 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 								</span>
 							</div>
 						);
+					}
+					// Show fetch button for existing clicks without country data
+					if (row.ip && !row.country_name) {
+						return <CountryFetchCell row={row} linkId={id} onCountryUpdated={onCountryUpdated} />;
 					}
 					return <div>-</div>;
 				},

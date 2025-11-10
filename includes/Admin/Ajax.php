@@ -96,7 +96,11 @@ class Ajax {
 		// js analytics tracking
 		add_action( 'wp_ajax_nopriv_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
 		add_action( 'wp_ajax_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
-		
+
+		// Update click country data (for backward compatibility)
+		add_action( 'wp_ajax_betterlinks/admin/update_click_country', array( $this, 'update_click_country' ) );
+		add_action( 'wp_ajax_betterlinks/admin/update_clicks_country_by_ip', array( $this, 'update_clicks_country_by_ip' ) );
+
 		// UTM Template Application
 		add_action( 'wp_ajax_betterlinks/admin/apply_utm_template_to_links', array( $this, 'apply_utm_template_to_links' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_categories', array( $this, 'get_links_by_categories' ) );
@@ -1307,11 +1311,155 @@ class Ajax {
 		$data = $utils->get_slug_raw($short_url);
 		$data['skip_password_protection'] = true;
 		$data['location'] = $location;
+
+		// Accept country data from frontend geolocation
+		if ( isset( $_POST['country_code'] ) ) {
+			$data['country_code'] = sanitize_text_field( $_POST['country_code'] );
+		}
+		if ( isset( $_POST['country_name'] ) ) {
+			$data['country_name'] = sanitize_text_field( $_POST['country_name'] );
+		}
+
 		Helper::init_tracking($data, $utils);
 
 		wp_send_json([
 			'data' => true
 		]);
+	}
+
+	/**
+	 * Update click record with country data
+	 *
+	 * Used for backward compatibility to update existing clicks with country information
+	 */
+	public function update_click_country() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		global $wpdb;
+
+		$click_id = isset( $_POST['click_id'] ) ? intval( $_POST['click_id'] ) : 0;
+		$country_code = isset( $_POST['country_code'] ) ? sanitize_text_field( $_POST['country_code'] ) : '';
+		$country_name = isset( $_POST['country_name'] ) ? sanitize_text_field( $_POST['country_name'] ) : '';
+
+		if ( ! $click_id || ! $country_code || ! $country_name ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid parameters', 'betterlinks' )
+			) );
+		}
+
+		$table_name = $wpdb->prefix . 'betterlinks_clicks';
+
+		$updated = $wpdb->update(
+			$table_name,
+			array(
+				'country_code' => $country_code,
+				'country_name' => $country_name,
+			),
+			array( 'ID' => $click_id ),
+			array( '%s', '%s' ),
+			array( '%d' )
+		);
+
+		if ( $updated !== false ) {
+			wp_send_json_success( array(
+				'message' => __( 'Country data updated successfully', 'betterlinks' ),
+				'country_code' => $country_code,
+				'country_name' => $country_name,
+			) );
+		} else {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to update country data', 'betterlinks' )
+			) );
+		}
+	}
+
+	/**
+	 * Update all clicks with the same IP within a specific link with country data
+	 *
+	 * This bulk update ensures that when country is fetched for one IP,
+	 * all clicks from the same IP within the same short URL are updated automatically
+	 */
+	public function update_clicks_country_by_ip() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		global $wpdb;
+
+		$link_id = isset( $_POST['link_id'] ) ? intval( $_POST['link_id'] ) : 0;
+		$ip = isset( $_POST['ip'] ) ? sanitize_text_field( $_POST['ip'] ) : '';
+		$country_code = isset( $_POST['country_code'] ) ? sanitize_text_field( $_POST['country_code'] ) : '';
+		$country_name = isset( $_POST['country_name'] ) ? sanitize_text_field( $_POST['country_name'] ) : '';
+
+		if ( ! $link_id || ! $ip || ! $country_code || ! $country_name ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid parameters', 'betterlinks' )
+			) );
+		}
+
+		$table_name = $wpdb->prefix . 'betterlinks_clicks';
+
+		// Update all clicks with the same IP within this link_id
+		// This will update ALL clicks with this IP, regardless of whether they already have country data
+		$updated = $wpdb->update(
+			$table_name,
+			array(
+				'country_code' => $country_code,
+				'country_name' => $country_name,
+			),
+			array(
+				'link_id' => $link_id,
+				'ip' => $ip,
+			),
+			array( '%s', '%s' ),
+			array( '%d', '%s' )
+		);
+
+		if ( $updated !== false ) {
+			// Clear the transient cache for this link's analytics data
+			// This ensures the API returns fresh data with the updated country information
+			$this->clear_individual_clicks_transient( $link_id );
+
+			wp_send_json_success( array(
+				'message' => sprintf( __( 'Country data updated for %d clicks', 'betterlinks' ), $updated ),
+				'country_code' => $country_code,
+				'country_name' => $country_name,
+				'updated_count' => $updated,
+			) );
+		} else {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to update country data', 'betterlinks' )
+			) );
+		}
+	}
+
+	/**
+	 * Clear transient cache for individual clicks analytics
+	 * This ensures fresh data is fetched from the database
+	 *
+	 * @param int $link_id The link ID
+	 */
+	private function clear_individual_clicks_transient( $link_id ) {
+		global $wpdb;
+
+		// Get all transient keys for this link and delete them
+		// The transient key format is: btl_individual_analytics_clicks_{from}_{to}_{link_id}
+		$transient_prefix = 'btl_individual_analytics_clicks_';
+
+		// Query the options table to find all matching transients
+		$transients = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+				'%' . $wpdb->esc_like( $transient_prefix ) . '%' . $wpdb->esc_like( (string) $link_id ) . '%'
+			)
+		);
+
+		// Delete each transient
+		if ( $transients ) {
+			foreach ( $transients as $transient ) {
+				// Remove the '_transient_' prefix to get the transient name
+				$transient_name = str_replace( '_transient_', '', $transient->option_name );
+				delete_transient( $transient_name );
+			}
+		}
 	}
 
 	/**

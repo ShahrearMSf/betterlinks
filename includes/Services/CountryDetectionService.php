@@ -48,7 +48,10 @@ class CountryDetectionService {
 
     /**
      * Get country information for an IP address
-     * 
+     *
+     * Note: Country data is primarily detected on the frontend via JavaScript.
+     * This method is used as a fallback when frontend detection fails.
+     *
      * @param string $ip The IP address to lookup
      * @return array|null Array with country_code and country_name, or null if not found
      */
@@ -63,20 +66,12 @@ class CountryDetectionService {
             return $cached_country;
         }
 
-        // Check if we already have this country in our database
+        // Try to fetch from APIs if not cached
         $country_data = self::fetch_country_from_api( $ip );
         if ( $country_data ) {
             // Cache the result
             self::cache_country( $ip, $country_data );
-
-            // Store in countries lookup table if not exists
-            self::store_country_in_lookup_table( $country_data );
-
-            // Return only the essential fields (remove api_used for external use)
-            return array(
-                'country_code' => $country_data['country_code'],
-                'country_name' => $country_data['country_name'],
-            );
+            return $country_data;
         }
 
         return null;
@@ -101,18 +96,17 @@ class CountryDetectionService {
 
     /**
      * Cache country data for an IP
-     * 
+     *
      * @param string $ip The IP address
      * @param array $country_data Country information
      */
-    private static function cache_country( $ip, $country_data ) {
+    public static function cache_country( $ip, $country_data ) {
         $cache_key = 'btl_country_' . md5( $ip );
         set_transient( $cache_key, $country_data, self::CACHE_DURATION );
     }
 
     /**
      * Fetch country data from multiple APIs with fallback support
-     * Tries each API in sequence until one succeeds
      *
      * @param string $ip The IP address
      * @return array|null Country data from API or null
@@ -124,8 +118,6 @@ class CountryDetectionService {
                 return $country_data;
             }
         }
-
-        // If all APIs failed, return null
         return null;
     }
 
@@ -137,10 +129,9 @@ class CountryDetectionService {
      * @return array|null Country data or null if failed
      */
     private static function try_single_api( $ip, $api_config ) {
-        // Check if this API has been rate limited recently
         $rate_limit_key = 'btl_api_rate_limit_' . md5( $api_config['url'] );
         if ( get_transient( $rate_limit_key ) ) {
-            return null; // Skip this API if it's rate limited
+            return null;
         }
 
         $api_url = str_replace( '{IP}', $ip, $api_config['url'] );
@@ -158,9 +149,7 @@ class CountryDetectionService {
 
         $response_code = wp_remote_retrieve_response_code( $response );
 
-        // Handle rate limiting
         if ( $response_code === 429 ) {
-            // Rate limited - cache this for 5 minutes
             set_transient( $rate_limit_key, true, 5 * MINUTE_IN_SECONDS );
             return null;
         }
@@ -176,13 +165,10 @@ class CountryDetectionService {
             return null;
         }
 
-        // Handle API-specific error responses
         if ( isset( $data['status'] ) && $data['status'] === 'fail' ) {
-            // ip-api.com error response
             return null;
         }
 
-        // Extract country data based on API-specific field names
         $country_field = $api_config['country_field'];
         $country_code_field = $api_config['country_code_field'];
 
@@ -190,53 +176,10 @@ class CountryDetectionService {
             return null;
         }
 
-        // Normalize field names to our standard format
-        $result = array(
+        return array(
             'country_code' => sanitize_text_field( $data[$country_code_field] ),
             'country_name' => sanitize_text_field( $data[$country_field] ),
-            'api_used' => $api_config['url'] // Track which API was successful
         );
-
-        return $result;
-    }
-
-    /**
-     * Store country in the lookup table if it doesn't exist
-     * 
-     * @param array $country_data Country information
-     * @return int|false Country ID or false on failure
-     */
-    private static function store_country_in_lookup_table( $country_data ) {
-        global $wpdb;
-        
-        $table_name = $wpdb->prefix . 'betterlinks_countries';
-        
-        // Check if country already exists
-        $existing = $wpdb->get_var( $wpdb->prepare(
-            "SELECT id FROM {$table_name} WHERE country_code = %s",
-            $country_data['country_code']
-        ) );
-        
-        if ( $existing ) {
-            return $existing;
-        }
-        
-        // Insert new country (ignore api_used field if present)
-        $result = $wpdb->insert(
-            $table_name,
-            array(
-                'country_code' => $country_data['country_code'],
-                'country_name' => $country_data['country_name'],
-            ),
-            array( '%s', '%s' )
-        );
-        
-        if ( $result === false ) {
-            error_log( 'BetterLinks: Failed to insert country into lookup table: ' . $wpdb->last_error );
-            return false;
-        }
-        
-        return $wpdb->insert_id;
     }
 
     /**
@@ -441,27 +384,5 @@ class CountryDetectionService {
         );
     }
 
-    /**
-     * Get API usage statistics from cache
-     *
-     * @return array API usage statistics
-     */
-    public static function get_api_usage_stats() {
-        $stats = array();
 
-        foreach ( self::API_ENDPOINTS as $index => $api_config ) {
-            $rate_limit_key = 'btl_api_rate_limit_' . md5( $api_config['url'] );
-            $is_rate_limited = get_transient( $rate_limit_key );
-
-            $stats[] = array(
-                'api_index' => $index + 1,
-                'url' => $api_config['url'],
-                'limit' => $api_config['limit'],
-                'is_rate_limited' => (bool) $is_rate_limited,
-                'rate_limit_expires' => $is_rate_limited ? get_option( '_transient_timeout_' . $rate_limit_key ) : null
-            );
-        }
-
-        return $stats;
-    }
 }

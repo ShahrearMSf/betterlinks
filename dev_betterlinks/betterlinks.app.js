@@ -42,7 +42,21 @@
 			}
 			window.location.href = target.href;
 		},
-		initTracking(values) {
+		async initTracking(values) {
+			// Try to get country data from frontend geolocation service
+			if (typeof geolocationService !== 'undefined') {
+				try {
+					const countryData = await geolocationService.getCountry();
+					if (countryData) {
+						values.country_code = countryData.country_code;
+						values.country_name = countryData.country_name;
+					}
+				} catch (error) {
+					console.warn('Failed to get country data:', error);
+					// Continue with tracking even if geolocation fails
+				}
+			}
+
 			const form_data = new FormData();
 			form_data.append('action', 'betterlinks__js_analytics_tracking');
 			form_data.append('security', betterLinksApp.betterlinks_nonce);
