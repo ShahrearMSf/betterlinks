@@ -110,6 +110,7 @@ class Installer extends \WP_Background_Process
         $this->createBetterClicksTable();
         $this->createBetterLinkMetaTable();
         $this->createBetterLinkPasswordTable();
+        $this->createBetterLinksCountriesTable();
         // set plugin version in 'option table' if not already setted 
         // (i.e. when this plugin gets installed on a site for the very first time)
         if (!Helper::btl_get_option('betterlinks_version')) {
@@ -272,6 +273,11 @@ class Installer extends \WP_Background_Process
 
             if( version_compare( BETTERLINKS_DB_VERSION, '1.6.6', '>' ) ){
                 $this->modifyBetterLinksClicksTable2();
+            }
+
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.7', '>' ) ){
+                $this->createBetterLinksCountriesTable();
+                $this->modifyBetterLinksClicksTable3();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);

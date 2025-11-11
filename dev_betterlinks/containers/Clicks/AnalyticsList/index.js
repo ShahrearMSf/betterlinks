@@ -24,11 +24,18 @@ const AnalyticsList = (props) => {
 	return <DataList columns={newColumns} data={unique_list || []} progressPending={unique_list ? false : true} id={id} from={from} customDateFilter={customDateFilter} />;
 };
 
-const mapStateToProps = (state) => ({
-	settings: state.settings,
-	analytics: state.analytics,
-	clicks: state.clicks,
-});
+const mapStateToProps = (state) => {
+	// Get unique_list from Redux state if available, otherwise use prop
+	const reduxUniqueList = state.clicks?.unique_list;
+
+	return {
+		settings: state.settings,
+		analytics: state.analytics,
+		clicks: state.clicks,
+		// Pass unique_list from Redux so component re-renders when it updates
+		unique_list: reduxUniqueList,
+	};
+};
 const mapDispatchToProps = (dispatch) => ({
 	fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 	fetch_analytics_settings: bindActionCreators(fetch_analytics_settings, dispatch),

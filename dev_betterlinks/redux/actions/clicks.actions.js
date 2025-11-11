@@ -6,6 +6,7 @@ export const FETCH_INDIVIDUAL_CLICKS = 'FETCH_INDIVIDUAL_CLICKS';
 export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
 export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
 export const FETCH_MEDIUM_DATA = 'FETCH_MEDIUM_DATA';
+export const UPDATE_CLICKS_WITH_COUNTRY = 'UPDATE_CLICKS_WITH_COUNTRY';
 
 export const FETCH_UNIQUE_CLICKS_BY_TAGS = 'FETCH_UNIQUE_CLICKS_BY_TAGS';
 export const FETCH_ANALYTICS_GRAPH_BY_TAGS = 'FETCH_ANALYTICS_GRAPH_BY_TAGS';
@@ -230,5 +231,123 @@ export const fetchCustomClicksData = (data) => (dispatch) => {
 	dispatch({
 		type: FETCH_CLICKS_DATA,
 		payload: data,
+	});
+};
+
+export const delete_clicks = (params) => async (dispatch) => {
+	const { click_ids, link_id, from, to } = params;
+	try {
+		const deleteParams = {
+			click_ids: click_ids.join(','),
+			link_id: link_id,
+		};
+
+		// Include date range if provided
+		if (from) deleteParams.from = from;
+		if (to) deleteParams.to = to;
+
+		const res = await API.delete(namespace + 'clicks', {
+			params: deleteParams,
+		});
+
+		if (res?.data?.success) {
+			// Refresh the individual clicks data after deletion
+			dispatch({
+				type: FETCH_INDIVIDUAL_CLICKS,
+				payload: {
+					data: res.data?.data || {},
+					id: res.data?.id || link_id,
+				},
+			});
+
+			// Also refresh the main analytics graphs and data
+			if (from && to) {
+				dispatch(get_chart_data({ from, to }));
+				dispatch(get_graph_data({ from, to }));
+				dispatch(get_medium_data({ from, to }));
+				dispatch(fetch_clicks_data({ from, to }));
+			}
+		}
+	} catch (error) {
+		console.log('error deleting clicks: ' + error.message);
+	}
+};
+
+export const delete_links_analytics = (params) => async (dispatch) => {
+	const { link_ids, from, to } = params;
+	try {
+		const deleteParams = {
+			link_ids: link_ids.join(','),
+		};
+
+		// Include date range if provided
+		if (from) deleteParams.from = from;
+		if (to) deleteParams.to = to;
+
+		const res = await API.delete(namespace + 'clicks/delete_by_links/', {
+			params: deleteParams,
+		});
+
+		if (res?.data?.success) {
+			// Refresh the clicks data after deletion
+			dispatch({
+				type: FETCH_CLICKS_DATA,
+				payload: {
+					success: true,
+					data: res.data?.data || {},
+				},
+			});
+
+			// Also refresh the main analytics graphs and data
+			if (from && to) {
+				dispatch(get_chart_data({ from, to }));
+				dispatch(get_graph_data({ from, to }));
+				dispatch(get_medium_data({ from, to }));
+				dispatch(fetch_clicks_data({ from, to }));
+			}
+		}
+	} catch (error) {
+		console.log('error deleting links analytics: ' + error.message);
+	}
+};
+
+/**
+ * Update clicks data with country information
+ * This action updates the Redux store with country data without fetching from server
+ * Enables real-time UI update after bulk country fetch
+ */
+export const update_clicks_with_country = (updatedRows) => (dispatch, getState) => {
+	const state = getState();
+	const currentClicks = state.clicks?.unique_list || [];
+
+	// Create a map of updated rows by ID for quick lookup
+	const updatedMap = {};
+	updatedRows.forEach(row => {
+		updatedMap[row.ID] = row;
+	});
+
+	// Merge updated rows with existing clicks data, preserving all existing fields
+	const mergedClicks = currentClicks.map(click => {
+		if (updatedMap[click.ID]) {
+			// Merge: keep all existing fields from click, update only country fields
+			return {
+				...click,
+				country_code: updatedMap[click.ID].country_code,
+				country_name: updatedMap[click.ID].country_name
+			};
+		}
+		return click;
+	});
+
+	// Dispatch action to update Redux store
+	dispatch({
+		type: UPDATE_CLICKS_WITH_COUNTRY,
+		payload: {
+			data: {
+				unique_list: mergedClicks,
+				unique_count: state.clicks?.unique_count || 0,
+				analytic: state.clicks?.analytic || {}
+			}
+		}
 	});
 };

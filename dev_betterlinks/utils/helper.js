@@ -1,15 +1,17 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import _ from 'lodash';
+import _, { unset } from 'lodash';
 import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
 import { Badge, Tooltip } from '@material-ui/core';
+import { useState } from 'react';
 
 export const {
 	betterlinks_nonce,
 	nonce,
 	rest_url,
+	ajaxurl,
 	namespace,
 	plugin_root_url,
 	plugin_root_path,
@@ -476,6 +478,17 @@ export const getBrowser = (agent) => {
 	return browser;
 };
 
+export const getFlagEmoji = (countryCode) => {
+	if (!countryCode || countryCode.length !== 2) return '🌍';
+
+	const codePoints = countryCode
+		.toUpperCase()
+		.split('')
+		.map(char => 127397 + char.charCodeAt());
+
+	return String.fromCodePoint(...codePoints);
+};
+
 export const formatDate = (date = new Date(), format) => {
 	const map = {
 		mm: date.getMonth() + 1,
@@ -910,7 +923,297 @@ const ParameterItem = ({ type, item, style = {} }) => {
 	);
 };
 
-export const getColumns = (analytics, analyticsTab, id = null) => {
+/**
+ * CountryFetchCell Component
+ * Displays a button to fetch country data for existing clicks without country information
+ * When country is fetched, all clicks with the same IP within the same link are updated
+ */
+const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
+	const [loading, setLoading] = useState(false);
+	const [status, setStatus] = useState('idle'); // idle, loading, success, failed
+
+	const handleFetchCountry = async () => {
+		if (!row.ip) {
+			return;
+		}
+
+		setLoading(true);
+		setStatus('loading');
+
+		try {
+			// First, fetch country data from the API
+			const response = await fetch(
+				`${rest_url}betterlinks/v1/geolocation/fetch-by-ip?ip=${encodeURIComponent(row.ip)}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-WP-Nonce': nonce,
+					},
+				}
+			);
+
+			const data = await response.json();
+
+			if (data.success && data.data) {
+				// Now save the country data to the database via AJAX
+				// Use bulk update to update all clicks with the same IP within this link
+				const formData = new FormData();
+				formData.append('action', 'betterlinks/admin/update_clicks_country_by_ip');
+				formData.append('security', betterlinks_nonce);
+				formData.append('link_id', linkId);
+				formData.append('ip', row.ip);
+				formData.append('country_code', data.data.country_code);
+				formData.append('country_name', data.data.country_name);
+
+				const ajaxResponse = await fetch(ajaxurl, {
+					method: 'POST',
+					body: formData,
+				});
+
+				const ajaxData = await ajaxResponse.json();
+
+				if (ajaxData.success) {
+					setStatus('success');
+					// Update the row data
+					row.country_code = data.data.country_code;
+					row.country_name = data.data.country_name;
+
+					// Trigger callback to refresh table data
+					// The transient cache has been cleared on the backend, so fresh data will be fetched
+					if (onCountryUpdated) {
+						onCountryUpdated(row.ip, data.data);
+					}
+				} else {
+					setStatus('failed');
+				}
+			} else {
+				setStatus('failed');
+			}
+		} catch (error) {
+			console.error('Error fetching country:', error);
+			setStatus('failed');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getButtonContent = () => {
+		switch (status) {
+			case 'loading':
+				return __('Fetching...', 'betterlinks');
+			case 'success':
+				return countryData ? countryData.country_name : __('Fetched', 'betterlinks');
+			case 'failed':
+				return __('Failed', 'betterlinks');
+			default:
+				return <img width={18} height={18} src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'} alt="Refresh" />;
+		}
+	};
+
+	const getButtonStyle = () => {
+		let bgColor = '#fff';
+		let textColor = '#333';
+		let borderColor = '#ccc';
+
+		if (status === 'success') {
+			bgColor = '#d4edda';
+			textColor = '#155724';
+			borderColor = '#c3e6cb';
+		} else if (status === 'failed') {
+			bgColor = '#f8d7da';
+			textColor = '#721c24';
+			borderColor = '#f5c6cb';
+		}
+
+		const baseStyles = {
+			padding: '4px 8px',
+			fontSize: '12px',
+			borderRadius: '3px',
+			color: textColor,
+			border: 'unset',
+			backgroundColor: 'unset',
+			cursor: loading || status === 'success' ? 'not-allowed' : 'pointer',
+			opacity: loading || status === 'success' ? 0.7 : 1,
+			transition: 'all 0.3s ease',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+		};
+
+		// Add specific styles for the default state with icon
+		if (status === 'idle') {
+			return {
+				...baseStyles,
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				padding: '6px',
+			};
+		}
+
+		return {
+			...baseStyles,
+			maxWidth: '150px',
+		};
+	};
+
+	// Show country if row has country data
+	if (row.country_name && row.country_code) {
+		return (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+				<span style={{
+					fontSize: '16px',
+					lineHeight: '1'
+				}}>
+					{getFlagEmoji(row.country_code)}
+				</span>
+				<span title={row.country_name}>
+					{row.country_name}
+				</span>
+			</div>
+		);
+	}
+
+	return (
+		<button
+			className="btl-fetch-country-btn"
+			onClick={handleFetchCountry}
+			disabled={loading}
+			title={status === 'idle' ? __('Fetch Country', 'betterlinks') : row.ip}
+			style={getButtonStyle()}
+		>
+			{getButtonContent()}
+		</button>
+	);
+};
+
+/**
+ * Bulk fetch country data for multiple clicks
+ * Deduplicates IPs and calls API only once per unique IP
+ * Updates all clicks with the same IP within the same link
+ * Returns updated rows for real-time UI update
+ */
+export const bulkFetchCountry = async (selectedRows, linkId, onCountryUpdated) => {
+	if (!selectedRows || selectedRows.length === 0) {
+		return { success: false, message: __('No rows selected', 'betterlinks'), updatedRows: [] };
+	}
+
+	// Deduplicate IPs from selected rows
+	const uniqueIps = [...new Set(selectedRows.map(row => row.ip).filter(ip => ip))];
+
+	if (uniqueIps.length === 0) {
+		return { success: false, message: __('No valid IPs found in selected rows', 'betterlinks'), updatedRows: [] };
+	}
+
+	// Get unique IPs that need country data (don't have country_name yet)
+	const ipsNeedingCountry = [...new Set(
+		selectedRows
+			.filter(row => !row.country_name && row.ip)
+			.map(row => row.ip)
+	)];
+
+	if (ipsNeedingCountry.length === 0) {
+		return { success: false, message: __('All selected rows already have country data', 'betterlinks'), updatedRows: [] };
+	}
+
+	const results = {
+		success: true,
+		processed: 0,
+		updated: 0,
+		failed: 0,
+		message: '',
+		updatedRows: [],
+		countryMap: {} // Map of IP to country data for real-time UI update
+	};
+
+	try {
+		// Process each unique IP that needs country data
+		for (const ip of ipsNeedingCountry) {
+			try {
+				// Fetch country data from API
+				const response = await fetch(`${rest_url}betterlinks/v1/geolocation/fetch-by-ip?ip=${encodeURIComponent(ip)}`, {
+					method: 'GET',
+					headers: {
+						'X-WP-Nonce': nonce,
+					}
+				});
+
+				const data = await response.json();
+
+				if (data.success && data.data) {
+					// Save the country data to the database via AJAX
+					// Use bulk update to update all clicks with the same IP within this link
+					const formData = new FormData();
+					formData.append('action', 'betterlinks/admin/update_clicks_country_by_ip');
+					formData.append('security', betterlinks_nonce);
+					formData.append('link_id', linkId);
+					formData.append('ip', ip);
+					formData.append('country_code', data.data.country_code);
+					formData.append('country_name', data.data.country_name);
+
+					const ajaxResponse = await fetch(ajaxurl, {
+						method: 'POST',
+						body: formData,
+					});
+
+					const ajaxData = await ajaxResponse.json();
+
+					if (ajaxData.success) {
+						results.updated += ajaxData.data.updated_count || 1;
+						results.processed++;
+
+						// Store country data for real-time UI update
+						results.countryMap[ip] = {
+							country_code: data.data.country_code,
+							country_name: data.data.country_name
+						};
+					} else {
+						results.failed++;
+					}
+				} else {
+					results.failed++;
+				}
+			} catch (error) {
+				console.error('Error fetching country for IP:', ip, error);
+				results.failed++;
+			}
+
+			// Add a small delay to avoid overwhelming the API
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		results.message = `${__('Processed', 'betterlinks')} ${results.processed} ${__('IPs, updated', 'betterlinks')} ${results.updated} ${__('clicks', 'betterlinks')}, ${results.failed} ${__('failed', 'betterlinks')}`;
+
+		// Update selected rows with fetched country data for real-time UI update
+		results.updatedRows = selectedRows.map(row => {
+			if (results.countryMap[row.ip]) {
+				return {
+					...row,
+					country_code: results.countryMap[row.ip].country_code,
+					country_name: results.countryMap[row.ip].country_name
+				};
+			}
+			return row;
+		});
+
+		// Trigger callback to refresh table data
+		if (onCountryUpdated) {
+			onCountryUpdated(results.updatedRows);
+		}
+
+		return results;
+	} catch (error) {
+		console.error('Error in bulk fetch country:', error);
+		return {
+			success: false,
+			message: __('Error fetching country data', 'betterlinks'),
+			error: error.message
+		};
+	}
+};
+
+export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated = null) => {
 	if (!!id) {
 		const isProUpdated = pro_version_check('2.1.0');
 		const singleColumn = [
@@ -934,6 +1237,34 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				selector: 'ip',
 				sortable: false,
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+			},
+			{
+				name: __('Country', 'betterlinks'),
+				selector: 'country_name',
+				sortable: false,
+				width: '180px',
+				cell: (row) => {
+					if (row.country_name && row.country_code) {
+						return (
+							<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+								<span style={{
+									fontSize: '16px',
+									lineHeight: '1'
+								}}>
+									{getFlagEmoji(row.country_code)}
+								</span>
+								<span title={row.country_name}>
+									{row.country_name}
+								</span>
+							</div>
+						);
+					}
+					// Show fetch button for existing clicks without country data
+					if (row.ip && !row.country_name) {
+						return <CountryFetchCell row={row} linkId={id} onCountryUpdated={onCountryUpdated} />;
+					}
+					return <div>-</div>;
+				},
 			},
 			{
 				name: __('Timestamp', 'betterlinks'),
@@ -1105,6 +1436,10 @@ export const analyticsColumnData = [
 	{
 		name: __('IP', 'betterlinks'),
 		selector: 'ip',
+	},
+	{
+		name: __('Country', 'betterlinks'),
+		selector: 'country_name',
 	},
 	{
 		name: __('Timestamp', 'betterlinks'),

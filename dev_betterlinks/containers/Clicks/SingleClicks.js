@@ -52,7 +52,18 @@ const SingleClicks = (props) => {
 		props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading });
 	}, [id]);
 
-	const columns = useCallback(getColumns(analytics, analyticsTab, id), [analytics]);
+	const handleCountryUpdated = useCallback((ip, countryData) => {
+		// Refresh the individual clicks data after country is updated
+		const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
+		const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
+		const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');
+		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
+		pastDate = from || formatDate(pastDate, 'yyyy-mm-dd');
+
+		props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading });
+	}, [id, customDateFilter, props]);
+
+	const columns = useCallback(getColumns(analytics, analyticsTab, id, handleCountryUpdated), [analytics, analyticsTab, id, handleCountryUpdated]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
 	const uniqueIpCount = [...new Set(individual_clicks?.[id]?.analytics.map((item) => item.ip))].length;
@@ -77,7 +88,7 @@ const SingleClicks = (props) => {
 			/>
 			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
 			<div className="btl-analytic-table-wrapper btl-analytic-table-wrapper-single-clicks">
-				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} />
+				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} customDateFilter={customDateFilter} />
 			</div>
 		</div>
 	);

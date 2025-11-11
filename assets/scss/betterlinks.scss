@@ -1530,3 +1530,11 @@ button.rdrStaticRange {
     background-color: #ffffff;
     width: 600px;
 }
+//common style classes
+.betterlinks-body {
+	.btl-flex {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+}

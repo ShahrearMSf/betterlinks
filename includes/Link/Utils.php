@@ -168,6 +168,24 @@ class Utils {
 			$IP                 = $this->get_current_client_IP();
 			$click_data['ip']   = $IP;
 			$click_data['host'] = $IP;
+
+			// Check if country data was provided from frontend geolocation
+			$has_frontend_country = isset( $data['country_code'] ) && isset( $data['country_name'] );
+
+			if ( $has_frontend_country ) {
+				// Use country data from frontend geolocation
+				$click_data['country_code'] = $data['country_code'];
+				$click_data['country_name'] = $data['country_name'];
+			} else {
+				// Fallback to server-side detection if frontend didn't provide country data
+				if ( class_exists( '\BetterLinks\Services\CountryDetectionService' ) ) {
+					$country_data = \BetterLinks\Services\CountryDetectionService::get_country_by_ip( $IP );
+					if ( $country_data ) {
+						$click_data['country_code'] = $country_data['country_code'];
+						$click_data['country_name'] = $country_data['country_name'];
+					}
+				}
+			}
 		}
 
 		if ( apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false ) ) {
