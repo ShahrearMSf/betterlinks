@@ -6,6 +6,7 @@ export const FETCH_INDIVIDUAL_CLICKS = 'FETCH_INDIVIDUAL_CLICKS';
 export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
 export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
 export const FETCH_MEDIUM_DATA = 'FETCH_MEDIUM_DATA';
+export const UPDATE_CLICKS_WITH_COUNTRY = 'UPDATE_CLICKS_WITH_COUNTRY';
 
 export const FETCH_UNIQUE_CLICKS_BY_TAGS = 'FETCH_UNIQUE_CLICKS_BY_TAGS';
 export const FETCH_ANALYTICS_GRAPH_BY_TAGS = 'FETCH_ANALYTICS_GRAPH_BY_TAGS';
@@ -308,4 +309,45 @@ export const delete_links_analytics = (params) => async (dispatch) => {
 	} catch (error) {
 		console.log('error deleting links analytics: ' + error.message);
 	}
+};
+
+/**
+ * Update clicks data with country information
+ * This action updates the Redux store with country data without fetching from server
+ * Enables real-time UI update after bulk country fetch
+ */
+export const update_clicks_with_country = (updatedRows) => (dispatch, getState) => {
+	const state = getState();
+	const currentClicks = state.clicks?.unique_list || [];
+
+	// Create a map of updated rows by ID for quick lookup
+	const updatedMap = {};
+	updatedRows.forEach(row => {
+		updatedMap[row.ID] = row;
+	});
+
+	// Merge updated rows with existing clicks data, preserving all existing fields
+	const mergedClicks = currentClicks.map(click => {
+		if (updatedMap[click.ID]) {
+			// Merge: keep all existing fields from click, update only country fields
+			return {
+				...click,
+				country_code: updatedMap[click.ID].country_code,
+				country_name: updatedMap[click.ID].country_name
+			};
+		}
+		return click;
+	});
+
+	// Dispatch action to update Redux store
+	dispatch({
+		type: UPDATE_CLICKS_WITH_COUNTRY,
+		payload: {
+			data: {
+				unique_list: mergedClicks,
+				unique_count: state.clicks?.unique_count || 0,
+				analytic: state.clicks?.analytic || {}
+			}
+		}
+	});
 };

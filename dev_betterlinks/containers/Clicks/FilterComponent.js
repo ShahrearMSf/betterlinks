@@ -61,7 +61,10 @@ const FilterComponent = (props) => {
 								classNamePrefix="btl-react-select"
 								defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
 								value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
-								options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
+								options={[
+									{ value: 'delete', label: __('Delete', 'betterlinks') },
+									...(id ? [{ value: 'fetch_country', label: __('Fetch Country', 'betterlinks') }] : []),
+								]}
 								onChange={(e) => setBulkAction(e)}
 							/>
 							<div className="btl-tooltip">
@@ -73,7 +76,7 @@ const FilterComponent = (props) => {
 								>
 									{__('Apply', 'betterlinks')}
 								</button>
-								{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
+								{warning && bulkAction.value !== 'delete' && bulkAction.value !== 'fetch_country' && <span className="btl-tooltiptext">Please Select Action.</span>}
 							</div>
 						</div>
 					)}

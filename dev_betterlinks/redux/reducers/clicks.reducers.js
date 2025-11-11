@@ -6,6 +6,7 @@ import {
 	FETCH_INDIVIDUAL_CLICKS,
 	FETCH_MEDIUM_DATA,
 	FETCH_UNIQUE_CLICKS_BY_TAGS,
+	UPDATE_CLICKS_WITH_COUNTRY,
 } from 'redux/actions/clicks.actions';
 
 function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
@@ -113,6 +114,16 @@ function clicks(state = { individual_clicks: {} }, action) {
 			return {
 				...state,
 				tag_graphs: tag_graphs,
+			};
+		}
+		case UPDATE_CLICKS_WITH_COUNTRY: {
+			const { unique_list, unique_count, analytic } = payload.data;
+			const newClicksData = get_parsed_clicks_list(unique_list || [], 'all', analytic || null);
+
+			return {
+				...state,
+				unique_list: newClicksData,
+				unique_count: unique_count,
 			};
 		}
 		default:

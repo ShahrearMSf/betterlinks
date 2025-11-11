@@ -864,6 +864,131 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 	);
 };
 
+/**
+ * Bulk fetch country data for multiple clicks
+ * Deduplicates IPs and calls API only once per unique IP
+ * Updates all clicks with the same IP within the same link
+ * Returns updated rows for real-time UI update
+ */
+export const bulkFetchCountry = async (selectedRows, linkId, onCountryUpdated) => {
+	if (!selectedRows || selectedRows.length === 0) {
+		return { success: false, message: __('No rows selected', 'betterlinks'), updatedRows: [] };
+	}
+
+	// Deduplicate IPs from selected rows
+	const uniqueIps = [...new Set(selectedRows.map(row => row.ip).filter(ip => ip))];
+
+	if (uniqueIps.length === 0) {
+		return { success: false, message: __('No valid IPs found in selected rows', 'betterlinks'), updatedRows: [] };
+	}
+
+	// Get unique IPs that need country data (don't have country_name yet)
+	const ipsNeedingCountry = [...new Set(
+		selectedRows
+			.filter(row => !row.country_name && row.ip)
+			.map(row => row.ip)
+	)];
+
+	if (ipsNeedingCountry.length === 0) {
+		return { success: false, message: __('All selected rows already have country data', 'betterlinks'), updatedRows: [] };
+	}
+
+	const results = {
+		success: true,
+		processed: 0,
+		updated: 0,
+		failed: 0,
+		message: '',
+		updatedRows: [],
+		countryMap: {} // Map of IP to country data for real-time UI update
+	};
+
+	try {
+		// Process each unique IP that needs country data
+		for (const ip of ipsNeedingCountry) {
+			try {
+				// Fetch country data from API
+				const response = await fetch(`${rest_url}betterlinks/v1/geolocation/fetch-by-ip?ip=${encodeURIComponent(ip)}`, {
+					method: 'GET',
+					headers: {
+						'X-WP-Nonce': nonce,
+					}
+				});
+
+				const data = await response.json();
+
+				if (data.success && data.data) {
+					// Save the country data to the database via AJAX
+					// Use bulk update to update all clicks with the same IP within this link
+					const formData = new FormData();
+					formData.append('action', 'betterlinks/admin/update_clicks_country_by_ip');
+					formData.append('security', betterlinks_nonce);
+					formData.append('link_id', linkId);
+					formData.append('ip', ip);
+					formData.append('country_code', data.data.country_code);
+					formData.append('country_name', data.data.country_name);
+
+					const ajaxResponse = await fetch(ajaxurl, {
+						method: 'POST',
+						body: formData,
+					});
+
+					const ajaxData = await ajaxResponse.json();
+
+					if (ajaxData.success) {
+						results.updated += ajaxData.data.updated_count || 1;
+						results.processed++;
+
+						// Store country data for real-time UI update
+						results.countryMap[ip] = {
+							country_code: data.data.country_code,
+							country_name: data.data.country_name
+						};
+					} else {
+						results.failed++;
+					}
+				} else {
+					results.failed++;
+				}
+			} catch (error) {
+				console.error('Error fetching country for IP:', ip, error);
+				results.failed++;
+			}
+
+			// Add a small delay to avoid overwhelming the API
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		results.message = `${__('Processed', 'betterlinks')} ${results.processed} ${__('IPs, updated', 'betterlinks')} ${results.updated} ${__('clicks', 'betterlinks')}, ${results.failed} ${__('failed', 'betterlinks')}`;
+
+		// Update selected rows with fetched country data for real-time UI update
+		results.updatedRows = selectedRows.map(row => {
+			if (results.countryMap[row.ip]) {
+				return {
+					...row,
+					country_code: results.countryMap[row.ip].country_code,
+					country_name: results.countryMap[row.ip].country_name
+				};
+			}
+			return row;
+		});
+
+		// Trigger callback to refresh table data
+		if (onCountryUpdated) {
+			onCountryUpdated(results.updatedRows);
+		}
+
+		return results;
+	} catch (error) {
+		console.error('Error in bulk fetch country:', error);
+		return {
+			success: false,
+			message: __('Error fetching country data', 'betterlinks'),
+			error: error.message
+		};
+	}
+};
+
 export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated = null) => {
 	if (!!id) {
 		const isProUpdated = pro_version_check('2.1.0');
