@@ -232,3 +232,80 @@ export const fetchCustomClicksData = (data) => (dispatch) => {
 		payload: data,
 	});
 };
+
+export const delete_clicks = (params) => async (dispatch) => {
+	const { click_ids, link_id, from, to } = params;
+	try {
+		const deleteParams = {
+			click_ids: click_ids.join(','),
+			link_id: link_id,
+		};
+
+		// Include date range if provided
+		if (from) deleteParams.from = from;
+		if (to) deleteParams.to = to;
+
+		const res = await API.delete(namespace + 'clicks', {
+			params: deleteParams,
+		});
+
+		if (res?.data?.success) {
+			// Refresh the individual clicks data after deletion
+			dispatch({
+				type: FETCH_INDIVIDUAL_CLICKS,
+				payload: {
+					data: res.data?.data || {},
+					id: res.data?.id || link_id,
+				},
+			});
+
+			// Also refresh the main analytics graphs and data
+			if (from && to) {
+				dispatch(get_chart_data({ from, to }));
+				dispatch(get_graph_data({ from, to }));
+				dispatch(get_medium_data({ from, to }));
+				dispatch(fetch_clicks_data({ from, to }));
+			}
+		}
+	} catch (error) {
+		console.log('error deleting clicks: ' + error.message);
+	}
+};
+
+export const delete_links_analytics = (params) => async (dispatch) => {
+	const { link_ids, from, to } = params;
+	try {
+		const deleteParams = {
+			link_ids: link_ids.join(','),
+		};
+
+		// Include date range if provided
+		if (from) deleteParams.from = from;
+		if (to) deleteParams.to = to;
+
+		const res = await API.delete(namespace + 'clicks/delete_by_links/', {
+			params: deleteParams,
+		});
+
+		if (res?.data?.success) {
+			// Refresh the clicks data after deletion
+			dispatch({
+				type: FETCH_CLICKS_DATA,
+				payload: {
+					success: true,
+					data: res.data?.data || {},
+				},
+			});
+
+			// Also refresh the main analytics graphs and data
+			if (from && to) {
+				dispatch(get_chart_data({ from, to }));
+				dispatch(get_graph_data({ from, to }));
+				dispatch(get_medium_data({ from, to }));
+				dispatch(fetch_clicks_data({ from, to }));
+			}
+		}
+	} catch (error) {
+		console.log('error deleting links analytics: ' + error.message);
+	}
+};

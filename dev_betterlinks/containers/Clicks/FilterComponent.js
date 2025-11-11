@@ -5,9 +5,10 @@ import { MultiSelect } from 'react-multi-select-component';
 import { useEffect } from 'react';
 import ProBadge from 'components/Badge/ProBadge';
 import { is_pro_enabled } from 'utils/helper';
+import Select from 'react-select';
 
 const FilterComponent = (props) => {
-	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id } = props;
+	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id, selectedRows, bulkAction, setBulkAction, rowDeleteHandler, warning } = props;
 	const [selectedValues, setSelectedValues] = useState([]);
 	useEffect(() => {
 		setSelectedValues(Object.values(analytics || []));
@@ -39,19 +40,44 @@ const FilterComponent = (props) => {
 	return (
 		<>
 			<div className="btl-click-filter">
-				<div style={{ display: 'flex', alignItems: 'center' }}>
-					{id && (
-						<a
-							className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
-							onClick={() => {
-								window.history.go(-1);
-								return false;
-							}}
-							href="#"
-						/>
+				<div className='btl-flex'>
+					<div style={{ display: 'flex', alignItems: 'center' }}>
+						{id && (
+							<a
+								className="btl-go-back-btn dashicons dashicons-arrow-left-alt"
+								onClick={() => {
+									window.history.go(-1);
+									return false;
+								}}
+								href="#"
+							/>
+						)}
+					</div>
+
+					{selectedRows && selectedRows.length > 0 && (
+						<div className="btl-bulk-actions">
+							<Select
+								className="btl-list-view-select"
+								classNamePrefix="btl-react-select"
+								defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
+								value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
+								options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
+								onChange={(e) => setBulkAction(e)}
+							/>
+							<div className="btl-tooltip">
+								<button
+									className="btl-link-apply-button"
+									onClick={() => {
+										rowDeleteHandler();
+									}}
+								>
+									{__('Apply', 'betterlinks')}
+								</button>
+								{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
+							</div>
+						</div>
 					)}
 				</div>
-
 				<div style={{ display: 'flex' }}>
 					<form onSubmit={searchClickHandler}>
 						<input id="search" type="text" placeholder={__('Search...', 'betterlinks')} value={filterText} onChange={onFilter} />

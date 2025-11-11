@@ -88,7 +88,7 @@ const SingleClicks = (props) => {
 			/>
 			{id && <SingleLinkDetails clicks={individual_clicks?.[id]?.link_details ? individual_clicks?.[id]?.link_details : { link_title: null, short_url: null, target_url: null }} />}
 			<div className="btl-analytic-table-wrapper btl-analytic-table-wrapper-single-clicks">
-				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} />
+				<DataList id={id} columns={newColumns} data={individual_clicks?.[id]?.analytics || []} progressPending={individual_clicks?.[id]?.analytics ? false : true} customDateFilter={customDateFilter} />
 			</div>
 		</div>
 	);

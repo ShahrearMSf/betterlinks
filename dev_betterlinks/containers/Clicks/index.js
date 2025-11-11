@@ -39,10 +39,16 @@ const Clicks = (props) => {
 			props.fetch_clicks_data({ from: pastDate, to: currentDate, setLoading });
 		}
 	}, [clicks]);
+
+	// Re-render Graph component when any analytics data changes
+	useEffect(() => {
+		// This effect ensures the Graph component re-renders when data updates
+	}, [clicks, unique_list, unique_count, top_referer, devices, os, browser, medium]);
 	return (
 		<div className="btl-analytic">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<Graph
+				key={`graph-${unique_count}-${top_referer?.length || 0}`}
 				data={analyticsData(clicks || { total_count: [], unique_count: [] })}
 				uniqueIpCount={unique_count}
 				customDateFilter={customDateFilter}
