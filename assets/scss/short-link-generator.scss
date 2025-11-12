@@ -563,9 +563,11 @@ body.betterlinks-dark-mode {
 /* Checkbox Field */
 .btl-bulk-checkbox-field {
     display: flex;
-    align-items: center;
     gap: 8px;
     margin-bottom: 4px;
+    .btl-tooltip span.dashicons.dashicons-info-outline {
+        margin-top: -3px;
+    }
 }
 
 .btl-bulk-checkbox-field input[type="checkbox"] {
@@ -1331,6 +1333,7 @@ body.betterlinks-dark-mode {
     font-size: 16px;
     line-height: 130%;
     color: #1D2939;
+    margin-bottom: 8px;
 }
 
 .btl-progress-subtitle {
@@ -1914,9 +1917,9 @@ body.betterlinks-dark-mode {
 }
 
 .btl-progress-content-main .btl-progress-subtitle {
-    font-size: 16px;
+    font-size: 12px;
     color: #6B7280;
-    margin: 0 0 16px 0;
+    margin: 0 0 24px 0;
     line-height: 1.5;
 }
 
@@ -2143,7 +2146,6 @@ body.betterlinks-dark-mode {
 
 .btl-completion-content-main {
     margin-top: 16px;
-    margin-bottom: 16px;
 }
 
 .btl-completion-content-main .btl-completion-title {
@@ -2158,6 +2160,7 @@ body.betterlinks-dark-mode {
     font-size: 12px;
     line-height: 120%;
     color: #788597;
+    margin-top: 8px;
 }
 
 .btl-completion-time {

@@ -509,12 +509,37 @@ class ShortLinkGenerator
             }
 
             // Filter out posts with existing links if not including them
+            $original_post_count = count($post_ids);
             if (!$filters['include_existing']) {
                 $post_ids = $this->filter_posts_without_existing_links($post_ids);
             }
 
             if (empty($post_ids)) {
-                wp_send_json_error(['message' => __('All posts already have short links. Enable "Include existing" to regenerate them.', 'betterlinks')]);
+                // All posts already have links - show completed state instead of error
+                update_option('betterlinks_bulk_generation_status', [
+                    'status' => 'completed',
+                    'started_at' => current_time('mysql'),
+                    'completed_at' => current_time('mysql'),
+                    'total' => $original_post_count,
+                    'processed' => $original_post_count,
+                    'successful' => 0,
+                    'failed' => 0,
+                    'skipped' => $original_post_count,
+                    'progress_percent' => 100,
+                    'errors' => []
+                ]);
+
+                // Store empty report data
+                update_option('betterlinks_bulk_generation_report', []);
+
+                wp_send_json_success([
+                    'message' => sprintf(__('All %d posts already have short links.', 'betterlinks'), $original_post_count),
+                    'queued' => 0,
+                    'successful' => 0,
+                    'failed' => 0,
+                    'skipped' => $original_post_count,
+                    'all_exist' => true
+                ]);
                 return;
             }
 

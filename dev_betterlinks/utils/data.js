@@ -71,7 +71,7 @@ export const tabList = [
 		type: 'free',
 	},
 	{
-		label: __('Short Link Generator', 'betterlinks'),
+		label: __('Auto Post Link Generator', 'betterlinks'),
 		type: 'pro',
 	},
 	{
