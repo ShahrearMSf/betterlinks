@@ -1215,7 +1215,7 @@ export const bulkFetchCountry = async (selectedRows, linkId, onCountryUpdated) =
 
 export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated = null) => {
 	if (!!id) {
-		const isProUpdated = pro_version_check('2.1.0');
+		const isProUpdated = pro_version_check('2.4.1');
 		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
@@ -1239,11 +1239,24 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
 			{
-				name: __('Country', 'betterlinks'),
+				name: (
+					<>
+						{__('Country', 'betterlinks')}
+						{!is_pro_enabled && <ProBadge />}
+						{!isProUpdated && (
+							<Tooltip arrow title="To use Country Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.4.1 installed & activated" placement="top">
+								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
+							</Tooltip>
+						)}
+					</>
+				),
 				selector: 'country_name',
 				sortable: false,
 				width: '180px',
 				cell: (row) => {
+					if (!is_pro_enabled) {
+						return;
+					}
 					if (row.country_name && row.country_code) {
 						return (
 							<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>

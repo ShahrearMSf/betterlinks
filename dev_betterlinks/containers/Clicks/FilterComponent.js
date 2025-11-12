@@ -17,7 +17,14 @@ const FilterComponent = (props) => {
 	const options = [
 		{ label: __('Browser', 'betterlinks'), value: 'browser' },
 		{ label: __('IP', 'betterlinks'), value: 'ip' },
-		{ label: __('Country', 'betterlinks'), value: 'country_name' },
+		{
+			label: (
+				<div>
+					{__('Country', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+				</div>
+			),
+			value: 'country_name',
+		},
 		{ label: __('Timestamp', 'betterlinks'), value: 'created_at' },
 		{ label: __('Referer', 'betterlinks'), value: 'referer' },
 		{
