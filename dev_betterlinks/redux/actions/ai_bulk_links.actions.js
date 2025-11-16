@@ -59,6 +59,7 @@ export const update_ai_settings = (settings) => async (dispatch) => {
 
 /**
  * Process URLs with AI to generate links
+ * Process one URL at a time to show realistic progress
  */
 export const process_urls_with_ai = (urls, prompt, options = {}) => async (dispatch) => {
 	try {
@@ -66,34 +67,57 @@ export const process_urls_with_ai = (urls, prompt, options = {}) => async (dispa
 			type: SET_AI_PROCESSING,
 			payload: {
 				isProcessing: true,
-				currentStep: 0,
+				currentIndex: 0,
 				totalUrls: urls.length,
 			},
 		});
 
-		const res = await API.post(namespace + 'ai-process-links', {
-			params: {
-				urls,
-				prompt,
-				...options,
-			},
-		});
+		const allGeneratedLinks = [];
 
-		if (res.data.success) {
-			dispatch({
-				type: SET_AI_GENERATED_LINKS,
-				payload: res.data.data,
-			});
+		// Process URLs one at a time to show realistic progress
+		for (let i = 0; i < urls.length; i++) {
+			const currentUrl = urls[i];
+			
+			// Update progress for current URL
 			dispatch({
 				type: SET_AI_PROCESSING,
 				payload: {
-					isProcessing: false,
-					currentStep: 4,
+					isProcessing: true,
+					currentIndex: i + 1,
 					totalUrls: urls.length,
 				},
 			});
-			return res.data;
+
+			// Process single URL
+			const res = await API.post(namespace + 'ai-process-links', {
+				params: {
+					urls: [currentUrl], // Send only one URL at a time
+					prompt,
+					...options,
+				},
+			});
+
+			if (res.data.success && res.data.data && res.data.data.length > 0) {
+				allGeneratedLinks.push(...res.data.data);
+			}
 		}
+
+		// All URLs processed successfully
+		dispatch({
+			type: SET_AI_GENERATED_LINKS,
+			payload: allGeneratedLinks,
+		});
+		
+		dispatch({
+			type: SET_AI_PROCESSING,
+			payload: {
+				isProcessing: false,
+				currentIndex: urls.length,
+				totalUrls: urls.length,
+			},
+		});
+
+		return { success: true, data: allGeneratedLinks };
 	} catch (e) {
 		console.error('Error processing URLs with AI:', e);
 		dispatch({

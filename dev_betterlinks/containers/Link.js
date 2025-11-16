@@ -428,13 +428,14 @@ export const Link = (props) => {
 					</button>
 					{
 						! isShowIcon && (
-							<button
+							<div class="btl-ai-button-wrapper"
 								onClick={() => setIsAIBulkLinkOpen(true)}
-								className="btl-ai-bulk-link-button"
-								title={__('Add Bulk Links With AI', 'betterlinks')}
 							>
-								{__('Add Bulk Link With AI', 'betterlinks')}
-							</button>
+								<button class="btl-ai-button">
+									<img src={plugin_root_url + '/assets/images/icons/ai-btn-icon.svg'} alt="AI Icon" />
+									<span>Add link with AI</span>
+								</button>
+							</div>
 						)
 					}
 				</>

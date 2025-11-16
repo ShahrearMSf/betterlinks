@@ -16,6 +16,11 @@
 		padding: 30px 20px 15px 20px !important;
 	}
 
+	// Remove padding for AI modal
+	&.btl-ai-bulk-link-modal {
+		padding: 0 !important;
+	}
+
 	& {
 		width: 60%;
 		max-height: 100vh;

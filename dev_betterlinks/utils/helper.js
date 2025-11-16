@@ -190,11 +190,12 @@ export const modalCustomStyles = {
 		left: '50%',
 		right: 'auto',
 		bottom: 'auto',
-		maxWidth: '850px',
+		maxWidth: '800px',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -43%)',
 		position: 'absolute',
 		background: '#ffffff',
+		borderRadius: '8px',
 	},
 };
 

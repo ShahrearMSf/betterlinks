@@ -15,7 +15,7 @@ const initialState = {
 	},
 	processing: {
 		isProcessing: false,
-		currentStep: 0,
+		currentIndex: 0,
 		totalUrls: 0,
 		stepMessage: '',
 		error: null,
