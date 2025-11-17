@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Formik, Form, Field } from 'formik';
-import { API, delayStatusChanged } from 'utils/helper';
+import { API, delayStatusChanged, plugin_root_url } from 'utils/helper';
 import Select from '../Select';
 
 const AISettings = () => {
@@ -83,7 +83,7 @@ const AISettings = () => {
 
 	return (
 		<div className="btl-ai-settings">
-			<div style={{ marginBottom: '30px' }}>
+			<div style={{ marginBottom: '30px', borderBottom: '1px solid #DEE1E9' }}>
 				<h3 style={{ margin: '0 0 20px 0', fontSize: '20px', fontWeight: '600' }}>
 					{__('AI Configuration', 'betterlinks')}
 				</h3>
@@ -200,13 +200,13 @@ const AISettings = () => {
 						)}
 
 						{/* How to get API Key Section */}
-						<div style={{ marginBottom: '30px', padding: '16px', background: '#f5f5f5', borderRadius: '6px' }}>
+						<div style={{ marginBottom: '30px', padding: '16px', background: '#F9FAFB', borderRadius: '6px', borderRadius: '8px' }}>
 							<div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-								<div style={{ fontSize: '20px', marginTop: '2px' }}>ℹ️</div>
-								<div>
-									<h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#333' }}>
+								<div style={{ padding: '24px' }}>
+									<div style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#333', display: 'flex', alignItems: 'center', gap: '8px' }}>
+										<img width="20" height="20" src={plugin_root_url + '/assets/images/icons/ai-api-icon.svg'} alt="Target" />
 										{__('How to get API Key', 'betterlinks')}
-									</h4>
+									</div>
 									<div style={{ fontSize: '13px', color: '#666', lineHeight: '1.6' }}>
 										<div style={{ marginBottom: '8px' }}>
 											<strong>{__('Open AI:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
