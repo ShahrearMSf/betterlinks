@@ -205,7 +205,7 @@ class Notice {
 				'refresh'     => BETTERLINKS_VERSION,
 				'dismissible' => true,
 				'do_action'   => 'wpdeveloper_notice_clicked_for_betterlinks',
-				'display_if'  => ! is_array( $notices->is_installed( 'betterlinks-pro/betterlinks-pro.php' ) )
+				'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
 			]
 		);
 
@@ -226,10 +226,30 @@ class Notice {
 				'dismissible' => true,
 				'refresh'     => BETTERLINKS_VERSION,
 				"expire"      => strtotime( '11:59:59pm 10th January, 2025' ),
-				'display_if'  => ! is_array( $notices->is_installed( 'betterlinks-pro/betterlinks-pro.php' ) )
+				'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
 			]
 		);
 
+		// Black Friday Mega Sale Notice
+        $black_friday_icon = self::ASSET_URL . 'images/full-logo.svg';
+		$black_friday_message = "<style>#wpnotice-betterlinks-betterlinks_black_friday_2025 { border-left: 3px solid #E1ADEE !important; } .notice-betterlinks-betterlinks_black_friday_2025 { border-left: 4px solid #FF6B6B !important; }</style><div> <p style='margin-top: 0; margin-bottom: 10px; font-size: 14px;'> <strong>Black Friday Mega Sale:</strong> Manage, Shorten & Track Every Click - Smarter, Faster And Easier - Now <strong> Up To $160 OFF! </strong>🎁 </p><a style='display: inline-flex;align-items:center;column-gap:5px; background: #3B4045; color: #FFFFFF; font-size: 14px;' class='button button-primary' href='https://betterlinks.io/bfcm2025-admin-notice' target='_blank'>Upgrade To PRO</a><a style='display: inline-flex;align-items:center;column-gap:5px;margin-left:10px; background: unset; box-shadow: unset; border-style: unset; color: #424242; font-size: 14px; text-decoration: underline;' class='button dismiss-btn' href='#' data-dismiss='true'>I'll Grab It Later</a> </div>";
+
+        $_black_friday_notices = [
+            'thumbnail' => $black_friday_icon,
+            'html'      => $black_friday_message,
+        ];
+        $notices->add(
+            'betterlinks_black_friday_2025',
+            $_black_friday_notices,
+            [
+                'start'       => strtotime( '11:59:59pm 16th November, 2025' ),
+                'recurrence'  => false,
+                'dismissible' => true,
+                'refresh'     => BETTERLINKS_VERSION,
+                "expire"      => strtotime('11:59:59pm 4th December, 2025'),
+    			'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
+            ]
+        );
 		self::$cache_bank->create_account( $notices );
 		self::$cache_bank->calculate_deposits( $notices );
 
