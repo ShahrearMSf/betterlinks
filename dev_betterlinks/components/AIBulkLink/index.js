@@ -15,6 +15,7 @@ import '../../../assets/scss/components/_ai_generate_links.scss';
 import InitialState from './InitialState';
 import ProcessingState from './ProcessingState';
 import PreviewState from './PreviewState';
+import PublishingState from './PublishingState';
 
 const AIBulkLink = ({
 	isOpen,
@@ -35,6 +36,7 @@ const AIBulkLink = ({
 	const [prompt, setPrompt] = useState('');
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const [isPublishing, setIsPublishing] = useState(false);
 
 	// Generate default prompt (always includes all features)
 	useEffect(() => {
@@ -88,10 +90,19 @@ const AIBulkLink = ({
 	const handlePublish = async () => {
 		setError('');
 		setSuccess('');
+		setIsPublishing(true);
+
+		// Show publishing state for at least 3 seconds
+		const minDisplayTime = new Promise(resolve => setTimeout(resolve, 3000));
 
 		try {
-			const result = await publish_ai_generated_links(aiState.generatedLinks);
+			const [result] = await Promise.all([
+				publish_ai_generated_links(aiState.generatedLinks),
+				minDisplayTime
+			]);
+			
 			if (result.success) {
+				setIsPublishing(false);
 				setSuccess(__('Links published successfully!', 'betterlinks'));
 				setTimeout(() => {
 					reset_ai_state();
@@ -101,6 +112,7 @@ const AIBulkLink = ({
 				}, 1500);
 			}
 		} catch (err) {
+			setIsPublishing(false);
 			setError(__('Error publishing links. Please try again.', 'betterlinks'));
 		}
 	};
@@ -111,13 +123,14 @@ const AIBulkLink = ({
 		setPrompt('');
 		setError('');
 		setSuccess('');
+		setIsPublishing(false);
 		onClose();
 	};
 
 	const isProcessing = aiState?.processing?.isProcessing;
 	const generatedLinks = aiState?.generatedLinks || [];
 	const hasGeneratedLinks = generatedLinks.length > 0;
-	
+
 	// Check if URLs field is empty or only contains whitespace
 	const isUrlsEmpty = !urls.trim();
 
@@ -157,13 +170,13 @@ const AIBulkLink = ({
           </div>
 
 			{/* Error/Success Messages */}
-			{error && <div className="btl-ai-error-message">{error}</div>}
-			{success && <div className="btl-ai-success-message">{success}</div>}
+			{/* {error && <div className="btl-ai-error-message">{error}</div>}
+			{success && <div className="btl-ai-success-message">{success}</div>} */}
 
 			{/* Main Content */}
 			<div className="btl-ai-content">
 				{/* Initial State */}
-				{!isProcessing && !hasGeneratedLinks && (
+				{!isProcessing && !hasGeneratedLinks && !isPublishing && (
 					<InitialState
 						urls={urls}
 						setUrls={setUrls}
@@ -183,10 +196,13 @@ const AIBulkLink = ({
 				)}
 
 				{/* Processing State */}
-				{isProcessing && <ProcessingState aiState={aiState} />}
+				{isProcessing && !isPublishing && <ProcessingState aiState={aiState} />}
+
+				{/* Publishing State */}
+				{isPublishing && <PublishingState />}
 
 				{/* Preview State */}
-				{hasGeneratedLinks && !isProcessing && (
+				{hasGeneratedLinks && !isProcessing && !isPublishing && (
 					<>
 						<PreviewState generatedLinks={generatedLinks} />
 						
@@ -203,7 +219,7 @@ const AIBulkLink = ({
 							<button
 								className="btl-ai-btn-generate"
 								onClick={handlePublish}
-								disabled={isProcessing}
+								disabled={isProcessing || isPublishing}
 							>
 								{__('Publish All Links', 'betterlinks')}
 							</button>

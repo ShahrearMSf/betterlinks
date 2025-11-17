@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Formik, Form, Field } from 'formik';
 import { API, delayStatusChanged } from 'utils/helper';
+import Select from '../Select';
 
 const AISettings = () => {
 	const [initialValues, setInitialValues] = useState({
@@ -82,11 +83,10 @@ const AISettings = () => {
 
 	return (
 		<div className="btl-ai-settings">
-			<div style={{ marginBottom: '20px' }}>
-				<h3>{__('AI Configuration', 'betterlinks')}</h3>
-				<p style={{ color: '#666', fontSize: '14px' }}>
-					{__('Configure your AI API keys for the bulk link generation feature.', 'betterlinks')}
-				</p>
+			<div style={{ marginBottom: '30px' }}>
+				<h3 style={{ margin: '0 0 20px 0', fontSize: '20px', fontWeight: '600' }}>
+					{__('AI Configuration', 'betterlinks')}
+				</h3>
 			</div>
 
 			{message && (
@@ -109,102 +109,143 @@ const AISettings = () => {
 				onSubmit={handleSubmit}
 				enableReinitialize
 			>
-				{({ isSubmitting, errors, touched, values }) => (
+				{({ isSubmitting, errors, touched, values, setFieldValue }) => (
 					<Form>
-						<div style={{ marginBottom: '20px' }}>
-							<label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+						{/* AI Provider Section */}
+						<div style={{ marginBottom: '30px' }}>
+							<label style={{ display: 'block', marginBottom: '12px', fontWeight: '500', fontSize: '14px' }}>
 								{__('AI Provider', 'betterlinks')}
 							</label>
-							<Field
-								as="select"
-								name="ai_provider"
-								style={{
-									width: '100%',
-									padding: '10px 12px',
-									border: '1px solid #ddd',
-									borderRadius: '4px',
-									fontSize: '14px',
-								}}
-							>
-								<option value="openai">{__('OpenAI (GPT)', 'betterlinks')}</option>
-								<option value="gemini">{__('Google Gemini', 'betterlinks')}</option>
-							</Field>
-							<div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>
-								{__('Select which AI provider to use for link generation', 'betterlinks')}
+							<div style={{ maxWidth: '350px' }}>
+								<Select
+									name="ai_provider"
+									value={[
+										{
+											value: 'openai',
+											label: __('Open AI', 'betterlinks'),
+										},
+										{
+											value: 'gemini',
+											label: __('Google Gemini', 'betterlinks'),
+										},
+									]}
+									setFieldValue={setFieldValue}
+								/>
+							</div>
+							<div style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
+								{__('Choose how short URLs should be generated', 'betterlinks')}
 							</div>
 						</div>
 
+						{/* OpenAI API Key Section */}
 						{values.ai_provider === 'openai' && (
-							<div style={{ marginBottom: '20px' }}>
-								<label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+							<div style={{ marginBottom: '30px' }}>
+								<label style={{ display: 'block', marginBottom: '12px', fontWeight: '500', fontSize: '14px' }}>
 									{__('OpenAI API Key', 'betterlinks')}
 								</label>
 								<Field
 									type="password"
 									name="openai_api_key"
-									placeholder={__('Enter your OpenAI API key', 'betterlinks')}
+									placeholder={__('*****************************', 'betterlinks')}
 									value={values.openai_api_key}
 									style={{
 										width: '100%',
+										maxWidth: '350px',
 										padding: '10px 12px',
 										border: `1px solid ${errors.openai_api_key && touched.openai_api_key ? '#f97272' : '#ddd'}`,
 										borderRadius: '4px',
 										fontSize: '14px',
 										boxSizing: 'border-box',
+										backgroundColor: '#f9f9f9',
 									}}
 								/>
-								<div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>
+								<div style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
 									{__('Get your API key from', 'betterlinks')}{' '}
-									<a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">
+									<a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{ color: '#2563EB', textDecoration: 'none' }}>
 										{__('OpenAI Platform', 'betterlinks')}
 									</a>
 								</div>
 							</div>
 						)}
 
+						{/* Gemini AI API Key Section */}
 						{values.ai_provider === 'gemini' && (
-							<div style={{ marginBottom: '20px' }}>
-								<label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-									{__('Google Gemini API Key', 'betterlinks')}
+							<div style={{ marginBottom: '30px' }}>
+								<label style={{ display: 'block', marginBottom: '12px', fontWeight: '500', fontSize: '14px' }}>
+									{__('Gemini AI API Key', 'betterlinks')}
 								</label>
 								<Field
 									type="password"
 									name="gemini_api_key"
-									placeholder={__('Enter your Google Gemini API key', 'betterlinks')}
+									placeholder={__('*****************************', 'betterlinks')}
 									value={values.gemini_api_key}
 									style={{
 										width: '100%',
+										maxWidth: '350px',
 										padding: '10px 12px',
 										border: `1px solid ${errors.gemini_api_key && touched.gemini_api_key ? '#f97272' : '#ddd'}`,
 										borderRadius: '4px',
 										fontSize: '14px',
 										boxSizing: 'border-box',
+										backgroundColor: '#f9f9f9',
 									}}
 								/>
-								<div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>
+								<div style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
 									{__('Get your API key from', 'betterlinks')}{' '}
-									<a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer">
+									<a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{ color: '#2563EB', textDecoration: 'none' }}>
 										{__('Google AI Studio', 'betterlinks')}
 									</a>
 								</div>
 							</div>
 						)}
 
+						{/* How to get API Key Section */}
+						<div style={{ marginBottom: '30px', padding: '16px', background: '#f5f5f5', borderRadius: '6px' }}>
+							<div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+								<div style={{ fontSize: '20px', marginTop: '2px' }}>ℹ️</div>
+								<div>
+									<h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#333' }}>
+										{__('How to get API Key', 'betterlinks')}
+									</h4>
+									<div style={{ fontSize: '13px', color: '#666', lineHeight: '1.6' }}>
+										<div style={{ marginBottom: '8px' }}>
+											<strong>{__('Open AI:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
+											<a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{ color: '#2563EB', textDecoration: 'none' }}>
+												platform.openai.com
+											</a>
+											{__(' and create a new API key', 'betterlinks')}
+										</div>
+										<div>
+											<strong>{__('Google Gemini:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
+											<a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{ color: '#2563EB', textDecoration: 'none' }}>
+												makersuite.google.com
+											</a>
+											{__(' and create a new API key', 'betterlinks')}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Save Settings Button */}
 						<div style={{ marginTop: '30px' }}>
 							<button
 								type="submit"
 								disabled={isSubmitting}
 								style={{
-									padding: '10px 20px',
-									background: '#4CAF50',
+									padding: '10px 24px',
+									background: '#2563EB',
 									color: 'white',
 									border: 'none',
 									borderRadius: '4px',
 									fontSize: '14px',
 									fontWeight: '500',
 									cursor: isSubmitting ? 'not-allowed' : 'pointer',
-									opacity: isSubmitting ? 0.6 : 1,
+									opacity: isSubmitting ? 0.7 : 1,
+									transition: 'background-color 0.2s',
 								}}
+								onMouseEnter={(e) => !isSubmitting && (e.target.style.backgroundColor = '#1d4ed8')}
+								onMouseLeave={(e) => !isSubmitting && (e.target.style.backgroundColor = '#2563EB')}
 							>
 								{submitText}
 							</button>
@@ -212,28 +253,6 @@ const AISettings = () => {
 					</Form>
 				)}
 			</Formik>
-
-			<div style={{ marginTop: '30px', padding: '15px', background: '#f0f7ff', borderRadius: '4px' }}>
-				<h4 style={{ margin: '0 0 10px 0', color: '#1976d2' }}>
-					{__('How to get API Keys:', 'betterlinks')}
-				</h4>
-				<ul style={{ margin: '0', paddingLeft: '20px', fontSize: '13px', color: '#333' }}>
-					<li>
-						<strong>{__('OpenAI:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
-						<a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">
-							platform.openai.com
-						</a>
-						{__(' and create a new API key', 'betterlinks')}
-					</li>
-					<li>
-						<strong>{__('Google Gemini:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
-						<a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer">
-							makersuite.google.com
-						</a>
-						{__(' and create a new API key', 'betterlinks')}
-					</li>
-				</ul>
-			</div>
 		</div>
 	);
 };

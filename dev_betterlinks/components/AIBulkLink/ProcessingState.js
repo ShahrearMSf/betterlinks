@@ -50,7 +50,7 @@ const ProcessingState = ({ aiState }) => {
 			{/* Title and Subtitle */}
 			<h3 className="btl-ai-processing-title">{__('Generating Links with AI', 'betterlinks')}</h3>
 			<p className="btl-ai-processing-subtitle">
-				{__('Please wait while your URLs are analyzed and optimized short links are being generated', 'betterlinks')}
+				{__('Please wait while your URLs and generate optimized short links', 'betterlinks')}
 			</p>
 
 			{/* Progress Count */}

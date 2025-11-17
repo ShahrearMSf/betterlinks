@@ -204,7 +204,6 @@
 		grid-template-columns: repeat(2, 1fr);
 		gap: 20px;
 		margin-bottom: 24px;
-		background: white;
 
 		@media (max-width: 768px) {
 			grid-template-columns: 1fr;
@@ -238,193 +237,6 @@
 		}
 	}
 
-	// Accordion Styles
-	.btl-ai-accordion {
-		background: white;
-		border: 1px solid #e0e0e0;
-		border-radius: 8px;
-		margin-bottom: 24px;
-		overflow: hidden;
-
-		.btl-ai-accordion-header {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-			padding: 16px 20px;
-			background: #f9f9f9;
-			cursor: pointer;
-			user-select: none;
-			transition: all 0.3s ease;
-			border-bottom: 1px solid #e0e0e0;
-
-			&:hover {
-				background: #f0f0f0;
-			}
-
-			.btl-ai-accordion-icon {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 20px;
-				height: 20px;
-				font-size: 12px;
-				color: #667eea;
-				transition: transform 0.3s ease;
-			}
-
-			h3 {
-				margin: 0;
-				font-size: 16px;
-				font-weight: 600;
-				color: #333;
-				flex: 1;
-			}
-		}
-
-		.btl-ai-accordion-content {
-			padding: 20px;
-			animation: slideDown 0.3s ease;
-
-			.btl-ai-setting-group {
-				margin-bottom: 20px;
-
-				.btl-modal-select--full {
-					width: 364px !important;
-				}
-
-				&:last-child {
-					margin-bottom: 0;
-				}
-
-				.btl-ai-checkbox-label {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-					cursor: pointer;
-					user-select: none;
-					margin-bottom: 8px;
-
-					input[type='checkbox'] {
-						width: 18px;
-						height: 18px;
-						cursor: pointer;
-						accent-color: #667eea;
-					}
-
-					span {
-						font-size: 14px;
-						font-weight: 600;
-						color: #333;
-					}
-				}
-
-				.btl-ai-label {
-					display: block;
-					margin-bottom: 8px;
-					font-weight: 600;
-					color: #333;
-					font-size: 14px;
-				}
-
-				.btl-ai-select {
-					width: 100%;
-					padding: 8px 12px;
-					border: 1px solid #ddd;
-					border-radius: 6px;
-					font-size: 14px;
-					font-family: inherit;
-					background: white;
-					cursor: pointer;
-					transition: all 0.3s ease;
-
-					&:focus {
-						outline: none;
-						border-color: #667eea;
-						box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-					}
-
-					&:disabled {
-						background: #f5f5f5;
-						color: #999;
-						cursor: not-allowed;
-					}
-				}
-
-				.btl-ai-setting-help {
-					font-size: 12px;
-					color: #999;
-					margin-top: 6px;
-					margin-bottom: 0;
-				}
-
-				.btl-ai-setting-subgroup {
-					margin-top: 12px;
-					padding: 12px;
-					background: #f9f9f9;
-					border-radius: 6px;
-					border-left: 3px solid #667eea;
-
-					.btl-ai-label {
-						margin-bottom: 10px;
-					}
-
-					.btl-ai-select {
-						margin-bottom: 0;
-					}
-
-					.btl-ai-tags-select {
-						display: flex;
-						flex-wrap: wrap;
-						gap: 10px;
-
-						.btl-ai-tag-checkbox {
-							display: flex;
-							align-items: center;
-							gap: 6px;
-							padding: 8px 12px;
-							background: white;
-							border: 1px solid #ddd;
-							border-radius: 20px;
-							cursor: pointer;
-							user-select: none;
-							transition: all 0.3s ease;
-							font-size: 13px;
-
-							&:hover {
-								border-color: #667eea;
-								background: #f0f4ff;
-							}
-
-							input[type='checkbox'] {
-								width: 16px;
-								height: 16px;
-								cursor: pointer;
-								accent-color: #667eea;
-								margin: 0;
-							}
-
-							span {
-								color: #333;
-								font-weight: 500;
-							}
-
-							&:has(input[type='checkbox']:checked) {
-								background: #e8edff;
-								border-color: #667eea;
-								color: #667eea;
-
-								span {
-									color: #667eea;
-									font-weight: 600;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
 	@keyframes slideDown {
 		from {
 			opacity: 0;
@@ -441,7 +253,7 @@
 	.btl-ai-content {
 		min-height: 300px;
 		padding: 24px;
-		background-color: #EEF1F8;
+		background-color: #F9FAFB;
 		// margin-bottom: 20px;
 	}
 
@@ -550,8 +362,10 @@
 	.btl-ai-processing {
 		text-align: center;
 		padding: 60px 40px;
-		max-width: 600px;
+		// max-width: 600px;
 		margin: 0 auto;
+		border: 1px solid #D9E1F4;
+		border-radius: 8px;
 
 		// Header Icon with Circular Progress
 		.btl-ai-processing-icon {
@@ -589,7 +403,7 @@
 		.btl-ai-processing-title {
 			font-size: 24px;
 			font-weight: 600;
-			color: #1a1a1a;
+			color: #19285D;
 			margin: 0 0 12px 0;
 			letter-spacing: -0.5px;
 		}
@@ -597,10 +411,10 @@
 		// Subtitle
 		.btl-ai-processing-subtitle {
 			font-size: 14px;
-			color: #6b7280;
+			color: #4E5260;
 			line-height: 1.6;
-			margin: 0 0 32px 0;
-			max-width: 480px;
+			margin: 0 0 40px 0;
+			max-width: 340px;
 			margin-left: auto;
 			margin-right: auto;
 		}
@@ -619,7 +433,8 @@
 			margin: 0 0 48px 0;
 
 			.btl-ai-progress-bar-track {
-				width: 100%;
+				width: 200px;
+				margin: 0 auto;
 				height: 8px;
 				background: #E9EBF0;
 				border-radius: 12px;
@@ -757,7 +572,7 @@
 				flex-direction: column;
 				gap: 0;
 				border-radius: 8px;
-				padding: 0px 12px;
+				// padding: 0px 12px;
 			}
 
 			.btl-ai-detail-row {
