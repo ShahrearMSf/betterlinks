@@ -1,11 +1,11 @@
 === BetterLinks – An Advanced Plugin for Affiliate Links, Link Shortening, Link Tracking, Link Branding & Marketing ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul
+Contributors: wpdevteam, re_enter_rupok, asif2bd, sapanmozammel, priyomukul, hasandev
 Donate link: https://wpdeveloper.com
 Tags: affiliate links, cloaking, link shortener, short links, redirects
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -159,6 +159,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 
 == Changelog ==
+
+ = 2.3.2 - 26/10/2025 =
+
+- Improvement: Added “Refresh Stats” option on the Analytics page for Instant data updates.
+- Improvement: Enhanced the “Reset” mechanism — it now supports date-wise resets with individual link data clearing.
+- Few minor bug fixes & improvements
 
 = 2.3.1 - 21/09/2025 =
 - Improvement: Added Default Category selection option.
