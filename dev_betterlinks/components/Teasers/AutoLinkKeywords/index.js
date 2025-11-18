@@ -109,7 +109,7 @@ const Teaser = () => {
 			<SelectTeaser
 				title={
 					<>
-						{__('Disable Auto-link keywords ', 'betterlinks')}
+						{__('Disable Auto-link keywords', 'betterlinks')}
 						<span style={{ display: 'block' }}>{__('for Post Types', 'betterlinks')}</span>
 					</>
 				}

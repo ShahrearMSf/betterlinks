@@ -85,6 +85,6 @@ export const tabList = [
 	},
 	{
 		label: __('AI Configuration', 'betterlinks'),
-		type: 'free',
+		type: 'pro',
 	},
 ].filter(Boolean);
