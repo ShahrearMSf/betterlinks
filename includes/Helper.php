@@ -290,6 +290,7 @@ class Helper {
 					$item->link_status = $broken_links[ $item->ID ]['old_link_status'];
 				}
 				$item->tags_data = array();
+				$item->tags_id = array(); // Initialize tags_id array for form submission
 
 				foreach ( $tags_list as $tag ) {
 					if ( $tag->ID === $item->ID ) {
@@ -301,6 +302,8 @@ class Helper {
 								'term_slug' => $tag->term_slug,
 							)
 						);
+						// Also add to tags_id array for form submission
+						array_push( $item->tags_id, $tag->cat_id );
 					}
 				}
 

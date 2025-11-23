@@ -44,8 +44,34 @@ const Tags = ({ fieldName, linkId, setFieldValue, data, disabled }) => {
 			);
 		}
 	}, [linkId]);
-	
+
 	const [field] = useField(fieldName);
+
+	// Initialize tags from form data when duplicating (linkId is 0 but tags_id exists in form)
+	useEffect(() => {
+		const formValue = field.value;
+
+		// If linkId is 0 (new/duplicate link) but we have tags_id in form data, initialize them
+		if (!linkId && formValue && (Array.isArray(formValue) ? formValue.length > 0 : formValue)) {
+			const tagsArray = Array.isArray(formValue) ? formValue : [formValue];
+			const tags = tagsArray
+				.filter(tagId => {
+					// Find the tag in the available terms
+					return data?.terms?.some(term => term.ID === tagId && term.term_type === 'tags');
+				})
+				.map(tagId => {
+					const term = data?.terms?.find(term => term.ID === tagId && term.term_type === 'tags');
+					return {
+						value: term.ID,
+						label: term.term_name,
+					};
+				});
+
+			if (tags.length > 0) {
+				setSelectedTags(tags);
+			}
+		}
+	}, [data?.terms, field.value, linkId]);
 	const onChange = (option) => {
 		// Update local state for UI
 		setSelectedTags(option || []);
