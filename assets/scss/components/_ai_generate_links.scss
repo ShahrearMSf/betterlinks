@@ -844,3 +844,300 @@
 	animation: fadeIn 0.3s ease;
 }
 
+// Dark Mode Support
+body.betterlinks-dark-mode {
+	.btl-ai-bulk-link-modal {
+		// Header dark mode
+		.btl-ai-header-container {
+			background: linear-gradient(90deg,
+				rgba(88, 28, 135, 0.2) 0%,
+				rgba(37, 99, 235, 0.2) 15%,
+				rgba(255, 255, 255, 0) 30%,
+				rgba(255, 255, 255, 0) 70%,
+				rgba(37, 99, 235, 0.2) 85%,
+				rgba(88, 28, 135, 0.2) 100%
+			);
+			border-bottom-color: rgba(75, 85, 99, 0.5);
+
+			.btl-ai-title {
+				color: #f9fafb;
+			}
+
+			.btl-ai-description {
+				color: #d1d5db;
+			}
+
+			.btl-ai-close-button {
+				color: #9ca3af;
+
+				&:hover {
+					background: rgba(255, 255, 255, 0.1);
+					color: #f3f4f6;
+				}
+			}
+		}
+
+		// Content area dark mode
+		.btl-ai-content {
+			background-color: #1f2937;
+			color: #f9fafb;
+		}
+
+		// Form elements dark mode
+		.btl-ai-form-group {
+			label {
+				color: #f3f4f6;
+			}
+
+			textarea,
+			input[type='text'],
+			input[type='password'],
+			select {
+				background-color: #374151;
+				border-color: #4b5563;
+				color: #f9fafb;
+
+				&:focus {
+					border-color: #667eea;
+					box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+				}
+
+				&:disabled {
+					background: #2d3748;
+					color: #9ca3af;
+				}
+
+				&::placeholder {
+					color: #9ca3af;
+				}
+			}
+
+			textarea.btl-ai-prompt {
+				border-color: #6b5b2f;
+				background: #2d2416;
+				color: #f9fafb;
+			}
+
+			.btl-ai-help-text {
+				color: #9ca3af;
+			}
+		}
+
+		// Settings grid dark mode
+		.btl-ai-settings-grid {
+			.btl-ai-setting-group {
+				.btl-ai-label {
+					color: #f3f4f6;
+				}
+			}
+		}
+
+		// Header info box dark mode
+		.btl-ai-header {
+			background: #2d2416;
+			border-left-color: #ff6b6b;
+
+			p {
+				color: #d1d5db;
+			}
+		}
+
+		// Processing state dark mode
+		.btl-ai-processing {
+			border-color: #4b5563;
+
+			.btl-ai-processing-title {
+				color: #f9fafb;
+			}
+
+			.btl-ai-processing-subtitle {
+				color: #d1d5db;
+			}
+
+			.btl-ai-processing-count {
+				color: #a5b4fc;
+			}
+
+			.btl-ai-progress-bar-track {
+				background: #374151;
+
+				.btl-ai-progress-bar-fill {
+					background-color: #667eea;
+					box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+				}
+			}
+
+			.btl-ai-processing-steps {
+				.btl-ai-step-item {
+					.btl-ai-step-label {
+						color: #f3f4f6 !important;
+						font-weight: 500;
+					}
+
+					&.btl-ai-step-completed {
+						.btl-ai-step-label {
+							color: #a7f3d0 !important;
+						}
+					}
+
+					&.btl-ai-step-active {
+						.btl-ai-step-label {
+							color: #a5b4fc !important;
+						}
+					}
+
+					&.btl-ai-step-pending {
+						.btl-ai-step-label {
+							color: #9ca3af !important;
+						}
+					}
+				}
+			}
+		}
+
+		// Preview state dark mode
+		.btl-ai-preview {
+			h3 {
+				color: #f3f4f6;
+			}
+
+			.btl-ai-link-card {
+				.btl-ai-card-title {
+					color: #f9fafb;
+				}
+
+				.btl-ai-link-details {
+					background: #374151;
+					border-color: #4b5563;
+				}
+
+				.btl-ai-detail-row {
+					border-bottom-color: #4b5563;
+
+					.btl-ai-detail-label {
+						color: #d1d5db;
+					}
+
+					.btl-ai-detail-value {
+						color: #f3f4f6;
+
+						&.btl-ai-short-url {
+							color: #60a5fa;
+						}
+					}
+
+					.btl-ai-icon-btn {
+						&:hover {
+							background: #4b5563;
+
+							svg path,
+							svg rect {
+								stroke: #d1d5db;
+							}
+						}
+
+						&:active {
+							background: #5a6b7a;
+						}
+					}
+
+					.btl-ai-category-badge {
+						background: #2d3748;
+						border-color: #4b5563;
+						color: #d1d5db;
+					}
+				}
+			}
+		}
+
+		// Buttons dark mode
+		.btl-ai-btn-generate {
+			background: #667eea;
+			color: #ffffff;
+
+			&:hover:not(:disabled) {
+				background: #5568d3;
+				box-shadow: 0 8px 16px rgba(102, 126, 234, 0.5);
+			}
+
+			&:disabled {
+				background: #4b5563;
+				opacity: 0.6;
+			}
+		}
+
+		.btl-ai-modal-footer {
+			border-top-color: #4b5563;
+
+			button {
+				&.btl-ai-btn-secondary {
+					background: #374151;
+					color: #f3f4f6;
+					border-color: #4b5563;
+
+					&:hover {
+						background: #4b5563;
+					}
+				}
+
+				&.btl-ai-btn-primary {
+					background: #10b981;
+					color: white;
+
+					&:hover:not(:disabled) {
+						background: #059669;
+					}
+
+					&:disabled {
+						background: #4b5563;
+					}
+				}
+
+				&.btl-ai-btn-danger {
+					background: #ef4444;
+					color: white;
+
+					&:hover {
+						background: #dc2626;
+					}
+				}
+			}
+		}
+
+		// Error and success messages dark mode
+		.btl-ai-error-message {
+			background: #7f1d1d;
+			border-color: #f87171;
+			color: #fecaca;
+		}
+
+		.btl-ai-success-message {
+			background: #064e3b;
+			border-color: #6ee7b7;
+			color: #a7f3d0;
+		}
+	}
+
+	// Dark mode for AI button wrapper
+	.btl-ai-button-wrapper {
+		.btl-ai-button {
+			background: #374151;
+			color: #f9fafb;
+
+			&:hover {
+				background: #4b5563;
+			}
+		}
+	}
+
+	// Dark mode for old style button
+	.btl-ai-bulk-link-button {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+
+		&:hover {
+			box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+		}
+	}
+}
+
