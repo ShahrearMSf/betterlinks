@@ -1,6 +1,127 @@
 import { API, makeRequest } from 'utils/helper';
+import AILinkGenerator from 'components/AILinkGenerator';
+import { extractFieldLimits } from 'utils/FieldLimitsExtractor';
 
 const namespace = 'betterlinks/v1/';
+
+/**
+ * Generate short URL from title (1-3 words, max 30 characters)
+ * Removes common words and creates a concise slug
+ */
+const generateShortUrlFromTitle = (title) => {
+	const commonWords = [
+		'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from',
+		'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
+		'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'
+	];
+
+	// Sanitize title: lowercase, remove special chars, split by spaces/hyphens
+	let slug = title
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+		.trim()
+		.split(/[\s-]+/) // Split by spaces or hyphens
+		.filter(word => word.length > 0 && !commonWords.includes(word)) // Remove common words
+		.slice(0, 3) // Take max 3 words
+		.join('-');
+
+	// Ensure max 30 characters
+	if (slug.length > 30) {
+		slug = slug.substring(0, 30).replace(/-+$/, ''); // Remove trailing hyphens
+	}
+
+	// Fallback if slug is empty
+	if (!slug) {
+		slug = 'link-' + Math.random().toString(36).substr(2, 9);
+	}
+
+	return slug;
+};
+
+/**
+ * Extract category from prompt if mentioned
+ * Handles multiple formats:
+ * - "category: Technology"
+ * - "category should be Business"
+ * - "Category Summer25"
+ * - "category Summer25 and tags winter26" (stops before "and tags")
+ */
+const extractCategoryFromPrompt = (prompt) => {
+	if (!prompt) return null;
+
+	// Try multiple patterns in order of specificity
+	let categoryMatch;
+
+	// Pattern 1: "category: value" or "category should be value" (most specific)
+	categoryMatch = prompt.match(/category\s*(?:should\s*)?(?:be\s*)?:?\s*([A-Za-z0-9\s&-]+?)(?=\s+(?:and\s+)?tags\s|\.|\n|,|$)/i);
+	if (categoryMatch && categoryMatch[1]) {
+		return categoryMatch[1].trim();
+	}
+
+	// Pattern 2: "category value" followed by "and tags" or end of sentence
+	categoryMatch = prompt.match(/category\s+([A-Za-z0-9\s&-]+?)(?=\s+(?:and\s+)?tags\s|\.|\n|,|$)/i);
+	if (categoryMatch && categoryMatch[1]) {
+		return categoryMatch[1].trim();
+	}
+
+	// Pattern 3: Fallback - "category value" at end of prompt
+	categoryMatch = prompt.match(/category\s+([A-Za-z0-9\s&-]+?)$/i);
+	if (categoryMatch && categoryMatch[1]) {
+		return categoryMatch[1].trim();
+	}
+
+	return null;
+};
+
+/**
+ * Extract tags from prompt if mentioned
+ * Handles multiple formats:
+ * - "tags: tag1, tag2"
+ * - "tags should be tag1 and tag2"
+ * - "tags winter26"
+ * - "and tags winter26" (after category)
+ * - "tags: tag1, tag2, tag3"
+ */
+const extractTagsFromPrompt = (prompt) => {
+	if (!prompt) return [];
+
+	let tagsMatch;
+
+	// Pattern 1: "tags: value" or "tags should be value" (most specific)
+	tagsMatch = prompt.match(/tags\s*(?:should\s*)?(?:be\s*)?:?\s*([A-Za-z0-9\s,&-]+?)(?=\.|\n|$)/i);
+	if (tagsMatch && tagsMatch[1]) {
+		const tagString = tagsMatch[1].trim();
+		const tags = tagString
+			.split(/[,&]|and/)
+			.map(tag => tag.trim())
+			.filter(tag => tag.length > 0 && tag.toLowerCase() !== 'category');
+		return tags.length > 0 ? tags : [];
+	}
+
+	// Pattern 2: "and tags value" (after category)
+	tagsMatch = prompt.match(/and\s+tags\s+([A-Za-z0-9\s,&-]+?)(?=\.|\n|$)/i);
+	if (tagsMatch && tagsMatch[1]) {
+		const tagString = tagsMatch[1].trim();
+		const tags = tagString
+			.split(/[,&]|and/)
+			.map(tag => tag.trim())
+			.filter(tag => tag.length > 0 && tag.toLowerCase() !== 'category');
+		return tags.length > 0 ? tags : [];
+	}
+
+	// Pattern 3: "tags value" at end of prompt
+	tagsMatch = prompt.match(/tags\s+([A-Za-z0-9\s,&-]+?)$/i);
+	if (tagsMatch && tagsMatch[1]) {
+		const tagString = tagsMatch[1].trim();
+		const tags = tagString
+			.split(/[,&]|and/)
+			.map(tag => tag.trim())
+			.filter(tag => tag.length > 0 && tag.toLowerCase() !== 'category');
+		return tags.length > 0 ? tags : [];
+	}
+
+	return [];
+};
 
 export const FETCH_AI_SETTINGS = 'FETCH_AI_SETTINGS';
 export const UPDATE_AI_SETTINGS = 'UPDATE_AI_SETTINGS';
@@ -59,10 +180,25 @@ export const update_ai_settings = (settings) => async (dispatch) => {
 
 /**
  * Process URLs with AI to generate links
- * Process one URL at a time to show realistic progress
+ * Uses frontend AI service for better performance and real-time processing
  */
-export const process_urls_with_ai = (urls, prompt, options = {}) => async (dispatch) => {
+export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}) => async (dispatch, getState) => {
 	try {
+		// Get AI settings from state if not provided
+		const state = getState();
+		const settings = aiSettings.ai_provider ? aiSettings : state.ai?.settings || {};
+
+		const provider = settings.ai_provider || 'openai';
+		const apiKey = provider === 'openai' ? settings.openai_api_key : settings.gemini_api_key;
+
+		if (!apiKey) {
+			throw new Error('API key not configured for selected provider');
+		}
+
+		// Extract category and tags from prompt if mentioned
+		const promptCategory = extractCategoryFromPrompt(prompt);
+		const promptTags = extractTagsFromPrompt(prompt);
+
 		dispatch({
 			type: SET_AI_PROCESSING,
 			payload: {
@@ -74,31 +210,120 @@ export const process_urls_with_ai = (urls, prompt, options = {}) => async (dispa
 
 		const allGeneratedLinks = [];
 
-		// Process URLs one at a time to show realistic progress
-		for (let i = 0; i < urls.length; i++) {
-			const currentUrl = urls[i];
-			
-			// Update progress for current URL
+		// Batch URLs for efficient API processing
+		// Process in chunks to reduce API calls (e.g., 20 URLs per API call)
+		const BATCH_SIZE = 20;
+		const batches = [];
+
+		for (let i = 0; i < urls.length; i += BATCH_SIZE) {
+			batches.push(urls.slice(i, i + BATCH_SIZE));
+		}
+
+		// Fetch content for all URLs first
+		const urlsContentMap = {};
+		for (const url of urls) {
+			const contentRes = await API.post(namespace + 'fetch-url-content', {
+				url: url,
+			});
+			urlsContentMap[url] = contentRes.data.success ? contentRes.data.data : { title: '', description: '' };
+		}
+
+		// Process each batch with a single API call
+		for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+			const batch = batches[batchIndex];
+
+			// Update progress
 			dispatch({
 				type: SET_AI_PROCESSING,
 				payload: {
 					isProcessing: true,
-					currentIndex: i + 1,
+					currentIndex: Math.min((batchIndex + 1) * BATCH_SIZE, urls.length),
 					totalUrls: urls.length,
 				},
 			});
 
-			// Process single URL
-			const res = await API.post(namespace + 'ai-process-links', {
-				params: {
-					urls: [currentUrl], // Send only one URL at a time
-					prompt,
-					...options,
-				},
-			});
+			// Prepare batch data for bulk API call
+			const batchData = batch.map(url => ({
+				url: url,
+				content: urlsContentMap[url],
+			}));
 
-			if (res.data.success && res.data.data && res.data.data.length > 0) {
-				allGeneratedLinks.push(...res.data.data);
+			// Generate links for entire batch with single API call
+			const batchResults = await AILinkGenerator.generateBulkLinks(
+				provider,
+				apiKey,
+				batchData,
+				prompt
+			);
+
+			// Process batch results
+			if (batchResults.success && Array.isArray(batchResults.data)) {
+				for (const aiResult of batchResults.data) {
+					const currentUrl = aiResult.url;
+
+					// Generate short URL from title
+					const shortUrl = generateShortUrlFromTitle(aiResult.title);
+
+					// Smart Category Assignment Logic
+					let finalCategory = '';
+					let finalCatId = '';
+
+					// Approach 2: User selected existing category
+					if (options.selected_category && options.selected_category !== 'ai_generated') {
+						finalCategory = options.selected_category;
+						finalCatId = options.selected_category;
+					}
+					// Approach 3: Category mentioned in prompt
+					else if (promptCategory) {
+						finalCategory = promptCategory;
+					}
+					// Approach 1: AI Generated Category (from AI response)
+					else if (aiResult.category) {
+						finalCategory = aiResult.category;
+					}
+
+					// Smart Tags Assignment Logic
+					let finalTags = [];
+
+					// Priority 1: User specified tags in prompt
+					if (promptTags && promptTags.length > 0) {
+						finalTags = promptTags;
+					}
+					// Priority 2: AI Generated tags (from AI response) - default 1 tag only
+					else if (aiResult.tags && Array.isArray(aiResult.tags) && aiResult.tags.length > 0) {
+						// By default, use only the first tag (AI generates 1 tag by default)
+						finalTags = [aiResult.tags[0]];
+					}
+
+					// Combine AI-generated data with options to create full link object
+					const linkData = {
+						link_title: aiResult.title,
+						link_note: aiResult.description,
+						meta_title: aiResult.meta_title,
+						meta_description: aiResult.meta_description,
+						target_url: currentUrl,
+						short_url: shortUrl,
+						redirect_type: options.redirect_type || '302',
+						nofollow: options.nofollow || 1,
+						sponsored: options.sponsored || '',
+						track_me: options.track_me || 1,
+						param_forwarding: options.param_forwarding || '',
+						category: finalCategory,
+						tags: finalTags,
+						cat_id: finalCatId,
+						suggested_tags: finalTags,
+						short_url_strategy: options.short_url_strategy || 'from_title',
+						enable_description: options.enable_description !== false,
+						enable_ai_category: options.enable_ai_category !== false,
+						enable_ai_tag: options.enable_ai_tag !== false,
+						enable_customize_preview: options.enable_customize_preview !== false,
+						selected_category: options.selected_category || '',
+					};
+
+					allGeneratedLinks.push(linkData);
+				}
+			} else {
+				console.error(`Error generating links for batch ${batchIndex}:`, batchResults.error);
 			}
 		}
 
@@ -107,7 +332,7 @@ export const process_urls_with_ai = (urls, prompt, options = {}) => async (dispa
 			type: SET_AI_GENERATED_LINKS,
 			payload: allGeneratedLinks,
 		});
-		
+
 		dispatch({
 			type: SET_AI_PROCESSING,
 			payload: {
@@ -148,14 +373,35 @@ export const update_processing_step = (step, message = '') => (dispatch) => {
  */
 export const publish_ai_generated_links = (links) => async (dispatch) => {
 	try {
-		console.log('Publishing links:', links);
+		// Validate links before sending
+		if (!links || links.length === 0) {
+			throw new Error('No links to publish');
+		}
+
+		// Ensure all links have required fields
+		const validatedLinks = links.map(link => ({
+			link_title: link.link_title || '',
+			link_note: link.link_note || '',
+			target_url: link.target_url || '',
+			short_url: link.short_url || '',
+			redirect_type: link.redirect_type || '307',
+			nofollow: link.nofollow || 1,
+			sponsored: link.sponsored || '',
+			track_me: link.track_me || 1,
+			param_forwarding: link.param_forwarding || '',
+			category: link.category || '',
+			tags: link.tags || [],
+			cat_id: link.cat_id || '',
+			suggested_tags: link.suggested_tags || [],
+			meta_title: link.meta_title || '',
+			meta_description: link.meta_description || '',
+			enable_customize_preview: link.enable_customize_preview !== false,
+		}));
 
 		// Send links directly, not wrapped in params
 		const res = await API.post(namespace + 'ai-publish-links', {
-			links,
+			links: validatedLinks,
 		});
-
-		console.log('Publish response:', res.data);
 
 		if (res.data.success) {
 			dispatch({

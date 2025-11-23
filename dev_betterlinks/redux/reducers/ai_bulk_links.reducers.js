@@ -13,6 +13,7 @@ const initialState = {
 		gemini_api_key: '',
 		ai_provider: 'openai', // 'openai' or 'gemini'
 	},
+	settingsLoading: true, // Track if settings are being fetched
 	processing: {
 		isProcessing: false,
 		currentIndex: 0,
@@ -32,6 +33,7 @@ function aiBulkLinks(state = initialState, { type, payload }) {
 					...state.settings,
 					...payload,
 				},
+				settingsLoading: false, // Settings have been fetched
 			};
 
 		case UPDATE_AI_SETTINGS:
@@ -72,6 +74,7 @@ function aiBulkLinks(state = initialState, { type, payload }) {
 				...state,
 				processing: initialState.processing,
 				generatedLinks: [],
+				settingsLoading: true, // Reset loading flag when modal closes
 			};
 
 		default:

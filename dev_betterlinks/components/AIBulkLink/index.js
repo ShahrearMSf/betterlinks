@@ -33,19 +33,10 @@ const AIBulkLink = ({
 	const [redirectType, setRedirectType] = useState('302');
 	const [shortUrlStrategy, setShortUrlStrategy] = useState('from_title');
 	const [selectedCategory, setSelectedCategory] = useState('ai_generated');
-	const [prompt, setPrompt] = useState('');
+	const [prompt, setPrompt] = useState('Generate SEO-friendly titles for the given URL based on its content. Make the title concise (max 60 characters) and optimized for search engines. Create compelling descriptions (max 160 characters) that work well for social media sharing. Generate Meta Title (max 60 characters) and Meta Description (max 160 characters) optimized for social media sharing and search engine results.');
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
 	const [isPublishing, setIsPublishing] = useState(false);
-
-	// Generate default prompt (always includes all features)
-	useEffect(() => {
-		const defaultPrompt = 'Generate SEO-friendly titles for the given URL based on its content. Make the title concise (max 60 characters) and optimized for search engines. Create compelling descriptions (max 160 characters) that work well for social media sharing. Suggest ONE relevant tag based on the content topic. Generate Meta Title (max 60 characters) and Meta Description (max 160 characters) optimized for social media sharing and search engine results.';
-		
-		if (!prompt) {
-			setPrompt(defaultPrompt);
-		}
-	}, []);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -79,12 +70,14 @@ const AIBulkLink = ({
 			enable_ai_category: selectedCategory === 'ai_generated',
 			selected_category: selectedCategory !== 'ai_generated' ? selectedCategory : '',
 			enable_ai_tag: true,  // Always enabled
-			selected_tags: [],
 			enable_customize_preview: true,  // Always enabled
 		};
 
-		// Process URLs with AI
-		await process_urls_with_ai(urlList, prompt, options);
+		// Get AI settings from state
+		const aiSettings = aiState?.settings || {};
+
+		// Process URLs with AI (using frontend AI service)
+		await process_urls_with_ai(urlList, prompt, options, aiSettings);
 	};
 
 	const handlePublish = async () => {
@@ -107,7 +100,7 @@ const AIBulkLink = ({
 				setTimeout(() => {
 					reset_ai_state();
 					setUrls('');
-					setPrompt('');
+					// Don't clear prompt - keep it for next time modal opens
 					onClose();
 				}, 1500);
 			}
@@ -120,7 +113,7 @@ const AIBulkLink = ({
 	const handleClose = () => {
 		reset_ai_state();
 		setUrls('');
-		setPrompt('');
+		// Don't clear prompt - keep it for next time modal opens
 		setError('');
 		setSuccess('');
 		setIsPublishing(false);
@@ -130,9 +123,19 @@ const AIBulkLink = ({
 	const isProcessing = aiState?.processing?.isProcessing;
 	const generatedLinks = aiState?.generatedLinks || [];
 	const hasGeneratedLinks = generatedLinks.length > 0;
+	const settingsLoading = aiState?.settingsLoading !== false; // Default to true if undefined
 
 	// Check if URLs field is empty or only contains whitespace
 	const isUrlsEmpty = !urls.trim();
+
+	// Check if API key is configured based on selected provider
+	// Only check after settings are loaded to avoid flickering
+	const hasValidApiKey =
+		!settingsLoading && (
+			aiState?.settings?.ai_provider === 'openai'
+				? (aiState?.settings?.openai_api_key && aiState.settings.openai_api_key.trim())
+				: (aiState?.settings?.gemini_api_key && aiState.settings.gemini_api_key.trim())
+		);
 
 	return (
 		<Modal
@@ -192,6 +195,8 @@ const AIBulkLink = ({
 						onGenerateLinks={handleGenerateLinks}
 						isProcessing={isProcessing}
 						isUrlsEmpty={isUrlsEmpty}
+						hasValidApiKey={hasValidApiKey}
+						settingsLoading={settingsLoading}
 					/>
 				)}
 

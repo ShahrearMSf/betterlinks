@@ -4,6 +4,7 @@ namespace BetterLinks\API;
 
 use BetterLinks\Helper;
 use BetterLinks\Traits\ArgumentSchema;
+use BetterLinks\Tools\PromptAnalyzer;
 
 class AIBulkLinks extends Controller {
 
@@ -42,6 +43,19 @@ class AIBulkLinks extends Controller {
 				array(
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_ai_settings' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+				),
+			)
+		);
+
+		// Fetch URL content for frontend AI processing
+		register_rest_route(
+			$this->namespace,
+			'/fetch-url-content',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'fetch_url_content_endpoint' ),
 					'permission_callback' => array( $this, 'permissions_check' ),
 				),
 			)
@@ -114,12 +128,12 @@ class AIBulkLinks extends Controller {
 			$all_settings = json_decode( $all_settings, true );
 		}
 
-		// Update AI settings
-		if ( isset( $params['openai_api_key'] ) && ! empty( $params['openai_api_key'] ) ) {
+		// Update AI settings - allow empty values to clear API keys
+		if ( isset( $params['openai_api_key'] ) ) {
 			$all_settings['openai_api_key'] = sanitize_text_field( $params['openai_api_key'] );
 		}
 
-		if ( isset( $params['gemini_api_key'] ) && ! empty( $params['gemini_api_key'] ) ) {
+		if ( isset( $params['gemini_api_key'] ) ) {
 			$all_settings['gemini_api_key'] = sanitize_text_field( $params['gemini_api_key'] );
 		}
 
@@ -144,6 +158,38 @@ class AIBulkLinks extends Controller {
 					'gemini_api_key'  => isset( $all_settings['gemini_api_key'] ) ? $all_settings['gemini_api_key'] : '',
 					'ai_provider'     => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
 				),
+			),
+			200
+		);
+	}
+
+	/**
+	 * Fetch URL content endpoint for frontend AI processing
+	 */
+	public function fetch_url_content_endpoint( $request ) {
+		$params = $request->get_json_params();
+		if ( empty( $params ) ) {
+			$params = $request->get_params();
+		}
+
+		$url = isset( $params['url'] ) ? esc_url_raw( $params['url'] ) : '';
+
+		if ( empty( $url ) ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => __( 'URL is required', 'betterlinks' ),
+				),
+				400
+			);
+		}
+
+		$content = $this->fetch_url_content( $url );
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => $content,
 			),
 			200
 		);
@@ -208,15 +254,8 @@ class AIBulkLinks extends Controller {
 			$params = $request->get_params();
 		}
 
-		// Debug logging
-		error_log( 'Publish AI Links - Raw params: ' . json_encode( $params ) );
-
 		// Get links from params
 		$links = isset( $params['links'] ) ? (array) $params['links'] : array();
-
-		// Debug logging
-		error_log( 'Publish AI Links - Links count: ' . count( $links ) );
-		error_log( 'Publish AI Links - Links data: ' . json_encode( $links ) );
 
 		if ( empty( $links ) ) {
 			return new \WP_REST_Response(
@@ -238,7 +277,14 @@ class AIBulkLinks extends Controller {
 				$link_data = (array) $link_data;
 			}
 
-			error_log( 'Processing link: ' . json_encode( $link_data ) );
+			// Validate required fields
+			if ( empty( $link_data['short_url'] ) ) {
+				continue;
+			}
+
+			if ( empty( $link_data['target_url'] ) ) {
+				continue;
+			}
 
 			// Add required fields if missing
 			if ( empty( $link_data['link_author'] ) ) {
@@ -279,24 +325,20 @@ class AIBulkLinks extends Controller {
 			// Create tags if needed
 			if ( ! empty( $link_data['tags'] ) ) {
 				$tags = is_array( $link_data['tags'] ) ? $link_data['tags'] : array_map( 'trim', explode( ',', $link_data['tags'] ) );
+
 				// Use the insert_tags_terms method which handles creating tags
 				$tag_ids = Helper::insert_tags_terms( $tags );
+
 				if ( ! empty( $tag_ids ) ) {
 					$link_data['tags_id'] = $tag_ids;
 				}
 			}
 
-			error_log( 'Link data before sanitize: ' . json_encode( $link_data ) );
-
 			// Sanitize the link data
 			$sanitized_data = $this->sanitize_links_data( $link_data );
 
-			error_log( 'Link data after sanitize: ' . json_encode( $sanitized_data ) );
-
 			// Create the link
 			$result = $this->insert_link( $sanitized_data );
-
-			error_log( 'Insert link result: ' . json_encode( $result ) );
 
 			if ( $result ) {
 				// Save meta tags if customize preview is enabled
@@ -379,17 +421,30 @@ class AIBulkLinks extends Controller {
 		}
 		$provider = isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai';
 
+		// Analyze the prompt to extract constraints
+		$prompt_constraints = PromptAnalyzer::analyze( $prompt );
+
 		// Check if description should be enabled
 		$enable_description = isset( $options['enable_description'] ) ? (bool) $options['enable_description'] : true;
 
 		// For now, return mock data. In production, integrate with OpenAI or Gemini API
 		$title = isset( $content['title'] ) ? $content['title'] : 'Generated Link';
-		$title = substr( $title, 0, isset( $options['title_length'] ) ? $options['title_length'] : 60 );
+
+		// Apply title constraints from prompt
+		$title_max_chars = $prompt_constraints['title_max_chars'] ?? ( isset( $options['title_length'] ) ? $options['title_length'] : 60 );
+		$title_max_words = $prompt_constraints['title_max_words'];
+		$title_min_words = $prompt_constraints['title_min_words'];
+		$title = PromptAnalyzer::apply_constraints( $title, $title_max_chars, $title_max_words, $title_min_words );
 
 		$description = '';
 		if ( $enable_description ) {
 			$description = isset( $content['description'] ) ? $content['description'] : '';
-			$description = substr( $description, 0, isset( $options['description_length'] ) ? $options['description_length'] : 160 );
+
+			// Apply description constraints from prompt
+			$desc_max_chars = $prompt_constraints['description_max_chars'] ?? ( isset( $options['description_length'] ) ? $options['description_length'] : 160 );
+			$desc_max_words = $prompt_constraints['description_max_words'];
+			$desc_min_words = $prompt_constraints['description_min_words'];
+			$description = PromptAnalyzer::apply_constraints( $description, $desc_max_chars, $desc_max_words, $desc_min_words );
 		}
 
 		// Check if AI category generation is enabled
@@ -400,14 +455,33 @@ class AIBulkLinks extends Controller {
 		$enable_customize_preview = isset( $options['enable_customize_preview'] ) ? (bool) $options['enable_customize_preview'] : false;
 
 		// Suggest categories and tags based on URL and content
-		$suggested_data = $this->suggest_categories_and_tags( $url, $title, $description, $enable_ai_category, $enable_ai_tag, $options );
+		$suggested_data = $this->suggest_categories_and_tags( $url, $title, $description, $enable_ai_category, $enable_ai_tag, $options, $prompt_constraints );
 
 		// Generate meta title and description if customize preview is enabled
 		$meta_title = '';
 		$meta_description = '';
 		if ( $enable_customize_preview ) {
 			$meta_title = $title; // Use the generated title as meta title
+
+			// Apply meta title constraints from prompt
+			if ( ! is_null( $prompt_constraints['meta_title_max_chars'] ) || ! is_null( $prompt_constraints['meta_title_max_words'] ) ) {
+				$meta_title = PromptAnalyzer::apply_constraints(
+					$meta_title,
+					$prompt_constraints['meta_title_max_chars'],
+					$prompt_constraints['meta_title_max_words']
+				);
+			}
+
 			$meta_description = $description; // Use the generated description as meta description
+
+			// Apply meta description constraints from prompt
+			if ( ! is_null( $prompt_constraints['meta_description_max_chars'] ) || ! is_null( $prompt_constraints['meta_description_max_words'] ) ) {
+				$meta_description = PromptAnalyzer::apply_constraints(
+					$meta_description,
+					$prompt_constraints['meta_description_max_chars'],
+					$prompt_constraints['meta_description_max_words']
+				);
+			}
 		}
 
 		return array(
@@ -435,7 +509,7 @@ class AIBulkLinks extends Controller {
 	 * NOTE: This method only SUGGESTS categories and tags, it does NOT create them.
 	 * Categories and tags are created during the publish phase to avoid creating them before publishing.
 	 */
-	private function suggest_categories_and_tags( $url, $title, $description, $enable_ai_category = true, $enable_ai_tag = true, $options = array() ) {
+	private function suggest_categories_and_tags( $url, $title, $description, $enable_ai_category = true, $enable_ai_tag = true, $options = array(), $prompt_constraints = array() ) {
 		// Extract domain and path from URL
 		$parsed_url = wp_parse_url( $url );
 		$domain = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
@@ -494,44 +568,62 @@ class AIBulkLinks extends Controller {
 		$category_name = 'Uncategorized';
 		$cat_id = 1; // Default to Uncategorized
 
-		if ( $enable_ai_category ) {
+		// PRIORITY 1: Check if category is specified in prompt constraints (HIGHEST PRIORITY)
+		if ( ! empty( $prompt_constraints['category'] ) ) {
+			// Use category from prompt - this ALWAYS takes priority
+			$category_name = $prompt_constraints['category'];
+			// NOTE: Do NOT create the category here. It will be created during publish phase.
+		}
+		// PRIORITY 2: Use selected category from options
+		elseif ( ! empty( $options['selected_category'] ) ) {
+			$cat_id = intval( $options['selected_category'] );
+			// Get category name from ID
+			$category_term = Helper::get_term_by_id( $cat_id, 'category' );
+			if ( ! empty( $category_term ) && is_array( $category_term ) ) {
+				$category_name = $category_term[0]['term_name'];
+			}
+		}
+		// PRIORITY 3: AI-generated category from keywords (if enabled)
+		elseif ( $enable_ai_category ) {
 			// AI-generated category from keywords
 			$category_name = ! empty( $keywords ) ? $keywords[0] : 'Uncategorized';
 			// NOTE: Do NOT create the category here. It will be created during publish phase.
-		} else {
-			// Use selected category from options
-			if ( ! empty( $options['selected_category'] ) ) {
-				$cat_id = intval( $options['selected_category'] );
-				// Get category name from ID
-				$category_term = Helper::get_term_by_id( $cat_id, 'category' );
-				if ( ! empty( $category_term ) && is_array( $category_term ) ) {
-					$category_name = $category_term[0]['term_name'];
+		}
+
+		// Handle tag assignment
+		// NOTE: Tags are only SUGGESTED here, they will be created during publish phase
+		// CHANGE: Now supports multiple tags when user specifies them in prompt
+		$tags_string = '';
+
+		// PRIORITY 1: Check if tags are specified in prompt constraints (HIGHEST PRIORITY)
+		if ( ! empty( $prompt_constraints['tags'] ) && is_array( $prompt_constraints['tags'] ) && count( $prompt_constraints['tags'] ) > 0 ) {
+			// Use ALL tags from prompt (if user specifies multiple tags, use all of them)
+			// Convert array to comma-separated string for storage
+			$tags_string = implode( ',', $prompt_constraints['tags'] );
+		}
+		// PRIORITY 2: Use selected tags from options
+		elseif ( ! empty( $options['selected_tags'] ) ) {
+			$selected_tags = (array) $options['selected_tags'];
+			// Get all selected tags
+			if ( ! empty( $selected_tags ) ) {
+				$tag_names = array();
+				foreach ( $selected_tags as $tag_id ) {
+					$tag_term = Helper::get_term_by_id( $tag_id, 'tags' );
+					if ( ! empty( $tag_term ) && is_array( $tag_term ) ) {
+						$tag_names[] = $tag_term[0]['term_name'];
+					}
+				}
+				if ( ! empty( $tag_names ) ) {
+					$tags_string = implode( ',', $tag_names );
 				}
 			}
 		}
-
-		// Handle tag assignment - IMPORTANT: Only 1 tag per link
-		// NOTE: Tags are only SUGGESTED here, they will be created during publish phase
-		$tags_string = '';
-
-		if ( $enable_ai_tag ) {
-			// AI-generated tag - use only the FIRST keyword as tag (1 tag per link)
+		// PRIORITY 3: AI-generated tag (if enabled)
+		elseif ( $enable_ai_tag ) {
+			// AI-generated tag - use only the FIRST keyword as tag (1 tag per link by default)
 			if ( ! empty( $keywords ) && count( $keywords ) > 1 ) {
 				// Use second keyword as tag (first is category)
 				$tags_string = $keywords[1];
-			}
-		} else {
-			// Use selected tags from options - but limit to 1 tag per link
-			if ( ! empty( $options['selected_tags'] ) ) {
-				$selected_tags = (array) $options['selected_tags'];
-				// Take only the first selected tag
-				if ( ! empty( $selected_tags ) ) {
-					$first_tag_id = $selected_tags[0];
-					$tag_term = Helper::get_term_by_id( $first_tag_id, 'tags' );
-					if ( ! empty( $tag_term ) && is_array( $tag_term ) ) {
-						$tags_string = $tag_term[0]['term_name'];
-					}
-				}
 			}
 		}
 
