@@ -10,28 +10,28 @@ const ProgressDisplay = ({ generationStatus, postCount, plugin_root_url }) => {
                 {/* Circular Progress */}
                 <div className="btl-progress-circle-container">
                     <div className="btl-progress-circle">
-                        <svg width="64" height="64" viewBox="0 0 200 200" className="btl-progress-svg">
+                        <svg width="64" height="64" viewBox="0 0 120 120" className="btl-progress-svg">
                             {/* Background circle */}
                             <circle
-                                cx="100"
-                                cy="100"
-                                r="80"
+                                cx="60"
+                                cy="60"
+                                r="50"
                                 stroke="#E5E7EB"
                                 strokeWidth="12"
                                 fill="none"
                             />
                             {/* Progress circle */}
                             <circle
-                                cx="100"
-                                cy="100"
-                                r="80"
+                                cx="60"
+                                cy="60"
+                                r="50"
                                 stroke="#3B82F6"
                                 strokeWidth="12"
                                 fill="none"
                                 strokeLinecap="round"
-                                strokeDasharray={`${2 * Math.PI * 80}`}
-                                strokeDashoffset={`${2 * Math.PI * 80 * (1 - (generationStatus.progress_percent || 0) / 100)}`}
-                                transform="rotate(-90 100 100)"
+                                strokeDasharray={`${2 * Math.PI * 50}`}
+                                strokeDashoffset={`${2 * Math.PI * 50 * (1 - (generationStatus.progress_percent || 0) / 100)}`}
+                                transform="rotate(-90 60 60)"
                                 style={{ transition: 'stroke-dashoffset 0.5s ease-in-out' }}
                             />
                         </svg>

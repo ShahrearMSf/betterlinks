@@ -32,7 +32,6 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [generationInProgress, setGenerationInProgress] = useState(false);
     const [generationStatus, setGenerationStatus] = useState(null);
-    const [simulatedProgress, setSimulatedProgress] = useState(0);
     const [progressInterval, setProgressInterval] = useState(null);
 
     // Advanced filters
@@ -88,6 +87,8 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                         });
                     });
                 });
+                // Sort categories alphabetically by label
+                categoryOptions.sort((a, b) => a.label.localeCompare(b.label));
                 setCategories(categoryOptions);
 
                 const tagOptions = [];
@@ -101,6 +102,8 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                         });
                     });
                 });
+                // Sort tags alphabetically by label
+                tagOptions.sort((a, b) => a.label.localeCompare(b.label));
                 // setTags(tagOptions);
             }
         }
@@ -142,7 +145,11 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
             });
 
             if (response.data && response.data.success) {
-                setBetterlinkCategories(response.data.data);
+                // Sort categories alphabetically by label
+                const sortedCategories = response.data.data.sort((a, b) =>
+                    (a.label || '').localeCompare(b.label || '')
+                );
+                setBetterlinkCategories(sortedCategories);
             }
         } catch (error) {
             console.error('Error loading BetterLink categories:', error);
@@ -157,7 +164,11 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
             });
 
             if (response.data && response.data.success) {
-                setBetterlinkTags(response.data.data);
+                // Sort tags alphabetically by label
+                const sortedTags = response.data.data.sort((a, b) =>
+                    (a.label || '').localeCompare(b.label || '')
+                );
+                setBetterlinkTags(sortedTags);
             }
         } catch (error) {
             console.error('Error loading BetterLink tags:', error);
@@ -222,7 +233,6 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
             status: 'starting',
             message: __('Initializing bulk generation...', 'betterlinks')
         });
-        setSimulatedProgress(0);
         // setShowCompletionMessage(false);
 
         // Start simulated progress for better UX
@@ -293,8 +303,7 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
             progress += Math.random() * 15; // Random increment between 0-15%
             if (progress > 85) progress = 85; // Don't go beyond 85% until real data comes
 
-            setSimulatedProgress(progress);
-                console.log('pp - ', Math.floor(progress));
+            console.log('pp - ', Math.floor(progress));
 
             setGenerationStatus(prev => ({
                 ...prev,
@@ -331,10 +340,11 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                     // Clear simulated progress once we get real data
                     clearProgressInterval();
 
-                    // Gradually update to real progress for smooth transition
+                    // Use real progress data directly - don't compare with simulated progress
+                    // This ensures progress always increases monotonically based on actual server data
                     setGenerationStatus({
                         ...status,
-                        progress_percent: Math.max(status.progress_percent || 0, simulatedProgress)
+                        progress_percent: status.progress_percent || 0
                     });
 
                     if (status.status === 'completed' || status.status === 'cancelled') {

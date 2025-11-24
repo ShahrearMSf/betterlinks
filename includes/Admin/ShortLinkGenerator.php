@@ -988,6 +988,10 @@ class ShortLinkGenerator
             }
         }
 
+        // Collision handling strategy for duplicate slugs
+        $collision_handling = isset($data['collision_handling']) ? sanitize_text_field($data['collision_handling']) : 'append';
+        $filters['collision_handling'] = in_array($collision_handling, ['append', 'regenerate', 'skip']) ? $collision_handling : 'append';
+
         return $filters;
     }
 
