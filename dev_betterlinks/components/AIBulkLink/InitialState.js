@@ -21,6 +21,7 @@ isProcessing,
 isUrlsEmpty,
 hasValidApiKey,
 settingsLoading,
+defaultPrompt,
 }) => {
 	const shortURLSlugTypes = [
 		{
@@ -133,7 +134,7 @@ label: cat.term_name,
 					</label>
 					<textarea
 						className="btl-ai-textarea"
-						placeholder={__('Enter one or multiple URLs (one per line or separated by spaces):', 'betterlinks')}
+						placeholder={__('http://test-site.local/go/ui8/product-name/contact-page\n\nhttps://examplelink.com', 'betterlinks')}
 						value={urls}
 						onChange={(e) => setUrls(e.target.value)}
 						rows="5"
@@ -142,14 +143,32 @@ label: cat.term_name,
 						https://example.com
 						https://another-example.com
 					</textarea>
+					<p className="btl-ai-note">
+						{__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')}
+					</p>
 				</div>
 
 				{/* AI Prompt */}
 				<div className="btl-ai-form-group">
-					<label className="btl-ai-label">
-						<img src={plugin_root_url + '/assets/images/icons/ai-prompt-label.svg'} alt="AI Icon" />
-						{__('Add link with AI', 'betterlinks')}
-					</label>
+					<div className="btl-ai-label-with-reset">
+						<label className="btl-ai-label">
+							<img src={plugin_root_url + '/assets/images/icons/ai-prompt-label.svg'} alt="AI Icon" />
+							{__('Add link with AI', 'betterlinks')}
+						</label>
+						<button
+							type="button"
+							className="btl-ai-reset-prompt-btn"
+							onClick={() => setPrompt(defaultPrompt)}
+							disabled={isProcessing || prompt === defaultPrompt}
+							title={__('Reset to default prompt', 'betterlinks')}
+						>
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C9.84871 2 11.5 2.84871 12.6213 4.17157" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+								<path d="M12 2V4.5H9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+							</svg>
+							{__('Reset Prompt', 'betterlinks')}
+						</button>
+					</div>
 					<textarea
 						className="btl-ai-textarea"
 						placeholder={__('Enter your AI prompt for generating link data:', 'betterlinks')}

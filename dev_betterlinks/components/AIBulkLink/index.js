@@ -29,11 +29,14 @@ const AIBulkLink = ({
 	fetch_all_tags,
 	terms,
 }) => {
+	// Define default prompt as a constant
+	const DEFAULT_PROMPT = 'Generate SEO-friendly titles for the given URL based on its content. Make the title concise (max 60 characters) and optimized for search engines. Create compelling descriptions (max 160 characters) that work well for social media sharing. Generate Meta Title (max 60 characters) and Meta Description (max 160 characters) optimized for social media sharing and search engine results.';
+
 	const [urls, setUrls] = useState('');
 	const [redirectType, setRedirectType] = useState('302');
 	const [shortUrlStrategy, setShortUrlStrategy] = useState('from_title');
 	const [selectedCategory, setSelectedCategory] = useState('ai_generated');
-	const [prompt, setPrompt] = useState('Generate SEO-friendly titles for the given URL based on its content. Make the title concise (max 60 characters) and optimized for search engines. Create compelling descriptions (max 160 characters) that work well for social media sharing. Generate Meta Title (max 60 characters) and Meta Description (max 160 characters) optimized for social media sharing and search engine results.');
+	const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
 	const [isPublishing, setIsPublishing] = useState(false);
@@ -191,6 +194,7 @@ const AIBulkLink = ({
 						setSelectedCategory={setSelectedCategory}
 						prompt={prompt}
 						setPrompt={setPrompt}
+						defaultPrompt={DEFAULT_PROMPT}
 						terms={terms}
 						onGenerateLinks={handleGenerateLinks}
 						isProcessing={isProcessing}

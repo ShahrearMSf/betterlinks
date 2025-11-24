@@ -409,15 +409,9 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 			});
 
 			// Refresh the links list to show newly published links
-			// This will clear the cache and fetch fresh data
-			setTimeout(() => {
-				// Dispatch action to refresh links from the main links API
-				// This ensures the newly published links appear immediately
-				const refreshLinksAction = {
-					type: 'FETCH_LINKS_REQUEST',
-				};
-				dispatch(refreshLinksAction);
-			}, 500);
+			// Import and call the actual fetch_links_data action
+			const { fetch_links_data } = await import('./links.actions');
+			dispatch(fetch_links_data());
 
 			return res.data;
 		}
@@ -426,19 +420,15 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 		makeRequest({
 			action: 'betterlinks/admin/publish_ai_links',
 			links: JSON.stringify(links),
-		}).then((response) => {
+		}).then(async (response) => {
 			if (response.data) {
 				dispatch({
 					type: RESET_AI_STATE,
 				});
 
 				// Refresh the links list to show newly published links
-				setTimeout(() => {
-					const refreshLinksAction = {
-						type: 'FETCH_LINKS_REQUEST',
-					};
-					dispatch(refreshLinksAction);
-				}, 500);
+				const { fetch_links_data } = await import('./links.actions');
+				dispatch(fetch_links_data());
 			}
 		});
 	}
