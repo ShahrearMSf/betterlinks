@@ -84,7 +84,7 @@ if (!class_exists('BetterLinks')) {
              * Defines CONSTANTS for Whole plugins.
              */
             define('BETTERLINKS_VERSION', '2.3.2');
-            define('BETTERLINKS_DB_VERSION', '1.6.7');
+            define('BETTERLINKS_DB_VERSION', '1.6.8');
             define('BETTERLINKS_MENU_NOTICE', '9');
             define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
             define('BETTERLINKS_PLUGIN_FILE', __FILE__);
