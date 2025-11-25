@@ -275,9 +275,10 @@ class Installer extends \WP_Background_Process
                 $this->modifyBetterLinksClicksTable2();
             }
 
-            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.7', '>' ) ){
+            // Ensure countries table exists for all versions >= 1.6.7
+            if( version_compare( BETTERLINKS_DB_VERSION, '1.6.7', '>=' ) ){
                 $this->createBetterLinksCountriesTable();
-                $this->modifyBetterLinksClicksTable3();
+                $this->modifyBetterLinksClicksTable4();
             }
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);

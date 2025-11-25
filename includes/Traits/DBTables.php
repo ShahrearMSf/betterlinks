@@ -73,6 +73,7 @@ trait DBTables
     public function createBetterClicksTable()
     {
         $table_name = $this->wpdb->prefix . 'betterlinks_clicks';
+        $countries_table = $this->wpdb->prefix . 'betterlinks_countries';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             link_id bigint(20) NOT NULL,
@@ -88,10 +89,11 @@ trait DBTables
             browser_version VARCHAR(20) NULL,
             `language` VARCHAR(10) NULL,
             `query_params` TEXT NULL,
+            `country_id` int(11) unsigned NULL,
             referer varchar(255) NULL,
             host varchar(255) NULL,
             uri varchar(255) NULL,
-            click_count tinyint(4) NOT NULL default 0, 
+            click_count tinyint(4) NOT NULL default 0,
             visitor_id varchar(25) NULL,
             click_order tinyint(11) default 0,
             created_at datetime NOT NULL default CURRENT_TIMESTAMP,
@@ -100,7 +102,9 @@ trait DBTables
             PRIMARY KEY  (ID),
             KEY ip (ip),
             key link_id (link_id),
-            key click_order (click_order)
+            key click_order (click_order),
+            KEY idx_country_id (country_id),
+            CONSTRAINT fk_clicks_country_id FOREIGN KEY (country_id) REFERENCES {$countries_table}(id) ON DELETE SET NULL ON UPDATE CASCADE
         ) $this->charset_collate;";
         dbDelta($sql);
     }
@@ -189,24 +193,6 @@ trait DBTables
         }
     }
 
-    // adding country columns into betterlinks_clicks table
-    public function modifyBetterLinksClicksTable3() {
-        global $wpdb;
-
-        $check_column_exists_sql = sprintf( 'select `column_name` from information_schema.columns where table_schema="%1$s" and table_name="%2$sbetterlinks_clicks" and column_name="country_code";', DB_NAME, $wpdb->prefix );
-		$result                  = $wpdb->query( $check_column_exists_sql );
-
-        if ( ! $result ) {
-			$table_name = $wpdb->prefix . 'betterlinks_clicks';
-
-            $sql        = "ALTER TABLE {$table_name}
-                ADD COLUMN `country_code` VARCHAR(2) NULL AFTER `query_params`,
-                ADD COLUMN `country_name` VARCHAR(100) NULL AFTER `country_code`,
-                ADD INDEX `idx_country_code` (`country_code`);";
-			$wpdb->query( $sql );
-        }
-    }
-
     // Create countries lookup table for efficient storage and querying
     public function createBetterLinksCountriesTable() {
         $table_name = $this->wpdb->prefix . 'betterlinks_countries';
@@ -221,5 +207,37 @@ trait DBTables
             KEY idx_country_name (country_name)
         ) $this->charset_collate;";
         dbDelta($sql);
+    }
+
+    // Add country_id foreign key column to betterlinks_clicks table
+    public function modifyBetterLinksClicksTable4() {
+        global $wpdb;
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+        $table_name = $wpdb->prefix . 'betterlinks_clicks';
+        $countries_table = $wpdb->prefix . 'betterlinks_countries';
+
+        // Check if country_id column exists
+        $column_exists = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(*) FROM information_schema.columns
+             WHERE table_schema = %s
+             AND table_name = %s
+             AND column_name = 'country_id'",
+            DB_NAME,
+            $table_name
+        ) );
+
+        if ( ! $column_exists ) {
+            $sql = "ALTER TABLE {$table_name}
+                ADD COLUMN `country_id` int(11) unsigned NULL AFTER `query_params`,
+                ADD INDEX `idx_country_id` (`country_id`),
+                ADD CONSTRAINT `fk_clicks_country_id`
+                FOREIGN KEY (`country_id`)
+                REFERENCES {$countries_table}(`id`)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE;";
+
+            dbDelta( $sql );
+        }
     }
 }

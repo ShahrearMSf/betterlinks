@@ -82,11 +82,22 @@ class Geolocation {
 		$country_data = CountryDetectionService::get_country_by_ip( $ip );
 
 		if ( $country_data ) {
+			// Get or create country record and include country_id in response
+			$country_id = CountryDetectionService::get_or_create_country_id(
+				$country_data['country_code'],
+				$country_data['country_name']
+			);
+
+			$response_data = $country_data;
+			if ( $country_id ) {
+				$response_data['country_id'] = $country_id;
+			}
+
 			return new \WP_REST_Response(
 				array(
 					'success' => true,
 					'message' => 'Country detected successfully',
-					'data'    => $country_data,
+					'data'    => $response_data,
 				),
 				200
 			);
@@ -127,11 +138,22 @@ class Geolocation {
 		$country_data = CountryDetectionService::get_country_by_ip( $ip );
 
 		if ( $country_data ) {
+			// Get or create country record and include country_id in response
+			$country_id = CountryDetectionService::get_or_create_country_id(
+				$country_data['country_code'],
+				$country_data['country_name']
+			);
+
+			$response_data = $country_data;
+			if ( $country_id ) {
+				$response_data['country_id'] = $country_id;
+			}
+
 			return new \WP_REST_Response(
 				array(
 					'success' => true,
 					'message' => 'Country detected successfully',
-					'data'    => $country_data,
+					'data'    => $response_data,
 				),
 				200
 			);

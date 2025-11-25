@@ -183,21 +183,83 @@ class CountryDetectionService {
     }
 
     /**
+     * Get or create country record and return country_id
+     *
+     * @param string $country_code The country code
+     * @param string $country_name The country name
+     * @return int|null Country ID or null if failed
+     */
+    public static function get_or_create_country_id( $country_code, $country_name ) {
+        global $wpdb;
+
+        if ( empty( $country_code ) || empty( $country_name ) ) {
+            return null;
+        }
+
+        $table_name = $wpdb->prefix . 'betterlinks_countries';
+
+        // Try to get existing country
+        $country = $wpdb->get_row( $wpdb->prepare(
+            "SELECT id FROM {$table_name} WHERE country_code = %s",
+            $country_code
+        ), ARRAY_A );
+
+        if ( $country ) {
+            return (int) $country['id'];
+        }
+
+        // Create new country record
+        $inserted = $wpdb->insert(
+            $table_name,
+            array(
+                'country_code' => $country_code,
+                'country_name' => $country_name,
+            ),
+            array( '%s', '%s' )
+        );
+
+        if ( $inserted ) {
+            return (int) $wpdb->insert_id;
+        }
+
+        return null;
+    }
+
+    /**
      * Get country data from lookup table by country code
-     * 
+     *
      * @param string $country_code The country code
      * @return array|null Country data or null
      */
     public static function get_country_from_lookup_table( $country_code ) {
         global $wpdb;
-        
+
         $table_name = $wpdb->prefix . 'betterlinks_countries';
-        
+
         $country = $wpdb->get_row( $wpdb->prepare(
             "SELECT * FROM {$table_name} WHERE country_code = %s",
             $country_code
         ), ARRAY_A );
-        
+
+        return $country ? $country : null;
+    }
+
+    /**
+     * Get country data by country_id
+     *
+     * @param int $country_id The country ID
+     * @return array|null Country data or null
+     */
+    public static function get_country_by_id( $country_id ) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'betterlinks_countries';
+
+        $country = $wpdb->get_row( $wpdb->prepare(
+            "SELECT * FROM {$table_name} WHERE id = %d",
+            $country_id
+        ), ARRAY_A );
+
         return $country ? $country : null;
     }
 
@@ -249,19 +311,23 @@ class CountryDetectionService {
             return $cached;
         }
 
-        $where_clause = "WHERE created_at BETWEEN %s AND %s AND country_code IS NOT NULL AND country_code != ''";
+        $clicks_table = $wpdb->prefix . 'betterlinks_clicks';
+        $countries_table = $wpdb->prefix . 'betterlinks_countries';
+
+        $where_clause = "WHERE c.created_at BETWEEN %s AND %s AND c.country_id IS NOT NULL";
         $params = array( $from . ' 00:00:00', $to . ' 23:59:59' );
 
         if ( $link_id ) {
-            $where_clause .= " AND link_id = %d";
+            $where_clause .= " AND c.link_id = %d";
             $params[] = $link_id;
         }
 
         $query = $wpdb->prepare(
-            "SELECT country_code, country_name, COUNT(*) as clicks, COUNT(DISTINCT ip) as unique_clicks
-             FROM {$wpdb->prefix}betterlinks_clicks
+            "SELECT co.country_code, co.country_name, COUNT(*) as clicks, COUNT(DISTINCT c.ip) as unique_clicks
+             FROM {$clicks_table} c
+             LEFT JOIN {$countries_table} co ON c.country_id = co.id
              {$where_clause}
-             GROUP BY country_code, country_name
+             GROUP BY c.country_id, co.country_code, co.country_name
              ORDER BY clicks DESC
              LIMIT 10",
             $params
@@ -318,11 +384,11 @@ class CountryDetectionService {
     public static function backfill_country_data( $limit = 100 ) {
         global $wpdb;
 
-        // Get clicks without country data
+        // Get clicks without country_id
         $clicks = $wpdb->get_results( $wpdb->prepare(
             "SELECT ID, ip FROM {$wpdb->prefix}betterlinks_clicks
              WHERE ip IS NOT NULL AND ip != ''
-             AND (country_code IS NULL OR country_code = '')
+             AND country_id IS NULL
              LIMIT %d",
             $limit
         ), ARRAY_A );
@@ -337,19 +403,26 @@ class CountryDetectionService {
             $country_data = self::get_country_by_ip( $click['ip'] );
 
             if ( $country_data ) {
-                $result = $wpdb->update(
-                    $wpdb->prefix . 'betterlinks_clicks',
-                    array(
-                        'country_code' => $country_data['country_code'],
-                        'country_name' => $country_data['country_name']
-                    ),
-                    array( 'ID' => $click['ID'] ),
-                    array( '%s', '%s' ),
-                    array( '%d' )
+                // Get or create country record and get its ID
+                $country_id = self::get_or_create_country_id(
+                    $country_data['country_code'],
+                    $country_data['country_name']
                 );
 
-                if ( $result !== false ) {
-                    $updated++;
+                if ( $country_id ) {
+                    $result = $wpdb->update(
+                        $wpdb->prefix . 'betterlinks_clicks',
+                        array( 'country_id' => $country_id ),
+                        array( 'ID' => $click['ID'] ),
+                        array( '%d' ),
+                        array( '%d' )
+                    );
+
+                    if ( $result !== false ) {
+                        $updated++;
+                    } else {
+                        $errors++;
+                    }
                 } else {
                     $errors++;
                 }
@@ -380,7 +453,7 @@ class CountryDetectionService {
         return (int) $wpdb->get_var(
             "SELECT COUNT(*) FROM {$wpdb->prefix}betterlinks_clicks
              WHERE ip IS NOT NULL AND ip != ''
-             AND (country_code IS NULL OR country_code = '')"
+             AND country_id IS NULL"
         );
     }
 

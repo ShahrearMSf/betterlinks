@@ -183,27 +183,21 @@ trait Clicks {
 		}
 		global $wpdb;
 
-		// Check if country columns exist
-		$country_columns_exist = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT(*) FROM information_schema.columns
-			 WHERE table_schema = %s
-			 AND table_name = %s
-			 AND column_name = 'country_code'",
-			DB_NAME,
-			$wpdb->prefix . 'betterlinks_clicks'
-		) );
+		$clicks_table = $wpdb->prefix . 'betterlinks_clicks';
+		$countries_table = $wpdb->prefix . 'betterlinks_countries';
 
-		$fields = 'ID, link_id, ip, browser, referer, os, device, query_params, created_at';
-		if ( $country_columns_exist ) {
-			$fields .= ', country_code, country_name';
-		}
-
-		$query   = $wpdb->prepare(
-			"SELECT {$fields} FROM {$wpdb->prefix}betterlinks_clicks WHERE link_id=%s AND created_at BETWEEN %s AND %s ORDER BY created_at DESC",
+		// Use normalized schema with JOIN to countries table
+		$query = $wpdb->prepare(
+			"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at,
+			 co.country_code, co.country_name
+			 FROM {$clicks_table} c
+			 LEFT JOIN {$countries_table} co ON c.country_id = co.id
+			 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s
+			 ORDER BY c.created_at DESC",
 			$id,
 			$from . ' 00:00:00',
 			$to . ' 23:59:59'
-		 );
+		);
 
 		$results = $wpdb->get_results( $query, ARRAY_A );
 

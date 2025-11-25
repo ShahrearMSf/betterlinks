@@ -1450,14 +1450,23 @@ class Ajax {
 
 		$table_name = $wpdb->prefix . 'betterlinks_clicks';
 
+		// Get or create country record and get its ID
+		$country_id = \BetterLinks\Services\CountryDetectionService::get_or_create_country_id(
+			$country_code,
+			$country_name
+		);
+
+		if ( ! $country_id ) {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to create country record', 'betterlinks' )
+			) );
+		}
+
 		$updated = $wpdb->update(
 			$table_name,
-			array(
-				'country_code' => $country_code,
-				'country_name' => $country_name,
-			),
+			array( 'country_id' => $country_id ),
 			array( 'ID' => $click_id ),
-			array( '%s', '%s' ),
+			array( '%d' ),
 			array( '%d' )
 		);
 
@@ -1466,6 +1475,7 @@ class Ajax {
 				'message' => __( 'Country data updated successfully', 'betterlinks' ),
 				'country_code' => $country_code,
 				'country_name' => $country_name,
+				'country_id' => $country_id,
 			) );
 		} else {
 			wp_send_json_error( array(
@@ -1498,19 +1508,28 @@ class Ajax {
 
 		$table_name = $wpdb->prefix . 'betterlinks_clicks';
 
+		// Get or create country record and get its ID
+		$country_id = \BetterLinks\Services\CountryDetectionService::get_or_create_country_id(
+			$country_code,
+			$country_name
+		);
+
+		if ( ! $country_id ) {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to create country record', 'betterlinks' )
+			) );
+		}
+
 		// Update all clicks with the same IP within this link_id
 		// This will update ALL clicks with this IP, regardless of whether they already have country data
 		$updated = $wpdb->update(
 			$table_name,
-			array(
-				'country_code' => $country_code,
-				'country_name' => $country_name,
-			),
+			array( 'country_id' => $country_id ),
 			array(
 				'link_id' => $link_id,
 				'ip' => $ip,
 			),
-			array( '%s', '%s' ),
+			array( '%d' ),
 			array( '%d', '%s' )
 		);
 
@@ -1523,6 +1542,7 @@ class Ajax {
 				'message' => sprintf( __( 'Country data updated for %d clicks', 'betterlinks' ), $updated ),
 				'country_code' => $country_code,
 				'country_name' => $country_name,
+				'country_id' => $country_id,
 				'updated_count' => $updated,
 			) );
 		} else {
