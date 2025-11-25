@@ -1,15 +1,25 @@
 /**
  * AI Link Generator Service
  * Handles API calls to OpenAI and Gemini APIs for generating short link data
+ *
+ * Smart Category & Tags Detection:
+ * - AI intelligently detects category and tags from user prompt
+ * - If user mentions category/tags in prompt, AI applies them to ALL URLs
+ * - If user doesn't mention them, AI generates unique ones per URL based on content
+ * - No regex pattern matching - AI handles natural language detection
  */
 
 import { extractFieldLimits, formatLimitsForAI, formatLimitsForJSON } from 'utils/FieldLimitsExtractor';
 
-
-
 /**
  * Build bulk prompts for multiple URLs
- * For batch processing
+ * For batch processing with smart category and tags detection
+ *
+ * The AI will:
+ * 1. Analyze the user prompt for any category/tags mentions
+ * 2. If found, apply them to ALL URLs consistently
+ * 3. If not found, generate unique category/tags per URL based on content
+ * 4. Return JSON with all required fields including category and tags array
  */
 const buildBulkPrompts = (urlsData, prompt, fieldLimits = null) => {
 	// Extract field limits from prompt if not provided
@@ -23,37 +33,80 @@ const buildBulkPrompts = (urlsData, prompt, fieldLimits = null) => {
 	Content Title: ${item.content.title}
 	Content Description: ${item.content.description}`).join('');
 
-		const systemPrompt = `You are an expert at creating SEO-optimized short URLs and metadata.
-	Generate a JSON array response with the following structure for each URL:
-	[
-	{
-		"url": "original_url",
-		"title": "SEO-friendly title (${limitsJSON.title})",
-		"description": "Compelling description (${limitsJSON.description})",
-		"meta_title": "Meta title for social sharing (${limitsJSON.meta_title})",
-		"meta_description": "Meta description (${limitsJSON.meta_description})",
-		"category": "Single category name based on content (e.g., 'Technology', 'Business', 'Health')",
-		"tags": ["tag1"]
-	}
-	]
+	const systemPrompt = `You are an expert at creating SEO-optimized short URLs and metadata.
 
-	IMPORTANT: Respect the limits specified above. Generate content that fits within the specified character or word limits for ALL URLs.`;
+IMPORTANT INSTRUCTIONS FOR CATEGORY AND TAGS EXTRACTION:
+1. Carefully analyze the user prompt for any mentions of category or tags
+2. When extracting category, REMOVE connector words like "is", "should be", "are", "be", "as", "for"
+   - "category is Winter tech" → extract "Winter tech" (NOT "is Winter tech")
+   - "category should be Business" → extract "Business" (NOT "should be Business")
+   - "category: Technology" → extract "Technology"
+   - "category Winter tech" → extract "Winter tech"
+   - "category [Winter tech]" → extract "Winter tech"
+3. When extracting tags, REMOVE connector words like "should be", "are", "and", "or"
+   - "tags should be AI, ML" → extract ["AI", "ML"]
+   - "tags: AI, ML, Innovation" → extract ["AI", "ML", "Innovation"]
+   - "tags AI and ML" → extract ["AI", "ML"]
+4. Use EXACTLY the extracted category/tags for ALL URLs without modification
+5. If the user does NOT mention category/tags, generate appropriate ones based on each URL's content
+6. Category should be a single string value (trimmed, no extra words)
+7. Tags should ALWAYS be an array, even if it contains only one tag
 
-		const userPrompt = `Generate optimized metadata for the following ${urlsData.length} URLs:
-	${urlsList}
+Generate a JSON array response with the following structure for each URL:
+[
+{
+	"url": "original_url",
+	"title": "SEO-friendly title (${limitsJSON.title})",
+	"description": "Compelling description (${limitsJSON.description})",
+	"meta_title": "Meta title for social sharing (${limitsJSON.meta_title})",
+	"meta_description": "Meta description (${limitsJSON.meta_description})",
+	"category": "Category name (either from user prompt or generated from content)",
+	"tags": ["tag1", "tag2", "tag3"]
+}
+]
 
-	User Prompt: ${prompt}
+CRITICAL RULES:
+- Respect the limits specified above. Generate content that fits within the specified character or word limits for ALL URLs.
+- If user specifies category/tags in their prompt, use EXACTLY those values for ALL URLs without modification
+- If user does NOT specify category/tags, generate unique ones per URL based on content
+- Tags must ALWAYS be an array format, never a string
+- IMPORTANT: Extract only the actual category/tags value, removing connector words like "is", "should be", "are"
+- Return ONLY valid JSON array, no additional text`;
 
-	For each URL, generate:
-	1. SEO-friendly ${limitsFormatted.split(',')[0]}
-	2. Compelling ${limitsFormatted.split(',')[1]}
-	3. Meta ${limitsFormatted.split(',')[2]}
-	4. Meta ${limitsFormatted.split(',')[3]}
-	5. A single category name based on the content
-	6. Exactly 1 relevant tag as an array (e.g., ["Technology"])
+	const userPrompt = `Generate optimized metadata for the following ${urlsData.length} URLs:
+${urlsList}
 
-	Return a JSON array with results for all URLs in the same order as provided.
-	Remember: Strictly adhere to the character/word limits specified above for ALL URLs.`;
+User Prompt: ${prompt}
+
+For each URL, generate:
+1. SEO-friendly ${limitsFormatted.split(',')[0]}
+2. Compelling ${limitsFormatted.split(',')[1]}
+3. Meta ${limitsFormatted.split(',')[2]}
+4. Meta ${limitsFormatted.split(',')[3]}
+5. Category (check if user mentioned it in their prompt - if yes, extract ONLY the category value removing connector words; if no, generate from content)
+6. Tags array (check if user mentioned tags in their prompt - if yes, extract ONLY the tag values removing connector words; if no, generate 1-3 tags from content)
+
+IMPORTANT NOTES ON EXTRACTION:
+- Analyze the user prompt carefully for any category or tags mentions
+- User might mention category/tags in various formats:
+  * "category: Tech" → extract "Tech"
+  * "category should be Business" → extract "Business" (NOT "should be Business")
+  * "category is Winter Tech" → extract "Winter Tech" (NOT "is Winter Tech")
+  * "category Winter Tech" → extract "Winter Tech"
+  * "category [Winter Tech]" → extract "Winter Tech"
+  * "tags: AI, ML" → extract ["AI", "ML"]
+  * "tags should be tutorial and guide" → extract ["tutorial", "guide"] (NOT "should be tutorial and guide")
+  * "tags AI and ML" → extract ["AI", "ML"]
+- CRITICAL: Remove connector words like "is", "should be", "are", "be", "as", "for", "and", "or" when extracting
+- If user specifies category/tags, apply them to ALL URLs consistently
+- If user doesn't specify, generate unique category/tags per URL based on its content
+- Tags must always be an array format
+
+Return a JSON array with results for all URLs in the same order as provided.
+Remember:
+- Strictly adhere to the character/word limits specified above for ALL URLs
+- Extract category/tags values cleanly without connector words
+- Return ONLY valid JSON array, no markdown formatting or additional text`;
 
 	return { systemPrompt, userPrompt };
 };
