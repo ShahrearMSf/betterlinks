@@ -373,7 +373,8 @@ class Notice {
                 'dismissible' => true,
                 'refresh'     => BETTERLINKS_VERSION,
                 "expire"      => strtotime('11:59:59pm 4th December, 2025'),
-    			'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' )
+    			'display_if'  => ! is_plugin_active( 'betterlinks-pro/betterlinks-pro.php' ),
+				'priority'    => 7
             ]
         );
 		self::$cache_bank->create_account( $notices );
