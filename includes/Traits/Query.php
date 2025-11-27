@@ -652,7 +652,7 @@ trait Query {
 			$db_data_array[] = isset( $item['host'] ) ? $item['host'] : '';
 		}
 
-		if ( $is_country_enabled && $country_id_column_exists && $country_id ) {
+		if ( $is_country_enabled && $country_id ) {
 			$db_data_array[] = $country_id;
 		}
 		// $db_data_array[] = isset($item['device']) ? $item['device'] : '';
