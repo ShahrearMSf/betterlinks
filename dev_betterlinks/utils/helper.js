@@ -986,13 +986,25 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 					}
 				} else {
 					setStatus('failed');
+					// Auto-reset to idle after 3 seconds on failure
+					setTimeout(() => {
+						setStatus('idle');
+					}, 3000);
 				}
 			} else {
 				setStatus('failed');
+				// Auto-reset to idle after 3 seconds on failure
+				setTimeout(() => {
+					setStatus('idle');
+				}, 3000);
 			}
 		} catch (error) {
 			console.error('Error fetching country:', error);
 			setStatus('failed');
+			// Auto-reset to idle after 3 seconds on failure
+			setTimeout(() => {
+				setStatus('idle');
+			}, 3000);
 		} finally {
 			setLoading(false);
 		}
@@ -1001,13 +1013,52 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 	const getButtonContent = () => {
 		switch (status) {
 			case 'loading':
-				return __('Fetching...', 'betterlinks');
+				return (
+					<img
+						width={18}
+						height={18}
+						src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'}
+						alt="Fetching"
+						style={{
+							animation: 'spin 1s linear infinite',
+							display: 'block',
+						}}
+					/>
+				);
 			case 'success':
-				return countryData ? countryData.country_name : __('Fetched', 'betterlinks');
+				return (
+					<span style={{
+						display: 'block',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}>
+						{countryData ? countryData.country_name : __('Fetched', 'betterlinks')}
+					</span>
+				);
 			case 'failed':
-				return __('Failed', 'betterlinks');
+				return (
+					<span style={{
+						display: 'block',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}>
+						{__('Failed', 'betterlinks')}
+					</span>
+				);
 			default:
-				return <img width={18} height={18} src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'} alt="Refresh" />;
+				return (
+					<img
+						width={18}
+						height={18}
+						src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'}
+						alt="Refresh"
+						style={{
+							display: 'block',
+						}}
+					/>
+				);
 		}
 	};
 
@@ -1039,15 +1090,17 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
 			textOverflow: 'ellipsis',
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			minWidth: '26px',
+			minHeight: '26px',
 		};
 
 		// Add specific styles for the default state with icon
-		if (status === 'idle') {
+		if (status === 'idle' || status === 'loading') {
 			return {
 				...baseStyles,
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
 				padding: '6px',
 			};
 		}
