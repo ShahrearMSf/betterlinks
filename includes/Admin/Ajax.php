@@ -80,6 +80,7 @@ class Ajax {
 		// Notices
 		add_action( 'wp_ajax_betterlinks__admin_menu_notice', array( $this, 'admin_menu_notice' ) );
 		add_action( 'wp_ajax_betterlinks__admin_dashboard_notice', array( $this, 'admin_dashboard_notice' ) );
+		add_action( 'wp_ajax_betterlinks_dismiss_black_friday_notice', array( $this, 'dismiss_black_friday_notice' ) );
 
 		add_action( 'wp_ajax_betterlinks__fetch_target_url', array( $this, 'fetch_target_url' ) );
 
@@ -1592,5 +1593,44 @@ class Ajax {
 			'links_with_utm' => $links_with_utm,
 			'links_without_utm' => $links_without_utm
 		) );
+	}
+
+	/**
+	 * Dismiss Black Friday notice via AJAX
+	 * Sets a transient so the notice doesn't show again for 30 days
+	 *
+	 * @return void
+	 */
+	public function dismiss_black_friday_notice() {
+		// Verify nonce for security
+		check_ajax_referer( 'betterlinks_dismiss_black_friday_notice', 'nonce' );
+
+		// Check user permissions
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array( 'message' => __( "You don't have permission to do this.", 'betterlinks' ) ),
+				403
+			);
+		}
+
+		// Set transient for 30 days (2592000 seconds)
+		$transient_set = set_transient( 'betterlinks_black_friday_pointer_dismissed', true, 2592000 );
+
+		if ( ! $transient_set ) {
+			wp_send_json_error(
+				array( 'message' => __( 'Failed to dismiss notice. Please try again.', 'betterlinks' ) ),
+				500
+			);
+		}
+
+		// Update plugin pointer priority to null when notice is dismissed
+		update_option( '_wpdeveloper_plugin_pointer_priority', null );
+
+		// Dismiss the notice in the Notices library system as well
+		// This ensures the notice doesn't show again even after page refresh
+		// The key format is: {app}_{notice_id}_notice_dismissed
+		update_site_option( 'betterlinks_betterlinks_black_friday_2025_notice_dismissed', true );
+
+		wp_send_json_success( array( 'message' => __( 'Notice dismissed successfully.', 'betterlinks' ) ) );
 	}
 }
