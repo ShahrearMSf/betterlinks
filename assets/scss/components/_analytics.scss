@@ -1093,3 +1093,13 @@ $breakpoint-phone: 560px;
 	line-height: 17.6px;
 	word-wrap: break-word;
 }
+
+// Spin animation for loading refresh icon
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
