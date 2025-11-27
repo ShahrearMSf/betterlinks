@@ -39,7 +39,6 @@ class Notice {
 		add_action( 'in_admin_header', [ $this, 'remove_admin_notice' ] );
 		add_action( 'btl_compatibity_notices', [ $this, 'btlpro_compatibility_notices' ] );
 		// Use multiple hooks for better compatibility across different WordPress setups
-		add_action( 'admin_notices', [ $this, 'black_friday_pointer_notice' ], 999 );
 		add_action( 'admin_footer', [ $this, 'black_friday_pointer_notice' ], 999 );
 	}
 
@@ -115,12 +114,13 @@ class Notice {
 			return;
 		}
 
-		// Only show on BetterLinks pages and WordPress dashboard
+		// Only show on BetterLinks pages, WordPress dashboard, and plugins directory
 		$current_screen = get_current_screen();
 		$is_betterlinks_page = ( 0 === strpos( $current_screen->id, 'toplevel_page_betterlinks' ) || 0 === strpos( $current_screen->id, 'betterlinks_page_' ) );
 		$is_dashboard = ( 'dashboard' === $current_screen->id );
+		$is_plugins_page = ( 'plugins' === $current_screen->id );
 
-		if ( ! $is_betterlinks_page && ! $is_dashboard ) {
+		if ( ! $is_betterlinks_page && ! $is_dashboard && ! $is_plugins_page ) {
 			return;
 		}
 
