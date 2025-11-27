@@ -98,8 +98,8 @@ class Notice {
 		}
 
 		// Check plugin pointer priority system
-		// BetterLinks priority is 5
-		$betterlinks_priority = 5;
+		// BetterLinks priority is 7
+		$betterlinks_priority = 7;
 		$current_priority = get_option( '_wpdeveloper_plugin_pointer_priority' );
 		// If priority option doesn't exist, create it with BetterLinks priority
 		if ( false === $current_priority || null === $current_priority || '' === $current_priority ) {
@@ -254,7 +254,7 @@ class Notice {
 			'lifetime'       => 3,
 			'stylesheet_url' => self::ASSET_URL . 'css/betterlinks-admin-notice.css',
 			'styles'         => self::ASSET_URL . 'css/betterlinks-admin-notice.css',
-			'priority'       => 5
+			'priority'       => 7
 		] );
 
 		global $betterlinks;
