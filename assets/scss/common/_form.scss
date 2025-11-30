@@ -18,7 +18,7 @@
 		padding-right: 20px;
 		padding-top: 8px;
 		padding-bottom: 8px;
-		min-width: 235px;
+		min-width: 262px;
 
 		@media screen and (max-width: 650px) {
 			margin-bottom: 5px;
@@ -221,7 +221,7 @@
 
 	&.block {
 		display: inline-block;
-		margin-right: 20px;
+		margin-right: 10px;
 		min-height: 20px;
 
 		.btl-tooltip {
