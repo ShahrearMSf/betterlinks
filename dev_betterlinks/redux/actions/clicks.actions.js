@@ -7,6 +7,8 @@ export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
 export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
 export const FETCH_MEDIUM_DATA = 'FETCH_MEDIUM_DATA';
 export const UPDATE_CLICKS_WITH_COUNTRY = 'UPDATE_CLICKS_WITH_COUNTRY';
+export const FETCH_INDIVIDUAL_CHART_DATA = 'FETCH_INDIVIDUAL_CHART_DATA';
+export const FETCH_INDIVIDUAL_MEDIUM_DATA = 'FETCH_INDIVIDUAL_MEDIUM_DATA';
 
 export const FETCH_UNIQUE_CLICKS_BY_TAGS = 'FETCH_UNIQUE_CLICKS_BY_TAGS';
 export const FETCH_ANALYTICS_GRAPH_BY_TAGS = 'FETCH_ANALYTICS_GRAPH_BY_TAGS';
@@ -351,3 +353,62 @@ export const update_clicks_with_country = (updatedRows) => (dispatch, getState) 
 		}
 	});
 };
+
+export const get_individual_chart_data = (params) => async (dispatch) => {
+	const { link_id, from, to, setLoading } = params;
+	const endPoint = `${namespace}clicks/get_individual_charts/${link_id}`;
+	setLoading && setLoading(true);
+
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data?.data) {
+			throw new Error('rest api not working properly for fetch_individual_chart_data');
+		}
+		setLoading && setLoading(false);
+		dispatch({
+			type: FETCH_INDIVIDUAL_CHART_DATA,
+			payload: {
+				data: res.data.data,
+				id: link_id,
+			},
+		});
+	} catch (error) {
+		console.log('error is ' + error.message);
+		setLoading && setLoading(false);
+	}
+};
+
+export const get_individual_medium_data = (params) => async (dispatch) => {
+	const { link_id, from, to, setLoading } = params;
+	const endPoint = `${namespace}clicks/get_individual_medium/${link_id}`;
+	setLoading && setLoading(true);
+
+	try {
+		const res = await API.get(endPoint, {
+			params: {
+				from,
+				to,
+			},
+		});
+		if (!res?.data?.data) {
+			throw new Error('rest api not working properly for fetch_individual_medium_data');
+		}
+		setLoading && setLoading(false);
+		dispatch({
+			type: FETCH_INDIVIDUAL_MEDIUM_DATA,
+			payload: {
+				data: res.data.data,
+				id: link_id,
+			},
+		});
+	} catch (error) {
+		console.log('error is ' + error.message);
+		setLoading && setLoading(false);
+	}
+};
+

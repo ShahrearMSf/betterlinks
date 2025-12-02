@@ -14,6 +14,8 @@ import {
 	get_chart_data,
 	get_graph_data,
 	get_medium_data,
+	get_individual_chart_data,
+	get_individual_medium_data,
 } from 'redux/actions/clicks.actions';
 import TopAnalyticsChartTeaser from 'components/Teasers/Analytics/TopAnalyticsChartTeaser';
 import GraphTeaser from './Clicks/GraphTeaser';
@@ -67,6 +69,8 @@ const Graph = (props) => {
 			}
 			if (id && is_pro_enabled) {
 				props.fetch_individual_clicks({ link_id: id, from, to, setLoading });
+				props.get_individual_chart_data({ link_id: id, from, to, setLoading: setChartLoading });
+				props.get_individual_medium_data({ link_id: id, from, to, setLoading: setMediumLoading });
 			}
 
 			if (tag_id) {
@@ -161,9 +165,8 @@ const Graph = (props) => {
 				{is_pro_enabled && chartLoading ? (
 					<ChartLoader />
 				) : (
-					!id &&
 					!tag_id &&
-					betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser darkMode={darkMode} />, extraAnalytics)
+					betterLinksHooks.applyFilters('BetterlinksAnalyticsChart', !is_extra_data_tracking_compatible && <TopAnalyticsChartTeaser darkMode={darkMode} />, { ...extraAnalytics, id })
 				)}
 			</div>
 		</div>
@@ -185,6 +188,8 @@ const mapDispatchToProps = (dispatch) => {
 		fetch_individual_clicks: bindActionCreators(fetch_individual_clicks, dispatch),
 		get_analytics_graph_by_tag: bindActionCreators(get_analytics_graph_by_tag, dispatch),
 		get_analytics_unique_list_by_id: bindActionCreators(get_analytics_unique_list_by_id, dispatch),
+		get_individual_chart_data: bindActionCreators(get_individual_chart_data, dispatch),
+		get_individual_medium_data: bindActionCreators(get_individual_medium_data, dispatch),
 	};
 };
 

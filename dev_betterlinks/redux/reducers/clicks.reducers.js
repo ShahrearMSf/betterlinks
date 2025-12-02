@@ -7,6 +7,8 @@ import {
 	FETCH_MEDIUM_DATA,
 	FETCH_UNIQUE_CLICKS_BY_TAGS,
 	UPDATE_CLICKS_WITH_COUNTRY,
+	FETCH_INDIVIDUAL_CHART_DATA,
+	FETCH_INDIVIDUAL_MEDIUM_DATA,
 } from 'redux/actions/clicks.actions';
 
 function get_parsed_clicks_list(unique_list, type = 'all', analytic = null) {
@@ -124,6 +126,33 @@ function clicks(state = { individual_clicks: {} }, action) {
 				...state,
 				unique_list: newClicksData,
 				unique_count: unique_count,
+			};
+		}
+		case FETCH_INDIVIDUAL_CHART_DATA: {
+			const { data, id } = payload;
+			const individual_clicks = state?.individual_clicks || {};
+			individual_clicks[id] = {
+				...individual_clicks[id],
+				individual_referer: data.referer || [],
+				individual_devices: data.devices || [],
+				individual_os: data.os || [],
+				individual_browser: data.browser || [],
+			};
+			return {
+				...state,
+				individual_clicks,
+			};
+		}
+		case FETCH_INDIVIDUAL_MEDIUM_DATA: {
+			const { data, id } = payload;
+			const individual_clicks = state?.individual_clicks || {};
+			individual_clicks[id] = {
+				...individual_clicks[id],
+				individual_medium: data.medium || [],
+			};
+			return {
+				...state,
+				individual_clicks,
 			};
 		}
 		default:
