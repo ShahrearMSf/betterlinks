@@ -73,7 +73,6 @@ trait DBTables
     public function createBetterClicksTable()
     {
         $table_name = $this->wpdb->prefix . 'betterlinks_clicks';
-        $countries_table = $this->wpdb->prefix . 'betterlinks_countries';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             ID bigint(20) unsigned NOT NULL auto_increment,
             link_id bigint(20) NOT NULL,
@@ -103,8 +102,7 @@ trait DBTables
             KEY ip (ip),
             key link_id (link_id),
             key click_order (click_order),
-            KEY idx_country_id (country_id),
-            CONSTRAINT fk_clicks_country_id FOREIGN KEY (country_id) REFERENCES {$countries_table}(id) ON DELETE SET NULL ON UPDATE CASCADE
+            KEY idx_country_id (country_id)
         ) $this->charset_collate;";
         dbDelta($sql);
     }

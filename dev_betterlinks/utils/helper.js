@@ -1268,7 +1268,8 @@ export const bulkFetchCountry = async (selectedRows, linkId, onCountryUpdated) =
 
 export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated = null) => {
 	if (!!id) {
-		const isProUpdated = pro_version_check('2.4.1');
+		const isProUpdated = pro_version_check('2.1.0');
+		const isProUpdatedCountry = pro_version_check('2.5.0');
 		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
@@ -1296,8 +1297,8 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 					<>
 						{__('Country', 'betterlinks')}
 						{!is_pro_enabled && <ProBadge />}
-						{!isProUpdated && (
-							<Tooltip arrow title="To use Country Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.4.1 installed & activated" placement="top">
+						{!isProUpdatedCountry && (
+							<Tooltip arrow title="To use Country Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.5.0 installed & activated" placement="top">
 								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
 							</Tooltip>
 						)}

@@ -185,19 +185,35 @@ trait Clicks {
 
 		$clicks_table = $wpdb->prefix . 'betterlinks_clicks';
 		$countries_table = $wpdb->prefix . 'betterlinks_countries';
-
-		// Use normalized schema with JOIN to countries table
-		$query = $wpdb->prepare(
-			"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at,
-			 co.country_code, co.country_name
-			 FROM {$clicks_table} c
-			 LEFT JOIN {$countries_table} co ON c.country_id = co.id
-			 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s
-			 ORDER BY c.created_at DESC",
-			$id,
-			$from . ' 00:00:00',
-			$to . ' 23:59:59'
-		);
+		
+		// Check if extra data tracking (including country data) is enabled
+		$is_extra_data_tracking_compatible = apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false );
+		
+		if ( $is_extra_data_tracking_compatible ) {
+			// Use normalized schema with JOIN to countries table (Pro version)
+			$query = $wpdb->prepare(
+				"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at,
+				 co.country_code, co.country_name
+				 FROM {$clicks_table} c
+				 LEFT JOIN {$countries_table} co ON c.country_id = co.id
+				 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s
+				 ORDER BY c.created_at DESC",
+				$id,
+				$from . ' 00:00:00',
+				$to . ' 23:59:59'
+			);
+		} else {
+			// Basic query without country data (Free version)
+			$query = $wpdb->prepare(
+				"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.created_at
+				 FROM {$clicks_table} c
+				 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s
+				 ORDER BY c.created_at DESC",
+				$id,
+				$from . ' 00:00:00',
+				$to . ' 23:59:59'
+			);
+		}
 
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
