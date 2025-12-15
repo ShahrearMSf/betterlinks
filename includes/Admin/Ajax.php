@@ -6,6 +6,7 @@ use BetterLinks\Admin\WPDev\PluginUsageTracker;
 use BetterLinks\Cron;
 use BetterLinks\Helper;
 use BetterLinks\Link\Utils;
+use BetterLinks\Cache;
 
 class Ajax {
 
@@ -22,6 +23,9 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_short_url', array( $this, 'get_links_by_short_url' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_permalink', array( $this, 'get_links_by_permalink' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_cat_by_link_id', array( $this, 'get_category_by_link_id' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_betterlink_categories', array( $this, 'get_betterlink_categories' ) );
+		add_action( 'wp_ajax_betterlinks/admin/get_betterlink_tags', array( $this, 'get_betterlink_tags' ) );
+		add_action( 'wp_ajax_betterlinks/admin/create_betterlink_category', array( $this, 'create_betterlink_category' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_autolink_create_settings', array( $this, 'get_auto_link_create_settings' ) );
 		add_action( 'wp_ajax_betterlinks/admin/write_json_links', array( $this, 'write_json_links' ) );
 		add_action( 'wp_ajax_betterlinks/admin/write_json_clicks', array( $this, 'write_json_clicks' ) );
@@ -30,6 +34,8 @@ class Ajax {
 		add_action( 'wp_ajax_betterlinks/admin/cat_slug_unique_checker', array( $this, 'cat_slug_unique_checker' ) );
 		add_action( 'wp_ajax_betterlinks/admin/reset_analytics', array( $this, 'reset_analytics' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_clicks_count', array( $this, 'get_clicks_count' ) );
+		add_action( 'wp_ajax_betterlinks/admin/backfill_country_data', array( $this, 'backfill_country_data' ) );
+		add_action( 'wp_ajax_betterlinks/admin/clear_analytics_cache', array( $this, 'clear_analytics_cache' ) );
 		// prettylinks.
 		add_action( 'wp_ajax_betterlinks/admin/get_prettylinks_data', array( $this, 'get_prettylinks_data' ) );
 		add_action( 'wp_ajax_betterlinks/admin/run_prettylinks_migration', array( $this, 'run_prettylinks_migration' ) );
@@ -95,7 +101,11 @@ class Ajax {
 		// js analytics tracking
 		add_action( 'wp_ajax_nopriv_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
 		add_action( 'wp_ajax_betterlinks__js_analytics_tracking', array( $this, 'js_analytics_tracking' ) );
-		
+
+		// Update click country data (for backward compatibility)
+		add_action( 'wp_ajax_betterlinks/admin/update_click_country', array( $this, 'update_click_country' ) );
+		add_action( 'wp_ajax_betterlinks/admin/update_clicks_country_by_ip', array( $this, 'update_clicks_country_by_ip' ) );
+
 		// UTM Template Application
 		add_action( 'wp_ajax_betterlinks/admin/apply_utm_template_to_links', array( $this, 'apply_utm_template_to_links' ) );
 		add_action( 'wp_ajax_betterlinks/admin/get_links_by_categories', array( $this, 'get_links_by_categories' ) );
@@ -729,6 +739,85 @@ class Ajax {
 		return wp_send_json( $results );
 	}
 
+	public function get_betterlink_categories() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$categories = $this->get_all_categories();
+		$formatted_categories = array();
+
+		foreach ($categories as $category) {
+			$formatted_categories[] = array(
+				'value' => $category['ID'],
+				'label' => $category['term_name'],
+				'slug' => $category['term_slug'],
+				'link_count' => isset($category['link_count']) ? $category['link_count'] : 0
+			);
+		}
+
+		wp_send_json_success($formatted_categories);
+	}
+
+	public function create_betterlink_category() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$category_name = isset($_POST['category_name']) ? sanitize_text_field($_POST['category_name']) : '';
+		
+		if (empty($category_name)) {
+			wp_send_json_error(array('message' => __('Category name is required', 'betterlinks')));
+			return;
+		}
+
+		// Create the category using the existing Helper method
+		$term_data = array(
+			'term_name' => $category_name,
+			'term_slug' => sanitize_title($category_name),
+			'term_type' => 'category'
+		);
+
+		$term_id = Helper::insert_term($term_data);
+		
+		if ($term_id) {
+			// Return the created category data
+			$created_category = array(
+				'id' => $term_id,
+				'term_name' => $category_name,
+				'term_slug' => sanitize_title($category_name),
+				'link_count' => 0
+			);
+			
+			wp_send_json_success($created_category);
+		} else {
+			wp_send_json_error(array('message' => __('Failed to create category', 'betterlinks')));
+		}
+	}
+
+	public function get_betterlink_tags() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( "You don't have permission to do this." );
+		}
+
+		$tags = $this->get_all_tags();
+		$formatted_tags = array();
+
+		foreach ($tags as $tag) {
+			$formatted_tags[] = array(
+				'value' => $tag['ID'],
+				'label' => $tag['term_name'],
+				'slug' => $tag['term_slug'],
+				'link_count' => isset($tag['link_count']) ? $tag['link_count'] : 0
+			);
+		}
+
+		wp_send_json_success($formatted_tags);
+	}
+
 	public function get_auto_link_create_settings() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -887,6 +976,24 @@ class Ajax {
 
 		// Pro Logics
 		$response = apply_filters( 'betterlinkspro/admin/update_settings', $response );
+
+		// Handle custom SVG icon sanitization
+		if ( ! empty( $response['autolink_custom_icon'] ) ) {
+			// Use the sanitize_custom_svg method if it exists, otherwise use custom wp_kses for SVG
+			if ( class_exists( '\BetterLinksPro\Frontend\AutoLinks' ) && method_exists( '\BetterLinksPro\Frontend\AutoLinks', 'sanitize_custom_svg' ) ) {
+				$response['autolink_custom_icon'] = \BetterLinksPro\Frontend\AutoLinks::sanitize_custom_svg( $response['autolink_custom_icon'] );
+			} else {
+				// Custom wp_kses with SVG allowed elements as fallback
+				$allowed_svg = array(
+					'svg' => array( 'class' => array(), 'width' => array(), 'height' => array(), 'viewbox' => array(), 'viewBox' => array(), 'fill' => array(), 'xmlns' => array() ),
+					'path' => array( 'd' => array(), 'stroke' => array(), 'stroke-width' => array(), 'stroke-linecap' => array(), 'stroke-linejoin' => array(), 'fill' => array() ),
+					'g' => array( 'fill' => array(), 'stroke' => array() ),
+					'circle' => array( 'cx' => array(), 'cy' => array(), 'r' => array(), 'fill' => array(), 'stroke' => array() ),
+					'rect' => array( 'x' => array(), 'y' => array(), 'width' => array(), 'height' => array(), 'fill' => array(), 'stroke' => array() ),
+				);
+				$response['autolink_custom_icon'] = wp_kses( $response['autolink_custom_icon'], $allowed_svg );
+			}
+		}
 
 		if ( ! empty( $response['fbs']['enable_fbs'] ) ) {
 			$category                  = ! empty( $response['fbs']['cat_id'] ) ? sanitize_text_field( $response['fbs']['cat_id'] ) : 1;
@@ -1306,11 +1413,175 @@ class Ajax {
 		$data = $utils->get_slug_raw($short_url);
 		$data['skip_password_protection'] = true;
 		$data['location'] = $location;
+
+		// Accept country data from frontend geolocation
+		if ( isset( $_POST['country_code'] ) ) {
+			$data['country_code'] = sanitize_text_field( $_POST['country_code'] );
+		}
+		if ( isset( $_POST['country_name'] ) ) {
+			$data['country_name'] = sanitize_text_field( $_POST['country_name'] );
+		}
+
 		Helper::init_tracking($data, $utils);
 
 		wp_send_json([
 			'data' => true
 		]);
+	}
+
+	/**
+	 * Update click record with country data
+	 *
+	 * Used for backward compatibility to update existing clicks with country information
+	 */
+	public function update_click_country() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		global $wpdb;
+
+		$click_id = isset( $_POST['click_id'] ) ? intval( $_POST['click_id'] ) : 0;
+		$country_code = isset( $_POST['country_code'] ) ? sanitize_text_field( $_POST['country_code'] ) : '';
+		$country_name = isset( $_POST['country_name'] ) ? sanitize_text_field( $_POST['country_name'] ) : '';
+
+		if ( ! $click_id || ! $country_code || ! $country_name ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid parameters', 'betterlinks' )
+			) );
+		}
+
+		$table_name = $wpdb->prefix . 'betterlinks_clicks';
+
+		// Get or create country record and get its ID
+		$country_id = \BetterLinks\Services\CountryDetectionService::get_or_create_country_id(
+			$country_code,
+			$country_name
+		);
+
+		if ( ! $country_id ) {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to create country record', 'betterlinks' )
+			) );
+		}
+
+		$updated = $wpdb->update(
+			$table_name,
+			array( 'country_id' => $country_id ),
+			array( 'ID' => $click_id ),
+			array( '%d' ),
+			array( '%d' )
+		);
+
+		if ( $updated !== false ) {
+			wp_send_json_success( array(
+				'message' => __( 'Country data updated successfully', 'betterlinks' ),
+				'country_code' => $country_code,
+				'country_name' => $country_name,
+				'country_id' => $country_id,
+			) );
+		} else {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to update country data', 'betterlinks' )
+			) );
+		}
+	}
+
+	/**
+	 * Update all clicks with the same IP within a specific link with country data
+	 *
+	 * This bulk update ensures that when country is fetched for one IP,
+	 * all clicks from the same IP within the same short URL are updated automatically
+	 */
+	public function update_clicks_country_by_ip() {
+		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		global $wpdb;
+
+		$link_id = isset( $_POST['link_id'] ) ? intval( $_POST['link_id'] ) : 0;
+		$ip = isset( $_POST['ip'] ) ? sanitize_text_field( $_POST['ip'] ) : '';
+		$country_code = isset( $_POST['country_code'] ) ? sanitize_text_field( $_POST['country_code'] ) : '';
+		$country_name = isset( $_POST['country_name'] ) ? sanitize_text_field( $_POST['country_name'] ) : '';
+
+		if ( ! $link_id || ! $ip || ! $country_code || ! $country_name ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid parameters', 'betterlinks' )
+			) );
+		}
+
+		$table_name = $wpdb->prefix . 'betterlinks_clicks';
+
+		// Get or create country record and get its ID
+		$country_id = \BetterLinks\Services\CountryDetectionService::get_or_create_country_id(
+			$country_code,
+			$country_name
+		);
+
+		if ( ! $country_id ) {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to create country record', 'betterlinks' )
+			) );
+		}
+
+		// Update all clicks with the same IP within this link_id
+		// This will update ALL clicks with this IP, regardless of whether they already have country data
+		$updated = $wpdb->update(
+			$table_name,
+			array( 'country_id' => $country_id ),
+			array(
+				'link_id' => $link_id,
+				'ip' => $ip,
+			),
+			array( '%d' ),
+			array( '%d', '%s' )
+		);
+
+		if ( $updated !== false ) {
+			// Clear the transient cache for this link's analytics data
+			// This ensures the API returns fresh data with the updated country information
+			$this->clear_individual_clicks_transient( $link_id );
+
+			wp_send_json_success( array(
+				'message' => sprintf( __( 'Country data updated for %d clicks', 'betterlinks' ), $updated ),
+				'country_code' => $country_code,
+				'country_name' => $country_name,
+				'country_id' => $country_id,
+				'updated_count' => $updated,
+			) );
+		} else {
+			wp_send_json_error( array(
+				'message' => __( 'Failed to update country data', 'betterlinks' )
+			) );
+		}
+	}
+
+	/**
+	 * Clear transient cache for individual clicks analytics
+	 * This ensures fresh data is fetched from the database
+	 *
+	 * @param int $link_id The link ID
+	 */
+	private function clear_individual_clicks_transient( $link_id ) {
+		global $wpdb;
+
+		// Get all transient keys for this link and delete them
+		// The transient key format is: btl_individual_analytics_clicks_{from}_{to}_{link_id}
+		$transient_prefix = 'btl_individual_analytics_clicks_';
+
+		// Query the options table to find all matching transients
+		$transients = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+				'%' . $wpdb->esc_like( $transient_prefix ) . '%' . $wpdb->esc_like( (string) $link_id ) . '%'
+			)
+		);
+
+		// Delete each transient
+		if ( $transients ) {
+			foreach ( $transients as $transient ) {
+				// Remove the '_transient_' prefix to get the transient name
+				$transient_name = str_replace( '_transient_', '', $transient->option_name );
+				delete_transient( $transient_name );
+			}
+		}
 	}
 
 	/**
@@ -1633,4 +1904,55 @@ class Ajax {
 
 		wp_send_json_success( array( 'message' => __( 'Notice dismissed successfully.', 'betterlinks' ) ) );
 	}
+	
+	/**
+	 * Backfill country data for existing clicks
+	 */
+	public function backfill_country_data() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+		}
+
+		if ( ! wp_verify_nonce( $_POST['security'], 'betterlinks_nonce' ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid nonce' ) );
+		}
+
+		$limit = isset( $_POST['limit'] ) ? intval( $_POST['limit'] ) : 100;
+		$limit = max( 1, min( 500, $limit ) ); // Limit between 1 and 500
+
+		if ( ! class_exists( '\BetterLinks\Services\CountryDetectionService' ) ) {
+			wp_send_json_error( array( 'message' => 'Country detection service not available' ) );
+		}
+
+		$results = \BetterLinks\Services\CountryDetectionService::backfill_country_data( $limit );
+
+		wp_send_json_success( $results );
+	}
+
+	/**
+	 * Clear analytics cache
+	 */
+	public function clear_analytics_cache() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+		}
+
+		if ( ! wp_verify_nonce( $_POST['security'], 'betterlinks_nonce' ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid nonce' ) );
+		}
+
+		global $wpdb;
+
+		// Clear all BetterLinks transients
+		$deleted = $wpdb->query(
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_btl_%' OR option_name LIKE '_transient_timeout_btl_%'"
+		);
+
+		wp_send_json_success( array(
+			'message' => 'Analytics cache cleared successfully',
+			'deleted_transients' => $deleted
+		) );
+	}
+
+
 }

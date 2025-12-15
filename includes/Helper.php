@@ -290,6 +290,7 @@ class Helper {
 					$item->link_status = $broken_links[ $item->ID ]['old_link_status'];
 				}
 				$item->tags_data = array();
+				$item->tags_id = array(); // Initialize tags_id array for form submission
 
 				foreach ( $tags_list as $tag ) {
 					if ( $tag->ID === $item->ID ) {
@@ -301,6 +302,8 @@ class Helper {
 								'term_slug' => $tag->term_slug,
 							)
 						);
+						// Also add to tags_id array for form submission
+						array_push( $item->tags_id, $tag->cat_id );
 					}
 				}
 
@@ -430,7 +433,7 @@ class Helper {
 	public static function sanitize_text_or_array_field( $array_or_string, $key = '' ) {
 
 		$boolean = array( 'true', 'false', '1', '0' );
-		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields' );
+		$skip    = array( 'affiliate_disclosure_text', 'allow_contact_text', 'form_title', 'customFields', 'autolink_custom_icon' );
 		if ( is_string( $array_or_string ) ) {
 			if( 'link' === $key ) {
 				return esc_url_raw($array_or_string);

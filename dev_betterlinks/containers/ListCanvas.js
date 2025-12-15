@@ -8,7 +8,7 @@ import { dateI18n } from '@wordpress/date';
 import LinkCopyUrl from 'components/LinkCopyUrl';
 import LinksFilter from 'components/LinksFilter';
 import { linksFilterData, insertOverlayElement, analytic, get_tags, betterlinks_date_format, paginationPerPageCount } from 'utils/helper';
-import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link } from 'redux/actions/links.actions';
+import { fetch_links_data, add_new_cat, add_new_link, edit_link, delete_link, bulk_assign_category } from 'redux/actions/links.actions';
 import { fetch_settings_data, fetch_tracking_settings } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import LinkQuickAction from 'components/LinkQuickAction';
@@ -230,6 +230,7 @@ const ListCanvas = (props) => {
 		return (
 			<LinksFilter
 				deleteLinkHandler={props.delete_link}
+				assignCategoryHandler={props.bulk_assign_category}
 				catItems={categories}
 				tagItems={tags}
 				bulkActionData={bulkActionData}
@@ -257,6 +258,7 @@ const ListCanvas = (props) => {
 		resetPaginationToggle,
 		bulkActionData,
 		delete_link,
+		bulk_assign_category,
 		categories,
 		customDateFilter,
 		setCustomDateFilter,
@@ -313,6 +315,7 @@ const mapDispatchToProps = (dispatch) => {
 		add_new_link: bindActionCreators(add_new_link, dispatch),
 		edit_link: bindActionCreators(edit_link, dispatch),
 		delete_link: bindActionCreators(delete_link, dispatch),
+		bulk_assign_category: bindActionCreators(bulk_assign_category, dispatch),
 		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 		fetch_links_password: bindActionCreators(fetch_links_password, dispatch),
 		fetch_meta_tags: bindActionCreators(fetch_meta_tags, dispatch),

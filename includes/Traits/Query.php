@@ -607,8 +607,25 @@ trait Query {
 			return;
 		}
 		$is_analytics_ip_enabled = isset( $item['ip'] ) && isset( $item['host'] );
+		$is_country_enabled = isset( $item['country_code'] ) && isset( $item['country_name'] );
+
 		$addedPlaceholderString  = $is_analytics_ip_enabled ? ' created_at_gmt, rotation_target_url, ip, host ' : ' created_at_gmt, rotation_target_url ';
 		$addedDbColumnsString    = $is_analytics_ip_enabled ? ' %s, %s, %s, %s ' : ' %s, %s ';
+
+		// Use country_id for normalized schema
+		$country_id = null;
+		if ( $is_country_enabled ) {
+			// Get or create country record
+			$country_id = \BetterLinks\Services\CountryDetectionService::get_or_create_country_id(
+				$item['country_code'],
+				$item['country_name']
+			);
+
+			if ( $country_id ) {
+				$addedPlaceholderString .= ', country_id';
+				$addedDbColumnsString   .= ', %d';
+			}
+		}
 
 		if ( $is_extra_data_tracking_compatible ) {
 			$addedPlaceholderString .= ', brand_name, model, bot_name, browser_type, os_version, browser_version, language, query_params';
@@ -633,6 +650,10 @@ trait Query {
 		if ( $is_analytics_ip_enabled ) {
 			$db_data_array[] = isset( $item['ip'] ) ? $item['ip'] : '';
 			$db_data_array[] = isset( $item['host'] ) ? $item['host'] : '';
+		}
+
+		if ( $is_country_enabled && $country_id ) {
+			$db_data_array[] = $country_id;
 		}
 		// $db_data_array[] = isset($item['device']) ? $item['device'] : '';
 		if ( $is_extra_data_tracking_compatible ) {

@@ -2,6 +2,7 @@ import { FETCH_ANALYTICS_SETTINGS } from './actionstrings';
 const defaultAnalyticsSettings = [
 	{ label: 'Browser', value: 'browser' },
 	{ label: 'IP', value: 'ip' },
+	{ label: 'Country', value: 'country_name' },
 	{ label: 'Timestamp', value: 'created_at' },
 	{ label: 'Referer', value: 'referer' },
 	{ label: 'Parameters', value: 'query_params' },

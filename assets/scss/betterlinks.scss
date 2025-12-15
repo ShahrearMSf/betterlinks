@@ -2,6 +2,7 @@
 @import './calendar/theme';
 @import './common/fonts';
 @import './common/variable';
+@import './short-link-generator';
 
 @keyframes rotating {
 	from {
@@ -1528,4 +1529,12 @@ button.rdrStaticRange {
 	inset: 40px;
     background-color: #ffffff;
     width: 600px;
+}
+//common style classes
+.betterlinks-body {
+	.btl-flex {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 }

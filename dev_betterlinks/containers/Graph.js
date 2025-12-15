@@ -154,7 +154,7 @@ const Graph = (props) => {
 					{!is_pro_enabled && id ? (
 						<img className="btl-analytics-chart-image" src={plugin_root_url + 'assets/images/teasers/individual-analytics.png'} />
 					) : (
-						<Chart options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
+						<Chart key={`chart-${JSON.stringify(dataOptions.series)}`} options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
 					)}
 					{id && <GraphTeaser />}
 				</div>

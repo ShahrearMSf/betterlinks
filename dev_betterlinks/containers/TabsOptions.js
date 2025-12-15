@@ -6,6 +6,7 @@ import AutoLinkCreate from 'components/Teasers/AutoLinkCreate';
 import CustomizeMetaTags from 'components/Teasers/CustomizeMetaTags';
 import ExternalAnalytics from 'components/Teasers/ExternalAnalytics';
 import PasswordProtection from 'components/Teasers/PasswordProtection';
+import ShortLinkGenerator from 'components/ShortLinkGenerator';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { is_fbs_enabled, is_pro_enabled } from 'utils/helper';
 import CustomFields from './CustomFields';
@@ -17,6 +18,7 @@ import UTMBuilderGlobalSettings from 'components/UTMBuilderGlobalSettings';
 const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
 		<CustomFields settings={settings} />,
+		<ShortLinkGenerator />,
 		<UTMBuilderGlobalSettings settings={settings} />,
 		<CreateLinkExternally settings={settings} terms={terms} />,
 		is_fbs_enabled && <FluentBoardSettings settings={settings} terms={terms} />,

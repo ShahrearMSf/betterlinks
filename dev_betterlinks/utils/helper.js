@@ -1,15 +1,17 @@
 import { __ } from '@wordpress/i18n';
 import axios from 'axios';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-import _ from 'lodash';
+import _, { unset } from 'lodash';
 import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
 import { Badge, Tooltip } from '@material-ui/core';
+import { useState } from 'react';
 
 export const {
 	betterlinks_nonce,
 	nonce,
 	rest_url,
+	ajaxurl,
 	namespace,
 	plugin_root_url,
 	plugin_root_path,
@@ -163,22 +165,246 @@ export const generateTitleToSlug = (value) => {
 		.replace(/[^a-z0-9-/-]/g, '');
 };
 
-export const generateShortURL = (settings, title) => {
+export const generateShortURL = (settings, title, targetUrl) => {
 	if (settings) {
 		let shortURL = settings.prefix && settings.prefix.length > 0 ? settings.prefix + '/' : '';
-		if (settings.is_random_string && title === null) {
-			return shortURL + generateRandomSlug();
+
+		// Handle new URL generation types
+		if (settings.url_slug_generation_type) {
+			switch (settings.url_slug_generation_type) {
+				case 'random_string':
+					return shortURL + generateRandomString();
+				case 'random_number':
+					return shortURL + generateRandomNumber();
+				case 'random_mixed':
+					return shortURL + generateRandomMixed();
+				case 'from_title':
+					return title ? shortURL + generateFromTitle(title) : shortURL + generateRandomMixed();
+				case 'from_url':
+					return targetUrl ? shortURL + generateFromUrl(targetUrl) : shortURL + generateRandomMixed();
+				default:
+					return shortURL + generateRandomMixed();
+			}
 		}
-		if (!settings.is_random_string && title) {
-			return shortURL + generateTitleToSlug(title);
+
+		// Legacy support for old is_random_string setting
+		// This ensures backward compatibility for existing users
+		if (settings.hasOwnProperty('is_random_string')) {
+			if (settings.is_random_string && title === null) {
+				return shortURL + generateRandomSlug();
+			}
+			if (!settings.is_random_string && title) {
+				return shortURL + generateTitleToSlug(title);
+			}
 		}
-		return '';
+
+		// Default fallback
+		return shortURL + generateRandomMixed();
 	}
 	return '';
 };
 
 export const generateRandomSlug = (length = 3) => {
 	return Math.random().toString(20).substr(2, length) + new Date().getMilliseconds();
+};
+
+// New URL generation functions
+export const generateRandomString = (length = Math.floor(Math.random() * 5) + 6) => {
+	const chars = 'abcdefghijklmnopqrstuvwxyz';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+};
+
+export const generateRandomNumber = (length = Math.floor(Math.random() * 5) + 6) => {
+	const chars = '0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+};
+
+export const generateRandomMixed = (length = Math.floor(Math.random() * 5) + 6) => {
+	const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+};
+
+export const generateFromTitle = (title) => {
+	if (!title) return generateRandomMixed();
+
+	// Clean and process the title to create a user-friendly slug
+	let slug = title
+		.trim()
+		.toLowerCase()
+		// Remove common stop words for better readability
+		.replace(/\b(the|a|an|and|or|but|in|on|at|to|for|of|with|by|from|up|about|into|through|during|before|after|above|below|between|among|against|across|toward|towards|under|over)\b/gi, '')
+		.replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+		.replace(/\s+/g, '-') // Replace spaces with hyphens
+		.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+		.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+	// Split into words and keep the most meaningful ones
+	let words = slug.split('-').filter(word => word.length > 0);
+
+	// Allow 3-4 meaningful words for better readability
+	if (words.length > 4) {
+		// Keep first 4 words, but prefer longer/more meaningful words
+		words = words
+			.sort((a, b) => b.length - a.length) // Sort by length (longer words first)
+			.slice(0, 4) // Take top 4 words
+			.sort((a, b) => title.toLowerCase().indexOf(a) - title.toLowerCase().indexOf(b)); // Restore original order
+	}
+
+	slug = words.join('-');
+
+	// If still too long (over 25 chars), intelligently truncate
+	if (slug.length > 25) {
+		// Try to keep first 3 words
+		if (words.length > 3) {
+			words = words.slice(0, 3);
+			slug = words.join('-');
+		}
+
+		// If still too long, truncate but try to end at a word boundary
+		if (slug.length > 20) {
+			let truncated = slug.substring(0, 18);
+			let lastDash = truncated.lastIndexOf('-');
+			if (lastDash > 8) {
+				slug = truncated.substring(0, lastDash);
+			} else {
+				slug = truncated;
+			}
+		}
+	}
+
+	// Ensure minimum length of 3 characters for readability
+	if (slug.length < 3) {
+		// Use first few characters of original title if slug is too short
+		let fallback = title
+			.toLowerCase()
+			.replace(/[^a-z0-9]/g, '')
+			.substring(0, 8);
+		slug = fallback || generateRandomMixed(6);
+	}
+
+	return slug || generateRandomMixed();
+};
+
+export const generateFromUrl = (targetUrl) => {
+	if (!targetUrl) return generateRandomMixed();
+
+	try {
+		const url = new URL(targetUrl);
+		let pathParts = url.pathname.split('/').filter(part => part.length > 0);
+
+		let slug = '';
+
+		if (pathParts.length > 0) {
+			// Get multiple relevant path segments for better context
+			let relevantParts = [];
+
+			// Start from the end and work backwards, skipping pure numbers and very short segments
+			for (let i = pathParts.length - 1; i >= 0 && relevantParts.length < 3; i--) {
+				let part = pathParts[i];
+
+				// Clean the part first
+				let cleanPart = part
+					.toLowerCase()
+					// Remove common file extensions
+					.replace(/\.(html|htm|php|aspx|jsp|cfm|pdf|doc|docx)$/i, '')
+					// Remove URL parameters and fragments
+					.split('?')[0].split('#')[0]
+					// Clean up the slug
+					.replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+					.replace(/\s+/g, '-') // Replace spaces with hyphens
+					.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+					.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+				// Include this part if it's meaningful (not just numbers and longer than 2 chars)
+				if (cleanPart.length > 2 && !cleanPart.match(/^\d+$/)) {
+					relevantParts.unshift(cleanPart); // Add to beginning to maintain order
+				}
+			}
+
+			// Join the relevant parts
+			if (relevantParts.length > 0) {
+				slug = relevantParts.join('-');
+			}
+
+			// If no meaningful parts found, use the last segment anyway
+			if (!slug && pathParts.length > 0) {
+				slug = pathParts[pathParts.length - 1]
+					.toLowerCase()
+					.replace(/\.(html|htm|php|aspx|jsp|cfm)$/i, '')
+					.split('?')[0].split('#')[0]
+					.replace(/[^a-z0-9\s-]/g, '')
+					.replace(/\s+/g, '-')
+					.replace(/-+/g, '-')
+					.replace(/^-|-$/g, '');
+			}
+		} else {
+			// If no meaningful path, generate from domain name
+			let domainParts = url.hostname
+				.replace(/^www\./, '') // Remove www prefix
+				.split('.');
+
+			// Use the main domain part (usually the first part before TLD)
+			slug = domainParts[0]
+				.toLowerCase()
+				.replace(/[^a-z0-9-]/g, '') // Remove special characters except hyphens
+				.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+				.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+		}
+
+		// Remove common stop words for better readability
+		slug = slug.replace(/\b(page|post|article|blog|news|category|tag|product|item|detail|view|show|index|home|main|default)\b/gi, '')
+			.replace(/-+/g, '-') // Clean up multiple hyphens
+			.replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+		// Intelligent truncation for better readability - allow up to 25 characters
+		if (slug.length > 25) {
+			// Split by hyphens and try to keep meaningful parts
+			let parts = slug.split('-').filter(part => part.length > 0);
+			if (parts.length > 3) {
+				// Keep first 3 parts
+				parts = parts.slice(0, 3);
+				slug = parts.join('-');
+			} else if (slug.length > 20) {
+				// Truncate but try to end at a word boundary
+				let truncated = slug.substring(0, 18);
+				let lastDash = truncated.lastIndexOf('-');
+				if (lastDash > 8) {
+					slug = truncated.substring(0, lastDash);
+				} else {
+					slug = truncated;
+				}
+			}
+		}
+
+		// Ensure minimum length for readability
+		if (slug.length < 3) {
+			// Fallback to a portion of the domain name
+			let fallback = url.hostname
+				.replace(/^www\./, '')
+				.replace(/\./g, '')
+				.toLowerCase()
+				.replace(/[^a-z0-9]/g, '')
+				.substring(0, 10);
+			slug = fallback || generateRandomMixed();
+		}
+
+		return slug || generateRandomMixed();
+	} catch (error) {
+		// If URL parsing fails, return random mixed
+		return generateRandomMixed();
+	}
 };
 
 export const modalCustomStyles = {
@@ -250,6 +476,17 @@ export const getBrowser = (agent) => {
 		browser = 'web';
 	}
 	return browser;
+};
+
+export const getFlagEmoji = (countryCode) => {
+	if (!countryCode || countryCode.length !== 2) return '🌍';
+
+	const codePoints = countryCode
+		.toUpperCase()
+		.split('')
+		.map(char => 127397 + char.charCodeAt());
+
+	return String.fromCodePoint(...codePoints);
 };
 
 export const formatDate = (date = new Date(), format) => {
@@ -686,9 +923,353 @@ const ParameterItem = ({ type, item, style = {} }) => {
 	);
 };
 
-export const getColumns = (analytics, analyticsTab, id = null) => {
+/**
+ * CountryFetchCell Component
+ * Displays a button to fetch country data for existing clicks without country information
+ * When country is fetched, all clicks with the same IP within the same link are updated
+ */
+const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
+	const [loading, setLoading] = useState(false);
+	const [status, setStatus] = useState('idle'); // idle, loading, success, failed
+
+	const handleFetchCountry = async () => {
+		if (!row.ip) {
+			return;
+		}
+
+		setLoading(true);
+		setStatus('loading');
+
+		try {
+			// First, fetch country data from the API
+			const response = await fetch(
+				`${rest_url}betterlinks/v1/geolocation/fetch-by-ip?ip=${encodeURIComponent(row.ip)}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-WP-Nonce': nonce,
+					},
+				}
+			);
+
+			const data = await response.json();
+
+			if (data.success && data.data) {
+				// Now save the country data to the database via AJAX
+				// Use bulk update to update all clicks with the same IP within this link
+				const formData = new FormData();
+				formData.append('action', 'betterlinks/admin/update_clicks_country_by_ip');
+				formData.append('security', betterlinks_nonce);
+				formData.append('link_id', linkId);
+				formData.append('ip', row.ip);
+				formData.append('country_code', data.data.country_code);
+				formData.append('country_name', data.data.country_name);
+
+				const ajaxResponse = await fetch(ajaxurl, {
+					method: 'POST',
+					body: formData,
+				});
+
+				const ajaxData = await ajaxResponse.json();
+
+				if (ajaxData.success) {
+					setStatus('success');
+					// Update the row data
+					row.country_code = data.data.country_code;
+					row.country_name = data.data.country_name;
+
+					// Trigger callback to refresh table data
+					// The transient cache has been cleared on the backend, so fresh data will be fetched
+					if (onCountryUpdated) {
+						onCountryUpdated(row.ip, data.data);
+					}
+				} else {
+					setStatus('failed');
+					// Auto-reset to idle after 3 seconds on failure
+					setTimeout(() => {
+						setStatus('idle');
+					}, 3000);
+				}
+			} else {
+				setStatus('failed');
+				// Auto-reset to idle after 3 seconds on failure
+				setTimeout(() => {
+					setStatus('idle');
+				}, 3000);
+			}
+		} catch (error) {
+			console.error('Error fetching country:', error);
+			setStatus('failed');
+			// Auto-reset to idle after 3 seconds on failure
+			setTimeout(() => {
+				setStatus('idle');
+			}, 3000);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getButtonContent = () => {
+		switch (status) {
+			case 'loading':
+				return (
+					<img
+						width={18}
+						height={18}
+						src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'}
+						alt="Fetching"
+						style={{
+							animation: 'spin 1s linear infinite',
+							display: 'block',
+						}}
+					/>
+				);
+			case 'success':
+				return (
+					<span style={{
+						display: 'block',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}>
+						{countryData ? countryData.country_name : __('Fetched', 'betterlinks')}
+					</span>
+				);
+			case 'failed':
+				return (
+					<span style={{
+						display: 'block',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}>
+						{__('Failed', 'betterlinks')}
+					</span>
+				);
+			default:
+				return (
+					<img
+						width={18}
+						height={18}
+						src={plugin_root_url + '/assets/images/icons/refresh_arrow.svg'}
+						alt="Refresh"
+						style={{
+							display: 'block',
+						}}
+					/>
+				);
+		}
+	};
+
+	const getButtonStyle = () => {
+		let bgColor = '#fff';
+		let textColor = '#333';
+		let borderColor = '#ccc';
+
+		if (status === 'success') {
+			bgColor = '#d4edda';
+			textColor = '#155724';
+			borderColor = '#c3e6cb';
+		} else if (status === 'failed') {
+			bgColor = '#f8d7da';
+			textColor = '#721c24';
+			borderColor = '#f5c6cb';
+		}
+
+		const baseStyles = {
+			padding: '4px 8px',
+			fontSize: '12px',
+			borderRadius: '3px',
+			color: textColor,
+			border: 'unset',
+			backgroundColor: 'unset',
+			cursor: loading || status === 'success' ? 'not-allowed' : 'pointer',
+			opacity: loading || status === 'success' ? 0.7 : 1,
+			transition: 'all 0.3s ease',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			minWidth: '26px',
+			minHeight: '26px',
+		};
+
+		// Add specific styles for the default state with icon
+		if (status === 'idle' || status === 'loading') {
+			return {
+				...baseStyles,
+				padding: '6px',
+			};
+		}
+
+		return {
+			...baseStyles,
+			maxWidth: '150px',
+		};
+	};
+
+	// Show country if row has country data
+	if (row.country_name && row.country_code) {
+		return (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+				<span style={{
+					fontSize: '16px',
+					lineHeight: '1'
+				}}>
+					{getFlagEmoji(row.country_code)}
+				</span>
+				<span title={row.country_name}>
+					{row.country_name}
+				</span>
+			</div>
+		);
+	}
+
+	return (
+		<button
+			className="btl-fetch-country-btn"
+			onClick={handleFetchCountry}
+			disabled={loading}
+			title={status === 'idle' ? __('Fetch Country', 'betterlinks') : row.ip}
+			style={getButtonStyle()}
+		>
+			{getButtonContent()}
+		</button>
+	);
+};
+
+/**
+ * Bulk fetch country data for multiple clicks
+ * Deduplicates IPs and calls API only once per unique IP
+ * Updates all clicks with the same IP within the same link
+ * Returns updated rows for real-time UI update
+ */
+export const bulkFetchCountry = async (selectedRows, linkId, onCountryUpdated) => {
+	if (!selectedRows || selectedRows.length === 0) {
+		return { success: false, message: __('No rows selected', 'betterlinks'), updatedRows: [] };
+	}
+
+	// Deduplicate IPs from selected rows
+	const uniqueIps = [...new Set(selectedRows.map(row => row.ip).filter(ip => ip))];
+
+	if (uniqueIps.length === 0) {
+		return { success: false, message: __('No valid IPs found in selected rows', 'betterlinks'), updatedRows: [] };
+	}
+
+	// Get unique IPs that need country data (don't have country_name yet)
+	const ipsNeedingCountry = [...new Set(
+		selectedRows
+			.filter(row => !row.country_name && row.ip)
+			.map(row => row.ip)
+	)];
+
+	if (ipsNeedingCountry.length === 0) {
+		return { success: false, message: __('All selected rows already have country data', 'betterlinks'), updatedRows: [] };
+	}
+
+	const results = {
+		success: true,
+		processed: 0,
+		updated: 0,
+		failed: 0,
+		message: '',
+		updatedRows: [],
+		countryMap: {} // Map of IP to country data for real-time UI update
+	};
+
+	try {
+		// Process each unique IP that needs country data
+		for (const ip of ipsNeedingCountry) {
+			try {
+				// Fetch country data from API
+				const response = await fetch(`${rest_url}betterlinks/v1/geolocation/fetch-by-ip?ip=${encodeURIComponent(ip)}`, {
+					method: 'GET',
+					headers: {
+						'X-WP-Nonce': nonce,
+					}
+				});
+
+				const data = await response.json();
+
+				if (data.success && data.data) {
+					// Save the country data to the database via AJAX
+					// Use bulk update to update all clicks with the same IP within this link
+					const formData = new FormData();
+					formData.append('action', 'betterlinks/admin/update_clicks_country_by_ip');
+					formData.append('security', betterlinks_nonce);
+					formData.append('link_id', linkId);
+					formData.append('ip', ip);
+					formData.append('country_code', data.data.country_code);
+					formData.append('country_name', data.data.country_name);
+
+					const ajaxResponse = await fetch(ajaxurl, {
+						method: 'POST',
+						body: formData,
+					});
+
+					const ajaxData = await ajaxResponse.json();
+
+					if (ajaxData.success) {
+						results.updated += ajaxData.data.updated_count || 1;
+						results.processed++;
+
+						// Store country data for real-time UI update
+						results.countryMap[ip] = {
+							country_code: data.data.country_code,
+							country_name: data.data.country_name
+						};
+					} else {
+						results.failed++;
+					}
+				} else {
+					results.failed++;
+				}
+			} catch (error) {
+				console.error('Error fetching country for IP:', ip, error);
+				results.failed++;
+			}
+
+			// Add a small delay to avoid overwhelming the API
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		results.message = `${__('Processed', 'betterlinks')} ${results.processed} ${__('IPs, updated', 'betterlinks')} ${results.updated} ${__('clicks', 'betterlinks')}, ${results.failed} ${__('failed', 'betterlinks')}`;
+
+		// Update selected rows with fetched country data for real-time UI update
+		results.updatedRows = selectedRows.map(row => {
+			if (results.countryMap[row.ip]) {
+				return {
+					...row,
+					country_code: results.countryMap[row.ip].country_code,
+					country_name: results.countryMap[row.ip].country_name
+				};
+			}
+			return row;
+		});
+
+		// Trigger callback to refresh table data
+		if (onCountryUpdated) {
+			onCountryUpdated(results.updatedRows);
+		}
+
+		return results;
+	} catch (error) {
+		console.error('Error in bulk fetch country:', error);
+		return {
+			success: false,
+			message: __('Error fetching country data', 'betterlinks'),
+			error: error.message
+		};
+	}
+};
+
+export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated = null) => {
 	if (!!id) {
 		const isProUpdated = pro_version_check('2.1.0');
+		const isProUpdatedCountry = pro_version_check('2.5.0');
 		const singleColumn = [
 			{
 				name: __('Browser', 'betterlinks'),
@@ -710,6 +1291,47 @@ export const getColumns = (analytics, analyticsTab, id = null) => {
 				selector: 'ip',
 				sortable: false,
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+			},
+			{
+				name: (
+					<>
+						{__('Country', 'betterlinks')}
+						{!is_pro_enabled && <ProBadge />}
+						{!isProUpdatedCountry && (
+							<Tooltip arrow title="To use Country Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.5.0 installed & activated" placement="top">
+								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
+							</Tooltip>
+						)}
+					</>
+				),
+				selector: 'country_name',
+				sortable: false,
+				width: '180px',
+				cell: (row) => {
+					if (!is_pro_enabled) {
+						return;
+					}
+					if (row.country_name && row.country_code) {
+						return (
+							<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+								<span style={{
+									fontSize: '16px',
+									lineHeight: '1'
+								}}>
+									{getFlagEmoji(row.country_code)}
+								</span>
+								<span title={row.country_name}>
+									{row.country_name}
+								</span>
+							</div>
+						);
+					}
+					// Show fetch button for existing clicks without country data
+					if (row.ip && !row.country_name) {
+						return <CountryFetchCell row={row} linkId={id} onCountryUpdated={onCountryUpdated} />;
+					}
+					return <div>-</div>;
+				},
 			},
 			{
 				name: __('Timestamp', 'betterlinks'),
@@ -881,6 +1503,10 @@ export const analyticsColumnData = [
 	{
 		name: __('IP', 'betterlinks'),
 		selector: 'ip',
+	},
+	{
+		name: __('Country', 'betterlinks'),
+		selector: 'country_name',
 	},
 	{
 		name: __('Timestamp', 'betterlinks'),

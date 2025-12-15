@@ -41,11 +41,38 @@ export const affiliateLinkPosition = [
 	},
 ];
 
+export const urlGenerationTypes = [
+	{
+		value: 'from_title',
+		label: __('Generate From Link Title', 'betterlinks'),
+	},
+	{
+		value: 'from_url',
+		label: __('Generate From Target URL', 'betterlinks'),
+	},
+	{
+		value: 'random_string',
+		label: __('Random Strings', 'betterlinks'),
+	},
+	{
+		value: 'random_number',
+		label: __('Random Numbers', 'betterlinks'),
+	},
+	{
+		value: 'random_mixed',
+		label: __('Random Alphanumeric', 'betterlinks'),
+	},
+];
+
 // Advanced Option Feature List
 export const tabList = [
 	{
 		label: __('Custom Fields', 'betterlinks'),
 		type: 'free',
+	},
+	{
+		label: __('Auto Post Link Generator', 'betterlinks'),
+		type: 'pro',
 	},
 	{
 		label: __('UTM Builder', 'betterlinks'),

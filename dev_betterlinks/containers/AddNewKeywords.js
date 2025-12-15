@@ -23,10 +23,11 @@ const AddNewKeywords = (props) => {
 	const { postTypes, postTags, postCategories } = postTypesProps;
 	const { settings } = props.settings;
 	const boundary = [
-		{ value: 'whitespace', label: 'White Space' },
+		{ value: '', label: 'Blank Space' },
+		{ value: 'whitespace', label: 'Blank Space & point' },
 		{ value: 'comma', label: 'Comma' },
 		{ value: 'point', label: 'Point' },
-		{ value: '', label: 'None' },
+		{ value: 'none', label: 'None' },
 	];
 
 	useEffect(() => {
@@ -78,12 +79,13 @@ const AddNewKeywords = (props) => {
 			setDuplicate(formDuplicate);
 			return false;
 		}
-		if (values.leftBoundary === '' || values.keywordBefore === '') {
-			values.leftBoundary = '';
+		// Clear keyword before/after for 'none' and '' (White Space) boundaries
+		if (values.leftBoundary === '' || values.leftBoundary === 'none' || values.keywordBefore === '') {
+			values.leftBoundary = values.leftBoundary || '';
 			values.keywordBefore = '';
 		}
-		if (values.rightBoundary === '' || values.keywordAfter === '') {
-			values.rightBoundary = '';
+		if (values.rightBoundary === '' || values.rightBoundary === 'none' || values.keywordAfter === '') {
+			values.rightBoundary = values.rightBoundary || '';
 			values.keywordAfter = '';
 		}
 		const findLink = allLinks.find((link) => link.value == values.chooseLink);
@@ -321,7 +323,7 @@ const AddNewKeywords = (props) => {
 													}}
 												/>
 											</div>
-											{props.values.leftBoundary != '' && (
+											{props.values.leftBoundary != '' && props.values.leftBoundary != 'none' && (
 												<div className="btl-modal-form-group">
 													<label className="btl-modal-form-label" htmlFor="keywordBefore">
 														{__('Keyword Before', 'betterlinks')}
@@ -329,7 +331,7 @@ const AddNewKeywords = (props) => {
 													<Field id="keywordBefore" type="text" name="keywordBefore" />
 												</div>
 											)}
-											{props.values.rightBoundary != '' && (
+											{props.values.rightBoundary != '' && props.values.rightBoundary != 'none' && (
 												<div className="btl-modal-form-group">
 													<label className="btl-modal-form-label" htmlFor="keywordAfter">
 														{__('Keyword After', 'betterlinks')}

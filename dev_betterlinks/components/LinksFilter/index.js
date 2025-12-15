@@ -22,9 +22,30 @@ const rowDeleteHandler = (selectedRows, action, deleteLinkHandler, setWarning, s
 	setWarning(true);
 };
 
+const rowAssignCategoryHandler = (selectedRows, action, selectedCategory, assignCategoryHandler, setWarning, setToggledClearRows) => {
+	if (action.value === 'assign_category') {
+		if (!selectedCategory || !selectedCategory.value) {
+			setWarning(true);
+			return;
+		}
+		setWarning(false);
+		const assignItemLists = [];
+		selectedRows.map((item) => {
+			assignItemLists.push({
+				ID: item.ID,
+				cat_id: selectedCategory.value,
+			});
+		});
+		setToggledClearRows();
+		assignCategoryHandler(assignItemLists);
+		return;
+	}
+};
+
 const LinksFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState({});
 	const [warning, setWarning] = useState(false);
+	const [selectedAssignCategory, setSelectedAssignCategory] = useState(null);
 	const dateRangePickerOnChangeHandler = (item) => {
 		props.setCustomDateFilter([item.selection]);
 		if (item.selection.endDate != item.selection.startDate) {
@@ -47,24 +68,46 @@ const LinksFilter = (props) => {
 							classNamePrefix="btl-react-select"
 							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
 							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
-							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
-							onChange={(e) => setBulkAction(e)}
+							options={[
+								{ value: 'delete', label: __('Delete', 'betterlinks') },
+								{ value: 'assign_category', label: __('Assign Category', 'betterlinks') }
+							]}
+							onChange={(e) => {
+								setBulkAction(e);
+								setSelectedAssignCategory(null);
+								setWarning(false);
+							}}
 						/>
+						{bulkAction.value === 'assign_category' && (
+							<Select
+								className="btl-list-view-select"
+								classNamePrefix="btl-react-select"
+								placeholder={__('Select Category', 'betterlinks')}
+								value={selectedAssignCategory}
+								options={props.catItems}
+								onChange={(e) => setSelectedAssignCategory(e)}
+							/>
+						)}
 						<div className="btl-tooltip">
 							<button
 								className="btl-link-apply-button"
 								onClick={() => {
-									rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler, setWarning, props.setToggledClearRows);
+									if (bulkAction.value === 'assign_category') {
+										rowAssignCategoryHandler(props.bulkActionData.selectedRows, bulkAction, selectedAssignCategory, props.assignCategoryHandler, setWarning, props.setToggledClearRows);
+									} else {
+										rowDeleteHandler(props.bulkActionData.selectedRows, bulkAction, props.deleteLinkHandler, setWarning, props.setToggledClearRows);
+									}
 									setBulkAction({});
+									setSelectedAssignCategory(null);
 								}}
 							>
 								{__('Apply', 'betterlinks')}
 							</button>
-							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">Please Select Action.</span>}
+							{warning && <span className="btl-tooltiptext">{bulkAction.value === 'assign_category' ? __('Please Select Category.', 'betterlinks') : __('Please Select Action.', 'betterlinks')}</span>}
 						</div>
 					</div>
 				)}
-				<div className="btl-click-filter">
+				<div className="btl-click-filter" style = {bulkAction.value === 'assign_category' ? { width: '130px' } : {}}>
 					<input id="search" type="text" placeholder={__('Search', 'betterlinks')} value={props.filterText} onChange={props.onFilter} />
 				</div>
 				<Select

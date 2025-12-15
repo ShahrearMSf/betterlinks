@@ -134,7 +134,7 @@ export const Link = (props) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: generateShortURL(settings.settings, null),
+		short_url: generateShortURL(settings.settings, null, null),
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,
@@ -142,6 +142,7 @@ export const Link = (props) => {
 		link_modified_gmt: currentDate,
 		redirect_type: '307',
 		cat_id: catId || settings?.settings?.default_category || '1', // Default to "Uncategorized" (ID: 1)
+		tags_id: [], // Initialize empty tags array for new links
 		...settings.settings,
 		...objForGutenTargetBlank,
 	};
@@ -306,7 +307,7 @@ export const Link = (props) => {
 						setFetchedTitle(fetchedTitle);
 						return;
 					}
-					handleTitleChange(setFieldValue, fetchedTitle || '', short_url);
+					handleTitleChange(setFieldValue, fetchedTitle || '', short_url, target_url);
 				}
 			} catch (error) {
 				console.log(error);
@@ -315,10 +316,20 @@ export const Link = (props) => {
 		[settings.settings]
 	);
 
-	const handleTitleChange = (setFieldValue, title, short_url = null) => {
+	const handleTitleChange = (setFieldValue, title, short_url = null, targetUrl = null) => {
 		setFieldValue('link_title', title);
 		if (!data) {
-			let shortURL = generateShortURL(settings.settings, short_url || title);
+			let shortURL = generateShortURL(settings.settings, short_url || title, targetUrl);
+			if (shortURL.length > 0) {
+				setFieldValue('short_url', shortURL);
+				setSlugIsExists(false);
+			}
+		}
+	};
+
+	const handleTargetUrlChange = (setFieldValue, targetUrl, title = null) => {
+		if (!data && settings.settings.url_slug_generation_type === 'from_url') {
+			let shortURL = generateShortURL(settings.settings, title, targetUrl);
 			if (shortURL.length > 0) {
 				setFieldValue('short_url', shortURL);
 				setSlugIsExists(false);
@@ -476,7 +487,7 @@ export const Link = (props) => {
 														name="link_title"
 														disabled={isDisableLinkFormEditView}
 														onChange={(e) => {
-															handleTitleChange(props.setFieldValue, e.target.value);
+															handleTitleChange(props.setFieldValue, e.target.value, null, props.values?.target_url);
 														}}
 														required
 													/>
@@ -486,7 +497,7 @@ export const Link = (props) => {
 													<FetchedTitleConfirmation
 														fetchedTitle={fetchedTitle}
 														handleYes={() => {
-															handleTitleChange(props.setFieldValue, fetchedTitle);
+															handleTitleChange(props.setFieldValue, fetchedTitle, null, props.values?.target_url);
 															setFetchedTitle(null);
 														}}
 														handleNo={() => setFetchedTitle(null)}
@@ -535,6 +546,8 @@ export const Link = (props) => {
 													props.setFieldValue('target_url', target_url);
 													const willUpdateTitle = '' === props.values?.link_title;
 													fetchTargetURL(target_url, props.setFieldValue, willUpdateTitle, props.values?.link_title);
+													// Handle URL-based slug generation
+													handleTargetUrlChange(props.setFieldValue, target_url, props.values?.link_title);
 												}}
 												placeholder=""
 												disabled={isDisableLinkFormEditView}
