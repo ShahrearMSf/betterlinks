@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 
 const ProgressDisplay = ({ generationStatus, postCount, plugin_root_url }) => {
+    const [displayProgress, setDisplayProgress] = useState(0);
+    const [lastStatus, setLastStatus] = useState(null);
+    
+    useEffect(() => {
+        if (!generationStatus) return;
+        
+        const currentProgress = generationStatus.progress_percent || 0;
+        const currentStatus = generationStatus.status;
+        
+        // If status changed to a new generation (detected by status change or progress reset to 0)
+        if (currentStatus !== lastStatus || (currentProgress === 0 && displayProgress > 0)) {
+            setDisplayProgress(0);
+            setLastStatus(currentStatus);
+        } else if (currentProgress >= displayProgress) {
+            // Only update if progress increases
+            setDisplayProgress(currentProgress);
+        }
+        // Never allow progress to decrease during the same generation
+    }, [generationStatus?.progress_percent, generationStatus?.status]);
+
     if (!generationStatus || generationStatus.status === 'completed') return null;
 
     return (
@@ -30,13 +50,13 @@ const ProgressDisplay = ({ generationStatus, postCount, plugin_root_url }) => {
                                 fill="none"
                                 strokeLinecap="round"
                                 strokeDasharray={`${2 * Math.PI * 50}`}
-                                strokeDashoffset={`${2 * Math.PI * 50 * (1 - (generationStatus.progress_percent || 0) / 100)}`}
+                                strokeDashoffset={`${2 * Math.PI * 50 * (1 - displayProgress / 100)}`}
                                 transform="rotate(-90 60 60)"
                                 style={{ transition: 'stroke-dashoffset 0.5s ease-in-out' }}
                             />
                         </svg>
                         <div className="btl-progress-percentage-display">
-                            <span className="btl-progress-percent-text">{generationStatus.progress_percent || 0}%</span>
+                            <span className="btl-progress-percent-text">{Math.round(displayProgress)}%</span>
                         </div>
                     </div>
                 </div>
@@ -49,12 +69,12 @@ const ProgressDisplay = ({ generationStatus, postCount, plugin_root_url }) => {
                     </p>
                     
                     {/* Time Left */}
-                    {generationStatus.progress_percent > 0 && generationStatus.progress_percent < 100 && (
+                    {displayProgress > 0 && displayProgress < 100 && (
                         <div className="btl-progress-time-left">
                             <span className="btl-time-label">{__('Time Left: ~', 'betterlinks')}</span>
                             <span className="btl-time-value">
                                 {(() => {
-                                    const remainingPercent = 100 - generationStatus.progress_percent;
+                                    const remainingPercent = 100 - displayProgress;
                                     const estimatedMinutes = Math.ceil((remainingPercent / 100) * Math.ceil((generationStatus.total || 1) / 10));
                                     return estimatedMinutes > 0 ? `${estimatedMinutes} ${__('minutes', 'betterlinks')}` : __('Almost done', 'betterlinks');
                                 })()}

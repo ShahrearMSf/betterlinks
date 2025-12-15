@@ -1063,6 +1063,7 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 	};
 
 	const getButtonStyle = () => {
+		const isProUpdatedCountry = pro_version_check('2.5.0');
 		let bgColor = '#fff';
 		let textColor = '#333';
 		let borderColor = '#ccc';
@@ -1077,6 +1078,8 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 			borderColor = '#f5c6cb';
 		}
 
+		const isDisabled = loading || status === 'success' || !is_pro_enabled || !isProUpdatedCountry;
+
 		const baseStyles = {
 			padding: '4px 8px',
 			fontSize: '12px',
@@ -1084,8 +1087,8 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 			color: textColor,
 			border: 'unset',
 			backgroundColor: 'unset',
-			cursor: loading || status === 'success' ? 'not-allowed' : 'pointer',
-			opacity: loading || status === 'success' ? 0.7 : 1,
+			cursor: isDisabled ? 'not-allowed' : 'pointer',
+			opacity: isDisabled ? 0.7 : 1,
 			transition: 'all 0.3s ease',
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
@@ -1128,12 +1131,18 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 		);
 	}
 
+	const isProUpdatedCountry = pro_version_check('2.5.0');
+
 	return (
 		<button
 			className="btl-fetch-country-btn"
 			onClick={handleFetchCountry}
-			disabled={loading}
-			title={status === 'idle' ? __('Fetch Country', 'betterlinks') : row.ip}
+			disabled={loading || !is_pro_enabled || !isProUpdatedCountry}
+			title={
+				!is_pro_enabled ? __('Pro Feature - Upgrade to Pro', 'betterlinks') :
+				!isProUpdatedCountry ? __('Please update BetterLinks Pro to v2.5.0 or newer', 'betterlinks') :
+				status === 'idle' ? __('Fetch Country', 'betterlinks') : row.ip
+			}
 			style={getButtonStyle()}
 		>
 			{getButtonContent()}

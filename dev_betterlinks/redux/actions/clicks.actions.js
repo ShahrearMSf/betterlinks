@@ -12,7 +12,7 @@ export const FETCH_UNIQUE_CLICKS_BY_TAGS = 'FETCH_UNIQUE_CLICKS_BY_TAGS';
 export const FETCH_ANALYTICS_GRAPH_BY_TAGS = 'FETCH_ANALYTICS_GRAPH_BY_TAGS';
 
 export const get_analytics_graph_by_tag = (params) => async (dispatch) => {
-	const { tag_id, from, to, setLoading } = params;
+	const { tag_id, from, to, setLoading = () => {} } = params;
 	const endPoint = `${namespace}clicks/tags/get_graphs/${tag_id}`;
 	setLoading(true);
 
@@ -40,7 +40,7 @@ export const get_analytics_graph_by_tag = (params) => async (dispatch) => {
 };
 
 export const get_analytics_unique_list_by_id = (params) => async (dispatch) => {
-	const { tag_id, from, to, setLoading } = params;
+	const { tag_id, from, to, setLoading = () => {} } = params;
 
 	const endPoint = namespace + 'clicks/tags/' + tag_id;
 	setLoading(true);
@@ -69,7 +69,7 @@ export const get_analytics_unique_list_by_id = (params) => async (dispatch) => {
 };
 
 export const get_medium_data = (params) => async (dispatch) => {
-	const { from, to, setLoading } = params;
+	const { from, to, setLoading = () => {} } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_medium');
 	setLoading(true);
 	try {
@@ -93,7 +93,7 @@ export const get_medium_data = (params) => async (dispatch) => {
 };
 
 export const get_chart_data = (params) => async (dispatch) => {
-	const { from, to, setLoading } = params;
+	const { from, to, setLoading = () => {} } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_charts');
 	setLoading(true);
 	try {
@@ -114,7 +114,7 @@ export const get_chart_data = (params) => async (dispatch) => {
 	} catch (error) {}
 };
 export const get_graph_data = (params) => async (dispatch) => {
-	const { from, to, setLoading } = params;
+	const { from, to, setLoading = () => {} } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/get_graphs');
 
 	setLoading(true);
@@ -137,7 +137,7 @@ export const get_graph_data = (params) => async (dispatch) => {
 };
 
 export const fetch_individual_clicks = (params) => async (dispatch) => {
-	const { link_id, from, to, setLoading } = params;
+	const { link_id, from, to, setLoading = () => {} } = params;
 	let endPoint = betterLinksHooks.applyFilters('betterLinksFetchClicksData', namespace + 'clicks/' + link_id);
 	setLoading(true);
 	try {

@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { makeRequest, betterlinks_nonce, prefix, plugin_root_url, is_pro_enabled } from '../../utils/helper';
+import { makeRequest, betterlinks_nonce, prefix, plugin_root_url, is_pro_enabled, pro_version_check } from '../../utils/helper';
 import { useUpgradeProModal } from '../../utils/customHooks';
 import UpgradeToPro from '../Teasers/UpgradeToPro';
 import StaticProVisulaization from './StaticProVisulaization';
@@ -49,6 +49,9 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
         settings?.url_slug_generation_type ||
         (settings?.is_random_string ? 'random_string' : 'random_mixed')
     );
+
+    // Check if pro version meets minimum requirement (v2.5.0)
+    const isProVersionValid = pro_version_check('2.5.0', '>=');
 
     // Sync URL slug generation type when settings change
     useEffect(() => {
@@ -224,6 +227,10 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
     const confirmGeneration = async () => {
         setShowConfirmation(false);
         setGenerationInProgress(true);
+        
+        // Clear any existing progress intervals to prevent conflicts
+        clearProgressInterval();
+        
         setGenerationStatus({
             progress_percent: 0,
             processed: 0,
@@ -298,12 +305,14 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
     };
 
     const startSimulatedProgress = () => {
-        let progress = 0;
+        let progress = 0; // Always start from 0%
         const interval = setInterval(() => {
-            progress += Math.random() * 15; // Random increment between 0-15%
-            if (progress > 85) progress = 85; // Don't go beyond 85% until real data comes
-
-            console.log('pp - ', Math.floor(progress));
+            // Smaller, more consistent increments for smoother progress
+            const increment = Math.random() * 2 + 0.5; // Random increment between 0.5-2.5%
+            progress += increment;
+            
+            // Cap at 99% to prevent going over 100% while keeping it smooth
+            if (progress > 99) progress = 99;
 
             setGenerationStatus(prev => ({
                 ...prev,
@@ -314,7 +323,7 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                         ? __('Creating short links...', 'betterlinks')
                         : __('Finalizing and optimizing links...', 'betterlinks')
             }));
-        }, 800); // Update every 800ms for visible progress
+        }, 400); // Update every 400ms for smooth visual progress
 
         setProgressInterval(interval);
     };
@@ -408,7 +417,14 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                 <StaticProVisulaization openUpgradeToProModal={openUpgradeToProModal} />
             ) : (
                 <>
-
+            {!isProVersionValid && (
+				<div className="btl-form-group">
+					<div className="short-description">
+						<b style={{ fontWeight: 700 }}>{__('Note: ', 'betterlinks')}</b>
+						{__('To use the Auto Post Link Generator feature, please ensure BetterLinks Pro v2.5.0 or newer is activated', 'betterlinks')}
+					</div>
+				</div>
+			)}
             <div className="btl-header bl-text-white">
                 <h2>{__('Auto Post Link Generator', 'betterlinks')}</h2>
                 <div className="btl-description">
@@ -676,12 +692,16 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                         <button
                             className="btl-btn btl-btn-primary"
                             onClick={handleGenerate}
-                            disabled={!selectedPostType || isLoading || generationInProgress || postCount === 0}
+                            disabled={!selectedPostType || isLoading || generationInProgress || postCount === 0 || !isProVersionValid}
                         >
                             {isLoading || generationInProgress ? (
                                 <>
                                     <span className="btl-spinner"></span>
                                     {__('Loading...', 'betterlinks')}
+                                </>
+                            ) : !isProVersionValid ? (
+                                <>
+                                    {__('Requires BetterLinks Pro v2.5.0+', 'betterlinks')}
                                 </>
                             ) : (
                                 <>

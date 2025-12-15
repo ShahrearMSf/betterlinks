@@ -16,6 +16,17 @@ const ConfirmationModal = ({
 }) => {
     if (!showConfirmation) return null;
 
+    const handleStartGeneration = () => {
+        // Scroll to top smoothly
+        window.scrollTo({
+            top: 300,
+            behavior: 'smooth'
+        });
+        
+        // Call the original confirmation function
+        confirmGeneration();
+    };
+
     return (
         <div className="btl-modal-overlay btl-fade-in" onClick={() => setShowConfirmation(false)}>
             <div className="btl-confirmation-modal btl-slide-in" onClick={(e) => e.stopPropagation()}>
@@ -118,7 +129,7 @@ const ConfirmationModal = ({
                         <div className="btl-confirmation-summary-content">
                             <div className="btl-confirmation-summary-title">{__('Posts Selected', 'betterlinks')}</div>
                             <div className="btl-confirmation-summary-subtitle">
-                                {__('Estimated Time ~', 'betterlinks')} {Math.ceil(postCount / 10)} {__('minutes', 'betterlinks')}
+                                {__('Estimated Time ~', 'betterlinks')} {Math.ceil(postCount / 10)} {postCount > 1 ? __('minutes', 'betterlinks') : __('minute', 'betterlinks')}
                             </div>
                         </div>
                     </div>
@@ -134,7 +145,7 @@ const ConfirmationModal = ({
                     </button>
                     <button
                         className="btl-confirmation-btn btl-confirmation-btn-primary"
-                        onClick={confirmGeneration}
+                        onClick={handleStartGeneration}
                     >
                         {__('Start Generation', 'betterlinks')}
                     </button>
