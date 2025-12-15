@@ -46,7 +46,7 @@ class Admin {
 
 	public function insert_plugin_links( $links ) {
 		if ( ! apply_filters( 'betterlinks/pro_enabled', false ) ) {
-			$links[] = '<a href="https://betterlinks.io/bfcm-2025-plugins-wp" target="_blank" style="color: #000000; font-weight: bold;">' . __( 'Save 40% Today', 'betterlinks' ) . '</a>';
+			$links[] = '<a href="https://wpdeveloper.com/in/upgrade-betterlinks" target="_blank" style="color: #000000; font-weight: bold;">' . __( 'Upgrade to Pro', 'betterlinks' ) . '</a>';
 		}
 
 		return $links;
