@@ -413,8 +413,8 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                 <h2>{__('Auto Post Link Generator', 'betterlinks')}</h2>
                 <div className="btl-description">
                     {__('Generate bulk short links for any post type with advanced configuration ', 'betterlinks')}
-                    <a href="https://betterlinks.io/docs/auto-post-link-generator/" target="_blank">
-                        {__('Learn More.', 'betterlinks')}
+                    <a href="https://betterlinks.io/docs/auto-post-link-generator-in-betterlinks" target="_blank">
+                        {__('Learn More', 'betterlinks')}
                     </a>
                 </div>
             </div>

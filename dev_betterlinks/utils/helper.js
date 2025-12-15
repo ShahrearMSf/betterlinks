@@ -1298,7 +1298,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 						{__('Country', 'betterlinks')}
 						{!is_pro_enabled && <ProBadge />}
 						{!isProUpdatedCountry && (
-							<Tooltip arrow title="To use Country Tracking Feature, kindly ensure that you have at least BetterLinks Pro v2.5.0 installed & activated" placement="top">
+							<Tooltip arrow title="To track visitor Countries, please ensure BetterLinks Pro v2.5.0 or newer is activated" placement="top">
 								<span className="dashicons dashicons-info-outline" style={{ fontSize: 'inherit', color: 'red', cursor: 'pointer' }} />
 							</Tooltip>
 						)}
