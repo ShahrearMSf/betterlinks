@@ -1,6 +1,7 @@
 import axios from 'axios';
 import queryString from 'query-string';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
+import { UPDATE_LINKS_ANALYTICS } from './links.actions';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const FETCH_INDIVIDUAL_CLICKS = 'FETCH_INDIVIDUAL_CLICKS';
 export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
@@ -178,6 +179,16 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 			type: FETCH_CLICKS_DATA,
 			payload: res.data,
 		});
+
+		// Also update links analytics data for real-time UI update
+		if (res.data?.data?.analytic) {
+			dispatch({
+				type: UPDATE_LINKS_ANALYTICS,
+				payload: {
+					analytic: res.data.data.analytic,
+				},
+			});
+		}
 	} catch (e) {
 		console.log({ error: e });
 		const parsed = queryString.parse(location.search);
@@ -200,6 +211,16 @@ export const fetch_clicks_data = (params) => async (dispatch) => {
 						type: FETCH_CLICKS_DATA,
 						payload: response.data,
 					});
+
+					// Also update links analytics data for real-time UI update
+					if (response.data?.data?.analytic) {
+						dispatch({
+							type: UPDATE_LINKS_ANALYTICS,
+							payload: {
+								analytic: response.data.data.analytic,
+							},
+						});
+					}
 				}
 			},
 			(error) => {
@@ -297,6 +318,17 @@ export const delete_links_analytics = (params) => async (dispatch) => {
 					data: res.data?.data || {},
 				},
 			});
+
+			// Update links analytics data in real-time
+			// The API returns updated analytic data after deletion
+			if (res.data?.data?.analytic) {
+				dispatch({
+					type: UPDATE_LINKS_ANALYTICS,
+					payload: {
+						analytic: res.data.data.analytic,
+					},
+				});
+			}
 
 			// Also refresh the main analytics graphs and data
 			if (from && to) {

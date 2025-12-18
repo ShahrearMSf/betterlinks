@@ -1,4 +1,29 @@
 (function ($) {
+	/**
+	 * Check if BetterLinks Pro version meets the minimum requirement
+	 * Returns true if pro is not installed or if version is >= required version
+	 * 
+	 * @param {string} requiredVersion - Minimum required version
+	 * @returns {boolean}
+	 */
+	const isProVersionValid = (requiredVersion) => {
+		const proVersion = betterLinksApp?.betterlinkspro_version;
+		// If pro is not installed, return false (country tracking requires pro >= 2.5.0)
+		if (!proVersion) return false;
+		
+		const proVersionParts = proVersion.split('.').map(Number);
+		const requiredParts = requiredVersion.split('.').map(Number);
+		
+		for (let i = 0; i < Math.max(proVersionParts.length, requiredParts.length); i++) {
+			const proPart = proVersionParts[i] || 0;
+			const reqPart = requiredParts[i] || 0;
+			
+			if (proPart > reqPart) return true;
+			if (proPart < reqPart) return false;
+		}
+		return true; // Versions are equal
+	};
+
 	const betterlinksTrack = {
 		init() {
 			this.trackUnCloakedLinksWithLinkID();
@@ -44,7 +69,8 @@
 		},
 		async initTracking(values) {
 			// Try to get country data from frontend geolocation service
-			if (typeof geolocationService !== 'undefined') {
+			// Only if BetterLinks Pro v2.5.0 or newer is installed
+			if (typeof geolocationService !== 'undefined' && isProVersionValid('2.5.0')) {
 				try {
 					const countryData = await geolocationService.getCountry();
 					if (countryData) {

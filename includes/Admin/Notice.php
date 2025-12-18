@@ -215,7 +215,7 @@ class Notice {
 			"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/Create-Dynamic-UTM-Template-with-BetterLinks' style='display: inline-block'>
+				<a target='_blank' href='https://betterlinks.io/docs/auto-post-link-generator-in-betterlinks' style='display: inline-block'>
 					%s
 				</a>
 				%s
@@ -223,14 +223,14 @@ class Notice {
 				%s
 				</p>
 		</div>",
-			__( 'NEW: BetterLinks Pro 2.4 now includes a powerful new ', 'betterlinks' ),
-			__( 'UTM Builder.', 'betterlinks' ),
+			__( 'NEW: BetterLinks Pro 2.5 now includes a powerful new ', 'betterlinks' ),
+			__( 'Auto Post Link Generator.', 'betterlinks' ),
 			__( ' Check the full ', 'betterlinks' ),
 			__( 'Changelog', 'betterlinks' ),
 			__( ' for details.', 'betterlinks' ),
 		);
 	}
-//NEW: BetterLinks Pro 2.4 now includes a powerful new UTM Builder. Check the full Changelog for details.
+
 	public function usage_tracker() {
 		$this->opt_in_tracker = PluginUsageTracker::get_instance( BETTERLINKS_PLUGIN_FILE, [
 			'opt_in'       => true,

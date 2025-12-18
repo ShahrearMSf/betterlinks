@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -34,11 +34,20 @@ const Graph = (props) => {
 	} = props;
 	const id = betterLinksQuery.get('id');
 	const tag_id = betterLinksQuery.get('tag_id');
-	const labels = get_labels(is_pro_enabled ? props.data.clicks : []);
+	const labels = get_labels(props.data?.clicks || {});
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
+	const [isMounted, setIsMounted] = useState(true);
 
 	const { darkMode } = activity;
+
+	// Track component mount state to prevent chart errors on unmount
+	useEffect(() => {
+		setIsMounted(true);
+		return () => {
+			setIsMounted(false);
+		};
+	}, []);
 
 	const dateRangePickerOnChangeHandler = (item) => {
 		setCustomDateFilter([item.selection]);
@@ -100,6 +109,14 @@ const Graph = (props) => {
 						},
 					},
 				},
+				animations: {
+					enabled: true,
+					dynamicAnimation: {
+						enabled: false,
+					},
+				},
+				redrawOnParentResize: false,
+				redrawOnWindowResize: false,
 			},
 			xaxis: {
 				categories: labels,
@@ -118,6 +135,12 @@ const Graph = (props) => {
 		series: getDataset(props.data, props.uniqueIpCount),
 	};
 
+	// Check if chart has valid data to render
+
+	if (!isMounted) {
+		return null;
+	}
+	console.log('dataOptions', dataOptions);
 	return (
 		<div>
 			<div className="btl-analytics-filter">
@@ -132,14 +155,13 @@ const Graph = (props) => {
 							<div className="btl-date-range-picker">
 								<button onClick={closeDatePicker} className="btn-date-range-close">
 									<span className="dashicons dashicons-no-alt" />
-								</button>
+								</button>s
 								<DateRangePicker
 									onChange={(item) => dateRangePickerOnChangeHandler(item)}
 									showSelectionPreview={true}
 									moveRangeOnFirstSelection={false}
 									months={2}
 									ranges={customDateFilter}
-									direction="horizontal"
 								/>
 							</div>
 						</div>
@@ -154,7 +176,7 @@ const Graph = (props) => {
 					{!is_pro_enabled && id ? (
 						<img className="btl-analytics-chart-image" src={plugin_root_url + 'assets/images/teasers/individual-analytics.png'} />
 					) : (
-						<Chart key={`chart-${JSON.stringify(dataOptions.series)}`} options={dataOptions.options} series={dataOptions.series} type="area" height="350" />
+						<Chart key={`chart-${JSON.stringify(dataOptions.series)}`} options={dataOptions.options} series={dataOptions.series} type="area" height={350} />
 					)}
 					{id && <GraphTeaser />}
 				</div>

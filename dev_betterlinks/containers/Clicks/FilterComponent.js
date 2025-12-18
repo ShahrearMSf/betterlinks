@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
 import { useEffect } from 'react';
 import ProBadge from 'components/Badge/ProBadge';
-import { is_pro_enabled } from 'utils/helper';
+import { is_pro_enabled, pro_version_check } from 'utils/helper';
 import Select from 'react-select';
 
 const FilterComponent = (props) => {
@@ -70,7 +70,7 @@ const FilterComponent = (props) => {
 								value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
 								options={[
 									{ value: 'delete', label: __('Delete', 'betterlinks') },
-									...(id ? [{ value: 'fetch_country', label: __('Fetch Country', 'betterlinks') }] : []),
+									...(id ? [{ value: 'fetch_country', label: <>{__('Fetch Country', 'betterlinks')} {(!is_pro_enabled || !pro_version_check('2.5.0')) && <ProBadge />}</> }] : []),
 								]}
 								onChange={(e) => setBulkAction(e)}
 							/>
@@ -80,6 +80,8 @@ const FilterComponent = (props) => {
 									onClick={() => {
 										rowDeleteHandler();
 									}}
+									disabled={bulkAction?.value === 'fetch_country' && (!is_pro_enabled || !pro_version_check('2.5.0'))}
+									title={bulkAction?.value === 'fetch_country' && (!pro_version_check('2.5.0')) ? __('Please update BetterLinks Pro to v2.5.0 or newer', 'betterlinks') : ''}
 								>
 									{__('Apply', 'betterlinks')}
 								</button>

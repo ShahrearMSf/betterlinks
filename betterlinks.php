@@ -3,7 +3,7 @@
  * Plugin Name:		BetterLinks
  * Plugin URI:		https://betterlinks.io/
  * Description:		Ultimate plugin to create, shorten, track and manage any URL. Gather analytics reports and run successfully marketing campaigns easily.
- * Version:			2.3.4
+ * Version:			2.4.0
  * Author:			WPDeveloper
  * Author URI:		https://wpdeveloper.com
  * License:			GPL-3.0+
@@ -83,7 +83,7 @@ if (!class_exists('BetterLinks')) {
             /**
              * Defines CONSTANTS for Whole plugins.
              */
-            define('BETTERLINKS_VERSION', '2.3.4');
+            define('BETTERLINKS_VERSION', '2.4.0');
             define('BETTERLINKS_DB_VERSION', '1.6.7');
             define('BETTERLINKS_MENU_NOTICE', '9');
             define('BETTERLINKS_SETTINGS_NAME', 'betterlinks_settings');
@@ -211,6 +211,7 @@ if (!class_exists('BetterLinks')) {
                 'site_url' => apply_filters('betterlinks/site_url', site_url()),
                 'rest_url' => rest_url(),
                 'nonce' => wp_create_nonce('wp_rest'),
+                'betterlinkspro_version' => defined('BETTERLINKS_PRO_VERSION') ? BETTERLINKS_PRO_VERSION : null,
             ]);
         }
     }

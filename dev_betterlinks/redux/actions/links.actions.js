@@ -15,6 +15,7 @@ export const DELETE_LINK = 'DELETE_LINK';
 export const EDIT_LINK = 'EDIT_LINK';
 export const EDIT_LINK_FOR_GUTENBERG = 'EDIT_LINK_FOR_GUTENBERG';
 export const HANDLE_LINK_FAVORITE = 'HANDLE_LINK_FAVORITE';
+export const UPDATE_LINKS_ANALYTICS = 'UPDATE_LINKS_ANALYTICS';
 
 export const onDragEnd = (result) => async (dispatch) => {
 	var [notUsed, ID] = result.draggableId.split('_');

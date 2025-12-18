@@ -424,7 +424,13 @@ class Clicks extends Controller {
 		delete_transient( $graph_transient_key );
 
 		// Clear all analytics caches to be safe
-		\BetterLinks\Traits\Query::clear_analytics_cache();
+		\BetterLinks\Helper::clear_analytics_cache();
+
+		// Update the betterlinks_analytics_data option with fresh data from database
+		\BetterLinks\Helper::update_links_analytics();
+
+		// Clear links cache so that page refresh shows updated analytics
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 
 		$results = $this->get_individual_analytics_clicks( $link_id, $from, $to );
 		$link_details = $this->get_individual_link_details( $link_id );
@@ -511,7 +517,13 @@ class Clicks extends Controller {
 		}
 
 		// Clear all analytics caches
-		\BetterLinks\Traits\Query::clear_analytics_cache();
+		\BetterLinks\Helper::clear_analytics_cache();
+
+		// Update the betterlinks_analytics_data option with fresh data from database
+		\BetterLinks\Helper::update_links_analytics();
+
+		// Clear links cache so that page refresh shows updated analytics
+		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 
 		// Fetch updated analytics data for the link list
 		$unique_list = $this->get_analytics_unique_list( $from, $to );

@@ -66,6 +66,18 @@ class Geolocation {
 	 * @return \WP_REST_Response
 	 */
 	public function detect_country( $request ) {
+		// Check if BetterLinks Pro v2.5.0 or newer is installed
+		if ( ! defined( 'BETTERLINKS_PRO_VERSION' ) || version_compare( BETTERLINKS_PRO_VERSION, '2.5.0', '<' ) ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => 'Country detection requires BetterLinks Pro v2.5.0 or newer',
+					'data'    => null,
+				),
+				403
+			);
+		}
+
 		$ip = CountryDetectionService::get_current_client_ip();
 
 		if ( ! $ip ) {
@@ -122,6 +134,18 @@ class Geolocation {
 	 * @return \WP_REST_Response
 	 */
 	public function fetch_country_by_ip( $request ) {
+		// Check if BetterLinks Pro v2.5.0 or newer is installed
+		if ( ! defined( 'BETTERLINKS_PRO_VERSION' ) || version_compare( BETTERLINKS_PRO_VERSION, '2.5.0', '<' ) ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => 'Country detection requires BetterLinks Pro v2.5.0 or newer',
+					'data'    => null,
+				),
+				403
+			);
+		}
+
 		$ip = $request->get_param( 'ip' );
 
 		if ( ! $ip || ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {

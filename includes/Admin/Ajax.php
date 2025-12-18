@@ -1437,6 +1437,13 @@ class Ajax {
 	public function update_click_country() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
 
+		// Check if BetterLinks Pro v2.5.0 or newer is installed
+		if ( ! defined( 'BETTERLINKS_PRO_VERSION' ) || version_compare( BETTERLINKS_PRO_VERSION, '2.5.0', '<' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Country detection requires BetterLinks Pro v2.5.0 or newer', 'betterlinks' )
+			) );
+		}
+
 		global $wpdb;
 
 		$click_id = isset( $_POST['click_id'] ) ? intval( $_POST['click_id'] ) : 0;
@@ -1493,6 +1500,13 @@ class Ajax {
 	 */
 	public function update_clicks_country_by_ip() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
+
+		// Check if BetterLinks Pro v2.5.0 or newer is installed
+		if ( ! defined( 'BETTERLINKS_PRO_VERSION' ) || version_compare( BETTERLINKS_PRO_VERSION, '2.5.0', '<' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Country detection requires BetterLinks Pro v2.5.0 or newer', 'betterlinks' )
+			) );
+		}
 
 		global $wpdb;
 

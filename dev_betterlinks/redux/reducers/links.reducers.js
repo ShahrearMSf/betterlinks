@@ -11,6 +11,7 @@ import {
 	EDIT_LINK_FOR_GUTENBERG,
 	DELETE_LINK,
 	HANDLE_LINK_FAVORITE,
+	UPDATE_LINKS_ANALYTICS,
 } from 'redux/actions/links.actions';
 import { DELETE_GUTENBERG_LINK } from 'redux/actions/actionstrings';
 
@@ -325,6 +326,44 @@ function links(state = {}, action) {
 				...state,
 				links: newLinks,
 			};
+		case UPDATE_LINKS_ANALYTICS: {
+			// Update analytic data for links after bulk delete
+			const { analytic } = payload;
+			if (!state.links || !analytic) {
+				return state;
+			}
+
+			const updatedLinks = {};
+			for (const [catId, category] of Object.entries(state.links)) {
+				const updatedLists = (category.lists || []).map((link) => {
+					const linkId = link.ID;
+					// Update the analytic property if it exists in the new analytic data
+					if (analytic.hasOwnProperty(linkId)) {
+						return {
+							...link,
+							analytic: analytic[linkId],
+						};
+					}
+					// If link had analytic but it's now removed (deleted), set to null or empty
+					if (link.analytic && !analytic.hasOwnProperty(linkId)) {
+						return {
+							...link,
+							analytic: null,
+						};
+					}
+					return link;
+				});
+				updatedLinks[catId] = {
+					...category,
+					lists: updatedLists,
+				};
+			}
+
+			return {
+				...state,
+				links: updatedLinks,
+			};
+		}
 		default:
 			return state;
 	}
