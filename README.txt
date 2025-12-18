@@ -160,16 +160,22 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
- = 2.3.4 - 27/11/2025 =
+= 2.4.0 - 18/12/2025 =
+
+- Improvement: Introduced Bulk Deletion option in Specific Clicks Analytics and Item-wise Analytics.
+- Improvement: Introduced Multiple URL Slug Generation mechanism
+- Few minor bug fixes & improvements
+
+= 2.3.4 - 27/11/2025 =
 
 - Few minor bug fixes & improvements
 
 
- = 2.3.3 - 18/11/2025 =
+= 2.3.3 - 18/11/2025 =
 
 - Few minor bug fixes & improvements
 
- = 2.3.2 - 26/10/2025 =
+= 2.3.2 - 26/10/2025 =
 
 - Improvement: Added “Refresh Stats” option on the Analytics page for Instant data updates.
 - Improvement: Enhanced the “Reset” mechanism — it now supports date-wise resets with individual link data clearing.
