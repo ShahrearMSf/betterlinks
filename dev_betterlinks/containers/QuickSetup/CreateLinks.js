@@ -38,19 +38,28 @@ const CreateLink = (props) => {
 	};
 	const handleTitleChange = (setFieldValue, title, short_url = null, targetUrl = null) => {
 		setFieldValue('link_title', title);
-		let shortURL = generateShortURL(settings, short_url || title, targetUrl);
-		if (shortURL.length > 0) {
-			setFieldValue('short_url', shortURL);
-			setSlugIsExists(false);
-			return shortURL;
+		// Only update short_url for 'from_title' type, not for random types
+		const generationType = settings?.url_slug_generation_type || 
+			(settings?.is_random_string ? 'random_number' : 'from_title');
+		
+		if (generationType === 'from_title') {
+			let shortURL = generateShortURL(settings, short_url || title, targetUrl, false);
+			if (shortURL && shortURL.length > 0) {
+				setFieldValue('short_url', shortURL);
+				setSlugIsExists(false);
+				return shortURL;
+			}
 		}
 		return '';
 	};
 
 	const handleTargetUrlChange = (setFieldValue, targetUrl, title = null) => {
-		if (settings.url_slug_generation_type === 'from_url') {
-			let shortURL = generateShortURL(settings, title, targetUrl);
-			if (shortURL.length > 0) {
+		const generationType = settings?.url_slug_generation_type || 
+			(settings?.is_random_string ? 'random_number' : 'from_title');
+		
+		if (generationType === 'from_url') {
+			let shortURL = generateShortURL(settings, title, targetUrl, false);
+			if (shortURL && shortURL.length > 0) {
 				setFieldValue('short_url', shortURL);
 				setSlugIsExists(false);
 			}
@@ -133,12 +142,19 @@ const CreateLink = (props) => {
 															disabled={isDisableLinkFormEditView}
 															onChange={(e) => {
 																const short_url = handleTitleChange(props.setFieldValue, e.target.value, null, props.values?.target_url);
-																props.setFieldValue('short_url', short_url);
-																setLinkOptions((prev) => ({
-																	...prev,
-																	link_title: e.target.value,
-																	short_url,
-																}));
+																// Only update if short_url was actually generated (for from_title type)
+																if (short_url) {
+																	setLinkOptions((prev) => ({
+																		...prev,
+																		link_title: e.target.value,
+																		short_url,
+																	}));
+																} else {
+																	setLinkOptions((prev) => ({
+																		...prev,
+																		link_title: e.target.value,
+																	}));
+																}
 															}}
 															required
 														/>

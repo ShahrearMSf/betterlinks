@@ -90,7 +90,14 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 	return (
 		<React.Fragment>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			<Formik enableReinitialize initialValues={{ ...settings }} onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}>
+			<Formik
+				enableReinitialize
+				initialValues={{
+					...settings,
+					url_slug_generation_type: settings?.url_slug_generation_type || 'from_title',
+				}}
+				onSubmit={(values) => saveSettingsHandler(values, update_option, setFormSubmitText)}
+			>
 				{(props) => (
 					<Form>
 						<div className="btl-tab-panel-inner">
@@ -272,8 +279,9 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										name="url_slug_generation_type"
 										options={urlGenerationTypes}
 										defaultValue={
-											settings.url_slug_generation_type ||
-											(settings?.is_random_string ? 'random_string' : 'random_mixed')
+											settings?.is_random_string
+												? 'random_number'
+												: (settings.url_slug_generation_type || 'from_title')
 										}
 										setFieldValue={props.setFieldValue}
 										isMulti={false}

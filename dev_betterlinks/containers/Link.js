@@ -134,7 +134,7 @@ export const Link = (props) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: generateShortURL(settings.settings, null, null),
+		short_url: generateShortURL(settings.settings, null, null, true),
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,
@@ -319,20 +319,33 @@ export const Link = (props) => {
 	const handleTitleChange = (setFieldValue, title, short_url = null, targetUrl = null) => {
 		setFieldValue('link_title', title);
 		if (!data) {
-			let shortURL = generateShortURL(settings.settings, short_url || title, targetUrl);
-			if (shortURL.length > 0) {
-				setFieldValue('short_url', shortURL);
-				setSlugIsExists(false);
+			// Only update short_url for 'from_title' type, not for random types
+			const generationType = settings.settings?.url_slug_generation_type || 
+				(settings.settings?.is_random_string ? 'random_number' : 'from_title');
+			
+			if (generationType === 'from_title') {
+				let shortURL = generateShortURL(settings.settings, short_url || title, targetUrl, false);
+				if (shortURL && shortURL.length > 0) {
+					setFieldValue('short_url', shortURL);
+					setSlugIsExists(false);
+				}
 			}
+			// For random types (random_string, random_number, random_mixed), 
+			// the slug remains fixed from initial generation
 		}
 	};
 
 	const handleTargetUrlChange = (setFieldValue, targetUrl, title = null) => {
-		if (!data && settings.settings.url_slug_generation_type === 'from_url') {
-			let shortURL = generateShortURL(settings.settings, title, targetUrl);
-			if (shortURL.length > 0) {
-				setFieldValue('short_url', shortURL);
-				setSlugIsExists(false);
+		if (!data) {
+			const generationType = settings.settings?.url_slug_generation_type || 
+				(settings.settings?.is_random_string ? 'random_number' : 'from_title');
+			
+			if (generationType === 'from_url') {
+				let shortURL = generateShortURL(settings.settings, title, targetUrl, false);
+				if (shortURL && shortURL.length > 0) {
+					setFieldValue('short_url', shortURL);
+					setSlugIsExists(false);
+				}
 			}
 		}
 	};

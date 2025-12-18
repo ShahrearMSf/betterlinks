@@ -47,7 +47,7 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
     const [linkPrefix, setLinkPrefix] = useState(prefix || 'go');
     const [urlSlugGenerationType, setUrlSlugGenerationType] = useState(
         settings?.url_slug_generation_type ||
-        (settings?.is_random_string ? 'random_string' : 'random_mixed')
+        (settings?.is_random_string ? 'random_number' : 'from_title')
     );
 
     // Check if pro version meets minimum requirement (v2.5.0)
@@ -58,9 +58,14 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
         if (settings?.url_slug_generation_type) {
             setUrlSlugGenerationType(settings.url_slug_generation_type);
         } else if (settings?.is_random_string !== undefined) {
-            setUrlSlugGenerationType(settings.is_random_string ? 'random_string' : 'random_mixed');
+            setUrlSlugGenerationType(settings.is_random_string ? 'random_number' : 'from_title');
         }
     }, [settings?.url_slug_generation_type, settings?.is_random_string]);
+
+    // Log urlSlugGenerationType changes
+    useEffect(() => {
+        console.log('urlSlugGenerationType:', urlSlugGenerationType);
+    }, [urlSlugGenerationType]);
 
     // Load post types on mount
     useEffect(() => {

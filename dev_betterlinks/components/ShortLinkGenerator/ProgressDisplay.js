@@ -76,7 +76,7 @@ const ProgressDisplay = ({ generationStatus, postCount, plugin_root_url }) => {
                                 {(() => {
                                     const remainingPercent = 100 - displayProgress;
                                     const estimatedMinutes = Math.ceil((remainingPercent / 100) * Math.ceil((generationStatus.total || 1) / 10));
-                                    return estimatedMinutes > 0 ? `${estimatedMinutes} ${__('minutes', 'betterlinks')}` : __('Almost done', 'betterlinks');
+                                    return estimatedMinutes > 0 ? `${estimatedMinutes} ${ estimatedMinutes > 1 ? __('minutes', 'betterlinks') : __('minute', 'betterlinks')}` : __('Almost done', 'betterlinks');
                                 })()}
                             </span>
                         </div>

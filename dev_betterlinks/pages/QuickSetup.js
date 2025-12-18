@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { add_new_link, fetch_links_data } from 'redux/actions/links.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
-import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, migratable_plugins } from 'utils/helper';
+import { betterlinks_quick_setup_step, betterlinks_settings, formatDate, migratable_plugins, generateShortURL } from 'utils/helper';
 
 const QuickSetup = (props) => {
 	const [activeStep, setActiveStep] = useState(betterlinks_quick_setup_step ? 1 : 0);
@@ -103,7 +103,7 @@ const getInitialValues = (settings) => {
 		link_title: '',
 		link_slug: '',
 		target_url: '',
-		short_url: '',
+		short_url: generateShortURL(settings, null, null, true),
 		link_note: '',
 		link_date: currentDate,
 		link_date_gmt: currentDate,

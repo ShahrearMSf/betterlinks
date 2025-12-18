@@ -165,7 +165,7 @@ export const generateTitleToSlug = (value) => {
 		.replace(/[^a-z0-9-/-]/g, '');
 };
 
-export const generateShortURL = (settings, title, targetUrl) => {
+export const generateShortURL = (settings, title, targetUrl, isInitialGeneration = false) => {
 	if (settings) {
 		let shortURL = settings.prefix && settings.prefix.length > 0 ? settings.prefix + '/' : '';
 
@@ -173,33 +173,43 @@ export const generateShortURL = (settings, title, targetUrl) => {
 		if (settings.url_slug_generation_type) {
 			switch (settings.url_slug_generation_type) {
 				case 'random_string':
-					return shortURL + generateRandomString();
+					// Only generate random slug on initial generation, not on title/url changes
+					return isInitialGeneration ? shortURL + generateRandomString() : null;
 				case 'random_number':
-					return shortURL + generateRandomNumber();
+					// Only generate random slug on initial generation, not on title/url changes
+					return isInitialGeneration ? shortURL + generateRandomNumber() : null;
 				case 'random_mixed':
-					return shortURL + generateRandomMixed();
+					// Only generate random slug on initial generation, not on title/url changes
+					return isInitialGeneration ? shortURL + generateRandomMixed() : null;
 				case 'from_title':
-					return title ? shortURL + generateFromTitle(title) : shortURL + generateRandomMixed();
+					// Return empty slug for initial generation, generate from title when title is provided
+					if (isInitialGeneration) return shortURL;
+					return title ? shortURL + generateFromTitle(title) : null;
 				case 'from_url':
-					return targetUrl ? shortURL + generateFromUrl(targetUrl) : shortURL + generateRandomMixed();
+					// Return empty slug for initial generation, generate from URL when URL is provided
+					if (isInitialGeneration) return shortURL;
+					return targetUrl ? shortURL + generateFromUrl(targetUrl) : null;
 				default:
-					return shortURL + generateRandomMixed();
+					return isInitialGeneration ? shortURL + generateRandomMixed() : null;
 			}
 		}
 
 		// Legacy support for old is_random_string setting
 		// This ensures backward compatibility for existing users
 		if (settings.hasOwnProperty('is_random_string')) {
-			if (settings.is_random_string && title === null) {
-				return shortURL + generateRandomSlug();
+			if (settings.is_random_string) {
+				// Old behavior: random_string now maps to random_number
+				return isInitialGeneration ? shortURL + generateRandomNumber() : null;
 			}
-			if (!settings.is_random_string && title) {
-				return shortURL + generateTitleToSlug(title);
+			if (!settings.is_random_string) {
+				// Old behavior: not random_string now maps to from_title
+				if (isInitialGeneration) return shortURL;
+				return title ? shortURL + generateTitleToSlug(title) : null;
 			}
 		}
 
 		// Default fallback
-		return shortURL + generateRandomMixed();
+		return isInitialGeneration ? shortURL + generateRandomMixed() : null;
 	}
 	return '';
 };

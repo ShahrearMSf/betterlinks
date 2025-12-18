@@ -37,7 +37,7 @@ class ShortLinkGenerator
      */
     private function verify_pro_access()
     {
-        return $this->is_pro_enabled() && $this->is_pro_plugin_active() && $this->check_pro_license();
+        return $this->is_pro_enabled() && $this->is_pro_plugin_active() && $this->check_pro_license() && $this->is_pro_bulk_generator_available();
     }
 
     /**
@@ -69,6 +69,21 @@ class ShortLinkGenerator
         // If pro version is defined, assume license is valid
         // This can be enhanced with actual license verification
         return defined('BETTERLINKS_PRO_VERSION');
+    }
+
+    /**
+     * Check if the Pro plugin has bulk link generator feature available
+     * This ensures old Pro versions without this feature cannot access it
+     * 
+     * @since 1.7.0
+     * @return bool
+     */
+    private function is_pro_bulk_generator_available()
+    {
+        // Check if the Pro Helper class exists and has the bulk generator method
+        return class_exists('BetterLinksPro\\Helper') && 
+               method_exists('BetterLinksPro\\Helper', 'is_bulk_link_generator_enabled') &&
+               \BetterLinksPro\Helper::is_bulk_link_generator_enabled();
     }
 
     /**

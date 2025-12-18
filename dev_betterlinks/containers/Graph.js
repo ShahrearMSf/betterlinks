@@ -140,7 +140,6 @@ const Graph = (props) => {
 	if (!isMounted) {
 		return null;
 	}
-	console.log('dataOptions', dataOptions);
 	return (
 		<div>
 			<div className="btl-analytics-filter">

@@ -1501,10 +1501,21 @@ class Ajax {
 	public function update_clicks_country_by_ip() {
 		check_ajax_referer( 'betterlinks_admin_nonce', 'security' );
 
-		// Check if BetterLinks Pro v2.5.0 or newer is installed
+		// Check if BetterLinks Pro v2.5.0 or newer is installed and has country tracking feature
 		if ( ! defined( 'BETTERLINKS_PRO_VERSION' ) || version_compare( BETTERLINKS_PRO_VERSION, '2.5.0', '<' ) ) {
 			wp_send_json_error( array(
-				'message' => __( 'Country detection requires BetterLinks Pro v2.5.0 or newer', 'betterlinks' )
+				'message' => __( 'Country detection requires BetterLinks Pro v2.5.0 or newer', 'betterlinks' ),
+				'code' => 'pro_version_required'
+			) );
+		}
+
+		// Additional check: Verify Pro plugin has the country tracking function (prevents bypass with old Pro files)
+		if ( ! class_exists( 'BetterLinksPro\\Helper' ) || 
+			 ! method_exists( 'BetterLinksPro\\Helper', 'is_country_tracking_enabled' ) ||
+			 ! \BetterLinksPro\Helper::is_country_tracking_enabled() ) {
+			wp_send_json_error( array(
+				'message' => __( 'Please update BetterLinks Pro to v2.5.0 or newer to use this feature', 'betterlinks' ),
+				'code' => 'pro_update_required'
 			) );
 		}
 

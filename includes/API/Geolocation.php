@@ -72,6 +72,22 @@ class Geolocation {
 				array(
 					'success' => false,
 					'message' => 'Country detection requires BetterLinks Pro v2.5.0 or newer',
+					'code'    => 'pro_version_required',
+					'data'    => null,
+				),
+				403
+			);
+		}
+
+		// Additional check: Verify Pro plugin has the country tracking function (prevents bypass with old Pro files)
+		if ( ! class_exists( 'BetterLinksPro\\Helper' ) || 
+			 ! method_exists( 'BetterLinksPro\\Helper', 'is_country_tracking_enabled' ) ||
+			 ! \BetterLinksPro\Helper::is_country_tracking_enabled() ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => 'Please update BetterLinks Pro to v2.5.0 or newer to use this feature',
+					'code'    => 'pro_update_required',
 					'data'    => null,
 				),
 				403
@@ -140,6 +156,22 @@ class Geolocation {
 				array(
 					'success' => false,
 					'message' => 'Country detection requires BetterLinks Pro v2.5.0 or newer',
+					'code'    => 'pro_version_required',
+					'data'    => null,
+				),
+				403
+			);
+		}
+
+		// Additional check: Verify Pro plugin has the country tracking function (prevents bypass with old Pro files)
+		if ( ! class_exists( 'BetterLinksPro\\Helper' ) || 
+			 ! method_exists( 'BetterLinksPro\\Helper', 'is_country_tracking_enabled' ) ||
+			 ! \BetterLinksPro\Helper::is_country_tracking_enabled() ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => 'Please update BetterLinks Pro to v2.5.0 or newer to use this feature',
+					'code'    => 'pro_update_required',
 					'data'    => null,
 				),
 				403
