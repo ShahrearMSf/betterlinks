@@ -198,12 +198,10 @@ if (!class_exists('BetterLinks')) {
         }
 
         public function frontend_scripts() {
-            $dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.app.core.min.asset.php';
+			$dependencies = include_once BETTERLINKS_ASSETS_DIR_PATH . 'js/betterlinks.app.core.min.asset.php';
 
-            // Enqueue geolocation service first (required by betterlinks-app)
-            wp_enqueue_script( 'betterlinks-geolocation', BETTERLINKS_ASSETS_URI . 'js/geolocation.service.min.js', [], $dependencies['version'], true );
-
-            wp_enqueue_script( 'betterlinks-app', BETTERLINKS_ASSETS_URI . 'js/betterlinks.app.core.min.js', [ 'jquery', 'betterlinks-geolocation' ], $dependencies['version'], true );
+			// Enqueue main app script (geolocation logic is bundled inside)
+			wp_enqueue_script( 'betterlinks-app', BETTERLINKS_ASSETS_URI . 'js/betterlinks.app.core.min.js', [ 'jquery' ], $dependencies['version'], true );
 
             wp_localize_script('betterlinks-app', 'betterLinksApp', [
                 'betterlinks_nonce' => wp_create_nonce('betterlinks_admin_nonce'),
