@@ -110,4 +110,8 @@ export const tabList = [
 		label: __('Auto-Link Keywords', 'betterlinks'),
 		type: 'pro',
 	},
+	{
+		label: __('AI Configuration', 'betterlinks'),
+		type: 'pro',
+	},
 ].filter(Boolean);

@@ -14,6 +14,7 @@ import { tabList } from 'utils/data';
 import FluentBoardSettings from 'components/FluentBoardSettings';
 import AutoLinkKeywords from 'components/Teasers/AutoLinkKeywords';
 import UTMBuilderGlobalSettings from 'components/UTMBuilderGlobalSettings';
+import AISettings from 'components/AISettings';
 
 const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
@@ -28,6 +29,7 @@ const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, track
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 		<AutoLinkKeywords settings={settings} postdatas={postdatas} />,
+		<AISettings />,
 	].filter(Boolean);
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);

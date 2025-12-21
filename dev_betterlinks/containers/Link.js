@@ -39,6 +39,7 @@ import FetchedTitleConfirmation from 'components/Link/FetchedTitleConfirmation';
 import AdvanceOptionTeaser from 'components/Teasers/Link/AdvanceOptionTeaser';
 import DynamicRedirectsTeaser from 'components/Teasers/Link/DynamicRedirectsTeaser';
 import ProBadge from 'components/Badge/ProBadge';
+import AIBulkLink from 'components/AIBulkLink';
 
 const propTypes = {
 	isShowIcon: PropTypes.bool,
@@ -82,6 +83,7 @@ export const Link = (props) => {
 	const [modalUTMIsOpen, setModalUTMIsOpen] = useState(false);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 	const [isShowCustomUTMModalContent, setIsShowCustomUTMModalContent] = useState(true);
+	const [isAIBulkLinkOpen, setIsAIBulkLinkOpen] = useState(false);
 	const currentDate = formatDate(new Date(), 'yyyy-mm-dd h:m:s');
 	const isDisableLinkFormEditView = betterLinksHooks.applyFilters('isDisableLinkFormEditView', false, data);
 	const [isOpenLinkPanel, setOpenLinkPanel] = useState({
@@ -444,9 +446,23 @@ export const Link = (props) => {
 					{!props.children && <span className="icon">{!isFetchTerms ? <i className={`btl btl-${'' === type ? 'edit' : 'copy'}`}></i> : <i className="btl btl-reload"></i>}</span>}
 				</button>
 			) : (
-				<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
-					{isShowIcon ? <i className="btl btl-add"></i> : __('Add New Link', 'betterlinks')} {!isShowIcon && isFetchTerms ? ' ...' : ''}
-				</button>
+				<>
+					<button onClick={openModal} className={`btl-create-link-button ${isShowIcon && isFetchTerms ? 'btl-rotating' : ''}`}>
+						{isShowIcon ? <i className="btl btl-add"></i> : __('Add New Link', 'betterlinks')} {!isShowIcon && isFetchTerms ? ' ...' : ''}
+					</button>
+					{
+						! isShowIcon && (
+							<div class="btl-ai-button-wrapper"
+								onClick={() => setIsAIBulkLinkOpen(true)}
+							>
+								<button class="btl-ai-button">
+									<img src={plugin_root_url + '/assets/images/icons/ai-btn-icon.svg'} alt="AI Icon" />
+									<span>Add link with AI</span>
+								</button>
+							</div>
+						)
+					}
+				</>
 			)}
 			<Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={modalCustomStyles} ariaHideApp={false}>
 				<span className="btl-close-modal" onClick={closeModal}>
@@ -835,6 +851,12 @@ export const Link = (props) => {
 					}}
 				</Formik>
 			</Modal>
+			<AIBulkLink
+				isOpen={isAIBulkLinkOpen}
+				onClose={() => setIsAIBulkLinkOpen(false)}
+				terms={terms}
+				settings={settings}
+			/>
 		</>
 	);
 };
