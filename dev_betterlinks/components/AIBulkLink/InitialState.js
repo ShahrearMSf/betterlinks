@@ -3,7 +3,9 @@ import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
 import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 import { redirectType as redirectTypeOptions, urlGenerationTypes } from 'utils/data';
+import { useUpgradeProModal } from 'utils/customHooks';
 import ProBadge from 'components/Badge/ProBadge';
+import UpgradeToPro from '../Teasers/UpgradeToPro';
 
 const InitialState = ({
 urls,
@@ -24,6 +26,8 @@ hasValidApiKey,
 settingsLoading,
 defaultPrompt,
 }) => {
+	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+
 	// Prepare category options with AI Generated as first option
 	const categoryOptions = [
 		{
@@ -52,37 +56,40 @@ label: cat.term_name,
 					<label className="btl-ai-label btl-white">
 						{__('Redirect Type', 'betterlinks')}
 					</label>
-					<Select2
-						className="btl-modal-select--full"
-						classNamePrefix="btl-react-select"
-						options={[
-							...redirectTypeOptions,
-							{
-								value: is_pro_enabled ? 'cloak' : 'pro',
-								label: (
-									<>
-										{__('Cloaked', 'betterlinks')} <ProBadge />
-									</>
-								),
-								disabled: !is_pro_enabled,
-							},
-						]}
-						value={[
-							...redirectTypeOptions,
-							{
-								value: is_pro_enabled ? 'cloak' : 'pro',
-								label: (
-									<>
-										{__('Cloaked', 'betterlinks')} <ProBadge />
-									</>
-								),
-								disabled: !is_pro_enabled,
-							},
-						].filter((item) => item.value === redirectType)[0] || redirectTypeOptions[0]}
-						onChange={(option) => setRedirectType(option?.value || '302')}
-						isSearchable={false}
-						isOptionDisabled={(option) => option.disabled}
-					/>
+					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
+						<Select2
+							className="btl-modal-select--full"
+							classNamePrefix="btl-react-select"
+							options={[
+								...redirectTypeOptions,
+								{
+									value: is_pro_enabled ? 'cloak' : 'pro',
+									label: (
+										<>
+											{__('Cloaked', 'betterlinks')} <ProBadge />
+										</>
+									),
+									disabled: !is_pro_enabled,
+								},
+							]}
+							value={[
+								...redirectTypeOptions,
+								{
+									value: is_pro_enabled ? 'cloak' : 'pro',
+									label: (
+										<>
+											{__('Cloaked', 'betterlinks')} <ProBadge />
+										</>
+									),
+									disabled: !is_pro_enabled,
+								},
+							].filter((item) => item.value === redirectType)[0] || redirectTypeOptions[0]}
+							onChange={(option) => setRedirectType(option?.value || '302')}
+							isSearchable={false}
+							isOptionDisabled={(option) => option.disabled}
+							isDisabled={!is_pro_enabled}
+						/>
+					</span>
 				</div>
 
 				{/* Short URL Generation Strategy */}
@@ -90,14 +97,17 @@ label: cat.term_name,
 					<label className="btl-ai-label btl-white">
 						{__('URL Slug Generation', 'betterlinks')}
 					</label>
-					<Select2
-						className="btl-modal-select--full"
-						classNamePrefix="btl-react-select"
-						options={urlGenerationTypes}
-						value={urlGenerationTypes.filter((item) => item.value === shortUrlStrategy)[0]}
-						onChange={(option) => setShortUrlStrategy(option?.value || 'from_title')}
-						isSearchable={false}
-					/>
+					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
+						<Select2
+							className="btl-modal-select--full"
+							classNamePrefix="btl-react-select"
+							options={urlGenerationTypes}
+							value={urlGenerationTypes.filter((item) => item.value === shortUrlStrategy)[0]}
+							onChange={(option) => setShortUrlStrategy(option?.value || 'from_title')}
+							isSearchable={false}
+							isDisabled={!is_pro_enabled}
+						/>
+					</span>
 				</div>
 
 				{/* Assign Category */}
@@ -105,16 +115,19 @@ label: cat.term_name,
 					<label className="btl-ai-label btl-white">
 						{__('Assign Category', 'betterlinks')}
 					</label>
-					<Select2
-						className="btl-modal-select--full"
-						classNamePrefix="btl-react-select"
-						options={categoryOptions}
-						value={
-							categoryOptions.find((cat) => cat.value === selectedCategory) || categoryOptions[0]
-						}
-						onChange={(option) => setSelectedCategory(option?.value || 'ai_generated')}
-						placeholder={__('Select a category...', 'betterlinks')}
-					/>
+					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
+						<Select2
+							className="btl-modal-select--full"
+							classNamePrefix="btl-react-select"
+							options={categoryOptions}
+							value={
+								categoryOptions.find((cat) => cat.value === selectedCategory) || categoryOptions[0]
+							}
+							onChange={(option) => setSelectedCategory(option?.value || 'ai_generated')}
+							placeholder={__('Select a category...', 'betterlinks')}
+							isDisabled={!is_pro_enabled}
+						/>
+					</span>
 				</div>
 			</div>
 
@@ -126,17 +139,20 @@ label: cat.term_name,
 						<span className="btl-ai-required">*</span>
 						{__('Target URLs', 'betterlinks')}
 					</label>
+					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea
 						className="btl-ai-textarea"
 						placeholder={__('http://test-site.local/go/ui8/product-name/contact-page\n\nhttps://examplelink.com', 'betterlinks')}
 						value={urls}
 						onChange={(e) => setUrls(e.target.value)}
 						rows="5"
-						disabled={isProcessing}
+						disabled={isProcessing || !is_pro_enabled}
+						style={!is_pro_enabled ? { pointerEvents: 'none' } : {}}
 					>
 						https://example.com
 						https://another-example.com
 					</textarea>
+					</div>
 					<p className="btl-ai-note">
 						{__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')}
 					</p>
@@ -163,21 +179,26 @@ label: cat.term_name,
 							{__('Reset Prompt', 'betterlinks')}
 						</button>
 					</div>
+					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea
 						className="btl-ai-textarea"
 						placeholder={__('Enter your AI prompt for generating link data:', 'betterlinks')}
 						value={prompt}
 						onChange={(e) => setPrompt(e.target.value)}
 						rows="5"
-						disabled={isProcessing}
+						disabled={isProcessing || !is_pro_enabled}
+						style={!is_pro_enabled ? { pointerEvents: 'none' } : {}}
 					/>
+				    </div>
 				</div>
 
 				{/* Generate Button */}
+				<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', display: 'inline-block', position: 'relative' } : { display: 'inline-block', position: 'relative' }}>
 				<button
 					className="btl-ai-btn-generate"
-					onClick={onGenerateLinks}
+					onClick={is_pro_enabled ? onGenerateLinks : undefined}
 					disabled={isProcessing || isUrlsEmpty}
+					style={!is_pro_enabled && (isProcessing || isUrlsEmpty) ? { pointerEvents: 'none' } : {}}
 				>
 					{isProcessing ? (
 <>
@@ -191,7 +212,9 @@ label: cat.term_name,
 						</>
 					)}
 				</button>
+				</div>
 			</div>
+			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 		</>
 	);
 };

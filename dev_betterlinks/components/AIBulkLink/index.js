@@ -3,7 +3,8 @@ import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { modalCustomStyles, plugin_root_url } from 'utils/helper';
+import { Link } from 'react-router-dom';
+import { modalCustomStyles, plugin_root_url, is_pro_enabled, route_path } from 'utils/helper';
 import {
 	fetch_ai_settings,
 	process_urls_with_ai,
@@ -16,6 +17,7 @@ import InitialState from './InitialState';
 import ProcessingState from './ProcessingState';
 import PreviewState from './PreviewState';
 import PublishingState from './PublishingState';
+import ProBadge from 'components/Badge/ProBadge';
 
 const AIBulkLink = ({
 	isOpen,
@@ -153,9 +155,19 @@ const AIBulkLink = ({
             <div className="btl-ai-left-section">
 			  <img src={plugin_root_url + '/assets/images/icons/ai-hedaer-icon.svg'} alt="AI Icon" />
               <div className="btl-ai-content-wrapper">
-                <h1 className="btl-ai-title">Generate Link With AI</h1>
+                <h1 className="btl-ai-title">Generate Link With AI { !is_pro_enabled && <ProBadge />} </h1> 
                 <p className="btl-ai-description">
-                  Use advanced AI to automatically generate optimized short links from your target URLs
+                  Use advanced AI to automatically generate optimized short links from your target URLs 
+                  <Link 
+                    to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
+					style={{ textDecoration: 'underline' }}
+                    onClick={(e) => {
+                      // Close the modal when navigating to settings
+                      onClose();
+                    }}
+                  >
+                    {__(' Configure AI', 'betterlinks')}
+                  </Link>
                 </p>
               </div>
             </div>
