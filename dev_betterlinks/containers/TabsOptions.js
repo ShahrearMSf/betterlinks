@@ -18,6 +18,7 @@ import AISettings from 'components/AISettings';
 
 const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
+		<AISettings />,
 		<CustomFields settings={settings} />,
 		<ShortLinkGenerator />,
 		<UTMBuilderGlobalSettings settings={settings} />,
@@ -29,7 +30,6 @@ const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, track
 		<PasswordProtection settings={settings} />,
 		<CustomizeMetaTags settings={settings} />,
 		<AutoLinkKeywords settings={settings} postdatas={postdatas} />,
-		<AISettings />,
 	].filter(Boolean);
 	const optionsTabList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabList', tabList);
 	const optionsTabPanelList = betterLinksHooks.applyFilters('betterLinksSettingsOptionsTabPanelList', panelList);

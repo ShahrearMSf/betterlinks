@@ -1,42 +1,8 @@
-import { API, makeRequest } from 'utils/helper';
+import { API, makeRequest, generateShortURL } from 'utils/helper';
 import AILinkGenerator from 'components/AILinkGenerator';
 import { extractFieldLimits } from 'utils/FieldLimitsExtractor';
 
 const namespace = 'betterlinks/v1/';
-
-/**
- * Generate short URL from title (1-3 words, max 30 characters)
- * Removes common words and creates a concise slug
- */
-const generateShortUrlFromTitle = (title) => {
-	const commonWords = [
-		'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from',
-		'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
-		'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those'
-	];
-
-	// Sanitize title: lowercase, remove special chars, split by spaces/hyphens
-	let slug = title
-		.toLowerCase()
-		.replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-		.trim()
-		.split(/[\s-]+/) // Split by spaces or hyphens
-		.filter(word => word.length > 0 && !commonWords.includes(word)) // Remove common words
-		.slice(0, 3) // Take max 3 words
-		.join('-');
-
-	// Ensure max 30 characters
-	if (slug.length > 30) {
-		slug = slug.substring(0, 30).replace(/-+$/, ''); // Remove trailing hyphens
-	}
-
-	// Fallback if slug is empty
-	if (!slug) {
-		slug = 'link-' + Math.random().toString(36).substr(2, 9);
-	}
-
-	return slug;
-};
 
 /**
  * Extract category from prompt if mentioned
@@ -261,8 +227,14 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 				for (const aiResult of batchResults.data) {
 					const currentUrl = aiResult.url;
 
-					// Generate short URL from title
-					const shortUrl = generateShortUrlFromTitle(aiResult.title);
+					// Create settings object for URL generation
+					const urlSettings = {
+						url_slug_generation_type: options.short_url_strategy || 'from_title',
+						prefix: '', // No prefix for AI generated links
+					};
+
+					// Generate short URL based on selected strategy
+					const shortUrl = generateShortURL(urlSettings, aiResult.title, currentUrl, true);
 
 					// Smart Category Assignment Logic
 					let finalCategory = '';

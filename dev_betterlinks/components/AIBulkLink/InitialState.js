@@ -2,7 +2,8 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
 import { is_pro_enabled, plugin_root_url } from 'utils/helper';
-import { redirectType as redirectTypeOptions } from 'utils/data';
+import { redirectType as redirectTypeOptions, urlGenerationTypes } from 'utils/data';
+import ProBadge from 'components/Badge/ProBadge';
 
 const InitialState = ({
 urls,
@@ -23,21 +24,6 @@ hasValidApiKey,
 settingsLoading,
 defaultPrompt,
 }) => {
-	const shortURLSlugTypes = [
-		{
-			value: 'from_title',
-			label: __('From Title (Recommended)', 'betterlinks'),
-		},
-		{
-			value: 'random',
-			label: __('Random Slug', 'betterlinks'),
-		},
-		{
-			value: 'custom_prefix',
-			label: __('Custom Prefix', 'betterlinks'),
-		},
-	];
-
 	// Prepare category options with AI Generated as first option
 	const categoryOptions = [
 		{
@@ -73,7 +59,11 @@ label: cat.term_name,
 							...redirectTypeOptions,
 							{
 								value: is_pro_enabled ? 'cloak' : 'pro',
-								label: __('Cloaked', 'betterlinks'),
+								label: (
+									<>
+										{__('Cloaked', 'betterlinks')} <ProBadge />
+									</>
+								),
 								disabled: !is_pro_enabled,
 							},
 						]}
@@ -81,7 +71,11 @@ label: cat.term_name,
 							...redirectTypeOptions,
 							{
 								value: is_pro_enabled ? 'cloak' : 'pro',
-								label: __('Cloaked', 'betterlinks'),
+								label: (
+									<>
+										{__('Cloaked', 'betterlinks')} <ProBadge />
+									</>
+								),
 								disabled: !is_pro_enabled,
 							},
 						].filter((item) => item.value === redirectType)[0] || redirectTypeOptions[0]}
@@ -94,13 +88,13 @@ label: cat.term_name,
 				{/* Short URL Generation Strategy */}
 				<div className="btl-ai-setting-group">
 					<label className="btl-ai-label btl-white">
-						{__('Short URL Generation', 'betterlinks')}
+						{__('URL Slug Generation', 'betterlinks')}
 					</label>
 					<Select2
 						className="btl-modal-select--full"
 						classNamePrefix="btl-react-select"
-						options={shortURLSlugTypes}
-						value={shortURLSlugTypes.filter((item) => item.value === shortUrlStrategy)[0]}
+						options={urlGenerationTypes}
+						value={urlGenerationTypes.filter((item) => item.value === shortUrlStrategy)[0]}
 						onChange={(option) => setShortUrlStrategy(option?.value || 'from_title')}
 						isSearchable={false}
 					/>

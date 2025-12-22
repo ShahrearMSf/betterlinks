@@ -19,12 +19,30 @@ const Teaser = () => {
 		<>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 			<div className="btl-ai-settings">
-				<div style={{ marginBottom: '30px', borderBottom: '1px solid #DEE1E9' }}>
+				<div style={{ borderBottom: '1px solid #DEE1E9' }}>
 					<h3 style={{ margin: '0 0 20px 0', fontSize: '20px', fontWeight: '600' }}>
 						{__('AI Configuration', 'betterlinks')}
 					</h3>
 				</div>
 
+				<div className="btl-form-group">
+                    <div className="btl-form-field">
+                        <div className="short-description">
+                            <b style={{ fontWeight: 700 }}>Note: </b>
+                            <span>
+                                {__('AI Bulk Link Generator feature is available in the pro version. Read the documentation for more information.', 'betterlinks')}
+                            </span>
+                            <a
+                                className="external-analytic-tooltip-anchor"
+                                href="https://betterlinks.io/docs/ai-bulk-link-generator/"
+                                target="_blank"
+                                style={{ color: 'inherit' }}
+                            >
+                                {__('Click here', 'betterlinks-pro')}
+                            </a>
+                        </div>
+                    </div>
+                </div>
 				{/* AI Provider Section */}
 				<div style={{ marginBottom: '30px' }} onClick={openUpgradeToProModal}>
 					<label style={{ display: 'block', marginBottom: '12px', fontWeight: '500', fontSize: '14px' }}>
@@ -109,7 +127,7 @@ const Teaser = () => {
 				</div>
 
 				{/* How to get API Key Section */}
-				<div style={{ marginBottom: '30px', padding: '16px', background: '#F9FAFB', borderRadius: '8px' }}>
+				{/* <div style={{ marginBottom: '30px', padding: '16px', background: '#F9FAFB', borderRadius: '8px' }}>
 					<div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
 						<div style={{ padding: '24px' }}>
 							<div style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#333', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -134,7 +152,7 @@ const Teaser = () => {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> */}
 
 				{/* Save Settings Button */}
 				{/* <div style={{ marginTop: '30px' }}>

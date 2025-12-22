@@ -230,7 +230,7 @@ const AIBulkLink = ({
 								onClick={handlePublish}
 								disabled={isProcessing || isPublishing}
 							>
-								{__('Publish All Links', 'betterlinks')}
+								{generatedLinks.length > 1 ? __('Publish All Links', 'betterlinks') : __('Publish Link', 'betterlinks')}
 							</button>
 						</div>
 					</>
