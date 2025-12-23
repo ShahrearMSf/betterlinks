@@ -154,7 +154,7 @@ const Graph = (props) => {
 							<div className="btl-date-range-picker">
 								<button onClick={closeDatePicker} className="btn-date-range-close">
 									<span className="dashicons dashicons-no-alt" />
-								</button>s
+								</button>
 								<DateRangePicker
 									onChange={(item) => dateRangePickerOnChangeHandler(item)}
 									showSelectionPreview={true}
