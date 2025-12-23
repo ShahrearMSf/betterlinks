@@ -1538,3 +1538,8 @@ button.rdrStaticRange {
 		align-items: center;
 	}
 }
+.btl-date-range-picker {
+	.rdrMonthsVertical {
+		flex-direction: row !important;
+	}
+}

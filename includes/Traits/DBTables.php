@@ -210,7 +210,6 @@ trait DBTables
     // Add country_id foreign key column to betterlinks_clicks table
     public function modifyBetterLinksClicksTable4() {
         global $wpdb;
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         $table_name = $wpdb->prefix . 'betterlinks_clicks';
         $countries_table = $wpdb->prefix . 'betterlinks_countries';
@@ -235,7 +234,7 @@ trait DBTables
                 ON DELETE SET NULL
                 ON UPDATE CASCADE;";
 
-            dbDelta( $sql );
+            $wpdb->query( $sql );
         }
     }
 }
