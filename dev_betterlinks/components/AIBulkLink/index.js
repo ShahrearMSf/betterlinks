@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import { modalCustomStyles, plugin_root_url, is_pro_enabled, route_path } from 'utils/helper';
+import { modalCustomStyles, plugin_root_url, is_pro_enabled } from 'utils/helper';
 import {
 	fetch_ai_settings,
 	process_urls_with_ai,
@@ -155,19 +155,19 @@ const AIBulkLink = ({
             <div className="btl-ai-left-section">
 			  <img src={plugin_root_url + '/assets/images/icons/ai-hedaer-icon.svg'} alt="AI Icon" />
               <div className="btl-ai-content-wrapper">
-                <h1 className="btl-ai-title">Generate Link With AI { !is_pro_enabled && <ProBadge />} </h1> 
+                <h1 className="btl-ai-title">{__('AI Bulk Link Generator', 'betterlinks')} { !is_pro_enabled && <ProBadge />} </h1> 
                 <p className="btl-ai-description">
-                  Use advanced AI to automatically generate optimized short links from your target URLs 
-                  <Link 
-                    to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
-					style={{ textDecoration: 'underline' }}
-                    onClick={(e) => {
-                      // Close the modal when navigating to settings
-                      onClose();
-                    }}
-                  >
-                    {__(' Configure AI', 'betterlinks')}
-                  </Link>
+					{__('Generate bulk short links instantly with AI from your URLs. Learn more in the. ', 'betterlinks')}
+					<a
+						href={'https://betterlinks.io/docs/ai-bulk-link-generator/'}
+						target="_blank"
+						style={{ textDecoration: 'underline' }}
+						onClick={(e) => {
+							onClose();
+						}}
+					>
+						{__(' docs', 'betterlinks')}
+					</a>
                 </p>
               </div>
             </div>
@@ -242,7 +242,7 @@ const AIBulkLink = ({
 								onClick={handlePublish}
 								disabled={isProcessing || isPublishing}
 							>
-								{generatedLinks.length > 1 ? __('Publish All Links', 'betterlinks') : __('Publish Link', 'betterlinks')}
+								{generatedLinks.length > 1 ? __('Publish All Links', 'betterlinks') : __('Publish', 'betterlinks')}
 							</button>
 						</div>
 					</>

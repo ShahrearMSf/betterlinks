@@ -44,15 +44,15 @@ const PublishingState = () => {
 			</div>
 
 			{/* Title and Subtitle */}
-			<h3 className="btl-ai-processing-title">{__('Publishing Links...', 'betterlinks')}</h3>
+			<h3 className="btl-ai-processing-title">{__('Publishing Links in Progress...', 'betterlinks')}</h3>
 			<p className="btl-ai-processing-subtitle">
-				{__('Please wait while we create your short links in the database', 'betterlinks')}
+				{__('Please, don’t close this window until it’s done!', 'betterlinks')}
 			</p>
 
 			{/* Status Text */}
-			<div className="btl-ai-processing-count">
+			{/* <div className="btl-ai-processing-count">
 				{__('Saving to Database...', 'betterlinks')}
-			</div>
+			</div> */}
 		</div>
 	);
 };

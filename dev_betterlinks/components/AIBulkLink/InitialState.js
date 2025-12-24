@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
-import { is_pro_enabled, plugin_root_url } from 'utils/helper';
+import { is_pro_enabled, plugin_root_url, route_path } from 'utils/helper';
 import { redirectType as redirectTypeOptions, urlGenerationTypes } from 'utils/data';
 import { useUpgradeProModal } from 'utils/customHooks';
 import ProBadge from 'components/Badge/ProBadge';
@@ -32,7 +33,7 @@ defaultPrompt,
 	const categoryOptions = [
 		{
 			value: 'ai_generated',
-			label: __('AI Generated Category', 'betterlinks'),
+			label: __('AI Suggested Category', 'betterlinks'),
 		},
 		...(terms?.categories?.map((cat) => ({
 value: cat.ID,
@@ -45,7 +46,19 @@ label: cat.term_name,
 			{/* API Key Missing Notice - Only show if settings are loaded and no valid API key */}
 			{!settingsLoading && !hasValidApiKey && (
 				<div className="btl-ai-header">
-					<p>{__('Notice: Please add your API key to use the AI Link Generation feature.', 'betterlinks')}</p>
+					<p>
+						⚠️ {__('Notice: API key must be configured to use AI bulk link generation. ', 'betterlinks')}
+						<Link 
+							to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
+							style={{ textDecoration: 'underline' }}
+							onClick={(e) => {
+								// Close the modal when navigating to settings
+								if (typeof onClose === 'function') onClose();
+							}}
+						>
+							{__('Click to Configure API', 'betterlinks')}
+						</Link>
+					</p>
 				</div>
 			)}
 
@@ -54,7 +67,13 @@ label: cat.term_name,
 				{/* Redirect Type */}
 				<div className="btl-ai-setting-group">
 					<label className="btl-ai-label btl-white">
-						{__('Redirect Type', 'betterlinks')}
+						{__('Link Redirect Type', 'betterlinks')}
+					  <div className="btl-tooltip">
+						   <span className="dashicons dashicons-info-outline" />
+						   <span className="btl-tooltiptext" style={{ width: '255px', textAlign: 'left', lineHeight: '1.2em' }}>
+							   {__('Select redirect type for your generated short links', 'betterlinks-pro')}
+						   </span>
+					   </div>
 					</label>
 					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
 						<Select2
@@ -94,9 +113,15 @@ label: cat.term_name,
 
 				{/* Short URL Generation Strategy */}
 				<div className="btl-ai-setting-group">
-					<label className="btl-ai-label btl-white">
-						{__('URL Slug Generation', 'betterlinks')}
-					</label>
+					   <label className="btl-ai-label btl-white">
+						   {__('Short URL Generation', 'betterlinks')}
+						   <div className="btl-tooltip">
+							   <span className="dashicons dashicons-info-outline" />
+							   <span className="btl-tooltiptext" style={{ width: '255px', textAlign: 'left', lineHeight: '1.2em' }}>
+								   {__('Select the input source that AI will use to generate your short links', 'betterlinks-pro')}
+							   </span>
+						   </div>
+					   </label>
 					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
 						<Select2
 							className="btl-modal-select--full"
@@ -113,7 +138,13 @@ label: cat.term_name,
 				{/* Assign Category */}
 				<div className="btl-ai-setting-group">
 					<label className="btl-ai-label btl-white">
-						{__('Assign Category', 'betterlinks')}
+						{__('Category', 'betterlinks')}
+					  <div className="btl-tooltip">
+						   <span className="dashicons dashicons-info-outline" />
+						   <span className="btl-tooltiptext" style={{ width: '255px', textAlign: 'left', lineHeight: '1.2em' }}>
+							   {__('Select category from dropdown or let AI choose category automatically.', 'betterlinks-pro')}
+						   </span>
+					   </div>
 					</label>
 					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
 						<Select2
@@ -138,6 +169,12 @@ label: cat.term_name,
 					<label className="btl-ai-label">
 						<span className="btl-ai-required">*</span>
 						{__('Target URLs', 'betterlinks')}
+						<div className="btl-tooltip">
+						   <span className="dashicons dashicons-info-outline" />
+						   <span className="btl-tooltiptext" style={{ width: '255px', textAlign: 'left', lineHeight: '1.2em' }}>
+							   {__('Enter your destination URLs for AI-powered bulk link generation', 'betterlinks-pro')}
+						   </span>
+					   </div>
 					</label>
 					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea

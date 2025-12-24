@@ -21,7 +21,7 @@ const Teaser = () => {
 			<div className="btl-ai-settings">
 				<div style={{ borderBottom: '1px solid #DEE1E9' }}>
 					<h3 style={{ margin: '0 0 20px 0', fontSize: '20px', fontWeight: '600' }}>
-						{__('AI Configuration', 'betterlinks')}
+						{__('API Configuration', 'betterlinks')}
 					</h3>
 				</div>
 
@@ -30,7 +30,7 @@ const Teaser = () => {
                         <div className="short-description">
                             <b style={{ fontWeight: 700 }}>Note: </b>
                             <span>
-                                {__('AI Bulk Link Generator feature is available in the pro version. Read the documentation for more information.', 'betterlinks')}
+                                {__('Set up your API configuration to activate AI‑powered link management ', 'betterlinks')}
                             </span>
                             <a
                                 className="external-analytic-tooltip-anchor"
@@ -46,7 +46,7 @@ const Teaser = () => {
 				{/* AI Provider Section */}
 				<div style={{ marginBottom: '30px' }} onClick={openUpgradeToProModal}>
 					<label style={{ display: 'block', marginBottom: '12px', fontWeight: '500', fontSize: '14px' }}>
-						{__('AI Provider', 'betterlinks')}
+						{__('Select AI Provider', 'betterlinks')}
 					</label>
 					<div style={{ maxWidth: '350px', opacity: 0.6, pointerEvents: 'none' }}>
 						<div style={{

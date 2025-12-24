@@ -48,9 +48,9 @@ const ProcessingState = ({ aiState }) => {
 			</div>
 
 			{/* Title and Subtitle */}
-			<h3 className="btl-ai-processing-title">{__('Generating Links with AI', 'betterlinks')}</h3>
+			<h3 className="btl-ai-processing-title">{__('Bulk Link Generation in Progress…', 'betterlinks')}</h3>
 			<p className="btl-ai-processing-subtitle">
-				{__('Please wait while your URLs and generate optimized short links', 'betterlinks')}
+				{__('Please, don’t close this window until it’s done!', 'betterlinks')}
 			</p>
 
 			{/* Progress Count */}
@@ -78,10 +78,10 @@ const ProcessingState = ({ aiState }) => {
 							<path d="M8 12L11 15L16 9" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
 						</svg>
 					</div>
-					<span className="btl-ai-step-label">{__('Extracting URLs', 'betterlinks')}</span>
+					<span className="btl-ai-step-label">{__('Checking URLs', 'betterlinks')}</span>
 				</div>
 
-				<div className="btl-ai-step-item btl-ai-step-completed">
+				{/* <div className="btl-ai-step-item btl-ai-step-completed">
 					<div className="btl-ai-step-icon-wrapper">
 						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="12" cy="12" r="10" fill="#10B981" opacity="0.1"/>
@@ -90,7 +90,7 @@ const ProcessingState = ({ aiState }) => {
 						</svg>
 					</div>
 					<span className="btl-ai-step-label">{__('Scrapping Content', 'betterlinks')}</span>
-				</div>
+				</div> */}
 
 				<div className="btl-ai-step-item btl-ai-step-active">
 					<div className="btl-ai-step-icon-wrapper btl-ai-step-spinner">
@@ -118,7 +118,7 @@ const ProcessingState = ({ aiState }) => {
 							<path d="M12 8V12L14.5 14.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
 						</svg>
 					</div>
-					<span className="btl-ai-step-label">{__('Generating Links', 'betterlinks')}</span>
+					<span className="btl-ai-step-label">{__('Generating Bulk Links', 'betterlinks')}</span>
 				</div>
 			</div>
 		</div>
