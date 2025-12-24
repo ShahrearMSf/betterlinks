@@ -234,7 +234,18 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 					};
 
 					// Generate short URL based on selected strategy
-					const shortUrl = generateShortURL(urlSettings, aiResult.title, currentUrl, true);
+					let shortUrl;
+					const strategy = options.short_url_strategy || 'from_title';
+					if (strategy === 'from_title') {
+					   // For 'from_title', use the AI-generated title and set isInitialGeneration to false
+					   shortUrl = generateShortURL(urlSettings, aiResult.title, currentUrl, false);
+					} else if (strategy === 'from_url') {
+					   // For 'from_url', use the target URL and set isInitialGeneration to false
+					   shortUrl = generateShortURL(urlSettings, '', currentUrl, false);
+					} else {
+					   // For other strategies, keep current logic
+					   shortUrl = generateShortURL(urlSettings, aiResult.title, currentUrl, true);
+					}
 
 					// Smart Category Assignment Logic
 					let finalCategory = '';

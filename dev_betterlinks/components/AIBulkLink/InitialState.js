@@ -197,8 +197,9 @@ label: cat.term_name,
 				<button
 					className="btl-ai-btn-generate"
 					onClick={is_pro_enabled ? onGenerateLinks : undefined}
-					disabled={isProcessing || isUrlsEmpty}
+					disabled={isProcessing || isUrlsEmpty || !settingsLoading && !hasValidApiKey}
 					style={!is_pro_enabled && (isProcessing || isUrlsEmpty) ? { pointerEvents: 'none' } : {}}
+					title={!is_pro_enabled ? __('Pro Feature - Upgrade to Pro', 'betterlinks') : !settingsLoading && !hasValidApiKey ? __('Configure your API key', 'betterlinks') : ''}
 				>
 					{isProcessing ? (
 <>
