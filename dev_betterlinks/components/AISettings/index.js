@@ -30,7 +30,7 @@ const Teaser = () => {
                         <div className="short-description">
                             <b style={{ fontWeight: 700 }}>Note: </b>
                             <span>
-                                {__('Set up your API configuration to activate AI‑powered link management ', 'betterlinks')}
+                                {__('Make sure to save your API key and configure it to use AI features. For more details, ', 'betterlinks')}
                             </span>
                             <a
                                 className="external-analytic-tooltip-anchor"
@@ -38,7 +38,7 @@ const Teaser = () => {
                                 target="_blank"
                                 style={{ color: 'inherit' }}
                             >
-                                {__('Click here', 'betterlinks-pro')}
+                                {__('click here', 'betterlinks-pro')}
                             </a>
                         </div>
                     </div>
@@ -63,6 +63,29 @@ const Teaser = () => {
 					</div>
 					<div style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
 						{__('Choose your preferred AI provider', 'betterlinks')}
+					</div>
+				</div>
+
+				{/* AI Model Selection Section */}
+				<div style={{ marginBottom: '30px' }} onClick={openUpgradeToProModal}>
+					<label style={{ display: 'block', marginBottom: '12px', fontWeight: '500', fontSize: '14px' }}>
+						{__('AI Model', 'betterlinks')}
+					</label>
+					<div style={{ maxWidth: '350px', opacity: 0.6, pointerEvents: 'none' }}>
+						<div style={{
+							width: '100%',
+							padding: '10px 12px',
+							border: '1px solid #ddd',
+							borderRadius: '4px',
+							fontSize: '14px',
+							backgroundColor: '#f9f9f9',
+							color: '#999',
+						}}>
+							{__('GPT-4o Mini', 'betterlinks')}
+						</div>
+					</div>
+					<div style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
+						{__('Choose the AI model for link generation based on your selected provider', 'betterlinks')}
 					</div>
 				</div>
 

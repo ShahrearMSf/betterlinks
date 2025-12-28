@@ -92,7 +92,13 @@ class AIBulkLinks extends Controller {
 	 * Get AI Settings
 	 */
 	public function get_ai_settings( $request ) {
-		// Get settings from main betterlinks_links option
+		// Get API keys from secure separate option
+		$api_keys = get_option( BETTERLINKS_AI_API_KEYS_OPTION_NAME, array() );
+		if ( is_string( $api_keys ) ) {
+			$api_keys = json_decode( $api_keys, true );
+		}
+
+		// Get AI provider from main settings
 		$all_settings = get_option( BETTERLINKS_LINKS_OPTION_NAME, array() );
 		if ( is_string( $all_settings ) ) {
 			$all_settings = json_decode( $all_settings, true );
@@ -102,9 +108,11 @@ class AIBulkLinks extends Controller {
 			array(
 				'success' => true,
 				'data'    => array(
-					'openai_api_key'  => isset( $all_settings['openai_api_key'] ) ? $all_settings['openai_api_key'] : '',
-					'gemini_api_key'  => isset( $all_settings['gemini_api_key'] ) ? $all_settings['gemini_api_key'] : '',
+					'openai_api_key'  => isset( $api_keys['openai_api_key'] ) ? $api_keys['openai_api_key'] : '',
+					'gemini_api_key'  => isset( $api_keys['gemini_api_key'] ) ? $api_keys['gemini_api_key'] : '',
 					'ai_provider'     => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
+					'openai_model'    => isset( $all_settings['openai_model'] ) ? $all_settings['openai_model'] : 'gpt-4o-mini',
+					'gemini_model'    => isset( $all_settings['gemini_model'] ) ? $all_settings['gemini_model'] : 'gemini-2.5-flash',
 				),
 			),
 			200
@@ -122,30 +130,52 @@ class AIBulkLinks extends Controller {
 			$params = $request->get_params();
 		}
 
+		// Get existing API keys from secure separate option
+		$api_keys = get_option( BETTERLINKS_AI_API_KEYS_OPTION_NAME, array() );
+		if ( is_string( $api_keys ) ) {
+			$api_keys = json_decode( $api_keys, true );
+		}
+
 		// Get existing settings from main betterlinks_links option
 		$all_settings = get_option( BETTERLINKS_LINKS_OPTION_NAME, array() );
 		if ( is_string( $all_settings ) ) {
 			$all_settings = json_decode( $all_settings, true );
 		}
 
-		// Update AI settings - allow empty values to clear API keys
+		// Update API keys in separate secure option - allow empty values to clear API keys
 		if ( isset( $params['openai_api_key'] ) ) {
-			$all_settings['openai_api_key'] = sanitize_text_field( $params['openai_api_key'] );
+			$api_keys['openai_api_key'] = sanitize_text_field( $params['openai_api_key'] );
 		}
 
 		if ( isset( $params['gemini_api_key'] ) ) {
-			$all_settings['gemini_api_key'] = sanitize_text_field( $params['gemini_api_key'] );
+			$api_keys['gemini_api_key'] = sanitize_text_field( $params['gemini_api_key'] );
 		}
 
+		// Update AI provider in main settings (non-sensitive)
 		if ( isset( $params['ai_provider'] ) ) {
 			$all_settings['ai_provider'] = sanitize_text_field( $params['ai_provider'] );
 		}
 
-		// Save to main betterlinks_links option
+		// Update AI models in main settings (non-sensitive)
+		if ( isset( $params['openai_model'] ) ) {
+			$all_settings['openai_model'] = sanitize_text_field( $params['openai_model'] );
+		}
+
+		if ( isset( $params['gemini_model'] ) ) {
+			$all_settings['gemini_model'] = sanitize_text_field( $params['gemini_model'] );
+		}
+
+		// Save API keys to secure separate option
+		$api_keys_json = json_encode( $api_keys );
+		if ( $api_keys_json ) {
+			update_option( BETTERLINKS_AI_API_KEYS_OPTION_NAME, $api_keys_json );
+		}
+
+		// Save main settings (without API keys)
 		$all_settings_json = json_encode( $all_settings );
 		if ( $all_settings_json ) {
 			update_option( BETTERLINKS_LINKS_OPTION_NAME, $all_settings_json );
-			// Update cache
+			// Update cache (API keys are excluded by Cache::write_json_settings)
 			\BetterLinks\Admin\Cache::write_json_settings();
 		}
 
@@ -154,9 +184,11 @@ class AIBulkLinks extends Controller {
 				'success' => true,
 				'message' => __( 'AI settings saved successfully', 'betterlinks' ),
 				'data'    => array(
-					'openai_api_key'  => isset( $all_settings['openai_api_key'] ) ? $all_settings['openai_api_key'] : '',
-					'gemini_api_key'  => isset( $all_settings['gemini_api_key'] ) ? $all_settings['gemini_api_key'] : '',
+					'openai_api_key'  => isset( $api_keys['openai_api_key'] ) ? $api_keys['openai_api_key'] : '',
+					'gemini_api_key'  => isset( $api_keys['gemini_api_key'] ) ? $api_keys['gemini_api_key'] : '',
 					'ai_provider'     => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
+					'openai_model'    => isset( $all_settings['openai_model'] ) ? $all_settings['openai_model'] : 'gpt-4o-mini',
+					'gemini_model'    => isset( $all_settings['gemini_model'] ) ? $all_settings['gemini_model'] : 'gemini-2.5-flash',
 				),
 			),
 			200

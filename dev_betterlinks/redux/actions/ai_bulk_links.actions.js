@@ -156,6 +156,7 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 
 		const provider = settings.ai_provider || 'openai';
 		const apiKey = provider === 'openai' ? settings.openai_api_key : settings.gemini_api_key;
+		const model = provider === 'openai' ? settings.openai_model : settings.gemini_model;
 
 		if (!apiKey) {
 			throw new Error('API key not configured for selected provider');
@@ -219,7 +220,9 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 				provider,
 				apiKey,
 				batchData,
-				prompt
+				prompt,
+				null, // fieldLimits
+				model
 			);
 
 			// Process batch results
@@ -396,6 +399,11 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 			const { fetch_links_data } = await import('./links.actions');
 			dispatch(fetch_links_data());
 
+			// Also refresh terms data to include any newly created categories/tags
+			// Import and call the fetch_terms_data action
+			const { fetch_terms_data } = await import('./terms.actions');
+			dispatch(fetch_terms_data());
+
 			return res.data;
 		}
 	} catch (e) {
@@ -412,6 +420,10 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 				// Refresh the links list to show newly published links
 				const { fetch_links_data } = await import('./links.actions');
 				dispatch(fetch_links_data());
+
+				// Also refresh terms data to include any newly created categories/tags
+				const { fetch_terms_data } = await import('./terms.actions');
+				dispatch(fetch_terms_data());
 			}
 		});
 	}

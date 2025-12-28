@@ -116,7 +116,7 @@ Remember:
 /**
  * Call OpenAI API for bulk URLs (batch processing)
  */
-export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimits = null) => {
+export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimits = null, model = 'gpt-4o-mini') => {
 	try {
 		const { systemPrompt, userPrompt } = buildBulkPrompts(urlsData, prompt, fieldLimits);
 
@@ -127,7 +127,7 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 				'Authorization': `Bearer ${apiKey}`,
 			},
 			body: JSON.stringify({
-				model: 'gpt-4o-mini',
+				model: model,
 				messages: [
 					{ role: 'system', content: systemPrompt },
 					{ role: 'user', content: userPrompt },
@@ -161,12 +161,12 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 /**
  * Call Gemini API for bulk URLs (batch processing)
  */
-export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimits = null) => {
+export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimits = null, model = 'gemini-2.0-flash') => {
 	try {
 		const { systemPrompt, userPrompt } = buildBulkPrompts(urlsData, prompt, fieldLimits);
 
 		const response = await fetch(
-			`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+			`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
 			{
 				method: 'POST',
 				headers: {
@@ -211,11 +211,13 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
  * Batch processing to reduce API calls (single API call for multiple URLs)
  * This is the primary export - use this for all AI link generation
  */
-export const generateBulkLinkData = async (provider, apiKey, urlsData, prompt, fieldLimits = null) => {
+export const generateBulkLinkData = async (provider, apiKey, urlsData, prompt, fieldLimits = null, model = null) => {
 	if (provider === 'openai') {
-		return await generateBulkWithOpenAI(apiKey, urlsData, prompt, fieldLimits);
+		const openaiModel = model || 'gpt-4o-mini';
+		return await generateBulkWithOpenAI(apiKey, urlsData, prompt, fieldLimits, openaiModel);
 	} else if (provider === 'gemini') {
-		return await generateBulkWithGemini(apiKey, urlsData, prompt, fieldLimits);
+		const geminiModel = model || 'gemini-2.5-flash';
+		return await generateBulkWithGemini(apiKey, urlsData, prompt, fieldLimits, geminiModel);
 	} else {
 		throw new Error(`Unknown AI provider: ${provider}`);
 	}
