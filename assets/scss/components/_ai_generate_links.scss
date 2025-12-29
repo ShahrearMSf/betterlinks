@@ -581,8 +581,8 @@
 	}
 
 	.btl-ai-preview {
-		h3 {
-			font-size: 18px;
+		.btl-ai-preview-header {
+			font-size: 20px;
 			font-weight: 600;
 			color: #333;
 			margin: 0 0 20px 0;
@@ -590,7 +590,17 @@
 			align-items: center;
 			gap: 8px;
 		}
-
+		.btl-ai-category-badge {
+			display: inline-flex;
+			align-items: center;
+			padding: 4px 12px;
+			border: 1px solid #E4E9F7;
+			border-radius: 4px;
+			font-size: 13px;
+			font-weight: 500;
+			color: #19285D;
+			white-space: nowrap;
+		}
 		.btl-ai-links-list {
 			display: flex;
 			flex-direction: column;
@@ -604,7 +614,7 @@
 			.btl-ai-card-title {
 				margin: 0 0 12px 0;
 				font-size: 18px;
-				font-weight: 600;
+				font-weight: 500;
 				color: #01040D;
 				line-height: 1.4;
 			}
@@ -664,11 +674,17 @@
 						color: #1F2937;
 						word-break: break-all;
 						line-height: 1.5;
+						max-width: 100%;
+						overflow-x: auto;
+						white-space: nowrap; 
 
 						&.btl-ai-short-url {
 							color: #3B82F6;
 							font-weight: 500;
 						}
+						&::-webkit-scrollbar {
+							height: 4px;
+							}
 					}
 				}
 
@@ -712,17 +728,7 @@
 					}
 				}
 
-				.btl-ai-category-badge {
-					display: inline-flex;
-					align-items: center;
-					padding: 4px 12px;
-					border: 1px solid #E4E9F7;
-					border-radius: 4px;
-					font-size: 13px;
-					font-weight: 500;
-					color: #19285D;
-					white-space: nowrap;
-				}
+//test
 			}
 		}
 	}
@@ -789,6 +795,16 @@
 		background: #e8f5e9;
 		border: 1px solid #4CAF50;
 		color: #2e7d32;
+		padding: 12px;
+		border-radius: 4px;
+		margin-bottom: 15px;
+		font-size: 14px;
+	}
+
+	.btl-ai-info-message {
+		background: #e3f2fd;
+		border: 1px solid #2196F3;
+		color: #1565c0;
 		padding: 12px;
 		border-radius: 4px;
 		margin-bottom: 15px;
@@ -1179,6 +1195,12 @@ body.betterlinks-dark-mode {
 			background: #064e3b;
 			border-color: #6ee7b7;
 			color: #a7f3d0;
+		}
+
+		.btl-ai-info-message {
+			background: #1e3a8a;
+			border-color: #60a5fa;
+			color: #bfdbfe;
 		}
 	}
 

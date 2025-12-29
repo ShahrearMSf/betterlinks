@@ -142,13 +142,35 @@ class AIBulkLinks extends Controller {
 			$all_settings = json_decode( $all_settings, true );
 		}
 
-		// Update API keys in separate secure option - allow empty values to clear API keys
+		// Update API keys in separate secure option - validate that API keys are not empty
 		if ( isset( $params['openai_api_key'] ) ) {
-			$api_keys['openai_api_key'] = sanitize_text_field( $params['openai_api_key'] );
+			$openai_key = sanitize_text_field( $params['openai_api_key'] );
+			// Don't allow empty API keys to be saved
+			if ( empty( trim( $openai_key ) ) ) {
+				return new \WP_REST_Response(
+					array(
+						'success' => false,
+						'message' => __( 'OpenAI API key cannot be empty. Please provide a valid API key.', 'betterlinks' ),
+					),
+					400
+				);
+			}
+			$api_keys['openai_api_key'] = $openai_key;
 		}
 
 		if ( isset( $params['gemini_api_key'] ) ) {
-			$api_keys['gemini_api_key'] = sanitize_text_field( $params['gemini_api_key'] );
+			$gemini_key = sanitize_text_field( $params['gemini_api_key'] );
+			// Don't allow empty API keys to be saved
+			if ( empty( trim( $gemini_key ) ) ) {
+				return new \WP_REST_Response(
+					array(
+						'success' => false,
+						'message' => __( 'Gemini API key cannot be empty. Please provide a valid API key.', 'betterlinks' ),
+					),
+					400
+				);
+			}
+			$api_keys['gemini_api_key'] = $gemini_key;
 		}
 
 		// Update AI provider in main settings (non-sensitive)
@@ -401,7 +423,7 @@ class AIBulkLinks extends Controller {
 	 * Fetch URL content
 	 */
 	private function fetch_url_content( $url ) {
-		$response = wp_remote_get(
+		$response = wp_safe_remote_get(
 			$url,
 			array(
 				'timeout'   => 10,

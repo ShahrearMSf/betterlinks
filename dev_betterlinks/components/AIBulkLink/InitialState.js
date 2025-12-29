@@ -200,7 +200,7 @@ label: cat.term_name,
 					<div className="btl-ai-label-with-reset">
 						<label className="btl-ai-label">
 							<img src={plugin_root_url + '/assets/images/icons/ai-prompt-label.svg'} alt="AI Icon" />
-							{__('Add link with AI', 'betterlinks')}
+							{__('AI Instructions', 'betterlinks')}
 						</label>
 						<button
 							type="button"

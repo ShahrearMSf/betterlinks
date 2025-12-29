@@ -457,7 +457,7 @@ export const Link = (props) => {
 							>
 								<button class="btl-ai-button">
 									<img src={plugin_root_url + '/assets/images/icons/ai-btn-icon.svg'} alt="AI Icon" />
-									<span>Add link with AI</span>
+									<span>AI Bulk Link Generator</span>
 								</button>
 							</div>
 						)

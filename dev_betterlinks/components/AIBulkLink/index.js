@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import { modalCustomStyles, plugin_root_url, is_pro_enabled } from 'utils/helper';
+import { modalCustomStyles, plugin_root_url, is_pro_enabled, removeDuplicateUrls } from 'utils/helper';
 import {
 	fetch_ai_settings,
 	process_urls_with_ai,
@@ -41,6 +41,7 @@ const AIBulkLink = ({
 	const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const [info, setInfo] = useState('');
 	const [isPublishing, setIsPublishing] = useState(false);
 
 	useEffect(() => {
@@ -54,12 +55,22 @@ const AIBulkLink = ({
 	const handleGenerateLinks = async () => {
 		setError('');
 		setSuccess('');
+		setInfo('');
 
-		// Validate URLs
-		const urlList = urls
-			.split(/[\s\n]+/)
-			.filter((url) => url.trim())
-			.map((url) => url.trim());
+		// Remove duplicate URLs efficiently
+		const { uniqueUrls: urlList, duplicatesRemoved, originalCount } = removeDuplicateUrls(urls);
+
+		// Notify user about duplicate removal if any duplicates were found
+		if (duplicatesRemoved > 0) {
+			const duplicateText = duplicatesRemoved === 1 ? 'duplicate URL' : 'duplicate URLs';
+			setInfo(__(`✓ Removed ${duplicatesRemoved} ${duplicateText} from ${originalCount} total URLs. Processing ${urlList.length} unique URLs.`, 'betterlinks'));
+		}
+
+		// Validate that we have URLs after duplicate removal
+		if (urlList.length === 0) {
+			setError(__('Please enter at least one valid URL', 'betterlinks'));
+			return;
+		}
 
 		// Validate prompt
 		if (!prompt.trim()) {
@@ -88,6 +99,7 @@ const AIBulkLink = ({
 	const handlePublish = async () => {
 		setError('');
 		setSuccess('');
+		setInfo('');
 		setIsPublishing(true);
 
 		// Show publishing state for at least 3 seconds
@@ -121,6 +133,7 @@ const AIBulkLink = ({
 		// Don't clear prompt - keep it for next time modal opens
 		setError('');
 		setSuccess('');
+		setInfo('');
 		setIsPublishing(false);
 		onClose();
 	};
@@ -141,6 +154,15 @@ const AIBulkLink = ({
 				? (aiState?.settings?.openai_api_key && aiState.settings.openai_api_key.trim())
 				: (aiState?.settings?.gemini_api_key && aiState.settings.gemini_api_key.trim())
 		);
+
+	// Enhanced URL setter that clears info message when user modifies URLs
+	const handleUrlsChange = (newUrls) => {
+		setUrls(newUrls);
+		// Clear info message when user starts typing to provide fresh feedback
+		if (info) {
+			setInfo('');
+		}
+	};
 
 	return (
 		<Modal
@@ -187,9 +209,10 @@ const AIBulkLink = ({
             </div>
           </div>
 
-			{/* Error/Success Messages */}
-			{/* {error && <div className="btl-ai-error-message">{error}</div>}
-			{success && <div className="btl-ai-success-message">{success}</div>} */}
+			{/* Error/Success/Info Messages */}
+			{error && <div className="btl-ai-error-message">{error}</div>}
+			{success && <div className="btl-ai-success-message">{success}</div>}
+			{info && <div className="btl-ai-info-message">{info}</div>}
 
 			{/* Main Content */}
 			<div className="btl-ai-content">
@@ -197,7 +220,7 @@ const AIBulkLink = ({
 				{!isProcessing && !hasGeneratedLinks && !isPublishing && (
 					<InitialState
 						urls={urls}
-						setUrls={setUrls}
+						setUrls={handleUrlsChange}
 						redirectType={redirectType}
 						setRedirectType={setRedirectType}
 						shortUrlStrategy={shortUrlStrategy}
@@ -225,7 +248,7 @@ const AIBulkLink = ({
 				{/* Preview State */}
 				{hasGeneratedLinks && !isProcessing && !isPublishing && (
 					<>
-						<PreviewState generatedLinks={generatedLinks} />
+						<PreviewState generatedLinks={generatedLinks} selectedCategory={selectedCategory} />
 						
 						{/* Footer */}
 						<div className="btl-ai-modal-footer">

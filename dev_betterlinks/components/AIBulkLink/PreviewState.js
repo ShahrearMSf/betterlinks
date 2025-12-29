@@ -1,11 +1,42 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { plugin_root_url } from 'utils/helper';
+import { connect } from 'react-redux';
 
-const PreviewState = ({ generatedLinks }) => {
+const PreviewState = ({ generatedLinks, terms, selectedCategory }) => {
 	// Get site URL from WordPress
 	const siteUrl = window.location.origin;
 	const [copiedIndex, setCopiedIndex] = useState(null);
+
+	// Helper function to get category name from ID or return the category as-is if it's already a name
+	const getCategoryDisplayName = (category) => {
+		if (!category) return '';
+
+		// If category is a number (ID), look up the name from terms
+		if (!isNaN(category) && terms?.categories) {
+			const categoryTerm = terms.categories.find(cat => cat.ID == category);
+			return categoryTerm ? categoryTerm.term_name : category;
+		}
+
+		// If category is already a string (AI generated or prompt-based), return as-is
+		return category;
+	};
+
+	// Helper function to get the selected category name for the header message
+	const getSelectedCategoryName = () => {
+		if (!selectedCategory || selectedCategory === 'ai_generated') {
+			return null;
+		}
+
+		// If selectedCategory is a number (ID), look up the name from terms
+		if (!isNaN(selectedCategory) && terms?.categories) {
+			const categoryTerm = terms.categories.find(cat => cat.ID == selectedCategory);
+			return categoryTerm ? categoryTerm.term_name : selectedCategory;
+		}
+
+		// If selectedCategory is already a string, return as-is
+		return selectedCategory;
+	};
 
 	// Handle copy to clipboard
 	const handleCopyToClipboard = (text, identifier) => {
@@ -52,9 +83,23 @@ const PreviewState = ({ generatedLinks }) => {
 		window.open(url, '_blank');
 	};
 
+	// Get the header message based on selected category
+	const getHeaderMessage = () => {
+		const categoryName = getSelectedCategoryName();
+		if (categoryName) {
+			return (
+				<>
+					{__('Bulk link generation completed and added to ', 'betterlinks')}
+					<span className="btl-ai-category-badge">{categoryName}</span>
+				</>
+			);
+		}
+		return __('Bulk link generation completed; please review before publishing.', 'betterlinks');
+	};
+
 	return (
 <div className="btl-ai-preview">
-			<h3>{__('Generated Links Preview', 'betterlinks')}</h3>
+			<div className="btl-ai-preview-header">{getHeaderMessage()}</div>
 			<div className="btl-ai-links-list">
 				{generatedLinks.map((link, index) => {
 					// Construct full short URL
@@ -126,7 +171,7 @@ const PreviewState = ({ generatedLinks }) => {
 								</div>
 
 								{/* Category */}
-								{link.category && (
+								{link.category && ! getSelectedCategoryName() && (
 									<div className="btl-ai-detail-row">
 										<div className="btl-ai-detail-icon">
 											<img width="20" height="20" src={plugin_root_url + '/assets/images/icons/category-icon.svg'} alt="Target" />
@@ -134,7 +179,7 @@ const PreviewState = ({ generatedLinks }) => {
 										<div className="btl-ai-detail-content">
 											<span className="btl-ai-detail-label">{__('Category:', 'betterlinks')}</span>
 											<span className="btl-ai-detail-value">
-												<span className="btl-ai-category-badge">{link.category}</span>
+												<span className="btl-ai-category-badge">{getCategoryDisplayName(link.category)}</span>
 											</span>
 										</div>
 									</div>
@@ -148,4 +193,8 @@ const PreviewState = ({ generatedLinks }) => {
 	);
 };
 
-export default PreviewState;
+const mapStateToProps = (state) => ({
+	terms: state.terms,
+});
+
+export default connect(mapStateToProps)(PreviewState);
