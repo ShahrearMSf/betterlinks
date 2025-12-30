@@ -1,12 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url } from 'utils/helper';
+import { plugin_root_url, shortURLUniqueCheck } from 'utils/helper';
 import { connect } from 'react-redux';
 
-const PreviewState = ({ generatedLinks, terms, selectedCategory }) => {
+const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsChange }) => {
 	// Get site URL from WordPress
 	const siteUrl = window.location.origin;
 	const [copiedIndex, setCopiedIndex] = useState(null);
+	const [existingUrls, setExistingUrls] = useState(new Set());
+
+	// Check URL existence when component mounts or generatedLinks change
+	useEffect(() => {
+		const checkUrlExistence = async () => {
+			if (!generatedLinks || generatedLinks.length === 0) {
+				return;
+			}
+
+			const existingSet = new Set();
+
+			// Check each generated link's short URL
+			for (const link of generatedLinks) {
+				if (link.short_url) {
+					try {
+						// Pass empty ID since we're checking for new links
+						const exists = await shortURLUniqueCheck(link.short_url, '', () => {});
+						if (exists) {
+							existingSet.add(link.short_url);
+						}
+					} catch (error) {
+						console.error('Error checking URL existence:', error);
+					}
+				}
+			}
+
+			setExistingUrls(existingSet);
+
+			// Notify parent component about existing URLs
+			if (onExistingUrlsChange) {
+				onExistingUrlsChange(existingSet);
+			}
+		};
+
+		checkUrlExistence();
+	}, [generatedLinks, onExistingUrlsChange]);
 
 	// Helper function to get category name from ID or return the category as-is if it's already a name
 	const getCategoryDisplayName = (category) => {
@@ -154,7 +190,14 @@ const PreviewState = ({ generatedLinks, terms, selectedCategory }) => {
 									</div>
 									<div className="btl-ai-detail-content">
 										<span className="btl-ai-detail-label">{__('Short URL:', 'betterlinks')}</span>
-										<span className="btl-ai-detail-value btl-ai-short-url">{fullShortUrl}</span>
+										<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+											<span className="btl-ai-detail-value btl-ai-short-url">{fullShortUrl}</span>
+											{existingUrls.has(link.short_url) && (
+												<span className="btl-ai-exists-badge">
+													{__('Already Exists', 'betterlinks')}
+												</span>
+											)}
+										</div>
 									</div>
 									<div className="btl-ai-detail-actions">
 										<button

@@ -43,14 +43,23 @@ const AIBulkLink = ({
 	const [success, setSuccess] = useState('');
 	const [info, setInfo] = useState('');
 	const [isPublishing, setIsPublishing] = useState(false);
+	const [isClosing, setIsClosing] = useState(false);
+	const [existingUrls, setExistingUrls] = useState(new Set());
 
 	useEffect(() => {
 		if (isOpen) {
 			fetch_ai_settings();
 			fetch_all_categories();
 			fetch_all_tags();
+			// Reset closing state when modal opens
+			setIsClosing(false);
 		}
 	}, [isOpen, fetch_ai_settings, fetch_all_categories, fetch_all_tags]);
+
+	// Handle existing URLs change from PreviewState
+	const handleExistingUrlsChange = (existingUrlsSet) => {
+		setExistingUrls(existingUrlsSet);
+	};
 
 	const handleGenerateLinks = async () => {
 		setError('');
@@ -102,24 +111,33 @@ const AIBulkLink = ({
 		setInfo('');
 		setIsPublishing(true);
 
+		// Filter out links with existing URLs
+		const linksToPublish = aiState.generatedLinks.filter(link =>
+			!existingUrls.has(link.short_url)
+		);
+
 		// Show publishing state for at least 3 seconds
 		const minDisplayTime = new Promise(resolve => setTimeout(resolve, 3000));
 
 		try {
 			const [result] = await Promise.all([
-				publish_ai_generated_links(aiState.generatedLinks),
+				publish_ai_generated_links(linksToPublish),
 				minDisplayTime
 			]);
-			
+
 			if (result.success) {
-				setIsPublishing(false);
-				setSuccess(__('Links published successfully!', 'betterlinks'));
+				// Set closing flag to prevent InitialState from showing
+				setIsClosing(true);
+				// Close modal immediately after publishing without showing success message
+				onClose();
+				// Reset state after modal is closed
 				setTimeout(() => {
 					reset_ai_state();
 					setUrls('');
+					setIsPublishing(false);
+					setIsClosing(false);
 					// Don't clear prompt - keep it for next time modal opens
-					onClose();
-				}, 1500);
+				}, 100);
 			}
 		} catch (err) {
 			setIsPublishing(false);
@@ -128,20 +146,30 @@ const AIBulkLink = ({
 	};
 
 	const handleClose = () => {
-		reset_ai_state();
-		setUrls('');
-		// Don't clear prompt - keep it for next time modal opens
-		setError('');
-		setSuccess('');
-		setInfo('');
-		setIsPublishing(false);
+		// Set closing flag to prevent InitialState from showing
+		setIsClosing(true);
+		// Close modal first
 		onClose();
+		// Reset state after modal is closed to avoid showing InitialState
+		setTimeout(() => {
+			reset_ai_state();
+			setUrls('');
+			// Don't clear prompt - keep it for next time modal opens
+			setError('');
+			setSuccess('');
+			setInfo('');
+			setIsPublishing(false);
+			setIsClosing(false);
+		}, 100);
 	};
 
 	const isProcessing = aiState?.processing?.isProcessing;
 	const generatedLinks = aiState?.generatedLinks || [];
 	const hasGeneratedLinks = generatedLinks.length > 0;
 	const settingsLoading = aiState?.settingsLoading !== false; // Default to true if undefined
+
+	// Only show InitialState when we're truly in the initial state (not after publishing or closing)
+	const shouldShowInitialState = !isProcessing && !hasGeneratedLinks && !isPublishing && !isClosing;
 
 	// Check if URLs field is empty or only contains whitespace
 	const isUrlsEmpty = !urls.trim();
@@ -184,7 +212,7 @@ const AIBulkLink = ({
 						href={'https://betterlinks.io/docs/ai-bulk-link-generator/'}
 						target="_blank"
 						style={{ textDecoration: 'underline' }}
-						onClick={(e) => {
+						onClick={() => {
 							onClose();
 						}}
 					>
@@ -217,7 +245,7 @@ const AIBulkLink = ({
 			{/* Main Content */}
 			<div className="btl-ai-content">
 				{/* Initial State */}
-				{!isProcessing && !hasGeneratedLinks && !isPublishing && (
+				{shouldShowInitialState && (
 					<InitialState
 						urls={urls}
 						setUrls={handleUrlsChange}
@@ -248,7 +276,11 @@ const AIBulkLink = ({
 				{/* Preview State */}
 				{hasGeneratedLinks && !isProcessing && !isPublishing && (
 					<>
-						<PreviewState generatedLinks={generatedLinks} selectedCategory={selectedCategory} />
+						<PreviewState
+							generatedLinks={generatedLinks}
+							selectedCategory={selectedCategory}
+							onExistingUrlsChange={handleExistingUrlsChange}
+						/>
 						
 						{/* Footer */}
 						<div className="btl-ai-modal-footer">
