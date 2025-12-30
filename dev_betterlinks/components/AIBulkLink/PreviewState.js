@@ -42,7 +42,7 @@ const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsC
 		};
 
 		checkUrlExistence();
-	}, [generatedLinks, onExistingUrlsChange]);
+	}, [generatedLinks]); // Removed onExistingUrlsChange from dependencies to prevent infinite loop
 
 	// Helper function to get category name from ID or return the category as-is if it's already a name
 	const getCategoryDisplayName = (category) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
@@ -26,8 +26,63 @@ isUrlsEmpty,
 hasValidApiKey,
 settingsLoading,
 defaultPrompt,
+modalRef, // Add modalRef prop for scrolling
+error, // Add error prop to trigger validation styling
 }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+
+	// Validation states
+	const [validationErrors, setValidationErrors] = useState({
+		urls: false,
+		prompt: false
+	});
+	const [showValidation, setShowValidation] = useState(false);
+
+	// Effect to trigger validation styling when error appears
+	React.useEffect(() => {
+		if (error) {
+			// Determine which fields have errors based on error message content and current field values
+			const errors = {
+				urls: (error.includes('URL') || error.includes('url')) && !urls.trim(),
+				prompt: (error.includes('prompt') || error.includes('AI')) && !prompt.trim()
+			};
+
+			setValidationErrors(errors);
+			setShowValidation(true);
+
+			// Scroll to top when error appears
+			if (modalRef?.current) {
+				modalRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+		} else {
+			// Clear validation when no error
+			setShowValidation(false);
+		}
+	}, [error, modalRef, urls, prompt]);
+
+
+
+	// Handle generate button click - just call parent function
+	// Parent will handle validation, error messages, and trigger our visual styling via error prop
+	const handleGenerateClick = () => {
+		onGenerateLinks();
+	};
+
+	// Get validation class for textarea
+	const getTextareaClass = (fieldName) => {
+		if (!showValidation) return 'btl-ai-textarea';
+
+		const hasError = validationErrors[fieldName];
+		const hasValue = fieldName === 'urls' ? urls.trim() : prompt.trim();
+
+		if (hasError) {
+			return 'btl-ai-textarea btl-ai-textarea-error';
+		} else if (hasValue) {
+			return 'btl-ai-textarea btl-ai-textarea-success';
+		}
+
+		return 'btl-ai-textarea';
+	};
 
 	// Prepare category options with AI Generated as first option
 	const categoryOptions = [
@@ -51,7 +106,7 @@ label: cat.term_name,
 						<Link 
 							to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
 							style={{ textDecoration: 'underline' }}
-							onClick={(e) => {
+							onClick={() => {
 								// Close the modal when navigating to settings
 								if (typeof onClose === 'function') onClose();
 							}}
@@ -178,10 +233,16 @@ label: cat.term_name,
 					</label>
 					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea
-						className="btl-ai-textarea"
+						className={getTextareaClass('urls')}
 						placeholder={__('http://test-site.local/go/ui8/product-name/contact-page\n\nhttps://examplelink.com', 'betterlinks')}
 						value={urls}
-						onChange={(e) => setUrls(e.target.value)}
+						onChange={(e) => {
+							setUrls(e.target.value);
+							// Clear validation when user starts typing
+							if (showValidation) {
+								setShowValidation(false);
+							}
+						}}
 						rows="5"
 						disabled={isProcessing || !is_pro_enabled}
 						style={!is_pro_enabled ? { pointerEvents: 'none' } : {}}
@@ -218,10 +279,16 @@ label: cat.term_name,
 					</div>
 					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea
-						className="btl-ai-textarea"
+						className={getTextareaClass('prompt')}
 						placeholder={__('Enter your AI prompt for generating link data:', 'betterlinks')}
 						value={prompt}
-						onChange={(e) => setPrompt(e.target.value)}
+						onChange={(e) => {
+							setPrompt(e.target.value);
+							// Clear validation when user starts typing
+							if (showValidation) {
+								setShowValidation(false);
+							}
+						}}
 						rows="5"
 						disabled={isProcessing || !is_pro_enabled}
 						style={!is_pro_enabled ? { pointerEvents: 'none' } : {}}
@@ -233,8 +300,8 @@ label: cat.term_name,
 				<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', display: 'inline-block', position: 'relative' } : { display: 'inline-block', position: 'relative' }}>
 				<button
 					className="btl-ai-btn-generate"
-					onClick={is_pro_enabled ? onGenerateLinks : undefined}
-					disabled={isProcessing || isUrlsEmpty || !settingsLoading && !hasValidApiKey}
+					onClick={is_pro_enabled ? handleGenerateClick : undefined}
+					disabled={isProcessing || !settingsLoading && !hasValidApiKey}
 					style={!is_pro_enabled && (isProcessing || isUrlsEmpty) ? { pointerEvents: 'none' } : {}}
 					title={!is_pro_enabled ? __('Pro Feature - Upgrade to Pro', 'betterlinks') : !settingsLoading && !hasValidApiKey ? __('Configure your API key', 'betterlinks') : ''}
 				>

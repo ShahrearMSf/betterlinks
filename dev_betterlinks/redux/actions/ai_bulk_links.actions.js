@@ -178,8 +178,8 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 		const allGeneratedLinks = [];
 
 		// Batch URLs for efficient API processing
-		// Process in chunks to reduce API calls (e.g., 20 URLs per API call)
-		const BATCH_SIZE = 20;
+		// Reduce batch size to handle large numbers of URLs better
+		const BATCH_SIZE = 10;
 		const batches = [];
 
 		for (let i = 0; i < urls.length; i += BATCH_SIZE) {
@@ -309,7 +309,7 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 					allGeneratedLinks.push(linkData);
 				}
 			} else {
-				console.error(`Error generating links for batch ${batchIndex}:`, batchResults.error);
+				console.error(`Error generating links for batch ${batchIndex + 1}:`, batchResults.error);
 			}
 		}
 

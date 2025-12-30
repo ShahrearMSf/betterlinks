@@ -350,6 +350,17 @@
 				border: 2px solid #f0e68c;
 				background: #fffef0;
 			}
+
+			// Validation states
+			&.btl-ai-textarea-error {
+				border-color: #f97272 !important;
+				box-shadow: 0 0 0 3px rgba(249, 114, 114, 0.1) !important;
+			}
+
+			&.btl-ai-textarea-success {
+				border-color: #4CAF50 !important;
+				box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+			}
 		}
 
 		.btl-ai-help-text {
@@ -990,6 +1001,17 @@ body.betterlinks-dark-mode {
 				border-color: #6b5b2f;
 				background: #2d2416;
 				color: #f9fafb;
+			}
+
+			// Validation states dark mode
+			textarea.btl-ai-textarea-error {
+				border-color: #f87171 !important;
+				box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2) !important;
+			}
+
+			textarea.btl-ai-textarea-success {
+				border-color: #10b981 !important;
+				box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
 			}
 
 			.btl-ai-help-text {

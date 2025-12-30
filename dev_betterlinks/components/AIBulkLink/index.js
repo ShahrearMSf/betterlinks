@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
@@ -46,6 +46,9 @@ const AIBulkLink = ({
 	const [isClosing, setIsClosing] = useState(false);
 	const [existingUrls, setExistingUrls] = useState(new Set());
 
+	// Ref for modal content to enable scrolling to top on validation errors
+	const modalRef = useRef(null);
+
 	useEffect(() => {
 		if (isOpen) {
 			fetch_ai_settings();
@@ -56,10 +59,10 @@ const AIBulkLink = ({
 		}
 	}, [isOpen, fetch_ai_settings, fetch_all_categories, fetch_all_tags]);
 
-	// Handle existing URLs change from PreviewState
-	const handleExistingUrlsChange = (existingUrlsSet) => {
+	// Handle existing URLs change from PreviewState - memoized to prevent infinite loops
+	const handleExistingUrlsChange = useCallback((existingUrlsSet) => {
 		setExistingUrls(existingUrlsSet);
-	};
+	}, []);
 
 	const handleGenerateLinks = async () => {
 		setError('');
@@ -83,7 +86,7 @@ const AIBulkLink = ({
 
 		// Validate prompt
 		if (!prompt.trim()) {
-			setError(__('Please enter an AI prompt', 'betterlinks'));
+			setError(__('Please enter your AI prompt for generating link data', 'betterlinks'));
 			return;
 		}
 
@@ -200,6 +203,7 @@ const AIBulkLink = ({
 			ariaHideApp={false}
 			className="btl-ai-bulk-link-modal"
 		>
+		<div ref={modalRef}>
 		{/* Header with gradient background */}
           <div className="btl-ai-header-container">
             <div className="btl-ai-left-section">
@@ -264,6 +268,8 @@ const AIBulkLink = ({
 						isUrlsEmpty={isUrlsEmpty}
 						hasValidApiKey={hasValidApiKey}
 						settingsLoading={settingsLoading}
+						modalRef={modalRef}
+						error={error}
 					/>
 				)}
 
@@ -303,6 +309,7 @@ const AIBulkLink = ({
 					</>
 				)}
 			</div>
+		</div>
 		</Modal>
 	);
 };

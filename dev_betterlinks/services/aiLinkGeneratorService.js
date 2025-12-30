@@ -148,10 +148,13 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 		// Parse JSON array from response
 		const jsonMatch = content_text.match(/\[[\s\S]*\]/);
 		if (!jsonMatch) {
+			console.error('OpenAI response content:', content_text);
 			throw new Error('Invalid JSON array response from OpenAI');
 		}
 
-		return JSON.parse(jsonMatch[0]);
+		const parsedResults = JSON.parse(jsonMatch[0]);
+
+		return parsedResults;
 	} catch (error) {
 		console.error('OpenAI Bulk API error:', error);
 		throw error;
@@ -196,10 +199,12 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
 		// Parse JSON array from response
 		const jsonMatch = content_text.match(/\[[\s\S]*\]/);
 		if (!jsonMatch) {
+			console.error('Gemini response content:', content_text);
 			throw new Error('Invalid JSON array response from Gemini');
 		}
 
-		return JSON.parse(jsonMatch[0]);
+		const parsedResults = JSON.parse(jsonMatch[0]);
+		return parsedResults;
 	} catch (error) {
 		console.error('Gemini Bulk API error:', error);
 		throw error;
