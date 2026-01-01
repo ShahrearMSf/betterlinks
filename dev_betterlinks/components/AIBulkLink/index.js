@@ -74,8 +74,7 @@ const AIBulkLink = ({
 
 		// Notify user about duplicate removal if any duplicates were found
 		if (duplicatesRemoved > 0) {
-			const duplicateText = duplicatesRemoved === 1 ? 'duplicate URL' : 'duplicate URLs';
-			setInfo(__(`✓ Removed ${duplicatesRemoved} ${duplicateText} from ${originalCount} total URLs. Processing ${urlList.length} unique URLs.`, 'betterlinks'));
+			setInfo(__(`Total URL: ${originalCount}. Duplicates removed: ${duplicatesRemoved}. Processing unique URL: ${urlList.length}`, 'betterlinks'));
 		}
 
 		// Validate that we have URLs after duplicate removal
@@ -119,6 +118,13 @@ const AIBulkLink = ({
 			!existingUrls.has(link.short_url)
 		);
 
+		// Check if all links are filtered out due to existing URLs
+		if (linksToPublish.length === 0 && aiState.generatedLinks.length > 0) {
+			setIsPublishing(false);
+			setError(__('Short URL already exists.', 'betterlinks'));
+			return;
+		}
+
 		// Show publishing state for at least 3 seconds
 		const minDisplayTime = new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -128,7 +134,7 @@ const AIBulkLink = ({
 				minDisplayTime
 			]);
 
-			if (result.success) {
+			if (result && result.success) {
 				// Set closing flag to prevent InitialState from showing
 				setIsClosing(true);
 				// Close modal immediately after publishing without showing success message
@@ -141,10 +147,19 @@ const AIBulkLink = ({
 					setIsClosing(false);
 					// Don't clear prompt - keep it for next time modal opens
 				}, 100);
+			} else {
+				// Handle case where result is undefined or doesn't have success property
+				setIsPublishing(false);
+				setError(__('Error publishing links. Please try again.', 'betterlinks'));
 			}
 		} catch (err) {
 			setIsPublishing(false);
-			setError(__('Error publishing links. Please try again.', 'betterlinks'));
+			// Check if the error might be related to duplicate short URLs
+			if (err.message && (err.message.includes('already exists') || err.message.includes('duplicate'))) {
+				setError(__('Short URL already exists.', 'betterlinks'));
+			} else {
+				setError(__('Error publishing links. Please try again.', 'betterlinks'));
+			}
 		}
 	};
 
@@ -211,16 +226,16 @@ const AIBulkLink = ({
               <div className="btl-ai-content-wrapper">
                 <h1 className="btl-ai-title">{__('AI Bulk Link Generator', 'betterlinks')} { !is_pro_enabled && <ProBadge />} </h1> 
                 <p className="btl-ai-description">
-					{__('Generate bulk short links instantly with AI from your URLs. Learn more in the. ', 'betterlinks')}
+					{__('Generate bulk short links instantly with AI from your URLs. For more details, ', 'betterlinks')}
 					<a
-						href={'https://betterlinks.io/docs/ai-bulk-link-generator/'}
+						href={'https://betterlinks.io/docs/ai-bulk-link-generator-in-betterlinks/'}
 						target="_blank"
 						style={{ textDecoration: 'underline' }}
 						onClick={() => {
 							onClose();
 						}}
 					>
-						{__(' docs', 'betterlinks')}
+						{__('click here', 'betterlinks')}
 					</a>
                 </p>
               </div>

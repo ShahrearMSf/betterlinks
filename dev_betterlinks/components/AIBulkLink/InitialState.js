@@ -196,7 +196,7 @@ label: cat.term_name,
 						{__('Category', 'betterlinks')}
 					  <div className="btl-tooltip">
 						   <span className="dashicons dashicons-info-outline" />
-						   <span className="btl-tooltiptext" style={{ width: '255px', textAlign: 'left', lineHeight: '1.2em' }}>
+						   <span className="btl-tooltiptext" style={{ width: '186px', textAlign: 'left', lineHeight: '1.2em' }}>
 							   {__('Select category from dropdown or let AI choose category automatically.', 'betterlinks-pro')}
 						   </span>
 					   </div>

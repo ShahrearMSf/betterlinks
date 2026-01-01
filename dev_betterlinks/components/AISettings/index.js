@@ -34,7 +34,7 @@ const Teaser = () => {
                             </span>
                             <a
                                 className="external-analytic-tooltip-anchor"
-                                href="https://betterlinks.io/docs/ai-bulk-link-generator/"
+                                href="https://betterlinks.io/docs/ai-bulk-link-generator-in-betterlinks/"
                                 target="_blank"
                                 style={{ color: 'inherit' }}
                             >

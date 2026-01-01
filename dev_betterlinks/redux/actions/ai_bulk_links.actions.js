@@ -102,7 +102,7 @@ export const RESET_AI_STATE = 'RESET_AI_STATE';
 export const fetch_ai_settings = () => async (dispatch) => {
 	try {
 		const res = await API.get(namespace + 'ai-settings');
-		if (res.data.success) {
+		if (res && res.data && res.data.success) {
 			dispatch({
 				type: FETCH_AI_SETTINGS,
 				payload: res.data.data,
@@ -121,26 +121,36 @@ export const update_ai_settings = (settings) => async (dispatch) => {
 		const res = await API.post(namespace + 'ai-settings', {
 			params: settings,
 		});
-		if (res.data.success) {
+		if (res && res.data && res.data.success) {
 			dispatch({
 				type: UPDATE_AI_SETTINGS,
 				payload: res.data.data,
 			});
 			return res.data;
+		} else {
+			throw new Error('Invalid response from server');
 		}
 	} catch (e) {
 		console.error('Error updating AI settings:', e);
-		makeRequest({
-			action: 'betterlinks/admin/update_ai_settings',
-			...settings,
-		}).then((response) => {
-			if (response.data) {
+		try {
+			const response = await makeRequest({
+				action: 'betterlinks/admin/update_ai_settings',
+				...settings,
+			});
+
+			if (response && response.data) {
 				dispatch({
 					type: UPDATE_AI_SETTINGS,
 					payload: response.data,
 				});
+				return response.data;
+			} else {
+				throw new Error('Failed to update AI settings via fallback method');
 			}
-		});
+		} catch (fallbackError) {
+			console.error('Fallback request also failed:', fallbackError);
+			throw fallbackError;
+		}
 	}
 };
 
@@ -189,10 +199,17 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 		// Fetch content for all URLs first
 		const urlsContentMap = {};
 		for (const url of urls) {
-			const contentRes = await API.post(namespace + 'fetch-url-content', {
-				url: url,
-			});
-			urlsContentMap[url] = contentRes.data.success ? contentRes.data.data : { title: '', description: '' };
+			try {
+				const contentRes = await API.post(namespace + 'fetch-url-content', {
+					url: url,
+				});
+				urlsContentMap[url] = (contentRes && contentRes.data && contentRes.data.success)
+					? contentRes.data.data
+					: { title: '', description: '' };
+			} catch (contentError) {
+				console.error(`Error fetching content for URL ${url}:`, contentError);
+				urlsContentMap[url] = { title: '', description: '' };
+			}
 		}
 
 		// Process each batch with a single API call
@@ -389,7 +406,7 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 			links: validatedLinks,
 		});
 
-		if (res.data.success) {
+		if (res && res.data && res.data.success) {
 			dispatch({
 				type: RESET_AI_STATE,
 			});
@@ -405,14 +422,19 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 			dispatch(fetch_terms_data());
 
 			return res.data;
+		} else {
+			// If the response doesn't have the expected structure, throw an error
+			throw new Error('Invalid response from server');
 		}
 	} catch (e) {
 		console.error('Error publishing links:', e);
-		makeRequest({
-			action: 'betterlinks/admin/publish_ai_links',
-			links: JSON.stringify(links),
-		}).then(async (response) => {
-			if (response.data) {
+		try {
+			const response = await makeRequest({
+				action: 'betterlinks/admin/publish_ai_links',
+				links: JSON.stringify(links),
+			});
+
+			if (response && response.data) {
 				dispatch({
 					type: RESET_AI_STATE,
 				});
@@ -424,8 +446,18 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 				// Also refresh terms data to include any newly created categories/tags
 				const { fetch_terms_data } = await import('./terms.actions');
 				dispatch(fetch_terms_data());
+
+				// Return the response data to match the success path
+				return response.data;
+			} else {
+				// If fallback also fails, throw an error
+				throw new Error('Failed to publish links via fallback method');
 			}
-		});
+		} catch (fallbackError) {
+			console.error('Fallback request also failed:', fallbackError);
+			// Re-throw the error so the component can handle it
+			throw fallbackError;
+		}
 	}
 };
 
