@@ -564,6 +564,16 @@ trait Query {
 		return $result;
 	}
 
+	// Get term by ID for AI
+	public static function get_term_by_id( $term_id, $type = 'category' ) {
+		global $wpdb;
+		$result = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}betterlinks_terms WHERE ID=%d AND term_type=%s", $term_id, $type ),
+			ARRAY_A
+		);
+		return $result;
+	}
+
 	public static function get_terms_by_link_ID_and_term_type( $link_ID, $term_type = 'categroy' ) {
 		global $wpdb;
 		$prefix = $wpdb->prefix;

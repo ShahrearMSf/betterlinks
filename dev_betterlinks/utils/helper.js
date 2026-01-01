@@ -426,9 +426,12 @@ export const modalCustomStyles = {
 		left: '50%',
 		right: 'auto',
 		bottom: 'auto',
-		maxWidth: '850px',
+		maxWidth: '800px',
 		marginRight: '-50%',
 		transform: 'translate(-50%, -43%)',
+		position: 'absolute',
+		background: '#ffffff',
+		borderRadius: '8px',
 	},
 };
 
@@ -1625,3 +1628,51 @@ export const sortByClicksCategory = (type = '', categories, category_analytics) 
 };
 
 export const paginationPerPageCount = [10, 30, 50, 100, 200, 500];
+
+/**
+ * Efficiently removes duplicate URLs from an array of URLs
+ * Optimized for handling large datasets (500-1000+ URLs)
+ *
+ * @param {string} urlsText - Raw text containing URLs separated by newlines or spaces
+ * @returns {Object} - Object containing { uniqueUrls: string[], duplicatesRemoved: number, originalCount: number }
+ */
+export const removeDuplicateUrls = (urlsText) => {
+	if (!urlsText || typeof urlsText !== 'string') {
+		return {
+			uniqueUrls: [],
+			duplicatesRemoved: 0,
+			originalCount: 0
+		};
+	}
+
+	// Parse URLs from text (split by newlines and spaces, filter empty)
+	const urlList = urlsText
+		.split(/[\s\n]+/)
+		.filter((url) => url.trim())
+		.map((url) => url.trim());
+
+	const originalCount = urlList.length;
+
+	// Use Set for O(1) lookup time - most efficient for large datasets
+	const uniqueUrlsSet = new Set();
+	const uniqueUrls = [];
+
+	// Process URLs and track duplicates efficiently
+	for (const url of urlList) {
+		// Normalize URL for comparison (convert to lowercase for case-insensitive comparison)
+		const normalizedUrl = url.toLowerCase();
+
+		if (!uniqueUrlsSet.has(normalizedUrl)) {
+			uniqueUrlsSet.add(normalizedUrl);
+			uniqueUrls.push(url); // Keep original case for the actual URL
+		}
+	}
+
+	const duplicatesRemoved = originalCount - uniqueUrls.length;
+
+	return {
+		uniqueUrls,
+		duplicatesRemoved,
+		originalCount
+	};
+};

@@ -102,6 +102,7 @@ if (!class_exists('BetterLinks')) {
             define('BETTERLINKS_CACHE_LINKS_NAME', 'betterlinks_cache_links_data');
             define('BETTERLINKS_DB_ALTER_OPTIONS', 'betterlinks_db_alter_options');
             define('BETTERLINKS_CUSTOM_DOMAIN_MENU', 'betterlinks_custom_domain_menu');
+            define('BETTERLINKS_AI_API_KEYS_OPTION_NAME', 'betterlinks_ai_api_keys');
         }
 
         public function upload_dir_path()

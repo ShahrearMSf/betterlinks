@@ -687,20 +687,26 @@ class Helper {
 			return $slug;
 		}
 
-		$is_cat_exists = self::term_exists( $slug );
-		if ( ! $is_cat_exists ) {
-			$insert_id = self::insert_term(
-				array(
-					'term_name' => $slug,
-					'term_slug' => self::make_slug( $slug ),
-					'term_type' => 'category',
-				)
-			);
-			if ( $insert_id ) {
-				self::clear_query_cache();
-				$slug = $insert_id;
-			}
+		// Check if category exists and get its ID for AI
+		$existing_term = self::get_term_by_slug( self::make_slug( $slug ), 'category' );
+		if ( ! empty( $existing_term ) && is_array( $existing_term ) && count( $existing_term ) > 0 ) {
+			// Category exists, return its ID
+			return $existing_term[0]['ID'];
 		}
+
+		// Category doesn't exist, create it
+		$insert_id = self::insert_term(
+			array(
+				'term_name' => $slug,
+				'term_slug' => self::make_slug( $slug ),
+				'term_type' => 'category',
+			)
+		);
+		if ( $insert_id ) {
+			self::clear_query_cache();
+			return $insert_id;
+		}
+
 		return $slug;
 	}
 

@@ -12,5 +12,6 @@ import password from './password.reducers';
 import analytics from './analytics.reducers';
 import metaTags from './metaTags.reducers';
 import quickSetup from './quick-setup.reducers';
+import aiBulkLinks from './ai_bulk_links.reducers';
 
-export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas, favouriteSort, autoLinkSettings, password, analytics, metaTags, quickSetup });
+export default combineReducers({ activity, settings, links, terms, clicks, keywords, postdatas, favouriteSort, autoLinkSettings, password, analytics, metaTags, quickSetup, aiBulkLinks });

@@ -27,6 +27,7 @@ const Settings = (props) => {
 	const query = useQuery();
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
+	const advancedTab = query.get('advanced');
 	const { settings } = props.settings;
 	const { terms } = props.terms;
 	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
@@ -88,7 +89,7 @@ const Settings = (props) => {
 	return (
 		<React.Fragment>
 			<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
-			<Tabs defaultIndex={currentTab == 'true' ? 2 : 0}>
+			<Tabs defaultIndex={currentTab == 'true' ? 2 : advancedTab == 'true' ? 1 : 0}>
 				<TabList>
 					{tabList.map((item, index) => (
 						<Tab key={index}>{item}</Tab>
