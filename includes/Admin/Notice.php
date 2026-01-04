@@ -215,7 +215,7 @@ class Notice {
 			"<div class='notice notice-success is-dismissible btl-dashboard-notice' id='btl-dashboard-notice'>
 				<p>
 				%s
-				<a target='_blank' href='https://betterlinks.io/docs/auto-post-link-generator-in-betterlinks' style='display: inline-block'>
+				<a target='_blank' href='https://betterlinks.io/docs/ai-bulk-link-generator-in-betterlinks/' style='display: inline-block'>
 					%s
 				</a>
 				%s
@@ -223,8 +223,8 @@ class Notice {
 				%s
 				</p>
 		</div>",
-			__( 'NEW: BetterLinks Pro 2.5 now includes a powerful new ', 'betterlinks' ),
-			__( 'Auto Post Link Generator.', 'betterlinks' ),
+			__( 'NEW: BetterLinks Pro 2.6 now includes a powerful new ', 'betterlinks' ),
+			__( 'AI Bulk Link Generator.', 'betterlinks' ),
 			__( ' Check the full ', 'betterlinks' ),
 			__( 'Changelog', 'betterlinks' ),
 			__( ' for details.', 'betterlinks' ),

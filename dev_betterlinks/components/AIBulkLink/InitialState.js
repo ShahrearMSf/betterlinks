@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
-import { is_pro_enabled, plugin_root_url, route_path } from 'utils/helper';
+import { is_pro_enabled, plugin_root_url, route_path, pro_version_check } from 'utils/helper';
 import { redirectType as redirectTypeOptions, urlGenerationTypes } from 'utils/data';
 import { useUpgradeProModal } from 'utils/customHooks';
 import ProBadge from 'components/Badge/ProBadge';
@@ -30,6 +30,9 @@ modalRef, // Add modalRef prop for scrolling
 error, // Add error prop to trigger validation styling
 }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+
+	// Check if BetterLinks Pro version is 2.6.0 or newer
+	const isProVersionValid = pro_version_check('2.6.0');
 
 	// Validation states
 	const [validationErrors, setValidationErrors] = useState({
@@ -98,12 +101,21 @@ label: cat.term_name,
 
 	return (
 <>
-			{/* API Key Missing Notice - Only show if settings are loaded and no valid API key */}
-			{!settingsLoading && !hasValidApiKey && (
+			{/* Version Check Notice - Show if Pro version is less than 2.6.0 */}
+			{is_pro_enabled && !isProVersionValid && (
+				<div className="btl-ai-header">
+					<div>
+						⚠️ {__('AI Bulk Link Generator requires BetterLinks Pro ', 'betterlinks')}<strong>v2.6.0</strong>{__(' or newer. Please update the plugin to use it.', 'betterlinks')}
+					</div>
+				</div>
+			)}
+
+			{/* API Key Missing Notice - Only show if settings are loaded, no valid API key, and Pro version is valid */}
+			{!settingsLoading && !hasValidApiKey && isProVersionValid && (
 				<div className="btl-ai-header">
 					<p>
 						⚠️ {__('Notice: API key must be configured to use AI bulk link generation. ', 'betterlinks')}
-						<Link 
+						<Link
 							to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
 							style={{ textDecoration: 'underline' }}
 							onClick={() => {
@@ -130,7 +142,7 @@ label: cat.term_name,
 						   </span>
 					   </div>
 					</label>
-					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
+					<span onClick={!is_pro_enabled || !isProVersionValid ? openUpgradeToProModal : undefined} style={!is_pro_enabled || !isProVersionValid ? { cursor: 'pointer' } : {}}>
 						<Select2
 							className="btl-modal-select--full"
 							classNamePrefix="btl-react-select"
@@ -161,7 +173,7 @@ label: cat.term_name,
 							onChange={(option) => setRedirectType(option?.value || '302')}
 							isSearchable={false}
 							isOptionDisabled={(option) => option.disabled}
-							isDisabled={!is_pro_enabled}
+							isDisabled={!is_pro_enabled || !isProVersionValid}
 						/>
 					</span>
 				</div>
@@ -177,7 +189,7 @@ label: cat.term_name,
 							   </span>
 						   </div>
 					   </label>
-					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
+					<span onClick={!is_pro_enabled || !isProVersionValid ? openUpgradeToProModal : undefined} style={!is_pro_enabled || !isProVersionValid ? { cursor: 'pointer' } : {}}>
 						<Select2
 							className="btl-modal-select--full"
 							classNamePrefix="btl-react-select"
@@ -185,7 +197,7 @@ label: cat.term_name,
 							value={urlGenerationTypes.filter((item) => item.value === shortUrlStrategy)[0]}
 							onChange={(option) => setShortUrlStrategy(option?.value || 'from_title')}
 							isSearchable={false}
-							isDisabled={!is_pro_enabled}
+							isDisabled={!is_pro_enabled || !isProVersionValid}
 						/>
 					</span>
 				</div>
@@ -201,7 +213,7 @@ label: cat.term_name,
 						   </span>
 					   </div>
 					</label>
-					<span onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer' } : {}}>
+					<span onClick={!is_pro_enabled || !isProVersionValid ? openUpgradeToProModal : undefined} style={!is_pro_enabled || !isProVersionValid ? { cursor: 'pointer' } : {}}>
 						<Select2
 							className="btl-modal-select--full"
 							classNamePrefix="btl-react-select"
@@ -211,7 +223,7 @@ label: cat.term_name,
 							}
 							onChange={(option) => setSelectedCategory(option?.value || 'ai_generated')}
 							placeholder={__('Select a category...', 'betterlinks')}
-							isDisabled={!is_pro_enabled}
+							isDisabled={!is_pro_enabled || !isProVersionValid}
 						/>
 					</span>
 				</div>
@@ -231,10 +243,10 @@ label: cat.term_name,
 						   </span>
 					   </div>
 					</label>
-					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
+					<div onClick={!is_pro_enabled || !isProVersionValid ? openUpgradeToProModal : undefined} style={!is_pro_enabled || !isProVersionValid ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea
 						className={getTextareaClass('urls')}
-						placeholder={__('http://test-site.local/go/ui8/product-name/contact-page\n\nhttps://examplelink.com', 'betterlinks')}
+						placeholder={__('https://your-target-url.com/sample-link\n\nhttps://your-target-url.com/sample-link-2\n\nhttps://example.com/sample-link', 'betterlinks')}
 						value={urls}
 						onChange={(e) => {
 							setUrls(e.target.value);
@@ -244,11 +256,12 @@ label: cat.term_name,
 							}
 						}}
 						rows="5"
-						disabled={isProcessing || !is_pro_enabled}
-						style={!is_pro_enabled ? { pointerEvents: 'none' } : {}}
+						disabled={isProcessing || !is_pro_enabled || !isProVersionValid}
+						style={!is_pro_enabled || !isProVersionValid ? { pointerEvents: 'none' } : {}}
 					>
-						https://example.com
-						https://another-example.com
+						https://your-target-url.com/sample-link
+						https://your-target-url.com/sample-link-2
+						https://example.com/sample-link
 					</textarea>
 					</div>
 					<p className="btl-ai-note">
@@ -277,7 +290,7 @@ label: cat.term_name,
 							{__('Reset Prompt', 'betterlinks')}
 						</button>
 					</div>
-					<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
+					<div onClick={!is_pro_enabled || !isProVersionValid ? openUpgradeToProModal : undefined} style={!is_pro_enabled || !isProVersionValid ? { cursor: 'pointer', position: 'relative', display: 'block', width: '100%' } : { position: 'relative', display: 'block', width: '100%' }}>
 					<textarea
 						className={getTextareaClass('prompt')}
 						placeholder={__('Enter your AI prompt for generating link data:', 'betterlinks')}
@@ -290,20 +303,20 @@ label: cat.term_name,
 							}
 						}}
 						rows="5"
-						disabled={isProcessing || !is_pro_enabled}
-						style={!is_pro_enabled ? { pointerEvents: 'none' } : {}}
+						disabled={isProcessing || !is_pro_enabled || !isProVersionValid}
+						style={!is_pro_enabled || !isProVersionValid ? { pointerEvents: 'none' } : {}}
 					/>
 				    </div>
 				</div>
 
 				{/* Generate Button */}
-				<div onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={!is_pro_enabled ? { cursor: 'pointer', display: 'inline-block', position: 'relative' } : { display: 'inline-block', position: 'relative' }}>
+				<div onClick={!is_pro_enabled || !isProVersionValid ? openUpgradeToProModal : undefined} style={!is_pro_enabled || !isProVersionValid ? { cursor: 'pointer', display: 'inline-block', position: 'relative' } : { display: 'inline-block', position: 'relative' }}>
 				<button
 					className="btl-ai-btn-generate"
-					onClick={is_pro_enabled ? handleGenerateClick : undefined}
-					disabled={isProcessing || !settingsLoading && !hasValidApiKey}
-					style={!is_pro_enabled && (isProcessing || isUrlsEmpty) ? { pointerEvents: 'none' } : {}}
-					title={!is_pro_enabled ? __('Pro Feature - Upgrade to Pro', 'betterlinks') : !settingsLoading && !hasValidApiKey ? __('Configure your API key', 'betterlinks') : ''}
+					onClick={is_pro_enabled && isProVersionValid ? handleGenerateClick : undefined}
+					disabled={isProcessing || !settingsLoading && !hasValidApiKey || !isProVersionValid}
+					style={(!is_pro_enabled || !isProVersionValid) && (isProcessing || isUrlsEmpty) ? { pointerEvents: 'none' } : {}}
+					title={!is_pro_enabled ? __('Pro Feature - Upgrade to Pro', 'betterlinks') : !isProVersionValid ? __('AI feature requires BetterLinks Pro v2.6.0 or newer. Please update the plugin to use it.', 'betterlinks') : !settingsLoading && !hasValidApiKey ? __('Configure your API key', 'betterlinks') : ''}
 				>
 					{isProcessing ? (
 <>
@@ -313,7 +326,7 @@ label: cat.term_name,
 					) : (
 <>
 							<img src={plugin_root_url + '/assets/images/icons/ai-generate-btn.svg'} alt="AI Icon" />
-							 {__('Generate Links', 'betterlinks')}
+							 {!isProVersionValid ? __('Requires BetterLinks Pro v2.6.0+', 'betterlinks') : __('Generate Links', 'betterlinks')}
 						</>
 					)}
 				</button>

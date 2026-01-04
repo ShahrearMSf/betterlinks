@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useUpgradeProModal } from 'utils/customHooks';
-import { plugin_root_url } from 'utils/helper';
+import { pro_version_check } from 'utils/helper';
 import UpgradeToPro from '../Teasers/UpgradeToPro';
 
 const AISettings = () => {
@@ -14,6 +14,7 @@ export default AISettings;
 
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
+	const isProVersionValid = pro_version_check('2.6.0');
 
 	return (
 		<>
@@ -30,16 +31,21 @@ const Teaser = () => {
                         <div className="short-description">
                             <b style={{ fontWeight: 700 }}>Note: </b>
                             <span>
-                                {__('Make sure to save your API key and configure it to use AI features. For more details, ', 'betterlinks')}
+                                { !isProVersionValid ? __('AI Bulk Link Generator requires BetterLinks Pro v2.6.0 or newer. Please update the plugin to use it.', 'betterlinks') : __('Make sure to save your API key and configure it to use AI features. For more details, ', 'betterlinks')}
                             </span>
-                            <a
-                                className="external-analytic-tooltip-anchor"
-                                href="https://betterlinks.io/docs/ai-bulk-link-generator-in-betterlinks/"
-                                target="_blank"
-                                style={{ color: 'inherit' }}
-                            >
-                                {__('click here', 'betterlinks-pro')}
-                            </a>
+							{
+								isProVersionValid && (
+									<a
+										className="external-analytic-tooltip-anchor"
+										href="https://betterlinks.io/docs/ai-bulk-link-generator-in-betterlinks/"
+										target="_blank"
+										style={{ color: 'inherit' }}
+									>
+									{__('click here', 'betterlinks-pro')}
+									</a>
+								)
+							}
+                           
                         </div>
                     </div>
                 </div>
@@ -97,7 +103,7 @@ const Teaser = () => {
 					<input
 						type="password"
 						placeholder={__('*****************************', 'betterlinks')}
-						disabled
+						readOnly
 						style={{
 							width: '100%',
 							maxWidth: '350px',
@@ -127,7 +133,7 @@ const Teaser = () => {
 					<input
 						type="password"
 						placeholder={__('*****************************', 'betterlinks')}
-						disabled
+						readOnly
 						style={{
 							width: '100%',
 							maxWidth: '350px',
@@ -148,41 +154,10 @@ const Teaser = () => {
 						</a>
 					</div>
 				</div>
-
-				{/* How to get API Key Section */}
-				{/* <div style={{ marginBottom: '30px', padding: '16px', background: '#F9FAFB', borderRadius: '8px' }}>
-					<div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-						<div style={{ padding: '24px' }}>
-							<div style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#333', display: 'flex', alignItems: 'center', gap: '8px' }}>
-								<img width="20" height="20" src={plugin_root_url + '/assets/images/icons/ai-api-icon.svg'} alt="Target" />
-								{__('How to get API Key', 'betterlinks')}
-							</div>
-							<div style={{ fontSize: '13px', color: '#666', lineHeight: '1.6' }}>
-								<div style={{ marginBottom: '8px' }}>
-									<strong>{__('Open AI:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
-									<a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{ color: '#2563EB', textDecoration: 'none' }}>
-										platform.openai.com
-									</a>
-									{__(' and create a new API key', 'betterlinks')}
-								</div>
-								<div>
-									<strong>{__('Google Gemini:', 'betterlinks')}</strong> {__('Visit', 'betterlinks')}{' '}
-									<a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{ color: '#2563EB', textDecoration: 'none' }}>
-										makersuite.google.com
-									</a>
-									{__(' and create a new API key', 'betterlinks')}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> */}
-
-				{/* Save Settings Button */}
-				{/* <div style={{ marginTop: '30px' }}>
+				{/* Add Save Settings Button */}
+				<div style={{ marginTop: '30px' }} onClick={openUpgradeToProModal}>
 					<button
 						type="button"
-						disabled
-						onClick={openUpgradeToProModal}
 						style={{
 							padding: '10px 24px',
 							background: '#2563EB',
@@ -191,13 +166,13 @@ const Teaser = () => {
 							borderRadius: '4px',
 							fontSize: '14px',
 							fontWeight: '500',
-							cursor: 'pointer',
-							opacity: 0.7,
+							cursor: 'not-allowed',
 						}}
 					>
-						{__('Save Settings', 'betterlinks')}
+						{__('Requires BetterLinks Pro v2.6.0+', 'betterlinks')}
 					</button>
-				</div> */}
+				</div>
+				
 			</div>
 		</>
 	);
