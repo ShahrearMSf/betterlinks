@@ -75,6 +75,8 @@
 	.btl-create-autolinks,
 	.btl-create-links {
 		margin-left: 30px;
+		display: flex;
+		align-items: center;
 		.btl-create-autolink-button,
 		.btl-create-link-button {
 			cursor: pointer;

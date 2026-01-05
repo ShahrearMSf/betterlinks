@@ -6,7 +6,7 @@ use BetterLinks\Admin\WPDev\PluginUsageTracker;
 use BetterLinks\Cron;
 use BetterLinks\Helper;
 use BetterLinks\Link\Utils;
-use BetterLinks\Cache;
+use BetterLinks\Admin\Cache;
 
 class Ajax {
 

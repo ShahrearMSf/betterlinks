@@ -14,9 +14,11 @@ import { tabList } from 'utils/data';
 import FluentBoardSettings from 'components/FluentBoardSettings';
 import AutoLinkKeywords from 'components/Teasers/AutoLinkKeywords';
 import UTMBuilderGlobalSettings from 'components/UTMBuilderGlobalSettings';
+import AISettings from 'components/AISettings';
 
 const TabsOptions = ({ settings, postdatas, autoCreateLinkSettings, terms, trackingSettings, setAutoCreateLinkSettings }) => {
 	const panelList = [
+		<AISettings />,
 		<CustomFields settings={settings} />,
 		<ShortLinkGenerator />,
 		<UTMBuilderGlobalSettings settings={settings} />,

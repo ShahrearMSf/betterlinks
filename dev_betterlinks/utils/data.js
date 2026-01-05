@@ -67,6 +67,10 @@ export const urlGenerationTypes = [
 // Advanced Option Feature List
 export const tabList = [
 	{
+		label: __('AI Configuration', 'betterlinks'),
+		type: 'pro',
+	},
+	{
 		label: __('Custom Fields', 'betterlinks'),
 		type: 'free',
 	},
