@@ -162,6 +162,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 2.4.2 - 05/01/2026 =
+
+- Fixed: Share Task issue with Fluent Boards Link Management
+- Few minor bug fixes & improvements
+
 = 2.4.1 - 28/12/2025 =
 
 - Fixed: Missing geolocation script reference causing console errors
