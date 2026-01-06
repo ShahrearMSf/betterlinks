@@ -1,4 +1,4 @@
-import { API, makeRequest, generateShortURL } from 'utils/helper';
+import { API, makeRequest, generateShortURL, prefix } from 'utils/helper';
 import AILinkGenerator from 'components/AILinkGenerator';
 import { extractFieldLimits } from 'utils/FieldLimitsExtractor';
 
@@ -250,7 +250,7 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 					// Create settings object for URL generation
 					const urlSettings = {
 						url_slug_generation_type: options.short_url_strategy || 'from_title',
-						prefix: '', // No prefix for AI generated links
+						prefix: prefix || '', // Use prefix from settings (default: 'go')
 					};
 
 					// Generate short URL based on selected strategy
