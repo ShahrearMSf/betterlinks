@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -34,12 +34,17 @@ const Graph = (props) => {
 	} = props;
 	const id = betterLinksQuery.get('id');
 	const tag_id = betterLinksQuery.get('tag_id');
-	const labels = get_labels(props.data?.clicks || {});
 	const [filterButtonText, setFilterButtonText] = useState(__('Filter', 'betterlinks'));
 	const [isOpenCustomDateFilter, setOPenCustomDateFilter] = useState(false);
 	const [isMounted, setIsMounted] = useState(true);
 
 	const { darkMode } = activity;
+
+	// Memoize labels to prevent unnecessary recalculations
+	const labels = useMemo(() => get_labels(props.data?.clicks || {}), [props.data?.clicks]);
+
+	// Track if all chart data is ready to prevent partial renders
+	const [isChartDataReady, setIsChartDataReady] = useState(false);
 
 	// Track component mount state to prevent chart errors on unmount
 	useEffect(() => {
@@ -48,6 +53,23 @@ const Graph = (props) => {
 			setIsMounted(false);
 		};
 	}, []);
+
+	// Check if all required data is loaded before rendering chart
+	useEffect(() => {
+		const hasClicks = props.data?.clicks && Object.keys(props.data.clicks).length > 0;
+		const hasUniqueClicks = props.data?.unique_clicks && Object.keys(props.data.unique_clicks).length > 0;
+		const hasUniqueIpCount = props.uniqueIpCount !== undefined && props.uniqueIpCount !== null;
+		
+		// Only set chart as ready when all data is available
+		if (hasClicks && hasUniqueClicks && hasUniqueIpCount) {
+			setIsChartDataReady(true);
+		} else if (hasClicks && !hasUniqueClicks && !hasUniqueIpCount) {
+			// If only clicks data exists (no unique tracking), still show chart
+			setIsChartDataReady(true);
+		} else {
+			setIsChartDataReady(false);
+		}
+	}, [props.data?.clicks, props.data?.unique_clicks, props.uniqueIpCount]);
 
 	const dateRangePickerOnChangeHandler = (item) => {
 		setCustomDateFilter([item.selection]);
@@ -98,7 +120,8 @@ const Graph = (props) => {
 		setOPenCustomDateFilter(false);
 	};
 
-	const dataOptions = {
+	// Memoize dataOptions to prevent unnecessary Chart re-renders
+	const dataOptions = useMemo(() => ({
 		options: {
 			chart: {
 				id: 'analytics-click-count',
@@ -133,7 +156,7 @@ const Graph = (props) => {
 			},
 		},
 		series: getDataset(props.data, props.uniqueIpCount),
-	};
+	}), [labels, props.data, props.uniqueIpCount]);
 
 	// Check if chart has valid data to render
 
@@ -174,8 +197,10 @@ const Graph = (props) => {
 				<div className={`btl-analytics-chart-line${!is_pro_enabled && id ? ' btl-analytics-chart-line-teaser' : ''}`}>
 					{!is_pro_enabled && id ? (
 						<img className="btl-analytics-chart-image" src={plugin_root_url + 'assets/images/teasers/individual-analytics.png'} />
+					) : isChartDataReady ? (
+						<Chart options={dataOptions.options} series={dataOptions.series} type="area" height={350} />
 					) : (
-						<Chart key={`chart-${JSON.stringify(dataOptions.series)}`} options={dataOptions.options} series={dataOptions.series} type="area" height={350} />
+						<ChartLoader />
 					)}
 					{id && <GraphTeaser />}
 				</div>

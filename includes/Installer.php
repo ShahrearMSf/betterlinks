@@ -280,6 +280,10 @@ class Installer extends \WP_Background_Process
                 $this->createBetterLinksCountriesTable();
                 $this->modifyBetterLinksClicksTable4();
             }
+            
+            // Migrate default settings for backward compatibility (runs for all versions)
+            // This ensures older users get new default settings that were added over time
+            $this->migrate_default_settings();
         }
         Helper::btl_update_option('betterlinks_db_version', BETTERLINKS_DB_VERSION);
     }
