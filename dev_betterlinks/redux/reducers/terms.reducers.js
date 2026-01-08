@@ -1,5 +1,14 @@
 import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM, DELETE_TERM, FETCH_TAGS, FETCH_CATEGORIES } from 'redux/actions/actionstrings';
-function terms(state = {}, action) {
+
+const initialState = {
+	terms: [],
+	tags: [],
+	categories: [],
+	tag_analytics: null,
+	category_analytics: null,
+};
+
+function terms(state = initialState, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_TERMS_DATA:
@@ -37,7 +46,7 @@ function terms(state = {}, action) {
 		}
 		case UPDATE_TERM: {
 			const ID = payload.ID;
-			const newTerms = state.terms.map((item) =>
+			const newTerms = state?.terms?.map((item) =>
 				`${item.ID}` === `${ID}`
 					? {
 						...item,
@@ -45,7 +54,7 @@ function terms(state = {}, action) {
 					}
 					: item
 			);
-			const newTags = state.tags.map((item) =>
+			const newTags = state?.tags?.map((item) =>
 				`${item.ID}` === `${ID}` || `${item.id}` === `${ID}`
 					? {
 						...item,
@@ -53,7 +62,7 @@ function terms(state = {}, action) {
 					}
 					: item
 			);
-			const newCategories = state.categories?.map((item) =>
+			const newCategories = state?.categories?.map((item) =>
 				`${item.ID}` === `${ID}` || `${item.id}` === `${ID}`
 					? {
 						...item,
@@ -70,7 +79,7 @@ function terms(state = {}, action) {
 		}
 		case DELETE_TERM: {
 			const ID = payload?.cat_id;
-			const newTerms = state.terms.filter((item) => `${item.ID}` !== `${ID}`);
+			const newTerms = state?.terms?.filter((item) => `${item.ID}` !== `${ID}`);
 			const newTags = state?.tags?.filter((item) => `${item.id}` !== `${ID}` && `${item.ID}` != `${ID}`);
 			const newCategories = state?.categories?.filter((item) => `${item.id}` !== `${ID}` && `${item.ID}` != `${ID}`);
 			return {

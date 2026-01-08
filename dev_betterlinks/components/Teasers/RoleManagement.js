@@ -132,6 +132,23 @@ export default class RoleManagement extends React.Component {
 										))}
 									</div>
 								</div>
+								<div className="btl-role-item btl-form-group">
+									<label className="btl-form-label">
+										<span>
+											{__('Who can Manage', 'betterlinks')} <br />
+											{__('Link Scanner?', 'betterlinks')}
+										</span>
+										<ProBadge />
+									</label>
+									<div className="editFavorite link-options__body" onClick={() => this.openModal()}>
+										{Object.entries(roles).map(([key, value], index) => (
+											<label htmlFor={`editFavorite_${index}`} key={`editFavorite_${index}`} className="btl-checkbox-field block">
+												<input id={`editFavorite_${index}`} type="checkbox" name="editFavorite" className="btl-check" value={key} disabled={true} />
+												<span className="text">{value}</span>
+											</label>
+										))}
+									</div>
+								</div>
 							</form>
 						</div>
 					</div>
