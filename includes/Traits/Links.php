@@ -368,19 +368,21 @@ trait Links
 
         // Update JSON file if it exists
         if (BETTERLINKS_EXISTS_LINKS_JSON) {
-            // We need the short_url to update the JSON file
+            // Fetch complete link data to update JSON file
             $link_data = $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT short_url FROM {$wpdb->prefix}betterlinks WHERE ID = %d",
+                    "SELECT * FROM {$wpdb->prefix}betterlinks WHERE ID = %d",
                     $link_id
                 ),
                 ARRAY_A
             );
-            
+
             if ($link_data && isset($link_data['short_url'])) {
+                // Update target_url with the new value
+                $link_data['target_url'] = $new_url;
                 \BetterLinks\Helper::update_json_into_file(
                     trailingslashit(BETTERLINKS_UPLOAD_DIR_PATH) . 'links.json',
-                    ['target_url' => $new_url],
+                    $link_data,
                     $link_data['short_url']
                 );
             }

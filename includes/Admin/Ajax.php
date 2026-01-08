@@ -149,7 +149,19 @@ class Ajax {
 		}
 		$helper::clear_query_cache();
 		if ( BETTERLINKS_EXISTS_LINKS_JSON ) {
-			$helper::update_json_into_file( trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', array( 'short_url' => $short_url ), $old_short_url );
+			// Fetch the complete link data from database to update JSON file
+			$link_data = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM {$wpdb->prefix}betterlinks WHERE ID = %d",
+					$id
+				),
+				ARRAY_A
+			);
+			if ( $link_data ) {
+				// Update short_url with the new value
+				$link_data['short_url'] = $short_url;
+				$helper::update_json_into_file( trailingslashit( BETTERLINKS_UPLOAD_DIR_PATH ) . 'links.json', $link_data, $old_short_url );
+			}
 		}
 
 		wp_send_json_error(

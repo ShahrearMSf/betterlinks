@@ -354,11 +354,29 @@ class Helper {
 		$case_sensitive_is_enabled = isset( $existingData['is_case_sensitive'] ) ? $existingData['is_case_sensitive'] : false;
 		$short_url                 = $case_sensitive_is_enabled ? $data['short_url'] : strtolower( $data['short_url'] );
 		if ( isset( $data['wildcards'] ) && $data['wildcards'] ) {
-			$tempArray                 = $existingData['wildcards'];
+			$tempArray = $existingData['wildcards'];
+			// Remove any existing entry with the same ID to prevent duplicates
+			if ( isset( $data['ID'] ) ) {
+				foreach ( $tempArray as $key => $entry ) {
+					if ( isset( $entry['ID'] ) && $entry['ID'] == $data['ID'] ) {
+						unset( $tempArray[ $key ] );
+						break;
+					}
+				}
+			}
 			$tempArray[ $short_url ]   = self::json_link_formatter( $data );
 			$existingData['wildcards'] = $tempArray;
 		} else {
-			$tempArray               = ( isset( $existingData['links'] ) ? $existingData['links'] : array() );
+			$tempArray = ( isset( $existingData['links'] ) ? $existingData['links'] : array() );
+			// Remove any existing entry with the same ID to prevent duplicates
+			if ( isset( $data['ID'] ) ) {
+				foreach ( $tempArray as $key => $entry ) {
+					if ( isset( $entry['ID'] ) && $entry['ID'] == $data['ID'] ) {
+						unset( $tempArray[ $key ] );
+						break;
+					}
+				}
+			}
 			$tempArray[ $short_url ] = self::json_link_formatter( $data );
 			$existingData['links']   = $tempArray;
 		}
@@ -372,13 +390,33 @@ class Helper {
 		$existingData              = json_decode( $existingData, true );
 		$case_sensitive_is_enabled = isset( $existingData['is_case_sensitive'] ) ? $existingData['is_case_sensitive'] : false;
 		$short_url                 = $case_sensitive_is_enabled ? $data['short_url'] : strtolower( $data['short_url'] );
+
 		if ( isset( $data['wildcards'] ) && ! empty( $data['wildcards'] ) ) {
 			$tempArray = $existingData['wildcards'];
 			if ( is_array( $tempArray ) ) {
+				$found_old_entry = false;
+
+				// First, try to find and remove by old_short_url if provided
 				if ( ! empty( $old_short_url ) ) {
-					unset( $tempArray[ $old_short_url ] );
-					unset( $tempArray[ strToLower( $old_short_url ) ] );
+					$old_short_url_lower = strtolower( $old_short_url );
+					if ( isset( $tempArray[ $old_short_url ] ) ) {
+						unset( $tempArray[ $old_short_url ] );
+						$found_old_entry = true;
+					} elseif ( isset( $tempArray[ $old_short_url_lower ] ) ) {
+						unset( $tempArray[ $old_short_url_lower ] );
+						$found_old_entry = true;
+					}
 				}
+
+				// If old entry not found by short_url, search by ID to remove all duplicates
+				if ( ! $found_old_entry && isset( $data['ID'] ) ) {
+					foreach ( $tempArray as $key => $entry ) {
+						if ( isset( $entry['ID'] ) && $entry['ID'] == $data['ID'] ) {
+							unset( $tempArray[ $key ] );
+						}
+					}
+				}
+
 				$tempArray[ $short_url ]   = self::json_link_formatter( $data );
 				$existingData['wildcards'] = $tempArray;
 				return file_put_contents( $file, wp_json_encode( $existingData ) );
@@ -387,11 +425,32 @@ class Helper {
 			$tempArray     = $existingData['links'];
 			$previous_data = array();
 			if ( is_array( $tempArray ) ) {
+				$found_old_entry = false;
+
+				// First, try to find and remove by old_short_url if provided
 				if ( ! empty( $old_short_url ) ) {
-					$previous_data = $tempArray[ $old_short_url ];
-					unset( $tempArray[ $old_short_url ] );
-					unset( $tempArray[ strToLower( $old_short_url ) ] );
+					$old_short_url_lower = strtolower( $old_short_url );
+					if ( isset( $tempArray[ $old_short_url ] ) ) {
+						$previous_data = $tempArray[ $old_short_url ];
+						unset( $tempArray[ $old_short_url ] );
+						$found_old_entry = true;
+					} elseif ( isset( $tempArray[ $old_short_url_lower ] ) ) {
+						$previous_data = $tempArray[ $old_short_url_lower ];
+						unset( $tempArray[ $old_short_url_lower ] );
+						$found_old_entry = true;
+					}
 				}
+
+				// If old entry not found by short_url, search by ID to remove all duplicates
+				if ( ! $found_old_entry && isset( $data['ID'] ) ) {
+					foreach ( $tempArray as $key => $entry ) {
+						if ( isset( $entry['ID'] ) && $entry['ID'] == $data['ID'] ) {
+							$previous_data = $entry;
+							unset( $tempArray[ $key ] );
+						}
+					}
+				}
+
 				$data                    = wp_parse_args( $data, $previous_data );
 				$tempArray[ $short_url ] = self::json_link_formatter( $data );
 				$existingData['links']   = $tempArray;
