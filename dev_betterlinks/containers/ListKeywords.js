@@ -63,6 +63,31 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 			},
 		},
 		{
+			name: __('Status', 'betterlinks'),
+			selector: 'is_active',
+			sortable: false,
+			width: '120px',
+			center: true,
+			cell: (row) => {
+				const isActive = row.is_active !== undefined ? row.is_active : true;
+				return (
+					<span
+						style={{
+							padding: '4px 12px',
+							borderRadius: '14px',
+							fontSize: '12px',
+							fontWeight: '500',
+							backgroundColor: isActive ? '#d4edda' : '#f8d7da',
+							color: isActive ? '#155724' : '#721c24',
+							display: 'inline-block',
+						}}
+					>
+						{isActive ? __('Active', 'betterlinks') : __('Inactive', 'betterlinks')}
+					</span>
+				);
+			},
+		},
+		{
 			name: __('Shortened URL', 'betterlinks'),
 			selector: 'short_url',
 			sortable: false,

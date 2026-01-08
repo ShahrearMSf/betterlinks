@@ -652,6 +652,7 @@ export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 			leftBoundary: data.left_boundary,
 			rightBoundary: data.right_boundary,
 			limit: data.limit,
+			isActive: data.is_active !== undefined ? data.is_active : true,
 		};
 	}
 	return {
@@ -668,6 +669,7 @@ export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 		leftBoundary: autoLinkKeywordSettings?.leftBoundary || '',
 		rightBoundary: autoLinkKeywordSettings?.rightBoundary || '',
 		limit: autoLinkKeywordSettings?.limit || 100,
+		isActive: autoLinkKeywordSettings?.isActive !== undefined ? autoLinkKeywordSettings.isActive : true,
 	};
 };
 

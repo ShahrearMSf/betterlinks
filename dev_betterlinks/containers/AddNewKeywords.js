@@ -271,6 +271,10 @@ const AddNewKeywords = (props) => {
 										</button>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
+												<Field className="btl-check" name="isActive" type="checkbox" onChange={() => props.setFieldValue('isActive', !props.values.isActive)} />
+												<span className="text">{__('Auto Link Keyword Active', 'betterlinks')}</span>
+											</label>
+											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="openNewTab" type="checkbox" onChange={() => props.setFieldValue('openNewTab', !props.values.openNewTab)} />
 												<span className="text">{__('Open New Tab', 'betterlinks')}</span>
 											</label>
