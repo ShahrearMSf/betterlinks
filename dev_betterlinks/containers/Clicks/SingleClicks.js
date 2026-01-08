@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { subDays } from 'date-fns';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import Graph from 'containers/Graph';
-import { fetch_clicks_data, fetch_individual_clicks } from 'redux/actions/clicks.actions';
+import { fetch_clicks_data, fetch_individual_clicks, get_individual_chart_data, get_individual_medium_data } from 'redux/actions/clicks.actions';
 import { useUpgradeProModal } from 'utils/customHooks';
 import { formatDate, getColumns, is_pro_enabled, pro_version_check } from 'utils/helper';
 import { analyticsData } from './clicks.helper';
@@ -15,6 +15,8 @@ import DataList from './AnalyticsList/DataList';
 import ChartLoader from './ChartLoader';
 import SingleLinkDetails from './SingleLinkDetails';
 import CompatibilityNotice from 'components/Teasers/CompatibilityNotice';
+import Chart from 'react-apexcharts';
+import BarLoader from 'components/Loader/BarLoader';
 
 const SingleClicks = (props) => {
 	const [isOpenUpgradeToProModal, _, closeUpgradeToProModal] = useUpgradeProModal();
@@ -22,6 +24,8 @@ const SingleClicks = (props) => {
 	const { clicks } = props;
 	const { individual_clicks } = clicks;
 	const [loading, setLoading] = useState(false);
+	const [chartLoading, setChartLoading] = useState(false);
+	const [mediumLoading, setMediumLoading] = useState(false);
 	const { darkMode, analyticsTab } = props.activity;
 	const { settings } = props.settings;
 	const { analytics } = props.analytics;
@@ -50,6 +54,12 @@ const SingleClicks = (props) => {
 		pastDate = from || formatDate(pastDate, 'yyyy-mm-dd');
 
 		props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading });
+		
+		// Fetch individual chart and medium data
+		if (is_pro_enabled) {
+			props.get_individual_chart_data({ link_id: id, from: pastDate, to: currentDate, setLoading: setChartLoading });
+			props.get_individual_medium_data({ link_id: id, from: pastDate, to: currentDate, setLoading: setMediumLoading });
+		}
 	}, [id]);
 
 	const handleCountryUpdated = useCallback((ip, countryData) => {
@@ -66,7 +76,21 @@ const SingleClicks = (props) => {
 	const columns = useCallback(getColumns(analytics, analyticsTab, id, handleCountryUpdated), [analytics, analyticsTab, id, handleCountryUpdated]);
 	const newColumns = settings?.is_disable_analytics_ip ? columns.filter((item) => item.selector !== 'ip') : columns;
 
-	const uniqueIpCount = [...new Set(individual_clicks?.[id]?.analytics.map((item) => item.ip))].length;
+	const uniqueIpCount = individual_clicks?.[id]?.analytics ? [...new Set(individual_clicks[id].analytics.map((item) => item.ip))].length : 0;
+	
+	// Prepare extra analytics data for individual link
+	const extraAnalytics = is_pro_enabled && individual_clicks?.[id] ? {
+		top_referer: individual_clicks[id].individual_referer || [],
+		devices: individual_clicks[id].individual_devices || [],
+		os: individual_clicks[id].individual_os || [],
+		browser: individual_clicks[id].individual_browser || {},
+		top_medium: individual_clicks[id].individual_medium || {},
+		darkMode,
+		Chart,
+		BarLoader,
+		id,
+	} : null;
+
 	return (
 		<div className="btl-analytic">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -77,6 +101,10 @@ const SingleClicks = (props) => {
 					setCustomDateFilter={setCustomDateFilter}
 					setLoading={setLoading}
 					uniqueIpCount={uniqueIpCount}
+					chartLoading={chartLoading}
+					setChartLoading={setChartLoading}
+					setMediumLoading={setMediumLoading}
+					extraAnalytics={extraAnalytics}
 				/>
 			) : (
 				<ChartLoader />
@@ -105,5 +133,7 @@ const mapDispatchToProps = (dispatch) => ({
 	fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
 	fetch_analytics_settings: bindActionCreators(fetch_analytics_settings, dispatch),
 	update_analytics_settings: bindActionCreators(update_analytics_settings, dispatch),
+	get_individual_chart_data: bindActionCreators(get_individual_chart_data, dispatch),
+	get_individual_medium_data: bindActionCreators(get_individual_medium_data, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SingleClicks);
