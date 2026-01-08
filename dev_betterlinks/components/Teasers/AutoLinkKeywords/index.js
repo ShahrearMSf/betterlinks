@@ -63,6 +63,10 @@ const Teaser = () => {
 						<input type="checkbox" disabled className="btl-check" />
 						<span className="text">{__('Case Sensitive', 'betterlinks')}</span>
 					</label>
+					<label className="btl-checkbox-field block" onClick={openUpgradeToProModal}>
+						<input type="checkbox" disabled className="btl-check" />
+						<span className="text">{__('Activate', 'betterlinks')}</span>
+					</label>
 				</div>
 			</span>
 			<SelectTeaser title={__('Left Boundary', 'betterlinks')} onClick={openUpgradeToProModal} defaultValue={{ value: '', label: __('None', 'betterlinks') }} />
