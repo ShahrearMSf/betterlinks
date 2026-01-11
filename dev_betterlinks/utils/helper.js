@@ -649,6 +649,12 @@ export const makeRequest = async (payload = {}) => {
 
 export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 	if (Object.keys(data).length) {
+		// Convert is_active (boolean/int) to keywordStatus (string)
+		let keywordStatus = 'active';
+		if (data.is_active !== undefined) {
+			keywordStatus = (data.is_active == true || data.is_active == 1 || data.is_active == '1') ? 'active' : 'draft';
+		}
+		
 		return {
 			keywords: data.keywords,
 			oldKeywords: data.keywords,
@@ -665,9 +671,16 @@ export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 			leftBoundary: data.left_boundary,
 			rightBoundary: data.right_boundary,
 			limit: data.limit,
-			isActive: data.is_active !== undefined ? data.is_active : true,
+			keywordStatus: keywordStatus,
 		};
 	}
+	
+	// Convert isActive setting to keywordStatus
+	let defaultKeywordStatus = 'active';
+	if (autoLinkKeywordSettings?.isActive !== undefined) {
+		defaultKeywordStatus = autoLinkKeywordSettings.isActive ? 'active' : 'draft';
+	}
+	
 	return {
 		keywords: '',
 		chooseLink: '',
@@ -682,7 +695,7 @@ export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 		leftBoundary: autoLinkKeywordSettings?.leftBoundary || '',
 		rightBoundary: autoLinkKeywordSettings?.rightBoundary || '',
 		limit: autoLinkKeywordSettings?.limit || 100,
-		isActive: autoLinkKeywordSettings?.isActive !== undefined ? autoLinkKeywordSettings.isActive : true,
+		keywordStatus: defaultKeywordStatus,
 	};
 };
 

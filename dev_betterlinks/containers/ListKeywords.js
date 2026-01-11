@@ -6,11 +6,12 @@ import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import KeywordsQuickAction from 'components/KeywordsQuickAction';
 import LinkCopyUrl from 'components/LinkCopyUrl';
-import { delete_keyword } from 'redux/actions/keywords.actions';
+import { delete_keyword, update_keyword } from 'redux/actions/keywords.actions';
 import AddNewKeywords from './AddNewKeywords';
 
 const KeywordFilter = (props) => {
 	const [bulkAction, setBulkAction] = useState([]);
+	const [statusFilter, setStatusFilter] = useState([]);
 	const [warning, setWarning] = useState(false);
 
 	const handleDeleteKeyword = (bulkActionData, bulkAction, deleteHandler) => {
@@ -19,6 +20,25 @@ const KeywordFilter = (props) => {
 		deleteHandler(bulkActionData.selectedRows, bulkAction);
 		setBulkAction({});
 		return props.setToggledClearRows();
+	};
+
+	const handleBulkAction = () => {
+		if (!bulkAction?.value) {
+			return setWarning(true);
+		}
+		
+		if (bulkAction.value === 'delete') {
+			handleDeleteKeyword(props.bulkActionData, bulkAction, props.deleteKeywordHandler);
+		} else if (bulkAction.value === 'change_status') {
+			if (!statusFilter?.value) {
+				return setWarning(true);
+			}
+			setWarning(false);
+			props.changeStatusHandler(props.bulkActionData.selectedRows, statusFilter.value);
+			setBulkAction({});
+			setStatusFilter({});
+			return props.setToggledClearRows();
+		}
 	};
 
 	return (
@@ -31,14 +51,45 @@ const KeywordFilter = (props) => {
 							classNamePrefix="btl-react-select"
 							defaultValue={{ value: '', label: __('Bulk Actions', 'betterlinks') }}
 							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
-							options={[{ value: 'delete', label: __('Delete', 'betterlinks') }]}
-							onChange={(e) => setBulkAction(e)}
+							options={[
+								{ value: 'delete', label: __('Delete', 'betterlinks') },
+								{ value: 'change_status', label: __('Change Status', 'betterlinks') }
+							]}
+							onChange={(e) => {
+								setBulkAction(e);
+								setWarning(false);
+								if (e.value !== 'change_status') {
+									setStatusFilter({});
+								}
+							}}
 						/>
+						{bulkAction.value === 'change_status' && (
+							<Select
+								className="btl-list-view-select"
+								classNamePrefix="btl-react-select"
+								placeholder={__('Select Status', 'betterlinks')}
+								value={statusFilter?.value ? statusFilter : null}
+								options={[
+									{ value: 'active', label: __('Active', 'betterlinks') },
+									{ value: 'draft', label: __('Draft', 'betterlinks') }
+								]}
+								onChange={(e) => {
+									setStatusFilter(e);
+									setWarning(false);
+								}}
+							/>
+						)}
 						<div className="btl-tooltip">
-							<button className="btl-link-apply-button" onClick={() => handleDeleteKeyword(props.bulkActionData, bulkAction, props.deleteKeywordHandler)}>
+							<button className="btl-link-apply-button" onClick={handleBulkAction}>
 								{__('Apply', 'betterlinks')}
 							</button>
-							{warning && bulkAction.value !== 'delete' && <span className="btl-tooltiptext">{__('Please Select Action', 'betterlinks')}</span>}
+							{warning && (
+								<span className="btl-tooltiptext">
+									{bulkAction.value === 'change_status' && !statusFilter?.value
+										? __('Please Select Status', 'betterlinks')
+										: __('Please Select Action', 'betterlinks')}
+								</span>
+							)}
 						</div>
 					</div>
 				)}
@@ -82,7 +133,7 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 							display: 'inline-block',
 						}}
 					>
-						{isActive ? __('Active', 'betterlinks') : __('Inactive', 'betterlinks')}
+						{isActive ? __('Active', 'betterlinks') : __('Draft', 'betterlinks')}
 					</span>
 				);
 			},
@@ -123,7 +174,7 @@ const getLinksListViewColumnData = ({ links, delete_keyword, keywords, postTypes
 	];
 };
 
-const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, postTypesProps, search }) => {
+const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, update_keyword, postTypesProps, search }) => {
 	const [bulkActionData, setBulkActionData] = useState({});
 	const [toggledClearRows, setToggledClearRows] = useState(false);
 
@@ -131,9 +182,38 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 		setToggledClearRows(!toggledClearRows);
 	};
 
+	const handleChangeStatus = (selectedRows, status) => {
+		// Update status for all selected keywords
+		selectedRows.forEach((row) => {
+			const updatedData = {
+				...row,
+				isActive: status === 'active',
+				keywordStatus: status,
+				keywords: row.keywords,
+				oldKeywords: row.keywords,
+				chooseLink: row.link_id,
+				oldChooseLink: row.link_id,
+				postType: row.post_type || [],
+				category: row.category || [],
+				tags: row.tags || [],
+				openNewTab: row.open_new_tab || false,
+				useNoFollow: row.use_no_follow || false,
+				caseSensitive: row.case_sensitive || false,
+				keywordBefore: row.keyword_before || '',
+				keywordAfter: row.keyword_after || '',
+				leftBoundary: row.left_boundary || '',
+				rightBoundary: row.right_boundary || '',
+				limit: row.limit || 100,
+			};
+			
+			update_keyword(updatedData);
+		});
+	};
+
 	const subHeaderComponent = (
 		<KeywordFilter
 			deleteKeywordHandler={delete_keyword}
+			changeStatusHandler={handleChangeStatus}
 			bulkActionData={bulkActionData}
 			search={search}
 			setBulkActionData={setBulkActionData}
@@ -166,6 +246,7 @@ const ListKeywords = ({ linksForUpdateModal, links, keywords, delete_keyword, po
 const mapDispatchToProps = (dispatch) => {
 	return {
 		delete_keyword: bindActionCreators(delete_keyword, dispatch),
+		update_keyword: bindActionCreators(update_keyword, dispatch),
 	};
 };
 export default connect(null, mapDispatchToProps)(ListKeywords);

@@ -98,6 +98,9 @@ const AddNewKeywords = (props) => {
 			return;
 		}
 		if (values.chooseLink) {
+			// Convert keywordStatus to isActive (backend expects isActive as boolean/int)
+			values.isActive = values.keywordStatus === 'active';
+			
 			// check Left Boundary & Keyword Before
 			if (Object.keys(data).length > 0) {
 				update_keyword(values);
@@ -273,10 +276,6 @@ const AddNewKeywords = (props) => {
 										</button>
 										<div className="link-options__body">
 											<label className="btl-checkbox-field">
-												<Field className="btl-check" name="isActive" type="checkbox" onChange={() => props.setFieldValue('isActive', !props.values.isActive)} />
-												<span className="text">{__('Auto Link Keyword Active', 'betterlinks')}</span>
-											</label>
-											<label className="btl-checkbox-field">
 												<Field className="btl-check" name="openNewTab" type="checkbox" onChange={() => props.setFieldValue('openNewTab', !props.values.openNewTab)} />
 												<span className="text">{__('Open New Tab', 'betterlinks')}</span>
 											</label>
@@ -288,6 +287,36 @@ const AddNewKeywords = (props) => {
 												<Field className="btl-check" name="caseSensitive" type="checkbox" onChange={() => props.setFieldValue('caseSensitive', !props.values.caseSensitive)} />
 												<span className="text">{__('Case Sensitive', 'betterlinks')}</span>
 											</label>
+										</div>
+									</div>
+									<div className={`link-options ${openPanelType === 'STATUS' ? 'link-options--open' : ''}`}>
+										<button className="link-options__head" type="button" onClick={() => setOpenPanelType(openPanelType == 'STATUS' ? 'ADVANCED' : 'STATUS')}>
+											<h4 className="link-options__head--title">{__('Keyword Status', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
+										</button>
+										<div className="link-options__body">
+											<div className="btl-modal-form-group">
+												<label className="btl-modal-form-label" htmlFor="keywordStatus">
+													{__('Status', 'betterlinks')}
+												</label>
+												<Select2
+													id="keywordStatus"
+													name="keywordStatus"
+													className="btl-modal-select--mini"
+													classNamePrefix="btl-react-select"
+													options={[
+														{ value: 'active', label: __('Active', 'betterlinks') },
+														{ value: 'draft', label: __('Draft', 'betterlinks') }
+													]}
+													value={
+														props.values.keywordStatus === 'active' || props.values.keywordStatus == true || props.values.keywordStatus == 1 || props.values.keywordStatus == '1'
+															? { value: 'active', label: __('Active', 'betterlinks') }
+															: { value: 'draft', label: __('Draft', 'betterlinks') }
+													}
+													onChange={(option) => {
+														props.setFieldValue('keywordStatus', option.value);
+													}}
+												/>
+											</div>
 										</div>
 									</div>
 									<div className={`link-options ${openPanelType === 'ADVANCED' ? 'link-options--open' : ''} link-options--advance-keyword`}>
