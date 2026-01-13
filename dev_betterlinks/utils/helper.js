@@ -648,11 +648,19 @@ export const makeRequest = async (payload = {}) => {
 };
 
 export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
+	// Check if pro version is 2.6.1 or higher
+	const canChangeStatus = is_pro_enabled && pro_version_check('2.6.1');
+	
 	if (Object.keys(data).length) {
 		// Convert is_active (boolean/int) to keywordStatus (string)
 		let keywordStatus = 'active';
 		if (data.is_active !== undefined) {
 			keywordStatus = (data.is_active == true || data.is_active == 1 || data.is_active == '1') ? 'active' : 'draft';
+		}
+		
+		// Force active status if pro version requirement is not met
+		if (!canChangeStatus) {
+			keywordStatus = 'active';
 		}
 		
 		return {
@@ -677,7 +685,7 @@ export const getAutoLinksInitialValues = (data, autoLinkKeywordSettings) => {
 	
 	// Convert isActive setting to keywordStatus
 	let defaultKeywordStatus = 'active';
-	if (autoLinkKeywordSettings?.isActive !== undefined) {
+	if (autoLinkKeywordSettings?.isActive !== undefined && canChangeStatus) {
 		defaultKeywordStatus = autoLinkKeywordSettings.isActive ? 'active' : 'draft';
 	}
 	

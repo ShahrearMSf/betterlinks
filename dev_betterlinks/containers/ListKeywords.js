@@ -6,7 +6,9 @@ import { bindActionCreators } from 'redux';
 import DataTable from 'react-data-table-component';
 import KeywordsQuickAction from 'components/KeywordsQuickAction';
 import LinkCopyUrl from 'components/LinkCopyUrl';
+import ProBadge from 'components/Badge/ProBadge';
 import { delete_keyword, update_keyword } from 'redux/actions/keywords.actions';
+import { is_pro_enabled, pro_version_check } from 'utils/helper';
 import AddNewKeywords from './AddNewKeywords';
 
 const KeywordFilter = (props) => {
@@ -30,6 +32,10 @@ const KeywordFilter = (props) => {
 		if (bulkAction.value === 'delete') {
 			handleDeleteKeyword(props.bulkActionData, bulkAction, props.deleteKeywordHandler);
 		} else if (bulkAction.value === 'change_status') {
+			// Check if pro version is 2.6.1 or higher
+			if (!is_pro_enabled || !pro_version_check('2.6.1')) {
+				return; // Button will be disabled, this is just a safety check
+			}
 			if (!statusFilter?.value) {
 				return setWarning(true);
 			}
@@ -53,7 +59,7 @@ const KeywordFilter = (props) => {
 							value={bulkAction?.value ? bulkAction : { value: '', label: __('Bulk Actions', 'betterlinks') }}
 							options={[
 								{ value: 'delete', label: __('Delete', 'betterlinks') },
-								{ value: 'change_status', label: __('Change Status', 'betterlinks') }
+								{ value: 'change_status', label: <>{__('Change Status', 'betterlinks')} {(!is_pro_enabled || !pro_version_check('2.6.1')) && <ProBadge />}</> }
 							]}
 							onChange={(e) => {
 								setBulkAction(e);
@@ -80,8 +86,13 @@ const KeywordFilter = (props) => {
 							/>
 						)}
 						<div className="btl-tooltip">
-							<button className="btl-link-apply-button" onClick={handleBulkAction}>
-								{__('Apply', 'betterlinks')}
+							<button 
+								className="btl-link-apply-button" 
+								onClick={handleBulkAction}
+								disabled={bulkAction?.value === 'change_status' && (!is_pro_enabled || !pro_version_check('2.6.1'))}
+								title={bulkAction?.value === 'change_status' && (!is_pro_enabled || !pro_version_check('2.6.1')) ? __('Please update BetterLinks Pro to v2.6.1 or newer', 'betterlinks') : ''}
+							>
+								{bulkAction?.value === 'change_status' && (!is_pro_enabled || !pro_version_check('2.6.1')) ? __('Requires BetterLinks Pro v2.6.1+', 'betterlinks') : __('Apply', 'betterlinks')}
 							</button>
 							{warning && (
 								<span className="btl-tooltiptext">

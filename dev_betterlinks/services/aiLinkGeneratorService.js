@@ -71,7 +71,9 @@ CRITICAL RULES:
 - If user does NOT specify category/tags, generate unique ones per URL based on content
 - Tags must ALWAYS be an array format, never a string
 - IMPORTANT: Extract only the actual category/tags value, removing connector words like "is", "should be", "are"
-- Return ONLY valid JSON array, no additional text`;
+- Return ONLY valid JSON array, no additional text, no markdown code blocks, no explanations
+- Do NOT wrap the JSON in markdown code blocks (no triple backticks)
+- Your entire response must be ONLY the JSON array starting with [ and ending with ]`;
 
 	const userPrompt = `Generate optimized metadata for the following ${urlsData.length} URLs:
 ${urlsList}
@@ -106,7 +108,9 @@ Return a JSON array with results for all URLs in the same order as provided.
 Remember:
 - Strictly adhere to the character/word limits specified above for ALL URLs
 - Extract category/tags values cleanly without connector words
-- Return ONLY valid JSON array, no markdown formatting or additional text`;
+- Return ONLY the raw JSON array - no markdown code blocks, no explanations, no additional text
+- Do NOT use triple backticks with json or triple backticks formatting
+- Your response must start with [ and end with ]`;
 
 	return { systemPrompt, userPrompt };
 };
@@ -120,21 +124,51 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 	try {
 		const { systemPrompt, userPrompt } = buildBulkPrompts(urlsData, prompt, fieldLimits);
 
+		// Determine if model uses new API parameters (GPT-4.1+ and GPT-5+)
+		const newerModels = ['gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano', 'gpt-5', 'gpt-5.1', 'gpt-5.2', 'gpt-5-mini', 'gpt-5-nano'];
+		const isNewerModel = newerModels.includes(model);
+
+		// Build request body with correct parameters for each model type
+		const requestBody = {
+			model: model,
+			messages: [
+				{ role: 'system', content: systemPrompt },
+				{ role: 'user', content: userPrompt },
+			],
+		};
+
+		// GPT-5 models only support temperature: 1 (default), so we don't set it
+		// Older models support custom temperature values
+		if (!isNewerModel) {
+			requestBody.temperature = 0.7;
+		}
+
+		// GPT-5 models use reasoning tokens internally, which count against the limit
+		// So we need much higher limits for GPT-5 models (reasoning + output tokens)
+		// GPT-4.1 and older models don't use reasoning tokens, so 2000 is enough
+		if (isNewerModel) {
+			// Check if it's a GPT-5 model (uses reasoning tokens)
+			const isGPT5Model = model.startsWith('gpt-5');
+			
+			if (isGPT5Model) {
+				// GPT-5 uses ~2000 reasoning tokens + output tokens
+				// Increase limit to 8000 to ensure enough space for actual output
+				requestBody.max_completion_tokens = 80000;
+			} else {
+				// GPT-4.1 models don't use reasoning tokens
+				requestBody.max_completion_tokens = 2000;
+			}
+		} else {
+			requestBody.max_tokens = 2000;
+		}
+
 		const response = await fetch('https://api.openai.com/v1/chat/completions', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${apiKey}`,
 			},
-			body: JSON.stringify({
-				model: model,
-				messages: [
-					{ role: 'system', content: systemPrompt },
-					{ role: 'user', content: userPrompt },
-				],
-				temperature: 0.7,
-				max_tokens: 2000,
-			}),
+			body: JSON.stringify(requestBody),
 		});
 
 		if (!response.ok) {
@@ -145,14 +179,37 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 		const data = await response.json();
 		const content_text = data.choices[0].message.content;
 
-		// Parse JSON array from response
-		const jsonMatch = content_text.match(/\[[\s\S]*\]/);
-		if (!jsonMatch) {
-			console.error('OpenAI response content:', content_text);
-			throw new Error('Invalid JSON array response from OpenAI');
-		}
+		// Parse JSON array from response - handle various formats from different models
+		let parsedResults;
+		
+		try {
+			// First, try to remove markdown code blocks if present (```json ... ``` or ``` ... ```)
+			let cleanedText = content_text.trim();
+			
+			// Remove markdown code blocks
+			cleanedText = cleanedText.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+			
+			// Try to find JSON array in the cleaned text
+			const jsonMatch = cleanedText.match(/\[[\s\S]*\]/);
+			
+			if (!jsonMatch) {
+				console.error('OpenAI response content:', content_text);
+				throw new Error('No JSON array found in response');
+			}
 
-		const parsedResults = JSON.parse(jsonMatch[0]);
+			// Parse the JSON
+			parsedResults = JSON.parse(jsonMatch[0]);
+			
+			// Validate it's an array
+			if (!Array.isArray(parsedResults)) {
+				throw new Error('Response is not a JSON array');
+			}
+			
+		} catch (parseError) {
+			console.error('OpenAI response content:', content_text);
+			console.error('Parse error:', parseError);
+			throw new Error(`Invalid JSON array response from OpenAI: ${parseError.message}`);
+		}
 
 		return parsedResults;
 	} catch (error) {
@@ -196,14 +253,38 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
 		const data = await response.json();
 		const content_text = data.candidates[0].content.parts[0].text;
 
-		// Parse JSON array from response
-		const jsonMatch = content_text.match(/\[[\s\S]*\]/);
-		if (!jsonMatch) {
+		// Parse JSON array from response - handle various formats from different models
+		let parsedResults;
+		
+		try {
+			// First, try to remove markdown code blocks if present (```json ... ``` or ``` ... ```)
+			let cleanedText = content_text.trim();
+			
+			// Remove markdown code blocks
+			cleanedText = cleanedText.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+			
+			// Try to find JSON array in the cleaned text
+			const jsonMatch = cleanedText.match(/\[[\s\S]*\]/);
+			
+			if (!jsonMatch) {
+				console.error('Gemini response content:', content_text);
+				throw new Error('No JSON array found in response');
+			}
+
+			// Parse the JSON
+			parsedResults = JSON.parse(jsonMatch[0]);
+			
+			// Validate it's an array
+			if (!Array.isArray(parsedResults)) {
+				throw new Error('Response is not a JSON array');
+			}
+			
+		} catch (parseError) {
 			console.error('Gemini response content:', content_text);
-			throw new Error('Invalid JSON array response from Gemini');
+			console.error('Parse error:', parseError);
+			throw new Error(`Invalid JSON array response from Gemini: ${parseError.message}`);
 		}
 
-		const parsedResults = JSON.parse(jsonMatch[0]);
 		return parsedResults;
 	} catch (error) {
 		console.error('Gemini Bulk API error:', error);

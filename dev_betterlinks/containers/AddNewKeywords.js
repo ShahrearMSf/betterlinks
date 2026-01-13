@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActionButton from 'components/ActionButton';
-import { modalCustomStyles, getAutoLinksInitialValues, trimmed } from 'utils/helper';
+import { modalCustomStyles, getAutoLinksInitialValues, trimmed, is_pro_enabled, pro_version_check } from 'utils/helper';
 import { add_keyword, update_keyword } from 'redux/actions/keywords.actions';
 
 const propTypes = {
@@ -98,6 +98,11 @@ const AddNewKeywords = (props) => {
 			return;
 		}
 		if (values.chooseLink) {
+			// If pro version is not 2.6.1 or higher, force status to be active
+			if (!is_pro_enabled || !pro_version_check('2.6.1')) {
+				values.keywordStatus = 'active';
+			}
+			
 			// Convert keywordStatus to isActive (backend expects isActive as boolean/int)
 			values.isActive = values.keywordStatus === 'active';
 			
@@ -293,7 +298,18 @@ const AddNewKeywords = (props) => {
 										<button className="link-options__head" type="button" onClick={() => setOpenPanelType(openPanelType == 'STATUS' ? 'ADVANCED' : 'STATUS')}>
 											<h4 className="link-options__head--title">{__('Keyword Status', 'betterlinks')}</h4> <i className="btl btl-angle-arrow-down"></i>
 										</button>
-										<div className="link-options__body">
+										<div className="link-options__body hmd" style={{ padding: '3px 0 15px 20px'}}>
+											{(!is_pro_enabled || !pro_version_check('2.6.1')) && (
+												<span style={{ 
+													color: '#808080', 
+													fontSize: '12px', 
+													marginTop: '5px', 
+													display: 'block',
+													fontWeight: '500'
+												}}>
+													{__('Requires BetterLinks Pro v2.6.1+', 'betterlinks')}
+												</span>
+											)}
 											<div className="btl-modal-form-group">
 												<label className="btl-modal-form-label" htmlFor="keywordStatus">
 													{__('Status', 'betterlinks')}
@@ -301,7 +317,7 @@ const AddNewKeywords = (props) => {
 												<Select2
 													id="keywordStatus"
 													name="keywordStatus"
-													className="btl-modal-select--mini"
+													className="btl-modal-select--mini btl-tabs-gap"
 													classNamePrefix="btl-react-select"
 													options={[
 														{ value: 'active', label: __('Active', 'betterlinks') },
@@ -315,6 +331,7 @@ const AddNewKeywords = (props) => {
 													onChange={(option) => {
 														props.setFieldValue('keywordStatus', option.value);
 													}}
+													isDisabled={!is_pro_enabled || !pro_version_check('2.6.1')}
 												/>
 											</div>
 										</div>

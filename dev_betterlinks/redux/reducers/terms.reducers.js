@@ -1,14 +1,6 @@
 import { FETCH_TERMS_DATA, ADD_TERM, UPDATE_TERM, DELETE_TERM, FETCH_TAGS, FETCH_CATEGORIES } from 'redux/actions/actionstrings';
 
-const initialState = {
-	terms: [],
-	tags: [],
-	categories: [],
-	tag_analytics: null,
-	category_analytics: null,
-};
-
-function terms(state = initialState, action) {
+function terms(state = {}, action) {
 	const payload = action.payload;
 	switch (action.type) {
 		case FETCH_TERMS_DATA:
