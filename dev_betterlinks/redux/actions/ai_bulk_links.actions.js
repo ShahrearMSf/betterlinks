@@ -167,6 +167,7 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 		const provider = settings.ai_provider || 'openai';
 		const apiKey = provider === 'openai' ? settings.openai_api_key : settings.gemini_api_key;
 		const model = provider === 'openai' ? settings.openai_model : settings.gemini_model;
+		const tokenLimit = provider === 'openai' ? settings.openai_token_limit : settings.gemini_token_limit;
 
 		if (!apiKey) {
 			throw new Error('API key not configured for selected provider');
@@ -239,7 +240,8 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 				batchData,
 				prompt,
 				null, // fieldLimits
-				model
+				model,
+				tokenLimit
 			);
 
 			// Process batch results

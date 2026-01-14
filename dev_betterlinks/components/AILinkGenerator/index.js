@@ -35,9 +35,10 @@ const AILinkGenerator = {
 	 * @param {string} prompt - User prompt for AI
 	 * @param {object} fieldLimits - Optional field limits (extracted from prompt if not provided)
 	 * @param {string} model - Optional AI model to use
+	 * @param {number} tokenLimit - Optional token limit for API requests
 	 * @returns {object} {success: boolean, data: array, error: string}
 	 */
-	generateBulkLinks: async (provider, apiKey, batchData, prompt, fieldLimits = null, model = null) => {
+	generateBulkLinks: async (provider, apiKey, batchData, prompt, fieldLimits = null, model = null, tokenLimit = null) => {
 		try {
 			if (!apiKey || !apiKey.trim()) {
 				throw new Error('API key is required');
@@ -61,7 +62,8 @@ const AILinkGenerator = {
 				batchData,
 				prompt,
 				limits,
-				model
+				model,
+				tokenLimit
 			);
 
 			// Map results to include URL for each result

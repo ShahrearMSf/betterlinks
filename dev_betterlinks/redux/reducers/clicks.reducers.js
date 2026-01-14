@@ -90,7 +90,12 @@ function clicks(state = { individual_clicks: {} }, action) {
 			const newClicksData = get_parsed_clicks_list(data.analytics || [], 'individual');
 
 			const individual_clicks = state?.individual_clicks || {};
-			individual_clicks[id] = { ...data, analytics: newClicksData };
+			// Merge with existing data to preserve individual_referer, individual_devices, etc.
+			individual_clicks[id] = { 
+				...individual_clicks[id], 
+				...data, 
+				analytics: newClicksData 
+			};
 			return {
 				...state,
 				individual_clicks,

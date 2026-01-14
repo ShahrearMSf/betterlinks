@@ -120,7 +120,7 @@ Remember:
 /**
  * Call OpenAI API for bulk URLs (batch processing)
  */
-export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimits = null, model = 'gpt-4o-mini') => {
+export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimits = null, model = 'gpt-4o-mini', tokenLimit = null) => {
 	try {
 		const { systemPrompt, userPrompt } = buildBulkPrompts(urlsData, prompt, fieldLimits);
 
@@ -143,23 +143,27 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 			requestBody.temperature = 0.7;
 		}
 
-		// GPT-5 models use reasoning tokens internally, which count against the limit
-		// So we need much higher limits for GPT-5 models (reasoning + output tokens)
-		// GPT-4.1 and older models don't use reasoning tokens, so 2000 is enough
+		// Use provided token limit or fallback to defaults based on model type
 		if (isNewerModel) {
-			// Check if it's a GPT-5 model (uses reasoning tokens)
-			const isGPT5Model = model.startsWith('gpt-5');
-			
-			if (isGPT5Model) {
-				// GPT-5 uses ~2000 reasoning tokens + output tokens
-				// Increase limit to 8000 to ensure enough space for actual output
-				requestBody.max_completion_tokens = 80000;
+			// If token limit is provided, use it; otherwise use defaults
+			if (tokenLimit) {
+				requestBody.max_completion_tokens = tokenLimit;
 			} else {
-				// GPT-4.1 models don't use reasoning tokens
-				requestBody.max_completion_tokens = 2000;
+				// Check if it's a GPT-5 model (uses reasoning tokens)
+				const isGPT5Model = model.startsWith('gpt-5');
+				
+				if (isGPT5Model) {
+					// GPT-5 uses ~2000 reasoning tokens + output tokens
+					// Increase limit to 8000 to ensure enough space for actual output
+					requestBody.max_completion_tokens = 8000;
+				} else {
+					// GPT-4.1 models don't use reasoning tokens
+					requestBody.max_completion_tokens = 2000;
+				}
 			}
 		} else {
-			requestBody.max_tokens = 2000;
+			// For older models, use token limit if provided, otherwise default to 2000
+			requestBody.max_tokens = tokenLimit || 2000;
 		}
 
 		const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -221,9 +225,28 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 /**
  * Call Gemini API for bulk URLs (batch processing)
  */
-export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimits = null, model = 'gemini-2.0-flash') => {
+export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimits = null, model = 'gemini-2.0-flash', tokenLimit = null) => {
 	try {
 		const { systemPrompt, userPrompt } = buildBulkPrompts(urlsData, prompt, fieldLimits);
+
+		// Build request body
+		const requestBody = {
+			contents: [
+				{
+					parts: [
+						{ text: systemPrompt },
+						{ text: userPrompt },
+					],
+				},
+			],
+		};
+
+		// Add token limit if provided
+		if (tokenLimit) {
+			requestBody.generationConfig = {
+				maxOutputTokens: tokenLimit,
+			};
+		}
 
 		const response = await fetch(
 			`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -232,16 +255,7 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({
-					contents: [
-						{
-							parts: [
-								{ text: systemPrompt },
-								{ text: userPrompt },
-							],
-						},
-					],
-				}),
+				body: JSON.stringify(requestBody),
 			}
 		);
 
@@ -297,13 +311,13 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
  * Batch processing to reduce API calls (single API call for multiple URLs)
  * This is the primary export - use this for all AI link generation
  */
-export const generateBulkLinkData = async (provider, apiKey, urlsData, prompt, fieldLimits = null, model = null) => {
+export const generateBulkLinkData = async (provider, apiKey, urlsData, prompt, fieldLimits = null, model = null, tokenLimit = null) => {
 	if (provider === 'openai') {
 		const openaiModel = model || 'gpt-4o-mini';
-		return await generateBulkWithOpenAI(apiKey, urlsData, prompt, fieldLimits, openaiModel);
+		return await generateBulkWithOpenAI(apiKey, urlsData, prompt, fieldLimits, openaiModel, tokenLimit);
 	} else if (provider === 'gemini') {
 		const geminiModel = model || 'gemini-2.5-flash';
-		return await generateBulkWithGemini(apiKey, urlsData, prompt, fieldLimits, geminiModel);
+		return await generateBulkWithGemini(apiKey, urlsData, prompt, fieldLimits, geminiModel, tokenLimit);
 	} else {
 		throw new Error(`Unknown AI provider: ${provider}`);
 	}

@@ -53,14 +53,15 @@ const SingleClicks = (props) => {
 		let pastDate = betterLinksHooks.applyFilters('betterLinksAnalyticsFilterStartDate', subDays(new Date(), 30));
 		pastDate = from || formatDate(pastDate, 'yyyy-mm-dd');
 
+		// Always fetch the basic individual clicks data
 		props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading });
 		
-		// Fetch individual chart and medium data
+		// Fetch individual chart and medium data (Pro feature)
 		if (is_pro_enabled) {
 			props.get_individual_chart_data({ link_id: id, from: pastDate, to: currentDate, setLoading: setChartLoading });
 			props.get_individual_medium_data({ link_id: id, from: pastDate, to: currentDate, setLoading: setMediumLoading });
 		}
-	}, [id]);
+	}, [id, customDateFilter]);
 
 	const handleCountryUpdated = useCallback((ip, countryData) => {
 		// Refresh the individual clicks data after country is updated
@@ -94,9 +95,9 @@ const SingleClicks = (props) => {
 	return (
 		<div className="btl-analytic">
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
-			{individual_clicks?.[id] ? (
+			{individual_clicks?.[id]?.graph_data ? (
 				<Graph
-					data={analyticsData(individual_clicks?.[id].graph_data)}
+					data={analyticsData(individual_clicks[id].graph_data)}
 					customDateFilter={customDateFilter}
 					setCustomDateFilter={setCustomDateFilter}
 					setLoading={setLoading}

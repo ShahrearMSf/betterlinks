@@ -8,6 +8,12 @@ export const analyticsData = (data, id) => {
 		clicks: {},
 		unique_clicks: {},
 	};
+	
+	// Add defensive checks to prevent errors when data or properties are undefined
+	if (!data || !data.total_count || !data.unique_count) {
+		return results;
+	}
+	
 	data.total_count.forEach((element) => {
 		results.clicks[element.c_date] = element.click_count;
 	});
