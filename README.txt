@@ -162,6 +162,11 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 2.4.3 - 14/01/2026 =
+
+- Fixed: Migration error caused by a scalar value being treated as an array.
+- Few minor bug fixes & improvements 
+
 = 2.4.2 - 05/01/2026 =
 
 - Fixed: Share Task issue with Fluent Boards Link Management
