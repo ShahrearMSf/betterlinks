@@ -66,12 +66,15 @@ const AILinkGenerator = {
 				tokenLimit
 			);
 
-			// Map results to include URL for each result
-			const results = Array.isArray(generatedData) ? generatedData : [];
+			// Handle response from the AI service
+			// The service now returns { results: array, tokenUsage: object }
+			const results = generatedData.results || [];
+			const tokenUsage = generatedData.tokenUsage || null;
 
 			return {
 				success: true,
 				data: results,
+				tokenUsage: tokenUsage,
 			};
 		} catch (error) {
 			console.error('Error generating bulk links:', error);
@@ -79,6 +82,7 @@ const AILinkGenerator = {
 				success: false,
 				error: error.message,
 				data: [],
+				tokenUsage: null,
 			};
 		}
 	},

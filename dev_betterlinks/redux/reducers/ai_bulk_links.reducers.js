@@ -4,6 +4,7 @@ import {
 	SET_AI_PROCESSING,
 	SET_AI_PROCESSING_STEP,
 	SET_AI_GENERATED_LINKS,
+	SET_TOKEN_LIMIT_WARNING,
 	RESET_AI_STATE,
 } from 'redux/actions/ai_bulk_links.actions';
 
@@ -20,8 +21,10 @@ const initialState = {
 		totalUrls: 0,
 		stepMessage: '',
 		error: null,
+		warning: null, // Warning message for partial results
 	},
 	generatedLinks: [],
+	tokenLimitWarning: null, // Warning when token limit is reached with partial results
 };
 
 function aiBulkLinks(state = initialState, { type, payload }) {
@@ -69,11 +72,18 @@ function aiBulkLinks(state = initialState, { type, payload }) {
 				generatedLinks: payload,
 			};
 
+		case SET_TOKEN_LIMIT_WARNING:
+			return {
+				...state,
+				tokenLimitWarning: payload,
+			};
+
 		case RESET_AI_STATE:
 			return {
 				...state,
 				processing: initialState.processing,
 				generatedLinks: [],
+				tokenLimitWarning: null, // Clear warning on reset
 				settingsLoading: true, // Reset loading flag when modal closes
 			};
 

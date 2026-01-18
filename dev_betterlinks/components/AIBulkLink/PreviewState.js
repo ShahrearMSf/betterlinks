@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
-import { plugin_root_url, shortURLUniqueCheck } from 'utils/helper';
+import { plugin_root_url, shortURLUniqueCheck, route_path } from 'utils/helper';
 import { connect } from 'react-redux';
 
-const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsChange }) => {
+const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsChange, tokenLimitWarning, onClose }) => {
 	// Get site URL from WordPress
 	const siteUrl = window.location.origin;
 	const [copiedIndex, setCopiedIndex] = useState(null);
@@ -134,7 +135,39 @@ const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsC
 	};
 
 	return (
-<div className="btl-ai-preview">
+		<div className="btl-ai-preview">
+			{/* Token Limit Warning Banner */}
+			{tokenLimitWarning && (
+				<div className="btl-ai-warning-banner">
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+						<path d="M10 6V10" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+						<path d="M10 14H10.01" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+					</svg>
+					<div className="btl-ai-warning-content">
+						<div className="btl-ai-warning-title">
+							{__('Partial Results Due to Token Limit', 'betterlinks')}
+						</div>
+						<div className="btl-ai-warning-message">
+							{__(`Successfully generated ${tokenLimitWarning.processedCount} of ${tokenLimitWarning.totalCount} links using ${tokenLimitWarning.tokensUsed}/${tokenLimitWarning.tokenLimit} tokens. ${tokenLimitWarning.remainingCount} URLs could not be processed.`, 'betterlinks')}
+						</div>
+						<div className="btl-ai-warning-action">
+							{__('To process all URLs, please increase the Maximum Token Limit in AI Settings. ', 'betterlinks')}
+							<Link
+									to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
+									style={{ textDecoration: 'underline' }}
+									target="_blank"
+									onClick={() => {
+										// Close the modal when navigating to settings
+										if (typeof onClose === 'function') onClose();
+									}}
+								>
+									{__('here', 'betterlinks')}
+							</Link>
+						</div>
+					</div>
+				</div>
+			)}
 			<div className="btl-ai-preview-header">{getHeaderMessage()}</div>
 			<div className="btl-ai-links-list">
 				{generatedLinks.map((link, index) => {

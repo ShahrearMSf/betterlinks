@@ -301,6 +301,8 @@ const AIBulkLink = ({
 							generatedLinks={generatedLinks}
 							selectedCategory={selectedCategory}
 							onExistingUrlsChange={handleExistingUrlsChange}
+							tokenLimitWarning={aiState?.tokenLimitWarning}
+							onClose={handleClose}
 						/>
 						
 						{/* Footer */}

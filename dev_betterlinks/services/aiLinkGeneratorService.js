@@ -183,6 +183,13 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 		const data = await response.json();
 		const content_text = data.choices[0].message.content;
 
+		// Extract token usage information from the response
+		const tokenUsage = {
+			prompt_tokens: data.usage?.prompt_tokens || 0,
+			completion_tokens: data.usage?.completion_tokens || 0,
+			total_tokens: data.usage?.total_tokens || 0,
+		};
+
 		// Parse JSON array from response - handle various formats from different models
 		let parsedResults;
 		
@@ -192,6 +199,11 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 			
 			// Remove markdown code blocks
 			cleanedText = cleanedText.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+			
+			// Try to fix common JSON errors from AI responses
+			// Fix: Arrays separated by commas (],{) -> merge into one array
+			cleanedText = cleanedText.replace(/\]\s*,\s*\{/g, ',{');
+			cleanedText = cleanedText.replace(/\]\s*,\s*\[/g, ',');
 			
 			// Try to find JSON array in the cleaned text
 			const jsonMatch = cleanedText.match(/\[[\s\S]*\]/);
@@ -215,7 +227,7 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 			throw new Error(`Invalid JSON array response from OpenAI: ${parseError.message}`);
 		}
 
-		return parsedResults;
+		return { results: parsedResults, tokenUsage };
 	} catch (error) {
 		console.error('OpenAI Bulk API error:', error);
 		throw error;
@@ -267,6 +279,14 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
 		const data = await response.json();
 		const content_text = data.candidates[0].content.parts[0].text;
 
+		// Extract token usage information from Gemini response
+		// Gemini uses different field names than OpenAI
+		const tokenUsage = {
+			prompt_tokens: data.usageMetadata?.promptTokenCount || 0,
+			completion_tokens: data.usageMetadata?.candidatesTokenCount || 0,
+			total_tokens: data.usageMetadata?.totalTokenCount || 0,
+		};
+
 		// Parse JSON array from response - handle various formats from different models
 		let parsedResults;
 		
@@ -276,6 +296,11 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
 			
 			// Remove markdown code blocks
 			cleanedText = cleanedText.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+			
+			// Try to fix common JSON errors from AI responses
+			// Fix: Arrays separated by commas (],{) -> merge into one array
+			cleanedText = cleanedText.replace(/\]\s*,\s*\{/g, ',{');
+			cleanedText = cleanedText.replace(/\]\s*,\s*\[/g, ',');
 			
 			// Try to find JSON array in the cleaned text
 			const jsonMatch = cleanedText.match(/\[[\s\S]*\]/);
@@ -299,7 +324,7 @@ export const generateBulkWithGemini = async (apiKey, urlsData, prompt, fieldLimi
 			throw new Error(`Invalid JSON array response from Gemini: ${parseError.message}`);
 		}
 
-		return parsedResults;
+		return { results: parsedResults, tokenUsage };
 	} catch (error) {
 		console.error('Gemini Bulk API error:', error);
 		throw error;

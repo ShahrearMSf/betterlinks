@@ -108,11 +108,13 @@ class AIBulkLinks extends Controller {
 			array(
 				'success' => true,
 				'data'    => array(
-					'openai_api_key'  => isset( $api_keys['openai_api_key'] ) ? $api_keys['openai_api_key'] : '',
-					'gemini_api_key'  => isset( $api_keys['gemini_api_key'] ) ? $api_keys['gemini_api_key'] : '',
-					'ai_provider'     => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
-					'openai_model'    => isset( $all_settings['openai_model'] ) ? $all_settings['openai_model'] : 'gpt-4o-mini',
-					'gemini_model'    => isset( $all_settings['gemini_model'] ) ? $all_settings['gemini_model'] : 'gemini-2.5-flash',
+					'openai_api_key'     => isset( $api_keys['openai_api_key'] ) ? $api_keys['openai_api_key'] : '',
+					'gemini_api_key'     => isset( $api_keys['gemini_api_key'] ) ? $api_keys['gemini_api_key'] : '',
+					'ai_provider'        => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
+					'openai_model'       => isset( $all_settings['openai_model'] ) ? $all_settings['openai_model'] : 'gpt-4o-mini',
+					'gemini_model'       => isset( $all_settings['gemini_model'] ) ? $all_settings['gemini_model'] : 'gemini-2.5-flash',
+					'openai_token_limit' => isset( $all_settings['openai_token_limit'] ) ? intval( $all_settings['openai_token_limit'] ) : 3000,
+					'gemini_token_limit' => isset( $all_settings['gemini_token_limit'] ) ? intval( $all_settings['gemini_token_limit'] ) : 3000,
 				),
 			),
 			200
@@ -187,6 +189,15 @@ class AIBulkLinks extends Controller {
 			$all_settings['gemini_model'] = sanitize_text_field( $params['gemini_model'] );
 		}
 
+		// Update AI token limits in main settings
+		if ( isset( $params['openai_token_limit'] ) ) {
+			$all_settings['openai_token_limit'] = intval( $params['openai_token_limit'] );
+		}
+
+		if ( isset( $params['gemini_token_limit'] ) ) {
+			$all_settings['gemini_token_limit'] = intval( $params['gemini_token_limit'] );
+		}
+
 		// Save API keys to secure separate option
 		$api_keys_json = json_encode( $api_keys );
 		if ( $api_keys_json ) {
@@ -206,11 +217,13 @@ class AIBulkLinks extends Controller {
 				'success' => true,
 				'message' => __( 'AI settings saved successfully', 'betterlinks' ),
 				'data'    => array(
-					'openai_api_key'  => isset( $api_keys['openai_api_key'] ) ? $api_keys['openai_api_key'] : '',
-					'gemini_api_key'  => isset( $api_keys['gemini_api_key'] ) ? $api_keys['gemini_api_key'] : '',
-					'ai_provider'     => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
-					'openai_model'    => isset( $all_settings['openai_model'] ) ? $all_settings['openai_model'] : 'gpt-4o-mini',
-					'gemini_model'    => isset( $all_settings['gemini_model'] ) ? $all_settings['gemini_model'] : 'gemini-2.5-flash',
+					'openai_api_key'     => isset( $api_keys['openai_api_key'] ) ? $api_keys['openai_api_key'] : '',
+					'gemini_api_key'     => isset( $api_keys['gemini_api_key'] ) ? $api_keys['gemini_api_key'] : '',
+					'ai_provider'        => isset( $all_settings['ai_provider'] ) ? $all_settings['ai_provider'] : 'openai',
+					'openai_model'       => isset( $all_settings['openai_model'] ) ? $all_settings['openai_model'] : 'gpt-4o-mini',
+					'gemini_model'       => isset( $all_settings['gemini_model'] ) ? $all_settings['gemini_model'] : 'gemini-2.5-flash',
+					'openai_token_limit' => isset( $all_settings['openai_token_limit'] ) ? intval( $all_settings['openai_token_limit'] ) : 3000,
+					'gemini_token_limit' => isset( $all_settings['gemini_token_limit'] ) ? intval( $all_settings['gemini_token_limit'] ) : 3000,
 				),
 			),
 			200

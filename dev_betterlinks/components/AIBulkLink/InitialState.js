@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import Select2 from 'react-select';
@@ -7,6 +7,28 @@ import { redirectType as redirectTypeOptions, urlGenerationTypes } from 'utils/d
 import { useUpgradeProModal } from 'utils/customHooks';
 import ProBadge from 'components/Badge/ProBadge';
 import UpgradeToPro from '../Teasers/UpgradeToPro';
+import { connect } from 'react-redux';
+
+// Estimated tokens per batch (10 URLs) for each model
+const ESTIMATED_TOKENS_PER_BATCH = {
+	// OpenAI Models
+	'gpt-4.1-nano': 2800,
+	'gpt-4.1-mini': 2800,
+	'gpt-4.1': 2900,
+	'gpt-5-nano': 10500,
+	'gpt-5-mini': 5000,
+	'gpt-5.2': 2900,
+	'gpt-4o-mini': 2800,
+	'gpt-4o': 3000,
+	
+	// Gemini Models
+	'gemini-2.5-flash-lite': 3000,
+	'gemini-2.5-flash': 6000,
+	'gemini-2.5-pro': 6000,
+	'gemini-3-flash-preview': 5000,
+	'gemini-3-pro-preview': 5500,
+	'gemini-2.0-flash': 6000,
+};
 
 const InitialState = ({
 urls,
@@ -28,6 +50,7 @@ settingsLoading,
 defaultPrompt,
 modalRef, // Add modalRef prop for scrolling
 error, // Add error prop to trigger validation styling
+aiSettings, // Add AI settings from Redux
 }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
@@ -40,6 +63,51 @@ error, // Add error prop to trigger validation styling
 		prompt: false
 	});
 	const [showValidation, setShowValidation] = useState(false);
+
+	// Calculate URL count and token recommendation
+	const tokenRecommendation = useMemo(() => {
+		if (!urls.trim()) return null;
+
+		// Count URLs (split by newline or space)
+		const urlList = urls
+			.split(/[\n\s]+/)
+			.map(url => url.trim())
+			.filter(url => url.length > 0);
+		
+		const urlCount = urlList.length;
+		if (urlCount === 0) return null;
+
+		// Get current model and token limit from AI settings
+		const provider = aiSettings?.ai_provider || 'openai';
+		const model = provider === 'openai' 
+			? (aiSettings?.openai_model || 'gpt-4o-mini')
+			: (aiSettings?.gemini_model || 'gemini-2.5-flash-lite');
+		const currentTokenLimit = provider === 'openai'
+			? (aiSettings?.openai_token_limit || 3000)
+			: (aiSettings?.gemini_token_limit || 3000);
+
+		// Get estimated tokens per batch for the model
+		const tokensPerBatch = ESTIMATED_TOKENS_PER_BATCH[model] || 2800;
+		
+		// Calculate number of batches (10 URLs per batch)
+		const batchCount = Math.ceil(urlCount / 10);
+		
+		// Calculate estimated total tokens needed
+		const estimatedTotalTokens = batchCount * tokensPerBatch;
+
+		// Check if current limit might be exceeded
+		const willExceed = estimatedTotalTokens > currentTokenLimit;
+
+		return {
+			urlCount,
+			batchCount,
+			tokensPerBatch,
+			estimatedTotalTokens,
+			currentTokenLimit,
+			willExceed,
+			recommendedLimit: Math.ceil(estimatedTotalTokens / 100) * 100, // Round up to nearest 100
+		};
+	}, [urls, aiSettings]);
 
 	// Effect to trigger validation styling when error appears
 	React.useEffect(() => {
@@ -264,9 +332,33 @@ label: cat.term_name,
 						https://example.com/sample-link
 					</textarea>
 					</div>
-					<p className="btl-ai-note">
-						{__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')}
-					</p>
+					<div className="btl-ai-note">
+						{/* {__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')} */}
+						{tokenRecommendation ? (
+							<>
+								<span style={{ color: '#5e6d79', fontSize: '12px' }}>
+									{tokenRecommendation.urlCount} {__('URL(s) detected - estimated', 'betterlinks')} ~{tokenRecommendation.estimatedTotalTokens.toLocaleString()} {__('tokens needed', 'betterlinks')}
+								</span>
+								{tokenRecommendation.willExceed && (
+									<>
+										<br />
+										<span style={{ color: '#d63638', fontWeight: '500', fontSize: '12px' }}>
+											⚠️ {__('Warning: Current token limit is', 'betterlinks')} {tokenRecommendation.currentTokenLimit.toLocaleString()} {__('tokens. Recommend setting limit to at least', 'betterlinks')} {tokenRecommendation.recommendedLimit.toLocaleString()} {__('tokens in', 'betterlinks')}{' '}
+											<Link
+												to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
+												style={{ textDecoration: 'underline', color: '#d63638' }}
+												onClick={() => {
+													if (typeof onClose === 'function') onClose();
+												}}
+											>
+												{__('AI Settings', 'betterlinks')}
+											</Link>
+										</span>
+									</>
+								)}
+							</>
+						) : __('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')}
+					</div>
 				</div>
 
 				{/* AI Prompt */}
@@ -337,4 +429,8 @@ label: cat.term_name,
 	);
 };
 
-export default InitialState;
+const mapStateToProps = (state) => ({
+	aiSettings: state.aiBulkLinks?.settings,
+});
+
+export default connect(mapStateToProps)(InitialState);
