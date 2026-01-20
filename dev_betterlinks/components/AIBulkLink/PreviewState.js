@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { plugin_root_url, shortURLUniqueCheck, route_path } from 'utils/helper';
 import { connect } from 'react-redux';
 
-const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsChange, tokenLimitWarning, onClose }) => {
+const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsChange, tokenLimitWarning, estimatedTotalTokens, onClose }) => {
 	// Get site URL from WordPress
 	const siteUrl = window.location.origin;
 	const [copiedIndex, setCopiedIndex] = useState(null);
@@ -146,13 +146,19 @@ const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsC
 					</svg>
 					<div className="btl-ai-warning-content">
 						<div className="btl-ai-warning-title">
-							{__('Partial Results Due to Token Limit', 'betterlinks')}
+							{__('Token limit reached', 'betterlinks')}
 						</div>
 						<div className="btl-ai-warning-message">
-							{__(`Successfully generated ${tokenLimitWarning.processedCount} of ${tokenLimitWarning.totalCount} links using ${tokenLimitWarning.tokensUsed}/${tokenLimitWarning.tokenLimit} tokens. ${tokenLimitWarning.remainingCount} URLs could not be processed.`, 'betterlinks')}
+							{__(`${tokenLimitWarning.processedCount} of ${tokenLimitWarning.totalCount} links were generated using ${tokenLimitWarning.tokensUsed} tokens.`, 'betterlinks')}
+							{estimatedTotalTokens && (
+								<>
+									{' '}
+									{__(`Recommended token limit is ~${estimatedTotalTokens.toLocaleString()}.`, 'betterlinks')}
+								</>
+							)}
 						</div>
 						<div className="btl-ai-warning-action">
-							{__('To process all URLs, please increase the Maximum Token Limit in AI Settings. ', 'betterlinks')}
+							{__('To avoid this in the future, increase the token limit in AI Settings ', 'betterlinks')}
 							<Link
 									to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
 									style={{ textDecoration: 'underline' }}
@@ -162,7 +168,7 @@ const PreviewState = ({ generatedLinks, terms, selectedCategory, onExistingUrlsC
 										if (typeof onClose === 'function') onClose();
 									}}
 								>
-									{__('here', 'betterlinks')}
+									{__('here.', 'betterlinks')}
 							</Link>
 						</div>
 					</div>

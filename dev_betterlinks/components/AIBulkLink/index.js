@@ -45,6 +45,7 @@ const AIBulkLink = ({
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [isClosing, setIsClosing] = useState(false);
 	const [existingUrls, setExistingUrls] = useState(new Set());
+	const [estimatedTotalTokens, setEstimatedTotalTokens] = useState(null);
 
 	// Ref for modal content to enable scrolling to top on validation errors
 	const modalRef = useRef(null);
@@ -263,49 +264,47 @@ const AIBulkLink = ({
 
 			{/* Main Content */}
 			<div className="btl-ai-content">
-				{/* Initial State */}
-				{shouldShowInitialState && (
-					<InitialState
-						urls={urls}
-						setUrls={handleUrlsChange}
-						redirectType={redirectType}
-						setRedirectType={setRedirectType}
-						shortUrlStrategy={shortUrlStrategy}
-						setShortUrlStrategy={setShortUrlStrategy}
-						selectedCategory={selectedCategory}
-						setSelectedCategory={setSelectedCategory}
-						prompt={prompt}
-						setPrompt={setPrompt}
-						defaultPrompt={DEFAULT_PROMPT}
-						terms={terms}
-						onGenerateLinks={handleGenerateLinks}
-						isProcessing={isProcessing}
-						isUrlsEmpty={isUrlsEmpty}
-						hasValidApiKey={hasValidApiKey}
-						settingsLoading={settingsLoading}
-						modalRef={modalRef}
-						error={error}
-					/>
-				)}
-
-				{/* Processing State */}
+			{/* Initial State */}
+			{shouldShowInitialState && (
+				<InitialState
+					urls={urls}
+					setUrls={handleUrlsChange}
+					redirectType={redirectType}
+					setRedirectType={setRedirectType}
+					shortUrlStrategy={shortUrlStrategy}
+					setShortUrlStrategy={setShortUrlStrategy}
+					selectedCategory={selectedCategory}
+					setSelectedCategory={setSelectedCategory}
+					prompt={prompt}
+					setPrompt={setPrompt}
+					defaultPrompt={DEFAULT_PROMPT}
+					terms={terms}
+					onGenerateLinks={handleGenerateLinks}
+					isProcessing={isProcessing}
+					isUrlsEmpty={isUrlsEmpty}
+					hasValidApiKey={hasValidApiKey}
+					settingsLoading={settingsLoading}
+					modalRef={modalRef}
+					error={error}
+					onEstimatedTokensChange={setEstimatedTotalTokens}
+				/>
+			)}				{/* Processing State */}
 				{isProcessing && !isPublishing && <ProcessingState aiState={aiState} />}
 
 				{/* Publishing State */}
 				{isPublishing && <PublishingState />}
 
-				{/* Preview State */}
-				{hasGeneratedLinks && !isProcessing && !isPublishing && (
-					<>
-						<PreviewState
-							generatedLinks={generatedLinks}
-							selectedCategory={selectedCategory}
-							onExistingUrlsChange={handleExistingUrlsChange}
-							tokenLimitWarning={aiState?.tokenLimitWarning}
-							onClose={handleClose}
-						/>
-						
-						{/* Footer */}
+			{/* Preview State */}
+			{hasGeneratedLinks && !isProcessing && !isPublishing && (
+				<>
+					<PreviewState
+						generatedLinks={generatedLinks}
+						selectedCategory={selectedCategory}
+						onExistingUrlsChange={handleExistingUrlsChange}
+						tokenLimitWarning={aiState?.tokenLimitWarning}
+						estimatedTotalTokens={estimatedTotalTokens}
+						onClose={handleClose}
+					/>						{/* Footer */}
 						<div className="btl-ai-modal-footer">
 							<button
 								className="btl-ai-btn-secondary"

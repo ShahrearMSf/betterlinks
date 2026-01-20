@@ -51,6 +51,7 @@ defaultPrompt,
 modalRef, // Add modalRef prop for scrolling
 error, // Add error prop to trigger validation styling
 aiSettings, // Add AI settings from Redux
+onEstimatedTokensChange, // Add callback to pass estimated tokens to parent
 }) => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 
@@ -66,7 +67,13 @@ aiSettings, // Add AI settings from Redux
 
 	// Calculate URL count and token recommendation
 	const tokenRecommendation = useMemo(() => {
-		if (!urls.trim()) return null;
+		if (!urls.trim()) {
+			// Clear estimated tokens when URLs are empty
+			if (onEstimatedTokensChange) {
+				onEstimatedTokensChange(null);
+			}
+			return null;
+		}
 
 		// Count URLs (split by newline or space)
 		const urlList = urls
@@ -75,7 +82,13 @@ aiSettings, // Add AI settings from Redux
 			.filter(url => url.length > 0);
 		
 		const urlCount = urlList.length;
-		if (urlCount === 0) return null;
+		if (urlCount === 0) {
+			// Clear estimated tokens when no valid URLs
+			if (onEstimatedTokensChange) {
+				onEstimatedTokensChange(null);
+			}
+			return null;
+		}
 
 		// Get current model and token limit from AI settings
 		const provider = aiSettings?.ai_provider || 'openai';
@@ -95,6 +108,11 @@ aiSettings, // Add AI settings from Redux
 		// Calculate estimated total tokens needed
 		const estimatedTotalTokens = batchCount * tokensPerBatch;
 
+		// Pass estimated tokens to parent component
+		if (onEstimatedTokensChange) {
+			onEstimatedTokensChange(estimatedTotalTokens);
+		}
+
 		// Check if current limit might be exceeded
 		const willExceed = estimatedTotalTokens > currentTokenLimit;
 
@@ -107,7 +125,7 @@ aiSettings, // Add AI settings from Redux
 			willExceed,
 			recommendedLimit: Math.ceil(estimatedTotalTokens / 100) * 100, // Round up to nearest 100
 		};
-	}, [urls, aiSettings]);
+	}, [urls, aiSettings, onEstimatedTokensChange]);
 
 	// Effect to trigger validation styling when error appears
 	React.useEffect(() => {
@@ -337,21 +355,22 @@ label: cat.term_name,
 						{tokenRecommendation ? (
 							<>
 								<span style={{ color: '#5e6d79', fontSize: '12px' }}>
-									{tokenRecommendation.urlCount} {__('URL(s) detected - estimated', 'betterlinks')} ~{tokenRecommendation.estimatedTotalTokens.toLocaleString()} {__('tokens needed', 'betterlinks')}
+									{tokenRecommendation.urlCount} {__(' URLs detected. Estimated token usage is approximately ~ ', 'betterlinks')}{tokenRecommendation.estimatedTotalTokens.toLocaleString()}{__('.', 'betterlinks')}
 								</span>
 								{tokenRecommendation.willExceed && (
 									<>
 										<br />
 										<span style={{ color: '#d63638', fontWeight: '500', fontSize: '12px' }}>
-											⚠️ {__('Warning: Current token limit is', 'betterlinks')} {tokenRecommendation.currentTokenLimit.toLocaleString()} {__('tokens. Recommend setting limit to at least', 'betterlinks')} {tokenRecommendation.recommendedLimit.toLocaleString()} {__('tokens in', 'betterlinks')}{' '}
+										 {__('Warning : Current token limit is', 'betterlinks')} {tokenRecommendation.currentTokenLimit.toLocaleString()}{__('. Recommended token limit to process all URLs is', 'betterlinks')} {tokenRecommendation.recommendedLimit.toLocaleString()} {__('or higher. Change the limit ', 'betterlinks')}{' '}
 											<Link
 												to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
+												target="_blank"
 												style={{ textDecoration: 'underline', color: '#d63638' }}
 												onClick={() => {
 													if (typeof onClose === 'function') onClose();
 												}}
 											>
-												{__('AI Settings', 'betterlinks')}
+												{__('here', 'betterlinks')}
 											</Link>
 										</span>
 									</>
