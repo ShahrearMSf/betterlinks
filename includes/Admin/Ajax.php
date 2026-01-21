@@ -1819,6 +1819,11 @@ class Ajax {
 		// Clear cache again after all updates to ensure fresh data
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 
+		// Track UTM Builder usage
+		if ( $updated_count > 0 ) {
+			update_option( 'betterlinks_utm_builder_used', true );
+		}
+
 		// Regenerate JSON file cache if it exists
 		if ( defined( 'BETTERLINKS_EXISTS_LINKS_JSON' ) && BETTERLINKS_EXISTS_LINKS_JSON ) {
 			$cron = new \BetterLinks\Cron();

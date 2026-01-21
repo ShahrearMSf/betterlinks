@@ -1083,7 +1083,9 @@ trait Query {
 	public static function used_features_by_client() {
 		return [
 			'betterlinks_broken_link_scanner' => !empty( get_option( 'betterlinkspro_broken_links_logs', [] ) ),
-			'fullsite_link_scanner' => !empty( get_option('betterlinkspro_fullsite_broken_links_logs_cleared', 0) ) || !empty( get_option( 'betterlinkspro_fullsite_broken_links_logs', [] ) )
+			'fullsite_link_scanner' => !empty( get_option('betterlinkspro_fullsite_broken_links_logs_cleared', 0) ) || !empty( get_option( 'betterlinkspro_fullsite_broken_links_logs', [] ) ),
+			'ai_link_generator' => !empty( get_option( 'betterlinks_ai_generator_used', false ) ),
+			'utm_builder' => !empty( get_option( 'betterlinks_utm_builder_used', false ) ),
 		];
 	}
 }

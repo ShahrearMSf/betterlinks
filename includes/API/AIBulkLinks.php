@@ -419,6 +419,11 @@ class AIBulkLinks extends Controller {
 		// Clear the cache after publishing all links
 		delete_transient( BETTERLINKS_CACHE_LINKS_NAME );
 
+		// Track AI Link Generator usage
+		if ( ! empty( $published_links ) ) {
+			update_option( 'betterlinks_ai_generator_used', true );
+		}
+
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
