@@ -5,30 +5,28 @@ import { extractFieldLimits } from 'utils/FieldLimitsExtractor';
 const namespace = 'betterlinks/v1/';
 
 // Estimated tokens per batch (10 URLs) for each model
-// Used to predict token usage BEFORE making API calls to prevent exceeding limits
+// Based on: Input (prompt + URL content) + Output (title, description, meta fields, category, tags)
+// These estimates include both input and completion tokens for typical use cases
 const ESTIMATED_TOKENS_PER_BATCH = {
-	// OpenAI Models
-	'gpt-4.1-nano': 2800,
-	'gpt-4.1-mini': 2800,
-	'gpt-4.1': 2900,
-	'gpt-5-nano': 10500,
-	'gpt-5-mini': 5000,
-	'gpt-5.2': 2900,
-	'gpt-4o-mini': 2800, // fallback
-	'gpt-4o': 3000, // fallback
+	// OpenAI Models (Generally more efficient with structured output)
+	'gpt-4.1-nano': 1200,      // Nano tier - optimized for speed
+	'gpt-4.1-mini': 1400,      // Mini tier - good balance
+	'gpt-4.1': 1800,           // Standard tier - more detailed
+	'gpt-5-nano': 1300,        // Next-gen nano
+	'gpt-5-mini': 1600,        // Next-gen mini
+	'gpt-5.2': 2200,           // Most capable, uses more tokens
 	
-	// Gemini Models
-	'gemini-2.5-flash-lite': 3000,
-	'gemini-2.5-flash': 6000,
-	'gemini-2.5-pro': 6000,
-	'gemini-3-flash-preview': 5000,
-	'gemini-3-pro-preview': 5500,
-	'gemini-2.0-flash': 6000, // fallback
+	// Gemini Models (Generally use more tokens for similar tasks)
+	'gemini-2.5-flash-lite': 1600,    // Lite version - more efficient
+	'gemini-2.5-flash': 2000,         // Standard flash
+	'gemini-2.5-pro': 2500,           // Pro tier - more comprehensive
+	'gemini-3-flash-preview': 2200,   // Preview - newer tech
+	'gemini-3-pro-preview': 3000,     // Pro preview - most detailed
 };
 
 // Get estimated tokens for a model
 const getEstimatedTokensPerBatch = (model) => {
-	return ESTIMATED_TOKENS_PER_BATCH[model] || 2800; // default fallback
+	return ESTIMATED_TOKENS_PER_BATCH[model] || 1400; // default fallback (conservative estimate)
 };
 
 /**
@@ -184,7 +182,7 @@ export const update_ai_settings = (settings) => async (dispatch) => {
 
 /**
  * Process URLs with AI to generate links
- * Uses frontend AI service for better performance and real-time processing
+ * Uses dynamic token-aware batch processing to maximize token utilization
  */
 export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}) => async (dispatch, getState) => {
 	try {
@@ -220,14 +218,12 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 		let cumulativeTokens = 0;
 		const tokenUsageHistory = [];
 
-		// Batch URLs for efficient API processing
-		// Reduce batch size to handle large numbers of URLs better
-		const BATCH_SIZE = 10;
-		const batches = [];
-
-		for (let i = 0; i < urls.length; i += BATCH_SIZE) {
-			batches.push(urls.slice(i, i + BATCH_SIZE));
-		}
+		// Dynamic batch processing configuration
+		const MAX_BATCH_SIZE = 10; // Maximum URLs per API request
+		const MIN_BATCH_SIZE = 1;  // Minimum URLs per request (if tokens allow)
+		
+		// Track average tokens per URL for dynamic calculations
+		let avgTokensPerUrl = null;
 
 		// Fetch content for all URLs first
 		const urlsContentMap = {};
@@ -245,83 +241,194 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 			}
 		}
 
-		// Process each batch with a single API call
-		for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-			const batch = batches[batchIndex];
+		// Process URLs dynamically based on token availability
+		let currentIndex = 0;
+		let batchNumber = 0;
 
-			// IMPORTANT: Check token limit BEFORE making the API call
-			// Estimate how many tokens this batch will use
-			const estimatedBatchTokens = getEstimatedTokensPerBatch(model);
-			const estimatedTotalAfterBatch = cumulativeTokens + estimatedBatchTokens;
-
-			// If this batch would exceed the limit, stop NOW before making the API call
-			if (tokenLimit && estimatedTotalAfterBatch > tokenLimit) {
-				const processedCount = allGeneratedLinks.length;
-				const remainingCount = urls.length - processedCount;
-				const warningMessage = `Token limit reached (${cumulativeTokens}/${tokenLimit} tokens used). Successfully processed ${processedCount} of ${urls.length} URLs. ${remainingCount} URLs could not be processed. Please increase the Maximum Token Limit in AI Settings to process all URLs.`;
+		while (currentIndex < urls.length) {
+			batchNumber++;
+			
+			// Calculate dynamic batch size based on remaining tokens
+			let batchSize;
+			
+			if (tokenLimit && avgTokensPerUrl !== null) {
+				// We have real data from previous batches - use it for accurate predictions
+				const remainingTokens = tokenLimit - cumulativeTokens;
 				
-				console.warn('Token limit would be exceeded - stopping before API call:', {
-					limit: tokenLimit,
-					currentUsage: cumulativeTokens,
-					estimatedBatchTokens,
-					estimatedTotalAfterBatch,
-					batchesSoFar: batchIndex,
-					linksGenerated: allGeneratedLinks.length,
-					urlsRemaining: remainingCount,
+				// Calculate how many URLs we can safely process
+				// Add 10% safety margin to prevent exceeding limit
+				const safeTokensPerUrl = avgTokensPerUrl * 1.1;
+				const possibleUrls = Math.floor(remainingTokens / safeTokensPerUrl);
+				
+				// Apply min/max constraints
+				batchSize = Math.max(MIN_BATCH_SIZE, Math.min(MAX_BATCH_SIZE, possibleUrls));
+				
+				console.log(`Dynamic batch ${batchNumber} sizing:`, {
+					remainingTokens,
+					avgTokensPerUrl,
+					safeTokensPerUrl,
+					possibleUrls,
+					chosenBatchSize: batchSize,
+					urlsRemaining: urls.length - currentIndex,
 				});
-
-				// Set generated links and complete processing with warning (not error)
-				dispatch({
-					type: SET_AI_GENERATED_LINKS,
-					payload: allGeneratedLinks,
-				});
-
-				// Dispatch warning with token usage details
-				dispatch({
-					type: SET_TOKEN_LIMIT_WARNING,
-					payload: {
-						message: warningMessage,
+				
+				// Check if we have enough tokens for even 1 URL
+				if (possibleUrls < MIN_BATCH_SIZE) {
+					const processedCount = allGeneratedLinks.length;
+					const remainingCount = urls.length - processedCount;
+					const warningMessage = `Token limit reached (${cumulativeTokens}/${tokenLimit} tokens used). Successfully processed ${processedCount} of ${urls.length} URLs. ${remainingCount} URLs could not be processed. Please increase the Maximum Token Limit in AI Settings to process all URLs.`;
+					
+					console.warn('Insufficient tokens for next URL - stopping:', {
+						remainingTokens,
+						avgTokensPerUrl,
+						safeTokensPerUrl,
+						minRequired: safeTokensPerUrl,
 						processedCount,
 						remainingCount,
-						totalCount: urls.length,
-						tokensUsed: cumulativeTokens,
-						tokenLimit,
-					},
-				});
+					});
 
-				dispatch({
-					type: SET_AI_PROCESSING,
-					payload: {
-						isProcessing: false,
-						currentIndex: processedCount,
-						totalUrls: urls.length,
-					},
-				});
+					// Set generated links and complete processing with warning
+					dispatch({
+						type: SET_AI_GENERATED_LINKS,
+						payload: allGeneratedLinks,
+					});
 
-				// Return partial results with SUCCESS and warning - user can see what they got
-				return {
-					success: true, // Changed from false to true - partial success is still success
-					warning: warningMessage, // Changed from 'error' to 'warning'
-					data: allGeneratedLinks,
-					partialResults: true, // Flag to indicate not all URLs were processed
-					processedCount,
-					remainingCount,
-					tokenUsage: {
-						total: cumulativeTokens,
-						limit: tokenLimit,
-						exceeded: true,
-						wouldExceedBy: estimatedTotalAfterBatch - tokenLimit,
-						history: tokenUsageHistory,
-					},
-				};
+					// Dispatch warning with token usage details
+					dispatch({
+						type: SET_TOKEN_LIMIT_WARNING,
+						payload: {
+							message: warningMessage,
+							processedCount,
+							remainingCount,
+							totalCount: urls.length,
+							tokensUsed: cumulativeTokens,
+							tokenLimit,
+						},
+					});
+
+					dispatch({
+						type: SET_AI_PROCESSING,
+						payload: {
+							isProcessing: false,
+							currentIndex: processedCount,
+							totalUrls: urls.length,
+						},
+					});
+
+					// Return partial results with success and warning
+					return {
+						success: true,
+						warning: warningMessage,
+						data: allGeneratedLinks,
+						partialResults: true,
+						processedCount,
+						remainingCount,
+						tokenUsage: {
+							total: cumulativeTokens,
+							limit: tokenLimit,
+							exceeded: false,
+							remainingTokens,
+							history: tokenUsageHistory,
+						},
+					};
+				}
+			} else {
+				// First batch or no token limit - use estimated tokens for initial prediction
+				if (tokenLimit) {
+					const estimatedTokensPerBatch = getEstimatedTokensPerBatch(model);
+					const remainingTokens = tokenLimit - cumulativeTokens;
+					
+					// Estimate tokens per URL (divide batch estimate by 10)
+					const estimatedTokensPerUrl = estimatedTokensPerBatch / 10;
+					const safeTokensPerUrl = estimatedTokensPerUrl * 1.1; // 10% safety margin
+					
+					const possibleUrls = Math.floor(remainingTokens / safeTokensPerUrl);
+					batchSize = Math.max(MIN_BATCH_SIZE, Math.min(MAX_BATCH_SIZE, possibleUrls));
+					
+					// console.log(`Initial batch ${batchNumber} sizing (estimated):`, {
+					// 	remainingTokens,
+					// 	estimatedTokensPerUrl,
+					// 	safeTokensPerUrl,
+					// 	possibleUrls,
+					// 	chosenBatchSize: batchSize,
+					// });
+					
+					// Check if we have enough tokens for even 1 URL
+					if (possibleUrls < MIN_BATCH_SIZE) {
+						const processedCount = allGeneratedLinks.length;
+						const remainingCount = urls.length - processedCount;
+						const warningMessage = `Token limit reached (${cumulativeTokens}/${tokenLimit} tokens used). Successfully processed ${processedCount} of ${urls.length} URLs. ${remainingCount} URLs could not be processed. Please increase the Maximum Token Limit in AI Settings to process all URLs.`;
+						
+						// console.warn('Insufficient tokens for initial batch - stopping:', {
+						// 	remainingTokens,
+						// 	estimatedTokensPerUrl,
+						// 	safeTokensPerUrl,
+						// 	minRequired: safeTokensPerUrl,
+						// });
+
+						// Set generated links and complete processing with warning
+						dispatch({
+							type: SET_AI_GENERATED_LINKS,
+							payload: allGeneratedLinks,
+						});
+
+						// Dispatch warning with token usage details
+						dispatch({
+							type: SET_TOKEN_LIMIT_WARNING,
+							payload: {
+								message: warningMessage,
+								processedCount,
+								remainingCount,
+								totalCount: urls.length,
+								tokensUsed: cumulativeTokens,
+								tokenLimit,
+							},
+						});
+
+						dispatch({
+							type: SET_AI_PROCESSING,
+							payload: {
+								isProcessing: false,
+								currentIndex: processedCount,
+								totalUrls: urls.length,
+							},
+						});
+
+						return {
+							success: true,
+							warning: warningMessage,
+							data: allGeneratedLinks,
+							partialResults: true,
+							processedCount,
+							remainingCount,
+							tokenUsage: {
+								total: cumulativeTokens,
+								limit: tokenLimit,
+								exceeded: false,
+								remainingTokens,
+								history: tokenUsageHistory,
+							},
+						};
+					}
+				} else {
+					// No token limit - use maximum batch size
+					batchSize = MAX_BATCH_SIZE;
+				}
 			}
+			
+			// Don't exceed remaining URLs
+			const remainingUrls = urls.length - currentIndex;
+			batchSize = Math.min(batchSize, remainingUrls);
+			
+			// Extract current batch
+			const batch = urls.slice(currentIndex, currentIndex + batchSize);
 
 			// Update progress
 			dispatch({
 				type: SET_AI_PROCESSING,
 				payload: {
 					isProcessing: true,
-					currentIndex: Math.min((batchIndex + 1) * BATCH_SIZE, urls.length),
+					currentIndex: Math.min(currentIndex + batchSize, urls.length),
 					totalUrls: urls.length,
 				},
 			});
@@ -331,6 +438,15 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 				url: url,
 				content: urlsContentMap[url],
 			}));
+
+			// console.log(`Processing batch ${batchNumber}:`, {
+			// 	batchSize,
+			// 	urlRange: `${currentIndex + 1}-${currentIndex + batchSize}`,
+			// 	totalUrls: urls.length,
+			// 	cumulativeTokens,
+			// 	tokenLimit,
+			// 	remainingTokens: tokenLimit ? tokenLimit - cumulativeTokens : 'unlimited',
+			// });
 
 			// Generate links for entire batch with single API call
 			const batchResults = await AILinkGenerator.generateBulkLinks(
@@ -348,22 +464,35 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 				const batchTokens = batchResults.tokenUsage.completion_tokens || batchResults.tokenUsage.total_tokens || 0;
 				cumulativeTokens += batchTokens;
 				
+				// Calculate and update average tokens per URL for future predictions
+				const totalUrlsProcessed = currentIndex + batchSize;
+				avgTokensPerUrl = cumulativeTokens / totalUrlsProcessed;
+				
+				// Estimate tokens for this batch size (for comparison)
+				const estimatedBatchTokens = getEstimatedTokensPerBatch(model) * (batchSize / 10);
+				
 				// Store token usage history for this batch
 				tokenUsageHistory.push({
-					batchIndex: batchIndex + 1,
+					batchNumber,
+					batchSize,
+					urlRange: `${currentIndex + 1}-${currentIndex + batchSize}`,
 					batchTokens,
 					cumulativeTokens,
-					estimatedTokens: estimatedBatchTokens,
-					accuracy: Math.abs(batchTokens - estimatedBatchTokens) <= estimatedBatchTokens * 0.1 ? 'good' : 'needs adjustment',
+					avgTokensPerUrl: Math.round(avgTokensPerUrl),
+					estimatedTokens: Math.round(estimatedBatchTokens),
+					accuracy: Math.abs(batchTokens - estimatedBatchTokens) <= estimatedBatchTokens * 0.2 ? 'good' : 'needs adjustment',
+					remainingTokens: tokenLimit ? tokenLimit - cumulativeTokens : 'unlimited',
 				});
 
-				console.log(`Batch ${batchIndex + 1} token usage:`, {
-					actual: batchTokens,
-					estimated: estimatedBatchTokens,
-					cumulative: cumulativeTokens,
-					limit: tokenLimit,
-					remaining: tokenLimit ? tokenLimit - cumulativeTokens : 'unlimited',
-				});
+				// console.log(`Batch ${batchNumber} completed:`, {
+				// 	batchSize,
+				// 	actualTokens: batchTokens,
+				// 	estimatedTokens: Math.round(estimatedBatchTokens),
+				// 	cumulativeTokens,
+				// 	avgTokensPerUrl: Math.round(avgTokensPerUrl),
+				// 	remainingTokens: tokenLimit ? tokenLimit - cumulativeTokens : 'unlimited',
+				// 	percentUsed: tokenLimit ? Math.round((cumulativeTokens / tokenLimit) * 100) : 'N/A',
+				// });
 			}
 
 			// Process batch results
@@ -450,8 +579,11 @@ export const process_urls_with_ai = (urls, prompt, options = {}, aiSettings = {}
 					allGeneratedLinks.push(linkData);
 				}
 			} else {
-				console.error(`Error generating links for batch ${batchIndex + 1}:`, batchResults.error);
+				console.error(`Error generating links for batch ${batchNumber}:`, batchResults.error);
 			}
+			
+			// Move to next batch
+			currentIndex += batchSize;
 		}
 
 		// All URLs processed successfully
@@ -602,4 +734,3 @@ export const reset_ai_state = () => (dispatch) => {
 		type: RESET_AI_STATE,
 	});
 };
-

@@ -10,24 +10,23 @@ import UpgradeToPro from '../Teasers/UpgradeToPro';
 import { connect } from 'react-redux';
 
 // Estimated tokens per batch (10 URLs) for each model
+// Based on: Input (prompt + URL content) + Output (title, description, meta fields, category, tags)
+// These estimates include both input and completion tokens for typical use cases
 const ESTIMATED_TOKENS_PER_BATCH = {
-	// OpenAI Models
-	'gpt-4.1-nano': 2800,
-	'gpt-4.1-mini': 2800,
-	'gpt-4.1': 2900,
-	'gpt-5-nano': 10500,
-	'gpt-5-mini': 5000,
-	'gpt-5.2': 2900,
-	'gpt-4o-mini': 2800,
-	'gpt-4o': 3000,
+	// OpenAI Models (Generally more efficient with structured output)
+	'gpt-4.1-nano': 1200,      // Nano tier - optimized for speed
+	'gpt-4.1-mini': 1400,      // Mini tier - good balance
+	'gpt-4.1': 1800,           // Standard tier - more detailed
+	'gpt-5-nano': 1300,        // Next-gen nano
+	'gpt-5-mini': 1600,        // Next-gen mini
+	'gpt-5.2': 2200,           // Most capable, uses more tokens
 	
-	// Gemini Models
-	'gemini-2.5-flash-lite': 3000,
-	'gemini-2.5-flash': 6000,
-	'gemini-2.5-pro': 6000,
-	'gemini-3-flash-preview': 5000,
-	'gemini-3-pro-preview': 5500,
-	'gemini-2.0-flash': 6000,
+	// Gemini Models (Generally use more tokens for similar tasks)
+	'gemini-2.5-flash-lite': 1600,    // Lite version - more efficient
+	'gemini-2.5-flash': 2000,         // Standard flash
+	'gemini-2.5-pro': 2500,           // Pro tier - more comprehensive
+	'gemini-3-flash-preview': 2200,   // Preview - newer tech
+	'gemini-3-pro-preview': 3000,     // Pro preview - most detailed
 };
 
 const InitialState = ({
@@ -99,14 +98,14 @@ onEstimatedTokensChange, // Add callback to pass estimated tokens to parent
 			? (aiSettings?.openai_token_limit || 3000)
 			: (aiSettings?.gemini_token_limit || 3000);
 
-		// Get estimated tokens per batch for the model
-		const tokensPerBatch = ESTIMATED_TOKENS_PER_BATCH[model] || 2800;
+		// Get estimated tokens per batch (10 URLs) for the model
+		const tokensPerBatch = ESTIMATED_TOKENS_PER_BATCH[model] || 1400;
 		
-		// Calculate number of batches (10 URLs per batch)
-		const batchCount = Math.ceil(urlCount / 10);
+		// Calculate estimated tokens per URL (divide batch estimate by 10)
+		const tokensPerUrl = tokensPerBatch / 10;
 		
-		// Calculate estimated total tokens needed
-		const estimatedTotalTokens = batchCount * tokensPerBatch;
+		// Calculate estimated total tokens needed (per URL × URL count)
+		const estimatedTotalTokens = Math.ceil(tokensPerUrl * urlCount);
 
 		// Pass estimated tokens to parent component
 		if (onEstimatedTokensChange) {
@@ -118,8 +117,7 @@ onEstimatedTokensChange, // Add callback to pass estimated tokens to parent
 
 		return {
 			urlCount,
-			batchCount,
-			tokensPerBatch,
+			tokensPerUrl: Math.ceil(tokensPerUrl),
 			estimatedTotalTokens,
 			currentTokenLimit,
 			willExceed,
