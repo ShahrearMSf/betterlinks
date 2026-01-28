@@ -125,7 +125,7 @@ export const generateBulkWithOpenAI = async (apiKey, urlsData, prompt, fieldLimi
 		const { systemPrompt, userPrompt } = buildBulkPrompts(urlsData, prompt, fieldLimits);
 
 		// Determine if model uses new API parameters (GPT-4.1+ and GPT-5+)
-		const newerModels = ['gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano', 'gpt-5', 'gpt-5.1', 'gpt-5.2', 'gpt-5-mini', 'gpt-5-nano'];
+		const newerModels = ['gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano', 'gpt-5.2', 'gpt-5-mini', 'gpt-5-nano'];
 		const isNewerModel = newerModels.includes(model);
 
 		// Build request body with correct parameters for each model type

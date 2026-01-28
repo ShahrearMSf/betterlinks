@@ -63,6 +63,105 @@ onEstimatedTokensChange, // Add callback to pass estimated tokens to parent
 		prompt: false
 	});
 	const [showValidation, setShowValidation] = useState(false);
+	const [urlValidationMessage, setUrlValidationMessage] = useState('');
+	const [hasInvalidUrls, setHasInvalidUrls] = useState(false);
+
+	// URL validation function - supports multiple URL formats
+	const validateUrl = (urlString) => {
+		if (!urlString.trim()) return true; // Empty string is valid (will be caught by empty check)
+		
+		const trimmedUrl = urlString.trim();
+		
+		// Pattern 1: Full URLs with various schemes (http, https, ftp, sftp, file, data, custom schemes)
+		// Supports: http://example.com, https://example.com, ftp://example.com, myapp://open/page, etc.
+		const schemePattern = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\/.+/;
+		
+		// Pattern 2: URLs without scheme but starting with www
+		// Supports: www.example.com, www.example.com/path, www.sub.example.com
+		const wwwPattern = /^www\.[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(:[0-9]+)?(\/[^\s]*)?$/;
+		
+		// Pattern 3: Domain-only URLs (no scheme, no www) - SIMPLIFIED
+		// Supports: example.com, sub.example.com, example.co.uk, example.com/path
+		// Format: [domain].[tld] with optional subdomains, port, path, query, fragment
+		const domainPattern = /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+\.[a-zA-Z]{2,}(:[0-9]+)?(\/[^\s]*)?$/;
+		
+		// Pattern 4: Simple domain without subdomains - example.com, google.co.uk
+		const simpleDomainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(:[0-9]+)?(\/[^\s]*)?$/;
+		
+		// Pattern 5: IP addresses (IPv4)
+		// Supports: 192.168.0.1, 127.0.0.1/path, http://192.168.0.1:8080
+		const ipv4Pattern = /^(https?:\/\/)?(([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/[^\s]*)?$/;
+		
+		// Pattern 6: IPv6 addresses
+		// Supports: http://[2001:db8::1], [2001:db8::1]:8080
+		const ipv6Pattern = /^(https?:\/\/)?\[([0-9a-fA-F:]+)\](:[0-9]+)?(\/[^\s]*)?$/;
+		
+		// Pattern 7: Localhost variations
+		// Supports: localhost, localhost:3000, http://localhost:8080/path
+		const localhostPattern = /^(https?:\/\/)?localhost(:[0-9]+)?(\/[^\s]*)?$/;
+		
+		// Check against all patterns
+		if (schemePattern.test(trimmedUrl)) {
+			// For scheme-based URLs, do additional validation
+			try {
+				// Handle special schemes that don't need strict validation
+				if (trimmedUrl.startsWith('data:') || 
+				    trimmedUrl.startsWith('intent:') || 
+				    trimmedUrl.startsWith('market:')) {
+					return trimmedUrl.length > 10; // Basic length check
+				}
+				
+				// For other schemes, validate basic structure
+				const parts = trimmedUrl.split('://');
+				if (parts.length >= 2 && parts[1].length > 0) {
+					return true;
+				}
+			} catch (e) {
+				return false;
+			}
+		}
+		
+		// Test against other patterns
+		return wwwPattern.test(trimmedUrl) || 
+		       simpleDomainPattern.test(trimmedUrl) ||
+		       domainPattern.test(trimmedUrl) || 
+		       ipv4Pattern.test(trimmedUrl) || 
+		       ipv6Pattern.test(trimmedUrl) || 
+		       localhostPattern.test(trimmedUrl);
+	};
+
+	// Validate URLs in real-time
+	const validateUrls = (urlText) => {
+		if (!urlText.trim()) {
+			setUrlValidationMessage('');
+			setHasInvalidUrls(false);
+			return { isValid: true, invalidUrls: [] };
+		}
+
+		// Split by newline or space and filter empty strings
+		const urlList = urlText
+			.split(/[\n\s]+/)
+			.map(url => url.trim())
+			.filter(url => url.length > 0);
+
+		// Find invalid URLs
+		const invalidUrls = urlList.filter(url => !validateUrl(url));
+
+		if (invalidUrls.length > 0) {
+			const invalidCount = invalidUrls.length;
+			const message = invalidCount === 1 
+				? `Invalid URL detected: ${invalidUrls[0]}` 
+				: `${invalidCount} invalid URLs detected. Please check your input.`;
+			
+			setUrlValidationMessage(message);
+			setHasInvalidUrls(true);
+			return { isValid: false, invalidUrls };
+		}
+
+		setUrlValidationMessage('');
+		setHasInvalidUrls(false);
+		return { isValid: true, invalidUrls: [] };
+	};
 
 	// Calculate URL count and token recommendation
 	const tokenRecommendation = useMemo(() => {
@@ -152,11 +251,26 @@ onEstimatedTokensChange, // Add callback to pass estimated tokens to parent
 	// Handle generate button click - just call parent function
 	// Parent will handle validation, error messages, and trigger our visual styling via error prop
 	const handleGenerateClick = () => {
+		// Prevent generation if there are invalid URLs
+		if (hasInvalidUrls) {
+			setShowValidation(true);
+			
+			// Scroll to the URLs field to show the error
+			if (modalRef?.current) {
+				modalRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+			return;
+		}
+		
 		onGenerateLinks();
 	};
 
 	// Get validation class for textarea
 	const getTextareaClass = (fieldName) => {
+		if (fieldName === 'urls' && hasInvalidUrls) {
+			return 'btl-ai-textarea btl-ai-textarea-error';
+		}
+		
 		if (!showValidation) return 'btl-ai-textarea';
 
 		const hasError = validationErrors[fieldName];
@@ -333,7 +447,12 @@ label: cat.term_name,
 						placeholder={__('https://your-target-url.com/sample-link\n\nhttps://your-target-url.com/sample-link-2\n\nhttps://example.com/sample-link', 'betterlinks')}
 						value={urls}
 						onChange={(e) => {
-							setUrls(e.target.value);
+							const newValue = e.target.value;
+							setUrls(newValue);
+							
+							// Validate URLs in real-time
+							validateUrls(newValue);
+							
 							// Clear validation when user starts typing
 							if (showValidation) {
 								setShowValidation(false);
@@ -348,6 +467,23 @@ label: cat.term_name,
 						https://example.com/sample-link
 					</textarea>
 					</div>
+					
+					{/* URL Validation Warning */}
+					{urlValidationMessage && (
+						<div className="btl-ai-validation-warning" style={{ 
+							color: '#d63638', 
+							fontSize: '12px', 
+							marginTop: '8px',
+							marginBottom: '8px',
+							display: 'flex',
+							alignItems: 'center',
+							gap: '4px'
+						}}>
+							<span className="dashicons dashicons-warning" style={{ fontSize: '16px' }}></span>
+							<span>{urlValidationMessage}</span>
+						</div>
+					)}
+					
 					<div className="btl-ai-note">
 						{/* {__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')} */}
 						{tokenRecommendation ? (
@@ -423,9 +559,19 @@ label: cat.term_name,
 				<button
 					className="btl-ai-btn-generate"
 					onClick={is_pro_enabled && isProVersionValid ? handleGenerateClick : undefined}
-					disabled={isProcessing || !settingsLoading && !hasValidApiKey || !isProVersionValid}
+					disabled={isProcessing || !settingsLoading && !hasValidApiKey || !isProVersionValid || hasInvalidUrls}
 					style={(!is_pro_enabled || !isProVersionValid) && (isProcessing || isUrlsEmpty) ? { pointerEvents: 'none' } : {}}
-					title={!is_pro_enabled ? __('Pro Feature - Upgrade to Pro', 'betterlinks') : !isProVersionValid ? __('AI feature requires BetterLinks Pro v2.6.0 or newer. Please update the plugin to use it.', 'betterlinks') : !settingsLoading && !hasValidApiKey ? __('Configure your API key', 'betterlinks') : ''}
+					title={
+						hasInvalidUrls 
+							? __('Please fix invalid URLs before generating links', 'betterlinks')
+							: !is_pro_enabled 
+								? __('Pro Feature - Upgrade to Pro', 'betterlinks') 
+								: !isProVersionValid 
+									? __('AI feature requires BetterLinks Pro v2.6.0 or newer. Please update the plugin to use it.', 'betterlinks') 
+									: !settingsLoading && !hasValidApiKey 
+										? __('Configure your API key', 'betterlinks') 
+										: ''
+					}
 				>
 					{isProcessing ? (
 <>
