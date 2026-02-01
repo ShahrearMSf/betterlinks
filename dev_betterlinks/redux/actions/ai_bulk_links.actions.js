@@ -12,8 +12,8 @@ const ESTIMATED_TOKENS_PER_BATCH = {
 	'gpt-4.1-nano': 1200,      // Nano tier - optimized for speed
 	'gpt-4.1-mini': 1400,      // Mini tier - good balance
 	'gpt-4.1': 1800,           // Standard tier - more detailed
-	'gpt-5-nano': 1300,        // Next-gen nano
-	'gpt-5-mini': 1600,        // Next-gen mini
+	'gpt-5-nano': 12000,        // Next-gen nano
+	'gpt-5-mini': 6000,        // Next-gen mini
 	'gpt-5.2': 2200,           // Most capable, uses more tokens
 	
 	// Gemini Models (Generally use more tokens for similar tasks)

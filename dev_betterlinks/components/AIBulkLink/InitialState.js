@@ -17,8 +17,8 @@ const ESTIMATED_TOKENS_PER_BATCH = {
 	'gpt-4.1-nano': 1200,      // Nano tier - optimized for speed
 	'gpt-4.1-mini': 1400,      // Mini tier - good balance
 	'gpt-4.1': 1800,           // Standard tier - more detailed
-	'gpt-5-nano': 1300,        // Next-gen nano
-	'gpt-5-mini': 1600,        // Next-gen mini
+	'gpt-5-nano': 12000,        // Next-gen nano
+	'gpt-5-mini': 6000,        // Next-gen mini
 	'gpt-5.2': 2200,           // Most capable, uses more tokens
 	
 	// Gemini Models (Generally use more tokens for similar tasks)
@@ -193,9 +193,9 @@ onEstimatedTokensChange, // Add callback to pass estimated tokens to parent
 		const model = provider === 'openai' 
 			? (aiSettings?.openai_model || 'gpt-4o-mini')
 			: (aiSettings?.gemini_model || 'gemini-2.5-flash-lite');
-		const currentTokenLimit = provider === 'openai'
-			? (aiSettings?.openai_token_limit || 3000)
-			: (aiSettings?.gemini_token_limit || 3000);
+		const currentTokenLimit = aiSettings?.ai_provider === 'openai' 
+			? aiSettings?.openai_token_limit 
+			: aiSettings?.gemini_token_limit;
 
 		// Get estimated tokens per batch (10 URLs) for the model
 		const tokensPerBatch = ESTIMATED_TOKENS_PER_BATCH[model] || 1400;
@@ -483,35 +483,38 @@ label: cat.term_name,
 							<span>{urlValidationMessage}</span>
 						</div>
 					)}
-					
-					<div className="btl-ai-note">
-						{/* {__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')} */}
-						{tokenRecommendation ? (
-							<>
-								<span style={{ color: '#5e6d79', fontSize: '12px' }}>
-									{tokenRecommendation.urlCount} {__(' URLs detected. Estimated token usage is approximately ~ ', 'betterlinks')}{tokenRecommendation.estimatedTotalTokens.toLocaleString()}{__('.', 'betterlinks')}
-								</span>
-								{tokenRecommendation.willExceed && (
+					{
+						!urlValidationMessage && (
+							<div className="btl-ai-note">
+								{/* {__('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')} */}
+								{tokenRecommendation ? (
 									<>
-										<br />
-										<span style={{ color: '#d63638', fontWeight: '500', fontSize: '12px' }}>
-										 {__('Warning : Current token limit is', 'betterlinks')} {tokenRecommendation.currentTokenLimit.toLocaleString()}{__('. Recommended token limit to process all URLs is', 'betterlinks')} {tokenRecommendation.recommendedLimit.toLocaleString()} {__('or higher. Change the limit ', 'betterlinks')}{' '}
-											<Link
-												to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
-												target="_blank"
-												style={{ textDecoration: 'underline', color: '#d63638' }}
-												onClick={() => {
-													if (typeof onClose === 'function') onClose();
-												}}
-											>
-												{__('here', 'betterlinks')}
-											</Link>
+										<span style={{ color: '#5e6d79', fontSize: '12px' }}>
+											{tokenRecommendation.urlCount} {__(' URLs detected. Estimated token usage is approximately ~ ', 'betterlinks')}{tokenRecommendation.estimatedTotalTokens.toLocaleString()}{__('.', 'betterlinks')}
 										</span>
+										{tokenRecommendation.willExceed && (
+											<>
+												<br />
+												<span style={{ color: '#d63638', fontWeight: '500', fontSize: '12px' }}>
+												{__('Warning : Current token limit is', 'betterlinks')} {tokenRecommendation.currentTokenLimit.toLocaleString()}{__('. Recommended token limit to process all URLs is', 'betterlinks')} {tokenRecommendation.recommendedLimit.toLocaleString()} {__('or higher. Change the limit ', 'betterlinks')}{' '}
+													<Link
+														to={`${route_path}admin.php?page=betterlinks-settings&advanced=true`}
+														target="_blank"
+														style={{ textDecoration: 'underline', color: '#d63638' }}
+														onClick={() => {
+															if (typeof onClose === 'function') onClose();
+														}}
+													>
+														{__('here', 'betterlinks')}
+													</Link>
+												</span>
+											</>
+										)}
 									</>
-								)}
-							</>
-						) : __('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')}
-					</div>
+								) : __('Enter One or Multiple URLs (one per line or separated by space)', 'betterlinks')}
+							</div>
+						)
+					}
 				</div>
 
 				{/* AI Prompt */}

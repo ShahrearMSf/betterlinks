@@ -64,7 +64,7 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
 
     // Log urlSlugGenerationType changes
     useEffect(() => {
-        console.log('urlSlugGenerationType:', urlSlugGenerationType);
+        // console.log('urlSlugGenerationType:', urlSlugGenerationType);
     }, [urlSlugGenerationType]);
 
     // Load post types on mount
