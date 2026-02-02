@@ -39,7 +39,7 @@ export const {
 		thirstyaffliates: false,
 		prettylinks: false,
 	},
-} = window.betterLinksGlobal;
+} = window.betterLinksGlobal || {};
 
 export const API = axios.create({
 	baseURL: rest_url,
@@ -812,6 +812,10 @@ export const remove_top_loader = (document) => {
 };
 
 export const shortURLUniqueCheck = (slug, ID, setSlugIsExists) => {
+	if (!ajaxurl) {
+		console.error('ajaxurl is not defined');
+		return Promise.resolve(false);
+	}
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
 	form_data.append('security', betterlinks_nonce);
@@ -831,6 +835,10 @@ export const shortURLUniqueCheck = (slug, ID, setSlugIsExists) => {
 };
 
 export const shortURLUniqueCheckGutenberg = (slug, ID) => {
+	if (!ajaxurl) {
+		console.error('ajaxurl is not defined');
+		return Promise.resolve(false);
+	}
 	let form_data = new FormData();
 	form_data.append('action', 'betterlinks/admin/short_url_unique_checker');
 	form_data.append('security', betterlinks_nonce);
