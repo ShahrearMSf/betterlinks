@@ -43,6 +43,12 @@ trait DBMigrate {
 			return;
 		}
 		$settings = Cache::get_json_settings();
+		
+		// Ensure $settings is an array (fix for PHP 8+ scalar value error)
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
+		
 		if ( empty( $settings['fbs']['enable_fbs'] ) ) {
 			$args    = array(
 				'ID'        => 0,
@@ -75,6 +81,12 @@ trait DBMigrate {
 		}
 
 		$settings = Cache::get_json_settings();
+		
+		// Ensure $settings is an array (fix for PHP 8+ scalar value error)
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
+		
 		if ( ! empty( $settings['fbs']['delete_on'] ) ) {
 			return;
 		}
@@ -91,6 +103,12 @@ trait DBMigrate {
 
 	public function update_cle_category() {
 		$settings = Cache::get_json_settings();
+		
+		// Ensure $settings is an array (fix for PHP 8+ scalar value error)
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
+		
 		if ( isset( $settings['cle'] ) && empty( $settings['cle']['category'] ) ) {
 			$settings['cle']['category'] = '1';
 
@@ -107,6 +125,11 @@ trait DBMigrate {
 
 	public function update_settings() {
 		$settings = Cache::get_json_settings();
+
+		// Ensure $settings is an array (fix for PHP 8+ scalar value error)
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
 
 		if ( empty( $settings['enable_custom_domain_menu'] ) ) {
 			$settings['enable_custom_domain_menu'] = true;

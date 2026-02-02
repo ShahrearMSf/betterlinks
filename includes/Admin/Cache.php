@@ -19,7 +19,8 @@ class Cache {
 		if( !is_dir( BETTERLINKS_UPLOAD_DIR_PATH ) ){
 			wp_mkdir_p(BETTERLINKS_UPLOAD_DIR_PATH);
 		}
-		return file_put_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json', json_encode( $betterlinks_links ) );
+		file_put_contents( BETTERLINKS_UPLOAD_DIR_PATH . '/settings.json', json_encode( $betterlinks_links ) );
+		return $betterlinks_links;
 	}
 
 	public static function get_json_settings() {
