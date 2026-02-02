@@ -283,9 +283,9 @@ class Helper {
 					}
 				}
 
-				if ( isset( $broken_links[ $item->ID ] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
+				if ( isset( $broken_links[ $item->ID ] ) && is_array( $broken_links[ $item->ID ] ) && isset( $broken_links[ $item->ID ]['status']['status_code'] ) && in_array( $broken_links[ $item->ID ]['status']['status_code'], $broken_link_status_codes ) && empty( $broken_links[ $item->ID ]['is_log_removed'] ) ) {
 					$item->link_status = 'broken';
-				} elseif ( 'broken' === $item->link_status && isset( $broken_links[ $item->ID ]['old_link_status'] ) && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
+				} elseif ( 'broken' === $item->link_status && isset( $broken_links[ $item->ID ] ) && is_array( $broken_links[ $item->ID ] ) && isset( $broken_links[ $item->ID ]['old_link_status'] ) && 'broken' !== $broken_links[ $item->ID ]['old_link_status'] ) {
 					// if the link is fixed, but if db is not updated it to fixed link immediately then it will be marked as old status code.
 					$item->link_status = $broken_links[ $item->ID ]['old_link_status'];
 				}
