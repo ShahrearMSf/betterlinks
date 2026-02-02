@@ -204,7 +204,7 @@ const Graph = (props) => {
 					) : isChartDataReady ? (
 						<Chart options={dataOptions.options} series={dataOptions.series} type="area" height={350} />
 					) : (
-						<ChartLoader />
+						<Chart options={dataOptions.options} series={dataOptions.series} type="area" height={350} />
 					)}
 					{id && <GraphTeaser />}
 				</div>
