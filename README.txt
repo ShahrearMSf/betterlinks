@@ -163,6 +163,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 2.4.4 - 02/02/2026 =
+
+- Fixed: Missing Prefix issue in default general settings
+- Fixed: Duplicate short link data related issue
+- Few minor bug fixes & improvements 
+
 = 2.4.3 - 14/01/2026 =
 
 - Fixed: Migration error caused by a scalar value being treated as an array.
