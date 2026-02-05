@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Formik, Field, Form } from 'formik';
 import axios from 'axios';
@@ -7,15 +7,13 @@ import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
 import CategorySelect from 'components/CategorySelect';
 import UrlGenerationType from 'components/UrlGenerationType';
-import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType, urlGenerationTypes } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
 import ProBadge from 'components/Badge/ProBadge';
-const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
+const TabsGeneral = ({ settings, fetch_clicks_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -24,15 +22,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 	const [fastClicksStatus, setFastClicksStatus] = useState(exists_clicks_json);
 	const [isOpenUpgradeToProModal, setUpgradeToProModal] = useState(false);
 
-	useEffect(() => {
-		if (is_pro_enabled && !terms?.terms) {
-			fetch_terms_data();
-		}
-		// Always fetch terms data for category dropdown
-		if (!terms?.terms || terms.terms.length === 0) {
-			fetch_terms_data();
-		}
-	}, []);
+	// Terms data is now prefetched by Settings page, no need to fetch here
 
 	const writeLinkJSONHandler = () => {
 		setFastRedirectButtonText(__('Activating...', 'betterlinks'));
@@ -533,8 +523,6 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		update_option: bindActionCreators(update_option, dispatch),
 		fetch_clicks_data: bindActionCreators(fetch_clicks_data, dispatch),
-		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
 	};
 };
 
