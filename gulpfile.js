@@ -37,8 +37,10 @@ const buildStyles = () => {
 // 👇 Build CSS Assets
 gulp.task('build-style', buildStyles);
 
-const watchStyles = () => {
-      return gulp.watch(['assets/scss/**/*.scss'], buildStyles);
+const watchStyles = (done) => {
+      buildStyles();
+      gulp.watch(['assets/scss/**/*.scss'], buildStyles);
+      done();
 };
 // 👇 Watch SCSS files for changes
 gulp.task('watch-style', watchStyles);
