@@ -352,6 +352,30 @@ export const Link = (props) => {
 		}
 	};
 
+	const handleTargetUrlBlur = (setFieldValue, targetUrl) => {
+		if (!targetUrl) return;
+
+		const trimmedUrl = targetUrl.trim();
+		
+		// Check if the URL starts with a slash (local slug)
+		if (trimmedUrl.startsWith('/')) {
+			// Remove trailing slash from site_url if it exists
+			const baseSiteUrl = site_url.replace(/\/$/, '');
+			// Construct the full URL
+			const fullUrl = baseSiteUrl + trimmedUrl;
+			
+			// Validate the URL
+			try {
+				new URL(fullUrl);
+				// If valid, update the field value
+				setFieldValue('target_url', fullUrl);
+			} catch (error) {
+				// If invalid URL, keep the original value
+				console.warn('Invalid URL constructed:', fullUrl);
+			}
+		}
+	};
+
 	const submitLinkHandler = (values, actions) => {
 		const { setSubmitting, setFieldError } = actions;
 		setSubmitting(false);
@@ -577,6 +601,9 @@ export const Link = (props) => {
 													fetchTargetURL(target_url, props.setFieldValue, willUpdateTitle, props.values?.link_title);
 													// Handle URL-based slug generation
 													handleTargetUrlChange(props.setFieldValue, target_url, props.values?.link_title);
+												}}
+												onBlur={(e) => {
+													handleTargetUrlBlur(props.setFieldValue, e.target.value);
 												}}
 												placeholder=""
 												disabled={isDisableLinkFormEditView}
