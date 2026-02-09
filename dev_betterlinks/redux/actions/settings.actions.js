@@ -1,7 +1,14 @@
 import axios from 'axios';
-import { API, namespace, makeRequest } from 'utils/helper';
+import { API, namespace, makeRequest, is_pro_enabled } from 'utils/helper';
 import { fetch_terms_data } from './terms.actions';
 import { fetch_links_data } from './links.actions';
+import { fetch_post_types_data } from './posttypesdata.actions';
+import {
+	SETTINGS_PREFETCH_START,
+	SETTINGS_PREFETCH_COMPLETE,
+	SETTINGS_PREFETCH_ERROR,
+	SET_AUTO_CREATE_LINK_SETTINGS,
+} from './actionstrings';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const FETCH_TRACKING_SETTINGS = 'FETCH_TRACKING_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
@@ -132,4 +139,102 @@ export const update_option = (item) => async (dispatch) => {
 		});
 	}
 	fetch_links_data()(dispatch); // fetch all links from cache/db after changes on settings
+};
+
+/**
+ * Set auto create link settings in Redux store
+ * @param {Object} settings - The auto create link settings
+ */
+export const setAutoCreateLinkSettings = (settings) => ({
+	type: SET_AUTO_CREATE_LINK_SETTINGS,
+	payload: settings,
+});
+
+/**
+ * Prefetch all settings data for the Settings page
+ * This fetches all required data in parallel to eliminate loading states when switching tabs
+ * @param {Object} options - Options for prefetching
+ * @param {boolean} options.force - Force refetch even if data exists
+ */
+export const prefetchAllSettingsData = (options = {}) => async (dispatch, getState) => {
+	const { force = false } = options;
+	const state = getState();
+
+	// Check if already prefetching or data is already loaded
+	if (state.settings?.isPrefetching) {
+		return;
+	}
+
+	// Check if all data is already loaded (unless force is true)
+	const hasSettings = !!state.settings?.settings;
+	const hasTracking = !!state.settings?.tracking;
+	const hasTerms = !!state.terms?.terms;
+	const hasPostData = !!state.postdatas?.fetchedAll;
+	const hasAutoCreateSettings = !!state.settings?.autoCreateLinkSettings;
+
+	if (!force && hasSettings && hasTracking && hasTerms && hasPostData && (hasAutoCreateSettings || !is_pro_enabled)) {
+		// All data already loaded, mark as complete
+		dispatch({ type: SETTINGS_PREFETCH_COMPLETE });
+		return;
+	}
+
+	// Start prefetching
+	dispatch({ type: SETTINGS_PREFETCH_START });
+
+	try {
+		// Create array of promises for all data fetching
+		const fetchPromises = [];
+
+		// Fetch settings if not already loaded
+		if (force || !hasSettings) {
+			fetchPromises.push(fetch_settings_data()(dispatch));
+		}
+
+		// Fetch tracking settings if not already loaded
+		if (force || !hasTracking) {
+			fetchPromises.push(fetch_tracking_settings()(dispatch));
+		}
+
+		// Fetch terms data if not already loaded
+		if (force || !hasTerms) {
+			fetchPromises.push(fetch_terms_data()(dispatch));
+		}
+
+		// Fetch post types data if not already loaded
+		if (force || !hasPostData) {
+			fetchPromises.push(fetch_post_types_data()(dispatch));
+		}
+
+		// Fetch auto-create link settings for Pro users
+		if (is_pro_enabled && (force || !hasAutoCreateSettings)) {
+			const autoCreatePromise = makeRequest({
+				action: 'betterlinks/admin/get_auto_create_links_settings',
+			}).then((response) => {
+				if (response?.data?.data) {
+					const settings = response.data.data;
+					const processedSettings = {
+						enable_auto_link: settings.enable_auto_link,
+						post_shortlinks: settings.enable_auto_link && settings.post_shortlinks,
+						post_default_cat: settings.enable_auto_link && settings.post_shortlinks && settings.post_default_cat,
+						page_shortlinks: settings.enable_auto_link && settings.page_shortlinks,
+						page_default_cat: settings.enable_auto_link && settings.page_shortlinks && settings.page_default_cat,
+						custom_post_type_shortlinks: settings.enable_auto_link && settings.custom_post_type_shortlinks,
+						custom_post_type_default_cat: settings.enable_auto_link && settings.custom_post_type_shortlinks && settings.custom_post_type_default_cat,
+						custom_post_types_selection: settings.enable_auto_link && settings.custom_post_type_shortlinks && settings.custom_post_types_selection,
+					};
+					dispatch(setAutoCreateLinkSettings(processedSettings));
+				}
+			});
+			fetchPromises.push(autoCreatePromise);
+		}
+
+		// Wait for all promises to resolve
+		await Promise.all(fetchPromises);
+
+		// Mark prefetch as complete
+		dispatch({ type: SETTINGS_PREFETCH_COMPLETE });
+	} catch (error) {
+		console.error('Error prefetching settings data:', error);
+		dispatch({ type: SETTINGS_PREFETCH_ERROR, payload: error.message });
+	}
 };

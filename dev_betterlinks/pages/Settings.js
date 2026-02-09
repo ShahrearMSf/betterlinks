@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetch_settings_data, fetch_tracking_settings } from 'redux/actions/settings.actions';
-import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
+import { prefetchAllSettingsData, setAutoCreateLinkSettings } from 'redux/actions/settings.actions';
 import Topbar from 'containers/TopBar';
 import TabsGeneral from 'containers/TabsGeneral';
 import TabsTools from 'containers/TabsTools';
@@ -14,77 +13,90 @@ import RoleManagement from 'components/Teasers/RoleManagement';
 import GoPremium from 'components/Teasers/GoPremium';
 import Docs from 'components/Docs';
 import TabsOptions from 'containers/TabsOptions';
-import { is_pro_enabled, makeRequest } from 'utils/helper';
-import { fetch_terms_data } from 'redux/actions/terms.actions';
+import { is_pro_enabled, plugin_root_url } from 'utils/helper';
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
 }
 
+/**
+ * Loading component for settings page initial load
+ */
+const SettingsLoader = () => (
+	<div className="betterlinks-settings-loading" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+		<img style={{ width: '100px', height: '100px' }} src={`${plugin_root_url}assets/images/dark-mode-loader.gif`} alt={__('Loading...', 'betterlinks')} />
+	</div>
+);
+
 const Settings = (props) => {
-	const [autoCreateLinkSettings, setAutoCreateLinkSettings] = useState({});
-	const [trackingSettings, setTrackingSettings] = useState({});
+	const {
+		settings: settingsState,
+		postdatas,
+		terms,
+		prefetchAllSettingsData,
+		setAutoCreateLinkSettings,
+	} = props;
+
+	const { settings, tracking, isPrefetching, isPrefetched, autoCreateLinkSettings } = settingsState || {};
 	const query = useQuery();
 	const currentTab = query.get('import');
 	const migration = query.get('migration');
 	const advancedTab = query.get('advanced');
-	const { settings } = props.settings;
-	const { terms } = props.terms;
-	let tabList = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
-		__('General', 'betterlinks'),
-		__('Advanced Options', 'betterlinks'),
-		__('Tools', 'betterlinks'),
-		__('Role Management', 'betterlinks'),
-		__('Go Premium', 'betterlinks'),
-	]);
-	let tabPanel = betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
-		<TabsGeneral settings={settings} />,
-		<TabsOptions
-			settings={settings}
-			postdatas={props?.postdatas || {}}
-			autoCreateLinkSettings={autoCreateLinkSettings}
-			terms={terms}
-			trackingSettings={props.settings?.tracking}
-			setTrackingSettings={setTrackingSettings}
-			setAutoCreateLinkSettings={setAutoCreateLinkSettings}
-		/>,
-		<TabsTools query={query} />,
-		<RoleManagement />,
-		<GoPremium />,
-	]);
+	const termsData = terms?.terms;
+
+	// Prefetch all settings data on mount
 	useEffect(() => {
-		if (!settings) {
-			props.fetch_settings_data();
-		}
-		if (!props?.settings?.tracking) {
-			props.fetch_tracking_settings();
-		}
-		if (!props.postdatas.fetchedAll) {
-			props.fetch_post_types_data();
-		}
-		if (is_pro_enabled) {
-			makeRequest({
-				action: 'betterlinks/admin/get_auto_create_links_settings',
-			}).then((response) => {
-				if (response.data.data) {
-					const settings = response.data.data;
-					setAutoCreateLinkSettings({
-						enable_auto_link: settings.enable_auto_link,
-						post_shortlinks: settings.enable_auto_link && settings.post_shortlinks,
-						post_default_cat: settings.enable_auto_link && settings.post_shortlinks && settings.post_default_cat,
-						page_shortlinks: settings.enable_auto_link && settings.page_shortlinks,
-						page_default_cat: settings.enable_auto_link && settings.page_shortlinks && settings.page_default_cat,
-						custom_post_type_shortlinks: settings.enable_auto_link && settings.custom_post_type_shortlinks,
-						custom_post_type_default_cat: settings.enable_auto_link && settings.custom_post_type_shortlinks && settings.custom_post_type_default_cat,
-						custom_post_types_selection: settings.enable_auto_link && settings.custom_post_type_shortlinks && settings.custom_post_types_selection,
-					});
-				}
-			});
-		}
-		if (!terms) {
-			props.fetch_terms_data();
-		}
+		prefetchAllSettingsData();
 	}, []);
+
+	// Show loader only during initial prefetch, not on subsequent tab switches
+	// Check this BEFORE useMemo hooks to prevent accessing undefined settings
+	const isInitialLoading = !settings || (isPrefetching && !isPrefetched);
+
+	// Memoize tab lists - this doesn't depend on settings data
+	const tabList = useMemo(() => {
+		return betterLinksHooks.applyFilters('betterLinksSettingsFilterTabList', [
+			__('General', 'betterlinks'),
+			__('Advanced Options', 'betterlinks'),
+			__('Tools', 'betterlinks'),
+			__('Role Management', 'betterlinks'),
+			__('Go Premium', 'betterlinks'),
+		]);
+	}, []);
+
+	// Memoize tab panels - only compute when settings are available
+	const tabPanel = useMemo(() => {
+		// Return empty array if settings not loaded yet - we'll show loader anyway
+		if (!settings) {
+			return [];
+		}
+		
+		return betterLinksHooks.applyFilters('betterLinksSettingsFilterTabPanel', [
+			<TabsGeneral settings={settings} key="general" />,
+			<TabsOptions
+				key="options"
+				settings={settings}
+				postdatas={postdatas || {}}
+				autoCreateLinkSettings={autoCreateLinkSettings || {}}
+				terms={termsData}
+				trackingSettings={tracking}
+				setTrackingSettings={() => {}} // Deprecated - tracking now managed via Redux
+				setAutoCreateLinkSettings={(newSettings) => setAutoCreateLinkSettings(newSettings)}
+			/>,
+			<TabsTools query={query} key="tools" />,
+			<RoleManagement key="role" />,
+			<GoPremium key="premium" />,
+		]);
+	}, [settings, postdatas, autoCreateLinkSettings, termsData, tracking, query]);
+
+	if (isInitialLoading) {
+		return (
+			<React.Fragment>
+				<Topbar label={__('BetterLinks Settings', 'betterlinks')} />
+				<SettingsLoader />
+			</React.Fragment>
+		);
+	}
 
 	return (
 		<React.Fragment>
@@ -113,10 +125,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetch_settings_data: bindActionCreators(fetch_settings_data, dispatch),
-		fetch_tracking_settings: bindActionCreators(fetch_tracking_settings, dispatch),
-		fetch_post_types_data: bindActionCreators(fetch_post_types_data, dispatch),
-		fetch_terms_data: bindActionCreators(fetch_terms_data, dispatch),
+		prefetchAllSettingsData: bindActionCreators(prefetchAllSettingsData, dispatch),
+		setAutoCreateLinkSettings: bindActionCreators(setAutoCreateLinkSettings, dispatch),
 	};
 };
 
