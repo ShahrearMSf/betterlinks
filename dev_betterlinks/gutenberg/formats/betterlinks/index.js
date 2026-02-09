@@ -9,6 +9,7 @@ const { getRectangleFromRange } = wp.dom;
 
 // external library imports
 import reactStringReplace from 'react-string-replace';
+import { Provider } from 'react-redux';
 
 // redux imports
 import { betterlinksGutenStore } from 'redux/gutenbergStore';
@@ -401,68 +402,70 @@ export const betterlinksFormat = {
 							)}
 
 							{showLinkModal && (
-								<Link
-									searchFieldRef={linkData ? null : searchFieldRef}
-									linkNewTab={linkData ? activeAttributes.target == '_blank' : linkNewTab || activeAttributes.target == '_blank'}
-									betterlinksGutenStore={betterlinksGutenStore}
-									isShowIcon={false}
-									setShowLinkModal={setShowLinkModal}
-									isSubmittingForGutenberg={isSubmittingForGutenberg}
-									setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
-									data={linkData || undefined}
-									catId={linkData ? linkData.cat_id : undefined}
-									submitHandler={async (values) => {
-										const linkNewTab = !!values.openInNewTab;
-										delete values.openInNewTab;
+								<Provider store={betterlinksGutenStore}>
+									<Link
+										searchFieldRef={linkData ? null : searchFieldRef}
+										linkNewTab={linkData ? activeAttributes.target == '_blank' : linkNewTab || activeAttributes.target == '_blank'}
+										betterlinksGutenStore={betterlinksGutenStore}
+										isShowIcon={false}
+										setShowLinkModal={setShowLinkModal}
+										isSubmittingForGutenberg={isSubmittingForGutenberg}
+										setIsSubmittingForGutenberg={setIsSubmittingForGutenberg}
+										data={linkData || undefined}
+										catId={linkData ? linkData.cat_id : undefined}
+										submitHandler={async (values) => {
+											const linkNewTab = !!values.openInNewTab;
+											delete values.openInNewTab;
 
-										if (linkData) {
-											return edit_link(
-												values,
-												true
-											)(betterlinksGutenStore.dispatch)
-												.then((res) => {
-													const inputUrl = '1' === insertedLinkData?.uncloaked ? insertedLinkData.target_url : `${site_url}/${values.short_url}`;
-													setLinkNewTab(linkNewTab);
-													const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
-													setInsertedLinkData(values);
-													const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, linkId: values?.ID });
-													onChange(applyFormat(value, linkFormat));
-													reset();
-													setIsSubmittingForGutenberg(false);
-													setShowLinkModal(false);
-													return res;
-												})
-												.catch((error) => {
-													console.log('error!! editing link failed', error);
-												});
-										} else {
-											return add_new_link(
-												values,
-												true
-											)(betterlinksGutenStore.dispatch)
-												.then((res) => {
-													setLinkNewTab(linkNewTab);
-													setSearchedText(`${site_url}/${values.short_url}`);
-													setShowLinkModal(false);
-													setIsSubmittingForGutenberg(false);
+											if (linkData) {
+												return edit_link(
+													values,
+													true
+												)(betterlinksGutenStore.dispatch)
+													.then((res) => {
+														const inputUrl = '1' === insertedLinkData?.uncloaked ? insertedLinkData.target_url : `${site_url}/${values.short_url}`;
+														setLinkNewTab(linkNewTab);
+														const withHttp = /^https?\:\/\//i.test(inputUrl) ? inputUrl : `http://${inputUrl}`;
+														setInsertedLinkData(values);
+														const linkFormat = makeLinkFormat({ url: withHttp, linkNewTab, sponsored: !!values.sponsored, noFollow: !!values.nofollow, linkId: values?.ID });
+														onChange(applyFormat(value, linkFormat));
+														reset();
+														setIsSubmittingForGutenberg(false);
+														setShowLinkModal(false);
+														return res;
+													})
+													.catch((error) => {
+														console.log('error!! editing link failed', error);
+													});
+											} else {
+												return add_new_link(
+													values,
+													true
+												)(betterlinksGutenStore.dispatch)
+													.then((res) => {
+														setLinkNewTab(linkNewTab);
+														setSearchedText(`${site_url}/${values.short_url}`);
+														setShowLinkModal(false);
+														setIsSubmittingForGutenberg(false);
 
-													const searchFieldDomRef = searchFieldRef?.current;
-													if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
-													searchFieldDomRef.classList.add('temporary-focus');
-													setTimeout(() => {
-														if (searchFieldDomRef?.classList) {
-															searchFieldDomRef.classList.remove('temporary-focus');
-														}
-													}, 5000);
-													searchFieldDomRef.focus({ preventScroll: true });
-													return res;
-												})
-												.catch((error) => {
-													console.log('error!! aading new link failed', error);
-												});
-										}
-									}}
-								/>
+														const searchFieldDomRef = searchFieldRef?.current;
+														if (!(searchFieldDomRef?.classList && searchFieldDomRef?.focus)) return false;
+														searchFieldDomRef.classList.add('temporary-focus');
+														setTimeout(() => {
+															if (searchFieldDomRef?.classList) {
+																searchFieldDomRef.classList.remove('temporary-focus');
+															}
+														}, 5000);
+														searchFieldDomRef.focus({ preventScroll: true });
+														return res;
+													})
+													.catch((error) => {
+														console.log('error!! aading new link failed', error);
+													});
+											}
+										}}
+									/>
+								</Provider>
 							)}
 						</URLPopover>
 					</div>
