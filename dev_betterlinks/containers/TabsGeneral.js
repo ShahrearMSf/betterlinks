@@ -7,13 +7,14 @@ import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
 import CategorySelect from 'components/CategorySelect';
 import UrlGenerationType from 'components/UrlGenerationType';
+import IPTagInput from 'components/IPTagInput';
 import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { fetch_terms_data } from 'redux/actions/terms.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType, urlGenerationTypes } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler, pro_version_check } from 'utils/helper';
 import ProBadge from 'components/Badge/ProBadge';
 const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
@@ -455,6 +456,56 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 									</label>
 								</div>
 							</span>
+
+							{/* Exclude IP - Pro Feature with version check */}
+							{is_pro_enabled && pro_version_check('2.6.2') ? (
+								<span className="btl-form-group btl-form-group--top">
+									<label className="btl-form-label">
+										{__('Exclude IP Addresses', 'betterlinks')}
+										<div className="btl-tooltip">
+											<span className="dashicons dashicons-info-outline"></span>
+											<span className="btl-tooltiptext">{__('Clicks from these IP addresses will not be counted in analytics. Remove an IP to start tracking it again.', 'betterlinks')}</span>
+										</div>
+									</label>
+									<div className="btl-form-field">
+										<IPTagInput
+											name="excluded_ips"
+											value={props.values?.excluded_ips || []}
+											setFieldValue={props.setFieldValue}
+										/>
+										<div className="short-description" style={{ marginTop: '8px' }}>
+											<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+											{__('Enter IP addresses that should be excluded from analytics tracking. Clicks from these IPs will be redirected but not recorded. Removing an IP will allow its future clicks to be tracked again.', 'betterlinks')}
+										</div>
+									</div>
+								</span>
+							) : (
+								<span className="btl-form-group btl-form-group--top btl-form-group--teaser" onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={{ cursor: !is_pro_enabled ? 'pointer' : 'default' }}>
+									<label className="btl-form-label">
+										{__('Exclude IP Addresses', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+										<div className="btl-tooltip">
+											<span className="dashicons dashicons-info-outline"></span>
+											<span className="btl-tooltiptext">{__('Clicks from these IP addresses will not be counted in analytics. Remove an IP to start tracking it again.', 'betterlinks')}</span>
+										</div>
+									</label>
+									<div className="btl-form-field" style={{ pointerEvents: 'none' }}>
+										<IPTagInput
+											name="excluded_ips"
+											value={[]}
+											setFieldValue={() => {}}
+											disabled={true}
+										/>
+										<div className="short-description" style={{ marginTop: '8px' }}>
+											<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+											{!is_pro_enabled 
+												? __('This is a Pro feature. Upgrade to BetterLinks Pro to exclude specific IP addresses from analytics tracking.', 'betterlinks')
+												: __('Please update BetterLinks Pro to version 2.6.2 or later to use this feature.', 'betterlinks')
+											}
+										</div>
+									</div>
+								</span>
+							)}
+
 							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">

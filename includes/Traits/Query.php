@@ -301,6 +301,7 @@ trait Query {
 		$options                                   = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME ), true );
 		$formattedArray['is_case_sensitive']       = isset( $options['is_case_sensitive'] ) ? $options['is_case_sensitive'] : false;
 		$formattedArray['is_disable_analytics_ip'] = isset( $options['is_disable_analytics_ip'] ) ? $options['is_disable_analytics_ip'] : false;
+		$formattedArray['excluded_ips']            = isset( $options['excluded_ips'] ) ? $options['excluded_ips'] : array();
 		$is_links_case_sensitive                   = $formattedArray['is_case_sensitive'];
 		if ( ! empty( $options ) ) {
 			$formattedArray['wildcards_is_active']         = isset( $options['wildcards'] ) ? $options['wildcards'] : false;
@@ -698,9 +699,21 @@ trait Query {
 
 	public static function get_clicks_count($from = '', $to = '') {
 		global $wpdb;
+		
+		// Get excluded IPs
+		$options      = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME ), true );
+		$excluded_ips = isset( $options['excluded_ips'] ) && is_array( $options['excluded_ips'] ) ? $options['excluded_ips'] : array();
+		$excluded_ips_condition = '';
+		if ( ! empty( $excluded_ips ) ) {
+			$placeholders = implode( ', ', array_fill( 0, count( $excluded_ips ), '%s' ) );
+			$excluded_ips_condition = $wpdb->prepare( " AND ip NOT IN ({$placeholders})", $excluded_ips );
+		}
+		
 		$where = '';
 		if( '' !== $from && '' !== $to ){
-			$where = "WHERE created_at BETWEEN '$from 00:00:00' AND '$to 23:59:59'";
+			$where = "WHERE created_at BETWEEN '$from 00:00:00' AND '$to 23:59:59'" . $excluded_ips_condition;
+		} elseif ( ! empty( $excluded_ips_condition ) ) {
+			$where = "WHERE 1=1" . $excluded_ips_condition;
 		}
 
 		$query        = "SELECT link_id, count(id) as total_clicks from {$wpdb->prefix}betterlinks_clicks {$where} group by link_id";
@@ -773,6 +786,16 @@ trait Query {
 		$prefix                            = $wpdb->prefix;
 		$is_extra_data_tracking_compatible = apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false );
 		$extra_data_tracking_columns       = $is_extra_data_tracking_compatible ? 'CLICKS.os, CLICKS.device, CLICKS.brand_name, ' : '';
+		
+		// Get excluded IPs
+		$options      = json_decode( get_option( BETTERLINKS_LINKS_OPTION_NAME ), true );
+		$excluded_ips = isset( $options['excluded_ips'] ) && is_array( $options['excluded_ips'] ) ? $options['excluded_ips'] : array();
+		$excluded_ips_condition = '';
+		if ( ! empty( $excluded_ips ) ) {
+			$placeholders = implode( ', ', array_fill( 0, count( $excluded_ips ), '%s' ) );
+			$excluded_ips_condition = $wpdb->prepare( " AND CLICKS.ip NOT IN ({$placeholders})", $excluded_ips );
+		}
+		
 		$query                             = $wpdb->prepare(
 			"SELECT 
                 CLICKS.ID AS click_ID, 
@@ -790,7 +813,7 @@ trait Query {
                 {$prefix}betterlinks_clicks AS CLICKS 
                 LEFT JOIN {$prefix}betterlinks ON {$prefix}betterlinks.id = CLICKS.link_id 
             WHERE 
-                CLICKS.created_at BETWEEN %s AND %s 
+                CLICKS.created_at BETWEEN %s AND %s {$excluded_ips_condition}
             GROUP BY 
                 CLICKS.id 
             ORDER BY 

@@ -37,11 +37,13 @@ class Helper {
 					'is_autolink_headings'        => isset( $options['is_autolink_headings'] ) ? $options['is_autolink_headings'] : false,
 					'uncloaked_categories'        => isset( $options['uncloaked_categories'] ) ? $options['uncloaked_categories'] : array(),
 					'is_disable_analytics_ip'     => isset( $options['is_disable_analytics_ip'] ) ? $options['is_disable_analytics_ip'] : false,
+					'excluded_ips'                => isset( $options['excluded_ips'] ) ? $options['excluded_ips'] : array(),
 				)
 				: array(
 					'wildcards_is_active' => false,
 					'disablebotclicks'    => false,
 					'force_https'         => false,
+					'excluded_ips'        => array(),
 				);
 	}
 
