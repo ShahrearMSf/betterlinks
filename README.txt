@@ -163,6 +163,12 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
+= 2.4.5 - 10/02/2026 =
+
+- Improvement: Added proper handling for root relative target URLs beginning with a forward slash ("/")
+- Fixed: Link management issue Gutenberg editor 
+- Few minor bug fixes & improvements
+
 = 2.4.4 - 02/02/2026 =
 
 - Fixed: Missing Prefix issue in default general settings
