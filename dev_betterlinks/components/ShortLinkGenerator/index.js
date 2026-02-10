@@ -457,7 +457,7 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                                             value={selectedPostType}
                                             onChange={setSelectedPostType}
                                             options={postTypeOptions}
-                                            placeholder={__('Select post type...', 'betterlinks')}
+                                            placeholder={isLoading ? __('Post type Loading...', 'betterlinks') : __('Select post type...', 'betterlinks')}
                                             isLoading={isLoading}
                                             isClearable={false}
                                         />
@@ -699,12 +699,7 @@ const ShortLinkGenerator = ({ settings, fetch_links_data }) => {
                             onClick={handleGenerate}
                             disabled={!selectedPostType || isLoading || generationInProgress || postCount === 0 || !isProVersionValid}
                         >
-                            {isLoading || generationInProgress ? (
-                                <>
-                                    <span className="btl-spinner"></span>
-                                    {__('Loading...', 'betterlinks')}
-                                </>
-                            ) : !isProVersionValid ? (
+                            {!isProVersionValid ? (
                                 <>
                                     {__('Requires BetterLinks Pro v2.5.0+', 'betterlinks')}
                                 </>
