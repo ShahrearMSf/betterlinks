@@ -25,6 +25,7 @@ const TabsTools = ({ query }) => {
 					console.log(error);
 				}
 			);
+			console.log('import called')
 		}
 	}, []);
 
