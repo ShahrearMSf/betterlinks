@@ -218,32 +218,68 @@ trait Clicks {
 		// Check if extra data tracking (including country data) is enabled
 		$is_extra_data_tracking_compatible = apply_filters( 'betterlinks/is_extra_data_tracking_compatible', false );
 		
+		// Check if user_agents table exists
+		$user_agents_table = $wpdb->prefix . 'betterlinks_user_agents';
+		$user_agents_table_exists = $wpdb->get_var( 
+			$wpdb->prepare( 
+				"SHOW TABLES LIKE %s", 
+				$user_agents_table 
+			)
+		);
+		
 		if ( $is_extra_data_tracking_compatible ) {
 			// Use normalized schema with JOIN to countries table (Pro version)
-			$query = $wpdb->prepare(
-				"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at,
-				 co.country_code, co.country_name
-				 FROM {$clicks_table} c
-				 LEFT JOIN {$countries_table} co ON c.country_id = co.id
-				 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s {$excluded_ips_condition}
-				 ORDER BY c.created_at DESC",
-				$id,
-				$from . ' 00:00:00',
-				$to . ' 23:59:59'
-			);
+			if ( $user_agents_table_exists ) {
+				$query = $wpdb->prepare(
+					"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at,
+					 co.country_code, co.country_name, ua.user_agent
+					 FROM {$clicks_table} c
+					 LEFT JOIN {$countries_table} co ON c.country_id = co.id
+					 LEFT JOIN {$user_agents_table} ua ON c.user_agent_id = ua.id
+					 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s {$excluded_ips_condition}
+					 ORDER BY c.created_at DESC",
+					$id,
+					$from . ' 00:00:00',
+					$to . ' 23:59:59'
+				);
+			} else {
+				$query = $wpdb->prepare(
+					"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.os, c.device, c.query_params, c.created_at,
+					 co.country_code, co.country_name, NULL as user_agent
+					 FROM {$clicks_table} c
+					 LEFT JOIN {$countries_table} co ON c.country_id = co.id
+					 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s {$excluded_ips_condition}
+					 ORDER BY c.created_at DESC",
+					$id,
+					$from . ' 00:00:00',
+					$to . ' 23:59:59'
+				);
+			}
 		} else {
 			// Basic query without country data (Free version)
-			$query = $wpdb->prepare(
-				"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.created_at
-				 FROM {$clicks_table} c
-				 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s {$excluded_ips_condition}
-				 ORDER BY c.created_at DESC",
-				$id,
-				$from . ' 00:00:00',
-				$to . ' 23:59:59'
-			);
+			if ( $user_agents_table_exists ) {
+				$query = $wpdb->prepare(
+					"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.created_at, ua.user_agent
+					 FROM {$clicks_table} c
+					 LEFT JOIN {$user_agents_table} ua ON c.user_agent_id = ua.id
+					 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s {$excluded_ips_condition}
+					 ORDER BY c.created_at DESC",
+					$id,
+					$from . ' 00:00:00',
+					$to . ' 23:59:59'
+				);
+			} else {
+				$query = $wpdb->prepare(
+					"SELECT c.ID, c.link_id, c.ip, c.browser, c.referer, c.created_at, NULL as user_agent
+					 FROM {$clicks_table} c
+					 WHERE c.link_id=%d AND c.created_at BETWEEN %s AND %s {$excluded_ips_condition}
+					 ORDER BY c.created_at DESC",
+					$id,
+					$from . ' 00:00:00',
+					$to . ' 23:59:59'
+				);
+			}
 		}
-
 		$results = $wpdb->get_results( $query, ARRAY_A );
 
 		// Ensure we always return an array, even if empty
@@ -253,9 +289,7 @@ trait Clicks {
 
 		set_transient( $transient_key, $results, self::$transient_timeout );
 		return $results;
-	}
-
-	/**
+	}	/**
 	 * Returns individual link details
 	 *
 	 * @param int|string $id link id.

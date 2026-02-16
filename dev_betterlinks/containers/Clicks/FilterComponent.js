@@ -26,6 +26,14 @@ const FilterComponent = (props) => {
 			),
 			value: 'country_name',
 		},
+		{
+			label: (
+				<div>
+					{__('User Agent', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+				</div>
+			),
+			value: 'user_agent',
+		},
 		{ label: __('Timestamp', 'betterlinks'), value: 'created_at' },
 		{ label: __('Referer', 'betterlinks'), value: 'referer' },
 		{

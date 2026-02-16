@@ -517,6 +517,64 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 								</span>
 							)}
 
+							{/* User Agent Tracking - Pro Feature with version check */}
+							{is_pro_enabled && pro_version_check('2.6.2') ? (
+								<span className="btl-form-group">
+									<label className="btl-form-label">{__('User Agent', 'betterlinks')}</label>
+									<div className="link-options__body">
+										<label className="btl-checkbox-field block">
+											<Field
+												className="btl-check"
+												name="enable_user_agent_tracking"
+												type="checkbox"
+												onChange={() => props.setFieldValue('enable_user_agent_tracking', !props?.values?.enable_user_agent_tracking)}
+											/>
+											<span className="text">
+												{__('Enable User Agent Tracking', 'betterlinks')}
+												<div className="btl-tooltip">
+													<span className="dashicons dashicons-info-outline"></span>
+													<span className="btl-tooltiptext">{__("This will capture and store user agent information in analytics for detailed browser tracking", 'betterlinks')}</span>
+												</div>
+											</span>
+										</label>
+									</div>
+								</span>
+							) : (
+								<span 
+									className="btl-form-group btl-form-group--teaser" 
+									onClick={() => {
+										if (!is_pro_enabled) {
+											openUpgradeToProModal();
+										} else {
+											// Pro is enabled but version is outdated
+											toastWarning(
+												__('Please update BetterLinks Pro to version 2.6.2 or later to use the User Agent Tracking feature.', 'betterlinks'),
+												{
+													title: __('Update Required', 'betterlinks'),
+													duration: 5000,
+												}
+											);
+										}
+									}} 
+									style={{ cursor: 'pointer' }}
+								>
+									<label className="btl-form-label">
+										{__('User Agent', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+									</label>
+									<div className="link-options__body">
+										<label className="btl-checkbox-field block">
+											<input className="btl-check" name="enable_user_agent_tracking" type="checkbox" disabled={true} />
+											<span className="text">
+												{__('Enable User Agent Tracking', 'betterlinks')}
+												<div className="btl-tooltip">
+													<span className="dashicons dashicons-info-outline"></span>
+													<span className="btl-tooltiptext">{__("This will capture and store user agent information in analytics for detailed browser tracking", 'betterlinks')}</span>
+												</div>
+											</span>
+										</label>
+									</div>
+								</span>
+							)}
 							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">
