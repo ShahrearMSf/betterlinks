@@ -702,7 +702,7 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 					? __('AI-generated links have been published successfully', 'betterlinks')
 					: __('AI-generated link has been published successfully', 'betterlinks'),
 				{
-					title: __('Links Published', 'betterlinks'),
+					title: validatedLinks.length > 1 ? __('Links Published', 'betterlinks') : __('Link Published', 'betterlinks'),
 				}
 			);
 
@@ -737,7 +737,7 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 						? __('AI-generated links have been published successfully', 'betterlinks')
 						: __('AI-generated link has been published successfully', 'betterlinks'),
 					{
-						title: __('Links Published', 'betterlinks'),
+						title: links.length > 1 ? __('Links Published', 'betterlinks') : __('Link Published', 'betterlinks'),
 					}
 				);
 

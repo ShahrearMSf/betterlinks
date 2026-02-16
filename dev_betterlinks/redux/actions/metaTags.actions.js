@@ -27,9 +27,16 @@ export const add_meta_tags = (params) => async (dispatch) => {
 				type: ADD_NEW_META_TAGS,
 				payload: result.data.data,
 			});
-			toastSuccess(__('Meta tags have been updated successfully', 'betterlinks'), {
-				title: __('Meta Tags Saved', 'betterlinks'),
-			});
+			// Only show success toast if meta tags are enabled and have actual content
+			const hasMetaContent = params.meta_title || params.meta_description || params.meta_image;
+			console.log('params.status ', params.status);
+			console.log('hasMetaContent ', hasMetaContent);
+			
+			if (params.status && hasMetaContent) {
+				toastSuccess(__('Meta tags have been updated successfully', 'betterlinks'), {
+					title: __('Meta Tags Saved', 'betterlinks'),
+				});
+			}
 		}
 		fetch_meta_tags()(dispatch);
 	} catch (error) {
