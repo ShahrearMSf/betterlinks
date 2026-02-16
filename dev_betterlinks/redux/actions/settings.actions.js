@@ -2,6 +2,8 @@ import axios from 'axios';
 import { API, namespace, makeRequest } from 'utils/helper';
 import { fetch_terms_data } from './terms.actions';
 import { fetch_links_data } from './links.actions';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const FETCH_TRACKING_SETTINGS = 'FETCH_TRACKING_SETTINGS';
 export const ADD_OPTION = 'ADD_OPTION';
@@ -61,10 +63,16 @@ export const update_tracking_settings = (settings) => async (dispatch) => {
 			(response) => {
 				if (response.data?.data) {
 					fetch_tracking_settings()(dispatch);
+					toastSuccess(__('Tracking settings have been updated successfully', 'betterlinks'), {
+						title: __('Tracking Settings Saved', 'betterlinks'),
+					});
 				}
 			},
 			(error) => {
 				console.log(error);
+				toastError(__('Failed to update tracking settings', 'betterlinks'), {
+					title: __('Update Failed', 'betterlinks'),
+				});
 			}
 		);
 	} catch (error) {

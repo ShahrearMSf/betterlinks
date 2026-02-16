@@ -1,5 +1,7 @@
 import { is_pro_enabled } from 'utils/helper';
 import { ADD_NEW_PASSWORD, FETCH_LINKS_PASSWORD } from './actionstrings';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 
 export const fetch_links_password = () => async (dispatch) => {
 	if (!is_pro_enabled) return;
@@ -49,9 +51,15 @@ export const add_new_password = (data) => async (dispatch) => {
 				type: ADD_NEW_PASSWORD,
 				payload: { ...result.data.data, password: data.password },
 			});
+			toastSuccess(__('Password protection has been added to the link', 'betterlinks'), {
+				title: __('Password Added', 'betterlinks'),
+			});
 		}
 		fetch_links_password()(dispatch);
 	} catch (error) {
 		console.log('--error', error);
+		toastError(__('Failed to add password protection', 'betterlinks'), {
+			title: __('Password Failed', 'betterlinks'),
+		});
 	}
 };

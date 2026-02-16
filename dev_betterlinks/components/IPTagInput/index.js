@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
+import { useToast } from '../Toast';
 
 const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 	const [inputValue, setInputValue] = useState('');
-	const [error, setError] = useState('');
 	const inputRef = useRef(null);
+	const { error: showErrorToast } = useToast();
 
 	// Parse the initial value to ensure it's an array
 	const getIpList = () => {
@@ -43,17 +44,23 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 		const trimmedIP = ip.trim();
 		if (!trimmedIP) return;
 
-		setError('');
-
 		// Check if IP is valid
 		if (!isValidIP(trimmedIP)) {
-			setError(__('Invalid IP address: ', 'betterlinks') + trimmedIP);
+			showErrorToast(__('Invalid IP address: ', 'betterlinks') + trimmedIP, {
+				title: __('Validation Error', 'betterlinks'),
+				position: 'top-right',
+				duration: 4000,
+			});
 			return;
 		}
 
 		// Check if IP already exists
 		if (ipList.includes(trimmedIP)) {
-			setError(__('IP address already exists: ', 'betterlinks') + trimmedIP);
+			showErrorToast(__('IP address already exists: ', 'betterlinks') + trimmedIP, {
+				title: __('Duplicate Entry', 'betterlinks'),
+				position: 'top-right',
+				duration: 4000,
+			});
 			return;
 		}
 
@@ -80,9 +87,11 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 		});
 
 		if (invalidIps.length > 0) {
-			setError(__('Invalid IP address(es): ', 'betterlinks') + invalidIps.join(', '));
-		} else {
-			setError('');
+			showErrorToast(__('Invalid IP address(es): ', 'betterlinks') + invalidIps.join(', '), {
+				title: __('Validation Error', 'betterlinks'),
+				position: 'top-right',
+				duration: 5000,
+			});
 		}
 
 		setFieldValue(name, newIps);
@@ -93,7 +102,6 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 	const removeIP = (ipToRemove) => {
 		const newList = ipList.filter(ip => ip !== ipToRemove);
 		setFieldValue(name, newList);
-		setError('');
 	};
 
 	// Handle input change - check for separators
@@ -111,11 +119,6 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 		}
 		
 		setInputValue(newValue);
-		
-		// Clear error when user starts typing
-		if (error && newValue.length > inputValue.length) {
-			setError('');
-		}
 	};
 
 	// Handle key press - Enter key
@@ -180,13 +183,6 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 					/>
 				</div>
 			</div>
-			
-			{error && (
-				<div className="btl-ip-error">
-					<span className="dashicons dashicons-warning"></span>
-					{error}
-				</div>
-			)}
 
 			<div className="btl-ip-tag-hint">
 				{__('Separate multiple IPs with comma, space, or press Enter. You can also paste multiple IPs.', 'betterlinks')}

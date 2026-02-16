@@ -1,6 +1,8 @@
 import { API, makeRequest, generateShortURL, prefix } from 'utils/helper';
 import AILinkGenerator from 'components/AILinkGenerator';
 import { extractFieldLimits } from 'utils/FieldLimitsExtractor';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 
 const namespace = 'betterlinks/v1/';
 
@@ -152,6 +154,9 @@ export const update_ai_settings = (settings) => async (dispatch) => {
 				type: UPDATE_AI_SETTINGS,
 				payload: res.data.data,
 			});
+			toastSuccess(__('AI settings have been updated successfully', 'betterlinks'), {
+				title: __('AI Settings Saved', 'betterlinks'),
+			});
 			return res.data;
 		} else {
 			throw new Error('Invalid response from server');
@@ -169,12 +174,18 @@ export const update_ai_settings = (settings) => async (dispatch) => {
 					type: UPDATE_AI_SETTINGS,
 					payload: response.data,
 				});
+				toastSuccess(__('AI settings have been updated successfully', 'betterlinks'), {
+					title: __('AI Settings Saved', 'betterlinks'),
+				});
 				return response.data;
 			} else {
 				throw new Error('Failed to update AI settings via fallback method');
 			}
 		} catch (fallbackError) {
 			console.error('Fallback request also failed:', fallbackError);
+			toastError(__('Failed to update AI settings', 'betterlinks'), {
+				title: __('Settings Failed', 'betterlinks'),
+			});
 			throw fallbackError;
 		}
 	}
@@ -686,6 +697,15 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 			const { fetch_terms_data } = await import('./terms.actions');
 			dispatch(fetch_terms_data());
 
+			toastSuccess(
+				validatedLinks.length > 1
+					? __('AI-generated links have been published successfully', 'betterlinks')
+					: __('AI-generated link has been published successfully', 'betterlinks'),
+				{
+					title: __('Links Published', 'betterlinks'),
+				}
+			);
+
 			return res.data;
 		} else {
 			// If the response doesn't have the expected structure, throw an error
@@ -712,6 +732,15 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 				const { fetch_terms_data } = await import('./terms.actions');
 				dispatch(fetch_terms_data());
 
+				toastSuccess(
+					links.length > 1
+						? __('AI-generated links have been published successfully', 'betterlinks')
+						: __('AI-generated link has been published successfully', 'betterlinks'),
+					{
+						title: __('Links Published', 'betterlinks'),
+					}
+				);
+
 				// Return the response data to match the success path
 				return response.data;
 			} else {
@@ -720,6 +749,9 @@ export const publish_ai_generated_links = (links) => async (dispatch) => {
 			}
 		} catch (fallbackError) {
 			console.error('Fallback request also failed:', fallbackError);
+			toastError(__('Failed to publish AI-generated links', 'betterlinks'), {
+				title: __('Publish Failed', 'betterlinks'),
+			});
 			// Re-throw the error so the component can handle it
 			throw fallbackError;
 		}

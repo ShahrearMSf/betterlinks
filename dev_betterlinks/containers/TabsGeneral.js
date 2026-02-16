@@ -16,6 +16,7 @@ import { redirectType, urlGenerationTypes } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
 import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler, pro_version_check } from 'utils/helper';
 import ProBadge from 'components/Badge/ProBadge';
+import { toastWarning } from 'components/Toast';
 const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
@@ -464,7 +465,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										{__('Exclude IP Addresses', 'betterlinks')}
 										<div className="btl-tooltip">
 											<span className="dashicons dashicons-info-outline"></span>
-											<span className="btl-tooltiptext">{__('Clicks from these IP addresses will not be counted in analytics. Remove an IP to start tracking it again.', 'betterlinks')}</span>
+											<span className="btl-tooltiptext">{__('Exclude specific IP addresses from analytics tracking. Useful for filtering internal/specific traffic or bot activity', 'betterlinks')}</span>
 										</div>
 									</label>
 									<div className="btl-form-field">
@@ -475,12 +476,29 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										/>
 										<div className="short-description" style={{ marginTop: '8px' }}>
 											<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-											{__('Enter IP addresses that should be excluded from analytics tracking. Clicks from these IPs will be redirected but not recorded. Removing an IP will allow its future clicks to be tracked again.', 'betterlinks')}
+											{__("Excluded IPs will redirect normally but won't be visible in analytics. Remove an IP to make it visible again.", 'betterlinks')}
 										</div>
 									</div>
 								</span>
 							) : (
-								<span className="btl-form-group btl-form-group--top btl-form-group--teaser" onClick={!is_pro_enabled ? openUpgradeToProModal : undefined} style={{ cursor: !is_pro_enabled ? 'pointer' : 'default' }}>
+								<span 
+									className="btl-form-group btl-form-group--top btl-form-group--teaser" 
+									onClick={() => {
+										if (!is_pro_enabled) {
+											openUpgradeToProModal();
+										} else {
+											// Pro is enabled but version is outdated
+											toastWarning(
+												__('Please update BetterLinks Pro to version 2.6.2 or later to use the IP Exclusion feature.', 'betterlinks'),
+												{
+													title: __('Update Required', 'betterlinks'),
+													duration: 5000,
+												}
+											);
+										}
+									}} 
+									style={{ cursor: 'pointer' }}
+								>
 									<label className="btl-form-label">
 										{__('Exclude IP Addresses', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
 										<div className="btl-tooltip">
@@ -495,13 +513,6 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 											setFieldValue={() => {}}
 											disabled={true}
 										/>
-										<div className="short-description" style={{ marginTop: '8px' }}>
-											<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
-											{!is_pro_enabled 
-												? __('This is a Pro feature. Upgrade to BetterLinks Pro to exclude specific IP addresses from analytics tracking.', 'betterlinks')
-												: __('Please update BetterLinks Pro to version 2.6.2 or later to use this feature.', 'betterlinks')
-											}
-										</div>
 									</div>
 								</span>
 							)}

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import ProBadge from 'components/Badge/ProBadge';
 import { is_pro_enabled, pro_version_check } from 'utils/helper';
 import Select from 'react-select';
+import { toastWarning } from 'components/Toast';
 
 const FilterComponent = (props) => {
 	const { filterText, onFilter, searchClickHandler, searchStatus, isSearching, resetSearch, analytics, update_analytics_settings, id, selectedRows, bulkAction, setBulkAction, rowDeleteHandler, warning } = props;
@@ -78,10 +79,20 @@ const FilterComponent = (props) => {
 								<button
 									className="btl-link-apply-button"
 									onClick={() => {
+										// Check if fetch_country action requires Pro update
+										if (bulkAction?.value === 'fetch_country' && is_pro_enabled && !pro_version_check('2.5.0')) {
+											toastWarning(
+												__('Please update BetterLinks Pro to version 2.5.0 or later to use the Fetch Country feature.', 'betterlinks'),
+												{
+													title: __('Update Required', 'betterlinks'),
+													duration: 5000,
+												}
+											);
+											return;
+										}
 										rowDeleteHandler();
 									}}
 									disabled={bulkAction?.value === 'fetch_country' && (!is_pro_enabled || !pro_version_check('2.5.0'))}
-									title={bulkAction?.value === 'fetch_country' && (!pro_version_check('2.5.0')) ? __('Please update BetterLinks Pro to v2.5.0 or newer', 'betterlinks') : ''}
 								>
 									{__('Apply', 'betterlinks')}
 								</button>

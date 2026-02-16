@@ -2,6 +2,8 @@ import axios from 'axios';
 import queryString from 'query-string';
 import { API, namespace, betterlinks_nonce } from 'utils/helper';
 import { UPDATE_LINKS_ANALYTICS } from './links.actions';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 export const FETCH_CLICKS_DATA = 'FETCH_CLICKS_DATA';
 export const FETCH_INDIVIDUAL_CLICKS = 'FETCH_INDIVIDUAL_CLICKS';
 export const FETCH_GRAPH_DATA = 'FETCH_GRAPH_DATA';
@@ -283,6 +285,15 @@ export const delete_clicks = (params) => async (dispatch) => {
 				},
 			});
 
+			toastSuccess(
+				click_ids.length > 1
+					? __('Click records have been deleted successfully', 'betterlinks')
+					: __('Click record has been deleted successfully', 'betterlinks'),
+				{
+					title: click_ids.length > 1 ? __('Clicks Deleted', 'betterlinks') : __('Click Deleted', 'betterlinks'),
+				}
+			);
+
 			// Also refresh the main analytics graphs and data
 			if (from && to) {
 				dispatch(get_chart_data({ from, to }));
@@ -293,6 +304,9 @@ export const delete_clicks = (params) => async (dispatch) => {
 		}
 	} catch (error) {
 		console.log('error deleting clicks: ' + error.message);
+		toastError(__('Failed to delete click records', 'betterlinks'), {
+			title: __('Delete Failed', 'betterlinks'),
+		});
 	}
 };
 
@@ -332,6 +346,15 @@ export const delete_links_analytics = (params) => async (dispatch) => {
 				});
 			}
 
+			toastSuccess(
+				link_ids.length > 1
+					? __('Analytics data for selected links has been deleted', 'betterlinks')
+					: __('Analytics data for the link has been deleted', 'betterlinks'),
+				{
+					title: __('Analytics Deleted', 'betterlinks'),
+				}
+			);
+
 			// Also refresh the main analytics graphs and data
 			if (from && to) {
 				dispatch(get_chart_data({ from, to }));
@@ -342,6 +365,9 @@ export const delete_links_analytics = (params) => async (dispatch) => {
 		}
 	} catch (error) {
 		console.log('error deleting links analytics: ' + error.message);
+		toastError(__('Failed to delete analytics data', 'betterlinks'), {
+			title: __('Delete Failed', 'betterlinks'),
+		});
 	}
 };
 

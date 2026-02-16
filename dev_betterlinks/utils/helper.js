@@ -6,6 +6,7 @@ import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
 import { Badge, Tooltip } from '@material-ui/core';
 import { useState } from 'react';
+import { toastSuccess, toastError, toastWarning, toastInfo } from 'components/Toast';
 
 export const {
 	betterlinks_nonce,
@@ -453,12 +454,22 @@ export const modalCustomSmallStyles = {
 
 export const copyToClipboard = (copyText) => {
 	clipboardCopy(copyText);
+	toastSuccess(__('Copied to clipboard!', 'betterlinks'), {
+		title: __('Link Copied', 'betterlinks'),
+		position: 'top-right',
+		duration: 2000,
+	});
 	return;
 };
 
 export const copyShortUrl = (shortUrl) => {
 	const URL = makeShortUrl(shortUrl);
-	copyToClipboard(URL);
+	clipboardCopy(URL);
+	toastSuccess(__('Short link copied to clipboard!', 'betterlinks'), {
+		title: __('Link Copied', 'betterlinks'),
+		position: 'top-right',
+		duration: 2000,
+	});
 	return URL;
 };
 
@@ -894,6 +905,13 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	}
 	update_option(values);
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
+	
+	// Show toast notification
+	toastSuccess(__('Your settings have been saved successfully.', 'betterlinks'), {
+		title: __('Settings Saved', 'betterlinks'),
+		position: 'top-right',
+		duration: 3000,
+	});
 };
 
 export const getDataset = (data, uniqueIpCount) => {

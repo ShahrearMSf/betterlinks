@@ -562,7 +562,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 										</span>
 									</div>
 								</div>
-								<button className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}>
+								<button type="button" className="button-primary btn-save-settings" onClick={openCreateModal} style={{ cursor: is_pro_enabled ? 'pointer' : 'not-allowed' }}>
 									<img style={{ marginRight: '8px' }} src={plugin_root_url + 'assets/images/add-icon.svg'} alt="Add icon" />
 									{__('Create New Template', 'betterlinks')}
 								</button>
@@ -782,6 +782,7 @@ const UTMBuilderGlobalSettings = ({ settings, update_option, fetch_links_data })
 											{__('Create your first UTM template to auto-apply parameters to links by category and track campaign performance.', 'betterlinks')}
 										</p>
 										<button
+											type="button"
 											className="btl-utm-empty-cta"
 											onClick={openCreateModal}
 										>

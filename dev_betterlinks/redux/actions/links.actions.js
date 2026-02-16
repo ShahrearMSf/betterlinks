@@ -1,4 +1,6 @@
 import { API, namespace, makeRequest, getJsonString } from 'utils/helper';
+import { toastSuccess, toastError, toastWarning, toastInfo } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 import { EDIT_GUTENBERG_LINK, EDIT_LINK_EXPIRE_OPTION, ADD_TERM, UPDATE_TERM, DELETE_TERM } from 'redux/actions/actionstrings';
 import { add_new_password, fetch_links_password } from './password.actions';
 import { edit_gutenberg_auto_link } from './gutenbergredirectlink.actions';
@@ -97,6 +99,11 @@ export const add_new_cat = (data) => async (dispatch) => {
 				type: ADD_NEW_CAT,
 				payload: res.data,
 			});
+			toastSuccess(__('Category has been created successfully.', 'betterlinks'), {
+				title: __('Category Created', 'betterlinks'),
+				position: 'top-right',
+				duration: 3000,
+			});
 		}
 	} catch (e) {
 		makeRequest({
@@ -114,6 +121,11 @@ export const add_new_cat = (data) => async (dispatch) => {
 				dispatch({
 					type: ADD_NEW_CAT,
 					payload: res.data,
+				});
+				toastSuccess(__('Category has been created successfully.', 'betterlinks'), {
+					title: __('Category Created', 'betterlinks'),
+					position: 'top-right',
+					duration: 3000,
 				});
 			}
 		});
@@ -133,6 +145,11 @@ export const update_cat = (params) => async (dispatch) => {
 			type: UPDATE_TERM,
 			payload: res.data?.data,
 		});
+		toastSuccess(__('Category has been updated successfully.', 'betterlinks'), {
+			title: __('Category Updated', 'betterlinks'),
+			position: 'top-right',
+			duration: 3000,
+		});
 	} catch (e) {
 		makeRequest({
 			action: 'betterlinks/admin/update_term',
@@ -148,7 +165,12 @@ export const update_cat = (params) => async (dispatch) => {
 				});
 				dispatch({
 					type: UPDATE_TERM,
-					payload: res.data?.data,
+					payload: response.data?.data,
+				});
+				toastSuccess(__('Category has been updated successfully.', 'betterlinks'), {
+					title: __('Category Updated', 'betterlinks'),
+					position: 'top-right',
+					duration: 3000,
 				});
 			}
 		});
@@ -171,11 +193,18 @@ export const delete_cat = (params) => async (dispatch) => {
 				type: DELETE_TERM,
 				payload: res.data?.data,
 			});
+			toastSuccess(__('Category has been deleted successfully.', 'betterlinks'), {
+				title: __('Category Deleted', 'betterlinks'),
+				position: 'top-right',
+				duration: 3000,
+			});
 		} else {
 			// Handle API error response (e.g., trying to delete default category)
-			//console.error('Failed to delete category:', res.data.data?.message || 'Unknown error');
-			// You could also dispatch an error action here if needed
-			// dispatch({ type: 'DELETE_CAT_ERROR', payload: res.data });
+			toastError(res.data.data?.message || __('Failed to delete category.', 'betterlinks'), {
+				title: __('Delete Failed', 'betterlinks'),
+				position: 'top-right',
+				duration: 4000,
+			});
 		}
 	} catch (e) {
 		makeRequest({
@@ -190,6 +219,11 @@ export const delete_cat = (params) => async (dispatch) => {
 				dispatch({
 					type: DELETE_TERM,
 					payload: res.data?.data,
+				});
+				toastSuccess(__('Category has been deleted successfully.', 'betterlinks'), {
+					title: __('Category Deleted', 'betterlinks'),
+					position: 'top-right',
+					duration: 3000,
 				});
 			}
 		});
@@ -269,9 +303,19 @@ export const add_new_link =
 										: {},
 						});
 					}
+					toastSuccess(__('Your link has been created successfully.', 'betterlinks'), {
+						title: __('Link Created', 'betterlinks'),
+						position: 'top-right',
+						duration: 3000,
+					});
 				}
 				return res;
 			} catch (e) {
+				toastError(__('Failed to create link. Please try again.', 'betterlinks'), {
+					title: __('Link Creation Failed', 'betterlinks'),
+					position: 'top-right',
+					duration: 4000,
+				});
 				return makeRequest({
 					action: 'betterlinks/admin/create_link',
 					...formData,
@@ -393,8 +437,18 @@ export const edit_link =
 				});
 				edit_gutenberg_auto_link({ link_update: null });
 				!forGutenbergStore && fetch_links_password()(dispatch);
+				toastSuccess(__('Your link has been updated successfully.', 'betterlinks'), {
+					title: __('Link Updated', 'betterlinks'),
+					position: 'top-right',
+					duration: 3000,
+				});
 				return res;
 			} catch (e) {
+				toastError(__('Failed to update link. Please try again.', 'betterlinks'), {
+					title: __('Link Update Failed', 'betterlinks'),
+					position: 'top-right',
+					duration: 4000,
+				});
 				return makeRequest({
 					action: 'betterlinks/admin/update_link',
 					...item,
@@ -441,6 +495,11 @@ export const edit_link =
 							payload: response.data.data,
 						});
 						fetch_links_password()(dispatch);
+						toastSuccess(__('Your link has been updated successfully.', 'betterlinks'), {
+							title: __('Link Updated', 'betterlinks'),
+							position: 'top-right',
+							duration: 3000,
+						});
 					}
 				});
 			}
@@ -454,6 +513,20 @@ export const handle_link_favorite = (item) => async (dispatch) => {
 			type: HANDLE_LINK_FAVORITE,
 			payload: res?.data?.data || {},
 		});
+		const isFavorite = res?.data?.data?.is_favorite;
+		if (isFavorite === '1' || isFavorite === 1) {
+			toastSuccess(__('Link added to favorites.', 'betterlinks'), {
+				title: __('Favorite Added', 'betterlinks'),
+				position: 'top-right',
+				duration: 2000,
+			});
+		} else {
+			toastInfo(__('Link removed from favorites.', 'betterlinks'), {
+				title: __('Favorite Removed', 'betterlinks'),
+				position: 'top-right',
+				duration: 2000,
+			});
+		}
 	} catch (e) {
 		makeRequest({
 			action: 'betterlinks/admin/handle_favorite',
@@ -463,6 +536,20 @@ export const handle_link_favorite = (item) => async (dispatch) => {
 				type: HANDLE_LINK_FAVORITE,
 				payload: res?.data?.data || {},
 			});
+			const isFavorite = res?.data?.data?.is_favorite;
+			if (isFavorite === '1' || isFavorite === 1) {
+				toastSuccess(__('Link added to favorites.', 'betterlinks'), {
+					title: __('Favorite Added', 'betterlinks'),
+					position: 'top-right',
+					duration: 2000,
+				});
+			} else {
+				toastInfo(__('Link removed from favorites.', 'betterlinks'), {
+					title: __('Favorite Removed', 'betterlinks'),
+					position: 'top-right',
+					duration: 2000,
+				});
+			}
 		});
 	}
 };
@@ -474,6 +561,7 @@ export const delete_link = (params) => async (dispatch) => {
 	} else {
 		data = [params];
 	}
+	const linkCount = data.length;
 	data.map((item) => {
 		const { ID, short_url, term_id } = item;
 		makeRequest({
@@ -487,6 +575,14 @@ export const delete_link = (params) => async (dispatch) => {
 					type: DELETE_LINK,
 					payload: response.data,
 				});
+				toastSuccess(
+					linkCount > 1
+						? __('Links have been deleted successfully', 'betterlinks')
+						: __('Link has been deleted successfully', 'betterlinks'),
+					{
+						title: linkCount > 1 ? __('Links Deleted', 'betterlinks') : __('Link Deleted', 'betterlinks'),
+					}
+				);
 			}
 		});
 	});
@@ -499,6 +595,7 @@ export const bulk_assign_category = (params) => async (dispatch) => {
 	} else {
 		data = [params];
 	}
+	const linkCount = data.length;
 
 	// Update all links
 	const updatePromises = data.map((item) => {
@@ -512,6 +609,14 @@ export const bulk_assign_category = (params) => async (dispatch) => {
 
 	// Wait for all updates to complete, then fetch fresh data
 	Promise.all(updatePromises).then(() => {
+		toastSuccess(
+			linkCount > 1
+				? __('Links have been assigned to category successfully', 'betterlinks')
+				: __('Link has been assigned to category successfully', 'betterlinks'),
+			{
+				title: __('Category Assigned', 'betterlinks'),
+			}
+		);
 		// Fetch fresh links data after all updates are done
 		try {
 			API.get(namespace + 'links', {
