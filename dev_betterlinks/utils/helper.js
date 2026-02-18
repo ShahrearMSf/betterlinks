@@ -932,10 +932,6 @@ export const getDataset = (data, uniqueIpCount) => {
 	return dataset;
 };
 
-const getDevice = (device) => {
-	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
-	return device;
-};
 export const sortFunction = (title) => (rowA, rowB) => {
 	if (['total_clicks', 'unique_clicks'].includes(title)) {
 		if (+rowA[title] > +rowB[title]) return 1;
@@ -1748,4 +1744,9 @@ export const removeDuplicateUrls = (urlsText) => {
 		duplicatesRemoved,
 		originalCount
 	};
+};
+
+export const getDevice = (device) => {
+	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
+	return device;
 };

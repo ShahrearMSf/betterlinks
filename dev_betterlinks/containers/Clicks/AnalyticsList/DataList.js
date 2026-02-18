@@ -6,26 +6,169 @@ import FilterComponent from '../FilterComponent';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetch_analytics_settings, update_analytics_settings } from 'redux/actions/analytics.actions';
-import { betterlinks_nonce, formatDate, paginationPerPageCount, bulkFetchCountry } from 'utils/helper';
+import { betterlinks_nonce, formatDate, paginationPerPageCount, bulkFetchCountry, getColumns, getBrowser, getDevice } from 'utils/helper';
 import { fetch_clicks_data, searchClicksData, delete_clicks, delete_links_analytics, update_clicks_with_country, fetch_individual_clicks } from 'redux/actions/clicks.actions';
 import { getData } from '../clicks.helper';
+import DemoTable from 'components/CustomTable/DemoTable';
+import ResizableTable from 'components/CustomTable/ResizableTable';
 
 const DataList = (props) => {
-	const { columns, data, progressPending, id = null, from = null, customDateFilter } = props;
-	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	const [searchStatus, setSearchStatus] = useState(false);
-	const [isSearching, setSearching] = useState(false);
-	const [filterText, setFilterText] = useState('');
-	const [selectedRows, setSelectedRows] = useState([]);
-	const [bulkAction, setBulkAction] = useState({});
-	const [toggledClearRows, setToggledClearRows] = useState(false);
-	const [warning, setWarning] = useState(false);
-	const { analyticsTab } = props.activity;
-	const { analytics } = props.analytics;
+// Helpers for icon rendering in details view
+const getBrowserIcon = (browser) => {
+	if (!browser) return null;
+	// normalize to filename using helper
+	const fileName = getBrowser(browser || '');
+	const title = typeof browser === 'string' && browser.length ? browser : (fileName || 'Browser');
+	return <img width="25" src={`${window.betterLinksGlobal.plugin_root_url}assets/images/browser/${fileName}-browser.svg`} alt="icon" title={title} />;
+};
+const getDeviceIcon = (device) => {
+	if (!device) return null;
+	const fileName = getDevice(device || '');
+	const title = typeof device === 'string' && device.length ? device : (fileName || 'Device');
+	return <img width="25" src={`${window.betterLinksGlobal.plugin_root_url}assets/images/devices/${fileName}.svg`} alt="icon" title={title} />;
+};
+
+const { columns, data, progressPending, id = null, from = null, customDateFilter } = props;
+const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+const [searchStatus, setSearchStatus] = useState(false);
+const [isSearching, setSearching] = useState(false);
+const [filterText, setFilterText] = useState('');
+const [selectedRows, setSelectedRows] = useState([]);
+const [bulkAction, setBulkAction] = useState({});
+const [toggledClearRows, setToggledClearRows] = useState(false);
+const [warning, setWarning] = useState(false);
+const { analyticsTab } = props.activity;
+const { analytics } = props.analytics;
+// Dynamic columns and data mapping based on view mode
+let adaptedColumns, adaptedData, customCellRender;
+
+if (!id) {
+	// Link List View
+	adaptedColumns = [
+		{ key: 'name', label: __('Link Name', 'betterlinks'), sortable: true },
+		{ key: 'short_url', label: __('Shortened URL', 'betterlinks') },
+		{ key: 'target_url', label: __('Target URL', 'betterlinks') },
+		{ key: 'total_clicks', label: __('Total Clicks', 'betterlinks') },
+		{ key: 'unique_clicks', label: __('Unique Clicks', 'betterlinks') },
+		{ key: 'action', label: __('Action', 'betterlinks'), sortable: false },
+	];
+	adaptedData = getData(data, analyticsTab, filterText, id, from).map(row => ({
+		...row,
+		name: row.link_title || row.name || '',
+		action: 'Details',
+	}));
+		customCellRender = {
+			action: (row) => (
+				<a
+					href={`admin.php?page=betterlinks-analytics&id=${row.link_id}`}
+					style={{ color: '#0073aa', textDecoration: 'underline', cursor: 'pointer' }}
+				>
+					Details
+				</a>
+			),
+			short_url: (row) => (
+				<a href={row.short_url.startsWith('http') ? row.short_url : `https://${row.short_url}`} target="_blank" rel="noopener noreferrer">{row.short_url}</a>
+			),
+			target_url: (row) => (
+				<a href={row.target_url} target="_blank" rel="noopener noreferrer">{row.target_url}</a>
+			),
+		};
+} else {
+	// Single Link Details View
+	// Define the order with 'user_agent' after 'browser'
+	const allColumns = [
+		{ key: 'browser', label: __('Browser', 'betterlinks'), sortable: false },
+		{ key: 'ip', label: __('IP', 'betterlinks') },
+		{ key: 'country_name', label: __('Country', 'betterlinks') },
+		{ key: 'user_agent', label: __('User-Agent', 'betterlinks') },
+		{ key: 'created_at', label: __('Timestamp', 'betterlinks') },
+		{ key: 'referer', label: __('Referrer', 'betterlinks') },
+		{ key: 'query_params', label: __('Parameters', 'betterlinks') },
+		{ key: 'os', label: __('OS', 'betterlinks') },
+		{ key: 'device', label: __('Device', 'betterlinks'), sortable: false },
+		{ key: 'IPCOUNT', label: __('IP Count', 'betterlinks') },
+	];
+	// Only show columns selected in analytics settings, but always use the above order
+	const analyticsArr = Array.isArray(analytics)
+		? analytics
+		: (analytics && typeof analytics === 'object')
+			? Object.values(analytics)
+			: [];
+	const visibleKeys = analyticsArr.map(a => a.value);
+	console.log('analytics:', analytics);
+	console.log('visibleKeys:', visibleKeys);
+	adaptedColumns = allColumns.filter(col => visibleKeys.includes(col.key));
+	// Fallback: if no columns selected, show all columns
+	if (!adaptedColumns.length) {
+		adaptedColumns = allColumns;
+	}
+	adaptedData = getData(data, analyticsTab, filterText, id, from).map(row => ({
+		...row,
+		ip: row.ip !== undefined && row.ip !== null ? row.ip : '',
+		browser: row.browser !== undefined && row.browser !== null ? row.browser : '',
+		referer: row.referer !== undefined && row.referer !== null ? row.referer : '',
+		os: row.os !== undefined && row.os !== null ? row.os : '',
+		device: row.device !== undefined && row.device !== null ? row.device : '',
+		query_params: row.query_params !== undefined && row.query_params !== null ? row.query_params : '',
+		created_at: row.created_at !== undefined && row.created_at !== null ? row.created_at : '',
+		country_name: row.country_name !== undefined && row.country_name !== null ? row.country_name : '',
+		country_code: row.country_code !== undefined && row.country_code !== null ? row.country_code : '',
+		user_agent: row.user_agent !== undefined && row.user_agent !== null ? row.user_agent : '',
+		IPCOUNT: row.IPCOUNT !== undefined && row.IPCOUNT !== null ? row.IPCOUNT : (row.IPCount !== undefined && row.IPCount !== null ? row.IPCount : (row.ipcount !== undefined && row.ipcount !== null ? row.ipcount : '')),
+	}));
+	const allCellRender = {
+		browser: (row) => getBrowserIcon(row.browser),
+		device: (row) => getDeviceIcon(row.device),
+		referer: (row) => (
+			<a href={row.referer} target="_blank" rel="noopener noreferrer">{row.referer}</a>
+		),
+		query_params: (row) => (
+			<span style={{ wordBreak: 'break-all' }}>{row.query_params}</span>
+		),
+		user_agent: (row) => (
+			<span style={{ wordBreak: 'break-all' }}>{row.user_agent}</span>
+		),
+		ip: (row) => (
+			<span>{row.ip}{row.IPCOUNT ? `(${row.IPCOUNT})` : ''}</span>
+		),
+		os: (row) => <span>{row.os}</span>,
+			country_name: (row) => {
+				// Reuse helper's getColumns Country cell (CountryFetchCell) so behaviour and icon remain consistent
+				const helperCols = getColumns(analytics, analyticsTab, id, handleCountryUpdated) || [];
+				const countryCol = helperCols.find(c => c.selector === 'country_name');
+				if (countryCol && typeof countryCol.cell === 'function') {
+					return countryCol.cell(row);
+				}
+				// fallback
+				return row.country_name ? <span>{row.country_name}</span> : <div>-</div>;
+			},
+		created_at: (row) => <span>{row.created_at}</span>,
+		IPCOUNT: (row) => <span>{row.IPCOUNT}</span>,
+	};
+	// Only keep cell renderers for visible columns
+	customCellRender = {};
+	adaptedColumns.forEach(col => {
+		if (allCellRender[col.key]) customCellRender[col.key] = allCellRender[col.key];
+	});
+}
+// Debug: log adapted data and columns
+console.log('ResizableTable adaptedColumns:', adaptedColumns);
+console.log('ResizableTable adaptedData:', adaptedData);
 
 	useEffect(() => {
 		if (!analytics) props.fetch_analytics_settings();
 	}, []);
+	// Called after country data is fetched (single or bulk) to refresh table data
+	const handleCountryUpdated = (updatedRows) => {
+  if (!id) return;
+  const from = (customDateFilter && customDateFilter[0]) ? formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd') : undefined;
+  const to = (customDateFilter && customDateFilter[0]) ? formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') : undefined;
+  const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');
+  const pastDate = from || formatDate(new Date(), 'yyyy-mm-dd');
+
+  // Refresh individual clicks for the current link to reflect updated country data
+  props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading: () => {} });
+};
 
 	const handleRowsSelect = (state) => {
 		setSelectedRows(state.selectedRows);
@@ -72,17 +215,6 @@ const DataList = (props) => {
 			}
 
 			// Bulk fetch country for selected rows with real-time UI update
-			const handleCountryUpdated = (updatedRows) => {
-				// Refresh individual clicks data from server to get updated country data
-				// This is the same approach as the individual fetch button
-				const from = formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd');
-				const to = formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd');
-				const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');
-				let pastDate = from || formatDate(new Date(), 'yyyy-mm-dd');
-
-				props.fetch_individual_clicks({ link_id: id, from: pastDate, to: currentDate, setLoading: () => {} });
-			};
-
 			await bulkFetchCountry(selectedRows, id, handleCountryUpdated);
 
 			setBulkAction({});
@@ -145,29 +277,26 @@ const DataList = (props) => {
 		);
 	}, [filterText, resetPaginationToggle, searchStatus, isSearching, analytics, analyticsTab, id, selectedRows.length, bulkAction, warning]);
 
-	return (
-		<DataTable
-			className="btl-analytic-table"
-			title={__('Single Clicks', 'betterlinks')}
-			columns={columns}
-			data={getData(data, analyticsTab, filterText, id, from)}
-			pagination
-			progressPending={progressPending}
-			progressComponent={<TableLoader />}
-			paginationResetDefaultPage={resetPaginationToggle}
-			subHeader
-			subHeaderComponent={subHeaderComponentMemo}
-			persistTableHead
-			defaultSortFieldId="name"
-			paginationRowsPerPageOptions={paginationPerPageCount}
-			onChangeRowsPerPage={(rpp) => localStorage.setItem('btlAnalyticsRowsPerPage', rpp)}
-			paginationPerPage={+localStorage.getItem('btlAnalyticsRowsPerPage') || 10}
-			selectableRows
-			selectableRowsVisibleOnly
-			onSelectedRowsChange={(e) => handleRowsSelect(e)}
-			clearSelectedRows={toggledClearRows}
-		/>
-	);
+		// Use a unique storageKey for each table type
+		const storageKey = id ? 'betterlinks-single-link-table-columns' : 'betterlinks-link-list-table-columns';
+		return (
+			<div className="btl-table-grouped-container">
+				{subHeaderComponentMemo}
+				<ResizableTable
+					columns={adaptedColumns}
+					data={adaptedData}
+					loading={progressPending}
+					defaultSortKey={adaptedColumns[0]?.key || 'name'}
+					defaultSortDirection="asc"
+					selectableRows={true}
+					onSelectedRowsChange={handleRowsSelect}
+					clearSelectedRows={toggledClearRows}
+					selectedRowKey={id ? 'ID' : 'link_id'}
+					customCellRender={customCellRender}
+					storageKey={storageKey}
+				/>
+			</div>
+		);
 };
 const mapStateToProps = (state) => ({
 	analytics: state.analytics,

@@ -89,6 +89,27 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
+	// When the Settings page is opened with a hash for the User Agent control, scroll to it and focus the checkbox
+	useEffect(() => {
+		const handleHash = () => {
+			if (window.location.hash === '#btl-setting-user-agent') {
+				const el = document.getElementById('btl-setting-user-agent');
+				if (el) {
+					el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					// Add temporary visual class to the section itself
+					el.classList.add('btl-temp-focus');
+
+					setTimeout(() => {
+						el.classList.remove('btl-temp-focus');
+					}, 6000);
+				}
+			}
+		};
+
+		handleHash();
+		window.addEventListener('hashchange', handleHash);
+		return () => window.removeEventListener('hashchange', handleHash);
+	}, []);
 	return (
 		<React.Fragment>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -519,8 +540,8 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 
 							{/* User Agent Tracking - Pro Feature with version check */}
 							{is_pro_enabled && pro_version_check('2.6.2') ? (
-								<span className="btl-form-group">
-									<label className="btl-form-label">{__('User Agent', 'betterlinks')}</label>
+								<span id="btl-setting-user-agent" className="btl-form-group">
+									<label className="btl-form-label">{__('User-Agent', 'betterlinks')}</label>
 									<div className="link-options__body">
 										<label className="btl-checkbox-field block">
 											<Field
@@ -530,17 +551,17 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 												onChange={() => props.setFieldValue('enable_user_agent_tracking', !props?.values?.enable_user_agent_tracking)}
 											/>
 											<span className="text">
-												{__('Enable User Agent Tracking', 'betterlinks')}
+												{__('Enable User-Agent Tracking', 'betterlinks')}
 												<div className="btl-tooltip">
 													<span className="dashicons dashicons-info-outline"></span>
-													<span className="btl-tooltiptext">{__("This will capture and store user agent information in analytics for detailed browser tracking", 'betterlinks')}</span>
+													<span className="btl-tooltiptext">{__("This will capture and store User-Agent information in analytics", 'betterlinks')}</span>
 												</div>
 											</span>
 										</label>
 									</div>
 								</span>
 							) : (
-								<span 
+								<span id="btl-setting-user-agent" 
 									className="btl-form-group btl-form-group--teaser" 
 									onClick={() => {
 										if (!is_pro_enabled) {

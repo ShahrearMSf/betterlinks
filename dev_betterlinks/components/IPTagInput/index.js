@@ -76,12 +76,16 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 		if (ips.length === 0) return;
 
 		const invalidIps = [];
+		const duplicateIps = [];
 		const newIps = [...ipList];
 
 		ips.forEach(ip => {
 			if (!isValidIP(ip)) {
 				invalidIps.push(ip);
-			} else if (!newIps.includes(ip)) {
+			} else if (newIps.includes(ip)) {
+				// record duplicates so we can show a toast
+				duplicateIps.push(ip);
+			} else {
 				newIps.push(ip);
 			}
 		});
@@ -91,6 +95,14 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 				title: __('Validation Error', 'betterlinks'),
 				position: 'top-right',
 				duration: 5000,
+			});
+		}
+
+		if (duplicateIps.length > 0) {
+			showErrorToast(__('IP address already exists: ', 'betterlinks') + duplicateIps.join(', '), {
+				title: __('Duplicate Entry', 'betterlinks'),
+				position: 'top-right',
+				duration: 4000,
 			});
 		}
 
@@ -178,7 +190,7 @@ const IPTagInput = ({ name, value = [], setFieldValue, disabled = false }) => {
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
 						onPaste={handlePaste}
-						placeholder={ipList.length === 0 ? __('Enter IP addresses (comma, space, or Enter to add)...', 'betterlinks') : ''}
+						placeholder={ipList.length === 0 ? __('Enter IP addresses (Ex: 127.xxx.xxx or 2001:xxxx:xxxx)', 'betterlinks') : ''}
 						disabled={disabled}
 					/>
 				</div>
