@@ -1,4 +1,3 @@
-import TableLoader from 'components/Loader/TableLoader';
 import { useState, useRef, useEffect } from 'react';
 
 export default function ResizableTable({
@@ -13,6 +12,7 @@ export default function ResizableTable({
   customCellRender = {},
   enablePagination = true,
   loading = false,
+  skeletonRows = 10,
   storageKey = 'betterlinks-table-columns',
 }) {
   const buildColumns = (cols, withCheckbox) => ([
@@ -33,9 +33,7 @@ export default function ResizableTable({
     })),
   ]);
 
-
-  // Load column widths from localStorage if available
-  const getStoredWidths = () => {
+  const getStoredColumnOrder = () => {
     try {
       const raw = window.localStorage.getItem(storageKey);
       if (!raw) return null;
@@ -45,20 +43,30 @@ export default function ResizableTable({
     }
   };
 
-  const buildColumnsWithWidths = (cols, withCheckbox) => {
-    const stored = getStoredWidths();
-    return buildColumns(cols, withCheckbox).map((col, idx) => {
-      if (stored && stored[idx] && stored[idx].width) {
-        return { ...col, width: stored[idx].width };
+  const buildColumnsWithStoredOrder = (cols, withCheckbox) => {
+    const builtCols = buildColumns(cols, withCheckbox);
+    const stored = getStoredColumnOrder();
+
+    if (!stored || !stored.order) return builtCols;
+
+    const reordered = [];
+    for (const key of stored.order) {
+      const col = builtCols.find(c => c.key === key);
+      if (col) {
+        const width = stored.widths && stored.widths[key] ? stored.widths[key] : col.width;
+        reordered.push({ ...col, width });
       }
-      return col;
-    });
+    }
+
+    const missing = builtCols.filter(c => !reordered.find(r => r.key === c.key));
+    return [...reordered, ...missing];
   };
 
-  const [columns, setColumns] = useState(buildColumnsWithWidths(initialColumns || [], selectableRows));
+  const [columns, setColumns] = useState(buildColumnsWithStoredOrder(initialColumns || [], selectableRows));
+  const [draggedColumnIndex, setDraggedColumnIndex] = useState(null);
 
   useEffect(() => {
-    setColumns(buildColumnsWithWidths(initialColumns || [], selectableRows));
+    setColumns(buildColumnsWithStoredOrder(initialColumns || [], selectableRows));
   }, [initialColumns, selectableRows]);
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -80,7 +88,7 @@ export default function ResizableTable({
   const tableRef = useRef(null);
 
   const handleSort = (key, sortable) => {
-    if (!sortable) return;
+    if (!sortable || loading) return;
 
     if (sortKey === key) {
       if (sortDirection === 'asc') {
@@ -98,58 +106,19 @@ export default function ResizableTable({
   const sortedData = [...data].sort((a, b) => {
     if (!sortKey || !sortDirection) return 0;
 
-    // find column definition if exists
-    const colDef = columns.find((c) => c.key === sortKey) || {};
+    const aVal = a[sortKey];
+    const bVal = b[sortKey];
 
-    // if column provides a custom sortFunction, use it
-    if (typeof colDef.sortFunction === 'function') {
-      const result = colDef.sortFunction(a, b);
-      return sortDirection === 'asc' ? result : -result;
-    }
+    if (aVal === bVal) return 0;
 
-    const getComparable = (row, key) => {
-      let val = row ? row[key] : undefined;
-
-      // Special-case: if sorting by 'ip', prefer IPCOUNT when available
-      if (key === 'ip' && row && row.IPCOUNT !== undefined && row.IPCOUNT !== null) {
-        const v = Number(row.IPCOUNT);
-        return Number.isFinite(v) ? v : 0;
-      }
-
-      // created_at should be compared as timestamp
-      if (key === 'created_at' && val) {
-        const t = Date.parse(val);
-        return Number.isFinite(t) ? t : 0;
-      }
-
-      if (val === undefined || val === null) return '';
-
-      // numeric strings -> number
-      if (typeof val === 'string') {
-        const num = Number(String(val).replace(/,/g, '').trim());
-        if (!Number.isNaN(num) && String(val).trim() !== '') {
-          return num;
-        }
-        return val.toLowerCase();
-      }
-
-      return val;
-    };
-
-    const aVal = getComparable(a, sortKey);
-    const bVal = getComparable(b, sortKey);
-
-    // both numbers -> numeric compare
+    let comparison = 0;
     if (typeof aVal === 'number' && typeof bVal === 'number') {
-      if (aVal === bVal) return 0;
-      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+      comparison = aVal - bVal;
+    } else {
+      comparison = String(aVal).localeCompare(String(bVal));
     }
 
-    // fallback to localeCompare for strings
-    const aStr = aVal === undefined || aVal === null ? '' : String(aVal);
-    const bStr = bVal === undefined || bVal === null ? '' : String(bVal);
-    const cmp = aStr.localeCompare(bStr, undefined, { numeric: true, sensitivity: 'base' });
-    return sortDirection === 'asc' ? cmp : -cmp;
+    return sortDirection === 'asc' ? comparison : -comparison;
   });
 
   const totalPages = Math.ceil(sortedData.length / rowsPerPage);
@@ -161,11 +130,52 @@ export default function ResizableTable({
     setCurrentPage(1);
   }, [rowsPerPage, sortKey, sortDirection]);
 
+  const saveColumnState = (cols) => {
+    try {
+      const order = cols.map(c => c.key);
+      const widths = {};
+      cols.forEach(col => {
+        widths[col.key] = col.width;
+      });
+      window.localStorage.setItem(storageKey, JSON.stringify({ order, widths }));
+    } catch {}
+  };
+
   const handleMouseDown = (index, e) => {
+    if (loading) return;
     e.preventDefault();
     setResizingIndex(index);
     setStartX(e.clientX);
     setStartWidth(columns[index].width || 150);
+  };
+
+  const handleDragStart = (index, e) => {
+    if (loading || columns[index].key === '__checkbox__') {
+      e.preventDefault();
+      return;
+    }
+    setDraggedColumnIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (index, e) => {
+    if (draggedColumnIndex === null || loading) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+
+    if (draggedColumnIndex !== index) {
+      const newColumns = [...columns];
+      const draggedCol = newColumns[draggedColumnIndex];
+      newColumns.splice(draggedColumnIndex, 1);
+      newColumns.splice(index, 0, draggedCol);
+      setDraggedColumnIndex(index);
+      setColumns(newColumns);
+      saveColumnState(newColumns);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedColumnIndex(null);
   };
 
   useEffect(() => {
@@ -182,10 +192,7 @@ export default function ResizableTable({
         const updated = prev.map((col, idx) =>
           idx === resizingIndex ? { ...col, width: newWidth } : col
         );
-        // Save to localStorage
-        try {
-          window.localStorage.setItem(storageKey, JSON.stringify(updated.map(({ width }) => ({ width }))));
-        } catch {}
+        saveColumnState(updated);
         return updated;
       });
     };
@@ -203,7 +210,7 @@ export default function ResizableTable({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [resizingIndex, startX, startWidth, columns, storageKey]);
+  }, [resizingIndex, startX, startWidth, columns]);
 
   const getSortIcon = (key, sortable) => {
     if (!sortable) return null;
@@ -224,6 +231,7 @@ export default function ResizableTable({
     paginatedData.every((row) => selectedRows.includes(row[selectedRowKey]));
 
   const handleSelectAll = (e) => {
+    if (loading) return;
     if (e.target.checked) {
       const pageRowIds = paginatedData.map((row) => row[selectedRowKey]);
       const newSelected = [...new Set([...selectedRows, ...pageRowIds])];
@@ -244,6 +252,7 @@ export default function ResizableTable({
   };
 
   const handleSelectRow = (row, checked) => {
+    if (loading) return;
     let newSelected;
     if (checked) {
       newSelected = [...selectedRows, row[selectedRowKey]];
@@ -256,58 +265,81 @@ export default function ResizableTable({
         selectedRows: sortedData.filter((r) => newSelected.includes(r[selectedRowKey])),
       });
   };
-    // If loading, show skeleton loader and don't render table rows
-  if (loading) {
-    return (
-      <div className="btl-tbl-container" ref={tableRef}>
-        <div className="btl-tbl-wrapper">
-          <TableLoader />
-        </div>
-      </div>
-    );
-  }
+
+  const renderCellContent = (value, isTruncated = false) => {
+    if (!value) return value;
+    const text = String(value);
+    return <div className={isTruncated ? 'btl-tbl-cell-truncated' : 'btl-tbl-cell-content'}>{text}</div>;
+  };
+
+  const renderSkeletonRows = () => {
+    return Array.from({ length: skeletonRows }).map((_, rowIndex) => (
+      <tr key={`skeleton-${rowIndex}`} className="btl-tbl-row btl-tbl-skeleton-row">
+        {columns.map((column) => (
+          <td
+            key={column.key}
+            className="btl-tbl-td"
+            style={{ width: `${column.width}px` }}
+          >
+            {column.key === '__checkbox__' ? (
+              <div className="btl-tbl-skeleton btl-tbl-skeleton-checkbox"></div>
+            ) : (
+              <div className="btl-tbl-skeleton btl-tbl-skeleton-text"></div>
+            )}
+          </td>
+        ))}
+      </tr>
+    ));
+  };
 
   return (
-    <>
-      <div className="btl-tbl-container" ref={tableRef}>
-        <div className="btl-tbl-wrapper">
-          <table className="btl-tbl-table">
-            <thead className="btl-tbl-thead">
-              <tr className="btl-tbl-header-row">
-                {columns.map((column, index) => (
-                  <th
-                    key={column.key}
-                    className={`btl-tbl-th ${column.sortable ? 'btl-tbl-sortable' : ''}`}
-                    style={{ width: `${column.width}px` }}
-                    onClick={() => column.key !== '__checkbox__' && handleSort(column.key, column.sortable || false)}
-                  >
-                    <div className="btl-tbl-th-content">
-                      {column.key === '__checkbox__' ? (
-                        <input
-                          type="checkbox"
-                          checked={allSelected}
-                          onChange={handleSelectAll}
-                          aria-label="Select all rows"
-                        />
-                      ) : (
-                        <>
-                          <span className="btl-tbl-th-label">{column.label}</span>
-                          {getSortIcon(column.key, column.sortable || false)}
-                        </>
-                      )}
-                    </div>
-                    {column.key !== '__checkbox__' && (
-                      <div
-                        className="btl-tbl-resizer"
-                        onMouseDown={(e) => handleMouseDown(index, e)}
+    <div className="btl-tbl-container" ref={tableRef}>
+      <div className="btl-tbl-wrapper">
+        <table className="btl-tbl-table">
+          <thead className="btl-tbl-thead">
+            <tr className="btl-tbl-header-row">
+              {columns.map((column, index) => (
+                <th
+                  key={column.key}
+                  className={`btl-tbl-th ${column.sortable && !loading ? 'btl-tbl-sortable' : ''} ${draggedColumnIndex === index ? 'btl-tbl-th-dragging' : ''}`}
+                  style={{ width: `${column.width}px` }}
+                  onClick={() => column.key !== '__checkbox__' && handleSort(column.key, column.sortable || false)}
+                  draggable={column.key !== '__checkbox__' && !loading}
+                  onDragStart={(e) => handleDragStart(index, e)}
+                  onDragOver={(e) => handleDragOver(index, e)}
+                  onDragEnd={handleDragEnd}
+                >
+                  <div className="btl-tbl-th-content">
+                    {column.key === '__checkbox__' ? (
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={handleSelectAll}
+                        disabled={loading}
+                        aria-label="Select all rows"
                       />
+                    ) : (
+                      <>
+                        <span className="btl-tbl-th-label">{column.label}</span>
+                        {getSortIcon(column.key, column.sortable || false)}
+                      </>
                     )}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="btl-tbl-tbody">
-              {paginatedData.map((row, rowIndex) => (
+                  </div>
+                  {column.key !== '__checkbox__' && (
+                    <div
+                      className="btl-tbl-resizer"
+                      onMouseDown={(e) => handleMouseDown(index, e)}
+                    />
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="btl-tbl-tbody">
+            {loading ? (
+              renderSkeletonRows()
+            ) : (
+              paginatedData.map((row, rowIndex) => (
                 <tr key={rowIndex} className="btl-tbl-row">
                   {columns.map((column) => (
                     <td
@@ -325,81 +357,87 @@ export default function ResizableTable({
                       ) : customCellRender[column.key] ? (
                         customCellRender[column.key](row)
                       ) : (
-                        row[column.key]
+                        renderCellContent(row[column.key], column.key === 'user_agent' || column.key === 'referrer')
                       )}
                     </td>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
-        {enablePagination && (
-          <div className="btl-tbl-pagination">
-            <div className="btl-tbl-pagination-left">
-              <label htmlFor="rows-per-page" className="btl-tbl-pagination-label">
-                Rows per page:
-              </label>
-              <select
-                id="rows-per-page"
-                className="btl-tbl-pagination-select"
-                value={rowsPerPage}
-                onChange={(e) => setRowsPerPage(Number(e.target.value))}
-              >
-                <option value={10}>10</option>
-                <option value={30}>30</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={200}>200</option>
-                <option value={500}>500</option>
-              </select>
-            </div>
 
-            <div className="btl-tbl-pagination-center">
-              <span className="btl-tbl-pagination-info">
-                {sortedData.length === 0
-                  ? '0 of 0'
-                  : `${startIndex + 1}-${endIndex} of ${sortedData.length}`}
-              </span>
-            </div>
-
-            <div className="btl-tbl-pagination-right">
-              <button
-                className="btl-tbl-pagination-btn"
-                onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
-                aria-label="First page"
-              >
-                ⏮
-              </button>
-              <button
-                className="btl-tbl-pagination-btn"
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-                aria-label="Previous page"
-              >
-                ◀
-              </button>
-              <button
-                className="btl-tbl-pagination-btn"
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                aria-label="Next page"
-              >
-                ▶
-              </button>
-              <button
-                className="btl-tbl-pagination-btn"
-                onClick={() => setCurrentPage(totalPages)}
-                disabled={currentPage === totalPages}
-                aria-label="Last page"
-              >
-                ⏭
-              </button>
-            </div>
+      {enablePagination && (
+        <div className="btl-tbl-pagination">
+          <div className="btl-tbl-pagination-left">
+            <label htmlFor="rows-per-page" className="btl-tbl-pagination-label">
+              Rows per page:
+            </label>
+            <select
+              id="rows-per-page"
+              className="btl-tbl-pagination-select"
+              value={rowsPerPage}
+              onChange={(e) => setRowsPerPage(Number(e.target.value))}
+              disabled={loading}
+            >
+              <option value={10}>10</option>
+              <option value={30}>30</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={200}>200</option>
+              <option value={500}>500</option>
+            </select>
           </div>
-        )}
-      </>
+
+          <div className="btl-tbl-pagination-center">
+            <span className="btl-tbl-pagination-info">
+              {loading ? (
+                <div className="btl-tbl-skeleton btl-tbl-skeleton-text" style={{ width: '80px', height: '16px' }}></div>
+              ) : sortedData.length === 0 ? (
+                '0 of 0'
+              ) : (
+                `${startIndex + 1}-${endIndex} of ${sortedData.length}`
+              )}
+            </span>
+          </div>
+
+          <div className="btl-tbl-pagination-right">
+            <button
+              className="btl-tbl-pagination-btn"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1 || loading}
+              aria-label="First page"
+            >
+              ⏮
+            </button>
+            <button
+              className="btl-tbl-pagination-btn"
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1 || loading}
+              aria-label="Previous page"
+            >
+              ◀
+            </button>
+            <button
+              className="btl-tbl-pagination-btn"
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages || loading}
+              aria-label="Next page"
+            >
+              ▶
+            </button>
+            <button
+              className="btl-tbl-pagination-btn"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages || loading}
+              aria-label="Last page"
+            >
+              ⏭
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

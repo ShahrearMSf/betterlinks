@@ -328,7 +328,37 @@
   }
 }
 
+.btl-tbl-skeleton {
+  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+  background-size: 200% 100%;
+  animation: btl-tbl-skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
 
+@keyframes btl-tbl-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.btl-tbl-skeleton-row:hover {
+  background-color: white;
+}
+
+.btl-tbl-skeleton-text {
+  height: 16px;
+  width: 100%;
+  max-width: 90%;
+}
+
+.btl-tbl-skeleton-checkbox {
+  height: 16px;
+  width: 16px;
+  margin: 0 auto;
+}
 
 // ---- Custom Table Dark Mode ----
 .betterlinks-dark-mode {
