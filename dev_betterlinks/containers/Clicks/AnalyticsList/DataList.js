@@ -19,6 +19,7 @@ const getBrowserIcon = (browser) => {
 	// normalize to filename using helper
 	const fileName = getBrowser(browser || '');
 	const title = typeof browser === 'string' && browser.length ? browser : (fileName || 'Browser');
+	// use the same icon suffix as helper.getColumns for consistency
 	return <img width="25" src={`${window.betterLinksGlobal.plugin_root_url}assets/images/browser/${fileName}-browser.svg`} alt="icon" title={title} />;
 };
 const getDeviceIcon = (device) => {
@@ -74,33 +75,33 @@ if (!id) {
 			),
 		};
 } else {
-	// Single Link Details View
-	// Define the order with 'user_agent' after 'browser'
-	const allColumns = [
-		{ key: 'browser', label: __('Browser', 'betterlinks'), sortable: false },
-		{ key: 'ip', label: __('IP', 'betterlinks') },
-		{ key: 'country_name', label: __('Country', 'betterlinks') },
-		{ key: 'user_agent', label: __('User-Agent', 'betterlinks') },
-		{ key: 'created_at', label: __('Timestamp', 'betterlinks') },
-		{ key: 'referer', label: __('Referrer', 'betterlinks') },
-		{ key: 'query_params', label: __('Parameters', 'betterlinks') },
-		{ key: 'os', label: __('OS', 'betterlinks') },
-		{ key: 'device', label: __('Device', 'betterlinks'), sortable: false },
-		{ key: 'IPCOUNT', label: __('IP Count', 'betterlinks') },
-	];
-	// Only show columns selected in analytics settings, but always use the above order
-	const analyticsArr = Array.isArray(analytics)
-		? analytics
-		: (analytics && typeof analytics === 'object')
-			? Object.values(analytics)
-			: [];
-	const visibleKeys = analyticsArr.map(a => a.value);
-	console.log('analytics:', analytics);
-	console.log('visibleKeys:', visibleKeys);
-	adaptedColumns = allColumns.filter(col => visibleKeys.includes(col.key));
-	// Fallback: if no columns selected, show all columns
+	// Single Link Details View - use helper's getColumns so we don't lose any browser/device icons or
+	// other formatting defined there.  We still keep a fallback list in case analytics settings are
+	// empty (the helper filters by analytics values).
+	const helperCols = getColumns(analytics, analyticsTab, id, handleCountryUpdated) || [];
+	// convert helper columns to the shape expected by ResizableTable
+	adaptedColumns = helperCols.map(col => ({
+		key: col.selector,
+		label: col.name,
+		sortable: col.sortable !== false,
+		width: col.width,
+		minWidth: col.minWidth,
+		sortFunction: col.sortFunction,
+	}));
+	// fallback if helper returned nothing (no analytics settings selected)
 	if (!adaptedColumns.length) {
-		adaptedColumns = allColumns;
+		adaptedColumns = [
+			{ key: 'browser', label: __('Browser', 'betterlinks'), sortable: false },
+			{ key: 'ip', label: __('IP', 'betterlinks') },
+			{ key: 'country_name', label: __('Country', 'betterlinks') },
+			{ key: 'user_agent', label: __('User-Agent', 'betterlinks') },
+			{ key: 'created_at', label: __('Timestamp', 'betterlinks') },
+			{ key: 'referer', label: __('Referrer', 'betterlinks') },
+			{ key: 'query_params', label: __('Parameters', 'betterlinks') },
+			{ key: 'os', label: __('OS', 'betterlinks') },
+			{ key: 'device', label: __('Device', 'betterlinks'), sortable: false },
+			{ key: 'IPCOUNT', label: __('IP Count', 'betterlinks') },
+		];
 	}
 	adaptedData = getData(data, analyticsTab, filterText, id, from).map(row => ({
 		...row,
@@ -116,6 +117,11 @@ if (!id) {
 		user_agent: row.user_agent !== undefined && row.user_agent !== null ? row.user_agent : '',
 		IPCOUNT: row.IPCOUNT !== undefined && row.IPCOUNT !== null ? row.IPCOUNT : (row.IPCount !== undefined && row.IPCount !== null ? row.IPCount : (row.ipcount !== undefined && row.ipcount !== null ? row.ipcount : '')),
 	}));
+	// build renderers: prefer helper cell definitions, but keep our manual ones as fallback
+	const helperCellRender = {};
+	helperCols.forEach(c => {
+		if (typeof c.cell === 'function') helperCellRender[c.selector] = c.cell;
+	});
 	const allCellRender = {
 		browser: (row) => getBrowserIcon(row.browser),
 		device: (row) => getDeviceIcon(row.device),
@@ -132,28 +138,29 @@ if (!id) {
 			<span>{row.ip}{row.IPCOUNT ? `(${row.IPCOUNT})` : ''}</span>
 		),
 		os: (row) => <span>{row.os}</span>,
-			country_name: (row) => {
-				// Reuse helper's getColumns Country cell (CountryFetchCell) so behaviour and icon remain consistent
-				const helperCols = getColumns(analytics, analyticsTab, id, handleCountryUpdated) || [];
-				const countryCol = helperCols.find(c => c.selector === 'country_name');
-				if (countryCol && typeof countryCol.cell === 'function') {
-					return countryCol.cell(row);
-				}
-				// fallback
-				return row.country_name ? <span>{row.country_name}</span> : <div>-</div>;
-			},
+		country_name: (row) => {
+			// reuse helper's country cell for consistent behaviour if available
+			const countryCol = helperCols.find(c => c.selector === 'country_name');
+			if (countryCol && typeof countryCol.cell === 'function') {
+				return countryCol.cell(row);
+			}
+			return row.country_name ? <span>{row.country_name}</span> : <div>-</div>;
+		},
 		created_at: (row) => <span>{row.created_at}</span>,
 		IPCOUNT: (row) => <span>{row.IPCOUNT}</span>,
 	};
-	// Only keep cell renderers for visible columns
 	customCellRender = {};
 	adaptedColumns.forEach(col => {
-		if (allCellRender[col.key]) customCellRender[col.key] = allCellRender[col.key];
+		if (helperCellRender[col.key]) {
+			customCellRender[col.key] = helperCellRender[col.key];
+		} else if (allCellRender[col.key]) {
+			customCellRender[col.key] = allCellRender[col.key];
+		}
 	});
 }
 // Debug: log adapted data and columns
-console.log('ResizableTable adaptedColumns:', adaptedColumns);
-console.log('ResizableTable adaptedData:', adaptedData);
+// console.log('ResizableTable adaptedColumns:', adaptedColumns);
+// console.log('ResizableTable adaptedData:', adaptedData);
 
 	useEffect(() => {
 		if (!analytics) props.fetch_analytics_settings();
@@ -161,6 +168,11 @@ console.log('ResizableTable adaptedData:', adaptedData);
 	// Called after country data is fetched (single or bulk) to refresh table data
 	const handleCountryUpdated = (updatedRows) => {
   if (!id) return;
+
+  if (updatedRows && updatedRows.length) {
+    props.update_clicks_with_country(updatedRows);
+  }
+
   const from = (customDateFilter && customDateFilter[0]) ? formatDate(customDateFilter[0].startDate, 'yyyy-mm-dd') : undefined;
   const to = (customDateFilter && customDateFilter[0]) ? formatDate(customDateFilter[0].endDate, 'yyyy-mm-dd') : undefined;
   const currentDate = to || formatDate(new Date(), 'yyyy-mm-dd');

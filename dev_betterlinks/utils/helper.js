@@ -981,6 +981,7 @@ const ParameterItem = ({ type, item, style = {} }) => {
 const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState('idle'); // idle, loading, success, failed
+	const [countryData, setCountryData] = useState(null);
 
 	const handleFetchCountry = async () => {
 		if (!row.ip) {
@@ -1006,6 +1007,8 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 			const data = await response.json();
 
 			if (data.success && data.data) {
+				// store for render
+				setCountryData(data.data);
 				// Now save the country data to the database via AJAX
 				// Use bulk update to update all clicks with the same IP within this link
 				const formData = new FormData();
@@ -1028,11 +1031,13 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 					// Update the row data
 					row.country_code = data.data.country_code;
 					row.country_name = data.data.country_name;
+					setCountryData(data.data);
 
 					// Trigger callback to refresh table data
 					// The transient cache has been cleared on the backend, so fresh data will be fetched
 					if (onCountryUpdated) {
-						onCountryUpdated(row.ip, data.data);
+						// provide updated row array so parent can merge into store
+						onCountryUpdated([row]);
 					}
 				} else {
 					setStatus('failed');
@@ -1164,18 +1169,20 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 		};
 	};
 
-	// Show country if row has country data
-	if (row.country_name && row.country_code) {
+
+	const currentCountry = countryData || (row.country_name && row.country_code ? { country_name: row.country_name, country_code: row.country_code } : null);
+
+	if (currentCountry) {
 		return (
 			<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
 				<span style={{
 					fontSize: '16px',
 					lineHeight: '1'
 				}}>
-					{getFlagEmoji(row.country_code)}
+					{getFlagEmoji(currentCountry.country_code)}
 				</span>
-				<span title={row.country_name}>
-					{row.country_name}
+				<span title={currentCountry.country_name}>
+					{currentCountry.country_name}
 				</span>
 			</div>
 		);
@@ -1333,7 +1340,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 			{
 				name: __('Browser', 'betterlinks'),
 				selector: 'browser',
-				sortable: false,
+				sortable: true,
 				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
@@ -1348,7 +1355,13 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 			{
 				name: __('IP', 'betterlinks'),
 				selector: 'ip',
-				sortable: false,
+				sortable: true,
+				// sort by IPCOUNT rather than the string representation of IP
+				sortFunction: (rowA, rowB) => {
+					const a = +rowA.IPCOUNT || 0;
+					const b = +rowB.IPCOUNT || 0;
+					return a - b;
+				},
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
 			},
 			//add user agent here to show
@@ -1361,7 +1374,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 				),
 				selector: 'user_agent',
 				width: '300px',
-				sortable: false,
+				sortable: true,
 				cell: (row) => {
 					if (!is_pro_enabled) {
 						return;
@@ -1392,7 +1405,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 					</>
 				),
 				selector: 'country_name',
-				sortable: false,
+				sortable: true,
 				width: '180px',
 				cell: (row) => {
 					if (!is_pro_enabled) {
@@ -1423,13 +1436,13 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 			{
 				name: __('Timestamp', 'betterlinks'),
 				selector: 'created_at',
-				sortable: false,
+				sortable: true,
 			},
 			{
 				name: __('Referrer', 'betterlinks'),
 				selector: 'referer',
 				width: '300px',
-				sortable: false,
+				sortable: true,
 				cell: (row) => (
 					<div>
 						<div style={{ fontWeight: 700 }}>
@@ -1491,14 +1504,14 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 						</div>
 					);
 				},
-				sortable: false,
+				sortable: true,
 			},
 			{
 				name: __('OS', 'betterlinks'),
 				selector: 'os',
 				width: '100px',
 				cell: (row) => <div>{row.os}</div>,
-				sortable: false,
+				sortable: true,
 			},
 			{
 				name: __('Device', 'betterlinks'),
