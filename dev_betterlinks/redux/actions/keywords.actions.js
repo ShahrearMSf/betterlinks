@@ -1,4 +1,6 @@
 import { API, namespace, makeRequest } from 'utils/helper';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 export const FETCH_ALL_KEYWORDS = 'FETCH_ALL_KEYWORDS';
 export const GET_KEYWORD = 'GET_KEYWORD';
 export const ADD_NEW_KEYWORD = 'ADD_NEW_KEYWORD';
@@ -50,6 +52,9 @@ export const add_keyword = (formData) => async (dispatch) => {
 				type: ADD_NEW_KEYWORD,
 				payload: res.data,
 			});
+			toastSuccess(__('Keyword has been created successfully', 'betterlinks'), {
+				title: __('Keyword Created', 'betterlinks'),
+			});
 		}
 	} catch (e) {
 		makeRequest({
@@ -60,6 +65,9 @@ export const add_keyword = (formData) => async (dispatch) => {
 				dispatch({
 					type: ADD_NEW_KEYWORD,
 					payload: response.data,
+				});
+				toastSuccess(__('Keyword has been created successfully', 'betterlinks'), {
+					title: __('Keyword Created', 'betterlinks'),
 				});
 			}
 		});
@@ -76,6 +84,9 @@ export const update_keyword = (formData) => async (dispatch) => {
 				type: UPDATE_KEYWORD,
 				payload: res.data,
 			});
+			toastSuccess(__('Keyword has been updated successfully', 'betterlinks'), {
+				title: __('Keyword Updated', 'betterlinks'),
+			});
 		}
 	} catch (e) {
 		makeRequest({
@@ -87,12 +98,16 @@ export const update_keyword = (formData) => async (dispatch) => {
 					type: UPDATE_KEYWORD,
 					payload: response.data,
 				});
+				toastSuccess(__('Keyword has been updated successfully', 'betterlinks'), {
+					title: __('Keyword Updated', 'betterlinks'),
+				});
 			}
 		});
 	}
 };
 
 export const delete_keyword = (params) => (dispatch) => {
+	const keywordCount = params.length;
 	params.map((item) => {
 		const { keywords, link_id } = item;
 		makeRequest({
@@ -108,6 +123,14 @@ export const delete_keyword = (params) => (dispatch) => {
 						keywords,
 					},
 				});
+				toastSuccess(
+					keywordCount > 1
+						? __('Keywords have been deleted successfully', 'betterlinks')
+						: __('Keyword has been deleted successfully', 'betterlinks'),
+					{
+						title: keywordCount > 1 ? __('Keywords Deleted', 'betterlinks') : __('Keyword Deleted', 'betterlinks'),
+					}
+				);
 			}
 		});
 	});

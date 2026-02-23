@@ -7,13 +7,16 @@ import { bindActionCreators } from 'redux';
 import RedirectType from 'components/RedirectType';
 import CategorySelect from 'components/CategorySelect';
 import UrlGenerationType from 'components/UrlGenerationType';
+import IPTagInput from 'components/IPTagInput';
+import { fetch_post_types_data } from 'redux/actions/posttypesdata.actions';
 import { fetch_clicks_data } from 'redux/actions/clicks.actions';
 import { update_option } from 'redux/actions/settings.actions';
 import { redirectType, urlGenerationTypes } from 'utils/data';
 import UpgradeToPro from 'components/Teasers/UpgradeToPro';
-import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler } from 'utils/helper';
+import { site_url, exists_clicks_json, betterlinks_nonce, exists_links_json, delayStatusChanged, is_pro_enabled, saveSettingsHandler, pro_version_check } from 'utils/helper';
 import ProBadge from 'components/Badge/ProBadge';
-const TabsGeneral = ({ settings, fetch_clicks_data, terms, update_option, postdatas }) => {
+import { toastWarning } from 'components/Toast';
+const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, update_option, postdatas }) => {
 	const [cacheButtonText, setCacheButtonText] = useState(__('Refresh Stats', 'betterlinks'));
 	const [fastRedirectButtonText, setFastRedirectButtonText] = useState(__('Active Now', 'betterlinks'));
 	const [formSubmitText, setFormSubmitText] = useState(__('Save Settings', 'betterlinks'));
@@ -77,6 +80,27 @@ const TabsGeneral = ({ settings, fetch_clicks_data, terms, update_option, postda
 	const closeUpgradeToProModal = () => {
 		setUpgradeToProModal(false);
 	};
+	// When the Settings page is opened with a hash for the User Agent control, scroll to it and focus the checkbox
+	useEffect(() => {
+		const handleHash = () => {
+			if (window.location.hash === '#btl-setting-user-agent') {
+				const el = document.getElementById('btl-setting-user-agent');
+				if (el) {
+					el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					// Add temporary visual class to the section itself
+					el.classList.add('btl-temp-focus');
+
+					setTimeout(() => {
+						el.classList.remove('btl-temp-focus');
+					}, 6000);
+				}
+			}
+		};
+
+		handleHash();
+		window.addEventListener('hashchange', handleHash);
+		return () => window.removeEventListener('hashchange', handleHash);
+	}, []);
 	return (
 		<React.Fragment>
 			<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
@@ -445,6 +469,124 @@ const TabsGeneral = ({ settings, fetch_clicks_data, terms, update_option, postda
 									</label>
 								</div>
 							</span>
+
+							{/* Exclude IP - Pro Feature with version check */}
+							{is_pro_enabled && pro_version_check('2.6.2') ? (
+								<span className="btl-form-group btl-form-group--top">
+									<label className="btl-form-label">
+										{__('Exclude IP Addresses', 'betterlinks')}
+										<div className="btl-tooltip">
+											<span className="dashicons dashicons-info-outline"></span>
+											<span className="btl-tooltiptext">{__('Exclude specific IP addresses from analytics tracking. Useful for filtering internal/specific traffic or bot activity', 'betterlinks')}</span>
+										</div>
+									</label>
+									<div className="btl-form-field">
+										<IPTagInput
+											name="excluded_ips"
+											value={props.values?.excluded_ips || []}
+											setFieldValue={props.setFieldValue}
+										/>
+										<div className="short-description" style={{ marginTop: '8px' }}>
+											<b style={{ fontWeight: 700 }}>{__('Note:', 'betterlinks')} </b>
+											{__("Excluded IPs will redirect normally but won't be visible in analytics. Remove an IP to make it visible again.", 'betterlinks')}
+										</div>
+									</div>
+								</span>
+							) : (
+								<span 
+									className="btl-form-group btl-form-group--top btl-form-group--teaser" 
+									onClick={() => {
+										if (!is_pro_enabled) {
+											openUpgradeToProModal();
+										} else {
+											// Pro is enabled but version is outdated
+											toastWarning(
+												__('Please update BetterLinks Pro to version 2.6.2 or later to use the IP Exclusion feature.', 'betterlinks'),
+												{
+													title: __('Update Required', 'betterlinks'),
+													duration: 5000,
+												}
+											);
+										}
+									}} 
+									style={{ cursor: 'pointer' }}
+								>
+									<label className="btl-form-label">
+										{__('Exclude IP Addresses', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+										<div className="btl-tooltip">
+											<span className="dashicons dashicons-info-outline"></span>
+											<span className="btl-tooltiptext">{__('Clicks from these IP addresses will not be counted in analytics. Remove an IP to start tracking it again.', 'betterlinks')}</span>
+										</div>
+									</label>
+									<div className="btl-form-field" style={{ pointerEvents: 'none' }}>
+										<IPTagInput
+											name="excluded_ips"
+											value={[]}
+											setFieldValue={() => {}}
+											disabled={true}
+										/>
+									</div>
+								</span>
+							)}
+
+							{/* User Agent Tracking - Pro Feature with version check */}
+							{is_pro_enabled && pro_version_check('2.6.2') ? (
+								<span id="btl-setting-user-agent" className="btl-form-group">
+									<label className="btl-form-label">{__('User-Agent', 'betterlinks')}</label>
+									<div className="link-options__body">
+										<label className="btl-checkbox-field block">
+											<Field
+												className="btl-check"
+												name="enable_user_agent_tracking"
+												type="checkbox"
+												onChange={() => props.setFieldValue('enable_user_agent_tracking', !props?.values?.enable_user_agent_tracking)}
+											/>
+											<span className="text">
+												{__('Enable User-Agent Tracking', 'betterlinks')}
+												<div className="btl-tooltip">
+													<span className="dashicons dashicons-info-outline"></span>
+													<span className="btl-tooltiptext">{__("This will capture and store User-Agent information in analytics", 'betterlinks')}</span>
+												</div>
+											</span>
+										</label>
+									</div>
+								</span>
+							) : (
+								<span id="btl-setting-user-agent" 
+									className="btl-form-group btl-form-group--teaser" 
+									onClick={() => {
+										if (!is_pro_enabled) {
+											openUpgradeToProModal();
+										} else {
+											// Pro is enabled but version is outdated
+											toastWarning(
+												__('Please update BetterLinks Pro to version 2.6.2 or later to use the User Agent Tracking feature.', 'betterlinks'),
+												{
+													title: __('Update Required', 'betterlinks'),
+													duration: 5000,
+												}
+											);
+										}
+									}} 
+									style={{ cursor: 'pointer' }}
+								>
+									<label className="btl-form-label">
+										{__('User Agent', 'betterlinks')} {!is_pro_enabled && <ProBadge />}
+									</label>
+									<div className="link-options__body">
+										<label className="btl-checkbox-field block">
+											<input className="btl-check" name="enable_user_agent_tracking" type="checkbox" disabled={true} />
+											<span className="text">
+												{__('Enable User Agent Tracking', 'betterlinks')}
+												<div className="btl-tooltip">
+													<span className="dashicons dashicons-info-outline"></span>
+													<span className="btl-tooltiptext">{__("This will capture and store user agent information in analytics for detailed browser tracking", 'betterlinks')}</span>
+												</div>
+											</span>
+										</label>
+									</div>
+								</span>
+							)}
 							{!is_pro_enabled && (
 								<>
 									<span className="btl-form-group btl-form-group--teaser">

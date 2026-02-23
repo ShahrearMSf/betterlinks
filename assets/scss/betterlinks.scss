@@ -34,6 +34,8 @@
 	@import './components/broken-links';
 	@import './components/modal';
 	@import './components/quick-setup';
+	@import './components/ip-tag-input';
+	@import './components/toast';
 }
 
 *,
@@ -328,6 +330,7 @@ body {
 @import './components/utm_builder';
 @import './components/customize_link_preview';
 @import './components/ai_generate_links';
+@import './components/custom_table';
 
 // expire status circle styles starts
 
@@ -871,7 +874,7 @@ input#search_autolink::-webkit-search-cancel-button:hover {
 }
 
 .rmsc.multi-select {
-	max-width: 150px;
+	max-width: 165px;
 	min-width: 150px;
 }
 
@@ -1546,4 +1549,48 @@ button.rdrStaticRange {
 	.rdrMonthsVertical {
 		flex-direction: row !important;
 	}
+}
+.btl-click-filter .rmsc .item-renderer {
+	align-items: center !important;
+}
+
+
+//for effect
+
+/* ── Pulse Ring Focus Effect ── */
+
+.btl-temp-focus {
+  display: block; /* ← CRITICAL for span elements */
+  position: relative;
+  background: #eef2ff;
+  border-radius: 10px;
+//   box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.25), 0 8px 32px rgba(59, 91, 219, 0.12);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  padding: 0px 10px; /* optional: gives breathing room */
+  margin-left: -10px;
+}
+
+/* Pulse ring that expands and fades */
+.btl-temp-focus::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 13px;
+  border: 2px solid #3b5bdb;
+  opacity: 0;
+  pointer-events: none;
+  animation: pulseRing 1.6s ease-out 0s 4;
+}
+
+@keyframes pulseRing {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+
+@keyframes badgeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.btl-form-group {
+  overflow: visible !important;
 }

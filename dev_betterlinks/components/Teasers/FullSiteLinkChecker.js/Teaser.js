@@ -1,10 +1,12 @@
 import { __ } from '@wordpress/i18n';
+import React, { useEffect } from 'react';
 import Select2 from 'react-select';
 import UpgradeToPro from '../UpgradeToPro';
 import { useUpgradeProModal } from 'utils/customHooks';
 import DataTable from 'react-data-table-component';
 import { columns, teaserFLCLinks } from './teaser.data';
 import { plugin_root_url, pro_version_check } from 'utils/helper';
+import { toastWarning } from 'components/Toast';
 
 import { List, ListItem, ListItemText, Box, CircularProgress, Typography } from '@material-ui/core';
 import { ReactComponent as Link } from '../../../../assets/images/teasers/link.svg';
@@ -18,13 +20,22 @@ import { UpgradeToProSpecial } from '../UpgradeToProSpecial';
 const Teaser = () => {
 	const [isOpenUpgradeToProModal, openUpgradeToProModal, closeUpgradeToProModal] = useUpgradeProModal();
 	const is_pro_updated = pro_version_check('2.2');
+	
+	// Show toast warning if Pro version is outdated
+	useEffect(() => {
+		if (!is_pro_updated) {
+			toastWarning(
+				__('Please update BetterLinks Pro to version 2.2 or later to use the Full Site Link Scanner feature.', 'betterlinks'),
+				{
+					title: __('Update Required', 'betterlinks'),
+					duration: 6000,
+				}
+			);
+		}
+	}, [is_pro_updated]);
+	
 	return (
 		<>
-			{!is_pro_updated && (
-				<div className="btl-notes notice notice-warning" style={{ marginLeft: 0, marginBottom: '10px', padding: '10px', fontSize: '12px' }}>
-					<Note note="To utilize the Full Site Link Scanner Feature, please update the BetterLinks Pro plugin to at least v2.2." />
-				</div>
-			)}
 			<div style={{ position: 'relative' }}>
 				<UpgradeToPro isOpenModal={isOpenUpgradeToProModal} closeModal={closeUpgradeToProModal} />
 				<UpgradeToProSpecial

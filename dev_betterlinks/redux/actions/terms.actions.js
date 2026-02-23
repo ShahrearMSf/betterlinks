@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { API, namespace, betterlinks_nonce, makeRequest } from 'utils/helper';
 import { ADD_TERM, DELETE_TERM, FETCH_AUTOLINK_SETTINGS, FETCH_TAGS, FETCH_CATEGORIES, FETCH_TERMS_DATA, UPDATE_TERM } from 'redux/actions/actionstrings';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 
 export const delete_tag = (params) => async (dispatch) => {
 	params.map(async (item) => {
@@ -15,30 +17,61 @@ export const delete_tag = (params) => async (dispatch) => {
 					type: DELETE_TERM,
 					payload: res.data?.data,
 				});
+				toastSuccess(__('Tag has been deleted successfully', 'betterlinks'), {
+					title: __('Tag Deleted', 'betterlinks'),
+				});
 			} else {
 				// Handle API error response (e.g., trying to delete default category)
-				//console.error('Failed to delete term:', res.data.data?.message || 'Unknown error');
-				// You could also dispatch an error action here if needed
-				// dispatch({ type: 'DELETE_TERM_ERROR', payload: res.data });
+				toastError(res.data.data?.message || __('Failed to delete tag', 'betterlinks'), {
+					title: __('Delete Failed', 'betterlinks'),
+				});
 			}
 		} catch (error) {
 			console.log('error is: ', error.message);
+			toastError(error.message || __('Failed to delete tag', 'betterlinks'), {
+				title: __('Delete Failed', 'betterlinks'),
+			});
 		}
 	});
 };
 export const add_new_tag = (data) => async (dispatch) => {
+	// Use the input data.term_type since res.data?.data?.term_type may be undefined on update
+	const termType = data.term_type;
+	const isTag = termType === 'tags';
+	
 	try {
 		const res = await API.post(namespace + 'terms', {
 			params: data,
 		});
 
 		if (!res.data.success) return;
-
+		
 		if (res.data.success) {
 			dispatch({
 				type: res.data?.update ? UPDATE_TERM : ADD_TERM,
 				payload: res.data?.data,
 			});
+			
+			const isUpdate = res.data?.update;
+			let message, title;
+			
+			if (isUpdate) {
+				message = isTag 
+					? __('Tag has been updated successfully', 'betterlinks') 
+					: __('Category has been updated successfully', 'betterlinks');
+				title = isTag 
+					? __('Tag Updated', 'betterlinks') 
+					: __('Category Updated', 'betterlinks');
+			} else {
+				message = isTag 
+					? __('Tag has been created successfully', 'betterlinks') 
+					: __('Category has been created successfully', 'betterlinks');
+				title = isTag 
+					? __('Tag Created', 'betterlinks') 
+					: __('Category Created', 'betterlinks');
+			}
+			
+			toastSuccess(message, { title });
 		}
 	} catch (e) {
 		makeRequest({
@@ -53,6 +86,27 @@ export const add_new_tag = (data) => async (dispatch) => {
 					type: res.data?.update ? UPDATE_TERM : ADD_TERM,
 					payload: res.data?.data,
 				});
+				
+				const isUpdate = res.data?.update;
+				let message, title;
+				
+				if (isUpdate) {
+					message = isTag 
+						? __('Tag has been updated successfully', 'betterlinks') 
+						: __('Category has been updated successfully', 'betterlinks');
+					title = isTag 
+						? __('Tag Updated', 'betterlinks') 
+						: __('Category Updated', 'betterlinks');
+				} else {
+					message = isTag 
+						? __('Tag has been created successfully', 'betterlinks') 
+						: __('Category has been created successfully', 'betterlinks');
+					title = isTag 
+						? __('Tag Created', 'betterlinks') 
+						: __('Category Created', 'betterlinks');
+				}
+				
+				toastSuccess(message, { title });
 			}
 		});
 	}

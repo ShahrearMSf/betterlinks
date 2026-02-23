@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { deleteClicks, formatDate, exists_clicks_json, betterlinks_nonce, delayStatusChanged, plugin_root_url } from 'utils/helper';
 import { fetchCustomClicksData, fetch_clicks_data, get_chart_data, get_graph_data, get_medium_data } from 'redux/actions/clicks.actions';
 import { dispatch_new_links_data } from 'redux/actions/links.actions';
+import { toastSuccess } from 'components/Toast';
 import Modal from 'react-modal';
 import { DateRangePicker, defaultStaticRanges } from 'react-date-range';
 import { subDays } from 'date-fns';
@@ -221,6 +222,9 @@ const DeleteClicks = ({ fetchCustomClicksData, dispatch_new_links_data, fetch_cl
 			(response) => {
 				if (response.data) {
 					delayStatusChanged(null, __('Done!', 'betterlinks'), __('Refresh Stats', 'betterlinks'), setCacheButtonText);
+					toastSuccess(__('Analytics data has been refreshed successfully', 'betterlinks'), {
+						title: __('Stats Refreshed', 'betterlinks'),
+					});
 					// update analytic data with current date filter
 					if (customDateFilter && customDateFilter[0]) {
 						const filterDate = {

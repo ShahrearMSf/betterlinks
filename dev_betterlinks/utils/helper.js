@@ -6,6 +6,7 @@ import clipboardCopy from 'clipboard-copy';
 import ProBadge from 'components/Badge/ProBadge';
 import { Badge, Tooltip } from '@material-ui/core';
 import { useState } from 'react';
+import { toastSuccess, toastError, toastWarning, toastInfo } from 'components/Toast';
 
 export const {
 	betterlinks_nonce,
@@ -453,12 +454,22 @@ export const modalCustomSmallStyles = {
 
 export const copyToClipboard = (copyText) => {
 	clipboardCopy(copyText);
+	toastSuccess(__('Copied to clipboard!', 'betterlinks'), {
+		title: __('Link Copied', 'betterlinks'),
+		position: 'top-right',
+		duration: 2000,
+	});
 	return;
 };
 
 export const copyShortUrl = (shortUrl) => {
 	const URL = makeShortUrl(shortUrl);
-	copyToClipboard(URL);
+	clipboardCopy(URL);
+	toastSuccess(__('Short link copied to clipboard!', 'betterlinks'), {
+		title: __('Link Copied', 'betterlinks'),
+		position: 'top-right',
+		duration: 2000,
+	});
 	return URL;
 };
 
@@ -902,6 +913,13 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 	}
 	update_option(values);
 	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
+	
+	// Show toast notification
+	toastSuccess(__('Your settings have been saved successfully.', 'betterlinks'), {
+		title: __('Settings Saved', 'betterlinks'),
+		position: 'top-right',
+		duration: 3000,
+	});
 };
 
 export const getDataset = (data, uniqueIpCount) => {
@@ -922,10 +940,6 @@ export const getDataset = (data, uniqueIpCount) => {
 	return dataset;
 };
 
-const getDevice = (device) => {
-	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
-	return device;
-};
 export const sortFunction = (title) => (rowA, rowB) => {
 	if (['total_clicks', 'unique_clicks'].includes(title)) {
 		if (+rowA[title] > +rowB[title]) return 1;
@@ -975,6 +989,7 @@ const ParameterItem = ({ type, item, style = {} }) => {
 const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState('idle'); // idle, loading, success, failed
+	const [countryData, setCountryData] = useState(null);
 
 	const handleFetchCountry = async () => {
 		if (!row.ip) {
@@ -1000,6 +1015,8 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 			const data = await response.json();
 
 			if (data.success && data.data) {
+				// store for render
+				setCountryData(data.data);
 				// Now save the country data to the database via AJAX
 				// Use bulk update to update all clicks with the same IP within this link
 				const formData = new FormData();
@@ -1022,11 +1039,13 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 					// Update the row data
 					row.country_code = data.data.country_code;
 					row.country_name = data.data.country_name;
+					setCountryData(data.data);
 
 					// Trigger callback to refresh table data
 					// The transient cache has been cleared on the backend, so fresh data will be fetched
 					if (onCountryUpdated) {
-						onCountryUpdated(row.ip, data.data);
+						// provide updated row array so parent can merge into store
+						onCountryUpdated([row]);
 					}
 				} else {
 					setStatus('failed');
@@ -1158,18 +1177,20 @@ const CountryFetchCell = ({ row, linkId, onCountryUpdated }) => {
 		};
 	};
 
-	// Show country if row has country data
-	if (row.country_name && row.country_code) {
+
+	const currentCountry = countryData || (row.country_name && row.country_code ? { country_name: row.country_name, country_code: row.country_code } : null);
+
+	if (currentCountry) {
 		return (
 			<div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
 				<span style={{
 					fontSize: '16px',
 					lineHeight: '1'
 				}}>
-					{getFlagEmoji(row.country_code)}
+					{getFlagEmoji(currentCountry.country_code)}
 				</span>
-				<span title={row.country_name}>
-					{row.country_name}
+				<span title={currentCountry.country_name}>
+					{currentCountry.country_name}
 				</span>
 			</div>
 		);
@@ -1327,7 +1348,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 			{
 				name: __('Browser', 'betterlinks'),
 				selector: 'browser',
-				sortable: false,
+				sortable: true,
 				width: '100px',
 				cell: (row) => {
 					const browser = getBrowser(row.browser);
@@ -1342,8 +1363,42 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 			{
 				name: __('IP', 'betterlinks'),
 				selector: 'ip',
-				sortable: false,
+				sortable: true,
+				// sort by IPCOUNT rather than the string representation of IP
+				sortFunction: (rowA, rowB) => {
+					const a = +rowA.IPCOUNT || 0;
+					const b = +rowB.IPCOUNT || 0;
+					return a - b;
+				},
 				cell: (row) => <div>{row.ip + '(' + row.IPCOUNT + ')'}</div>,
+			},
+			//add user agent here to show
+			{
+				name: (
+					<>
+						{__('User Agent', 'betterlinks')}
+						{!is_pro_enabled && <ProBadge />}
+					</>
+				),
+				selector: 'user_agent',
+				width: '300px',
+				sortable: true,
+				cell: (row) => {
+					if (!is_pro_enabled) {
+						return;
+					}
+					const isTrackingEnabled = betterlinks_settings?.enable_user_agent_tracking || window.betterLinksGlobal?.betterlinks_settings?.enable_user_agent_tracking;
+					if (!isTrackingEnabled) {
+						return <div style={{ fontStyle: 'italic', color: '#666' }}>Disabled</div>;
+					}
+					return (
+						<div>
+							<div style={{ fontSize: '12px', wordBreak: 'break-all' }}>
+								{row.user_agent || 'N/A'}
+							</div>
+						</div>
+					);
+				},
 			},
 			{
 				name: (
@@ -1358,7 +1413,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 					</>
 				),
 				selector: 'country_name',
-				sortable: false,
+				sortable: true,
 				width: '180px',
 				cell: (row) => {
 					if (!is_pro_enabled) {
@@ -1389,13 +1444,13 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 			{
 				name: __('Timestamp', 'betterlinks'),
 				selector: 'created_at',
-				sortable: false,
+				sortable: true,
 			},
 			{
 				name: __('Referrer', 'betterlinks'),
 				selector: 'referer',
 				width: '300px',
-				sortable: false,
+				sortable: true,
 				cell: (row) => (
 					<div>
 						<div style={{ fontWeight: 700 }}>
@@ -1457,14 +1512,14 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 						</div>
 					);
 				},
-				sortable: false,
+				sortable: true,
 			},
 			{
 				name: __('OS', 'betterlinks'),
 				selector: 'os',
 				width: '100px',
 				cell: (row) => <div>{row.os}</div>,
-				sortable: false,
+				sortable: true,
 			},
 			{
 				name: __('Device', 'betterlinks'),
@@ -1546,11 +1601,11 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 
 export const analyticsColumnData = [
 	{
-		name: __('Browser', 'betterlinks'),
+		name: __('BrowseKK', 'betterlinks'),
 		selector: 'browser',
 	},
 	{
-		name: __('Link Name', 'betterlinks'),
+		name: __('Link Name jm', 'betterlinks'),
 		selector: 'name',
 	},
 	{
@@ -1560,6 +1615,10 @@ export const analyticsColumnData = [
 	{
 		name: __('Country', 'betterlinks'),
 		selector: 'country_name',
+	},
+	{
+		name: __('User Agent', 'betterlinks'),
+		selector: 'user_agent',
 	},
 	{
 		name: __('Timestamp', 'betterlinks'),
@@ -1706,4 +1765,9 @@ export const removeDuplicateUrls = (urlsText) => {
 		duplicatesRemoved,
 		originalCount
 	};
+};
+
+export const getDevice = (device) => {
+	if (['smartphone', 'phablet', 'feature phone'].includes(device)) return 'mobile';
+	return device;
 };

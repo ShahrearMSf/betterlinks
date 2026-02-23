@@ -1,4 +1,6 @@
 import { betterlinks_nonce, is_pro_enabled } from 'utils/helper';
+import { toastSuccess, toastError } from 'components/Toast';
+import { __ } from '@wordpress/i18n';
 
 export const FETCH_META_TAGS = 'FETCH_META_TAGS';
 export const ADD_NEW_META_TAGS = 'ADD_NEW_META_TAGS';
@@ -25,10 +27,23 @@ export const add_meta_tags = (params) => async (dispatch) => {
 				type: ADD_NEW_META_TAGS,
 				payload: result.data.data,
 			});
+			// Only show success toast if meta tags are enabled and have actual content
+			const hasMetaContent = params.meta_title || params.meta_description || params.meta_image;
+			console.log('params.status ', params.status);
+			console.log('hasMetaContent ', hasMetaContent);
+			
+			if (params.status && hasMetaContent) {
+				toastSuccess(__('Meta tags have been updated successfully', 'betterlinks'), {
+					title: __('Meta Tags Saved', 'betterlinks'),
+				});
+			}
 		}
 		fetch_meta_tags()(dispatch);
 	} catch (error) {
 		console.log('--error', error);
+		toastError(__('Failed to update meta tags', 'betterlinks'), {
+			title: __('Meta Tags Failed', 'betterlinks'),
+		});
 	}
 };
 

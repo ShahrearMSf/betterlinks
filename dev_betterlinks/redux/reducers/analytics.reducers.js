@@ -5,9 +5,8 @@ const analytics = (state = {}, { payload, type }) => {
 		case FETCH_ANALYTICS_SETTINGS: {
 			return {
 				...state,
-				analytics: {
-					...payload,
-				},
+				// store payload as-is (keep array form) so UI components receive an array
+				analytics: payload,
 			};
 		}
 		default:
