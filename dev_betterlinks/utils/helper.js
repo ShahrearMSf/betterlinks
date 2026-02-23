@@ -1385,7 +1385,7 @@ export const getColumns = (analytics, analyticsTab, id = null, onCountryUpdated 
 					}
 					return (
 						<div>
-							<div style={{ fontSize: '12px', wordBreak: 'break-all', maxWidth: '280px' }}>
+							<div style={{ fontSize: '12px', wordBreak: 'break-all' }}>
 								{row.user_agent || 'N/A'}
 							</div>
 						</div>
