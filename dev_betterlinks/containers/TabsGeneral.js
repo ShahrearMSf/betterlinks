@@ -471,7 +471,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 							</span>
 
 							{/* Exclude IP - Pro Feature with version check */}
-							{is_pro_enabled && pro_version_check('2.6.3') ? (
+							{is_pro_enabled && pro_version_check('2.7.0') ? (
 								<span className="btl-form-group btl-form-group--top">
 									<label className="btl-form-label">
 										{__('Exclude IP Addresses', 'betterlinks')}
@@ -501,7 +501,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										} else {
 											// Pro is enabled but version is outdated
 											toastWarning(
-												__('Please update BetterLinks Pro to version 2.6.3 or later to use the IP Exclusion feature.', 'betterlinks'),
+												__('Please update BetterLinks Pro to version 2.7.0 or later to use the IP Exclusion feature.', 'betterlinks'),
 												{
 													title: __('Update Required', 'betterlinks'),
 													duration: 5000,
@@ -530,7 +530,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 							)}
 
 							{/* User Agent Tracking - Pro Feature with version check */}
-							{is_pro_enabled && pro_version_check('2.6.3') ? (
+							{is_pro_enabled && pro_version_check('2.7.0') ? (
 								<span id="btl-setting-user-agent" className="btl-form-group">
 									<label className="btl-form-label">{__('User-Agent', 'betterlinks')}</label>
 									<div className="link-options__body">
@@ -560,7 +560,7 @@ const TabsGeneral = ({ settings, fetch_clicks_data, fetch_terms_data, terms, upd
 										} else {
 											// Pro is enabled but version is outdated
 											toastWarning(
-												__('Please update BetterLinks Pro to version 2.6.3 or later to use the User Agent Tracking feature.', 'betterlinks'),
+												__('Please update BetterLinks Pro to version 2.7.0 or later to use the User Agent Tracking feature.', 'betterlinks'),
 												{
 													title: __('Update Required', 'betterlinks'),
 													duration: 5000,
