@@ -909,17 +909,48 @@ export const saveSettingsHandler = (values, update_option, setFormSubmitText) =>
 		values.affiliate_disclosure_text = values.affiliate_disclosure_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
 	}
 	if (is_pro_enabled && values?.password?.allow_contact_text) {
-		values.password.allow_contact_text = values.password?.allow_contact_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
+		values.password.allow_contact_text = values.password?.password?.allow_contact_text.replace(/<span class="ql-cursor">(.*?)<\/span>/g, '');
 	}
-	update_option(values);
-	delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
-	
-	// Show toast notification
-	toastSuccess(__('Your settings have been saved successfully.', 'betterlinks'), {
-		title: __('Settings Saved', 'betterlinks'),
-		position: 'top-right',
-		duration: 3000,
-	});
+
+	// immediately show saving state
+	if (setFormSubmitText) setFormSubmitText(__('Saving...', 'betterlinks'));
+
+	// call the action which returns a promise
+	const promise = update_option(values);
+	if (promise && promise.then) {
+		promise
+			.then(() => {
+				// once the API returns successfully, update button text and show toast
+				if (setFormSubmitText) {
+					setFormSubmitText(__('Saved!', 'betterlinks'));
+					// revert to default after a short delay
+					setTimeout(() => {
+						setFormSubmitText(__('Save Settings', 'betterlinks'));
+					}, 3000);
+				}
+				toastSuccess(__('Your settings have been saved successfully.', 'betterlinks'), {
+					title: __('Settings Saved', 'betterlinks'),
+					position: 'top-right',
+					duration: 3000,
+				});
+			})
+			.catch(() => {
+				// optionally handle error state here
+				toastError(__('Failed to save settings', 'betterlinks'));
+			});
+	} else {
+		// fallback if update_option isn't a promise
+		if (setFormSubmitText) {
+			// revert after old delay logic
+			delayStatusChanged(__('Saving...', 'betterlinks'), __('Saved!', 'betterlinks'), __('Save Settings', 'betterlinks'), setFormSubmitText);
+		}
+		// still show toast
+		toastSuccess(__('Your settings have been saved successfully.', 'betterlinks'), {
+			title: __('Settings Saved', 'betterlinks'),
+			position: 'top-right',
+			duration: 3000,
+		});
+	}
 };
 
 export const getDataset = (data, uniqueIpCount) => {
