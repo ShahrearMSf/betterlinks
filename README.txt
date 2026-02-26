@@ -163,7 +163,7 @@ BetterLinks is very useful for website owners, affiliate marketers, SEO experts 
 
 == Changelog ==
 
-= 2.4.6 - 26/02/2026 =
+= 2.4.7 - 26/02/2026 =
 
 - Improvement: Improved Analytics table with dynamic column resize control
 - Improvement: Added toast notifications for all status updates
