@@ -575,10 +575,10 @@ export const delete_link = (params) => async (dispatch) => {
 					type: DELETE_LINK,
 					payload: response.data,
 				});
-				toastSuccess(
+				toastWarning(
 					linkCount > 1
-						? __('Links have been deleted successfully', 'betterlinks')
-						: __('Link has been deleted successfully', 'betterlinks'),
+						? __('Short links have been deleted', 'betterlinks')
+						: __('Short link has been deleted', 'betterlinks'),
 					{
 						title: linkCount > 1 ? __('Links Deleted', 'betterlinks') : __('Link Deleted', 'betterlinks'),
 					}
