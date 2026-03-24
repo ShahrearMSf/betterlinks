@@ -33,7 +33,7 @@ jobs:
 
     - name: Install dependencies & Build assets
       run: |
-        npm install
+        npm install --legacy-peer-deps
         npm run build
 
     - name: Generate zip
@@ -41,3 +41,5 @@ jobs:
       uses: 10up/action-wordpress-plugin-build-zip@stable
       with:
         retention-days: 3 # Optional; defaults to 5
+        install-command: 'echo "Already installed"'
+        build-command: 'echo "Already built"'
