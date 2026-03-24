@@ -1,0 +1,49 @@
+# Reusable workflow: verifies that the version string is identical across
+# betterlinks.php (plugin header), betterlinks.php (BETTERLINKS_VERSION constant),
+# and README.txt (Stable tag, checked only if the file exists). Fast, no server
+# required — runs in parallel with the build job in qa.yml.
+
+name: QA - Plugin Version Verification
+
+permissions: read-all
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  version-check:
+    runs-on: ubuntu-24.04
+    name: Version Consistency Check
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all version numbers are consistent
+        run: |
+          # Extract each version string from its canonical location
+          V_HEADER=$(grep -oP "^\s*\*\s*Version:\s*\K[\d.]+" betterlinks.php | head -1)
+          V_CONST=$(grep -oP "define\('BETTERLINKS_VERSION',\s*'?\K[\d.]+" betterlinks.php | head -1)
+
+          echo "Plugin header (Version:):        $V_HEADER"
+          echo "BETTERLINKS_VERSION constant:    $V_CONST"
+
+          MISMATCH=0
+          [ "$V_HEADER" != "$V_CONST" ] && echo "::error::MISMATCH: Plugin header ($V_HEADER) ≠ BETTERLINKS_VERSION ($V_CONST)" && MISMATCH=1
+
+          # README.txt is optional — only check if present
+          if [ -f README.txt ]; then
+            V_README=$(grep -oP "Stable tag:\s*\K[\d.]+" README.txt | head -1)
+            echo "README.txt Stable tag:            $V_README"
+            [ "$V_HEADER" != "$V_README" ] && echo "::error::MISMATCH: Plugin header ($V_HEADER) ≠ README.txt Stable tag ($V_README)" && MISMATCH=1
+          fi
+
+          # package.json version check (optional)
+          if [ -f package.json ]; then
+            V_PKG=$(grep -oP '"version":\s*"\K[\d.]+' package.json | head -1)
+            echo "package.json version:             $V_PKG"
+            [ "$V_HEADER" != "$V_PKG" ] && echo "::warning::package.json version ($V_PKG) differs from plugin header ($V_HEADER)" 
+          fi
+
+          [ "$MISMATCH" -eq 1 ] && exit 1
+
+          echo "✅ All version numbers are consistent: $V_HEADER"

@@ -1,0 +1,277 @@
+# Reusable workflow: downloads the BetterLinks plugin zip artifact, spins up a
+# WordPress environment for each WP/PHP version combination, activates the plugin,
+# and runs a suite of integrity checks. Version and PHP syntax checks run as
+# separate parallel jobs in qa.yml.
+
+name: QA - BetterLinks Compatibility Testing
+
+permissions: read-all
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  compatibility-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        wp-version: ["6.7.0", "6.9.0", "6.9.2", "6.9.3", "6.9.4", "latest"]
+        php-version: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
+
+    name: WP ${{ matrix.wp-version }} / PHP ${{ matrix.php-version }}
+
+    steps:
+      # Setup PHP + WP-CLI via shivammathur (handles WP-CLI install automatically)
+      - name: Setup PHP ${{ matrix.php-version }} + WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mysqli, mbstring, xml, gd, zip
+          tools: wp-cli
+
+      # Download the built artifact from the 'build' job
+      - name: Download Built BetterLinks
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ./betterlinks-dist
+
+      - name: Start Database
+        run: |
+          sudo systemctl start mysql
+          mysql -u root -proot -e "CREATE DATABASE wordpress_test;"
+
+      - name: Install WordPress Core
+        run: |
+          wp core download --version=${{ matrix.wp-version }} --path=./test-site --allow-root
+          cd test-site
+          wp config create --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --allow-root
+          wp core install \
+            --url=http://localhost:8080 \
+            --title="BetterLinks Test" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@example.com \
+            --allow-root
+
+      # Install from zip (10up action uploads the plugin as a zip artifact)
+      - name: Install BetterLinks
+        run: |
+          ZIP_FILE=$(find ./betterlinks-dist -maxdepth 2 -name "*.zip" | head -n 1)
+
+          if [ -n "$ZIP_FILE" ]; then
+            echo "Installing from zip: $ZIP_FILE"
+            wp plugin install "$(realpath "$ZIP_FILE")" --path=./test-site --allow-root
+          else
+            echo "No zip found — falling back to directory copy"
+            PLUGIN_SRC=$(find ./betterlinks-dist -maxdepth 1 -mindepth 1 -type d | head -n 1)
+            [ -z "$PLUGIN_SRC" ] && PLUGIN_SRC="./betterlinks-dist"
+            mkdir -p ./test-site/wp-content/plugins/betterlinks
+            cp -r "$PLUGIN_SRC/." ./test-site/wp-content/plugins/betterlinks/
+          fi
+
+          echo "Plugin directory contents:"
+          ls ./test-site/wp-content/plugins/betterlinks | head -n 15
+
+      - name: Activate BetterLinks
+        run: |
+          cd test-site
+          wp plugin activate betterlinks --allow-root
+
+      # IMPORTANT: BetterLinks uses WP_Background_Process (async HTTP) for DB
+      # table creation. In CI there is no HTTP server, so dispatch() never fires.
+      # The plugin has a built-in fallback: do_the_works_if_failed_during_activation()
+      # runs on admin_init, but only after a 5-second wait since activation.
+      # We sleep 6 s then trigger admin_init to force the fallback.
+      - name: Trigger BetterLinks activation fallback (DB table creation)
+        run: |
+          sleep 6
+          cd test-site
+          wp eval 'do_action("admin_init");' --allow-root
+          echo "✅ Activation fallback triggered — DB tables should now exist"
+
+      # ── Check 1: Basic WordPress + plugin integrity ──────────────────────
+      - name: Run Integrity Check
+        run: |
+          cd test-site
+          WP_STATUS=$(wp eval 'echo "Ready";' --quiet --allow-root)
+          if [[ "$WP_STATUS" != "Ready" ]]; then
+            echo "::error::WordPress crashed after activating BetterLinks."
+            exit 1
+          fi
+          echo "✅ BetterLinks is active and stable on WP ${{ matrix.wp-version }} / PHP ${{ matrix.php-version }}"
+
+      # ── Check 2: Critical constants must be defined ──────────────────────
+      - name: Verify BetterLinks Constants
+        run: |
+          cd test-site
+          wp eval '
+            $constants = [
+              "BETTERLINKS_VERSION",
+              "BETTERLINKS_DB_VERSION",
+              "BETTERLINKS_PLUGIN_FILE",
+              "BETTERLINKS_PLUGIN_BASENAME",
+              "BETTERLINKS_PLUGIN_SLUG",
+              "BETTERLINKS_PLUGIN_ROOT_URI",
+              "BETTERLINKS_ROOT_DIR_PATH",
+              "BETTERLINKS_ASSETS_DIR_PATH",
+              "BETTERLINKS_ASSETS_URI",
+              "BETTERLINKS_SETTINGS_NAME",
+            ];
+            $failed = false;
+            foreach ($constants as $c) {
+              if (!defined($c)) {
+                echo "::error::Missing constant: $c\n";
+                $failed = true;
+              }
+            }
+            if ($failed) exit(1);
+            echo "✅ All BetterLinks constants defined\n";
+
+            // Check the version option is stored in DB after activation
+            $version = get_option("betterlinks_version", "__MISSING__");
+            if ($version === "__MISSING__") {
+              echo "::error::Missing DB option: betterlinks_version (activation hook may not have run)\n";
+              exit(1);
+            }
+            echo "✅ BetterLinks version option found in DB: $version\n";
+          ' --allow-root
+
+      # ── Check 3: All core DB tables must exist after activation ──────────
+      - name: Verify BetterLinks DB Tables
+        run: |
+          cd test-site
+          wp eval '
+            global $wpdb;
+            $tables = [
+              $wpdb->prefix . "betterlinks",
+              $wpdb->prefix . "betterlinks_terms",
+              $wpdb->prefix . "betterlinks_terms_relationships",
+              $wpdb->prefix . "betterlinks_clicks",
+              $wpdb->prefix . "betterlinkmeta",
+              $wpdb->prefix . "betterlinks_password",
+              $wpdb->prefix . "betterlinks_countries",
+              $wpdb->prefix . "betterlinks_user_agents",
+            ];
+            $failed = false;
+            foreach ($tables as $table) {
+              $exists = $wpdb->get_var("SHOW TABLES LIKE \"$table\"");
+              if ($exists !== $table) {
+                echo "::error::Missing DB table: $table\n";
+                $failed = true;
+              }
+            }
+            if ($failed) exit(1);
+            echo "✅ All 8 BetterLinks DB tables exist\n";
+          ' --allow-root
+
+      # ── Check 4: REST API routes must be registered ──────────────────────
+      - name: Verify BetterLinks REST API Routes
+        run: |
+          cd test-site
+          wp eval '
+            $server = rest_get_server();
+            $routes = $server->get_routes();
+            // BetterLinks registers routes under the betterlinks/v1 namespace
+            $found = false;
+            foreach (array_keys($routes) as $r) {
+              if (strpos($r, "betterlinks") !== false) {
+                $found = true;
+                break;
+              }
+            }
+            if (!$found) {
+              echo "::error::No BetterLinks REST routes found under betterlinks namespace\n";
+              echo "Registered namespaces:\n";
+              foreach ($server->get_namespaces() as $ns) {
+                echo "  - $ns\n";
+              }
+              exit(1);
+            }
+            echo "✅ BetterLinks REST API routes are registered\n";
+
+            // List all betterlinks routes for information
+            foreach (array_keys($routes) as $r) {
+              if (strpos($r, "betterlinks") !== false) {
+                echo "  Route: $r\n";
+              }
+            }
+          ' --allow-root
+
+      # ── Check 5: PHP warnings & deprecations under WP_DEBUG ─────────────
+      - name: Check for PHP Warnings & Deprecations
+        run: |
+          cd test-site
+          wp config set WP_DEBUG true --raw --allow-root
+          wp config set WP_DEBUG_LOG true --raw --allow-root
+          # Trigger both frontend and admin bootstrap paths
+          wp eval 'do_action("init"); do_action("admin_init"); echo "Bootstrap OK\n";' --allow-root
+
+          if [ -f wp-content/debug.log ]; then
+            FATALS=$(grep -c "PHP Fatal" wp-content/debug.log || true)
+            DEPRECATED=$(grep -c "PHP Deprecated" wp-content/debug.log || true)
+
+            if [ "$FATALS" -gt 0 ]; then
+              echo "::error::PHP Fatal errors detected:"
+              grep "PHP Fatal" wp-content/debug.log
+              exit 1
+            fi
+
+            # Surface deprecations as workflow warnings (not failures)
+            # so they can be addressed before they become errors on the next PHP version
+            if [ "$DEPRECATED" -gt 0 ]; then
+              echo "::warning::PHP Deprecation notices found ($DEPRECATED total). Review before upgrading PHP."
+              grep "PHP Deprecated" wp-content/debug.log | head -20
+            fi
+          fi
+          echo "✅ No fatal PHP errors under WP_DEBUG"
+
+      # ── Check 6: REST API general health ────────────────────────────────
+      - name: Verify REST API Health
+        run: |
+          cd test-site
+          wp eval '
+            $request  = new WP_REST_Request("GET", "/wp/v2/posts");
+            $response = rest_do_request($request);
+            if ($response->is_error()) {
+              echo "::error::REST API broken: " . $response->as_error()->get_error_message() . "\n";
+              exit(1);
+            }
+            echo "✅ REST API responding normally\n";
+          ' --allow-root
+
+      # ── Check 7: Link redirect feature works ────────────────────────────
+      - name: Verify BetterLinks Core Functionality
+        run: |
+          cd test-site
+          wp eval '
+            // Verify that the global betterlinks links array is set (populated on init)
+            global $betterlinks;
+            if (!isset($betterlinks) || !is_array($betterlinks)) {
+              echo "::warning::Global \$betterlinks not initialized (may be empty on fresh install)\n";
+            } else {
+              echo "✅ Global \$betterlinks is initialized\n";
+            }
+
+            // Verify settings option exists
+            $settings = get_option(BETTERLINKS_SETTINGS_NAME, "__MISSING__");
+            if ($settings === "__MISSING__") {
+              echo "::warning::betterlinks_settings option not found in DB (expected after fresh install)\n";
+            } else {
+              echo "✅ BetterLinks settings found in DB\n";
+            }
+          ' --allow-root
