@@ -26,20 +26,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-
-    - name: Install dependencies & Build assets
-      run: |
-        npm install --legacy-peer-deps
-        npm run build
-
     - name: Generate zip
       id: upload-plugin-artifact
       uses: 10up/action-wordpress-plugin-build-zip@stable
       with:
-        retention-days: 3 # Optional; defaults to 5
-        install-command: 'echo "Already installed"'
-        build-command: 'echo "Already built"'
+        retention-days: 3
