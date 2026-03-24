@@ -30,23 +30,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - wp-version: "latest"
+          - wp-version: "6.9.4"
             php-version: "8.5"
-          - wp-version: "latest"
+          - wp-version: "6.9.4"
             php-version: "8.4"
-          - wp-version: "latest"
-            php-version: "8.2"
-          - wp-version: "latest"
-            php-version: "7.4"
           - wp-version: "6.9.4"
             php-version: "8.3"
-          - wp-version: "6.9.3"
+          - wp-version: "6.9.4"
             php-version: "8.2"
-          - wp-version: "6.9.2"
+          - wp-version: "6.7"
             php-version: "8.1"
-          - wp-version: "6.9.0"
+          - wp-version: "6.7"
             php-version: "8.0"
-          - wp-version: "6.7.0"
+          - wp-version: "6.5"
             php-version: "7.4"
 
     name: WP ${{ matrix.wp-version }} / PHP ${{ matrix.php-version }}
