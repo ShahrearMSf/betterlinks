@@ -116,13 +116,14 @@ jobs:
       - name: Force BetterLinks DB table creation directly
         run: |
           cd test-site
-          # We suppress warnings here because WP-CLI triggers the "init" hook
-          # before our eval runs, which makes BetterLinks query missing tables
-          # loudly in the log (though it does not halt execution).
+          # We use --skip-plugins=betterlinks so WP-CLI doesn't trigger 
+          # BetterLinks's 'init' hook (which queries the DB before tables exist).
+          # Then we manually load the plugin and build the tables silently.
           wp eval '
+            require_once WP_PLUGIN_DIR . "/betterlinks/betterlinks.php";
             $installer = new BetterLinks\Installer();
             $installer->create_db_tables();
-          ' --allow-root --quiet
+          ' --allow-root --skip-plugins=betterlinks
           echo "✅ Database tables forcibly created synchronously."
 
       # ── Check 1: Basic WordPress + plugin integrity ──────────────────────
