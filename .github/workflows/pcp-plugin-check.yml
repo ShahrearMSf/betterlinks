@@ -112,14 +112,19 @@ jobs:
           echo "✅ Plugin activated successfully."
 
       # IMPORTANT: BetterLinks uses WP_Background_Process (async HTTP) for DB
-      # table creation. In CI there is no HTTP server, so dispatch() never fires.
-      # The plugin has a built-in fallback: do_the_works_if_failed_during_activation()
-      # runs on admin_init after 5 s. We sleep 6 s then trigger admin_init.
-      - name: Trigger BetterLinks activation fallback (DB table creation)
+      # table creation. In CI there is no HTTP server, so it never completes.
+      # The admin_init fallback also aborts if the queue was initialized.
+      # We force table creation by aggressively invoking the Installer class.
+      - name: Force BetterLinks DB table creation directly
         run: |
-          sleep 6
           cd test-site
-          wp eval 'do_action("admin_init");' --allow-root
+          # We suppress warnings here because WP-CLI triggers the "init" hook
+          # before our eval runs, which makes BetterLinks query missing tables
+          # loudly in the log (though it does not halt execution).
+          wp eval '
+            $installer = new BetterLinks\Installer();
+            $installer->create_db_tables();
+          ' --allow-root --quiet
 
           # Inspect the WP debug log for PHP fatal errors written during activation
           DEBUG_LOG="./wp-content/debug.log"
