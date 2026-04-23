@@ -20,15 +20,8 @@ on:
     inputs:
       bl_branch:
         description: "BetterLinks branch / tag / SHA to test"
-        required: false
+        required: true
         default: "master"
-        type: string
-      # artifact-name declared here too so the `inputs.*` context resolves on
-      # workflow_dispatch. Leave empty for standalone → build-plugin runs.
-      artifact-name:
-        description: "Pre-built artifact name (leave empty to build from bl_branch)"
-        required: false
-        default: ""
         type: string
   workflow_call:
     inputs:
@@ -36,14 +29,9 @@ on:
         description: "Pre-built plugin artifact name from create-plugin-zip"
         required: true
         type: string
-      bl_branch:
-        description: "Branch (unused when artifact-name is supplied)"
-        required: false
-        default: ""
-        type: string
 
 concurrency:
-  group: "bl-free-e2e-${{ github.ref }}-${{ inputs.artifact-name || inputs.bl_branch }}"
+  group: "bl-free-e2e-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
@@ -95,7 +83,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact-name || needs.build-plugin.outputs.artifact-name }}
-          path: betterlinks-plugin
+          path: ./betterlinks-dist
 
       # 2. Clone the environment-independent free e2e suite
       - name: Checkout E2E test suite
@@ -148,11 +136,25 @@ jobs:
           wp rewrite structure '/%postname%/' --path="$WP_DIR"
           wp rewrite flush --path="$WP_DIR"
 
-      # 5. Install BetterLinks plugin from the downloaded artifact
+      # 5. Install BetterLinks plugin — same smart detection as pcp / compat.
       - name: Install BetterLinks plugin
         run: |
-          mkdir -p "$WP_DIR/wp-content/plugins/betterlinks"
-          cp -r betterlinks-plugin/* "$WP_DIR/wp-content/plugins/betterlinks/"
+          ZIP_FILE=$(find ./betterlinks-dist -maxdepth 2 -name "*.zip" | head -n 1)
+
+          if [ -n "$ZIP_FILE" ]; then
+            echo "Installing from zip: $ZIP_FILE"
+            wp plugin install "$(realpath "$ZIP_FILE")" --path="$WP_DIR"
+          else
+            echo "No zip found — falling back to directory copy"
+            PLUGIN_SRC=$(find ./betterlinks-dist -maxdepth 1 -mindepth 1 -type d | head -n 1)
+            [ -z "$PLUGIN_SRC" ] && PLUGIN_SRC="./betterlinks-dist"
+            mkdir -p "$WP_DIR/wp-content/plugins/betterlinks"
+            cp -r "$PLUGIN_SRC/." "$WP_DIR/wp-content/plugins/betterlinks/"
+          fi
+
+          echo "Plugin directory contents:"
+          ls "$WP_DIR/wp-content/plugins/betterlinks" | head -n 15
+
           wp plugin activate betterlinks --path="$WP_DIR"
           wp plugin list --status=active --path="$WP_DIR"
 
