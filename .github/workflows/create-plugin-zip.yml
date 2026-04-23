@@ -9,7 +9,19 @@ permissions: read-all
 
 on:
   workflow_dispatch: # Manual trigger only
+    inputs:
+      ref:
+        description: "Branch / tag / SHA to build"
+        required: false
+        type: string
+        default: ""
   workflow_call:
+    inputs:
+      ref:
+        description: "Branch / tag / SHA to build (defaults to the calling workflow's ref)"
+        required: false
+        type: string
+        default: ""
     outputs:
       artifact-name:
         description: "The name of the uploaded artifact"
@@ -25,6 +37,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref || github.ref }}
 
     - name: Generate zip
       id: upload-plugin-artifact
