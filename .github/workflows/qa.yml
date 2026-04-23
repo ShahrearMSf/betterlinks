@@ -36,3 +36,9 @@ jobs:
     uses: ./.github/workflows/betterlinks-compatibility-test.yml
     with:
       artifact-name: ${{ needs.build.outputs.artifact-name }}
+
+  e2e-free:
+    needs: build
+    uses: ./.github/workflows/e2e-free.yml
+    with:
+      artifact-name: ${{ needs.build.outputs.artifact-name }}
