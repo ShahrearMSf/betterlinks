@@ -15,24 +15,13 @@ on:
     inputs:
       bl_branch:
         description: "BetterLinks branch / tag / SHA to test"
-        required: false
+        required: true
         default: "master"
-        type: string
-      # Declared for schema consistency; leave empty for standalone.
-      artifact-name:
-        description: "Pre-built artifact name (leave empty to build from bl_branch)"
-        required: false
-        default: ""
         type: string
   workflow_call:
     inputs:
       artifact-name:
         required: true
-        type: string
-      bl_branch:
-        description: "Branch (unused when artifact-name is supplied)"
-        required: false
-        default: ""
         type: string
 
 jobs:
