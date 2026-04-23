@@ -1,47 +1,28 @@
-name: BetterLinks Free — E2E Tests
+# Reusable workflow: downloads the BetterLinks plugin zip artifact, spins up a
+# WordPress environment, activates the plugin, clones the environment-independent
+# free-only e2e suite (ShahrearMSf/bl-free-e2e), and runs Playwright tests.
+# Called by qa.yml after the build job completes.
+# Also runnable standalone via workflow_dispatch (you must paste an artifact-name
+# from a previous create-plugin-zip run, or run create-plugin-zip first).
+
+name: QA - BetterLinks Free E2E
+
+permissions: read-all
 
 on:
   workflow_dispatch:
     inputs:
-      bl_branch:
-        description: "BetterLinks branch / tag / SHA to test"
-        required: true
-        default: "master"
-        type: string
-      wp_version:
-        description: "WordPress version"
-        required: false
-        default: "latest"
-        type: string
-      # Declared here so `inputs.artifact-name` resolves on manual dispatch
-      # (the schema validator rejects references to undeclared inputs).
-      # Leave blank for dispatch so build-plugin actually runs.
       artifact-name:
-        description: "Pre-built artifact name (leave empty on dispatch to build fresh)"
-        required: false
-        default: ""
+        required: true
         type: string
   workflow_call:
     inputs:
       artifact-name:
         required: true
         type: string
-        description: "Pre-built plugin artifact name from create-plugin-zip"
-      wp_version:
-        required: false
-        type: string
-        default: "latest"
-      bl_branch:
-        description: "BetterLinks branch / tag / SHA to test"
-        required: false
-        type: string
-        default: ""
-
-permissions:
-  contents: read
 
 concurrency:
-  group: "bl-free-e2e-${{ github.ref }}"
+  group: "bl-free-e2e-${{ github.ref }}-${{ inputs.artifact-name }}"
   cancel-in-progress: true
 
 env:
@@ -56,18 +37,8 @@ env:
   ADMIN_EMAIL: admin@test.local
 
 jobs:
-  # Build plugin from source when invoked directly (workflow_dispatch).
-  # When called from qa.yml, this is skipped and the artifact-name input is used instead.
-  build-plugin:
-    if: ${{ inputs.artifact-name == '' }}
-    uses: ./.github/workflows/create-plugin-zip.yml
-    with:
-      ref: ${{ inputs.bl_branch }}
-
   e2e-test:
-    name: "E2E Tests (WP ${{ inputs.wp_version || 'latest' }})"
-    needs: [build-plugin]
-    if: ${{ !cancelled() && !failure() }}
+    name: "E2E Tests"
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -86,21 +57,22 @@ jobs:
           --health-retries=5
 
     steps:
-      - name: Download plugin artifact
+      # 1. Download the built BetterLinks artifact (contains the plugin zip)
+      - name: Download Built BetterLinks
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact-name || 'betterlinks' }}
+          name: ${{ inputs.artifact-name }}
           path: betterlinks-plugin
 
+      # 2. Clone the environment-independent free e2e suite
       - name: Checkout E2E test suite
         uses: actions/checkout@v4
         with:
-          # Environment-independent free-only suite.
-          # Repo: ShahrearMSf/bl-free-e2e
           repository: ShahrearMSf/bl-free-e2e
           ref: main
           path: e2e-suite
 
+      # 3. Setup Node.js + PHP + WP-CLI
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -113,9 +85,10 @@ jobs:
           extensions: mysqli, mbstring, xml, curl, zip, intl, gd, dom, simplexml
           tools: wp-cli
 
+      # 4. Download + configure WordPress
       - name: Download & configure WordPress
         run: |
-          wp core download --path="$WP_DIR" --version="${{ inputs.wp_version || 'latest' }}"
+          wp core download --path="$WP_DIR"
 
           wp config create \
             --path="$WP_DIR" \
@@ -139,32 +112,28 @@ jobs:
             --admin_email="$ADMIN_EMAIL" \
             --skip-email
 
-          # BetterLinks uses its own rewrite prefix (/<slug>/<short>) — pretty permalinks required.
+          # BetterLinks relies on pretty permalinks for short-URL redirects.
           wp rewrite structure '/%postname%/' --path="$WP_DIR"
           wp rewrite flush --path="$WP_DIR"
 
+      # 5. Install BetterLinks plugin from the downloaded artifact
       - name: Install BetterLinks plugin
         run: |
           mkdir -p "$WP_DIR/wp-content/plugins/betterlinks"
           cp -r betterlinks-plugin/* "$WP_DIR/wp-content/plugins/betterlinks/"
 
-          # Use wp-cli activate (it handles WP's bootstrapping correctly and
-          # avoids raw serialization mistakes like s:N length mismatches).
+          # wp-cli activate handles WP's bootstrapping + serialization safely.
           wp plugin activate betterlinks --path="$WP_DIR"
-
-          echo "--- Active plugins ---"
           wp plugin list --status=active --path="$WP_DIR"
 
+      # 6. Minimal content seed (2 posts with sample content)
       - name: Seed minimal test content
         run: |
           WP="wp --path=$WP_DIR"
-
-          # Dismiss admin nags that can interfere with test flow
           $WP option update fresh_site 0
           $WP transient delete --all
           $WP user meta update 1 admin_email_lifespan 9999999999
 
-          # A few sample posts — useful for Link Scanner and Auto-Link feature paths
           $WP post create --post_type=post --post_status=publish \
             --post_title="Sample Post 1" \
             --post_content="<p>Visit <a href=\"https://example.com\">Example</a> for more info.</p>" \
@@ -174,10 +143,10 @@ jobs:
             --post_content="<p>Check out WordPress and its many plugins.</p>" \
             --porcelain
 
-          # Ensure BetterLinks upload dir exists (plugin creates it on activation, but belt-and-braces)
           mkdir -p "$WP_DIR/wp-content/uploads/betterlinks_uploads"
           chmod -R 775 "$WP_DIR/wp-content/uploads"
 
+      # 7. Start PHP server
       - name: Start PHP server
         run: |
           cd "$WP_DIR"
@@ -188,7 +157,8 @@ jobs:
           done
           echo "WordPress ready at http://localhost:${WP_PORT}"
 
-      - name: Verify WordPress + BetterLinks are accessible
+      # 8. Sanity check
+      - name: Verify WordPress is accessible
         run: |
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${WP_PORT}/wp-login.php")
           echo "wp-login returned: $HTTP_CODE"
@@ -197,6 +167,7 @@ jobs:
             exit 1
           fi
 
+      # 9. Install + run Playwright
       - name: Install E2E dependencies
         working-directory: e2e-suite
         run: |
@@ -217,6 +188,7 @@ jobs:
           ADMIN_USER: admin
           ADMIN_PASS: admin
 
+      # 10. Upload artifacts + set status
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         if: always()
