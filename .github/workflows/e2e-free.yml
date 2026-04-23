@@ -1,9 +1,15 @@
-# Reusable workflow: downloads the BetterLinks plugin zip artifact, spins up a
-# WordPress environment, activates the plugin, clones the environment-independent
-# free-only e2e suite (ShahrearMSf/bl-free-e2e), and runs Playwright tests.
-# Called by qa.yml after the build job completes.
-# Also runnable standalone via workflow_dispatch (you must paste an artifact-name
-# from a previous create-plugin-zip run, or run create-plugin-zip first).
+# BetterLinks Free — E2E Tests
+#
+# Runs Playwright end-to-end tests against a fresh WordPress install with a
+# freshly-built BetterLinks (free) plugin.
+#
+# How it runs:
+#   - Standalone via workflow_dispatch: builds the plugin from the selected
+#     branch, then runs the tests.
+#   - Via workflow_call (from qa.yml): reuses the artifact produced by the
+#     shared `build` job and skips its own build.
+#
+# The environment-independent test suite lives at ShahrearMSf/bl-free-e2e.
 
 name: QA - BetterLinks Free E2E
 
@@ -12,17 +18,32 @@ permissions: read-all
 on:
   workflow_dispatch:
     inputs:
+      bl_branch:
+        description: "BetterLinks branch / tag / SHA to test"
+        required: false
+        default: "master"
+        type: string
+      # artifact-name declared here too so the `inputs.*` context resolves on
+      # workflow_dispatch. Leave empty for standalone → build-plugin runs.
       artifact-name:
-        required: true
+        description: "Pre-built artifact name (leave empty to build from bl_branch)"
+        required: false
+        default: ""
         type: string
   workflow_call:
     inputs:
       artifact-name:
+        description: "Pre-built plugin artifact name from create-plugin-zip"
         required: true
+        type: string
+      bl_branch:
+        description: "Branch (unused when artifact-name is supplied)"
+        required: false
+        default: ""
         type: string
 
 concurrency:
-  group: "bl-free-e2e-${{ github.ref }}-${{ inputs.artifact-name }}"
+  group: "bl-free-e2e-${{ github.ref }}-${{ inputs.artifact-name || inputs.bl_branch }}"
   cancel-in-progress: true
 
 env:
@@ -37,8 +58,19 @@ env:
   ADMIN_EMAIL: admin@test.local
 
 jobs:
+  # Only runs on standalone workflow_dispatch when no artifact-name is supplied.
+  # When called from qa.yml with an existing artifact, this job is skipped.
+  build-plugin:
+    if: ${{ inputs.artifact-name == '' }}
+    uses: ./.github/workflows/create-plugin-zip.yml
+    with:
+      ref: ${{ inputs.bl_branch }}
+
   e2e-test:
     name: "E2E Tests"
+    needs: [build-plugin]
+    # Run whether build-plugin ran (standalone) or was skipped (qa.yml call).
+    if: ${{ !cancelled() && !failure() }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -57,11 +89,12 @@ jobs:
           --health-retries=5
 
     steps:
-      # 1. Download the built BetterLinks artifact (contains the plugin zip)
+      # 1. Download the plugin artifact — either the one built by build-plugin
+      #    above, or the one passed in by qa.yml via inputs.artifact-name.
       - name: Download Built BetterLinks
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact-name }}
+          name: ${{ inputs.artifact-name || needs.build-plugin.outputs.artifact-name }}
           path: betterlinks-plugin
 
       # 2. Clone the environment-independent free e2e suite
@@ -112,7 +145,6 @@ jobs:
             --admin_email="$ADMIN_EMAIL" \
             --skip-email
 
-          # BetterLinks relies on pretty permalinks for short-URL redirects.
           wp rewrite structure '/%postname%/' --path="$WP_DIR"
           wp rewrite flush --path="$WP_DIR"
 
@@ -121,12 +153,10 @@ jobs:
         run: |
           mkdir -p "$WP_DIR/wp-content/plugins/betterlinks"
           cp -r betterlinks-plugin/* "$WP_DIR/wp-content/plugins/betterlinks/"
-
-          # wp-cli activate handles WP's bootstrapping + serialization safely.
           wp plugin activate betterlinks --path="$WP_DIR"
           wp plugin list --status=active --path="$WP_DIR"
 
-      # 6. Minimal content seed (2 posts with sample content)
+      # 6. Seed minimal content
       - name: Seed minimal test content
         run: |
           WP="wp --path=$WP_DIR"

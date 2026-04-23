@@ -6,8 +6,9 @@
 name: QA
 
 on:
+  # Manual-only. push / pull_request triggers the `Create Plugin Zip` workflow
+  # directly; this orchestrator runs the fuller QA fan-out only on demand.
   workflow_dispatch:
-  pull_request:
 
 permissions: read-all
 

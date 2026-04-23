@@ -1,7 +1,11 @@
-# Reusable workflow: downloads the BetterLinks plugin zip artifact, spins up a
-# WordPress environment for each WP/PHP version combination, activates the plugin,
-# and runs a suite of integrity checks. Version and PHP syntax checks run as
-# separate parallel jobs in qa.yml.
+# Spins up a WordPress environment for each WP/PHP version combination,
+# activates the freshly-built BetterLinks plugin, and runs a suite of
+# integrity checks.
+#
+# How it runs:
+#   - Standalone via workflow_dispatch: builds the plugin from the selected
+#     branch, then runs the matrix. No artifact-name needed.
+#   - Via workflow_call (from qa.yml): reuses the shared `build` artifact.
 
 name: QA - BetterLinks Compatibility Testing
 
@@ -10,20 +14,42 @@ permissions: read-all
 on:
   workflow_dispatch:
     inputs:
+      bl_branch:
+        description: "BetterLinks branch / tag / SHA to test"
+        required: false
+        default: "master"
+        type: string
+      # Declared for schema consistency; leave empty for standalone.
       artifact-name:
-        required: true
+        description: "Pre-built artifact name (leave empty to build from bl_branch)"
+        required: false
+        default: ""
         type: string
   workflow_call:
     inputs:
       artifact-name:
         required: true
         type: string
+      bl_branch:
+        description: "Branch (unused when artifact-name is supplied)"
+        required: false
+        default: ""
+        type: string
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  # Self-build when dispatched standalone without an artifact.
+  build-plugin:
+    if: ${{ inputs.artifact-name == '' }}
+    uses: ./.github/workflows/create-plugin-zip.yml
+    with:
+      ref: ${{ inputs.bl_branch }}
+
   compatibility-test:
+    needs: [build-plugin]
+    if: ${{ !cancelled() && !failure() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
@@ -56,11 +82,12 @@ jobs:
           extensions: mysqli, mbstring, xml, gd, zip
           tools: wp-cli
 
-      # Download the built artifact from the 'build' job
+      # Download the plugin artifact — either the one passed in by the
+      # caller (qa.yml), or the one built by build-plugin above.
       - name: Download Built BetterLinks
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact-name }}
+          name: ${{ inputs.artifact-name || needs.build-plugin.outputs.artifact-name }}
           path: ./betterlinks-dist
 
       - name: Start Database

@@ -1,14 +1,21 @@
-# Reusable workflow: builds the BetterLinks plugin zip using the 10up action
-# and uploads it as a short-lived artifact. Called by qa.yml so the zip is
-# built once and shared across all QA jobs. Also runnable standalone via
-# workflow_dispatch for a one-off build.
+# Builds the BetterLinks plugin zip using the 10up action and uploads it as
+# a short-lived artifact.
+#
+# Triggers:
+#   - push / pull_request: runs automatically so every change has a build
+#     available for download.
+#   - workflow_dispatch: manual one-off build with an explicit `ref`.
+#   - workflow_call: called by qa.yml + every other QA workflow's
+#     self-build fallback so the zip is built once per invocation.
 
 name: QA - Create Plugin Zip
 
 permissions: read-all
 
 on:
-  workflow_dispatch: # Manual trigger only
+  push:
+  pull_request:
+  workflow_dispatch:
     inputs:
       ref:
         description: "Branch / tag / SHA to build"
