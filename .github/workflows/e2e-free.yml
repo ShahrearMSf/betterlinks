@@ -13,6 +13,14 @@ on:
         required: false
         default: "latest"
         type: string
+      # Declared here so `inputs.artifact-name` resolves on manual dispatch
+      # (the schema validator rejects references to undeclared inputs).
+      # Leave blank for dispatch so build-plugin actually runs.
+      artifact-name:
+        description: "Pre-built artifact name (leave empty on dispatch to build fresh)"
+        required: false
+        default: ""
+        type: string
   workflow_call:
     inputs:
       artifact-name:
@@ -23,6 +31,11 @@ on:
         required: false
         type: string
         default: "latest"
+      bl_branch:
+        description: "BetterLinks branch / tag / SHA to test"
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
