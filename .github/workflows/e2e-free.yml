@@ -220,7 +220,76 @@ jobs:
           ADMIN_USER: admin
           ADMIN_PASS: admin
 
-      # 10. Upload artifacts + set status
+      # 10. Render a Markdown summary on the run's "Summary" tab.
+      #     Uses Playwright's JSON reporter output. No GitHub Pages required.
+      - name: Build job summary from Playwright JSON
+        if: always()
+        working-directory: e2e-suite
+        run: |
+          REPORT="test-results/results.json"
+          if [ ! -f "$REPORT" ]; then
+            echo "::warning::No results.json — skipping summary"
+            exit 0
+          fi
+
+          node <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('fs');
+          const r = JSON.parse(fs.readFileSync('test-results/results.json', 'utf8'));
+
+          // Walk the spec tree and collect per-test results
+          const flat = [];
+          const walk = (suite, parent = '') => {
+            const name = parent ? `${parent} › ${suite.title}` : suite.title;
+            for (const s of (suite.suites || [])) walk(s, name);
+            for (const spec of (suite.specs || [])) {
+              for (const t of (spec.tests || [])) {
+                for (const result of (t.results || [])) {
+                  flat.push({
+                    title: `${name ? name + ' › ' : ''}${spec.title}`,
+                    file: spec.file,
+                    status: result.status,
+                    duration: result.duration || 0,
+                  });
+                }
+              }
+            }
+          };
+          for (const s of (r.suites || [])) walk(s);
+
+          const passed  = flat.filter(t => t.status === 'passed').length;
+          const failed  = flat.filter(t => t.status === 'failed' || t.status === 'timedOut').length;
+          const skipped = flat.filter(t => t.status === 'skipped').length;
+          const total   = passed + failed + skipped;
+          const durMs   = flat.reduce((a, t) => a + t.duration, 0);
+          const durMin  = (durMs / 60_000).toFixed(1);
+          const passRate = total ? Math.round((passed / total) * 100) : 0;
+
+          const status = failed === 0 ? '🟢 All passing' : '🔴 Failures';
+
+          let md = '';
+          md += `## ${status} — Playwright E2E results\n\n`;
+          md += `| Total | ✅ Passed | ❌ Failed | ⏭ Skipped | Pass rate | Duration |\n`;
+          md += `|---|---|---|---|---|---|\n`;
+          md += `| ${total} | ${passed} | ${failed} | ${skipped} | ${passRate}% | ${durMin} min |\n\n`;
+
+          if (failed > 0) {
+            md += `### ❌ Failed tests (${failed})\n\n`;
+            for (const t of flat.filter(t => t.status === 'failed' || t.status === 'timedOut')) {
+              md += `- \`${t.file}\` — ${t.title}\n`;
+            }
+            md += `\n`;
+          }
+
+          md += `<details><summary>📦 Artifacts</summary>\n\n`;
+          md += `- **playwright-report** — full HTML report (download, unzip, open \`index.html\`)\n`;
+          md += `- **test-results** — per-test screenshots, traces, videos (failures only)\n`;
+          md += `- **wp-debug-log** — WordPress debug log (only uploaded on failure)\n`;
+          md += `\n</details>\n`;
+
+          process.stdout.write(md);
+          EOF
+
+      # 11. Upload artifacts + set status
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         if: always()
